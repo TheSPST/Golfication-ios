@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>328755607579-1irbc60tr1mkor2k8ccig7bblm7lpc43.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.328755607579-1irbc60tr1mkor2k8ccig7bblm7lpc43</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA3de-8MJ881lGthvBaum9SZm17qI_J6bQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>328755607579</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.khelfie.Khelfie</string>
+	<key>PROJECT_ID</key>
+	<string>golficationtest</string>
+	<key>STORAGE_BUCKET</key>
+	<string>golficationtest.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:328755607579:ios:0a65ed6e3eb35bb2</string>
+	<key>DATABASE_URL</key>
+	<string>https://golficationtest.firebaseio.com</string>
+</dict>
+</plist>
