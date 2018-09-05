@@ -7727,10 +7727,10 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="730"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="riY-XL-Zi2">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="719.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="830.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Q2F-0a-9OX">
-                                                <rect key="frame" x="10" y="10" width="355" height="699.5"/>
+                                                <rect key="frame" x="10" y="10" width="355" height="810.5"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zpv-0Y-ptk" customClass="CardView" customModule="Golfication" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="355" height="190"/>
@@ -8214,8 +8214,129 @@
                                                         <color key="textColor" red="0.62745098040000002" green="0.70980392160000005" blue="0.68627450980000004" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zzi-9y-jHX" customClass="CardView" customModule="Golfication" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="500" width="355" height="101"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="LFn-eM-UGI">
+                                                                <rect key="frame" x="8" y="8" width="339" height="85"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Starting Tee" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="khU-2I-S4I">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="339" height="30"/>
+                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JBi-Dc-TaN" customClass="CardView" customModule="Golfication" customModuleProvider="target">
+                                                                        <rect key="frame" x="0.0" y="35" width="339" height="50"/>
+                                                                        <subviews>
+                                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="ydw-3x-qpp">
+                                                                                <rect key="frame" x="16" y="7" width="154" height="36"/>
+                                                                                <subviews>
+                                                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="g2E-fX-81o">
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="154" height="17"/>
+                                                                                        <subviews>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="White Tee" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mTb-cd-RM1">
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="58.5" height="17"/>
+                                                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
+                                                                                                <color key="textColor" red="0.18039215689999999" green="0.62352941179999999" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                                <nil key="highlightedColor"/>
+                                                                                            </label>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Competetion Tee)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Nh-Z6-P9D">
+                                                                                                <rect key="frame" x="62.5" y="0.0" width="91.5" height="17"/>
+                                                                                                <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="12"/>
+                                                                                                <color key="textColor" red="0.18039215689999999" green="0.62352941179999999" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                                <nil key="highlightedColor"/>
+                                                                                            </label>
+                                                                                        </subviews>
+                                                                                    </stackView>
+                                                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="07n-KI-TFr">
+                                                                                        <rect key="frame" x="0.0" y="19" width="131" height="17"/>
+                                                                                        <subviews>
+                                                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="BOq-AT-dLY">
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="71.5" height="17"/>
+                                                                                                <subviews>
+                                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ratings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JDb-uA-Kpg">
+                                                                                                        <rect key="frame" x="0.0" y="0.0" width="44.5" height="17"/>
+                                                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
+                                                                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                                        <nil key="highlightedColor"/>
+                                                                                                    </label>
+                                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="72.7" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4aQ-8S-58g">
+                                                                                                        <rect key="frame" x="48.5" y="0.0" width="23" height="17"/>
+                                                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
+                                                                                                        <nil key="textColor"/>
+                                                                                                        <nil key="highlightedColor"/>
+                                                                                                    </label>
+                                                                                                </subviews>
+                                                                                            </stackView>
+                                                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="QRP-wP-SBe">
+                                                                                                <rect key="frame" x="79.5" y="0.0" width="51.5" height="17"/>
+                                                                                                <subviews>
+                                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Slope" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="32r-No-2RF">
+                                                                                                        <rect key="frame" x="0.0" y="0.0" width="33.5" height="17"/>
+                                                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
+                                                                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                                        <nil key="highlightedColor"/>
+                                                                                                    </label>
+                                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="32" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="41U-IO-29l">
+                                                                                                        <rect key="frame" x="37.5" y="0.0" width="14" height="17"/>
+                                                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
+                                                                                                        <nil key="textColor"/>
+                                                                                                        <nil key="highlightedColor"/>
+                                                                                                    </label>
+                                                                                                </subviews>
+                                                                                            </stackView>
+                                                                                        </subviews>
+                                                                                    </stackView>
+                                                                                </subviews>
+                                                                            </stackView>
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhV-Ql-1Gx">
+                                                                                <rect key="frame" x="304" y="12.5" width="25" height="25"/>
+                                                                                <constraints>
+                                                                                    <constraint firstAttribute="height" constant="25" id="ECo-7r-RLM"/>
+                                                                                    <constraint firstAttribute="width" constant="25" id="mOl-Br-4Va"/>
+                                                                                </constraints>
+                                                                                <state key="normal" image="green_arrow"/>
+                                                                                <connections>
+                                                                                    <action selector="searchLocationAction:" destination="Okh-0x-7gY" eventType="touchUpInside" id="JZm-1l-8Sw"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6OY-av-3yA">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="339" height="50"/>
+                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <connections>
+                                                                                    <action selector="btnActionStartingTee:" destination="Okh-0x-7gY" eventType="touchUpInside" id="yAs-7E-7GT"/>
+                                                                                </connections>
+                                                                            </button>
+                                                                        </subviews>
+                                                                        <color key="backgroundColor" red="0.96078431369999995" green="0.96078431369999995" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="50" id="7ct-hs-NFa"/>
+                                                                            <constraint firstItem="ydw-3x-qpp" firstAttribute="leading" secondItem="JBi-Dc-TaN" secondAttribute="leading" constant="16" id="EDL-qN-zgf"/>
+                                                                            <constraint firstItem="lhV-Ql-1Gx" firstAttribute="centerY" secondItem="JBi-Dc-TaN" secondAttribute="centerY" id="Hfw-Ie-Gta"/>
+                                                                            <constraint firstAttribute="trailing" secondItem="6OY-av-3yA" secondAttribute="trailing" id="Hnk-1r-pt9"/>
+                                                                            <constraint firstAttribute="bottom" secondItem="6OY-av-3yA" secondAttribute="bottom" id="MNT-D4-bSb"/>
+                                                                            <constraint firstItem="6OY-av-3yA" firstAttribute="leading" secondItem="JBi-Dc-TaN" secondAttribute="leading" id="Pip-zx-SKn"/>
+                                                                            <constraint firstAttribute="trailing" secondItem="lhV-Ql-1Gx" secondAttribute="trailing" constant="10" id="SCj-XT-WuB"/>
+                                                                            <constraint firstItem="ydw-3x-qpp" firstAttribute="centerY" secondItem="JBi-Dc-TaN" secondAttribute="centerY" id="ZLE-uU-eSJ"/>
+                                                                            <constraint firstItem="6OY-av-3yA" firstAttribute="top" secondItem="JBi-Dc-TaN" secondAttribute="top" id="vhy-wK-XFn"/>
+                                                                        </constraints>
+                                                                    </view>
+                                                                </subviews>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="85" id="sGF-Oj-I9V"/>
+                                                                </constraints>
+                                                            </stackView>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="bottom" secondItem="LFn-eM-UGI" secondAttribute="bottom" constant="8" id="F7I-MR-HOe"/>
+                                                            <constraint firstItem="LFn-eM-UGI" firstAttribute="leading" secondItem="Zzi-9y-jHX" secondAttribute="leading" constant="8" id="YD8-SR-KUD"/>
+                                                            <constraint firstItem="LFn-eM-UGI" firstAttribute="top" secondItem="Zzi-9y-jHX" secondAttribute="top" constant="8" id="oMF-fd-IbR"/>
+                                                            <constraint firstAttribute="trailing" secondItem="LFn-eM-UGI" secondAttribute="trailing" constant="8" id="oUM-4R-ql0"/>
+                                                        </constraints>
+                                                    </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bIN-sM-PV6" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="500" width="355" height="199.5"/>
+                                                        <rect key="frame" x="0.0" y="611" width="355" height="199.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Customize Your Experience" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KVW-Tk-Cj3">
                                                                 <rect key="frame" x="15" y="10" width="325" height="19.5"/>
@@ -8354,7 +8475,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wjm-ic-Zdl" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="699.5" width="355" height="190"/>
+                                                        <rect key="frame" x="0.0" y="810.5" width="355" height="190"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="p1X-Qg-VkY">
                                                                 <rect key="frame" x="15" y="10" width="325" height="80.5"/>
@@ -8653,6 +8774,7 @@
                     <size key="freeformSize" width="375" height="800"/>
                     <connections>
                         <outlet property="btnCheckBox" destination="MFb-ja-1pp" id="h04-GC-L3M"/>
+                        <outlet property="btnDropDownTee" destination="lhV-Ql-1Gx" id="sIt-Y6-pBw"/>
                         <outlet property="btnEnd" destination="8Df-BF-u14" id="slG-zJ-Juf"/>
                         <outlet property="btnFivePlayer" destination="FOa-BR-Pnd" id="qAs-3K-cd7"/>
                         <outlet property="btnFourPlayer" destination="I1v-bf-w1e" id="BCD-Mx-aky"/>
@@ -8695,6 +8817,10 @@
                         <outlet property="lblShotTracker" destination="xId-HX-7NU" id="iDW-Hf-SAN"/>
                         <outlet property="lblSubPlayOnCourse" destination="Gbg-tU-pxK" id="vrN-Xy-dDZ"/>
                         <outlet property="lblSubPrevRound" destination="BBK-l8-frV" id="Bve-XX-KMa"/>
+                        <outlet property="lblTeeName" destination="mTb-cd-RM1" id="55u-5r-efg"/>
+                        <outlet property="lblTeeRating" destination="4aQ-8S-58g" id="FKD-lc-D3V"/>
+                        <outlet property="lblTeeSlope" destination="41U-IO-29l" id="x9d-vd-tWa"/>
+                        <outlet property="lblTeeType" destination="9Nh-Z6-P9D" id="IlW-mf-kpA"/>
                         <outlet property="mappingGolfXView" destination="Xd1-1u-MeF" id="0Ke-l2-Tj9"/>
                         <outlet property="newGamescrollView" destination="tkh-dx-HKj" id="xpV-hV-x2O"/>
                         <outlet property="playGolfXView" destination="zXh-qX-pFK" id="ge8-mM-rdi"/>
@@ -8703,6 +8829,7 @@
                         <outlet property="scoreTableView" destination="92b-tg-yjD" id="Bd8-2Q-f4a"/>
                         <outlet property="scoreTblHConstraint" destination="JmP-ur-FOd" id="eSY-qg-D9N"/>
                         <outlet property="stackRequestInfo" destination="hyd-Bg-vR7" id="Ggw-dS-bV5"/>
+                        <outlet property="startingTeeCardView" destination="Zzi-9y-jHX" id="0uj-W5-X9s"/>
                         <outlet property="switchRangeFinder" destination="eUm-Lt-dUP" id="KXw-d9-jB4"/>
                         <outlet property="switchShotTracker" destination="Z5J-rH-C7g" id="R4b-76-vVr"/>
                     </connections>
@@ -8741,6 +8868,7 @@
         <image name="gir_false" width="12" height="12"/>
         <image name="gps_icon" width="25" height="25"/>
         <image name="gray_dot" width="7" height="7"/>
+        <image name="green_arrow" width="11" height="7"/>
         <image name="green_dot" width="7" height="7"/>
         <image name="hit" width="16" height="16"/>
         <image name="home_icon" width="25" height="25"/>

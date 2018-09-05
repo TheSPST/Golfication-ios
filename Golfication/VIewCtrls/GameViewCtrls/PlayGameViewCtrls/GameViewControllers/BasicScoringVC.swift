@@ -34,7 +34,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var scoreSecondSV: UIStackView!
 
     @IBOutlet weak var stackBtmConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var btnChangeHole: UIButton!
+    
     @IBOutlet weak var stackViewForMultiplayer: UIStackView!
     @IBOutlet weak var fairwayHitStackView: UIStackView!
     @IBOutlet weak var girStackView: UIStackView!
@@ -79,7 +80,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     let swipePrev = UISwipeGestureRecognizer()
     let swipeNext = UISwipeGestureRecognizer()
     var holeOutforAppsFlyer = [Int]()
-    
+    var startingIndex = Int()
+    var gameTypeIndex = Int()
     @IBAction func btnActionMenu(_ sender: Any) {
         var j = 0
         for player in playersButton{
@@ -99,7 +101,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         for hole in self.scoreData{
             strArr.append("Hole \(hole.hole) - Par - \(hole.par)")
         }
-        
         ActionSheetStringPicker.show(withTitle: "Select Hole", rows: strArr, initialSelection: holeIndex, doneBlock: { (picker, value, index) in
             self.holeIndex = value
             self.updateData(indexToUpdate: value)
@@ -394,6 +395,14 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @IBAction func nextAction(_ sender: Any) {
+        var maxLimit = scoreData.count-1
+        if(self.scoreData.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.scoreData.count{
+            maxLimit = (self.startingIndex+self.gameTypeIndex) - 1
+        }else if self.startingIndex+self.gameTypeIndex-1 > self.scoreData.count{
+            if(self.gameTypeIndex < self.scoreData.count){
+                maxLimit =  (self.startingIndex+self.gameTypeIndex-1) - self.scoreData.count
+            }
+        }
         menuStackView.isHidden = true
         holeIndex += 1
         self.btnNext.isHidden = false
@@ -401,18 +410,18 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.btnPrev.isEnabled = true
         self.swipeNext.isEnabled = true
         self.swipePrev.isEnabled = true
+        if(holeIndex == scoreData.count){
+            holeIndex = 0
+        }
         updateData(indexToUpdate: self.holeIndex)
-        
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
-        
-        if(holeIndex == scoreData.count-1){
+        if(holeIndex == maxLimit){
             self.btnNext.isHidden = true
             self.swipePrev.isEnabled = false
             self.btnFinishRound.isHidden = false
         }
-        
         let transition = CATransition()
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromRight
@@ -420,18 +429,26 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @IBAction func prevAction(_ sender: Any) {
+        var minLimit = 0
+        if(self.startingIndex != 1){
+            if(self.scoreData.count > self.gameTypeIndex){
+                minLimit = self.startingIndex - 1
+            }
+        }
+        
         menuStackView.isHidden = true
         holeIndex -= 1
         self.btnNext.isHidden = false
         self.swipePrev.isEnabled = true
         self.btnFinishRound.isHidden = true
+        if(holeIndex < 0){
+            holeIndex = scoreData.count-1
+        }
         updateData(indexToUpdate: self.holeIndex)
-        
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
-        
-        if(holeIndex == 0){
+        if(holeIndex == minLimit){
             self.swipeNext.isEnabled = false
             self.btnPrev.isEnabled = false
         }
@@ -458,7 +475,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.detailScoreSV.isHidden = true
             if (str > self.scoreData[self.holeIndex].par+2){
                 self.scoreSV.isHidden = false
-                self.stackViewStrokes1.isHidden = true
                 self.scoreSecondSV.isHidden = false
                 self.btnExpendScore.isHidden = true
                 for btn in buttonsArrayForStrokes{
@@ -509,7 +525,9 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             if let current = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
                 self.holeIndex = Int(current)!-1
             }else{
-                self.holeIndex = Int(self.matchDataDict.value(forKeyPath: "currentHole") as! String)! - 1
+                if let current = matchDataDic.value(forKeyPath: "currentHole") as? String{
+                    self.holeIndex = Int(current.count == 0 ? "1":current)! - 1
+                }
             }
         }
         if(self.holeIndex == scoreData.count-1){
@@ -540,6 +558,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         let backBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnBack.setImage(backBtnImage, for: .normal)
         btnBack.tintColor = UIColor.glfWhite
+        self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
+        self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateView(_:)), name: NSNotification.Name(rawValue: "updateView"),object: nil)
 
         lblCourseName.text = "\(matchDataDict.value(forKey: "courseName")!)"
@@ -610,15 +630,20 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 self.holeIndex = Int(current)!-1
             }else{
                 if let current = self.matchDataDict.value(forKeyPath: "currentHole") as? String{
-                    self.holeIndex = current == "" ? 0 : Int(current)! - 1
+                    self.holeIndex = current == "" ? startingIndex : Int(current)! - 1
                 }
             }
+        }else{
+            self.holeIndex = startingIndex - 1
         }
         self.exitGamePopUpView.show(navItem: self.navigationItem)
         self.exitGamePopUpView.delegate = self
         self.exitGamePopUpView.isHidden = true
+        if(self.holeIndex > self.scoreData.count){
+           self.holeIndex = 0
+        }
         updateData(indexToUpdate: self.holeIndex)
-        if(self.holeIndex == 0){
+        if(self.holeIndex == startingIndex - 1){
             self.btnPrev.isEnabled = false
             self.swipeNext.isEnabled = false
         }else if(self.holeIndex == scoreData.count-1){
@@ -637,6 +662,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 }
             }
             self.initilizeScoreNode()
+        }
+        if(self.gameTypeIndex < scoreData.count){
+            self.btnChangeHole.isUserInteractionEnabled = false
+        }else{
+            self.btnChangeHole.isUserInteractionEnabled = true
         }
     }
     @objc func swipedViewPrev(){
@@ -756,7 +786,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 }else{
                     holeWiseShots.setDictionary(data.value(forKey: self.playerId!) as! [String:Any])
                 }
-
             }
             i += 1
         }
@@ -914,6 +943,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.scoreSV.isHidden = false
             self.detailScoreSV.isHidden = true
             self.scoreSecondSV.isHidden = true
+            self.stackViewStrokes1.isHidden = false
         }
         self.progressView.hide(navItem: self.navigationItem)
         

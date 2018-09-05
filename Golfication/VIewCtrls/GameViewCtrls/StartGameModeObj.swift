@@ -23,6 +23,10 @@ class StartGameModeObj: NSObject{
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
+        if selectedTee.count > 1{
+            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+        }
+
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
             imagUrl = "\((Auth.auth().currentUser?.photoURL)!)"
@@ -147,6 +151,9 @@ class StartGameModeObj: NSObject{
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
+        if selectedTee.count > 1{
+            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+        }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
             imagUrl = "\((Auth.auth().currentUser?.photoURL)!)"
@@ -233,6 +240,9 @@ class StartGameModeObj: NSObject{
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
+        if selectedTee.count > 1{
+            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+        }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
             imagUrl = "\((Auth.auth().currentUser?.photoURL)!)"

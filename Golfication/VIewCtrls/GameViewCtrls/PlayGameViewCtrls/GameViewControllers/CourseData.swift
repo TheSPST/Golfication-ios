@@ -108,7 +108,7 @@ class CourseData:NSObject{
             }
             
             group.notify(queue: .main){
-//                if(self.propertyArray.count == 0){
+                if(self.propertyArray.count == 0){
                     for i in 0..<rangeFinderHoles.count{
                         let dataDic = NSMutableDictionary()
                         dataDic.setObject((rangeFinderHoles[i] as AnyObject).object(forKey: "greenLat")!, forKey: "greenLat" as NSCopying)
@@ -125,12 +125,19 @@ class CourseData:NSObject{
                             let dict = NSMutableDictionary()
                             dict.addEntries(from: ["hole" : i])
                             dict.addEntries(from: ["hcp" : teeB.value(forKey: "hcp") as! Int])
-                            if let gend = teeB.value(forKey: "teeType") as? String{
-                                dict.addEntries(from: ["gender" : gend])
-                                if(self.isMale) && gend == "men"{
+//                            if let gend = teeB.value(forKey: "teeType") as? String{
+//                                dict.addEntries(from: ["gender" : gend])
+//                                if(self.isMale) && gend == "men"{
+//                                    self.totalTee.append(dict)
+//                                }else if (!self.isMale) && gend != "men"{
+//                                    self.totalTee.append(dict)
+//                                }
+//                            }
+                            if let name = teeB.value(forKey: "teeColorType") as? String{
+                                if name.capitalizingFirstLetter() == selectedTee{
                                     self.totalTee.append(dict)
-                                }else if (!self.isMale) && gend != "men"{
-                                    self.totalTee.append(dict)
+                                    dataDic.setObject((teeB.value(forKey:"lat") as! Double), forKey: "teeLat" as NSCopying)
+                                    dataDic.setObject((teeB.value(forKey:"lng") as! Double), forKey: "teeLong" as NSCopying)
                                 }
                             }
                         }
@@ -149,7 +156,7 @@ class CourseData:NSObject{
                             self.holeGreenDataArr.append(greenData)
                         }
                     }
-//                }
+                }
                 for j in 0..<self.numberOfHoles.count{
                     for i in 0..<self.polygonArray.count{
                         if(self.propertyArray[i].hole == self.numberOfHoles[j].hole){

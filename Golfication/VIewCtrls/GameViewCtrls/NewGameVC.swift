@@ -25,7 +25,7 @@ var gameType: String = "18 holes"
 var startingHole: String = "1"
 var matchId = String()
 var mode = Int()
-
+var selectedTee = ""
 
 class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
@@ -39,7 +39,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
     @IBOutlet weak var lblRequestMap: UILabel!
     @IBOutlet weak var lblRangeFinder: UILabel!
     @IBOutlet weak var lblShotTracker: UILabel!
-
+    
+    @IBOutlet weak var startingTeeCardView: CardView!
+    @IBOutlet weak var btnDropDownTee: UIButton!
+    @IBOutlet weak var lblTeeName: UILabel!
+    @IBOutlet weak var lblTeeType: UILabel!
+    @IBOutlet weak var lblTeeRating: UILabel!
+    @IBOutlet weak var lblTeeSlope: UILabel!
+    
     @IBOutlet weak var lblRequestInfo: UILabel!
     @IBOutlet weak var lblRFRequestInfo: UILabel!
 
@@ -112,7 +119,74 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
     var scoringMode = ""
     var attributedStringArray = [String]()
     var detailedScore = NSMutableArray()
+    // Marke : StartingTee Action
+    
+    @IBAction func btnActionStartingTee(_ sender: UIButton) {
+        let myController = UIAlertController(title: "Select Tee", message: "Please select your Tee according to your Handicap", preferredStyle: UIAlertControllerStyle.actionSheet)
+        
+        let messageAttributed = NSMutableAttributedString(
+            string: myController.message!,
+            attributes: [NSAttributedStringKey.foregroundColor: UIColor.glfBluegreen, NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 15.0)!])
+        myController.setValue(messageAttributed, forKey: "attributedMessage")
+        
+        var color = [UIColor]()
+        for i in 0..<self.teeArr.count{
+            let tee = self.teeArr[i]
+            if(tee.name.contains("Whit")){
+                color.append(UIColor.glfFlatBlue)
+            }else if(tee.name.contains("Blu")){
+                color.append(UIColor.glfBluegreen)
+            }else if(tee.name.contains("Bla")){
+                color.append(UIColor.glfBluegreen)
+            }else if(tee.name.contains("Red")){
+                color.append(UIColor.glfRosyPink)
+            }
+        }
+        var i = 0
+        for tee in self.teeArr{
+            let whiteTee = (UIAlertAction(title: "\(tee.name) (\(tee.type) Tee)", style: UIAlertActionStyle.default, handler: { action in
+                self.lblTeeName.text = "\(tee.name)"
+                self.lblTeeType.text = "(\(tee.type) Tee)"
+                selectedTee = "\(tee.name)"
+            }))
+//            whiteTee.setValue(color[i], forKey: "teeName")
+            myController.addAction(whiteTee)
+            i += 1
+        }
+        let cancelOption = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { action in
+            debugPrint("Cancelled")
+        })
+        myController.addAction(cancelOption)
 
+
+//        let whiteTee = (UIAlertAction(title: "White Tee", style: UIAlertActionStyle.default, handler: { action in
+//            self.lblTeeName.text = "White Tee"
+//            self.lblTeeType.text = "(Competition Tee)"
+////            self.lblTeeSlope.text = "32"
+////            self.lblTeeRating.text = "75.0"
+//        }))
+//        let blueTee = (UIAlertAction(title: "Blue Tee", style: UIAlertActionStyle.default, handler: { action in
+//            self.lblTeeName.text = "Blue Tee"
+//            self.lblTeeType.text = "(Men Tee)"
+////            self.lblTeeSlope.text = "32"
+////            self.lblTeeRating.text = "75.0"
+//        }))
+//        let redTee = (UIAlertAction(title: "Red Tee", style: UIAlertActionStyle.default, handler: { action in
+//            self.lblTeeName.text = "Red Tee"
+//            self.lblTeeType.text = "(Women Tee)"
+////            self.lblTeeSlope.text = "32"
+////            self.lblTeeRating.text = "75.0"
+//        }))
+//        whiteTee.setValue(UIColor.glfBluegreen, forKey: "titleTextColor")
+//        redTee.setValue(UIColor.glfRosyPink, forKey: "titleTextColor")
+//        blueTee.setValue(UIColor.glfFlatBlue, forKey: "titleTextColor")
+
+//        myController.addAction(whiteTee)
+//        myController.addAction(blueTee)
+//        myController.addAction(redTee)
+
+        present(myController, animated: true, completion: nil)
+    }
     // MARK: backAction
     @IBAction func backAction(sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
@@ -161,7 +235,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
         }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
     }
-
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
@@ -339,7 +412,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
         barBtnBLE = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(self.golfXAction))
         barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
         self.navigationItem.rightBarButtonItem = barBtnBLE
-
+        self.startingTeeCardView.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(completeDeviceSetup(_:)), name: NSNotification.Name(rawValue: "setupDevice"), object: nil)
         // End Round
         NotificationCenter.default.addObserver(self, selector: #selector(self.EndRound(_:)), name: NSNotification.Name(rawValue: "EndRound"), object: nil)
@@ -1136,7 +1209,51 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
         }
         btnStartContinue.isHidden = false
     }
-    
+    var rating = "N/A"
+    var slope = "N/A"
+    var teeArr = [(name:String,type:String)]()
+    // MARK: selectedGameTypeFromFirebase
+    func checkRangeFinderHoleData() {
+        if  !(selectedGolfID == "") {
+            teeArr.removeAll()
+            let golfId = "course_\(selectedGolfID)"
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder") { (snapshot) in
+                if let rangeFin = snapshot.value as? NSMutableDictionary{
+                    if let rating = rangeFin.value(forKey: "rating") as? String{
+                        self.rating = rating
+                    }
+                    if let slope = rangeFin.value(forKey: "slope") as? String{
+                        self.slope = slope
+                    }
+                    if let holeArr = rangeFin.value(forKeyPath: "holes") as? NSArray{
+                        if let holeZero = holeArr.firstObject as? NSMutableDictionary{
+                            if let teeBoxArr = holeZero.value(forKey: "teeBoxes") as? NSArray{
+                                for tee in teeBoxArr{
+                                    let tee = tee as! NSMutableDictionary
+                                    let teeName = tee.value(forKey: "teeColorType") as! String
+                                    let teeType = tee.value(forKey: "teeType") as! String
+                                    self.teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter()))
+                                }
+                            }
+                        }
+                    }
+                }
+                DispatchQueue.main.async(execute: {
+                    if(self.teeArr.count > 0){
+                        self.startingTeeCardView.isHidden = false
+                        self.lblTeeName.text = "\(self.teeArr[0].name)"
+                        self.lblTeeType.text = "(\(self.teeArr[0].type) Tee)"
+                        self.lblTeeSlope.text = self.slope
+                        self.lblTeeRating.text = self.rating
+                        selectedTee = self.teeArr[0].name
+                    }else{
+                        self.startingTeeCardView.isHidden = true
+                    }
+                })
+            }
+        }
+    }
+
     // MARK: selectedGameTypeFromFirebase
     func selectedGameTypeFromFirebase() {
 
@@ -1144,6 +1261,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
 
             let golfId = "course_\(selectedGolfID)"
+            self.checkRangeFinderHoleData()
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)") { (snapshot) in
                 if snapshot.value != nil{
 
@@ -1329,8 +1447,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
                 for (key,value) in matchDict{
                     keyData = key as! String
                     if(keyData == "player"){
-                        for (k,_) in value as! NSMutableDictionary{
+                        for (k,v) in value as! NSMutableDictionary{
                             playersKey.append(k as! String)
+                            if(k as! String) == Auth.auth().currentUser!.uid{
+                                if let tee = (v as! NSMutableDictionary).value(forKey: "selectedTee") as? String{
+                                    selectedTee = tee
+                                    selectedTee.capitalizeFirstLetter()
+                                }
+                            }
                         }
                     }
                     if(keyData == "courseId"){
@@ -2008,6 +2132,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
+        if selectedTee.count > 1{
+            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+        }
+
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
             imagUrl = "\((Auth.auth().currentUser?.photoURL)!)"
@@ -2114,6 +2242,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
+        if selectedTee.count > 1{
+            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+        }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
             imagUrl = "\((Auth.auth().currentUser?.photoURL)!)"
@@ -2193,6 +2324,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
+        if selectedTee.count > 1{
+            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+        }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
             imagUrl = "\((Auth.auth().currentUser?.photoURL)!)"
@@ -2767,5 +2901,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
 extension StringProtocol where Index == String.Index {
     func nsRange(from range: Range<Index>) -> NSRange {
         return NSRange(range, in: self)
+    }
+}
+extension String {
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).uppercased() + dropFirst()
+    }
+    
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
     }
 }

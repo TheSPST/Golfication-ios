@@ -2357,6 +2357,7 @@
                     </view>
                     <connections>
                         <outlet property="btnBack" destination="wW6-W3-HZK" id="xTL-f9-hYm"/>
+                        <outlet property="btnChangeHole" destination="zSv-Ku-dBz" id="po1-qf-pd4"/>
                         <outlet property="btnDetailScoring" destination="i21-BD-xkV" id="yfH-Or-eYD"/>
                         <outlet property="btnDownArraow" destination="d2A-KR-Qrz" id="QOM-r7-bDG"/>
                         <outlet property="btnExpendScore" destination="BWw-EO-IC8" id="WeS-4m-R60"/>

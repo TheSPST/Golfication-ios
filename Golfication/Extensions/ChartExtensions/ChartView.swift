@@ -367,9 +367,12 @@ extension PieChartView {
         }
         
         let pieChartDataSet = PieChartDataSet(values: dataEntries, label: "")
-        pieChartDataSet.sliceSpace = 2.5
         pieChartDataSet.xValuePosition = .outsideSlice
         pieChartDataSet.yValuePosition = .outsideSlice
+        pieChartDataSet.sliceSpace = 2.0
+        pieChartDataSet.valueLineWidth = 0.01
+        pieChartDataSet.selectionShift = 5.0
+        pieChartDataSet.valueLinePart2Length = 2.0
         pieChartDataSet.valueTextColor = UIColor(red: 58.0/255.0, green: 124.0 / 255.0, blue: 149.0 / 255.0, alpha: 1)
         pieChartDataSet.valueLineColor = UIColor.clear
         pieChartDataSet.valueLineVariableLength = true
@@ -380,7 +383,6 @@ extension PieChartView {
         chartView.drawEntryLabelsEnabled = isValueEnable
         chartView.holeRadiusPercent = 0
         chartView.usePercentValuesEnabled = true
-        pieChartDataSet.selectionShift = 0
         chartView.highlightPerTapEnabled = false
         chartView.transparentCircleColor = UIColor.clear
         chartView.legend.enabled = false

@@ -207,21 +207,33 @@ class ScoreBoardForInputViewCtrl: UIViewController, UITableViewDelegate, UITable
     }
 
     @IBAction func btnActionScore(_ sender: UIButton) {
-        self.holeWiseShots.removeObject(forKey: "strokes")
-        self.holeWiseShots.removeObject(forKey: "holeOut")
-        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(self.playerId!)").updateChildValues(["strokes":NSNull()] as [AnyHashable : Any])
-        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(self.playerId!)").updateChildValues(["holeOut":false] as [AnyHashable : Any])
-        updateScoreData()
-        for btn in buttonsArrayForStrokes{
-            btn.setTitle("\(btn.tag)", for: .normal)
-            btn.layer.borderWidth = 0
-            for lay in btn.layer.sublayers!{
-                lay.borderWidth = 0
+        if let str = holeWiseShots.value(forKey: "strokes") as? Int{
+            self.detailScoreSV.isHidden = true
+            if (str > self.scoreData[self.index].par+2){
+                self.scoreSV.isHidden = false
+                self.scoreSecondSV.isHidden = false
+                self.btnExpendScore.isHidden = true
+                for btn in buttonsArrayForStrokes{
+                    btn.setTitleColor(UIColor.glfWhite, for: .normal)
+                }
+                buttonsArrayForStrokes[str-1].setTitleColor(UIColor.glfBluegreen, for: .normal)
+            }else{
+                self.scoreSV.isHidden = false
+                self.stackViewStrokes1.isHidden = false
+                self.scoreSecondSV.isHidden = true
+                self.btnExpendScore.isHidden = false
+                var newI = self.scoreData[self.index].par - 2
+                for btn in self.stackViewStrokes1.arrangedSubviews{
+                    (btn as! UIButton).setTitleColor(UIColor.glfWhite, for: .normal)
+                    updateStrokesButtonWithoutStrokes(strokes: (newI-self.scoreData[self.index].par), btn: btn as! UIButton,color:UIColor.white)
+                    newI += 1
+                }
+                if let btn = self.stackViewStrokes1.arrangedSubviews[str-self.scoreData[self.index].par+2] as? UIButton{
+                    updateStrokesButtonWithoutStrokes(strokes: (str-self.scoreData[self.index].par), btn: btn,color:UIColor.glfBluegreen)
+                    btn.setTitleColor(UIColor.glfBluegreen, for: .normal)
+                }
             }
         }
-        self.detailScoreSV.isHidden = true
-        //btnDetailsScoringConstraints.constant = 0
-        self.scoreSV.isHidden = false
         
     }
     @IBAction func expendScoreAction(_ sender: Any) {
@@ -648,19 +660,19 @@ class ScoreBoardForInputViewCtrl: UIViewController, UITableViewDelegate, UITable
             //btnDetailsScoringConstraints.constant = 0
         }
     }
-    func updateStrokesButtonWithoutStrokes(strokes:Int,btn:UIButton){
+    func updateStrokesButtonWithoutStrokes(strokes:Int,btn:UIButton,color:UIColor){
         if strokes <= -2 || strokes <= -3{
             //double circle
             let layer = CALayer()
             layer.frame = CGRect(x: 3, y:  3, width: btn.frame.width - 6, height: btn.frame.height - 6)
             layer.borderWidth = 1
-            layer.borderColor = UIColor.glfWhite.cgColor
+            layer.borderColor = color.cgColor
             layer.cornerRadius = layer.frame.height/2
             btn.layer.addSublayer(layer)
             
             btn.layer.borderWidth = 1
             btn.layer.cornerRadius = btn.frame.height/2
-            btn.layer.borderColor = UIColor.glfWhite.cgColor
+            btn.layer.borderColor = color.cgColor
             
         }
             
@@ -673,14 +685,14 @@ class ScoreBoardForInputViewCtrl: UIViewController, UITableViewDelegate, UITable
             }
             btn.titleLabel?.layer.borderWidth = 0
             btn.layer.borderWidth = 1
-            btn.layer.borderColor = UIColor.glfWhite.cgColor
+            btn.layer.borderColor = color.cgColor
             btn.layer.cornerRadius = btn.frame.size.height/2
         }
             
         else if strokes == 1{
             //single square
             btn.layer.borderWidth = 1
-            btn.layer.borderColor = UIColor.glfWhite.cgColor
+            btn.layer.borderColor = color.cgColor
         }
             
         else if strokes >= 2 || strokes >= 3{
@@ -688,13 +700,13 @@ class ScoreBoardForInputViewCtrl: UIViewController, UITableViewDelegate, UITable
             let layer = CALayer()
             layer.frame = CGRect(x: 3, y:  3, width: btn.frame.width - 6, height: btn.frame.height - 6)
             layer.borderWidth = 1
-            layer.borderColor = UIColor.glfWhite.cgColor
+            layer.borderColor = color.cgColor
             layer.cornerRadius = 2
             btn.layer.addSublayer(layer)
             
             btn.layer.borderWidth = 1
             btn.layer.cornerRadius = 2
-            btn.layer.borderColor = UIColor.glfWhite.cgColor
+            btn.layer.borderColor = color.cgColor
         }
     }
     @objc func fairwayHitAction(sender: UIButton!) {
@@ -1146,14 +1158,14 @@ class ScoreBoardForInputViewCtrl: UIViewController, UITableViewDelegate, UITable
         var newI = self.scoreData[self.index].par - 2
         for btn in self.stackViewStrokes1.arrangedSubviews{
             (btn as! UIButton).setTitle("\(newI)", for: .normal)
-            updateStrokesButtonWithoutStrokes(strokes: (newI-self.scoreData[self.index].par), btn: btn as! UIButton)
+            updateStrokesButtonWithoutStrokes(strokes: (newI-self.scoreData[self.index].par), btn: btn as! UIButton,color: UIColor.white)
             newI += 1
         }
         self.playerId = sender.userData
         self.index = sender.tag
         self.classicScoring = self.getScoreIntoClassicNode(hole: self.index,playerKey: self.playerId!)
         self.updateValue()
-        
+        self.holeWiseShots.removeAllObjects()
         lblHolePar.text = "Hole \(self.index+1) - Par \(self.scoreData[self.index].par)"
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
