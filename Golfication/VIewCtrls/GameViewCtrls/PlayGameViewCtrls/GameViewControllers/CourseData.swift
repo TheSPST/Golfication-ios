@@ -19,17 +19,11 @@ class CourseData:NSObject{
     var clubs = ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu","more"]
     var holeGreenDataArr = [GreenData]()
     var totalTee = [NSMutableDictionary]()
-    var isMale = true
     var handicap = Int()
     var slopeRating = Int()
-    func getGender(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "gender") { (snapshot) in
-            if let gend = snapshot.value as? String{
-                if(gend != "male"){
-                    self.isMale = false
-                }
-            }
-        }
+    var startingIndex = Int()
+    var gameTypeIndex = 18
+    func getHandicap(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "handicap") { (snapshot) in
             if let handic = snapshot.value as? String{
                 self.handicap = handic == "-" ? 0:Int(handic)!
@@ -38,7 +32,7 @@ class CourseData:NSObject{
     }
     func getGolfCourseDataFromFirebase(courseId:String){
 //        courseId = "course_9999999"
-        self.getGender()
+        self.getHandicap()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
@@ -125,14 +119,6 @@ class CourseData:NSObject{
                             let dict = NSMutableDictionary()
                             dict.addEntries(from: ["hole" : i])
                             dict.addEntries(from: ["hcp" : teeB.value(forKey: "hcp") as! Int])
-//                            if let gend = teeB.value(forKey: "teeType") as? String{
-//                                dict.addEntries(from: ["gender" : gend])
-//                                if(self.isMale) && gend == "men"{
-//                                    self.totalTee.append(dict)
-//                                }else if (!self.isMale) && gend != "men"{
-//                                    self.totalTee.append(dict)
-//                                }
-//                            }
                             if let name = teeB.value(forKey: "teeColorType") as? String{
                                 if name.capitalizingFirstLetter() == selectedTee{
                                     self.totalTee.append(dict)
@@ -205,10 +191,111 @@ class CourseData:NSObject{
                         self.centerPointOfTeeNGreen.append((tee: centerTee,fairway:fairWayPoint,green: centerOfGreen))
                     }
                 }
+                debugPrint(self.propertyArray.count)
+                debugPrint(self.centerPointOfTeeNGreen.count)
+                debugPrint(self.numberOfHoles.count)
+                debugPrint(self.gameTypeIndex)
+                debugPrint(self.startingIndex)
+                debugPrint(self.holeGreenDataArr.count)
+                
+                if(self.numberOfHoles.count < self.gameTypeIndex){
+                    var tempArr = self.propertyArray
+                    var tempHoleArr = self.centerPointOfTeeNGreen
+                    var tempNuOfHole = self.numberOfHoles
+                    for data in self.propertyArray{
+                        tempArr.append(data)
+                    }
+                    for data in self.centerPointOfTeeNGreen{
+                        tempHoleArr.append(data)
+                    }
+                    var i = self.numberOfHoles.last!.hole
+                    for data in self.numberOfHoles{
+                        var newData = data
+                        newData.hole = i+1
+                        tempNuOfHole.append(newData)
+                        i = i+1
+                    }
+                    self.numberOfHoles = tempNuOfHole
+                    self.propertyArray = tempArr
+                    self.centerPointOfTeeNGreen = tempHoleArr
+                }
+                
+                let min = self.startingIndex-1
+                var max = self.numberOfHoles.count-1
+                if(self.numberOfHoles.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.numberOfHoles.count{
+                    max = (self.startingIndex+self.gameTypeIndex) - 1
+                }else if self.startingIndex+self.gameTypeIndex-1 > self.numberOfHoles.count{
+                    if(self.gameTypeIndex < self.numberOfHoles.count){
+                        max =  (self.startingIndex+self.gameTypeIndex-1) - self.numberOfHoles.count
+                    }
+                }
+                var temp = self.propertyArray
+                temp.removeAll()
+                var newTemp = self.centerPointOfTeeNGreen
+                newTemp.removeAll()
+                var ttemp = [NSMutableDictionary]()
+                var tempholeGreenDataArr = [GreenData]()
+                var tempNumofHole = self.numberOfHoles
+                tempNumofHole.removeAll()
+
+                for i in self.startingIndex-1..<self.gameTypeIndex+self.startingIndex-1{
+                    debugPrint("index:",i)
+                    debugPrint("validIndex:",self.getValidIndex(isNext: true, index: i, max: max, min: min))
+                    let newIndex = self.getValidIndex(isNext: true, index: i, max: max, min: min)
+                    for j in 0..<self.propertyArray.count{
+                        if self.propertyArray[j].hole == newIndex+1{
+                            temp.append(self.propertyArray[j])
+                        }
+                    }
+                    newTemp.append(self.centerPointOfTeeNGreen[newIndex])
+                    if(self.totalTee.count > 0){
+                        ttemp.append(self.totalTee[newIndex])
+                    }
+                    if(self.holeGreenDataArr.count > 0){
+                        tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
+                    }
+                    tempNumofHole.append(self.numberOfHoles[newIndex])
+                }
+                if(newTemp.count > 0){
+                    self.centerPointOfTeeNGreen = newTemp
+                    self.propertyArray = temp
+                    self.totalTee = ttemp
+                    self.holeGreenDataArr = tempholeGreenDataArr
+                    self.numberOfHoles = tempNumofHole
+                }
+                
                 self.getGolfBagData()
             }
         }
     }
+    
+    func getValidIndex(isNext:Bool,index:Int,max:Int,min:Int)->Int{
+        var holeIndex = index
+        if(self.gameTypeIndex < self.numberOfHoles.count){
+            if(min < max){
+                if(holeIndex >= min) && (holeIndex < max){
+                    return holeIndex
+                }else{
+                    return isNext ? min : max-1
+                }
+            }else{
+                if(holeIndex < 0){
+                    holeIndex = numberOfHoles.count-1
+                }else if(holeIndex == numberOfHoles.count){
+                    holeIndex = 0
+                }else if (holeIndex >= max){
+                    holeIndex = min<=holeIndex ? holeIndex%numberOfHoles.count:min
+                }else if (holeIndex <= min){
+                    holeIndex = max == holeIndex ? min:holeIndex%numberOfHoles.count
+                }
+                return holeIndex
+            }
+        }else{
+            return holeIndex%self.gameTypeIndex
+        }
+    }
+    
+    
     func getGolfBagData(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
             if(snapshot.value != nil){

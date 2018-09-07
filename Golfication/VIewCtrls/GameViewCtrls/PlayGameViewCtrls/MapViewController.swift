@@ -3397,9 +3397,13 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                     }
                 }
                 if(!self.isContinueMatch){
-                    ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                    if(self.swingMatchId.count > 2){
+                        ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                    }
                 }else{
-                    self.getGameId(swingKey:self.swingMatchId)
+                    if(self.swingMatchId.count > 2){
+                        self.getGameId(swingKey:self.swingMatchId)
+                    }
                 }
             })
         }

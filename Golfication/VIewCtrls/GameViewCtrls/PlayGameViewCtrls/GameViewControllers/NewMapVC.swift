@@ -268,7 +268,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var playerArrayWithDetails = NSMutableDictionary()
     var playersButton = [(button:UIButton,isSelected:Bool,id:String,name:String)]()
     var currentMatchId = String()
-    var selectedGameType : Int!
     var holeOutCount = Int()
     var gir = Bool()
     var player = NSMutableDictionary()
@@ -283,7 +282,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var isContinue = false
     let swipeUp = UISwipeGestureRecognizer()
     let swipeDown = UISwipeGestureRecognizer()
-    var currentHole = Int()
     var userMarker = GMSMarker()
     var trackingMarker = GMSMarker()
     var isPintMarker = false
@@ -307,6 +305,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var shotForEdit : Int!
     var swingData = [[Any]]()
+    var startingIndex = Int()
+    var gameTypeIndex = Int()
+
+    
     @IBOutlet weak var greenStackViewHeight: NSLayoutConstraint!
     // Mark :- GetTableContentHeight
     var tableViewHeight: CGFloat {
@@ -533,7 +535,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         lbls.textAlignment = .center
         let newlbl = UILabel(frame:CGRect(x: 0, y: 0, width: tempView.frame.width, height: 30))
-        newlbl.text = "Hole \(self.holeIndex+1) - Par \(self.scoring[self.holeIndex].par)"
+        newlbl.text = "Hole \(self.scoring[self.holeIndex].hole) - Par \(self.scoring[self.holeIndex].par)"
         newlbl.textAlignment = .center
         let youSc = UIImageView(image: lbls.screenshot())
         let title = UIImageView(image: newlbl.screenshot())
@@ -673,7 +675,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if(!isHoleByHole){
             self.updateMap(indexToUpdate: holeIndex)
-            self.updateCurrentHole(index: holeIndex+1)
+            self.updateCurrentHole(index: self.scoring[holeIndex].hole)
         }else{
             var playerId : String!
             var totalShots = 0
@@ -705,7 +707,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if(!isHoleByHole){
             self.updateMap(indexToUpdate: holeIndex)
-            self.updateCurrentHole(index: holeIndex+1)
+            self.updateCurrentHole(index: self.scoring[holeIndex].hole)
         }else{
             var playerId : String!
             var totalShots = 0
@@ -995,10 +997,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         NotificationCenter.default.addObserver(self, selector: #selector(self.shareShotsDissmiss(_:)), name: NSNotification.Name(rawValue: "ShareShots"),object: nil)
         
         
-        
+        self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
+        self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+        self.courseData.startingIndex = self.startingIndex
+        self.courseData.gameTypeIndex = self.gameTypeIndex
         courseId = "course_\(self.matchDataDict.value(forKeyPath: "courseId") as! String)"
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
         
     }
@@ -1014,7 +1020,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             distance = distance*YARD
             suffix = "yard"
         }
-        Notification.sendGameDetailsNotification(msg: "Hole \(self.holeIndex+1) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking,isHole: self.holeOutFlag)
+        Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[self.holeIndex].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking,isHole: self.holeOutFlag)
         debugPrint("distance",distance)
     }
     @objc func stopTrackingFromNotification(_ notification:NSNotification){
@@ -1398,7 +1404,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let scoring = NSMutableDictionary()
         var holeArray = [NSMutableDictionary]()
         for i in 0..<courseData.numberOfHoles.count{
-            self.scoring.append((hole: i, par: 0,players:[NSMutableDictionary]()))
+            self.scoring.append((hole: courseData.numberOfHoles[i].hole, par: courseData.numberOfHoles[i].par,players:[NSMutableDictionary]()))
             let player = NSMutableDictionary()
             for j in 0..<playerData.count{
                 let data = playerData[j] as! NSMutableDictionary
@@ -1408,7 +1414,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 playerScore.setObject(playerDataHole, forKey: (data.value(forKey: "id") as! String) as NSCopying)
                 self.scoring[i].players.append(playerScore)
             }
-            self.scoring[i].par = courseData.numberOfHoles[i].par
             player.setObject(courseData.numberOfHoles[i].par, forKey: "par" as NSCopying)
             holeArray.append(player)
         }
@@ -2804,11 +2809,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         var strArr = [String]()
         for hole in self.scoring{
             if isHoleByHole{
-                strArr.append("Hole \(hole.hole+1) - Par - \(hole.par)")
-            }else{
                 strArr.append("Hole \(hole.hole) - Par - \(hole.par)")
             }
-
         }
         ActionSheetStringPicker.show(withTitle: "Select Hole", rows: strArr, initialSelection: holeIndex, doneBlock: { (picker, value, index) in
             self.holeIndex = value
@@ -4107,10 +4109,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         self.penaltyShots.removeAll()
         indexToUpdate = indexToUpdate == -1 ? indexToUpdate+1 : indexToUpdate
-        self.lblHoleNumber.text = "\(indexToUpdate+1)"
-        self.lblHoleNumber2.text = "Hole \(indexToUpdate+1)"
-        self.lblParNumber.text = "par \(courseData.numberOfHoles[indexToUpdate].par)"
-        self.lblParNumber2.text = "par \(courseData.numberOfHoles[indexToUpdate].par)"
+        self.lblHoleNumber.text = "\(self.scoring[indexToUpdate].hole)"
+        self.lblHoleNumber2.text = "Hole \(self.scoring[indexToUpdate].hole)"
+        self.lblParNumber.text = "par \(self.scoring[indexToUpdate].par)"
+        self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
         self.shotViseCurve.removeAll()
         self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
         if(self.scoring[indexToUpdate].par == 3){
@@ -4475,12 +4477,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 if(counter%10 == 0){
                                     debugPrint("isTracking\(self.isTracking)")
                                     if(self.holeOutFlag){
-                                        Notification.sendGameDetailsNotification(msg: "Hole \(self.holeIndex+1) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
+                                        Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
                                     }else{
                                         if(BackgroundMapStats.findPositionOfPointInside(position: self.userLocationForClub!, whichFeature:self.courseData.numberOfHoles[self.holeIndex].green)){
-                                            Notification.sendGameDetailsNotification(msg: "Hole \(self.holeIndex+1) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
+                                            Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
                                         }else{
-                                            Notification.sendGameDetailsNotification(msg: "Hole \(self.holeIndex+1) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
+                                            Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
                                         }
                                         
                                     }
@@ -5307,26 +5309,16 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
                         if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
                             self.swingMatchId = swingKey
-                            self.getGameId(swingKey:self.swingMatchId)
+                            if(swingKey != ""){
+                                self.getGameId(swingKey:self.swingMatchId)
+                            }
+
                         }
                     }else{
                         playersButton.append((button:btn, isSelected: false, id: k as! String,name:name))
                     }
                     self.holeOutforAppsFlyer.append(0)
                     self.multiplayerButtons.append(btn1)
-                }
-            }
-            if(keyData == "matchType"){
-                if(value as! String == "18 holes"){
-                    self.selectedGameType = 18
-                }
-                else{
-                    self.selectedGameType = 9
-                }
-            }
-            if(key as! String == "currentHole"){
-                if let v = value as? String{
-                    self.currentHole = v == "" ? 1 : Int(v)!
                 }
             }
         }
@@ -5337,17 +5329,23 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.btnMultiplayerLbl.isHidden = true
             self.stackViewForMultiplayer.isHidden = true
             self.lblPlayersName.isHidden = true
-            
         }else{
             self.btnMultiplayer.isHidden = false
             self.btnMultiplayerLbl.isHidden = false
         }
-        if let inde = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
-            holeIndex = Int(inde)!-1
-        }else{
-            holeIndex = 0
+        for i in 0..<courseData.numberOfHoles.count{
+            self.scoring[i].hole = courseData.numberOfHoles[i].hole
         }
-        
+        var currentHole = self.startingIndex
+        if let inde = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
+            currentHole = Int(inde)!-1
+        }
+        for i in 0..<self.scoring.count{
+            if(self.scoring[i].hole == currentHole){
+                self.holeIndex = i
+                break
+            }
+        }
         self.updateMap(indexToUpdate: self.holeIndex)
         self.updateWindSpeed(latLng: courseData.centerPointOfTeeNGreen[self.holeIndex].green, indexToUpdate: self.holeIndex)
         
@@ -5894,7 +5892,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func updateCurrentHole(index: Int){
-        self.currentHole = index
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(index)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])

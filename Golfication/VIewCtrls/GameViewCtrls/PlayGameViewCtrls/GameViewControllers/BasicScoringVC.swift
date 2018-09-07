@@ -397,7 +397,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBAction func nextAction(_ sender: Any) {
         var maxLimit = scoreData.count-1
         if(self.scoreData.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.scoreData.count{
-            maxLimit = (self.startingIndex+self.gameTypeIndex) - 1
+            maxLimit = (self.startingIndex+self.gameTypeIndex) - 2
         }else if self.startingIndex+self.gameTypeIndex-1 > self.scoreData.count{
             if(self.gameTypeIndex < self.scoreData.count){
                 maxLimit =  (self.startingIndex+self.gameTypeIndex-1) - self.scoreData.count

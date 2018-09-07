@@ -18,6 +18,15 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
     @IBOutlet weak var actvtIndView: UIActivityIndicatorView!
     @IBOutlet weak var btnBack: UIButton!
     
+    @IBOutlet weak var viewAddCourse: UIView!
+    @IBOutlet weak var scrlViewAddCourse: UIScrollView!
+    @IBOutlet weak var viewThankYouPopUp: CardView!
+    @IBOutlet weak var btnSubmitCourse: UIButton!
+    @IBOutlet weak var btnThankYouDone: UIButton!
+    @IBOutlet weak var courseTxtField: UITextField!
+    @IBOutlet weak var countryTxtField: UITextField!
+    @IBOutlet weak var cityTxtField: UITextField!
+    
     var locationManager = CLLocationManager()
     
     var fromNewGame = Bool()
@@ -31,6 +40,53 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
         else{
             searchTableView.isHidden = true
         }
+    }
+    
+    @IBAction func submitCourseAction(_ sender: Any) {
+        
+        if courseTxtField.text == ""{
+            let alert = UIAlertController(title: "Alert", message: "Please enter course name.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        if countryTxtField.text == ""{
+            let alert = UIAlertController(title: "Alert", message: "Please enter country.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        if cityTxtField.text == ""{
+            let alert = UIAlertController(title: "Alert", message: "Please enter city.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            viewAddCourse.isHidden = false
+            scrlViewAddCourse.isHidden = true
+            viewThankYouPopUp.isHidden = false
+            courseTxtField.text = ""
+            countryTxtField.text = ""
+            cityTxtField.text = ""
+            courseTxtField.resignFirstResponder()
+            countryTxtField.resignFirstResponder()
+            cityTxtField.resignFirstResponder()
+        }
+    }
+    
+    @IBAction func thankYouDoneAction(_ sender: Any) {
+        viewAddCourse.isHidden = true
+        courseTxtField.text = ""
+        countryTxtField.text = ""
+        cityTxtField.text = ""
+    }
+    
+    @IBAction func dismissCourseAction(_ sender: Any) {
+        viewAddCourse.isHidden = true
+    }
+    
+    @IBAction func addCourseAction(_ sender: Any) {
+        viewAddCourse.isHidden = false
+        scrlViewAddCourse.isHidden = false
+        viewThankYouPopUp.isHidden = true
     }
     
     @IBAction func nearByCourseAction(_ sender: Any) {
@@ -74,6 +130,10 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
         let backImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnBack.setBackgroundImage(backImage, for: .normal)
         btnBack.tintColor = UIColor.glfBluegreen
+        
+        viewAddCourse.isHidden = true
+        btnSubmitCourse.layer.cornerRadius = 3.0
+        btnThankYouDone.layer.cornerRadius = 3.0
         
         if(locationManager.location == nil){
             locationManager.requestAlwaysAuthorization()
@@ -297,7 +357,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             }else{
                 homeCourseDic.setObject((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Mapped") as! String, forKey: "mapped" as NSCopying)
             }
-
+            
             let homeCourseDetails = ["homeCourseDetails":homeCourseDic]
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(homeCourseDetails)
             

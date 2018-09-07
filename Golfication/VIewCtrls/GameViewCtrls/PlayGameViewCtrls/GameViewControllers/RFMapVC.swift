@@ -80,6 +80,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var playerIndex:Int!
     var classicScoring = classicMode()
     var isFromViewDid = false
+    var startingIndex = Int()
+    var gameTypeIndex = Int()
+
     // Header IBOutlets
     @IBOutlet weak var backBtnHeader: UIButton!
     // WindRelated IBOutlests
@@ -173,14 +176,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             emptyAlert.addAction(UIAlertAction(title: "Add Detailed Scores", style: .default, handler: { (action: UIAlertAction!) in
                 
                 let currentHoleWhilePlaying = NSMutableDictionary()
-                currentHoleWhilePlaying.setObject("\(holIndex+1)", forKey: "currentHole" as NSCopying)
+                currentHoleWhilePlaying.setObject("\(self.scoring[self.holeIndex].hole)", forKey: "currentHole" as NSCopying)
                 ref.child("matchData/\(self.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
                 self.holeIndex = holIndex
                 if(self.holeIndex == self.scoring.count){
                     self.holeIndex = 0
                 }
                 self.updateMap(indexToUpdate: self.holeIndex)
-                self.updateCurrentHole(index: self.holeIndex+1)
+                self.updateCurrentHole(index: self.scoring[self.holeIndex].hole)
             }))
             emptyAlert.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
                 self.progressView.show()
@@ -212,18 +215,18 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         for i in 0..<self.scoring.count{
             for dataDict in self.scoring[i].players{
                 for (key,value) in dataDict{
-                    let dic = value as! NSDictionary
-                    if dic.value(forKey: "holeOut") as! Bool == true{
-                        if(key as? String == playerId){
-                            for (key,value) in value as! NSMutableDictionary
-                            {
-                                if (key as! String == "holeOut" && value as! Bool){
-                                    let countDic = NSMutableDictionary()
-                                    countDic.setObject(i, forKey: "HoleIndex" as NSCopying)
-                                    countDic.setObject(dic.count, forKey: "DetailCount" as NSCopying)
-                                    detailedScore.addObjects(from: [countDic])
-
-                                    myVal = myVal + (value as! Int)
+                    if let dic = value as? NSDictionary{
+                        if dic.value(forKey: "holeOut") as! Bool == true{
+                            if(key as? String == playerId){
+                                for (key,value) in value as! NSMutableDictionary{
+                                    if (key as! String == "holeOut" && value as! Bool){
+                                        let countDic = NSMutableDictionary()
+                                        countDic.setObject(i, forKey: "HoleIndex" as NSCopying)
+                                        countDic.setObject(dic.count, forKey: "DetailCount" as NSCopying)
+                                        detailedScore.addObjects(from: [countDic])
+                                        
+                                        myVal = myVal + (value as! Int)
+                                    }
                                 }
                             }
                         }
@@ -356,6 +359,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 }
             }
         }
+        
         self.progressView.hide()
         var j = 0
         for data in playersButton{
@@ -367,20 +371,30 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             j += 1
         }
+        
+        var currentHole = self.startingIndex
         if(self.isContinueMatch){
-            self.holeIndex = 0
+            
             if(self.scoring.count == 0){
                 self.initilizeScoreNode()
             }
             if let current = matchDataDic.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
-                self.holeIndex = Int(current)!-1
+                currentHole = Int(current)!
             }else{
-                self.holeIndex = Int(matchDataDic.value(forKeyPath: "currentHole") as! String)! - 1
+                if let current = matchDataDic.value(forKeyPath: "currentHole") as? String{
+                    currentHole = Int(current.count == 0 ? "1":current)! - 1
+                }
             }
+            updateScoringHoleData()
         }
         else{
             self.initilizeScoreNode()
-            self.holeIndex = 0
+        }
+        for i in 0..<self.scoring.count{
+            if(self.scoring[i].hole == currentHole){
+                self.holeIndex = i
+                break
+            }
         }
         
         self.isFromViewDid = true
@@ -389,11 +403,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             fairwayHitContainerSV.isHidden = true
         }
         self.updateMap(indexToUpdate: self.holeIndex)
-        
-        
-//        self.updateMap(indexToUpdate: self.holeIndex)
-        
-        
+    
+    }
+    func updateScoringHoleData(){
+        for i in 0..<courseData.numberOfHoles.count{
+            self.scoring[i].hole = courseData.numberOfHoles[i].hole
+        }
     }
     func checkIfMuliplayerJoined(matchID:String){
         var isJoined = false
@@ -425,7 +440,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     }
                     self.holeIndex = 0
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
-                        self.updateCurrentHole(index: self.holeIndex+1)
+                        self.updateCurrentHole(index: self.scoring[self.holeIndex].hole)
                         self.updateMap(indexToUpdate: self.holeIndex)
                     })
                     
@@ -592,7 +607,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     
     var holeIndex = 0
     var matchType = Int()
-    var currentHole = Int()
     var tagVal = 0
     
     var isContinueMatch : Bool!
@@ -872,28 +886,19 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     override func viewDidLoad() {
         super.viewDidLoad()
         initalSetup()
-
-        //         self.tabBarController?.tabBar.isHidden = true
-        //         self.btnContinue.layer.cornerRadius = 3
-        //         self.btnSelectStrokes.semanticContentAttribute = .forceRightToLeft
-        //         self.btnSelectStrokes.setCorner(color: UIColor.glfFlatBlue.cgColor)
-        //         self.viewBottom.layer.cornerRadius = 5
-        //         let originalImage =  #imageLiteral(resourceName: "stats_arrow")
-        //         let backBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        //         btnAdvanceScore.image = backBtnImage
-        //         btnAdvanceScore.tintColor = UIColor.glfFlatBlue
-        
         let onCourse = matchDataDic.value(forKeyPath: "onCourse") as! Bool
         self.courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
         if (onCourse){
-            
             locationManager.delegate = self
             locationManager.startUpdatingLocation()
             let currentLocation: CLLocation = self.locationManager.location!
             self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
             self.mapView.isMyLocationEnabled = true
         }
-        
+        self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
+        self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+        self.courseData.startingIndex = self.startingIndex
+        self.courseData.gameTypeIndex = self.gameTypeIndex
         courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
         progressView.show()
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
@@ -1385,11 +1390,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 self.matchType = (matchType.count == 7 ? 9 : 18 )
                 
             }
-            if(key as! String == "currentHole"){
-                if let v = value as? String{
-                    self.currentHole = v == "" ? 1 : Int(v)!
-                }
-            }
         }
     }
 
@@ -1579,37 +1579,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 }
             }
         }
-//        if let strokes = classicScoring.strokesCount{
-//            var btnArr = [UIButton]()
-//            let par = self.scoring[self.holeIndex].par
-//            btnArr.append(buttonsArrayForStrokes[par-2])
-//            btnArr.append(buttonsArrayForStrokes[par-1])
-//            btnArr.append(buttonsArrayForStrokes[par])
-//            btnArr.append(buttonsArrayForStrokes[par+1])
-//            btnArr.append(buttonsArrayForStrokes[par+2])
-//            for i in 0..<4{
-//                btnArr[i].layer.borderWidth = 1
-//                for lay in btnArr[i].layer.sublayers!{
-//                    lay.borderWidth = 1
-//                }
-//            }
-//            self.buttonsArrayForStrokes[strokes-1].layer.borderColor = BackgroundMapStats.setHoleShotDetails(par: self.scoring[self.holeIndex].par, shots: strokes).1.cgColor
-//            for lay in self.buttonsArrayForStrokes[strokes-1].layer.sublayers!{
-//                lay.borderColor = BackgroundMapStats.setHoleShotDetails(par: self.scoring[self.holeIndex].par, shots: strokes).1.cgColor
-//            }
-//
-//            }
-        
         self.updateValue()
         self.scoreSV.isHidden = false
-        //        btnDetailScoring.tag = 1
-        //        detailScoreAction(btnDetailScoring)
         UIView.animate(withDuration: 0.3, animations: {
             self.scoreSV2.isHidden = true
         })
         updateColorToStrokes()
     }
-    
     func updateScoreData(){
         var i = 0
         for data in scoring[self.holeIndex].players{
@@ -2112,7 +2088,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         let scoring = NSMutableDictionary()
         var holeArray = [NSMutableDictionary]()
         for i in 0..<courseData.numberOfHoles.count{
-            self.scoring.append((hole: i+1, par: 0,players:[NSMutableDictionary]()))
+            self.scoring.append((hole: courseData.numberOfHoles[i].hole, par: 0,players:[NSMutableDictionary]()))
             let player = NSMutableDictionary()
             for j in 0..<playersButton.count{
                 let playerScore = NSMutableDictionary()
@@ -2175,10 +2151,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         btnTopShotRanking.isHidden = true
         
         markers.removeAll()
-        self.lblHoleNumber.text = "\(indexToUpdate+1)"
-        self.lblHoleNumber2.text = "Hole\(indexToUpdate+1)"
-        self.lblParNumber.text = "par \(courseData.numberOfHoles[indexToUpdate].par)"
-        self.lblParNumber2.text = "par \(courseData.numberOfHoles[indexToUpdate].par)"
+        self.lblHoleNumber.text = "\(self.scoring[indexToUpdate].hole)"
+        self.lblHoleNumber2.text = "Hole\(self.scoring[indexToUpdate].hole)"
+        self.lblParNumber.text = "par \(self.scoring[indexToUpdate].par)"
+        self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
         
         locationManager.startUpdatingLocation()
         self.positionsOfDotLine.removeAll()
@@ -2189,10 +2165,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].fairway)
         self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].green)
-        
-        
         self.updateWindSpeed(latLng: positionsOfDotLine[1], indexToUpdate: indexToUpdate)
-        
+        let distance = GMSGeometryDistance(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!) * YARD
+        let heading = GMSGeometryHeading(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!)
+        if(distance < 250){
+            positionsOfDotLine[1] = GMSGeometryOffset(self.positionsOfDotLine.last!, -1, heading)
+        }
         self.mapView.animate(toLocation: positionsOfDotLine[1])
         self.letsRotateWithZoom(latLng1: positionsOfDotLine.first!, latLng2: positionsOfDotLine.last!)
         let zoomLevel = getTheZoomLevel()
@@ -2438,6 +2416,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             markerClub = clubReco(dist: dist, lie: "O")
             if(dist > 250){
                 markerClub = " - "
+            }else if dist < 2{
+                markerClub = " Pu "
             }
             if(dist1 > 250){
                 markerClub1 = " - "
@@ -2456,14 +2436,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
             suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/2, GMSGeometryHeading(position.first!, position[1]))
             suggestedMarker1.map = self.mapView
-            debugPrint("Distance1 : ",dist1)
             
             suggestedMarker2.map = nil
             suggestedMarker2.iconView = btnForSuggMark2
             suggestedMarker2.position = GMSGeometryOffset(position[1], dist/2, GMSGeometryHeading(position[1], position.last!))
             suggestedMarker2.groundAnchor = CGPoint(x:-0.02,y:0.5)
             suggestedMarker2.map = self.mapView
-            debugPrint("Distance : ",dist)
             
         }
     }
@@ -2558,9 +2536,8 @@ extension RFMapVC{
     
     func updateCurrentHole(index: Int){
         Notification.sendLocaNotificatonToUser()
-        self.currentHole = index
         let currentHoleWhilePlaying = NSMutableDictionary()
-        currentHoleWhilePlaying.setObject("\(self.currentHole)", forKey: "currentHole" as NSCopying)
+        currentHoleWhilePlaying.setObject("\(index)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(self.matchId)/").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
             if(self.positionsOfDotLine.count > 2){
@@ -2570,44 +2547,35 @@ extension RFMapVC{
     }
     
     @IBAction func nextAction(_ sender: UIButton!) {
-        
         holeIndex += 1
-        if(holeIndex == self.scoring.count){
-            holeIndex = 0
-        }
-        
+        holeIndex = holeIndex % self.scoring.count
         let currentHoleWhilePlaying = NSMutableDictionary()
-        currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
+        currentHoleWhilePlaying.setObject("\(self.scoring[self.holeIndex].hole)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
-        
         self.updateMap(indexToUpdate: holeIndex)
-        self.updateCurrentHole(index: holeIndex+1)
+        self.updateCurrentHole(index: self.scoring[self.holeIndex].hole)
         if(holeIndex == 0){
             self.holeOutforAppsFlyer[self.playerIndex] = self.checkHoleOutZero(playerId: Auth.auth().currentUser!.uid)
             if(self.holeOutforAppsFlyer[self.playerIndex] == self.scoring.count){
                 self.btnActionFinishRound(self.btnEndRound)
             }
         }
-        
         fairwayHitContainerSV.isHidden = false
-        if self.scoring[self.holeIndex].par == 3{
-            fairwayHitContainerSV.isHidden = true
-        }
     }
     
     @IBAction func previousAction(_ sender: UIButton!) {
+
         holeIndex -= 1
-        if(holeIndex == -1){
+        holeIndex = holeIndex % self.scoring.count
+        if(self.holeIndex == -1){
             holeIndex = self.scoring.count-1
         }
-
-        let currentHoleWhilePlaying = NSMutableDictionary()
-        currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
-        ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
-
         self.updateMap(indexToUpdate: holeIndex)
-        self.updateCurrentHole(index: holeIndex+1)
-        
+        let currentHoleWhilePlaying = NSMutableDictionary()
+        currentHoleWhilePlaying.setObject("\(self.scoring[self.holeIndex].hole)", forKey: "currentHole" as NSCopying)
+        ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
+        self.updateCurrentHole(index: self.scoring[self.holeIndex].hole)
+
         fairwayHitContainerSV.isHidden = false
         if self.scoring[self.holeIndex].par == 3{
             fairwayHitContainerSV.isHidden = true
@@ -2730,3 +2698,38 @@ extension RFMapVC{
     }
     
 }
+/*
+ func getValidIndex(isNext:Bool)->Int{
+ var min = self.startingIndex-1
+ var max = self.scoring.count-1
+ if(self.scoring.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.scoring.count{
+ max = (self.startingIndex+self.gameTypeIndex) - 1
+ }else if self.startingIndex+self.gameTypeIndex-1 > self.scoring.count{
+ if(self.gameTypeIndex < self.scoring.count){
+ max =  (self.startingIndex+self.gameTypeIndex-1) - self.scoring.count
+ }
+ }
+ if(self.gameTypeIndex == self.scoring.count){
+ max = self.scoring.count
+ min = 0
+ }
+ if(min < max){
+ if(self.holeIndex >= min) && (self.holeIndex < max){
+ return self.holeIndex
+ }else{
+ return isNext ? min : max-1
+ }
+ }else{
+ if(self.holeIndex < 0){
+ self.holeIndex = self.scoring.count-1
+ }else if(self.holeIndex == self.scoring.count){
+ self.holeIndex = 0
+ }else if (self.holeIndex >= max){
+ self.holeIndex = isNext ? (min<=self.holeIndex ? self.holeIndex:min) : (min > self.holeIndex ? max-1:self.holeIndex)
+ }else if (self.holeIndex <= min){
+ self.holeIndex = isNext ? (max == self.holeIndex ? min:self.holeIndex):(self.holeIndex == min ? max:self.holeIndex)
+ }
+ return self.holeIndex
+ }
+ }
+*/

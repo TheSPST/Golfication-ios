@@ -56,18 +56,17 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
         shotScrollView.showsVerticalScrollIndicator = false
         shotScrollView.scrollsToTop = false
         
-        shotScrollView.contentSize = CGSize(width: shotScrollView.frame.size.width * CGFloat(totalCard), height: shotScrollView.frame.size.height)
+        shotScrollView.contentSize = CGSize(width: (self.view.frame.size.width-20) * CGFloat(totalCard), height: shotScrollView.frame.size.height)
         
         shotScrollView.delegate = self
         
-//        pageIndex = 0
         setCurrentScrollPage(i: pageIndex)
-        shotScrollView.scrollRectToVisible(CGRect(x: CGFloat(pageIndex) * shotScrollView.frame.size.width, y: shotScrollView.frame.origin.y, width: shotScrollView.frame.size.width, height: shotScrollView.frame.size.height), animated: true)
+        shotScrollView.scrollRectToVisible(CGRect(x: CGFloat(pageIndex) * (self.view.frame.size.width-20), y: shotScrollView.frame.origin.y, width: shotScrollView.frame.size.width, height: shotScrollView.frame.size.height), animated: true)
     }
     
     func setCurrentScrollPage(i:Int) {
         let mapShotPopupView = Bundle.main.loadNibNamed("MapShotPopupView", owner: self, options: nil)![0] as! UIView
-        mapShotPopupView.frame = CGRect(x: CGFloat(i) * shotScrollView.frame.size.width, y: 0, width: shotScrollView.frame.size.width, height: shotScrollView.frame.size.height)
+        mapShotPopupView.frame = CGRect(x: CGFloat(i) * (self.view.frame.size.width-20), y: 0, width: shotScrollView.frame.size.width, height: shotScrollView.frame.size.height)
         mapShotPopupView.backgroundColor = UIColor.clear
         
         let shotNumLbl = mapShotPopupView.viewWithTag(500) as! UILabel
