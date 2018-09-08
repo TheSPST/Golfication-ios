@@ -1282,7 +1282,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                     self.cameraBtn = self.requestSFPopupView.viewWithTag(222) as! UIButton
                                     self.cameraBtn.layer.cornerRadius = 3.0
                                     self.cameraBtn.addTarget(self, action: #selector(self.submitAction(_:)), for: .touchUpInside)
-                                    
+                                    let closeBtn = self.requestSFPopupView.viewWithTag(333) as! UIButton
+                                    closeBtn.addTarget(self, action: #selector(self.closeSFPopup(_:)), for: .touchUpInside)
                                     let submitBtn = self.requestSFPopupView.viewWithTag(111) as! UIButton
                                     submitBtn.layer.cornerRadius = 3.0
                                     submitBtn.addTarget(self, action: #selector(self.submitAction(_:)), for: .touchUpInside)
@@ -1327,16 +1328,23 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         guard let imageData = UIImageJPEGRepresentation(image, 0.1) else {
             return completion(nil)
         }
-        
         reference.putData(imageData, metadata: nil, completion: { (metadata, error) in
             if let error = error {
                 assertionFailure(error.localizedDescription)
                 return completion(nil)
             }
-            completion(metadata?.downloadURL())
+            reference.downloadURL(completion: { (url, error) in
+                if let error = error {
+                    assertionFailure(error.localizedDescription)
+                    return completion(nil)
+                }
+                completion(url)
+            })
         })
     }
-    
+    @objc func closeSFPopup(_ sender: UIButton!) {
+        self.requestSFPopupView.removeFromSuperview()
+    }
     @objc func submitAction(_ sender: UIButton!) {
         ActionSheetStringPicker.show(withTitle: "Select a source:", rows: ["Camera", "Gallery"], initialSelection: 0, doneBlock: {
             picker, value, index in

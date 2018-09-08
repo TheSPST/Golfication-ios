@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -55,11 +55,24 @@
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                         </button>
+                        <button opaque="NO" tag="333" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="izU-sU-5zR">
+                            <rect key="frame" x="301" y="4" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="30" id="D9p-Fy-0uO"/>
+                                <constraint firstAttribute="height" constant="30" id="TEF-Qc-rg9"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                            <state key="normal" title="X">
+                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="bdx-sY-UOz" firstAttribute="top" secondItem="AV1-c6-SNG" secondAttribute="bottom" constant="10" id="2BW-Lc-Vl9"/>
+                        <constraint firstItem="izU-sU-5zR" firstAttribute="top" secondItem="G5G-bY-G5r" secondAttribute="top" constant="4" id="3Nc-V6-R5V"/>
                         <constraint firstItem="4Iq-UC-eL0" firstAttribute="leading" secondItem="G5G-bY-G5r" secondAttribute="leading" constant="10" id="A0L-gj-PSu"/>
+                        <constraint firstAttribute="trailing" secondItem="izU-sU-5zR" secondAttribute="trailing" constant="4" id="AHn-kX-Alk"/>
                         <constraint firstAttribute="trailing" secondItem="bdx-sY-UOz" secondAttribute="trailing" constant="10" id="Vl7-Rp-xeB"/>
                         <constraint firstItem="AV1-c6-SNG" firstAttribute="leading" secondItem="G5G-bY-G5r" secondAttribute="leading" constant="10" id="YMd-Xp-TGi"/>
                         <constraint firstItem="uUz-Uw-6gE" firstAttribute="top" secondItem="bdx-sY-UOz" secondAttribute="bottom" constant="10" id="ZOY-4B-hRR"/>

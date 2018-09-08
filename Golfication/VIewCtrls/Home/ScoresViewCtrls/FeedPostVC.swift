@@ -123,7 +123,13 @@ class FeedPostVC: UIViewController, UITextViewDelegate {
                 assertionFailure(error.localizedDescription)
                 return completion(nil)
             }
-            completion(metadata?.downloadURL())
+            reference.downloadURL(completion: { (url, error) in
+                if let error = error {
+                    assertionFailure(error.localizedDescription)
+                    return completion(nil)
+                }
+                completion(url)
+            })
         })
     }
         
