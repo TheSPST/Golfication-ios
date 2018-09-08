@@ -60,16 +60,34 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             self.present(alert, animated: true, completion: nil)
         }
         else{
-            viewAddCourse.isHidden = false
-            scrlViewAddCourse.isHidden = true
-            viewThankYouPopUp.isHidden = false
-            courseTxtField.text = ""
-            countryTxtField.text = ""
-            cityTxtField.text = ""
-            courseTxtField.resignFirstResponder()
-            countryTxtField.resignFirstResponder()
-            cityTxtField.resignFirstResponder()
+            
+            sendCourseDetailToFirebase()
         }
+    }
+    
+    func sendCourseDetailToFirebase() {
+        
+        let courseDetailDic = NSMutableDictionary()
+        let courseDic = NSMutableDictionary()
+        let courseId = ref!.child("courseAdditions").childByAutoId().key
+        courseDic.setObject(cityTxtField.text!, forKey: "city" as NSCopying)
+        courseDic.setObject(countryTxtField.text!, forKey: "country" as NSCopying)
+        courseDic.setObject(courseTxtField.text!, forKey: "courseName" as NSCopying)
+        courseDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        courseDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
+        courseDic.setObject(Auth.auth().currentUser!.displayName!, forKey: "userName" as NSCopying)
+        courseDetailDic.setObject(courseDic, forKey: courseId as NSCopying)
+        ref.child("courseAdditions").updateChildValues(courseDetailDic as! [AnyHashable : Any])
+
+        viewAddCourse.isHidden = false
+        scrlViewAddCourse.isHidden = true
+        viewThankYouPopUp.isHidden = false
+        courseTxtField.text = ""
+        countryTxtField.text = ""
+        cityTxtField.text = ""
+        courseTxtField.resignFirstResponder()
+        countryTxtField.resignFirstResponder()
+        cityTxtField.resignFirstResponder()
     }
     
     @IBAction func thankYouDoneAction(_ sender: Any) {

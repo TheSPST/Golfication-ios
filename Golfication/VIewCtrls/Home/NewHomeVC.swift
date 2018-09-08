@@ -159,9 +159,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBAction func notifiAction(_ sender: Any) {
 //        let storyboard = UIStoryboard(name: "Map", bundle: nil)
 //        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MapForInputViewController") as! MapForInputViewController
-        let storyboard = UIStoryboard(name: "Home", bundle: nil)
-        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
-        //        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "UpdateDeviceFrameworkViewCtrl") as! UpdateDeviceFrameworkViewCtrl
+//        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+//        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
+//        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "UpdateDeviceFrameworkViewCtrl") as! UpdateDeviceFrameworkViewCtrl
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     

@@ -996,11 +996,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.shareShotsDissmiss(_:)), name: NSNotification.Name(rawValue: "ShareShots"),object: nil)
         
-        
-        self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
-        self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
-        self.courseData.startingIndex = self.startingIndex
-        self.courseData.gameTypeIndex = self.gameTypeIndex
+        if(!self.isHoleByHole){
+            self.startingIndex = Int(self.matchDataDict.value(forKeyPath: "startingHole") as! String)!
+            self.gameTypeIndex = self.matchDataDict.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+            self.courseData.startingIndex = self.startingIndex
+            self.courseData.gameTypeIndex = self.gameTypeIndex
+        }
         courseId = "course_\(self.matchDataDict.value(forKeyPath: "courseId") as! String)"
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
@@ -3752,7 +3753,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     @objc func loadMap(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
-        self.currentMatchId = matchId
+        if(!self.isHoleByHole){
+            self.currentMatchId = matchId
+        }
+        
         let playerData = NSMutableArray()
         for clu in courseData.clubs{
             self.clubsWithFullName.append(self.getClubName(club: clu))

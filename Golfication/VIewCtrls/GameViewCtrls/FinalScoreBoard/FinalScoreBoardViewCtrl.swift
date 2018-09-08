@@ -1621,6 +1621,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             return cell
     }
     @objc func viewScoreAction(_ sender: UIButton!) {
+        let editThisRound = EditPreviousGame()
+        editThisRound.continuePreviousMatch(matchId: self.currentMatchId, userId: Auth.auth().currentUser!.uid)
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = finalScoreData
         viewCtrl.playerData = finalPlayerMArray
@@ -1628,7 +1630,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     }
     
     @objc func viewHoleByHoleAction(_ sender: UIButton!) {
-        if(superClassName == "NewGameVC") || superClassName == "MapViewController" || superClassName == "RFMapVC" || (superClassName == "NewMapVC"){
+        if(superClassName! == "NewGameVC") || superClassName! == "MapViewController" || superClassName! == "RFMapVC" || (superClassName! == "NewMapVC"){
             self.matchDataDict = matchDataDic
         }
         let playerDict = NSMutableDictionary()
@@ -1645,6 +1647,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             viewCtrl.matchDataDict = self.matchDataDict
             viewCtrl.isContinue = false
             viewCtrl.isHoleByHole = true
+            viewCtrl.currentMatchId = self.currentMatchId
             viewCtrl.scoring = self.finalScoreData
             viewCtrl.courseId = "course_\(self.matchDataDict["courseId"]!)"
             self.navigationController?.pushViewController(viewCtrl, animated: true)

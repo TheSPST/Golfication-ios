@@ -21,7 +21,7 @@ class CourseData:NSObject{
     var totalTee = [NSMutableDictionary]()
     var handicap = Int()
     var slopeRating = Int()
-    var startingIndex = Int()
+    var startingIndex : Int!
     var gameTypeIndex = 18
     func getHandicap(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "handicap") { (snapshot) in
@@ -191,79 +191,81 @@ class CourseData:NSObject{
                         self.centerPointOfTeeNGreen.append((tee: centerTee,fairway:fairWayPoint,green: centerOfGreen))
                     }
                 }
-                debugPrint(self.propertyArray.count)
-                debugPrint(self.centerPointOfTeeNGreen.count)
-                debugPrint(self.numberOfHoles.count)
-                debugPrint(self.gameTypeIndex)
-                debugPrint(self.startingIndex)
-                debugPrint(self.holeGreenDataArr.count)
                 
-                if(self.numberOfHoles.count < self.gameTypeIndex){
-                    var tempArr = self.propertyArray
-                    var tempHoleArr = self.centerPointOfTeeNGreen
-                    var tempNuOfHole = self.numberOfHoles
-                    for data in self.propertyArray{
-                        tempArr.append(data)
+                if self.startingIndex != nil {
+                    debugPrint(self.propertyArray.count)
+                    debugPrint(self.centerPointOfTeeNGreen.count)
+                    debugPrint(self.numberOfHoles.count)
+                    debugPrint(self.gameTypeIndex)
+                    debugPrint(self.startingIndex)
+                    debugPrint(self.holeGreenDataArr.count)
+                    
+                    if(self.numberOfHoles.count < self.gameTypeIndex){
+                        var tempArr = self.propertyArray
+                        var tempHoleArr = self.centerPointOfTeeNGreen
+                        var tempNuOfHole = self.numberOfHoles
+                        for data in self.propertyArray{
+                            tempArr.append(data)
+                        }
+                        for data in self.centerPointOfTeeNGreen{
+                            tempHoleArr.append(data)
+                        }
+                        var i = self.numberOfHoles.last!.hole
+                        for data in self.numberOfHoles{
+                            var newData = data
+                            newData.hole = i+1
+                            tempNuOfHole.append(newData)
+                            i = i+1
+                        }
+                        self.numberOfHoles = tempNuOfHole
+                        self.propertyArray = tempArr
+                        self.centerPointOfTeeNGreen = tempHoleArr
                     }
-                    for data in self.centerPointOfTeeNGreen{
-                        tempHoleArr.append(data)
-                    }
-                    var i = self.numberOfHoles.last!.hole
-                    for data in self.numberOfHoles{
-                        var newData = data
-                        newData.hole = i+1
-                        tempNuOfHole.append(newData)
-                        i = i+1
-                    }
-                    self.numberOfHoles = tempNuOfHole
-                    self.propertyArray = tempArr
-                    self.centerPointOfTeeNGreen = tempHoleArr
-                }
-                
-                let min = self.startingIndex-1
-                var max = self.numberOfHoles.count-1
-                if(self.numberOfHoles.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.numberOfHoles.count{
-                    max = (self.startingIndex+self.gameTypeIndex) - 1
-                }else if self.startingIndex+self.gameTypeIndex-1 > self.numberOfHoles.count{
-                    if(self.gameTypeIndex < self.numberOfHoles.count){
-                        max =  (self.startingIndex+self.gameTypeIndex-1) - self.numberOfHoles.count
-                    }
-                }
-                var temp = self.propertyArray
-                temp.removeAll()
-                var newTemp = self.centerPointOfTeeNGreen
-                newTemp.removeAll()
-                var ttemp = [NSMutableDictionary]()
-                var tempholeGreenDataArr = [GreenData]()
-                var tempNumofHole = self.numberOfHoles
-                tempNumofHole.removeAll()
-
-                for i in self.startingIndex-1..<self.gameTypeIndex+self.startingIndex-1{
-                    debugPrint("index:",i)
-                    debugPrint("validIndex:",self.getValidIndex(isNext: true, index: i, max: max, min: min))
-                    let newIndex = self.getValidIndex(isNext: true, index: i, max: max, min: min)
-                    for j in 0..<self.propertyArray.count{
-                        if self.propertyArray[j].hole == newIndex+1{
-                            temp.append(self.propertyArray[j])
+                    let min = self.startingIndex-1
+                    var max = self.numberOfHoles.count-1
+                    
+                    if(self.numberOfHoles.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.numberOfHoles.count{
+                        max = (self.startingIndex+self.gameTypeIndex) - 1
+                    }else if self.startingIndex+self.gameTypeIndex-1 > self.numberOfHoles.count{
+                        if(self.gameTypeIndex < self.numberOfHoles.count){
+                            max =  (self.startingIndex+self.gameTypeIndex-1) - self.numberOfHoles.count
                         }
                     }
-                    newTemp.append(self.centerPointOfTeeNGreen[newIndex])
-                    if(self.totalTee.count > 0){
-                        ttemp.append(self.totalTee[newIndex])
+                    var temp = self.propertyArray
+                    temp.removeAll()
+                    var newTemp = self.centerPointOfTeeNGreen
+                    newTemp.removeAll()
+                    var ttemp = [NSMutableDictionary]()
+                    var tempholeGreenDataArr = [GreenData]()
+                    var tempNumofHole = self.numberOfHoles
+                    tempNumofHole.removeAll()
+                    
+                    for i in self.startingIndex-1..<self.gameTypeIndex+self.startingIndex-1{
+                        debugPrint("index:",i)
+                        debugPrint("validIndex:",self.getValidIndex(isNext: true, index: i, max: max, min: min))
+                        let newIndex = self.getValidIndex(isNext: true, index: i, max: max, min: min)
+                        for j in 0..<self.propertyArray.count{
+                            if self.propertyArray[j].hole == newIndex+1{
+                                temp.append(self.propertyArray[j])
+                            }
+                        }
+                        newTemp.append(self.centerPointOfTeeNGreen[newIndex])
+                        if(self.totalTee.count > 0){
+                            ttemp.append(self.totalTee[newIndex])
+                        }
+                        if(self.holeGreenDataArr.count > 0){
+                            tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
+                        }
+                        tempNumofHole.append(self.numberOfHoles[newIndex])
                     }
-                    if(self.holeGreenDataArr.count > 0){
-                        tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
+                    if(newTemp.count > 0){
+                        self.centerPointOfTeeNGreen = newTemp
+                        self.propertyArray = temp
+                        self.totalTee = ttemp
+                        self.holeGreenDataArr = tempholeGreenDataArr
+                        self.numberOfHoles = tempNumofHole
                     }
-                    tempNumofHole.append(self.numberOfHoles[newIndex])
                 }
-                if(newTemp.count > 0){
-                    self.centerPointOfTeeNGreen = newTemp
-                    self.propertyArray = temp
-                    self.totalTee = ttemp
-                    self.holeGreenDataArr = tempholeGreenDataArr
-                    self.numberOfHoles = tempNumofHole
-                }
-                
                 self.getGolfBagData()
             }
         }

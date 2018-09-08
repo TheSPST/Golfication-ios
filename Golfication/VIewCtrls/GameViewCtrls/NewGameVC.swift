@@ -1219,11 +1219,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
             let golfId = "course_\(selectedGolfID)"
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder") { (snapshot) in
                 if let rangeFin = snapshot.value as? NSMutableDictionary{
-                    if let rating = rangeFin.value(forKey: "rating") as? String{
-                        self.rating = rating
+                    if let rating = rangeFin.value(forKey: "rating") as? Int{
+                        self.rating = "\(rating)"
                     }
-                    if let slope = rangeFin.value(forKey: "slope") as? String{
-                        self.slope = slope
+                    if let slope = rangeFin.value(forKey: "slope") as? Int{
+                        self.slope = "\(slope)"
                     }
                     if let holeArr = rangeFin.value(forKeyPath: "holes") as? NSArray{
                         if let holeZero = holeArr.firstObject as? NSMutableDictionary{
