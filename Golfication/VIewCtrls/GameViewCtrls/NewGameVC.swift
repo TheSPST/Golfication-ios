@@ -15,6 +15,7 @@ import UserNotifications
 import CTShowcase
 import CoreBluetooth
 import UICircularProgressRing
+import FirebaseStorage
 
 var selectedGolfID: String = ""
 var selectedGolfName: String = ""
@@ -27,7 +28,7 @@ var matchId = String()
 var mode = Int()
 var selectedTee = ""
 
-class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
+class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     // MARK: Set Outlets
     
@@ -90,6 +91,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
 
     var barBtnBLE: UIBarButtonItem!
 
+    let imagePicker = UIImagePickerController()
+    var cameraBtn: UIButton!
+    var requestSFPopupView: UIView!
+    
     // MARK: Set Variables
     var isAccept = Int()
     var holeType = 0
@@ -408,6 +413,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        imagePicker.delegate = self
+
         // for Bluetooth device setup
         barBtnBLE = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(self.golfXAction))
         barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
@@ -1247,11 +1254,134 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
                         self.lblTeeRating.text = self.rating
                         selectedTee = self.teeArr[0].name
                     }else{
+                        selectedTee = ""
                         self.startingTeeCardView.isHidden = true
+
+                        var chkStableford = false
+                        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+                            var dataDic = [String:Int]()
+                            if(snapshot.childrenCount > 0){
+                                dataDic = (snapshot.value as? [String : Int])!
+                            }
+                            if dataDic.count > 0{
+                                for (key, _) in dataDic{
+                                    if key == selectedGolfID{
+                                        chkStableford = true
+                                        break
+                                    }
+                                }
+                            }
+                            DispatchQueue.main.async(execute: {
+                                self.progressView.hide(navItem: self.navigationItem)
+
+                                if !self.isImagePicked && !chkStableford{
+                                    self.requestSFPopupView = Bundle.main.loadNibNamed("RequestSFPopup", owner: self, options: nil)![0] as! UIView
+                                    self.requestSFPopupView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+                                    
+                                    self.cameraBtn = self.requestSFPopupView.viewWithTag(222) as! UIButton
+                                    self.cameraBtn.layer.cornerRadius = 3.0
+                                    self.cameraBtn.addTarget(self, action: #selector(self.submitAction(_:)), for: .touchUpInside)
+                                    
+                                    let submitBtn = self.requestSFPopupView.viewWithTag(111) as! UIButton
+                                    submitBtn.layer.cornerRadius = 3.0
+                                    submitBtn.addTarget(self, action: #selector(self.submitAction(_:)), for: .touchUpInside)
+                                    
+                                    self.view.addSubview(self.requestSFPopupView)
+                                }
+                                else if self.isImagePicked{
+                                    self.isImagePicked = false
+                                    self.requestSFPopupView.removeFromSuperview()
+                                    
+                                    let imageRef = Storage.storage().reference().child("\(Auth.auth().currentUser!.uid)-\(Timestamp)-stablefordImage.png")
+                                    self.uploadImage(self.chosenImage, at: imageRef) { (downloadURL) in
+                                        guard let downloadURL = downloadURL else {
+                                            return
+                                        }
+                                        let urlString = downloadURL.absoluteString
+                                        
+                                        let courseDetailDic = NSMutableDictionary()
+                                        let courseDic = NSMutableDictionary()
+                                        let courseId = ref!.child("stablefordRequest").childByAutoId().key
+                                        courseDic.setObject(selectedGolfID, forKey: "courseId" as NSCopying)
+                                        courseDic.setObject(selectedGolfName, forKey: "courseName" as NSCopying)
+                                        courseDic.setObject(urlString, forKey: "image" as NSCopying)
+                                        courseDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+                                        courseDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
+                                        courseDic.setObject(Auth.auth().currentUser!.displayName!, forKey: "userName" as NSCopying)
+                                        courseDetailDic.setObject(courseDic, forKey: courseId as NSCopying)
+                                        ref.child("stablefordRequest").updateChildValues(courseDetailDic as! [AnyHashable : Any])
+                                        
+                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/stablefordCourse/").updateChildValues([selectedGolfID:Timestamp])
+                                    }
+                                }
+                            })
+                        }
                     }
                 })
             }
         }
+    }
+
+    func uploadImage(_ image: UIImage, at reference: StorageReference, completion: @escaping (URL?) -> Void) {
+        guard let imageData = UIImageJPEGRepresentation(image, 0.1) else {
+            return completion(nil)
+        }
+        
+        reference.putData(imageData, metadata: nil, completion: { (metadata, error) in
+            if let error = error {
+                assertionFailure(error.localizedDescription)
+                return completion(nil)
+            }
+            completion(metadata?.downloadURL())
+        })
+    }
+    
+    @objc func submitAction(_ sender: UIButton!) {
+        ActionSheetStringPicker.show(withTitle: "Select a source:", rows: ["Camera", "Gallery"], initialSelection: 0, doneBlock: {
+            picker, value, index in
+            if value == 0 {
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    self.imagePicker.allowsEditing = false
+                    self.imagePicker.sourceType = .camera
+                    self.imagePicker.cameraCaptureMode = .photo
+                    self.imagePicker.modalPresentationStyle = .fullScreen
+                    self.present(self.imagePicker,animated: true,completion: nil)
+                }
+                else {
+                    self.noCamera()
+                }
+            }
+            else{
+                self.imagePicker.allowsEditing = false
+                self.imagePicker.sourceType = .photoLibrary
+                self.present(self.imagePicker, animated: true, completion: nil)
+            }
+            return
+        }, cancel: { ActionStringCancelBlock in
+            return
+        }, origin: sender)
+    }
+
+    func noCamera(){
+        let alertVC = UIAlertController(title: "No Camera", message: "Sorry, this device has no camera", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style:.default, handler: nil)
+            alertVC.addAction(okAction)
+        present(alertVC, animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    var isImagePicked = false
+    var chosenImage: UIImage!
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
+        chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        //imageView.contentMode = .ScaleAspectFit
+//        cameraBtn.setBackgroundImage(chosenImage, for: .normal)
+        isImagePicked = true
+        dismiss(animated: true, completion: nil)
     }
 
     // MARK: selectedGameTypeFromFirebase
