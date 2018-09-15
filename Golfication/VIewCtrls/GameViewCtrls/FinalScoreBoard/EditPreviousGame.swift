@@ -76,17 +76,25 @@ class EditPreviousGame: NSObject {
                                 }
                                 group.notify(queue: .main) {
                                     if(self.feedKeyForDeletion != nil){
-                                        allFeed.removeValue(forKey: self.feedKeyForDeletion)
+                                        allFeed.removeValue(forKey: self.feedKeyForDeletion!)
                                     }
                                     self.updatedValues.setValue(allFeed, forKey: "myFeeds")
                                     debugPrint(self.updatedValues)
                                     self.checkStatisticsData(matchKey: matchId, userKey: userId)
                                     debugPrint(self.updatedValues)
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRound"), object: nil)
                                 }
                             }
                         })
                     }
+                }else{
+                    let alertVC = UIAlertController(title: "Alert", message: "Please complete your current round in order to edit this round.", preferredStyle: UIAlertControllerStyle.alert)
+                    let action = UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil)
+                    alertVC.addAction(action)
+                    UIApplication.shared.keyWindow?.rootViewController?.present(alertVC, animated: true, completion: nil)
+                    return
                 }
+
             })
         }
     }
@@ -102,45 +110,47 @@ class EditPreviousGame: NSObject {
             card7 = statistics.value(forKey: "card7") as! NSMutableDictionary
             card4.removeObject(forKey: matchKey)
             var smartCaddie : NSMutableDictionary!
-            if(self.scoringMode == 1) && self.scoreData != nil{
-                smartCaddie = scoreData.value(forKey: "smartCaddie") as? NSMutableDictionary
-                var distance = Double()
-                var size = Int()
-                if let drData = smartCaddie.value(forKey: "Dr") as? [NSMutableDictionary]{
-                    for data in drData{
-                        distance += data.value(forKey: "distance") as! Double
+            if self.scoreData != nil{
+                if(self.scoringMode == 1){
+                    smartCaddie = scoreData.value(forKey: "smartCaddie") as? NSMutableDictionary
+                    var distance = Double()
+                    var size = Int()
+                    if let drData = smartCaddie.value(forKey: "Dr") as? [NSMutableDictionary]{
+                        for data in drData{
+                            distance += data.value(forKey: "distance") as! Double
+                        }
+                        size = drData.count
                     }
-                    size = drData.count
+                    var count = card6.value(forKey: "driveCount") as! Int
+                    var dis = card6.value(forKey: "driveDistance") as! Double
+                    count -= size
+                    dis -= distance
+                    card6.setValue(count, forKey: "driveCount")
+                    card6.setValue(dis, forKey: "driveDistance")
                 }
-                var count = card6.value(forKey: "driveCount") as! Int
-                var dis = card6.value(forKey: "driveDistance") as! Double
-                count -= size
-                dis -= distance
-                card6.setValue(count, forKey: "driveCount")
-                card6.setValue(dis, forKey: "driveDistance")
-            }
-            if let scoreArr = self.matchData.value(forKey: "scoring") as? [NSMutableDictionary]{
-                var puttsCount = Int()
-                var holeCount = Int()
-                for data in scoreArr{
-                    if let holeData = data.value(forKey:userKey) as? NSMutableDictionary{
-                        if let putts = holeData.value(forKey: "putting") as? Int{
-                            puttsCount += putts
-                            holeCount += 1
+                if let scoreArr = self.matchData.value(forKey: "scoring") as? [NSMutableDictionary]{
+                    var puttsCount = Int()
+                    var holeCount = Int()
+                    for data in scoreArr{
+                        if let holeData = data.value(forKey:userKey) as? NSMutableDictionary{
+                            if let putts = holeData.value(forKey: "putting") as? Int{
+                                puttsCount += putts
+                                holeCount += 1
+                            }
                         }
                     }
+                    var putts = card7.value(forKey: "puttCount") as! Int
+                    var holes = card7.value(forKey: "holeCount") as! Int
+                    putts -= puttsCount
+                    holes -= holeCount
+                    card7.setValue(putts, forKey: "puttCount")
+                    card7.setValue(holes, forKey: "holeCount")
                 }
-                var putts = card7.value(forKey: "puttCount") as! Int
-                var holes = card7.value(forKey: "holeCount") as! Int
-                putts -= puttsCount
-                holes -= holeCount
-                card7.setValue(putts, forKey: "puttCount")
-                card7.setValue(holes, forKey: "holeCount")
+                statistics.setValue(card4, forKey: "card4")
+                statistics.setValue(card6, forKey: "card6")
+                statistics.setValue(card7, forKey: "card7")
+                updatedValues.setValue(statistics, forKey: "statistics")
             }
         }
-        statistics.setValue(card4, forKey: "card4")
-        statistics.setValue(card6, forKey: "card6")
-        statistics.setValue(card7, forKey: "card7")
-        updatedValues.setValue(statistics, forKey: "statistics")
     }
 }

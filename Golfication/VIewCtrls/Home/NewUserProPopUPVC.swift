@@ -395,6 +395,8 @@ class NewUserProPopUPVC: UIViewController {
         membershipDict.setObject(expiryStr, forKey: "expiryDate" as NSCopying)
         membershipDict.setObject("Free_Membership", forKey: "productID" as NSCopying)
         membershipDict.setObject(self.beginTimestamp, forKey: "timestamp" as NSCopying)
+        membershipDict.setObject("ios", forKey: "device" as NSCopying)
+
         let proMembership = ["proMembership":membershipDict]
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(proMembership)
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :true] as [AnyHashable:Any])

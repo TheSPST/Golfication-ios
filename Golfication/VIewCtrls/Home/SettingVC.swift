@@ -12,11 +12,13 @@ import FBSDKLoginKit
 
 var distanceFilter = 0
 var skrokesGainedFilter = 0
-
+var onCourseNotification = 0
 class SettingVC: UITableViewController {
     
     var sectionOne:[Int] = [0, 1]
     var sectionTwo:[Int] = [0, 1, 2, 3, 4]
+    var sectionThree:[Int] = [0, 1]
+    
     var progressView = SDLoader()
     @IBOutlet weak var versionLbl: UILabel!
 
@@ -75,12 +77,25 @@ class SettingVC: UITableViewController {
                         skrokesGainedFilter = 0
                     }
                     DispatchQueue.main.async( execute: {
-                        self.progressView.hide()
-                        self.navigationItem.rightBarButtonItem?.isEnabled = true
-
-                        self.tableView.delegate = self
-                        self.tableView.dataSource = self
-                        self.tableView.reloadData()
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "notification") { (snapshot) in
+                            if snapshot.exists(){
+                                if let index = snapshot.value as? Int{
+                                    onCourseNotification = index
+                                }
+                            }
+                            else{
+                                onCourseNotification = 0
+                            }
+                            DispatchQueue.main.async( execute: {
+                                self.progressView.hide()
+                                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                                
+                                self.tableView.delegate = self
+                                self.tableView.dataSource = self
+                                self.tableView.reloadData()
+                                
+                            })
+                        }
                     })
                 }
             })
@@ -110,7 +125,6 @@ class SettingVC: UITableViewController {
                 isDevice = Bool()
                 isProMode = Bool()
                 section5 = [String]()
-                
                 selectedGolfID = ""
                 selectedGolfName = ""
                 //profileGolfName = ""
@@ -122,6 +136,7 @@ class SettingVC: UITableViewController {
                 matchId = ""
                 skrokesGainedFilter = 0
                 distanceFilter = 0
+                onCourseNotification = 0
                 self.signOutCurrentUser()
             }
         }))
@@ -176,8 +191,7 @@ class SettingVC: UITableViewController {
             default: break
             }
         }
-        else
-        {
+        else if indexPath.section == 1{
             if skrokesGainedFilter == indexPath.row{
                 cell.isSelected = true
                 cell.tintColor = UIColor.glfGreen
@@ -197,6 +211,21 @@ class SettingVC: UITableViewController {
             case 4: cell.textLabel?.text = "Women's - 18 Handicap"
             default: break
             }
+        }else{
+            if onCourseNotification == indexPath.row{
+                cell.isSelected = true
+                cell.tintColor = UIColor.glfGreen
+                cell.accessoryType = cell.isSelected ? .checkmark : .checkmark
+            }else{
+                cell.isSelected = false
+                cell.tintColor = UIColor.clear
+                cell.accessoryType = cell.isSelected ? .none : .none
+            }
+            switch indexPath.row{
+                case 0: cell.textLabel?.text = "Off - Less battery consumption"
+                case 1: cell.textLabel?.text = "On - More battery consumption"
+            default: break
+            }
         }
         return cell
     }
@@ -208,7 +237,7 @@ class SettingVC: UITableViewController {
         cell.tintColor = UIColor.glfGreen
 
         if indexPath.section == 0{
-            if sectionOne.count>0{
+            if !sectionOne.isEmpty{
                 for i in 0..<sectionOne.count{
                     tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))?.accessoryType = .none
                 }
@@ -222,8 +251,8 @@ class SettingVC: UITableViewController {
             distanceFilter = indexPath.row
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :distanceFilter] as [AnyHashable:Any])
         }
-        else{
-            if sectionTwo.count>0{
+        else if indexPath.section == 1{
+            if !sectionTwo.isEmpty{
                 for i in 0..<sectionTwo.count{
                     tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))?.accessoryType = .none
                 }
@@ -236,6 +265,20 @@ class SettingVC: UITableViewController {
             }
             skrokesGainedFilter = indexPath.row
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["strokesGained" :skrokesGainedFilter] as [AnyHashable:Any])
+        }else{
+            if !sectionThree.isEmpty{
+                for i in 0..<sectionThree.count{
+                    tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))?.accessoryType = .none
+                }
+                for i in 0..<sectionThree.count{
+                    if sectionThree[i] == indexPath.row{
+                        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+                        break
+                    }
+                }
+            }
+            onCourseNotification = indexPath.row
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["notification" :onCourseNotification] as [AnyHashable:Any])
         }
     }
 }

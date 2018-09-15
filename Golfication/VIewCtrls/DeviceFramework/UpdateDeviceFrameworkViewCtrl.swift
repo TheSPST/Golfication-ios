@@ -34,6 +34,7 @@ class UpdateDeviceFrameworkViewCtrl: UIViewController {
         ble.startScanning()
         lblConnected.text = "Connected"
     }
+    
     @IBAction func btnActionDownload(_ sender: UIButton) {
         let url = URL(string: urlStr)
         DispatchQueue.global().async {
@@ -47,28 +48,32 @@ class UpdateDeviceFrameworkViewCtrl: UIViewController {
             }
         }
     }
+    
     func writeImageWithHeader(hex:String){
 
         let img = FirmwareImage(hexString: hex)
         debugPrint(img)
         let headerData = img.imgIdentifyRequestData()
-//        deviceGolficationX.writeValue(headerData, for: oadCharacteristicHeader!, type: .withResponse)
+        
+        //deviceGolficationX.writeValue(headerData, for: oadCharacteristic, type: .withResponse)
+
         debugPrint(img.nBlocks)
 
         let NUM_BLOCK_PER_CONNECTION = 2   // send 4, 16 byte blocks per connection
 //        let BLOCK_TRANSFER_INTERVAL  = 0.1  // every 100ms
         for _ in 0..<NUM_BLOCK_PER_CONNECTION {
             if let blockData = img.nextBlock() {
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                     debugPrint("blockData:\(blockData)")
-//                    deviceGolficationX.writeValue(blockData, for: oadCharacteristicBlock!, type: .withoutResponse)
-//                })
+//                deviceGolficationX.writeValue(blockData, for: blockChar, type: .withoutResponse)
+
          } else {
                 debugPrint("Error in writing")
                 break
             }
         }
+        
     }
+    
     @IBAction func btnActionUpload(_ sender: UIButton) {
 //        if (charctersticsGlobalForWrite != nil){
 //

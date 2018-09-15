@@ -117,7 +117,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var selectedHomeGolfID: String = ""
     var selectedHomeGolfName: String = ""
     var mappedStr = ""
-    var profileHandicap: Int?
+    var profileHandicap: String?
     var profileScoring: Int?
     
     var strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
@@ -128,6 +128,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var cellIndex = 5
     var clubInsideGolfClub = [String]()
     
+    var isTrial = false
     // MARK: - inviteAction
     @IBAction func inviteAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Profile", bundle: nil)
@@ -155,14 +156,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
     
-    // MARK: - notifiAction
+    // \
     @IBAction func notifiAction(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "Map", bundle: nil)
-//        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MapForInputViewController") as! MapForInputViewController
 //        let storyboard = UIStoryboard(name: "Home", bundle: nil)
-//        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
 //        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "UpdateDeviceFrameworkViewCtrl") as! UpdateDeviceFrameworkViewCtrl
-        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
+//        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
+        
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
@@ -254,10 +254,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.btnProfileBasic.setTitleColor(UIColor.white, for: .normal)
     }
     
+
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
+
         //        Notification.sendNotification(reciever: "UhEPp4X2cAaPNOKdY6OOsoZ348L2", message: "Amit just finished a round at Qutab Golf Course.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
         
         //---------------------------- Update Versin details to Firebase --------------------------
@@ -575,13 +577,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - mySwingAction
     @objc func mySwingAction(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "Home", bundle: nil)
-//        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
-//        viewCtrl.linkStr = "https://www.indiegogo.com/projects/golfication-x-ai-powered-golf-super-wearable/x/17803765#/"
-//        viewCtrl.fromIndiegogo = false
-//        viewCtrl.fromNotification = false
-//        self.navigationController?.pushViewController(viewCtrl, animated: true)
-        getSwingData()
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "https://www.indiegogo.com/projects/golfication-x-ai-powered-golf-super-wearable/x/17803765#/"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+//        getSwingData()
     }
     
     func getSwingData() {
@@ -762,18 +764,32 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 if let unit = userData.object(forKey: "unit") as? Int{
                     distanceFilter = unit
                 }
+                if let notification = userData.object(forKey: "notification") as? Int{
+                    onCourseNotification = notification
+                }
                 if let strokesGained = userData.object(forKey: "strokesGained") as? Int{
                     skrokesGainedFilter = strokesGained
                 }
                 if let device = userData.object(forKey: "device") as? Bool{
                     isDevice = device
                 }
+                if let trial = userData.value(forKey: "trial") as? Bool{
+                    self.isTrial = trial
+                }
                 if let proMode = userData.value(forKey: "proMode") as? Bool{
                     isProMode = proMode
                     self.btnUpgrade.isHidden = false
                     
                     if let proMembership = userData.value(forKey: "proMembership") as? NSDictionary{
-                        if let expTimestamp = proMembership.value(forKey: "timestamp") as? Int{
+                        if let device  = proMembership.value(forKey: "device") as? String{
+                            if (device == "ios"){
+                            let refreshManager = RefreshSubscriptionManager.shared
+                            refreshManager.loadDataIfNeeded() { success in
+                            debugPrint("refreshManager==",success)
+                            }
+                         }
+                        }
+                            if let expTimestamp = proMembership.value(forKey: "timestamp") as? Int{
                             
                             let number = "\(expTimestamp)"
                             let array = number.compactMap{Int(String($0))}
@@ -788,16 +804,20 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             
                             var timeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
                             if proMembership.value(forKey: "productID") as? String != nil{
-                                if (proMembership.value(forKey: "productID") as! String == "pro_subscription_monthly") || (proMembership.value(forKey: "productID") as! String == "Free_Membership"){
+                                if (proMembership.value(forKey: "productID") as! String == "pro_subscription_monthly") || (proMembership.value(forKey: "productID") as! String == "pro_subscription_trial_monthly") || (proMembership.value(forKey: "productID") as! String == "Free_Membership"){
                                     
                                     timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-                                    //let timeEnd = Calendar.current.date(byAdding: .minute, value: 2, to: timeStart as Date)
-                                }
+//                                    timeEnd = Calendar.current.date(byAdding: .minute, value: 5, to: timeStart as Date)
+                                 }
                                 
                                 let timeNow = NSDate()
                                 let calendar = NSCalendar.current
                                 let components = calendar.dateComponents([.day], from: timeNow as Date, to: timeEnd!)
                                 if components.day == 0 || components.day! < 0{
+                            if let device = proMembership.value(forKey: "device") as? String{
+                                        
+                                    if (device == "ios") || ((device == "android") && (proMembership.value(forKey: "productID") as! String == "Free_Membership")){
+                                        
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["trial" :true] as [AnyHashable:Any])
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMembership" :NSNull()] as [AnyHashable:Any])
                                     
@@ -826,6 +846,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                         self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.05)
                                     }))
                                     self.present(alert, animated: true, completion: nil)
+                                    }
+                                }
                                 }
                             }
                         }
@@ -934,7 +956,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                 }
                 if let handicap = userData["handicap"] as? String{
-                    self.profileHandicap = Int(handicap)
+                    self.profileHandicap = handicap
                 }
                 if let gender = userData["gender"] as? String{
                     self.genderData = gender
@@ -1091,7 +1113,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.setProLockedUI(targetView: self.viewSGTab)
         }
         lblProfileHomeCourse.text = self.profileHomeCourse ?? "-"
-        lblProfileHandicap.text = "\(self.profileHandicap ?? 0)"
+        lblProfileHandicap.text = "\(self.profileHandicap ?? "0")"
         lblProfileScoring.text = "\(self.profileScoring ?? 0)"
         
         self.btnProfileBasic.setTitle("Basic", for: .normal)
@@ -1102,8 +1124,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
             if (newUser && !isProMode){
                 if (self.profileHomeCourse != nil && self.profileHomeCourse != "") || (mappedStr == "2"){
+                    if !isTrial{
                     self.viewBecomePro.isHidden = false
                     self.view.layoutIfNeeded()
+                    }
                 }
             }
         }
@@ -1851,7 +1875,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 cell.shareImageView.isHidden = true
                 
                 cell.shareImageHConstraint.constant = cell.frame.size.height
-                self.view.layoutIfNeeded()
+//                self.view.layoutIfNeeded()
                 
                 if(holesData.count == 9){
                     cell.scoreView2.isHidden = true

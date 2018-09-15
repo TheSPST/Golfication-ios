@@ -48,7 +48,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     var clubsForStrokesGained = [(String,Club)]()
     var allScoring = [Scoring]()
     var justFinishedTheMatch = false
-    
+    let editThisRound = EditPreviousGame()
+
     @IBOutlet weak var lblStackViewftUnit: UIStackView!
     @IBOutlet weak var lblStackViewftPremiumUnit: UIStackView!
 
@@ -61,6 +62,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     @IBOutlet weak var cardForChippingAccuracy1: CardView!
     @IBOutlet weak var cardForPremiumChippingAccuracy: CardView!
 
+    @IBOutlet weak var btnEditRound: UIBarButtonItem!
     var scrollArray = [CardView]()
     
     @IBOutlet weak var lblApproachPro: UILabel!
@@ -188,6 +190,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             self.navigationController?.popToRootViewController(animated: true)
         }
     }
+    @IBAction func editRoundAction(_ sender: Any) {
+        self.editThisRound.continuePreviousMatch(matchId: self.currentMatchId!, userId: Auth.auth().currentUser!.uid)
+    }
     
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool){
@@ -204,6 +209,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         super.viewDidLoad()
         self.title = "Round Summary"
         self.automaticallyAdjustsScrollViewInsets = false
+        NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRound"), object: nil)
+
         superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
         cardForStrokesGained.setGradientColor(topColor: UIColor(red:58.0/255.0, green:124.0/255.0, blue:165.0/255.0, alpha:1.0), bottomColor: UIColor(red:0.0, green:138.0/255.0, blue:100.0/255.0, alpha:1.0))
         cardForPremiumSG.setGradientColor(topColor: UIColor(red:58.0/255.0, green:124.0/255.0, blue:165.0/255.0, alpha:1.0), bottomColor: UIColor(red:0.0, green:138.0/255.0, blue:100.0/255.0, alpha:1.0))
@@ -313,6 +320,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 }
             }
             userImg.append(button)
+            
         }
         self.getData()
         // Do any additional setup after loading the view.
@@ -388,6 +396,16 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 }
             }
         }
+        self.navigationItem.rightBarButtonItem = nil
+//        self.btnEditRound.isEnabled = false
+//        for data in self.finalPlayersData{
+//            if let uid =  (data as AnyObject).value(forKey: "id") as? String{
+//                if(uid == Auth.auth().currentUser!.uid){
+//                    self.btnEditRound.isEnabled = true
+//                    break
+//                }
+//            }
+//        }
     }
    
     func startTimer(totalTime : Int) {
@@ -1621,12 +1639,51 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             return cell
     }
     @objc func viewScoreAction(_ sender: UIButton!) {
-        let editThisRound = EditPreviousGame()
-        editThisRound.continuePreviousMatch(matchId: self.currentMatchId, userId: Auth.auth().currentUser!.uid)
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = finalScoreData
         viewCtrl.playerData = finalPlayerMArray
         self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+    @objc func afterResponseEditRound(_ notification:NSNotification){
+        debugPrint("EditThisRound",editThisRound)
+        let alertVC = UIAlertController(title: "Edit Round", message: "Are you sure you want to edit this round?", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alertVC.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
+            self.removeValuesFromDatabase(action:"edit")
+        }))
+
+        let cancelAction = UIAlertAction(title: "cancle", style: UIAlertActionStyle.default, handler: nil)
+        alertVC.addAction(cancelAction)
+        self.present(alertVC, animated: true, completion: nil)
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRound"))
+    }
+    func removeValuesFromDatabase(action:String){
+        debugPrint("onCourse:false")
+        ref.child("matchData/\(self.currentMatchId!)/onCourse").setValue(false)
+        if(self.editThisRound.scoringMode != 1){
+            debugPrint("matchData/scoringMode: Classic")
+            ref.child("matchData/\(self.currentMatchId!)/").updateChildValues(["scoringMode":"classic"])
+        }
+        let dict = NSMutableDictionary()
+        dict.setValue(Timestamp, forKey: self.currentMatchId!)
+        debugPrint("deletedMatches : \(dict)")
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/deletedMatches").updateChildValues(dict as! [AnyHashable : Any])
+        let dict1 = NSMutableDictionary()
+        dict1.setValue(true, forKey:self.currentMatchId!)
+        debugPrint("activeMatches : \(dict1)")
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/").updateChildValues(dict1 as! [AnyHashable : Any])
+        if self.editThisRound.feedKeyForDeletion.count > 2{
+            debugPrint("Delete The Feed : \(self.editThisRound.feedKeyForDeletion!)")
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/myFeed/\(self.editThisRound.feedKeyForDeletion!)").setValue(NSNull())
+            ref.child("feedData/").updateChildValues([self.editThisRound.feedKeyForDeletion! : NSNull()])
+        }
+        if self.editThisRound.updatedValues.value(forKey: "statistics") != nil{
+            debugPrint("RemoveScoringNodeFromUserData")
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/scoring").updateChildValues([self.currentMatchId!:NSNull()])
+            debugPrint("updaateStatistics")
+              ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["statistics":self.editThisRound.updatedValues.value(forKey: "statistics")!])
+        }
+        
     }
     
     @objc func viewHoleByHoleAction(_ sender: UIButton!) {

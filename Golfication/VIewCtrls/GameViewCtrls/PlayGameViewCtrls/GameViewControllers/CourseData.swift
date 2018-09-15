@@ -20,9 +20,17 @@ class CourseData:NSObject{
     var holeGreenDataArr = [GreenData]()
     var totalTee = [NSMutableDictionary]()
     var handicap = Int()
-    var slopeRating = Int()
     var startingIndex : Int!
     var gameTypeIndex = 18
+    func measure(title: String!, call: () -> Void) {
+        let startTime = CACurrentMediaTime()
+        call()
+        let endTime = CACurrentMediaTime()
+        if let title = title {
+            print("\(title): ")
+        }
+        print("Time - \(endTime - startTime)")
+    }
     func getHandicap(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "handicap") { (snapshot) in
             if let handic = snapshot.value as? String{
@@ -37,7 +45,7 @@ class CourseData:NSObject{
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
             var rangeFinderHoles = NSArray()
-            
+            var stableFordHoles = NSArray()
             for(key,value) in completeDataDict{
                 group.enter()
                 if ((key as! String) == "coordinates"){
@@ -94,15 +102,14 @@ class CourseData:NSObject{
                 else if ((key as! String) == "rangefinder"){
                     let dict = value as! NSMutableDictionary
                     rangeFinderHoles = dict.value(forKey: "holes") as! NSArray
-                    if let slope = dict.value(forKey: "slope") as? Int{
-                        self.slopeRating = slope
-                    }
+                }else if((key as! String) == "stats"){
+                    let dict = value as! NSMutableDictionary
+                    stableFordHoles = dict.value(forKey: "holes") as! NSArray
                 }
                 group.leave()
-            }
-            
+            }            
             group.notify(queue: .main){
-                if(self.propertyArray.count == 0){
+                if(self.propertyArray.isEmpty){
                     for i in 0..<rangeFinderHoles.count{
                         let dataDic = NSMutableDictionary()
                         dataDic.setObject((rangeFinderHoles[i] as AnyObject).object(forKey: "greenLat")!, forKey: "greenLat" as NSCopying)
@@ -143,6 +150,7 @@ class CourseData:NSObject{
                         }
                     }
                 }
+                
                 for j in 0..<self.numberOfHoles.count{
                     for i in 0..<self.polygonArray.count{
                         if(self.propertyArray[i].hole == self.numberOfHoles[j].hole){
@@ -168,7 +176,8 @@ class CourseData:NSObject{
                         }
                     }
                 }
-                if(self.centerPointOfTeeNGreen.count == 0){
+                if(self.centerPointOfTeeNGreen.isEmpty){
+                    var i = 0
                     for data in self.numberOfHoles{
                         var centerOfTee = [CLLocationCoordinate2D]()
                         var indexOfMaxDistanceTee = 0
@@ -182,13 +191,27 @@ class CourseData:NSObject{
                                 indexOfMaxDistanceTee = t
                             }
                         }
-                        
+                        if(stableFordHoles.count  == self.numberOfHoles.count){
+                            let teeBoxes = (stableFordHoles[i] as AnyObject).object(forKey: "teeBoxes") as! NSArray
+                            for tee in teeBoxes{
+                                let teeB = tee as! NSMutableDictionary
+                                let dict = NSMutableDictionary()
+                                dict.addEntries(from: ["hole" : i])
+                                dict.addEntries(from: ["hcp" : teeB.value(forKey: "hcp") as! Int])
+                                if let name = teeB.value(forKey: "teeColorType") as? String{
+                                    if name.capitalizingFirstLetter() == selectedTee{
+                                        self.totalTee.append(dict)
+                                    }
+                                }
+                            }
+                        }
                         let centerTee = centerOfTee[indexOfMaxDistanceTee]
                         let centerOfGreen = BackgroundMapStats.middlePointOfListMarkers(listCoords:data.green)
                         let headingAngle = GMSGeometryHeading(centerTee, centerOfGreen)
                         let distance = GMSGeometryDistance(centerTee, centerOfGreen)
                         let fairWayPoint = GMSGeometryOffset(centerTee, distance*0.8, headingAngle)
                         self.centerPointOfTeeNGreen.append((tee: centerTee,fairway:fairWayPoint,green: centerOfGreen))
+                        i += 1
                     }
                 }
                 
@@ -258,7 +281,7 @@ class CourseData:NSObject{
                         }
                         tempNumofHole.append(self.numberOfHoles[newIndex])
                     }
-                    if(newTemp.count > 0){
+                    if(!newTemp.isEmpty){
                         self.centerPointOfTeeNGreen = newTemp
                         self.propertyArray = temp
                         self.totalTee = ttemp
@@ -300,8 +323,11 @@ class CourseData:NSObject{
     
     func getGolfBagData(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+            var golfBagArray = NSMutableArray()
             if(snapshot.value != nil){
-                let golfBagArray = snapshot.value as! NSMutableArray
+                golfBagArray = snapshot.value as! NSMutableArray
+            }
+            DispatchQueue.main.async(execute: {
                 if golfBagArray.count > 0{
                     self.clubs.removeAll()
                     for i in 0..<golfBagArray.count{
@@ -337,13 +363,11 @@ class CourseData:NSObject{
                                 temp.append(clubs)
                                 break
                             }
-
+                            
                         }
                     }
                     self.clubs = temp
                 }
-            }
-            DispatchQueue.main.async(execute: {
                 self.clubs.append("Pu")
                 //                self.clubs.append("More")
                 self.clubs = self.clubs.removeDuplicates()
@@ -354,10 +378,8 @@ class CourseData:NSObject{
     
     func updateMaxMin(){
         clubData.removeAll()
-        for data in clubWithMaxMin{
-            if clubs.contains(data.name){
-                clubData.append((name: data.name, max: data.max, min: data.min))
-            }
+        for data in clubWithMaxMin where clubs.contains(data.name){
+            clubData.append((name: data.name, max: data.max, min: data.min))
         }
         clubData.sort{($0).max > ($1).max}
         for i in 0..<clubData.count-1{

@@ -21,11 +21,19 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var cardView4: CardView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var viewUpgradeTrial: UIView!
+    @IBOutlet weak var viewSbcrptBtns: UIView!
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var lblCongrats: UILabel!
+    @IBOutlet weak var actvtIndView:UIActivityIndicatorView!
+    @IBOutlet weak var btnMonthly:UIButton!
+    @IBOutlet weak var btnYearly:UIButton!
+    @IBOutlet weak var viewOneYear:UIView!
+    @IBOutlet weak var viewOneMonth:UIView!
 
+    var isTrial = Bool()
+    
     // MARK: – Set Variables
     var titleLabel: UILabel!
     var subTitleLabel: UILabel!
@@ -63,6 +71,24 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    @IBAction func monthlyAction(_ sender: Any) {
+        //0->monthly , 1->trial monthly, 2-> trial yearly, 3->yearly
+        if isTrial == true{
+            IAPHandler.shared.purchaseMyProduct(index: 0)
+        }
+        else{
+            IAPHandler.shared.purchaseMyProduct(index: 1)
+        }
+    }
+    @IBAction func yearlyAction(_ sender: Any) {
+        if isTrial == true{
+            IAPHandler.shared.purchaseMyProduct(index: 3)
+        }
+        else{
+            IAPHandler.shared.purchaseMyProduct(index: 2)
+        }
+    }
+    
     // MARK: – viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,13 +99,18 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
         }
         else{
             lblCongrats.text = "Your 30 days free trial has been activated"
+//            lblCongrats.text = "Your 30 days pro membership has been activated"
         }
         viewUpgradeTrial.layer.cornerRadius = 5.0
+        viewSbcrptBtns.layer.cornerRadius = 5.0
+
+        viewUpgradeTrial.isHidden = true
         if fromUpgrade || fromNewUserPopUp{
-            viewUpgradeTrial.isHidden = false
+            viewSbcrptBtns.isHidden = false
+            setUpIAPHandler()
         }
         else{
-            viewUpgradeTrial.isHidden = true
+            viewSbcrptBtns.isHidden = true
         }
         closeBtn.setCircle(frame: closeBtn.frame)
         
@@ -95,51 +126,83 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
         cardView4.shadowOffsetHeight = Int(0.5)
         cardView4.shadowOpacity = 0.1
         
+        viewOneYear.layer.cornerRadius = 25.0
+        viewOneMonth.layer.cornerRadius = 25.0
+
         //https://www.dribba.com/uiscrollview-and-autolayout-with-ios8-and-swift/
         scrollView.delegate = self
         
-        /*titleLabel = UILabel(frame: CGRect(x: 0, y: 10, width: (self.view.frame.size.width)-20, height: 25))
-        titleLabel.text = "Golfication Pro Membership"
-        titleLabel.textAlignment = .center
-        titleLabel.font = UIFont(name: "SFProDisplay-Medium", size: 21.0)
-        titleLabel.textColor = UIColor.white
-        titleLabel.backgroundColor = UIColor.clear
+    }
+    
+    func setUpIAPHandler() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.startPaymentRequest(_:)), name: NSNotification.Name(rawValue: "PaymentStarted"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.endPaymentRequest(_:)), name: NSNotification.Name(rawValue: "PaymentFinished"), object: nil)
         
-        usrImageView = UIImageView(frame: CGRect(x: 50, y: titleLabel.frame.origin.y + titleLabel.frame.size.height+10, width: self.view.frame.size.width-40-40-40, height: self.view.frame.size.width-40-40-50))
-        usrImageView.backgroundColor = UIColor.clear
-        usrImageView.contentMode = .scaleAspectFit
+        NotificationCenter.default.addObserver(self, selector: #selector(self.startFetchingDetails(_:)), name: NSNotification.Name(rawValue: "FetchingStarted"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.endFetchingDetails(_:)), name: NSNotification.Name(rawValue: "FetchingFinished"), object: nil)
         
-        subTitleLabel = UILabel(frame: CGRect(x: 20, y: usrImageView.frame.origin.y + usrImageView.frame.size.height+5, width: (self.view.frame.size.width)-40-20, height: 40))
-        subTitleLabel.numberOfLines = 1
-        subTitleLabel.textAlignment = .center
-        subTitleLabel.font = UIFont(name: "SFProDisplay-Medium", size: 19.0)
-        subTitleLabel.textColor = UIColor.white
-        subTitleLabel.backgroundColor = UIColor.clear
+        IAPHandler.shared.fetchAvailableProducts()
+        IAPHandler.shared.purchaseStatusBlock = {[weak self] (type) in
+            guard let strongSelf = self else{ return }
+            if type == .purchased {
+                let alertView = UIAlertController(title: "", message: type.message(), preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in
+                    self!.closeAction(self?.closeBtn! as Any)
+                })
+                alertView.addAction(action)
+                strongSelf.present(alertView, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    @objc func startFetchingDetails(_ notification: NSNotification) {
+        self.actvtIndView.isHidden = false
+        self.actvtIndView.startAnimating()
+        btnMonthly.isEnabled = false
+        btnYearly.isEnabled = false
+    }
+    
+    @objc func endFetchingDetails(_ notification: NSNotification) {
+        self.actvtIndView.isHidden = true
+        self.actvtIndView.stopAnimating()
+        btnMonthly.isEnabled = true
+        btnYearly.isEnabled = true
+    }
+    
+    @objc func startPaymentRequest(_ notification: NSNotification) {
+        self.actvtIndView.isHidden = false
+        self.actvtIndView.startAnimating()
+        btnMonthly.isEnabled = false
+        btnYearly.isEnabled = false
+    }
+    
+    @objc func endPaymentRequest(_ notification: NSNotification) {
+        self.actvtIndView.isHidden = true
+        self.actvtIndView.stopAnimating()
+        btnMonthly.isEnabled = true
+        btnYearly.isEnabled = true
+
+        viewUpgradeTrial.isHidden = false
+        viewSbcrptBtns.isHidden = true
         
-        descTitleLabel = UILabel(frame: CGRect(x: 20, y: subTitleLabel.frame.origin.y + subTitleLabel.frame.size.height-10, width: (self.view.frame.size.width)-40-20, height: 40))
-        descTitleLabel.numberOfLines = 2
-        descTitleLabel.textAlignment = .center
-        descTitleLabel.font = UIFont(name: "SFProDisplay-Regular", size: 13.0)
-        descTitleLabel.textColor = UIColor.white
-        descTitleLabel.backgroundColor = UIColor.clear
+        UserDefaults.standard.set(false, forKey: "isNewUser")
+        UserDefaults.standard.synchronize()
+
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.isNavigationBarHidden = false
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentStarted"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentFinished"), object: nil)
         
-        
-        subTitleLabel.text = "Advanced Stats"
-        descTitleLabel.text = "Distance, range and accuracy for all your clubs"
-        usrImageView.image = #imageLiteral(resourceName: "Advancedstats")
-        
-        cardView1.addSubview(titleLabel)
-        cardView1.addSubview(descTitleLabel)
-        cardView1.addSubview(usrImageView)
-        cardView1.addSubview(subTitleLabel)*/
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "FetchingStarted"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "FetchingFinished"), object: nil)
     }
 
     // MARK: – ScrollViewDelegate
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
-        
-//        titleLabel.removeFromSuperview()
-//        subTitleLabel.removeFromSuperview()
-//        usrImageView.removeFromSuperview()
         
         let pageWidth: CGFloat =  scrollView.frame.size.width
         let currentPage: CGFloat = floor((scrollView.contentOffset.x - pageWidth/2) / pageWidth) + 1
@@ -149,46 +212,5 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
         let x =  CGFloat(self.pageControl.currentPage) * (pageWidth - 10)
         scrollView.setContentOffset(CGPoint(x:x, y:0), animated: false)
         
-        /*if pageControl.currentPage == 0 {
-            subTitleLabel.text = "Advance Stats"
-            descTitleLabel.text = "Distance, range and accuracy for all your clubs"
-            usrImageView.image = #imageLiteral(resourceName: "Advancedstats")
-            
-            cardView1.addSubview(titleLabel)
-            cardView1.addSubview(subTitleLabel)
-            cardView1.addSubview(descTitleLabel)
-            cardView1.addSubview(usrImageView)
-        }
-        else if pageControl.currentPage == 1 {
-            subTitleLabel.text = "Club Selection & Control"
-            descTitleLabel.text = "Know which clubs you need to hit often, and which you'd better leave out."
-            usrImageView.image = #imageLiteral(resourceName: "controlPro")
-            
-            cardView2.addSubview(titleLabel)
-            cardView2.addSubview(subTitleLabel)
-            cardView2.addSubview(descTitleLabel)
-            cardView2.addSubview(usrImageView)
-        }
-        else if pageControl.currentPage == 2 {
-            subTitleLabel.text = "Super Early-Bird Discount"
-            descTitleLabel.text = "Get a $100 pre-order discount coupon for Golf's most powerful wearable on launch day"
-            usrImageView.image = #imageLiteral(resourceName: "device1")
-            
-            cardView3.addSubview(titleLabel)
-            cardView3.addSubview(subTitleLabel)
-            cardView3.addSubview(descTitleLabel)
-            cardView3.addSubview(usrImageView)
-        }
-            
-        else if pageControl.currentPage == 3 {
-            subTitleLabel.text = "Strokes Gained Analysis"
-            descTitleLabel.text = "Break down each selection of your game, to better plan your training sessions."
-            usrImageView.image = #imageLiteral(resourceName: "sg")
-            
-            cardView4.addSubview(titleLabel)
-            cardView4.addSubview(subTitleLabel)
-            cardView4.addSubview(descTitleLabel)
-            cardView4.addSubview(usrImageView)
-        }*/
     }
 }

@@ -109,7 +109,7 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
                 
                 connection.start()
 
-                self.updateUserDataIntoFirebase(uid: (user?.uid)!, fbEmail: (user?.email)!, fbName: (user?.displayName)!)
+                self.updateUserDataIntoFirebase(uid: (user!.uid), fbEmail: (user!.email ?? ""), fbName: (user!.displayName ?? ""))
             })
         }
     }

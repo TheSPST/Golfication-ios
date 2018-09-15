@@ -206,8 +206,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var btnTrackShotWidth: NSLayoutConstraint!
     @IBOutlet weak var btnTrackShotHeight: NSLayoutConstraint!
     
-    
-    
+    var isBackground : Bool{
+        let state = UIApplication.shared.applicationState
+        if state == .background {
+            return true
+        }else{
+            return false
+        }
+    }
     // MARK:- All PanGesture Related Local Variables
     var panGesture  = UIPanGestureRecognizer()
     var btnPanGesture  = UIPanGestureRecognizer()
@@ -391,7 +397,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             playerIndex += 1
         }
-        FBSomeEvents.shared.logGameEndedEvent(holesPlayed: self.holeOutforAppsFlyer[playerIndex], gameT: 1)
+        FBSomeEvents.shared.logGameEndedEvent(holesPlayed: self.holeOutforAppsFlyer[playerIndex], valueToSum: 1)
         if(self.holeOutforAppsFlyer[playerIndex] > 8){
             self.saveAndviewScore()
         }else{
@@ -408,7 +414,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     // MARK:- btnVRView
     @IBAction func btnVRAction(_ sender: Any) {
-        if self.places.count>0{
+        if !self.places.isEmpty{
             self.places.removeAll()
             places = [Place]()
         }
@@ -488,7 +494,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBAction func btnActionRetry(_ sender: Any) {
         debugPrint("Cancle Pressed")
         self.isTracking = false
-        if(self.positionsOfDotLine.count > 0){
+        if(!self.positionsOfDotLine.isEmpty){
             self.positionsOfDotLine.remove(at: 0)
         }
         if(isPintMarker){
@@ -502,7 +508,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         ref.child("matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(Auth.auth().currentUser!.uid)/shotTracking").setValue(nil)
         self.btnTrackShot.backgroundColor = UIColor.glfBluegreen
         self.btnTrackShot.setImage(#imageLiteral(resourceName: "track_Shot"), for: .normal)
-        if(self.positionsOfCurveLines.count > 0){
+        if(!self.positionsOfCurveLines.isEmpty){
             self.positionsOfDotLine.insert(positionsOfCurveLines.last! , at: 0)
         }else{
             self.positionsOfDotLine.insert( courseData.centerPointOfTeeNGreen[self.holeIndex].tee, at: 0)
@@ -592,7 +598,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.multiplayerPageControl.isHidden = true
             self.lblRaceToFlagTitle.isHidden = true
             self.barChartParentStackView.isHidden = true
-            if(self.playersButton.count>1){
+            if(self.playersButton.count > 1){
                 self.updateRaceToFlag()
                 if (btnMultiplayer.tag == 1){
                     self.btnActionMultiplayer(btnMultiplayer)
@@ -847,7 +853,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(matchId)").removeValue()
         }
         self.sendMatchFinishedNotification()
-        if(Auth.auth().currentUser!.uid.count>1) &&  (matchId.count > 1){
+        if matchId.count > 1{
             ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
             if !isProMode{
                 ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["summaryTimer":Timestamp])
@@ -984,7 +990,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         // register background task
         if(isOnCourse){
-            self.registerBackgroundTask()
+            if onCourseNotification == 1{
+                self.registerBackgroundTask()
+            }
         }
         self.mapView.delegate = self
         self.initialSetup()
@@ -1290,7 +1298,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 positionsOfCurveLines.append(positionsOfDotLine.last!)
                 
                 
-                if (isOnCourse) && (positionsOfCurveLines.count>0){
+                if (isOnCourse) && (!positionsOfCurveLines.isEmpty){
                     positionsOfCurveLines.removeLast()
                 }
                 
@@ -1493,7 +1501,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
                 
                 self.uploadStats(shot: shotCount,clubName:shotClub, playerKey: self.selectedUserId)
-                if(self.positionsOfDotLine.count > 0){
+                if(!self.positionsOfDotLine.isEmpty){
                     if(GMSGeometryDistance(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!) * YARD) < 100{
                         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.allowAnimatedContent, animations: {
                             self.btnHoleOut.isHidden = false
@@ -1784,7 +1792,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                 }
                 shotCount = shotCount+1
-                if(self.positionsOfDotLine.count > 0){
+                if(!self.positionsOfDotLine.isEmpty){
                     if(GMSGeometryDistance(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!) * YARD) < 100{
                         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.allowAnimatedContent, animations: {
                             self.btnHoleOut.isHidden = false
@@ -2247,7 +2255,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             }
             if(shotCount+1 == indexOfMarker+1){
-                if(positionsOfDotLine.count == 0){
+                if(positionsOfDotLine.isEmpty){
                     self.holeOutFlag = false
                     self.positionsOfDotLine.append(positionsOfCurveLines.last!)
                     self.positionsOfDotLine.append(positionsOfCurveLines.last!)
@@ -2867,8 +2875,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             }
             self.allMarkers = self.allMarkers.removeDuplicates()
-            if(markers.count > 0) && self.allMarkers.index(of: self.markers.first!) != nil{
-                if self.positionsOfCurveLines.count > 0 && !isOnCourse && btnClose.isHidden{
+            if(!markers.isEmpty) && self.allMarkers.index(of: self.markers.first!) != nil{
+                if !self.positionsOfCurveLines.isEmpty && !isOnCourse && btnClose.isHidden{
                     self.allMarkers.remove(at: self.allMarkers.index(of: self.markers.first!)!)
                 }else if isOnCourse{
                     self.allMarkers.remove(at: self.allMarkers.index(of: self.markers.first!)!)
@@ -2895,7 +2903,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     let ind = BackgroundMapStats.getNearbymarkers(position: newPosition,markers:allMarkers)
                     self.dragMarkShowCase = allMarkers[ind]
                     print(ind)
-                    if(self.positionsOfDotLine.count>1 && allMarkers[ind].map != nil){
+                    if(!self.positionsOfDotLine.isEmpty && allMarkers[ind].map != nil){
                         let distance = GMSGeometryDistance(allMarkers[ind].position, newPosition)
                         if(distance < BackgroundMapStats.getDistanceWithZoom(zoom: currentZoom)){
                             debugPrint(currentZoom)
@@ -2920,7 +2928,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     newPosition = self.mapView.projection.coordinate(for: positions)
                     let ind = BackgroundMapStats.getNearbymarkers(position: newPosition,markers:allMarkers)
                     print(ind)
-                    if(self.positionsOfDotLine.count>1 && allMarkers[ind].map != nil){
+                    if(!self.positionsOfDotLine.isEmpty && allMarkers[ind].map != nil){
                         let distance = GMSGeometryDistance(allMarkers[ind].position, newPosition)
                         if(distance < BackgroundMapStats.getDistanceWithZoom(zoom: currentZoom)){
                             debugPrint(currentZoom)
@@ -2949,7 +2957,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     let ind = BackgroundMapStats.getNearbymarkers(position: newPosition,markers:allMarkers)
                     print(ind)
                     self.dragMarkShowCase = allMarkers[ind]
-                    if(self.positionsOfDotLine.count>1 && allMarkers[ind].map != nil){
+                    if(!self.positionsOfDotLine.isEmpty && allMarkers[ind].map != nil){
                         let distance = GMSGeometryDistance(allMarkers[ind].position, newPosition)
                         if(distance < BackgroundMapStats.getDistanceWithZoom(zoom: currentZoom)) && sender.numberOfTouches != 2{
                             debugPrint(currentZoom)
@@ -3199,7 +3207,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let distanceBwShots = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines[shot])
         let distanceBwHole0 = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines.last!)
         var distanceBwHole1 = GMSGeometryDistance(positionsOfCurveLines[shot], positionsOfCurveLines.last!)
-        if(distanceBwHole1 == 0) && positionsOfDotLine.count>0{
+        if(distanceBwHole1 == 0) && !positionsOfDotLine.isEmpty{
             distanceBwHole1 = GMSGeometryDistance(positionsOfCurveLines[shot], positionsOfDotLine.last!)
         }
         shotDictionary.setObject((distanceBwShots*YARD).rounded(toPlaces:2), forKey: "distance" as NSCopying)
@@ -3274,13 +3282,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for i in 0..<shotViseCurve.count{
             removeLinesAndMarkers(index: i)
         }
-        if(positionsOfDotLine.count > 0 && marker.title == "Point" ){
+        if(!positionsOfDotLine.isEmpty && marker.title == "Point" ){
             positionsOfDotLine.remove(at: marker.userData as! Int)
             positionsOfDotLine.insert(marker.position, at: marker.userData as! Int)
             plotLine(positions: positionsOfDotLine)
-        }else if(positionsOfCurveLines.count > 0 && marker.title == "Curved"){
+        }else if(!positionsOfCurveLines.isEmpty && marker.title == "Curved"){
             if(shotCount > 1 && marker.userData as! Int > 0){
-                if(positionsOfDotLine.count == 0 && shotCount == ind){
+                if(positionsOfDotLine.isEmpty && shotCount == ind){
                     plotCurvedPolyline(latLng1: positionsOfCurveLines[ind-1], latLng2: positionsOfCurveLines[ind],whichLine: false, club: self.shotsDetails[ind-1].club)
                     shotViseCurve[ind-1] = (shot: ind-1, line: curvedLines , markerPosition:markerInfo, swingPosition:swingMarker)
                 }
@@ -3747,8 +3755,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.viewForground.isHidden = !isHide
     }
     func calculateTotalExtraShots()->Double{
-        let data = (courseData.handicap * courseData.slopeRating)
-        
+        let data = (courseData.handicap * selectedSlope)
         return (Double(data / 113))
     }
     @objc func loadMap(_ notification: NSNotification) {
@@ -3966,7 +3973,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     var isFromPlotLine = false
     func plotLine(positions:[CLLocationCoordinate2D]){
-        if(positions.count > 0){
+        if(!positions.isEmpty){
             let path = GMSMutablePath()
             if(self.isOnCourse){
                 for i in 0..<positions.count{
@@ -4166,7 +4173,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for coord in courseData.numberOfHoles[holeIndex].green{
             self.pathOfGreen.add(coord)
         }
-        if(scoring[indexToUpdate].players.count>0){
+        if(!scoring[indexToUpdate].players.isEmpty){
             for playerScore in scoring[indexToUpdate].players{
                 for (key,value) in playerScore{
                     for activePlay in playersButton{
@@ -4379,7 +4386,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         
         if(!holeOutFlag){
-            if(self.positionsOfCurveLines.count > 0){
+            if(!self.positionsOfCurveLines.isEmpty){
                 self.letsRotateWithZoom(latLng1: positionsOfCurveLines.first!, latLng2: positionsOfDotLine.last!)
             }else{
                 self.letsRotateWithZoom(latLng1: positionsOfDotLine.first!, latLng2: positionsOfDotLine.last!)
@@ -4395,7 +4402,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if let onCourse = self.matchDataDict.value(forKeyPath: "onCourse") as? Bool{
             if(onCourse) && !holeOutFlag && !isHoleByHole{
-                var counter = 30
+                var counter = 0
                 if(clubInTrack != nil){
                     self.btnSelectClubs.setTitle(self.getClubName(club: clubInTrack.trim()).uppercased(), for: .normal)
                     let indexPath = IndexPath(row: courseData.clubs.index(of: clubInTrack.trim())!, section: 0)
@@ -4412,20 +4419,31 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.plotMarkerForCurvedLine(position: self.positionsOfCurveLines.last!, userData: self.positionsOfCurveLines.count-1)
                 }
                 if(userLocationForClub != nil) && (self.selectedUserId == Auth.auth().currentUser!.uid){
-                    mapTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true, block: { (timer) in
+                    mapTimer = Timer.scheduledTimer(withTimeInterval:5, repeats: true, block: { (timer) in
                         if(self.positionsOfDotLine.count > 2){
-                            self.locationManager.startUpdatingLocation()
-                            if self.locationManager.location == nil{
-                                self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
-                            }
-                            
-                            if let currentLocation: CLLocation = self.locationManager.location{
-                                self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+                            if(self.isBackground){
+                                if(counter%60 == 0){
+                                    self.locationManager.startUpdatingLocation()
+                                    if self.locationManager.location == nil{
+                                        self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
+                                    }
+                                    
+                                    if let currentLocation: CLLocation = self.locationManager.location{
+                                        self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+                                    }
+                                }
+                            }else{
+                                self.locationManager.startUpdatingLocation()
+                                if self.locationManager.location == nil{
+                                    self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
+                                }
+                                
+                                if let currentLocation: CLLocation = self.locationManager.location{
+                                    self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+                                }
                             }
                             let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
                             if (distance < 15000){
-                                //                                let head = GMSGeometryHeading(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!)
-                                //                                let newPoint = GMSGeometryOffset(self.positionsOfDotLine.first!, 1, head)
                                 self.positionsOfDotLine.remove(at: 0)
                                 self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
                                 self.isUserInsideBound = true
@@ -4478,7 +4496,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 self.lblCenterHeader.text = "\(Int(distanceC)) \(suffix)"
                                 debugPrint( "\(Int(distanceF)) \(Int(distanceC)) \(Int(distanceE)) \(Int(distanceC)) \(suffix)")
                                 
-                                if(counter%10 == 0){
+                                if(counter%60 == 0){
                                     debugPrint("isTracking\(self.isTracking)")
                                     if(self.holeOutFlag){
                                         Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
@@ -4491,8 +4509,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                         
                                     }
                                 }
-                                counter += 1
-                                if(self.positionsOfCurveLines.count > 0) && self.isTracking{
+                                counter += 5
+                                if(!self.positionsOfCurveLines.isEmpty) && self.isTracking{
                                     for i in 0..<self.penaltyShots.count{
                                         if (self.penaltyShots[i]){
                                             debugPrint(self.positionsOfCurveLines[i])
@@ -4558,7 +4576,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 
                                 self.suggestedMarker1.map = !self.isTracking ? self.mapView : nil
                                 if(!self.isTracking){
-                                    if !(self.markers.count>0 && self.markers[1].map == nil){
+                                    if !(!self.markers.isEmpty && self.markers[1].map == nil){
                                         self.suggestedMarker2.map = self.mapView
                                     }else{
                                         self.suggestedMarker2.map = nil
@@ -4700,7 +4718,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 shotViseCurve[i-1].line.strokeColor = UIColor.glfRosyPink
             }
         }
-        if self.positionsOfDotLine.count > 0{
+        if !self.positionsOfDotLine.isEmpty{
             plotLine(positions: self.positionsOfDotLine)
         }
     }
@@ -6250,7 +6268,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         else{
             if(positionsOfDotLine.count != 0){
-                if(positionsOfCurveLines.count == 0){
+                if(positionsOfCurveLines.isEmpty){
                     headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfDotLine.first!, positionsOfDotLine.last!)
                 }else{
                     headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfCurveLines.first!, positionsOfDotLine.last!)
@@ -6261,7 +6279,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         var headingAngleOfTeeToFairway = 0.0
-        if(positionsOfCurveLines.count == 0){
+        if(positionsOfCurveLines.isEmpty){
             headingAngleOfTeeToFairway = GMSGeometryHeading(positionsOfDotLine.first!, position)
         }
         else{
@@ -6431,7 +6449,7 @@ extension NewMapVC : DropperDelegate{
 extension NewMapVC : UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(self.shotsDetails.count == 0){
+        if(self.shotsDetails.isEmpty){
             return 1
         }else{
             return self.shotsDetails.count
@@ -6441,7 +6459,7 @@ extension NewMapVC : UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ShotsDetailsCell", for: indexPath as IndexPath) as! ShotDetailsTableViewCell
-        if(self.shotsDetails.count == 0){
+        if(self.shotsDetails.isEmpty){
             noDataLabel.frame = cell.frame
             cell.addSubview(noDataLabel)
         }else{

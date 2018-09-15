@@ -526,7 +526,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 self.holeIndex = Int(current)!-1
             }else{
                 if let current = matchDataDic.value(forKeyPath: "currentHole") as? String{
-                    self.holeIndex = Int(current.count == 0 ? "1":current)! - 1
+                    self.holeIndex = Int(current.isEmpty ? "1":current)! - 1
                 }
             }
         }
@@ -558,7 +558,12 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         let backBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnBack.setImage(backBtnImage, for: .normal)
         btnBack.tintColor = UIColor.glfWhite
-        self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
+        self.startingIndex = 1
+        if let startingIndex = matchDataDic.value(forKeyPath: "startingHole") as? String{
+            if startingIndex.count > 2{
+                self.startingIndex = Int(startingIndex)!
+            }
+        }
         self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateView(_:)), name: NSNotification.Name(rawValue: "updateView"),object: nil)
 
@@ -685,7 +690,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             playerIndex += 1
         }
-        FBSomeEvents.shared.logGameEndedEvent(holesPlayed: self.holeOutforAppsFlyer[playerIndex], gameT: 3)
+        FBSomeEvents.shared.logGameEndedEvent(holesPlayed: self.holeOutforAppsFlyer[playerIndex], valueToSum: 3)
         if(self.holeOutforAppsFlyer[playerIndex] >= 9){
             self.saveAndviewScore()
         }else{

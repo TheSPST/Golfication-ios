@@ -170,6 +170,35 @@ class Notification: NSObject{
             request, withCompletionHandler: nil)
     }
     
+    static func sendRangeFinderNotification(msg:String,title:String,subtitle:String,timer:Double){
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["my.notification"])
+        center.removeDeliveredNotifications(withIdentifiers: ["my.notification"])
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.subtitle = subtitle
+        content.body = msg
+        let updateLocation = UNNotificationAction(identifier: "update_Location",title: "Upadate Location", options: [.authenticationRequired])
+        let prevHoleAction = UNNotificationAction(identifier: "prev_hole",title: " Prev Hole", options: [.authenticationRequired])
+        let nextHoleAction = UNNotificationAction(identifier: "next_hole",title: "Next Hole", options: [.authenticationRequired])
+        
+        let category = UNNotificationCategory(identifier: "my.notification",actions: [updateLocation,prevHoleAction, nextHoleAction],intentIdentifiers: [], options: [])
+        UNUserNotificationCenter.current().setNotificationCategories([category])
+        content.categoryIdentifier = "my.notification"
+        
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: timer,
+            repeats: false)
+        //Create the request
+        let request = UNNotificationRequest(
+            identifier: "my.notification",
+            content: content,
+            trigger: trigger
+        )
+        //Schedule the request
+        UNUserNotificationCenter.current().add(
+            request, withCompletionHandler: nil)
+    }
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         switch response.actionIdentifier {
         case "prev_hole":

@@ -6,12 +6,12 @@
 import Foundation
 
 // This is a firmware image generator for the Ti BLE OAD firmware update process
-// 
+//
 // This image is constructed with a string, this string is assumed a "fullflash" hex image
 // that was read in by String(contentsOfURL: url), where url is the path to the fullflash kex image
-// 
+//
 // This class parses the intel hex sting to find the start address of the image, and builds a single
-// data blob from all bytes in all records in the hex file. 
+// data blob from all bytes in all records in the hex file.
 //
 // You can then use the nextBlock() function to get data for the next 16byte block during programming
 //
@@ -70,17 +70,17 @@ final class FirmwareImage {
         // reset all counters
         resetProgress()
     }
-
+    
     convenience init?(url: URL) {
         // read hex file & truncate into string
         guard let hexData = try? Data(contentsOf: url),
             let hex = String(data: hexData, encoding: .utf8) else {
                 return nil
         }
-
+        
         self.init(hexString: hex)
     }
-
+    
     // reset counters
     func resetProgress() {
         iBlocks = 0
@@ -113,7 +113,7 @@ final class FirmwareImage {
         
         return nil
     }
-
+    
     // turn hex string into an array of records
     private func generateLines(string: String) -> [String] {
         return string.components(separatedBy: .newlines).filter { !$0.isEmpty }
@@ -148,7 +148,7 @@ final class FirmwareImage {
                 // the block address in the line is relative to a previous base address record (if there was one)
                 blockAddr += currentAddressBase
                 
-                // if this is the very first data block address in the image, 
+                // if this is the very first data block address in the image,
                 // this will be the address we report in the image header
                 // the OAD target will program the image starting at this address, after reboot
                 if currentAddress == nil {
@@ -166,12 +166,13 @@ final class FirmwareImage {
                 
                 // try to get the bytes as Data
                 let lineDataStr = line[line.index(line.startIndex, offsetBy: 9)..<line.index(line.startIndex, offsetBy: (9+(numBytes*2)))]
-                guard let lineData = String(lineDataStr).dataFromHexString() else { continue }
+                let realString = String(lineDataStr) // convert substring to String
+                guard let lineData = realString.dataFromHexString() else { continue }
                 data.append(lineData as Data)
                 currentAddress = currentAddress! + UInt32(lineData.count)
                 
                 // we only support 16 byte blocks currently
-                // check that this block was 16 bytes, if not, pad 
+                // check that this block was 16 bytes, if not, pad
                 if lineData.count < 16 {
                     let numBytesToPad = 16-lineData.count
                     let padData = [UInt8](repeating: 0xFF, count: numBytesToPad)
@@ -190,11 +191,11 @@ final class FirmwareImage {
             case .EOF:
                 break
                 
-            // TODO: handle the remaining record types. for Ti BLE OAD, those are not currently needed
-            // because hexmerge.py doesn't produce lines of these record types
-            //case .EXT_SEG_ADDR:
-            //case .START_SEG_ADDR:
-            //case .START_LIN_ADDR:
+                // TODO: handle the remaining record types. for Ti BLE OAD, those are not currently needed
+                // because hexmerge.py doesn't produce lines of these record types
+                //case .EXT_SEG_ADDR:
+                //case .START_SEG_ADDR:
+                //case .START_LIN_ADDR:
                 
             default:
                 // TODO: handle unknown record type
@@ -229,30 +230,30 @@ final class FirmwareImage {
         while true {
             var oset = 0
             while oset < 0x1000 {
-
+                
                 if (page == startPage) && (oset == 0x00) {
-
+                    
                     //Skip the CRC and shadow.
                     //Note: this increments by 3 because oset is incremented by 1 in each pass
                     //through the loop
                     oset += 3
-
+                    
                 } else if (page == pageEnd) && (oset == osetEnd) {
-
+                    
                     crc = crc16(startCrc: crc, startVal: 0x00)
                     crc = crc16(startCrc: crc, startVal: 0x00)
                     return crc
-
+                    
                 } else {
-
+                    
                     data.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) in
                         crc = crc16(startCrc: crc, startVal: Int(bytes[Int(addr + oset)]))
                     }
                 }
-
+                
                 oset += 1
             }
-        
+            
             page += 1
             addr = page * 0x1000
         }
@@ -263,7 +264,7 @@ final class FirmwareImage {
         var val = startVal
         var crc = startCrc
         let poly = 0x1021
-
+        
         var cnt = 0
         while cnt < 8 {
             var msb = 0
@@ -320,52 +321,25 @@ extension Data {
     func hexArrayString() -> String {
         var str = ""
         var bytes = [UInt8](repeating: 0, count: count)
-
+        
         copyBytes(to: &bytes, count: count)
-
+        
         for b in bytes {
             str += String(format: "0x%02x, ", b)
         }
-
+        
         return "[\(str)]"
     }
 }
 
 // source: http://stackoverflow.com/questions/26501276/converting-hex-string-to-nsdata-in-swift
-/*extension Substring {
-    func dataFromHexString() -> Data? {
-        let trimmed = trimmingCharacters(in: CharacterSet(charactersIn: "<> "))
-        var hex = trimmed.replacingOccurrences(of: " ", with: "")
-        var data = Data()
-
-        while hex.count > 0 {
-//            let c = hex[hex.index(hex.startIndex, offsetBy: 2)]
-            let index1 = hex.index(hex.startIndex, offsetBy: 2)
-            
-            
-            let c = hex[..<index1]    // "<<<Hello"
-
-//            let c = hex.substring(to: hex.index(hex.startIndex, offsetBy: 2))
-            hex = String(hex[index1...])
-
-            var ch: UInt32 = 0
-            Scanner(string: String(c)).scanHexInt32(&ch)
-
-            var char = UInt8(ch)
-            data.append(&char, count: 1)
-        }
-
-        return data
-    }
-}
-*/
 extension String {
     func dataFromHexString() -> Data? {
         let trimmed = trimmingCharacters(in: CharacterSet(charactersIn: "<> "))
         var hex = trimmed.replacingOccurrences(of: " ", with: "")
         var data = Data()
         
-        while hex.count > 0 {
+        while hex.characters.count > 0 {
             let c = hex.substring(to: hex.index(hex.startIndex, offsetBy: 2))
             hex = hex.substring(from: hex.index(hex.startIndex, offsetBy: 2))
             

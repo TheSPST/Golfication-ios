@@ -234,7 +234,7 @@ class BackgroundMapStats: NSObject {
         let girDict = NSMutableDictionary()
         let faiDict = NSMutableDictionary()
         
-        if(shot==1) && (positionsOfCurveLines.count > 1){
+        if(shot==1) && (!positionsOfCurveLines.isEmpty){
             gir = false
             gir = callFindPositionInsideFeature(position:positionsOfCurveLines[shot], index: index) == "G" ? true:false
             girDict.setObject(gir, forKey: "gir" as NSCopying)
@@ -382,7 +382,7 @@ class BackgroundMapStats: NSObject {
         let distanceBwShots = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines[shot])
         let distanceBwHole0 = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines.last!)
         var distanceBwHole1 = GMSGeometryDistance(positionsOfCurveLines[shot], positionsOfCurveLines.last!)
-        if(distanceBwHole1 == 0) && positionsOfDotLine.count>0{
+        if(distanceBwHole1 == 0) && !positionsOfDotLine.isEmpty{
             distanceBwHole1 = GMSGeometryDistance(positionsOfCurveLines[shot], positionsOfDotLine.last!)
         }
         shotDictionary.setObject((distanceBwShots*YARD).rounded(toPlaces:2), forKey: "distance" as NSCopying)
@@ -755,7 +755,7 @@ class BackgroundMapStats: NSObject {
     static func removeRepetedElement(curvedArray : [CLLocationCoordinate2D] )->[CLLocationCoordinate2D]{
         var uniqueArray = [CLLocationCoordinate2D]()
         
-        if(curvedArray.count > 1){
+        if(!curvedArray.isEmpty){
             var lat = [CLLocationDegrees]()
             var lng = [CLLocationDegrees]()
             for i in 0..<curvedArray.count{

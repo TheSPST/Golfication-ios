@@ -33,6 +33,10 @@ class IAPHandler: NSObject {
     let AUTO_RENEW_MONTHLY_PRODUCT_ID = "pro_subscription_monthly"
     let AUTO_RENEW_YEARLY_PRODUCT_ID = "pro_subscription_yearly"
     
+    let AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID = "pro_subscription_trial_monthly"
+    let AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID = "pro_subscription_trial_yearly"
+    
+    
     fileprivate var productID = ""
     fileprivate var productsRequest = SKProductsRequest()
     fileprivate var iapProducts = [SKProduct]()
@@ -53,6 +57,8 @@ class IAPHandler: NSObject {
             SKPaymentQueue.default().add(self)
             SKPaymentQueue.default().add(payment)
             productID = product.productIdentifier
+            debugPrint("productID==",productID)
+            
         }
         else {
             purchaseStatusBlock?(.disabled)
@@ -70,10 +76,10 @@ class IAPHandler: NSObject {
     func fetchAvailableProducts(){
         
         // Put here your IAP Products ID's
-        let productIdentifiers = NSSet(objects: AUTO_RENEW_MONTHLY_PRODUCT_ID,AUTO_RENEW_YEARLY_PRODUCT_ID
-        )
+        let productIdentifiers = NSSet(objects: AUTO_RENEW_MONTHLY_PRODUCT_ID, AUTO_RENEW_YEARLY_PRODUCT_ID, AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID)
         
         productsRequest = SKProductsRequest(productIdentifiers: productIdentifiers as! Set<String>)
+        debugPrint("productIdentifiers==",productIdentifiers)
         productsRequest.delegate = self
         productsRequest.start()
         NetworkActivityIndicatorManager.NetworkOperationStarted()
@@ -93,7 +99,7 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
                 numberFormatter.numberStyle = .currency
                 numberFormatter.locale = product.priceLocale
                 let price1Str = numberFormatter.string(from: product.price)
-                debugPrint(product.localizedDescription + "\nfor just \(price1Str!)")
+                debugPrint(product.productIdentifier + product.localizedDescription + "\nfor just \(price1Str!)")
             }
         }
         
@@ -132,7 +138,7 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
 
                         var date = Date()
                         let calendar = Calendar.current
-                        if productID == "pro_subscription_monthly"{
+                        if productID == "pro_subscription_monthly" || productID == "pro_subscription_trial_monthly"{
                             date = calendar.date(byAdding: .day, value: 30, to: dateNow as Date)!
                         }
                         else{
@@ -156,7 +162,8 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
                         membershipDict.setObject(trnStr, forKey: "transactionDate" as NSCopying)
                         //membershipDict.setObject(transaction.transactionIdentifier, forKey: "transactionId" as NSCopying)
                         membershipDict.setObject(productID, forKey: "productID" as NSCopying)
-                        
+                        membershipDict.setObject("ios", forKey: "device" as NSCopying)
+
                         let proMembership = ["proMembership":membershipDict]
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(proMembership)
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :true] as [AnyHashable:Any])

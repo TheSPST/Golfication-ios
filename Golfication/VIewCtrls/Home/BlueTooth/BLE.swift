@@ -48,13 +48,14 @@ class BLE: NSObject {
     var downSwing : Float = 0.0
     var handVelocity :Float = 0.0
     var clubVelocity :Float = 0.0
+    var backAngle:Float = 0.0
     var lat :Float = 0.0
     var lng :Float = 0.0
     var totalTagInFirstPackate = 0
     var leftOrRight : Int!
     var metric: Int!
     var isFirst = false
-    var swingDetails = [(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,tempo:Double,club:String,time:Int64)]()
+    var swingDetails = [(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64)]()
     var holeWithSwing = [(hole:Int,shotNo:Int,club:String,lat:Double,lng:Double,holeOut:Bool)]()
     
     
@@ -527,7 +528,7 @@ class BLE: NSObject {
                 }
             }
             if(isPracticeMatch){
-                self.swingDetails.append((shotNo: 0, bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0,tempo:0.0,club:"",time:0))
+                self.swingDetails.append((shotNo: 0, bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0,ba:0.0,tempo:0.0,club:"",time:0))
                 self.randomGenerator()
                 var newByteArray = toByteArray(self.currentGameId)
                 self.invalidateAllTimers()
@@ -917,7 +918,8 @@ extension BLE: CBPeripheralDelegate {
                             swingDict.setValue(data.shotNo, forKey: "shotNum")
                             swingDict.setValue(data.cv, forKey: "clubSpeed")
                             swingDict.setValue(data.time, forKey: "timestamp")
-                            
+                            swingDict.setValue(data.ba, forKey: "backSwingAngle")
+
                             swingDict.setValue(self.randomIntVelocity(max: 90,min: 60),forKey:"VC1")
                             swingDict.setValue(self.randomIntVelocity(max: 55,min: 30),forKey:"VC2")
                             swingDict.setValue(self.randomIntVelocity(max: 140,min: 120),forKey:"VC3")
@@ -1096,7 +1098,7 @@ extension BLE: CBPeripheralDelegate {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: true)
         
     }
-    func updateSingleSwing(data:(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,tempo:Double,club:String,time:Int64),hole:Int){
+    func updateSingleSwing(data:(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64),hole:Int){
         let swingDict = NSMutableDictionary()
         swingDict.setValue(data.club, forKey: "club")
         swingDict.setValue(data.bs, forKey: "backSwing")
@@ -1107,7 +1109,7 @@ extension BLE: CBPeripheralDelegate {
         swingDict.setValue(hole, forKey: "holeNum")
         swingDict.setValue(data.cv, forKey: "clubSpeed")
         swingDict.setValue(data.time, forKey: "timestamp")
-        
+        swingDict.setValue(data.ba, forKey: "backSwingAngle")
         swingDict.setValue(self.randomIntVelocity(max: 90,min: 60),forKey:"VC1")
         swingDict.setValue(self.randomIntVelocity(max: 55,min: 30),forKey:"VC2")
         swingDict.setValue(self.randomIntVelocity(max: 140,min: 120),forKey:"VC3")
@@ -1302,13 +1304,13 @@ extension BLE: CBPeripheralDelegate {
                     }else{
                         if(self.holeWithSwing.count == 0){
                             self.holeWithSwing.append((hole: 1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
-                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, tempo: 0.0, club: "",time:0))
+                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0,ba:0.0,tempo: 0.0, club: "",time:0))
                         }else if(self.holeWithSwing.last!.holeOut){
                             self.holeWithSwing.append((hole:holeWithSwing.last!.hole+1 , shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
-                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, tempo: 0.0, club: "",time:0))
+                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, ba:0.0, tempo: 0.0, club: "",time:0))
                         }else{
                             self.holeWithSwing.append((hole: 1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
-                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, tempo: 0.0, club: "",time:0))
+                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, ba:0.0, tempo: 0.0, club: "",time:0))
                         }
                         hole = Int(dataArray[2])
                         holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[2])
@@ -1376,11 +1378,11 @@ extension BLE: CBPeripheralDelegate {
                 }else if(dataArray[0] == UInt8(91)){
                     
                     if swingDetails.last == nil{
-                        swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, tempo: 0.0, club: "",time:0))
+                        swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0))
                         holeWithSwing.append((hole: 0, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
                     }
                     else if(swingDetails.last!.shotNo != 0){
-                        swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, tempo: 0.0, club: "",time:0))
+                        swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0))
                         holeWithSwing.append((hole: 0, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
                     }
                     if(isPracticeMatch){
@@ -1390,6 +1392,7 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[shotNo-1].bs = Double(backSwing)
                         swingDetails[shotNo-1].ds = Double(downSwing)
                         swingDetails[shotNo-1].hv = Double(handVelocity)
+                        swingDetails[shotNo-1].club = allClubs[Int(dataArray[14])-1]
                         swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
                         swingDetails[shotNo-1].time = Timestamp
                     }else{
@@ -1414,12 +1417,12 @@ extension BLE: CBPeripheralDelegate {
                     
                 }else if(dataArray[0] == UInt8(92)){
                     if(isPracticeMatch){
-                        memccpy(&clubVelocity, [dataArray[4],dataArray[5],dataArray[6],dataArray[7]], 4, 4)
-                        let clubNumber = Int(dataArray[8]-1)
-                        swingDetails[shotNo-1].club = allClubs[clubNumber]
+                        memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
+                        memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         swingDetails[shotNo-1].cv = Double(clubVelocity)
-                        swingDetails[shotNo-1].shotNo = byteArrayToInt32(value: [dataArray[2],dataArray[3]])
-                        shotNo = byteArrayToInt32(value: [dataArray[2],dataArray[3]])+1
+                        swingDetails[shotNo-1].ba = Double(backAngle)
+                        swingDetails[shotNo-1].shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])
+                        shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])+1
                         self.uploadSwingScore()
                     }else{
                         let clubNumber = 0

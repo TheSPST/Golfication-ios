@@ -14,7 +14,7 @@ class HomeFreeProMemberVC: UIViewController, UIScrollViewDelegate {
     // MARK: – Set Outlets
     @IBOutlet weak var closeBtn: UIButton!
     
-    @IBOutlet weak var lblPricePerMonth: UILabel!
+//    @IBOutlet weak var lblPricePerMonth: UILabel!
     @IBOutlet weak var cardView1: CardView!
     @IBOutlet weak var cardView2: CardView!
     @IBOutlet weak var cardView3: CardView!
@@ -22,12 +22,17 @@ class HomeFreeProMemberVC: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var viewUpgradeTrial: UIView!
     @IBOutlet weak var viewJoinBtnContainer: UIView!
-    @IBOutlet weak var viewJoinBtn: UIView!
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var lblCongrats: UILabel!
-    
+    @IBOutlet weak var btnMonthly:UIButton!
+    @IBOutlet weak var btnYearly:UIButton!
+    @IBOutlet weak var viewOneYear:UIView!
+    @IBOutlet weak var viewOneMonth:UIView!
+
+    @IBOutlet weak var actvtIndView: UIActivityIndicatorView!
+
     // MARK: – Set Variables
     var titleLabel: UILabel!
     var subTitleLabel: UILabel!
@@ -42,59 +47,93 @@ class HomeFreeProMemberVC: UIViewController, UIScrollViewDelegate {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func joinAction(_ sender: Any) {
+    @IBAction func monthlyAction(_ sender: Any) {
+        //0->monthly , 1->trial monthly, 2-> trial yearly, 3->yearly
+        IAPHandler.shared.purchaseMyProduct(index: 1)
+    }
+    @IBAction func yearlyAction(_ sender: Any) {
+        IAPHandler.shared.purchaseMyProduct(index: 2)
+    }
+    
+    func setUpIAPHandler() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.startPaymentRequest(_:)), name: NSNotification.Name(rawValue: "PaymentStarted"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.endPaymentRequest(_:)), name: NSNotification.Name(rawValue: "PaymentFinished"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.startFetchingDetails(_:)), name: NSNotification.Name(rawValue: "FetchingStarted"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.endFetchingDetails(_:)), name: NSNotification.Name(rawValue: "FetchingFinished"), object: nil)
+        
+        IAPHandler.shared.fetchAvailableProducts()
+        IAPHandler.shared.purchaseStatusBlock = {[weak self] (type) in
+            guard let strongSelf = self else{ return }
+            if type == .purchased {
+                let alertView = UIAlertController(title: "", message: type.message(), preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in
+                    self?.dismiss(animated: true, completion: nil)
+                })
+                alertView.addAction(action)
+                strongSelf.present(alertView, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    @objc func startFetchingDetails(_ notification: NSNotification) {
+        self.actvtIndView.isHidden = false
+        self.actvtIndView.startAnimating()
+        btnMonthly.isEnabled = false
+        btnYearly.isEnabled = false
+    }
+    @objc func endFetchingDetails(_ notification: NSNotification) {
+        self.actvtIndView.isHidden = true
+        self.actvtIndView.stopAnimating()
+        btnMonthly.isEnabled = true
+        btnYearly.isEnabled = true
+    }
+    
+    @objc func startPaymentRequest(_ notification: NSNotification) {
+        self.actvtIndView.isHidden = false
+        self.actvtIndView.startAnimating()
+        btnMonthly.isEnabled = false
+        btnYearly.isEnabled = false
+    }
+    
+    @objc func endPaymentRequest(_ notification: NSNotification) {
+        self.actvtIndView.isHidden = true
+        self.actvtIndView.stopAnimating()
+        btnMonthly.isEnabled = true
+        btnYearly.isEnabled = true
+
         viewUpgradeTrial.isHidden = false
         viewJoinBtnContainer.isHidden = true
         
-         let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(Timestamp/1000)))
-         let timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-         let formatter = DateFormatter()
-         formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
-         let expiryStr = formatter.string(from: timeEnd!)
-         let trnStr = formatter.string(from: timeStart as Date)
-         
-         let membershipDict = NSMutableDictionary()
-         membershipDict.setObject(0, forKey: "isMembershipActive" as NSCopying)
-         membershipDict.setObject(trnStr, forKey: "transactionDate" as NSCopying)
-         membershipDict.setObject(expiryStr, forKey: "expiryDate" as NSCopying)
-         membershipDict.setObject("Free_Membership", forKey: "productID" as NSCopying)
-         membershipDict.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-         
-         let proMembership = ["proMembership":membershipDict]
-         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(proMembership)
-         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :true] as [AnyHashable:Any])
-         
-         let subDic = NSMutableDictionary()
-         subDic.setObject("Free_Membership", forKey: "productID" as NSCopying)
-         subDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-         subDic.setObject("purchase", forKey: "type" as NSCopying)
-         let subKey = ref!.child("\(Auth.auth().currentUser!.uid)").childByAutoId().key
-         let subscriptionDict = NSMutableDictionary()
-         subscriptionDict.setObject(subDic, forKey: subKey as NSCopying)
-         ref.child("subscriptions/\(Auth.auth().currentUser!.uid)/").updateChildValues(subscriptionDict as! [AnyHashable : Any])
-         
-         UserDefaults.standard.set(false, forKey: "isNewUser")
-         UserDefaults.standard.synchronize()
+        UserDefaults.standard.set(false, forKey: "isNewUser")
+        UserDefaults.standard.synchronize()
         
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)
     }
-    
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.isNavigationBarHidden = false
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentStarted"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentFinished"), object: nil)
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "FetchingStarted"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "FetchingFinished"), object: nil)
+    }
+
     // MARK: – viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
         
+        setUpIAPHandler()
+
         viewUpgradeTrial.isHidden = true
         lblCongrats.text = "Your 30 days free trial has been activated"
         
-//        viewUpgradeTrial.layer.cornerRadius = 5.0
-//        viewJoinBtnContainer.layer.cornerRadius = 5.0
-        viewJoinBtn.layer.cornerRadius = 25
+        viewOneYear.layer.cornerRadius = 25.0
+        viewOneMonth.layer.cornerRadius = 25.0
 
-        //        let attributeString =  NSMutableAttributedString(string: "$3.99/month")
-//        attributeString.addAttribute(NSAttributedStringKey.strikethroughStyle, value: NSUnderlineStyle.styleSingle.rawValue, range: NSMakeRange(0, attributeString.length))
-//        lblPrice.attributedText = attributeString
-        
         closeBtn.setCircle(frame: closeBtn.frame)
         
         cardView1.shadowOffsetHeight = Int(0.5)
@@ -111,13 +150,6 @@ class HomeFreeProMemberVC: UIViewController, UIScrollViewDelegate {
         
         //https://www.dribba.com/uiscrollview-and-autolayout-with-ios8-and-swift/
         scrollView.delegate = self
-        
-//        let rectShape = CAShapeLayer()
-//        rectShape.bounds = self.viewJoinBtnContainer.frame
-//        rectShape.position = self.viewJoinBtnContainer.center
-//        rectShape.path = UIBezierPath(roundedRect: self.viewJoinBtnContainer.bounds, byRoundingCorners: [.bottomLeft , .bottomRight], cornerRadii: CGSize(width: 5, height: 5)).cgPath
-//        self.viewJoinBtnContainer.layer.backgroundColor = UIColor.white.cgColor
-//        self.viewJoinBtnContainer.layer.mask = rectShape
     }
     
     // MARK: – ScrollViewDelegate

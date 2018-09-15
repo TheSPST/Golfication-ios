@@ -82,6 +82,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var isFromViewDid = false
     var startingIndex = Int()
     var gameTypeIndex = Int()
+    var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
 
     // Header IBOutlets
     @IBOutlet weak var backBtnHeader: UIButton!
@@ -144,7 +145,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             playerIndex += 1
         }
-        FBSomeEvents.shared.logGameEndedEvent(holesPlayed: self.holeOutforAppsFlyer[playerIndex], gameT: 2)
+        FBSomeEvents.shared.logGameEndedEvent(holesPlayed: self.holeOutforAppsFlyer[playerIndex], valueToSum: 2)
         if(self.holeOutforAppsFlyer[playerIndex] >= 9){
             self.saveAndviewScore()
         }else{
@@ -243,7 +244,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         stackViewMenu.isHidden = true
         let emptyAlert = UIAlertController(title: "Restart Round", message: "You Played \(self.holeOutforAppsFlyer[self.playerIndex])/\(scoring.count) Holes. Are you sure you want to Restart the Round ?", preferredStyle: UIAlertControllerStyle.alert)
         emptyAlert.addAction(UIAlertAction(title: "Restart Round", style: .default, handler: { (action: UIAlertAction!) in
-            if(self.playersButton.count > 1){
+            if(!self.playersButton.isEmpty){
                 self.checkIfMuliplayerJoined(matchID:self.matchId)
             }else{
                 self.resetScoreNodeForMe()
@@ -375,14 +376,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         var currentHole = self.startingIndex
         if(self.isContinueMatch){
             
-            if(self.scoring.count == 0){
+            if(self.scoring.isEmpty){
                 self.initilizeScoreNode()
             }
             if let current = matchDataDic.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
                 currentHole = Int(current)!
             }else{
                 if let current = matchDataDic.value(forKeyPath: "currentHole") as? String{
-                    currentHole = Int(current.count == 0 ? "1":current)! - 1
+                    currentHole = Int(current.isEmpty ? "1":current)! - 1
                 }
             }
             updateScoringHoleData()
@@ -580,7 +581,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var userLocationForClub : CLLocationCoordinate2D?
     var positionsOfDotLine = [CLLocationCoordinate2D]()
     var polygonArray = [[CLLocationCoordinate2D]]()
-    
+    var isBackground : Bool{
+        let state = UIApplication.shared.applicationState
+        if state == .background {
+            return true
+        }else{
+            return false
+        }
+    }
     //    var mapView = GMSMapView()
     var progressView = SDLoader()
     
@@ -887,6 +895,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         super.viewDidLoad()
         initalSetup()
         let onCourse = matchDataDic.value(forKeyPath: "onCourse") as! Bool
+        
         self.courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
         if (onCourse){
             locationManager.delegate = self
@@ -894,6 +903,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             let currentLocation: CLLocation = self.locationManager.location!
             self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
             self.mapView.isMyLocationEnabled = true
+            if onCourseNotification == 1{
+                self.registerBackgroundTask()
+            }
         }
         self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
         self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
@@ -903,15 +915,44 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         progressView.show()
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.sendNotificationOnCourse(_:)), name: NSNotification.Name(rawValue: "updateLocation"),object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
+
         //         getGolfCourseDataFromFirebase()
-        
-
-
+    }
+    // --------------------------- End -------------------------------
+    @objc func sendNotificationOnCourse(_ notification:NSNotification){
+        self.locationManager.startUpdatingLocation()
+        var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
+        var suffix = "meter"
+        if(distanceFilter != 1){
+            distance = distance*YARD
+            suffix = "yard"
+        }
+        Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[self.holeIndex].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0)
+        debugPrint("distance",distance)
+    }
+    @objc func changeHoleFromNotification(_ notification:NSNotification){
+        if let nextOrPrev = notification.object as? String{
+            if(nextOrPrev == "next"){
+                self.nextAction(self.btnNext)
+            }else{
+                self.previousAction(self.btnPrev)
+            }
+        }
+    }
+    func registerBackgroundTask() {
+        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+            self?.endBackgroundTask()
+        }
+        assert(backgroundTask != UIBackgroundTaskInvalid)
     }
     
-    // --------------------------- End -------------------------------
-    
+    func endBackgroundTask() {
+        print("Background task ended.")
+        UIApplication.shared.endBackgroundTask(backgroundTask)
+        backgroundTask = UIBackgroundTaskInvalid
+    }
     //MARK: - Setup Initital UI
     func setInitialUI(){
         var tag = 0
@@ -1350,7 +1391,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     func updateLine(mapView:GMSMapView, marker:GMSMarker){
         isUpdating = true
         draggingMarker = marker
-        if(positionsOfDotLine.count > 0 && marker.title == "Point" ){
+        if(!positionsOfDotLine.isEmpty && marker.title == "Point" ){
             positionsOfDotLine.remove(at: marker.userData as! Int)
             positionsOfDotLine.insert(marker.position, at: marker.userData as! Int)
             //print("Moving only dashedLine")
@@ -2199,10 +2240,19 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             updateStrokesButtonWithoutStrokes(strokes: (newI-self.scoring[indexToUpdate].par), btn: btn as! UIButton)
             newI += 1
         }
+        var counter = 0
+
         if(userLocationForClub != nil) && (self.playerId == Auth.auth().currentUser!.uid){
-            mapTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (timer) in
+            mapTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
                 if(self.positionsOfDotLine.count > 2){
-                    self.locationManager.startUpdatingLocation()
+                    if self.isBackground{
+                        if(counter%60 == 0){
+                            self.locationManager.startUpdatingLocation()
+                        }
+                    }else{
+                        self.locationManager.startUpdatingLocation()
+                    }
+
                     let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
                     if (distance < 15000){
                         self.positionsOfDotLine.remove(at: 0)
@@ -2228,7 +2278,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         self.plotLine(positions: self.positionsOfDotLine)
                         
                         var data : GreenData!
-                        if(self.courseData.holeGreenDataArr.count == 0){
+                        if(self.courseData.holeGreenDataArr.isEmpty){
                             data = self.setFronBackCenter(ind: indexToUpdate, currentLocation: self.userLocationForClub!)
                         }else{
                             data = self.courseData.holeGreenDataArr[indexToUpdate]
@@ -2247,6 +2297,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         self.lblCenterDist.text = "\(Int(distanceC)) \(suffix)"
                         self.lblEndDist.text = "\(Int(distanceE)) \(suffix)"
                         self.lblCenterHeader.text = "\(Int(distanceC)) \(suffix)"
+                        if(counter%60 == 0){
+                            Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0)
+                        }
+                        counter += 5
                     }
                     else{
                         let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)
@@ -2281,8 +2335,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         })
 
     }
-    
-    
     func getSuggestedClub(distance:Double,isGreen:Bool,shot:Int)->NSMutableAttributedString{
         var clubName = String()
         var distance = distance

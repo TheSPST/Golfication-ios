@@ -27,7 +27,8 @@ var startingHole: String = "1"
 var matchId = String()
 var mode = Int()
 var selectedTee = ""
-
+var selectedSlope = Int()
+var selectedRating = Int()
 class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     // MARK: Set Outlets
@@ -133,28 +134,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             string: myController.message!,
             attributes: [NSAttributedStringKey.foregroundColor: UIColor.glfBluegreen, NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 15.0)!])
         myController.setValue(messageAttributed, forKey: "attributedMessage")
-        
-        var color = [UIColor]()
-        for i in 0..<self.teeArr.count{
-            let tee = self.teeArr[i]
-            if(tee.name.contains("Whit")){
-                color.append(UIColor.glfFlatBlue)
-            }else if(tee.name.contains("Blu")){
-                color.append(UIColor.glfBluegreen)
-            }else if(tee.name.contains("Bla")){
-                color.append(UIColor.glfBluegreen)
-            }else if(tee.name.contains("Red")){
-                color.append(UIColor.glfRosyPink)
-            }
-        }
         var i = 0
         for tee in self.teeArr{
             let whiteTee = (UIAlertAction(title: "\(tee.name) (\(tee.type) Tee)", style: UIAlertActionStyle.default, handler: { action in
                 self.lblTeeName.text = "\(tee.name)"
                 self.lblTeeType.text = "(\(tee.type) Tee)"
+                self.lblTeeRating.text = tee.rating
+                self.lblTeeSlope.text = tee.slope
+                selectedSlope = Int(tee.slope)!
+                selectedRating = Int(tee.rating)!
                 selectedTee = "\(tee.name)"
             }))
-//            whiteTee.setValue(color[i], forKey: "teeName")
             myController.addAction(whiteTee)
             i += 1
         }
@@ -162,34 +152,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             debugPrint("Cancelled")
         })
         myController.addAction(cancelOption)
-
-
-//        let whiteTee = (UIAlertAction(title: "White Tee", style: UIAlertActionStyle.default, handler: { action in
-//            self.lblTeeName.text = "White Tee"
-//            self.lblTeeType.text = "(Competition Tee)"
-////            self.lblTeeSlope.text = "32"
-////            self.lblTeeRating.text = "75.0"
-//        }))
-//        let blueTee = (UIAlertAction(title: "Blue Tee", style: UIAlertActionStyle.default, handler: { action in
-//            self.lblTeeName.text = "Blue Tee"
-//            self.lblTeeType.text = "(Men Tee)"
-////            self.lblTeeSlope.text = "32"
-////            self.lblTeeRating.text = "75.0"
-//        }))
-//        let redTee = (UIAlertAction(title: "Red Tee", style: UIAlertActionStyle.default, handler: { action in
-//            self.lblTeeName.text = "Red Tee"
-//            self.lblTeeType.text = "(Women Tee)"
-////            self.lblTeeSlope.text = "32"
-////            self.lblTeeRating.text = "75.0"
-//        }))
-//        whiteTee.setValue(UIColor.glfBluegreen, forKey: "titleTextColor")
-//        redTee.setValue(UIColor.glfRosyPink, forKey: "titleTextColor")
-//        blueTee.setValue(UIColor.glfFlatBlue, forKey: "titleTextColor")
-
-//        myController.addAction(whiteTee)
-//        myController.addAction(blueTee)
-//        myController.addAction(redTee)
-
         present(myController, animated: true, completion: nil)
     }
     // MARK: backAction
@@ -634,14 +596,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
         // ------------------------ end -------------------------------------------
-        if isDevice{
-           self.navigationItem.rightBarButtonItem = barBtnBLE
-            barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-           checkDeviceStatus()
-        }
-        else{
+//        if isDevice{
+//           self.navigationItem.rightBarButtonItem = barBtnBLE
+//            barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+//           checkDeviceStatus()
+//        }
+//        else{
             self.navigationItem.rightBarButtonItem = nil
-        }
+        //}
     }
     
     // MARK: setInitialUi
@@ -738,12 +700,15 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
         if let currentLocation: CLLocation = locationManager.location{
-            
             self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
         }
         else{
+
             let alert = UIAlertController(title: "Alert", message: "Please enable GPS to get your nearest course.", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
+                locationManager.requestAlwaysAuthorization()
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            }))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -1216,114 +1181,121 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         btnStartContinue.isHidden = false
     }
-    var rating = "N/A"
-    var slope = "N/A"
-    var teeArr = [(name:String,type:String)]()
+    var teeArr = [(name:String,type:String,rating:String,slope:String)]()
     // MARK: selectedGameTypeFromFirebase
     func checkRangeFinderHoleData() {
         if  !(selectedGolfID == "") {
             teeArr.removeAll()
             let golfId = "course_\(selectedGolfID)"
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder") { (snapshot) in
-                if let rangeFin = snapshot.value as? NSMutableDictionary{
-                    if let rating = rangeFin.value(forKey: "rating") as? Int{
-                        self.rating = "\(rating)"
-                    }
-                    if let slope = rangeFin.value(forKey: "slope") as? Int{
-                        self.slope = "\(slope)"
-                    }
-                    if let holeArr = rangeFin.value(forKeyPath: "holes") as? NSArray{
-                        if let holeZero = holeArr.firstObject as? NSMutableDictionary{
-                            if let teeBoxArr = holeZero.value(forKey: "teeBoxes") as? NSArray{
-                                for tee in teeBoxArr{
-                                    let tee = tee as! NSMutableDictionary
-                                    let teeName = tee.value(forKey: "teeColorType") as! String
-                                    let teeType = tee.value(forKey: "teeType") as! String
-                                    self.teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter()))
-                                }
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/stats") { (snapshot) in
+                var rangeFinArr = [NSMutableDictionary]()
+                if let rangeFin = snapshot.value as? [NSMutableDictionary]{
+                    rangeFinArr = rangeFin
+                }
+                DispatchQueue.main.async(execute: {
+                    if (rangeFinArr.isEmpty){
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/stableford/stats") { (snapshot) in
+                            if let rangeFin = snapshot.value as? [NSMutableDictionary]{
+                                rangeFinArr = rangeFin
                             }
+                            DispatchQueue.main.async(execute: {
+                                self.processSelectTee(rangeFinArr: rangeFinArr)
+                            })
+                        }
+                    }else{
+                        self.processSelectTee(rangeFinArr: rangeFinArr)
+                    }
+                })
+            }
+        }
+    }
+    private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
+        for data in rangeFinArr{
+            let rating = data.value(forKey: "rating") as! Int
+            let slope = data.value(forKey: "slope") as! Int
+            let teeName = data.value(forKey: "teeColorType") as! String
+            let teeType = data.value(forKey: "teeType") as! String
+            self.teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:"\(rating)", slope:"\(slope)"))
+        }
+        if(!self.teeArr.isEmpty){
+            self.startingTeeCardView.isHidden = false
+            self.lblTeeName.text = "\(self.teeArr[0].name)"
+            self.lblTeeType.text = "(\(self.teeArr[0].type) Tee)"
+            self.lblTeeSlope.text = self.teeArr[0].slope
+            self.lblTeeRating.text = self.teeArr[0].rating
+            selectedSlope = Int(self.teeArr[0].slope)!
+            selectedRating = Int(self.teeArr[0].rating)!
+            selectedTee = self.teeArr[0].name
+        }else{
+            selectedTee = ""
+            selectedSlope = 0
+            selectedRating = 0
+            
+            self.startingTeeCardView.isHidden = true
+            
+            var chkStableford = false
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+                var dataDic = [String:Int]()
+                if(snapshot.childrenCount > 0){
+                    dataDic = (snapshot.value as? [String : Int])!
+                }
+                if !dataDic.isEmpty{
+                    for (key, _) in dataDic{
+                        if key == selectedGolfID{
+                            chkStableford = true
+                            break
                         }
                     }
                 }
                 DispatchQueue.main.async(execute: {
-                    if(self.teeArr.count > 0){
-                        self.startingTeeCardView.isHidden = false
-                        self.lblTeeName.text = "\(self.teeArr[0].name)"
-                        self.lblTeeType.text = "(\(self.teeArr[0].type) Tee)"
-                        self.lblTeeSlope.text = self.slope
-                        self.lblTeeRating.text = self.rating
-                        selectedTee = self.teeArr[0].name
-                    }else{
-                        selectedTee = ""
-                        self.startingTeeCardView.isHidden = true
-
-                        var chkStableford = false
-                        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-                        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
-                            var dataDic = [String:Int]()
-                            if(snapshot.childrenCount > 0){
-                                dataDic = (snapshot.value as? [String : Int])!
+                    self.progressView.hide(navItem: self.navigationItem)
+                    
+                    if !self.isImagePicked && !chkStableford{
+                        self.requestSFPopupView = Bundle.main.loadNibNamed("RequestSFPopup", owner: self, options: nil)![0] as! UIView
+                        self.requestSFPopupView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+                        
+                        self.cameraBtn = self.requestSFPopupView.viewWithTag(222) as! UIButton
+                        self.cameraBtn.layer.cornerRadius = 3.0
+                        self.cameraBtn.addTarget(self, action: #selector(self.submitAction(_:)), for: .touchUpInside)
+                        let closeBtn = self.requestSFPopupView.viewWithTag(333) as! UIButton
+                        closeBtn.addTarget(self, action: #selector(self.closeSFPopup(_:)), for: .touchUpInside)
+                        let submitBtn = self.requestSFPopupView.viewWithTag(111) as! UIButton
+                        submitBtn.layer.cornerRadius = 3.0
+                        submitBtn.addTarget(self, action: #selector(self.submitAction(_:)), for: .touchUpInside)
+                        
+                        self.view.addSubview(self.requestSFPopupView)
+                    }
+                    else if self.isImagePicked{
+                        self.isImagePicked = false
+                        self.requestSFPopupView.removeFromSuperview()
+                        
+                        let imageRef = Storage.storage().reference().child("\(Auth.auth().currentUser!.uid)-\(Timestamp)-stablefordImage.png")
+                        self.uploadImage(self.chosenImage, at: imageRef) { (downloadURL) in
+                            guard let downloadURL = downloadURL else {
+                                return
                             }
-                            if dataDic.count > 0{
-                                for (key, _) in dataDic{
-                                    if key == selectedGolfID{
-                                        chkStableford = true
-                                        break
-                                    }
-                                }
-                            }
-                            DispatchQueue.main.async(execute: {
-                                self.progressView.hide(navItem: self.navigationItem)
-
-                                if !self.isImagePicked && !chkStableford{
-                                    self.requestSFPopupView = Bundle.main.loadNibNamed("RequestSFPopup", owner: self, options: nil)![0] as! UIView
-                                    self.requestSFPopupView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
-                                    
-                                    self.cameraBtn = self.requestSFPopupView.viewWithTag(222) as! UIButton
-                                    self.cameraBtn.layer.cornerRadius = 3.0
-                                    self.cameraBtn.addTarget(self, action: #selector(self.submitAction(_:)), for: .touchUpInside)
-                                    let closeBtn = self.requestSFPopupView.viewWithTag(333) as! UIButton
-                                    closeBtn.addTarget(self, action: #selector(self.closeSFPopup(_:)), for: .touchUpInside)
-                                    let submitBtn = self.requestSFPopupView.viewWithTag(111) as! UIButton
-                                    submitBtn.layer.cornerRadius = 3.0
-                                    submitBtn.addTarget(self, action: #selector(self.submitAction(_:)), for: .touchUpInside)
-                                    
-                                    self.view.addSubview(self.requestSFPopupView)
-                                }
-                                else if self.isImagePicked{
-                                    self.isImagePicked = false
-                                    self.requestSFPopupView.removeFromSuperview()
-                                    
-                                    let imageRef = Storage.storage().reference().child("\(Auth.auth().currentUser!.uid)-\(Timestamp)-stablefordImage.png")
-                                    self.uploadImage(self.chosenImage, at: imageRef) { (downloadURL) in
-                                        guard let downloadURL = downloadURL else {
-                                            return
-                                        }
-                                        let urlString = downloadURL.absoluteString
-                                        
-                                        let courseDetailDic = NSMutableDictionary()
-                                        let courseDic = NSMutableDictionary()
-                                        let courseId = ref!.child("stablefordRequest").childByAutoId().key
-                                        courseDic.setObject(selectedGolfID, forKey: "courseId" as NSCopying)
-                                        courseDic.setObject(selectedGolfName, forKey: "courseName" as NSCopying)
-                                        courseDic.setObject(urlString, forKey: "image" as NSCopying)
-                                        courseDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-                                        courseDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
-                                        courseDic.setObject(Auth.auth().currentUser!.displayName!, forKey: "userName" as NSCopying)
-                                        courseDetailDic.setObject(courseDic, forKey: courseId as NSCopying)
-                                        ref.child("stablefordRequest").updateChildValues(courseDetailDic as! [AnyHashable : Any])
-                                        
-                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/stablefordCourse/").updateChildValues([selectedGolfID:Timestamp])
-                                    }
-                                }
-                            })
+                            let urlString = downloadURL.absoluteString
+                            
+                            let courseDetailDic = NSMutableDictionary()
+                            let courseDic = NSMutableDictionary()
+                            let courseId = ref!.child("stablefordRequest").childByAutoId().key
+                            courseDic.setObject(selectedGolfID, forKey: "courseId" as NSCopying)
+                            courseDic.setObject(selectedGolfName, forKey: "courseName" as NSCopying)
+                            courseDic.setObject(urlString, forKey: "image" as NSCopying)
+                            courseDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+                            courseDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
+                            courseDic.setObject(Auth.auth().currentUser!.displayName!, forKey: "userName" as NSCopying)
+                            courseDetailDic.setObject(courseDic, forKey: courseId as NSCopying)
+                            ref.child("stablefordRequest").updateChildValues(courseDetailDic as! [AnyHashable : Any])
+                            
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/stablefordCourse/").updateChildValues([selectedGolfID:Timestamp])
                         }
                     }
                 })
             }
         }
     }
-
     func uploadImage(_ image: UIImage, at reference: StorageReference, completion: @escaping (URL?) -> Void) {
         guard let imageData = UIImageJPEGRepresentation(image, 0.1) else {
             return completion(nil)
@@ -1399,7 +1371,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
 
             let golfId = "course_\(selectedGolfID)"
-            self.checkRangeFinderHoleData()
+//            self.checkRangeFinderHoleData()
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)") { (snapshot) in
                 if snapshot.value != nil{
 
@@ -1518,7 +1490,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         debugPrint("ModeGame",self.gameMode)
                         debugPrint("modeScoring",self.scoringMode)
 
-                        if isDevice{
+                        /*if isDevice{
                             self.lblLegacyAppMode.isHidden = false
                             self.golficationXView.isHidden = false
                             
@@ -1550,7 +1522,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 self.mappingGolfXView.isHidden = true
                             }
                             self.deselectGOlfXView()
-                        } 
+                        }*/
                     })
                 }
                 else{
@@ -2656,7 +2628,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         var holIndex = -1
         let totalThru: Int = self.checkHoleOutZero()
-        FBSomeEvents.shared.logGameEndedEvent(holesPlayed: totalThru, gameT: mode)
+        FBSomeEvents.shared.logGameEndedEvent(holesPlayed: totalThru, valueToSum: Double(mode))
         for i in 0..<detailedScore.count{
             let dic = detailedScore[i] as! NSMutableDictionary
             if (dic.value(forKey: "DetailCount") as! Int == 2){
