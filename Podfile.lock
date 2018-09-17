@@ -7,9 +7,9 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - Charts (3.0.4):
-    - Charts/Core (= 3.0.4)
-  - Charts/Core (3.0.4)
+  - Charts (3.1.1):
+    - Charts/Core (= 3.1.1)
+  - Charts/Core (3.1.1)
   - Crashlytics (3.9.3):
     - Fabric (~> 1.7.2)
   - CTShowcase (2.2.0)
@@ -158,7 +158,7 @@ SPEC CHECKSUMS:
   ActionButton: a71147de5a83b6d8d8e18464b216904ba7821677
   ActionSheetPicker-3.0: d11a4c12c6aaf704b8a3f56d179198c99f3e41e6
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  Charts: 0705898046257443f0afbbc3179f4b67507b6e48
+  Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
   Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
   CTShowcase: e7246c7294dc76a133582e8e20fb07f39e9e19c0
   DeviceKit: 3de509f9db7ae93bf676da5e97b945517bc957cd

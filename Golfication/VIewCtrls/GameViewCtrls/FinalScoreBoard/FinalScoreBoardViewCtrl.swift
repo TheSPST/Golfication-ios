@@ -396,16 +396,16 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 }
             }
         }
-        self.navigationItem.rightBarButtonItem = nil
-//        self.btnEditRound.isEnabled = false
-//        for data in self.finalPlayersData{
-//            if let uid =  (data as AnyObject).value(forKey: "id") as? String{
-//                if(uid == Auth.auth().currentUser!.uid){
-//                    self.btnEditRound.isEnabled = true
-//                    break
-//                }
-//            }
-//        }
+//        self.navigationItem.rightBarButtonItem = nil
+        self.btnEditRound.isEnabled = false
+        for data in self.finalPlayersData{
+            if let uid =  (data as AnyObject).value(forKey: "id") as? String{
+                if(uid == Auth.auth().currentUser!.uid){
+                    self.btnEditRound.isEnabled = true
+                    break
+                }
+            }
+        }
     }
    
     func startTimer(totalTime : Int) {
