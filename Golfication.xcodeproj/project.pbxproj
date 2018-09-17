@@ -209,7 +209,7 @@
 		4BCA1E6D209DECB200DFBC19 /* NewGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA1E6C209DECB200DFBC19 /* NewGameVC.swift */; };
 		4BCC816420AD64F600AD3108 /* ScanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC816320AD64F600AD3108 /* ScanProgressView.swift */; };
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
-		4BCDF23F214D2D8E00716BF3 /* GoogleService-Info-Dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCDF23E214D2D8E00716BF3 /* GoogleService-Info-Dev.plist */; };
+		4BCDF241214D3A2000716BF3 /* GoogleService-Info-Live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCDF240214D3A1F00716BF3 /* GoogleService-Info-Live.plist */; };
 		4BCFF6D820453CBC00FCB10D /* MySwingWebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */; };
 		4BD5CF83214CE17E00BEBEED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */; };
 		4BD5CF85214D212500BEBEED /* RefreshSubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */; };
@@ -436,7 +436,7 @@
 		4BCA1E6C209DECB200DFBC19 /* NewGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameVC.swift; sourceTree = "<group>"; };
 		4BCC816320AD64F600AD3108 /* ScanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanProgressView.swift; sourceTree = "<group>"; };
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
-		4BCDF23E214D2D8E00716BF3 /* GoogleService-Info-Dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-Dev.plist"; sourceTree = "<group>"; };
+		4BCDF240214D3A1F00716BF3 /* GoogleService-Info-Live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-Live.plist"; sourceTree = "<group>"; };
 		4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySwingWebViewVC.swift; sourceTree = "<group>"; };
 		4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSubscriptionManager.swift; sourceTree = "<group>"; };
 		4BD6AABA20A9AA0C00F1839C /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
@@ -1044,7 +1044,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4BCDF23E214D2D8E00716BF3 /* GoogleService-Info-Dev.plist */,
+				4BCDF240214D3A1F00716BF3 /* GoogleService-Info-Live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1177,7 +1177,6 @@
 				4B8C8D3D1FF674D0001F5D01 /* SF-Pro-Display-Thin.otf in Resources */,
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
-				4BCDF23F214D2D8E00716BF3 /* GoogleService-Info-Dev.plist in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
@@ -1206,6 +1205,7 @@
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
 				4B8C8D371FF674D0001F5D01 /* SF-Pro-Display-Black.otf in Resources */,
+				4BCDF241214D3A2000716BF3 /* GoogleService-Info-Live.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
