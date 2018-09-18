@@ -531,8 +531,8 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     
     // MARK: sliderChangedAction
     @IBAction func sliderChangedAction(_ sender: Any) {
-        self.lblHandicap.text = "Handicap \(Int(self.slider.value))"//(value as! NSString).floatValue
-        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\(Int(self.slider.value))"] as [AnyHashable:Any])
+        self.lblHandicap.text = "Handicap \((self.slider.value*10).rounded()/10)"//(value as! NSString).floatValue
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.slider.value*10).rounded()/10)"] as [AnyHashable:Any])
     }
     
     // MARK: btnCheckBoxAction
@@ -672,7 +672,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                         }
 
                         self.sliderHandicapNumber.value = (value as! NSString).floatValue
-                        self.lblHandicap.text = "Handicap \(Int(self.sliderHandicapNumber.value))"
+                        self.lblHandicap.text = "Handicap \(self.sliderHandicapNumber.value)"
                     }
                     /*else if(keys == "golfBag"){
                         let golfBagArray = value as! NSMutableArray

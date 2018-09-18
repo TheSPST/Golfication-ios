@@ -526,7 +526,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         let feedDict = NSMutableDictionary()
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
-        feedDict.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        feedDict.setObject(matchDataDic.value(forKey: "timestamp") as Any, forKey: "timestamp" as NSCopying)
         feedDict.setObject(matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
@@ -563,6 +563,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             viewCtrl.finalScoreData = self.scoring
             viewCtrl.currentMatchId = mID
             viewCtrl.justFinishedTheMatch = true
+            viewCtrl.fromGameImprovement = true
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoring.removeAll()
             self.matchId.removeAll()

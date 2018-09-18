@@ -79,7 +79,7 @@
                                     }
                                     if((key as! String) == Auth.auth().currentUser!.uid) && (((value as! NSMutableDictionary).value(forKey: "holeOut")) as! Bool) == true{
                                         self.holeOutTrueParVal +=  score.value(forKey: "par") as! Int
-
+                                        self.holeCountValue = self.holeCountValue + 1
                                         //self.generateStatsInt += 1
                                         if let shots = (((value as! NSMutableDictionary).value(forKey: "shots")) as? NSArray){
                                             shotsArray = shots
@@ -201,8 +201,6 @@
                                             }
                                             
                                             self.puttCountValue = self.puttCountValue + putting
-                                            self.holeCountValue = self.holeCountValue + 1
-                                            
                                         }
                                         
                                         if let fairway = (((value as! NSMutableDictionary).value(forKey: "fairway")) as? String){

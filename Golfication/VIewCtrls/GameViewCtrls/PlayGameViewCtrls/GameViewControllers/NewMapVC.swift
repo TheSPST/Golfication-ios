@@ -895,7 +895,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let feedDict = NSMutableDictionary()
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
-        feedDict.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        feedDict.setObject(self.matchDataDict.value(forKey: "timestamp") as Any, forKey: "timestamp" as NSCopying)
         feedDict.setObject(matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
@@ -932,6 +932,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             viewCtrl.finalScoreData = self.scoring
             viewCtrl.currentMatchId = mID
             viewCtrl.justFinishedTheMatch = true
+            viewCtrl.fromGameImprovement = true
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoring.removeAll()
             matchId.removeAll()
@@ -3755,7 +3756,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.viewForground.isHidden = !isHide
     }
     func calculateTotalExtraShots()->Double{
-        let data = (courseData.handicap * selectedSlope)
+        let data = (courseData.handicap * Double(selectedSlope))
         return (Double(data / 113))
     }
     @objc func loadMap(_ notification: NSNotification) {

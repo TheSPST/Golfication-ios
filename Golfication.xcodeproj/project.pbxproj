@@ -64,6 +64,8 @@
 		3EAE867E2125573F0081857B /* PracticePageContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */; };
 		3EAE867F2125573F0081857B /* Device.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EAE867B2125573E0081857B /* Device.storyboard */; };
 		3EB6D3B72137CA72000DA1BE /* FBSomeEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */; };
+		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
+		3EB769F52150D6D700830DAB /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F42150D6D700830DAB /* GoogleService-Info-live.plist */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
 		3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */ = {isa = PBXBuildFile; fileRef = 3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */; };
 		3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED2C8792088C08800604F31 /* ProfileVC.swift */; };
@@ -209,7 +211,6 @@
 		4BCA1E6D209DECB200DFBC19 /* NewGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA1E6C209DECB200DFBC19 /* NewGameVC.swift */; };
 		4BCC816420AD64F600AD3108 /* ScanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC816320AD64F600AD3108 /* ScanProgressView.swift */; };
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
-		4BCDF241214D3A2000716BF3 /* GoogleService-Info-Live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCDF240214D3A1F00716BF3 /* GoogleService-Info-Live.plist */; };
 		4BCFF6D820453CBC00FCB10D /* MySwingWebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */; };
 		4BD5CF83214CE17E00BEBEED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */; };
 		4BD5CF85214D212500BEBEED /* RefreshSubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */; };
@@ -286,6 +287,8 @@
 		3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticePageContainerVC.swift; sourceTree = "<group>"; };
 		3EAE867B2125573E0081857B /* Device.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Device.storyboard; sourceTree = "<group>"; };
 		3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSomeEvents.swift; sourceTree = "<group>"; };
+		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
+		3EB769F42150D6D700830DAB /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
 		3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json"; sourceTree = "<group>"; };
 		3ED2C8792088C08800604F31 /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
@@ -436,7 +439,6 @@
 		4BCA1E6C209DECB200DFBC19 /* NewGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameVC.swift; sourceTree = "<group>"; };
 		4BCC816320AD64F600AD3108 /* ScanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanProgressView.swift; sourceTree = "<group>"; };
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
-		4BCDF240214D3A1F00716BF3 /* GoogleService-Info-Live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-Live.plist"; sourceTree = "<group>"; };
 		4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySwingWebViewVC.swift; sourceTree = "<group>"; };
 		4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSubscriptionManager.swift; sourceTree = "<group>"; };
 		4BD6AABA20A9AA0C00F1839C /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
@@ -645,6 +647,7 @@
 		4B1F6B922090A29F00312EA7 /* GameViewCtrls */ = {
 			isa = PBXGroup;
 			children = (
+				3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */,
 				3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */,
 				3EE21F9920E2129A009B2C60 /* NextRoundVC.swift */,
 				3EEC413D20E1031D0093D0CC /* StartGameModeObj.swift */,
@@ -1044,7 +1047,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4BCDF240214D3A1F00716BF3 /* GoogleService-Info-Live.plist */,
+				3EB769F42150D6D700830DAB /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1172,11 +1175,13 @@
 				3E59234A20A991C60056D446 /* Home.storyboard in Resources */,
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
+				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
 				3EAE867F2125573F0081857B /* Device.storyboard in Resources */,
 				4B8C8D3D1FF674D0001F5D01 /* SF-Pro-Display-Thin.otf in Resources */,
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
+				3EB769F52150D6D700830DAB /* GoogleService-Info-live.plist in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
@@ -1205,7 +1210,6 @@
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
 				4B8C8D371FF674D0001F5D01 /* SF-Pro-Display-Black.otf in Resources */,
-				4BCDF241214D3A2000716BF3 /* GoogleService-Info-Live.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1242,7 +1246,6 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

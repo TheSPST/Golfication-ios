@@ -637,6 +637,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
             viewCtrl.finalScoreData = self.scoreData
             viewCtrl.currentMatchId = mID
             viewCtrl.justFinishedTheMatch = true
+            viewCtrl.fromGameImprovement = true
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoreData.removeAll()
             matchId.removeAll()

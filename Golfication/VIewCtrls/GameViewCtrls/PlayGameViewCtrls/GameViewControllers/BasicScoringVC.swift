@@ -330,7 +330,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         let feedDict = NSMutableDictionary()
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
-        feedDict.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        feedDict.setObject(self.matchDataDict.value(forKey: "timestamp") as Any, forKey: "timestamp" as NSCopying)
         feedDict.setObject(matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
@@ -367,6 +367,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             viewCtrl.finalScoreData = self.scoreData
             viewCtrl.currentMatchId = mID
             viewCtrl.justFinishedTheMatch = true
+            viewCtrl.fromGameImprovement = true
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoreData.removeAll()
             matchId.removeAll()

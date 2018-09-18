@@ -209,6 +209,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         super.viewDidLoad()
         self.title = "Round Summary"
         self.automaticallyAdjustsScrollViewInsets = false
+        if fromGameImprovement{
+            redirectToJoinFBGameImprovement()
+        }        
         NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRound"), object: nil)
 
         superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
@@ -1645,45 +1648,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     @objc func afterResponseEditRound(_ notification:NSNotification){
-        debugPrint("EditThisRound",editThisRound)
-        let alertVC = UIAlertController(title: "Edit Round", message: "Are you sure you want to edit this round?", preferredStyle: UIAlertControllerStyle.alert)
-        
-        alertVC.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
-            self.removeValuesFromDatabase(action:"edit")
-        }))
-
-        let cancelAction = UIAlertAction(title: "cancle", style: UIAlertActionStyle.default, handler: nil)
-        alertVC.addAction(cancelAction)
-        self.present(alertVC, animated: true, completion: nil)
+        let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
+        self.navigationController?.pushViewController(mapViewController, animated: true)
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRound"))
-    }
-    func removeValuesFromDatabase(action:String){
-        debugPrint("onCourse:false")
-        ref.child("matchData/\(self.currentMatchId!)/onCourse").setValue(false)
-        if(self.editThisRound.scoringMode != 1){
-            debugPrint("matchData/scoringMode: Classic")
-            ref.child("matchData/\(self.currentMatchId!)/").updateChildValues(["scoringMode":"classic"])
-        }
-        let dict = NSMutableDictionary()
-        dict.setValue(Timestamp, forKey: self.currentMatchId!)
-        debugPrint("deletedMatches : \(dict)")
-        ref.child("userData/\(Auth.auth().currentUser!.uid)/deletedMatches").updateChildValues(dict as! [AnyHashable : Any])
-        let dict1 = NSMutableDictionary()
-        dict1.setValue(true, forKey:self.currentMatchId!)
-        debugPrint("activeMatches : \(dict1)")
-        ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/").updateChildValues(dict1 as! [AnyHashable : Any])
-        if self.editThisRound.feedKeyForDeletion.count > 2{
-            debugPrint("Delete The Feed : \(self.editThisRound.feedKeyForDeletion!)")
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/myFeed/\(self.editThisRound.feedKeyForDeletion!)").setValue(NSNull())
-            ref.child("feedData/").updateChildValues([self.editThisRound.feedKeyForDeletion! : NSNull()])
-        }
-        if self.editThisRound.updatedValues.value(forKey: "statistics") != nil{
-            debugPrint("RemoveScoringNodeFromUserData")
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/scoring").updateChildValues([self.currentMatchId!:NSNull()])
-            debugPrint("updaateStatistics")
-              ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["statistics":self.editThisRound.updatedValues.value(forKey: "statistics")!])
-        }
-        
     }
     
     @objc func viewHoleByHoleAction(_ sender: UIButton!) {
@@ -1711,5 +1678,75 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         }
         sender.isUserInteractionEnabled = true
     }
+    
+    var gameImprovementPopup: UIView!
+    var joinBtn: UIButton!
+    
+    var fromGameImprovement = Bool()
+    
+    @objc func closeGameImprovement(_ sender: UIButton!) {
+        self.gameImprovementPopup.removeFromSuperview()
+    }
+    
+    @objc func joinGameImprovementAction(_ sender: UIButton!) {
+        self.gameImprovementPopup.removeFromSuperview()
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["fbPopupCount" :3] as [AnyHashable:Any])
+        sleep(2)
+        UIApplication.tryURL(urls: [
+            "fb://group?id=1927412700888670",
+            "http://www.facebook.com/groups/1927412700888670" // Website if app fails
+            ])
+    }
+    
+    private func redirectToJoinFBGameImprovement() {
+        
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "fbPopupCount") { (snapshot) in
+            if(snapshot.value != nil){
+                let count = snapshot.value as! Int
+                
+                if count < 3{
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["fbPopupCount" :count+1] as [AnyHashable:Any])
+                    
+                    self.gameImprovementPopup = Bundle.main.loadNibNamed("GameImprovementPopup", owner: self, options: nil)![0] as? UIView
+                    self.gameImprovementPopup.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+                    
+                    self.joinBtn = (self.gameImprovementPopup.viewWithTag(111) as! UIButton)
+                    self.joinBtn.layer.cornerRadius = 3.0
+                    self.joinBtn.addTarget(self, action: #selector(self.joinGameImprovementAction(_:)), for: .touchUpInside)
+                    
+                    let closeBtn = self.gameImprovementPopup.viewWithTag(222) as! UIButton
+                    closeBtn.addTarget(self, action: #selector(self.closeGameImprovement(_:)), for: .touchUpInside)
+                    
+                    self.view.addSubview(self.gameImprovementPopup)
+                }
+            }
+            else{
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["fbPopupCount" :1] as [AnyHashable:Any])
+                
+                self.gameImprovementPopup = Bundle.main.loadNibNamed("GameImprovementPopup", owner: self, options: nil)![0] as? UIView
+                self.gameImprovementPopup.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+                
+                self.joinBtn = (self.gameImprovementPopup.viewWithTag(111) as! UIButton)
+                self.joinBtn.layer.cornerRadius = 3.0
+                self.joinBtn.addTarget(self, action: #selector(self.joinGameImprovementAction(_:)), for: .touchUpInside)
+                
+                let closeBtn = self.gameImprovementPopup.viewWithTag(222) as! UIButton
+                closeBtn.addTarget(self, action: #selector(self.closeGameImprovement(_:)), for: .touchUpInside)
+                
+                self.view.addSubview(self.gameImprovementPopup)
+            }
+        }
+    }
 
+}
+extension UIApplication {
+    class func tryURL(urls: [String]) {
+        let application = UIApplication.shared
+        for url in urls {
+            if application.canOpenURL(URL(string: url)!) {
+                application.open(URL(string: url)!, options: [:], completionHandler: nil)
+                return
+            }
+        }
+    }
 }

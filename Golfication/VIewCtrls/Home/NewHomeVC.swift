@@ -259,6 +259,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRound"), object: nil)
 
         //        Notification.sendNotification(reciever: "UhEPp4X2cAaPNOKdY6OOsoZ348L2", message: "Amit just finished a round at Qutab Golf Course.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
         
@@ -1765,7 +1766,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
         
         if(feeds.type == "2"){
-            
+            cell.btnEditRound.isHidden = false
             cell.lblSharedMsg.isHidden = true
             let subtitle = NSDate(timeIntervalSince1970:(feeds.timeStamp)!/1000).timeAgoSinceNow
             if((feeds.location) != nil){
@@ -1893,7 +1894,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
         else{
             cell.lblSharedMsg.isHidden = false
-            
+            cell.btnEditRound.isHidden = true
             let subtitle = NSDate(timeIntervalSince1970:(feeds.timeStamp)!/1000).timeAgoSinceNow
             //if((feeds.location) != nil){
             cell.lblSubtitle.text = "\(subtitle)"
@@ -1943,8 +1944,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
         cell.btnLike.tag = indexPath.row
         cell.btnShare.tag = indexPath.row
+        cell.btnEditRound.tag = indexPath.row
         cell.btnLike.addTarget(self, action: #selector(self.btnActionLike(_:)), for: .touchUpInside)
         cell.btnShare.addTarget(self, action: #selector(self.btnActionShare(_:)), for: .touchUpInside)
+        cell.btnEditRound.addTarget(self, action: #selector(self.btnActionEditRound(_:)), for: .touchUpInside)
         //}
         self.cardViewMArray.add(cell.cardView)
         
@@ -2049,7 +2052,17 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             sender.setTitle("\(suffix)", for: .normal)
         }
     }
-    
+    //MARK: - btnActionEditRound
+    @objc func btnActionEditRound(_ sender:UIButton){
+        let editThisRound = EditPreviousGame()
+        editThisRound.continuePreviousMatch(matchId: dataArray[sender.tag].matchId!, userId: Auth.auth().currentUser!.uid)
+    }
+    // Mark: afterResponseEditRound
+    @objc func afterResponseEditRound(_ notification:NSNotification){
+        let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
+        self.navigationController?.pushViewController(mapViewController, animated: true)
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRound"))
+    }
     // MARK: - btnActionShare
     @objc func btnActionShare(_ sender:UIButton){
         let tagVal = sender.tag

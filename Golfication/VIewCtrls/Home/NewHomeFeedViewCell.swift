@@ -29,6 +29,7 @@ class NewHomeFeedViewCell: UITableViewCell {
     @IBOutlet weak var stackViewToClick: StackView!
     @IBOutlet weak var btnLike: UIButton!
     @IBOutlet weak var btnShare: UIButton!
+    @IBOutlet weak var btnEditRound: UIButton!
     @IBOutlet weak var btnScoreCard: UIButton!
 
     @IBOutlet weak var shareImageView: UIImageView!

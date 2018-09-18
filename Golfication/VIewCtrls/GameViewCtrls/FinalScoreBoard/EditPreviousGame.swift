@@ -17,7 +17,11 @@ class EditPreviousGame: NSObject {
     var feedKeyForDeletion : String!
     var scoreData : NSMutableDictionary!
     var scoringMode : Int!
+    var currentMatchId : String!
+    var userId : String!
     func continuePreviousMatch(matchId:String,userId:String){
+        self.currentMatchId = matchId
+        self.userId = userId
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "") { (snapshot) in
             if let user = snapshot.value as? NSDictionary{
                 self.userData = user
@@ -82,7 +86,7 @@ class EditPreviousGame: NSObject {
                                     debugPrint(self.updatedValues)
                                     self.checkStatisticsData(matchKey: matchId, userKey: userId)
                                     debugPrint(self.updatedValues)
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRound"), object: nil)
+                                    self.confirmEdit()
                                 }
                             }
                         })
@@ -105,9 +109,9 @@ class EditPreviousGame: NSObject {
         var card7 : NSMutableDictionary!
         if let states = userData.value(forKey: "statistics") as? NSMutableDictionary{
             statistics = states
-            card4 = statistics.value(forKey: "card4") as! NSMutableDictionary
-            card6 = statistics.value(forKey: "card6") as! NSMutableDictionary
-            card7 = statistics.value(forKey: "card7") as! NSMutableDictionary
+            card4 = (statistics.value(forKey: "card4") as! NSMutableDictionary)
+            card6 = (statistics.value(forKey: "card6") as! NSMutableDictionary)
+            card7 = (statistics.value(forKey: "card7") as! NSMutableDictionary)
             card4.removeObject(forKey: matchKey)
             var smartCaddie : NSMutableDictionary!
             if self.scoreData != nil{
@@ -133,9 +137,13 @@ class EditPreviousGame: NSObject {
                     var holeCount = Int()
                     for data in scoreArr{
                         if let holeData = data.value(forKey:userKey) as? NSMutableDictionary{
-                            if let putts = holeData.value(forKey: "putting") as? Int{
-                                puttsCount += putts
-                                holeCount += 1
+                            if let holeOut = holeData.value(forKey: "holeOut") as? Bool{
+                                holeCount += holeOut ? 1:0
+                                if(holeOut){
+                                    if let putts = holeData.value(forKey: "putting") as? Int{
+                                        puttsCount += putts
+                                    }
+                                }
                             }
                         }
                     }
@@ -152,5 +160,35 @@ class EditPreviousGame: NSObject {
                 updatedValues.setValue(statistics, forKey: "statistics")
             }
         }
+    }
+    private func confirmEdit(){
+        let alertVC = UIAlertController(title: "Edit Round", message: "Are you sure you want to edit this round?", preferredStyle: UIAlertControllerStyle.alert)
+        alertVC.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
+            self.removeValuesFromDatabase(action:"edit")
+        }))
+        let cancelAction = UIAlertAction(title: "cancle", style: UIAlertActionStyle.default, handler: nil)
+        alertVC.addAction(cancelAction)
+        UIApplication.shared.keyWindow?.rootViewController?.present(alertVC, animated: true, completion: nil)
+    }
+    private func removeValuesFromDatabase(action:String){
+        ref.child("matchData/\(self.currentMatchId!)/onCourse").setValue(false)
+        if(self.scoringMode != 1){
+            ref.child("matchData/\(self.currentMatchId!)/").updateChildValues(["scoringMode":"classic"])
+        }
+        let dict = NSMutableDictionary()
+        dict.setValue(Timestamp, forKey: self.currentMatchId!)
+        ref.child("userData/\(self.userId!)/deletedMatches").updateChildValues(dict as! [AnyHashable : Any])
+        let dict1 = NSMutableDictionary()
+        dict1.setValue(true, forKey:self.currentMatchId!)
+        ref.child("userData/\(self.userId!)/activeMatches/").updateChildValues(dict1 as! [AnyHashable : Any])
+        if self.feedKeyForDeletion.count > 2{
+            ref.child("userData/\(self.userId!)/myFeeds/\(self.feedKeyForDeletion!)").setValue(NSNull())
+            ref.child("feedData/").updateChildValues([self.feedKeyForDeletion! : NSNull()])
+        }
+        if self.updatedValues.value(forKey: "statistics") != nil{
+            ref.child("userData/\(self.userId!)/scoring").updateChildValues([self.currentMatchId!:NSNull()])
+            ref.child("userData/\(self.userId!)/").updateChildValues(["statistics":self.updatedValues.value(forKey: "statistics")!])
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRound"), object: nil)
     }
 }
