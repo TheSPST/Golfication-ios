@@ -697,7 +697,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = true
     }
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        mapTimer.invalidate()
+    }
     // ------------------------ By Amit ----------------------
     @IBAction func scoreBtnTapped(_ sender: UIButton) {
         isScoreTapped = true

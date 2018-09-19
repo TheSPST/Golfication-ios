@@ -35,12 +35,12 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
         let fbLoginManager = FBSDKLoginManager()
         fbLoginManager.logIn(withReadPermissions: ["public_profile", "email", "user_friends"], from: self) { (result, error) in
             if let error = error {
-                print("Failed to login: \(error.localizedDescription)")
+                debugPrint("Failed to login: \(error.localizedDescription)")
                 return
             }
             
             guard let accessToken = FBSDKAccessToken.current() else {
-                print("Failed to get access token")
+                debugPrint("Failed to get access token")
                 return
             }
             
@@ -49,7 +49,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             // Perform login by calling Firebase APIs
             Auth.auth().signIn(with: credential, completion: { (user, error) in
                 if let error = error {
-                    print("Login error: \(error.localizedDescription)")
+                    debugPrint("Login error: \(error.localizedDescription)")
                     let alertController = UIAlertController(title: "Login Error", message: error.localizedDescription, preferredStyle: .alert)
                     let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                     alertController.addAction(okayAction)
@@ -62,7 +62,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                 var graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: params)
                 graphRequest.start(completionHandler: { (connection, result, error) -> Void in
                     if ((error) != nil){
-                        print("Error: \(String(describing: error))")
+                        debugPrint("Error: \(String(describing: error))")
                     }else{
                         let result = result as! NSDictionary
                         let fbId = result.value(forKey: "id") as! String

@@ -54,10 +54,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     var expandedSectionHeader: UITableViewHeaderFooterView!
     var sectionItems: Array<Any> = []
     var sectionNames: Array<Any> = []
-    var searchDataArr = NSMutableArray()
-    var golfDataMArray = NSMutableArray()
+    var searchDataArr = [NSMutableDictionary]()
+    var golfDataMArray = [NSMutableDictionary]()
     
-    var dataArr = NSMutableArray()
+    var dataArr = [NSMutableDictionary]()
     var selectedClubs = NSMutableArray()
     var clubsBtn = [UIButton]()
     var currentPageIndex = 0
@@ -341,7 +341,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 })
             }
             else{
-                self.golfDataMArray =  NSMutableArray()
+                self.golfDataMArray =  [NSMutableDictionary]()
                 
                 let (courses) = arg0
                 let group = DispatchGroup()
@@ -357,44 +357,17 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     dataDic.setObject($0.value.Latitude, forKey : "Latitude" as NSCopying)
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
                     dataDic.setObject($0.value.Mapped, forKey : "Mapped" as NSCopying)
-                    
-                    self.golfDataMArray.add(dataDic)
+                    if($0.key != "99999999"){
+                        self.golfDataMArray.append(dataDic)
+                    }
                     group.leave()
                     group.notify(queue: .main) {
                     }
                 }
                 DispatchQueue.main.async(execute: {
                     self.progressView.hide()
-
-                    let tempArray = NSMutableArray()
-                    
-                    for i in 0..<self.golfDataMArray.count {
-                        let distancesDic = NSMutableDictionary()
-                        let pinLatitude = Double((self.golfDataMArray[i] as AnyObject).value(forKey: "Latitude") as! String)!
-                        let pinLongitude = Double((self.golfDataMArray[i] as AnyObject).value(forKey: "Longitude") as! String)!
-                        let pinLoc = CLLocation(latitude: pinLatitude, longitude: pinLongitude)
-                        let distance: CLLocationDistance = pinLoc.distance(from: currentLocation)
-                        
-                        distancesDic["Distance"] = distance.toString()
-                        distancesDic["Id"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Id")
-                        distancesDic["Name"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Name")
-                        distancesDic["City"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "City")
-                        distancesDic["Country"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Country")
-                        distancesDic["Latitude"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Latitude")
-                        distancesDic["Longitude"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Longitude")
-                        distancesDic["Mapped"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Mapped")
-                        
-                        tempArray.insert(distancesDic, at: i)
-                    }
-                    if !(currentLocation.coordinate.latitude == 0 && currentLocation.coordinate.longitude == 0){
-                        self.golfDataMArray.removeAllObjects()
-                        self.golfDataMArray = NSMutableArray()
-                        self.golfDataMArray.addObjects(from: tempArray as! [Any])
-                        
-                        let descriptor = NSSortDescriptor(key: "Distance", ascending: false)
-                        self.golfDataMArray.sort(using: [descriptor])
-                    }
-                    if self.golfDataMArray.count>0{
+                    if !self.golfDataMArray.isEmpty{
+                        self.golfDataMArray = BackgroundMapStats.sortAndShow(searchDataArr: self.golfDataMArray, myLocation: currentLocation)
                         let golfID = ((self.golfDataMArray[0] as AnyObject).value(forKey: "Id") as? String)!
                         let golfName = ((self.golfDataMArray[0] as AnyObject).value(forKey: "Name") as? String)!
                         let golfLong = ((self.golfDataMArray[0] as AnyObject).value(forKey: "Longitude") as? String)!
@@ -488,7 +461,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 })
             }
             else{
-                self.searchDataArr =  NSMutableArray()
+                self.searchDataArr =  [NSMutableDictionary]()
                 
                 let (courses) = arg0
                 let group = DispatchGroup()
@@ -505,7 +478,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
                     dataDic.setObject($0.value.Mapped, forKey : "Mapped" as NSCopying)
                     
-                    self.searchDataArr.add(dataDic)
+                    self.searchDataArr.append(dataDic)
                     group.leave()
                     
                     group.notify(queue: .main) {
@@ -515,7 +488,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 DispatchQueue.main.async(execute: {
                     self.progressView.hide()
 
-                    if self.searchDataArr.count>0{
+                    if !self.searchDataArr.isEmpty{
                         self.tblViewHConstraint.constant = self.view.frame.size.height - (self.searchContainerSV.frame.origin.y + self.searchContainerView.frame.size.height + self.bottomStackSV.frame.size.height + 20 + 30)
                         self.view.layoutIfNeeded()
                         
@@ -538,9 +511,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             self.btnCheckbox.setBackgroundImage(nil, for: .normal)
             self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
 //            self.sliderHandicapNumber.isEnabled = true
-            
-            self.lblHandicap.text = "\(Int(self.sliderHandicapNumber.value))"
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\(Int(self.sliderHandicapNumber.value))"] as [AnyHashable:Any])
+            self.lblHandicap.text = "Handicap \((self.sliderHandicapNumber.value*10).rounded()/10)"//(value as! NSString).floatValue
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
         }
         else{
             self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "check"), for: .normal)
@@ -611,7 +583,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 })
             }
             else{
-                self.dataArr =  NSMutableArray()
+                self.dataArr =  [NSMutableDictionary]()
                 
                 let (courses) = arg0
                 let group = DispatchGroup()
@@ -627,7 +599,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     dataDic.setObject($0.value.Latitude, forKey : "Latitude" as NSCopying)
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
                     
-                    self.dataArr.add(dataDic)
+                    self.dataArr.append(dataDic)
                     group.leave()
                     
                     group.notify(queue: .main) {
@@ -637,7 +609,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.progressView.hide()
 
                     let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "SearchLocationVC") as! SearchLocationVC
-                    if self.dataArr.count>0 {
+                    if !self.dataArr.isEmpty{
                         viewCtrl.searchDataArr = self.dataArr
                     }
                     

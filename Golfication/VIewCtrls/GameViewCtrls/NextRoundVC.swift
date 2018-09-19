@@ -143,7 +143,6 @@ class NextRoundVC: UIViewController {
         self.progressView.hide(navItem: self.navigationItem)
         
         if(notifScoring.count > 0){
-            
             let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "BasicScoringVC") as! BasicScoringVC
             viewCtrl.matchDataDict = matchDataDic
             viewCtrl.scoreData = notifScoring

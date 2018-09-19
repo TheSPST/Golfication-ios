@@ -172,7 +172,7 @@ class ShareStatsVC: UIViewController, UIGestureRecognizerDelegate, UIDocumentInt
                         
                     } catch {
                         
-                        print(error)
+                        debugPrint(error)
                     }
                     
                     let fileURL = URL(fileURLWithPath: writePath)

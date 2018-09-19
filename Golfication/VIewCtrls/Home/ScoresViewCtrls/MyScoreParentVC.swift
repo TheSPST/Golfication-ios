@@ -478,7 +478,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         let andPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: marrPredicates as! [NSPredicate])
         
         filteredArray = self.myDataArray.filtered(using: andPredicate) as! [NSDictionary]
-        print("filteredArray = ", filteredArray)
+        debugPrint("filteredArray = ", filteredArray)
         
         self.reloadPagerTabStripView()
         

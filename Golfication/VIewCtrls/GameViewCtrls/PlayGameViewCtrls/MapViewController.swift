@@ -1651,19 +1651,19 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                 }
             }
             continueButton.removeFromSuperview()
-            if UserDefaults.standard.object(forKey: "isNewUser") as? Bool != nil{
-                let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
-                if newUser{
-                    let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NewUserProPopUPVC") as! NewUserProPopUPVC
-//                    viewCtrl.modalPresentationStyle = .overCurrentContext
-//                    //let proNavCtrl = UINavigationController(rootViewController: viewCtrl)
-//                    self.present(viewCtrl, animated: true, completion: nil)
-                    
-                    let navCtrl = UINavigationController(rootViewController: viewCtrl)
-                    navCtrl.modalPresentationStyle = .overCurrentContext
-                    self.present(navCtrl, animated: false, completion: nil)
-                }
-            }
+//            if UserDefaults.standard.object(forKey: "isNewUser") as? Bool != nil{
+//                let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
+//                if newUser{
+//                    let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NewUerProPopUPVC") as! NewUseProPopUPVC
+////                    viewCtrl.modalPresentationStyle = .overCurrentContext
+////                    //let proNavCtrl = UINavigationController(rootViewController: viewCtrl)
+////                    self.present(viewCtrl, animated: true, completion: nil)
+//
+//                    let navCtrl = UINavigationController(rootViewController: viewCtrl)
+//                    navCtrl.modalPresentationStyle = .overCurrentContext
+//                    self.present(navCtrl, animated: false, completion: nil)
+//                }
+//            }
             
         }
         showcaseEnd.continueButton.isEnabled = true

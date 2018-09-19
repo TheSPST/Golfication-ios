@@ -163,10 +163,10 @@ class EditPreviousGame: NSObject {
     }
     private func confirmEdit(){
         let alertVC = UIAlertController(title: "Edit Round", message: "Are you sure you want to edit this round?", preferredStyle: UIAlertControllerStyle.alert)
-        alertVC.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
+        alertVC.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
             self.removeValuesFromDatabase(action:"edit")
         }))
-        let cancelAction = UIAlertAction(title: "cancle", style: UIAlertActionStyle.default, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil)
         alertVC.addAction(cancelAction)
         UIApplication.shared.keyWindow?.rootViewController?.present(alertVC, animated: true, completion: nil)
     }
@@ -190,5 +190,7 @@ class EditPreviousGame: NSObject {
             ref.child("userData/\(self.userId!)/").updateChildValues(["statistics":self.updatedValues.value(forKey: "statistics")!])
         }
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRound"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)
+
     }
 }

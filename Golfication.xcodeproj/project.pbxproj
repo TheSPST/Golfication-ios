@@ -14,6 +14,12 @@
 		0DE6ACFA1FBF00D9004A5D9E /* UILabel+Corner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE6ACF91FBF00D9004A5D9E /* UILabel+Corner.swift */; };
 		1C454C008565050A4C014552 /* Pods_Golfication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03AEE031B334C7493B9375BC /* Pods_Golfication.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		3E02E681211D6B7D00B0A520 /* NotificationForReferral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E02E680211D6B7D00B0A520 /* NotificationForReferral.swift */; };
+		3E035F84215293F000019014 /* TIOADToadImageReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E035F7A215293F000019014 /* TIOADToadImageReader.m */; };
+		3E035F85215293F000019014 /* TIOADClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E035F7B215293F000019014 /* TIOADClient.m */; };
+		3E035F86215293F000019014 /* TIOADViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E035F7D215293F000019014 /* TIOADViewController.swift */; };
+		3E035F87215293F000019014 /* OAD.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E035F7F215293F000019014 /* OAD.storyboard */; };
+		3E035F88215293F000019014 /* TIOADDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E035F82215293F000019014 /* TIOADDeviceTableViewCell.swift */; };
+		3E035F89215293F000019014 /* TIOADDeviceTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E035F83215293F000019014 /* TIOADDeviceTableViewCell.xib */; };
 		3E03F107207C9D8B001DDC5F /* EnterFreeProCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E03F106207C9D8A001DDC5F /* EnterFreeProCodeVC.swift */; };
 		3E03F114207E2FE1001DDC5F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E03F113207E2FE1001DDC5F /* InviteViewController.swift */; };
 		3E03F11A207F593A001DDC5F /* ScrollableStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E03F119207F593A001DDC5F /* ScrollableStackView.swift */; };
@@ -89,7 +95,6 @@
 		4B077D1720AC550000AFC9FC /* GolfBagCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B077D1620AC550000AFC9FC /* GolfBagCollectionCell.swift */; };
 		4B0788F920A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */; };
 		4B132F5C205A6D1900791656 /* NewUserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B132F5B205A6D1900791656 /* NewUserProfileVC.swift */; };
-		4B132F5E205AC6EE00791656 /* NewUserProPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B132F5D205AC6EE00791656 /* NewUserProPopUPVC.swift */; };
 		4B1F6BC32090A29F00312EA7 /* FeedbackVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B932090A29F00312EA7 /* FeedbackVC.swift */; };
 		4B1F6BC52090A29F00312EA7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B962090A29F00312EA7 /* MapViewController.swift */; };
 		4B1F6BC62090A29F00312EA7 /* CustomStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 4B1F6B972090A29F00312EA7 /* CustomStyle.json */; };
@@ -235,6 +240,17 @@
 		0D7F3BF81F9E312C00AE5301 /* Double+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+String.swift"; sourceTree = "<group>"; };
 		0DE6ACF91FBF00D9004A5D9E /* UILabel+Corner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Corner.swift"; sourceTree = "<group>"; };
 		3E02E680211D6B7D00B0A520 /* NotificationForReferral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationForReferral.swift; sourceTree = "<group>"; };
+		3E035F79215293F000019014 /* TIOADDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIOADDefines.h; sourceTree = "<group>"; };
+		3E035F7A215293F000019014 /* TIOADToadImageReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TIOADToadImageReader.m; sourceTree = "<group>"; };
+		3E035F7B215293F000019014 /* TIOADClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TIOADClient.m; sourceTree = "<group>"; };
+		3E035F7C215293F000019014 /* TIOADToadImageReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIOADToadImageReader.h; sourceTree = "<group>"; };
+		3E035F7D215293F000019014 /* TIOADViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TIOADViewController.swift; sourceTree = "<group>"; };
+		3E035F7E215293F000019014 /* TIOAD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIOAD.h; sourceTree = "<group>"; };
+		3E035F7F215293F000019014 /* OAD.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = OAD.storyboard; sourceTree = "<group>"; };
+		3E035F80215293F000019014 /* TIOADClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIOADClient.h; sourceTree = "<group>"; };
+		3E035F82215293F000019014 /* TIOADDeviceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TIOADDeviceTableViewCell.swift; sourceTree = "<group>"; };
+		3E035F83215293F000019014 /* TIOADDeviceTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TIOADDeviceTableViewCell.xib; sourceTree = "<group>"; };
+		3E035F8A2152941A00019014 /* Golfication-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Golfication-Bridging-Header.h"; sourceTree = "<group>"; };
 		3E03F106207C9D8A001DDC5F /* EnterFreeProCodeVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterFreeProCodeVC.swift; sourceTree = "<group>"; };
 		3E03F113207E2FE1001DDC5F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		3E03F119207F593A001DDC5F /* ScrollableStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableStackView.swift; sourceTree = "<group>"; };
@@ -312,7 +328,6 @@
 		4B077D1620AC550000AFC9FC /* GolfBagCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolfBagCollectionCell.swift; sourceTree = "<group>"; };
 		4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationTableViewCell.swift; sourceTree = "<group>"; };
 		4B132F5B205A6D1900791656 /* NewUserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserProfileVC.swift; sourceTree = "<group>"; };
-		4B132F5D205AC6EE00791656 /* NewUserProPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserProPopUPVC.swift; sourceTree = "<group>"; };
 		4B1F6B932090A29F00312EA7 /* FeedbackVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackVC.swift; sourceTree = "<group>"; };
 		4B1F6B962090A29F00312EA7 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		4B1F6B972090A29F00312EA7 /* CustomStyle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CustomStyle.json; sourceTree = "<group>"; };
@@ -474,6 +489,7 @@
 		0D5D4A2E1F94D382004621C7 = {
 			isa = PBXGroup;
 			children = (
+				3E035F8A2152941A00019014 /* Golfication-Bridging-Header.h */,
 				3EC2B2712011C50200E9AF6A /* Keys */,
 				0D5D4A391F94D382004621C7 /* Golfication */,
 				0D5D4A381F94D382004621C7 /* Products */,
@@ -544,6 +560,31 @@
 				3E15D32D1FFE0800005F4068 /* notificationExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3E035F78215293F000019014 /* TI_OAD */ = {
+			isa = PBXGroup;
+			children = (
+				3E035F79215293F000019014 /* TIOADDefines.h */,
+				3E035F7A215293F000019014 /* TIOADToadImageReader.m */,
+				3E035F7B215293F000019014 /* TIOADClient.m */,
+				3E035F7C215293F000019014 /* TIOADToadImageReader.h */,
+				3E035F7D215293F000019014 /* TIOADViewController.swift */,
+				3E035F7E215293F000019014 /* TIOAD.h */,
+				3E035F7F215293F000019014 /* OAD.storyboard */,
+				3E035F80215293F000019014 /* TIOADClient.h */,
+				3E035F81215293F000019014 /* TIOADDeviceTableViewCell */,
+			);
+			path = TI_OAD;
+			sourceTree = "<group>";
+		};
+		3E035F81215293F000019014 /* TIOADDeviceTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				3E035F82215293F000019014 /* TIOADDeviceTableViewCell.swift */,
+				3E035F83215293F000019014 /* TIOADDeviceTableViewCell.xib */,
+			);
+			path = TIOADDeviceTableViewCell;
 			sourceTree = "<group>";
 		};
 		3E380EEB1FFCCD2500246865 /* NotificationViewCtrl */ = {
@@ -618,6 +659,7 @@
 		3EEC413620E0D10F0093D0CC /* DeviceFramework */ = {
 			isa = PBXGroup;
 			children = (
+				3E035F78215293F000019014 /* TI_OAD */,
 				3EEC413920E0D1AF0093D0CC /* OADFirmwareImage.swift */,
 				3EEC413720E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift */,
 			);
@@ -898,7 +940,6 @@
 				4B7CA902208206D900FCFFF5 /* PublicProfileVC.swift */,
 				3E03F11F2080B36A001DDC5F /* SettingVC.swift */,
 				3E03F113207E2FE1001DDC5F /* InviteViewController.swift */,
-				4B132F5D205AC6EE00791656 /* NewUserProPopUPVC.swift */,
 				4BB7C427208DB584006CCAFF /* MyFeedVC.swift */,
 				4BDF242520765B4B0037CE6A /* NewHomeFeedViewCell.swift */,
 				4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */,
@@ -1193,6 +1234,7 @@
 				3E4CDC6F211C56B700C2C1C6 /* Assets.xcassets in Resources */,
 				4B8C8D3F1FF674D0001F5D01 /* SF-Pro-Display-ThinItalic.otf in Resources */,
 				4B1F6BE72090A29F00312EA7 /* hdar_close.png in Resources */,
+				3E035F89215293F000019014 /* TIOADDeviceTableViewCell.xib in Resources */,
 				4B8C8D381FF674D0001F5D01 /* SF-Pro-Display-LightItalic.otf in Resources */,
 				4B8C8D3E1FF674D0001F5D01 /* SF-Pro-Display-Light.otf in Resources */,
 				4B8C8D341FF674D0001F5D01 /* SF-Pro-Display-UltralightItalic.otf in Resources */,
@@ -1200,6 +1242,7 @@
 				4B8C8D391FF674D0001F5D01 /* SF-Pro-Display-Heavy.otf in Resources */,
 				3EA43D052015D80E0077B14A /* Explore.storyboard in Resources */,
 				4B1F6BD72090A29F00312EA7 /* Game.storyboard in Resources */,
+				3E035F87215293F000019014 /* OAD.storyboard in Resources */,
 				3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */,
 				4B8C8D401FF674D0001F5D01 /* SF-Pro-Display-BlackItalic.otf in Resources */,
 				4B8C8D331FF674D0001F5D01 /* SF-Pro-Display-Bold.otf in Resources */,
@@ -1345,6 +1388,7 @@
 				4B7CA903208206D900FCFFF5 /* PublicProfileVC.swift in Sources */,
 				4B1F6BCA2090A29F00312EA7 /* ManualScoring.swift in Sources */,
 				4BB26D131FF77EDB001E9556 /* GolficationGuideVC.swift in Sources */,
+				3E035F86215293F000019014 /* TIOADViewController.swift in Sources */,
 				4B132F5C205A6D1900791656 /* NewUserProfileVC.swift in Sources */,
 				4B1F6BCE2090A29F00312EA7 /* CustomPopUpViewController.swift in Sources */,
 				4B54A9E520C94B9B004285AF /* BluetoothDelegate.swift in Sources */,
@@ -1432,7 +1476,6 @@
 				4B9D0A5B2069155800CE5D9F /* Reach.swift in Sources */,
 				3E380EF11FFCCD6000246865 /* CustomProModeView.swift in Sources */,
 				3E13F3B8212E999C005D9B70 /* MapForInputViewController.swift in Sources */,
-				4B132F5E205AC6EE00791656 /* NewUserProPopUPVC.swift in Sources */,
 				4B1F6BD12090A29F00312EA7 /* PlayersTableViewCell.swift in Sources */,
 				4B9578E020B4409E008B2C61 /* BluetootheConnectionTesting.swift in Sources */,
 				3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */,
@@ -1466,10 +1509,12 @@
 				3EE21F9A20E2129B009B2C60 /* NextRoundVC.swift in Sources */,
 				4B1F6BC72090A29F00312EA7 /* Bound.swift in Sources */,
 				4BE0DB74206BB9B100AE33E2 /* ShareStatsButton.swift in Sources */,
+				3E035F84215293F000019014 /* TIOADToadImageReader.m in Sources */,
 				3E380EEF1FFCCD5300246865 /* NotificationVC.swift in Sources */,
 				4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */,
 				4BB26D121FF77EDB001E9556 /* SignUpVC.swift in Sources */,
 				3E3D120C213D6A3F00B2978D /* MapShotPopupVC.swift in Sources */,
+				3E035F85215293F000019014 /* TIOADClient.m in Sources */,
 				4BB26D271FF77EDB001E9556 /* SessionReportTableViewCell.swift in Sources */,
 				4B04C4CC20C03930000D2C23 /* ClockwiseAnimation.swift in Sources */,
 				4B1F6BE12090A29F00312EA7 /* ARConfiguration.swift in Sources */,
@@ -1483,6 +1528,7 @@
 				4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */,
 				4B1F6BE22090A29F00312EA7 /* ARViewController.swift in Sources */,
 				4B00679A1F9E151D0060E6BB /* CardView.swift in Sources */,
+				3E035F88215293F000019014 /* TIOADDeviceTableViewCell.swift in Sources */,
 				3EEC413A20E0D1AF0093D0CC /* OADFirmwareImage.swift in Sources */,
 				4B7E5EFC20D118BA001847CC /* BackgroundMapStats.swift in Sources */,
 				4BB26CC91FF77E2B001E9556 /* TPKeyboardAvoidingTableView.m in Sources */,
@@ -1664,7 +1710,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/khelfie/Desktop/Golfication-18-Sep/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1689,7 +1735,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/khelfie/Desktop/Golfication-18-Sep/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

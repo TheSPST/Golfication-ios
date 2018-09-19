@@ -47,7 +47,7 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
     
     func showReview() {
             if #available(iOS 10.3, *) {
-                print("Review Requested")
+                debugPrint("Review Requested")
                 SKStoreReviewController.requestReview()
             } else {
                 // Fallback on earlier versions
@@ -130,7 +130,7 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
         self.lblStarDetails.text = text[sender.tag]
         dataForFirebase.rating = sender.tag + 1
         self.lblWhatWentWrong.isHidden = false
-        print("count++")
+        debugPrint("count++")
         self.skipSubmitStackView.isHidden = false
         self.btnSkip.setTitleColor(UIColor.glfWarmGrey, for: .normal)
         for i in 0..<starsStackView.arrangedSubviews.count{

@@ -480,7 +480,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
             
 
             if(snapshot.value != nil){
-                print(snapshot.value as! NSMutableDictionary)
+                debugPrint(snapshot.value as! NSMutableDictionary)
                 playerDict = snapshot.value as! NSMutableDictionary
             }
             DispatchQueue.main.async(execute: {

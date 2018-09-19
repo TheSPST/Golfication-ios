@@ -109,7 +109,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var buttonscheck = [UIButton]()
     var finalMatchDic = NSMutableDictionary()
     var recentPlyrMArr = NSMutableArray()
-    var golfDataMArray = NSMutableArray()
+    var golfDataMArray = [NSMutableDictionary]()
 
     var isContinueClicked = Bool()
     var gameTypePopUp = Bool()
@@ -667,7 +667,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
 
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails") { (snapshot) in
             
-            if(snapshot.childrenCount > 0){
+            if(snapshot.value != nil){
                 var homeCourseData = NSDictionary()
                 homeCourseData = snapshot.value as! NSDictionary
                 //// -------------------------------------------------
@@ -686,7 +686,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-
                 self.selectedGameTypeFromFirebase()
             })
         }
@@ -1082,7 +1081,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 })
             }
             else{
-                self.golfDataMArray =  NSMutableArray()
+                self.golfDataMArray =  [NSMutableDictionary]()
                 
                 let (courses) = arg0
                 let group = DispatchGroup()
@@ -1097,46 +1096,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     dataDic.setObject($0.value.Country, forKey : "Country" as NSCopying)
                     dataDic.setObject($0.value.Latitude, forKey : "Latitude" as NSCopying)
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
-                    
-                    self.golfDataMArray.add(dataDic)
+                    if($0.key != "99999999"){
+                        self.golfDataMArray.append(dataDic)
+                    }
                     group.leave()
                     group.notify(queue: .main) {
                         
                     }
                 }
                 DispatchQueue.main.async(execute: {
-                    
-                    let tempArray = NSMutableArray()
-                    
-                    for i in 0..<self.golfDataMArray.count {
-                        let distancesDic = NSMutableDictionary()
-                        let pinLatitude = Double((self.golfDataMArray[i] as AnyObject).value(forKey: "Latitude") as! String)!
-                        let pinLongitude = Double((self.golfDataMArray[i] as AnyObject).value(forKey: "Longitude") as! String)!
-                        let pinLoc = CLLocation(latitude: pinLatitude, longitude: pinLongitude)
-                        let distance: CLLocationDistance = pinLoc.distance(from: currentLocation)
-                        
-                        distancesDic["Distance"] = distance.toString()
-                        distancesDic["Id"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Id")
-                        distancesDic["Name"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Name")
-                        distancesDic["City"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "City")
-                        distancesDic["Country"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Country")
-                        distancesDic["Latitude"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Latitude")
-                        distancesDic["Longitude"] = (self.golfDataMArray[i] as AnyObject).value(forKey: "Longitude")
-                        
-                        tempArray.insert(distancesDic, at: i)
-                    }
-                    
-                    if !(currentLocation.coordinate.latitude == 0 && currentLocation.coordinate.longitude == 0){
-                        
-                        self.golfDataMArray.removeAllObjects()
-                        self.golfDataMArray = NSMutableArray()
-                        self.golfDataMArray.addObjects(from: tempArray as! [Any])
-                        
-                        let descriptor = NSSortDescriptor(key: "Distance", ascending: false)
-                        self.golfDataMArray.sort(using: [descriptor])
-                    }
-                    
-                    if self.golfDataMArray.count>0{
+                    if !self.golfDataMArray.isEmpty{
+                        self.golfDataMArray = BackgroundMapStats.sortAndShow(searchDataArr: self.golfDataMArray, myLocation: currentLocation)
                         selectedGolfID = ((self.golfDataMArray[0] as AnyObject).value(forKey: "Id") as? String)!
                         selectedGolfName = ((self.golfDataMArray[0] as AnyObject).value(forKey: "Name") as? String)!
                         selectedLong = ((self.golfDataMArray[0] as AnyObject).value(forKey: "Longitude") as? String)!

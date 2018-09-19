@@ -839,5 +839,29 @@ class BackgroundMapStats: NSObject {
         }
         return checkDistance*3
     }
+    static func sortAndShow(searchDataArr:[NSMutableDictionary],myLocation:CLLocation)->[NSMutableDictionary]{
+        var searchArr = searchDataArr
+        var indexArr = [Int]()
+        var i = 0
+        for data in searchArr{
+            let latt = data.value(forKey: "Latitude") as! String
+            let lng = data.value(forKey: "Longitude") as! String
+            if(latt.count > 2) && (lng.count > 2){
+                let coord = CLLocation(latitude: Double(latt)!, longitude: Double(lng)!)
+                data.setValue(myLocation.distance(from: coord), forKey: "Distance")
+            }else{
+                indexArr.append(i)
+                ref.child("invalidCourses").updateChildValues([data.value(forKey: "Id") as! String:true])
+            }
+            i += 1
+        }
+        for ind in indexArr{
+            searchArr.remove(at: ind)
+        }
+        let sortedArr = searchArr.sorted{
+            ($1.value(forKey: "Distance")) as! Double > ($0.value(forKey: "Distance")) as! Double
+        }
+        return sortedArr
+    }
 }
 

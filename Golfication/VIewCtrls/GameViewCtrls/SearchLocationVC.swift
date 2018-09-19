@@ -11,7 +11,7 @@ import CoreLocation
 import FirebaseAuth
 
 class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
-    var searchDataArr = NSMutableArray()
+    var searchDataArr = [NSMutableDictionary]()
     
     @IBOutlet weak var searchTableView: UITableView!
     @IBOutlet weak var golfSearchBar: UISearchBar!
@@ -184,7 +184,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
                 })
             }
             else{
-                self.searchDataArr =  NSMutableArray()
+                self.searchDataArr =  [NSMutableDictionary]()
                 
                 let (courses) = arg0
                 let group = DispatchGroup()
@@ -201,7 +201,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
                     dataDic.setObject($0.value.Mapped, forKey : "Mapped" as NSCopying)
                     if($0.key != "99999999"){
-                        self.searchDataArr.add(dataDic)
+                        self.searchDataArr.append(dataDic)
                     }
                     group.leave()
                     group.notify(queue: .main) {
@@ -211,8 +211,8 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
                 DispatchQueue.main.async(execute: {
                     self.actvtIndView.isHidden = true
                     self.actvtIndView.stopAnimating()
-                    
-                    if self.searchDataArr.count>0{
+                    if !self.searchDataArr.isEmpty{
+                        self.searchDataArr = BackgroundMapStats.sortAndShow(searchDataArr:self.searchDataArr, myLocation: currentLocation)
                         self.searchTableView.isHidden = false
                         self.searchTableView.reloadData()
                     }
@@ -220,7 +220,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             }
         }
     }
-    
+
     func searchGolfLocation(searchText: String){
         
         let serverHandler = ServerHandler()
@@ -245,7 +245,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             }
             else{
                 
-                self.searchDataArr =  NSMutableArray()
+                self.searchDataArr =  [NSMutableDictionary]()
                 
                 let (courses) = arg0
                 let group = DispatchGroup()
@@ -261,7 +261,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
                     dataDic.setObject($0.value.Mapped, forKey : "Mapped" as NSCopying)
                     if($0.key != "99999999"){
-                        self.searchDataArr.add(dataDic)
+                        self.searchDataArr.append(dataDic)
                     }
                     group.leave()
                     
@@ -273,7 +273,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
                     self.actvtIndView.isHidden = true
                     self.actvtIndView.stopAnimating()
                     
-                    if self.searchDataArr.count>0{
+                    if !self.searchDataArr.isEmpty{
                         self.searchTableView.isHidden = false
                         self.searchTableView.reloadData()
                     }

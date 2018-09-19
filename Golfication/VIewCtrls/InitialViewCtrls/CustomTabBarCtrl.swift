@@ -41,26 +41,26 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         showcaseStartGame.show()
     }*/
     
-    @objc func btnSkipClick(_ sender: UIButton!) {
-        isShowCase = false
-        sender.superview?.removeFromSuperview()
-        
-        if UserDefaults.standard.object(forKey: "isNewUser") as? Bool != nil{
-
-        let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
-        if newUser{
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NewUserProPopUPVC") as! NewUserProPopUPVC
-//            viewCtrl.modalPresentationStyle = .overCurrentContext
-            let navCtrl = UINavigationController(rootViewController: viewCtrl)
-            navCtrl.modalPresentationStyle = .overCurrentContext
-            self.present(navCtrl, animated: false, completion: nil)
-//            self.present(viewCtrl, animated: true, completion: nil)
-//            let navCtrl = (self.selectedViewController as? UINavigationController)!
-//            navCtrl.pushViewController(viewCtrl, animated: true)
-            
-        }
-        }
-    }
+//    @objc func btnSkipClick(_ sender: UIButton!) {
+//        isShowCase = false
+//        sender.superview?.removeFromSuperview()
+//
+//        if UserDefaults.standard.object(forKey: "isNewUser") as? Bool != nil{
+//
+//        let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
+//        if newUser{
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NewUserPoPopUPVC") as! NewUserProPopUVC
+////            viewCtrl.modalPresentationStyle = .overCurrentContext
+//            let navCtrl = UINavigationController(rootViewController: viewCtrl)
+//            navCtrl.modalPresentationStyle = .overCurrentContext
+//            self.present(navCtrl, animated: false, completion: nil)
+////            self.present(viewCtrl, animated: true, completion: nil)
+////            let navCtrl = (self.selectedViewController as? UINavigationController)!
+////            navCtrl.pushViewController(viewCtrl, animated: true)
+//
+//        }
+//        }
+//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)

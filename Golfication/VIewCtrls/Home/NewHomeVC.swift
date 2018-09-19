@@ -158,11 +158,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // \
     @IBAction func notifiAction(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "Home", bundle: nil)
-//        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "UpdateDeviceFrameworkViewCtrl") as! UpdateDeviceFrameworkViewCtrl
+        let storyboard = UIStoryboard(name: "OAD", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
 //        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
-        
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
+//        TIOADViewController
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
@@ -259,7 +259,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRound"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)
 
         //        Notification.sendNotification(reciever: "UhEPp4X2cAaPNOKdY6OOsoZ348L2", message: "Amit just finished a round at Qutab Golf Course.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
         
@@ -376,7 +376,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 let demolbl = DemoLabel()
                 demolbl.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
                 demolbl.center = ((self.scoreBarChartView.superview)?.center)!
-                (self.scoreBarChartView.superview)?.addSubview(demolbl)
+                self.scoreBarChartView.addSubview(demolbl)
                 self.scoreBarChartView.setBarChart(dataPoints: self.round_time.reversed(), values: self.round_score.reversed(), chartView: self.scoreBarChartView, color: UIColor.glfSeafoamBlue, barWidth: 0.2, leftAxisMinimum: 0, labelTextColor: UIColor.glfWarmGrey, unit: "", valueColor: UIColor.glfWarmGrey)
             })
         }
@@ -445,7 +445,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         demolbl.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
         demolbl.center = ((self.SGBarChartView.superview)?.center)!
         if(isShow){
-            (self.SGBarChartView.superview)?.addSubview(demolbl)
+            self.SGBarChartView.addSubview(demolbl)
         }
         self.progressView.hide(navItem: self.navigationItem)
         SGBarChartView.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: SGBarChartView, color: UIColor.glfSeafoamBlue, barWidth: 0.2,valueColor: UIColor.glfWarmGrey.withAlphaComponent(0.5))
@@ -723,7 +723,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBAction func mySwingBtnAction(_ sender: UIButton) {
         self.mySwingAction(sender)
     }
-    
+    // MARK: - viewWillAppear
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        if(editWithTag != nil){
+           editWithTag = nil
+        }
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRoundHome"))
+    }
     
     // MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
@@ -2053,15 +2060,22 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
     }
     //MARK: - btnActionEditRound
+    var editWithTag:Int!
     @objc func btnActionEditRound(_ sender:UIButton){
         let editThisRound = EditPreviousGame()
+        self.editWithTag = sender.tag
         editThisRound.continuePreviousMatch(matchId: dataArray[sender.tag].matchId!, userId: Auth.auth().currentUser!.uid)
+        
     }
     // Mark: afterResponseEditRound
     @objc func afterResponseEditRound(_ notification:NSNotification){
-        let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
-        self.navigationController?.pushViewController(mapViewController, animated: true)
-        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRound"))
+        if(editWithTag != nil){
+            self.dataArray.remove(at: editWithTag)
+            self.feedTableView.reloadData()
+            let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
+            self.navigationController?.pushViewController(mapViewController, animated: true)
+        }
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRoundHome"))
     }
     // MARK: - btnActionShare
     @objc func btnActionShare(_ sender:UIButton){

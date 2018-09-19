@@ -731,7 +731,7 @@ extension BLE: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         debugPrint(peripheral)
         debugPrint("advertisementData :\(advertisementData)")
-        if (peripheral.name == "Golfication X") || (peripheral.name == "GolficationX") || (peripheral.name == "Peripheral Observer") || (peripheral.name == "CC2650 SensorTag") || (peripheral.name == "PeripheralObserver") || (peripheral.name == "SBP OAD off-chip"){
+        if (peripheral.name == "Golfication X") || (peripheral.name == "Holfication X") /*|| (peripheral.name == "Peripheral Observer") || (peripheral.name == "CC2650 SensorTag") || (peripheral.name == "PeripheralObserver") || (peripheral.name == "SBP OAD off-chip")*/{
             debugPrint("advertisementData :\(advertisementData)")
             deviceGolficationX = peripheral
             peripheral.delegate = self
@@ -1301,6 +1301,11 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[shotNo-1].hv = Double(handVelocity)
                         swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
                         swingDetails[shotNo-1].time = Timestamp
+                        var clubIndex = 0
+                        if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
+                            clubIndex = (Int(dataArray[14]))-1
+                        }
+                        swingDetails[shotNo-1].club = allClubs[clubIndex]
                     }else{
                         if(self.holeWithSwing.count == 0){
                             self.holeWithSwing.append((hole: 1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
@@ -1327,11 +1332,10 @@ extension BLE: CBPeripheralDelegate {
                     }
                 }else if (dataArray[0] == UInt8(82)) && (currentCommandData[1] == dataArray[1]){
                     if(isPracticeMatch){
-                        memccpy(&clubVelocity, [dataArray[4],dataArray[5],dataArray[6],dataArray[7]], 4, 4)
-                        let clubNumber = Int(dataArray[8] == 0 ? 1:dataArray[8]+1)
-                        swingDetails[shotNo-1].club = allClubs[clubNumber]
+                        memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
+                        memccpy(&backSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         swingDetails[shotNo-1].cv = Double(clubVelocity)
-                        swingDetails[shotNo-1].shotNo = byteArrayToInt32(value: [dataArray[2],dataArray[3]])
+                        swingDetails[shotNo-1].shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])
                         shotNo = byteArrayToInt32(value: [dataArray[2],dataArray[3]])+1
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
                     }else{
@@ -1392,7 +1396,11 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[shotNo-1].bs = Double(backSwing)
                         swingDetails[shotNo-1].ds = Double(downSwing)
                         swingDetails[shotNo-1].hv = Double(handVelocity)
-                        swingDetails[shotNo-1].club = allClubs[Int(dataArray[14])-1]
+                        var clubIndex = 0
+                        if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
+                            clubIndex = (Int(dataArray[14]))-1
+                        }
+                        swingDetails[shotNo-1].club = allClubs[clubIndex]
                         swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
                         swingDetails[shotNo-1].time = Timestamp
                     }else{
@@ -1480,17 +1488,19 @@ extension BLE: CBPeripheralDelegate {
             }
         }
         self.clubData.sort{($0).max > ($1).max}
-        for i in 0..<clubData.count-1{
-            if !(clubData[i].min == clubData[i+1].max+1) && (clubData[i].min>clubWithMaxMin[i+1].max+1){
-                let diff = clubData[i].min - clubData[i+1].max+1
-                clubData[i].max += diff/2
-                clubData[i+1].min -= diff/2
-                if(clubData[i+1].min < 0){
-                    clubData[i+1].min = 0
+        if (!self.clubData.isEmpty){
+            for i in 0..<self.clubData.count-1{
+                if !(self.clubData[i].min == self.clubData[i+1].max+1) && (self.clubData[i].min>clubWithMaxMin[i+1].max+1){
+                    let diff = self.clubData[i].min - self.clubData[i+1].max+1
+                    self.clubData[i].max += diff/2
+                    self.clubData[i+1].min -= diff/2
+                    if(self.clubData[i+1].min < 0){
+                       self.clubData[i+1].min = 0
+                    }
                 }
             }
+            debugPrint("clubs \(self.clubData)")
         }
-        debugPrint("clubs \(clubData)")
     }
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         DispatchQueue.main.async(execute: {

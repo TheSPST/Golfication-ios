@@ -143,12 +143,12 @@
                 receiptData = try NSData(contentsOf: Bundle.main.appStoreReceiptURL!, options: NSData.ReadingOptions.alwaysMapped)
             }
             catch{
-                print("ERROR: " + error.localizedDescription)
+                debugPrint("ERROR: " + error.localizedDescription)
             }
             //let receiptString = receiptData?.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
             let base64encodedReceipt = receiptData?.base64EncodedString(options: NSData.Base64EncodingOptions.endLineWithCarriageReturn)
             
-            print(base64encodedReceipt!)
+            debugPrint(base64encodedReceipt!)
             
             
             let requestDictionary = ["receipt-data":base64encodedReceipt!,"password":SUBSCRIPTION_SECRET]
@@ -277,13 +277,13 @@
                         }
                         
                     case .expired(let expiryDate, let receiptItems):
-                        print("Product is expired since \(expiryDate)\(receiptItems)")
+                        debugPrint("Product is expired since \(expiryDate)\(receiptItems)")
                     case .notPurchased:
-                        print("This product has never been purchased")
+                        debugPrint("This product has never been purchased")
                     }
                     
                 case .error(let error):
-                    print("Receipt verification failed: \(error)")
+                    debugPrint("Receipt verification failed: \(error)")
                 }
             }
         }
@@ -491,7 +491,7 @@
                 })
             }
             else{
-                var dataArr =  NSMutableArray()
+                var dataArr =  [NSMutableDictionary]()
                 
                 let (courses) = arg0
                 let group = DispatchGroup()
@@ -506,50 +506,21 @@
                     dataDic.setObject($0.value.Country, forKey : "Country" as NSCopying)
                     dataDic.setObject($0.value.Latitude, forKey : "Latitude" as NSCopying)
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
-                    
-                    dataArr.add(dataDic)
+                    if($0.key != "99999999"){
+                        dataArr.append(dataDic)
+                    }
                     group.leave()
                     group.notify(queue: .main) {
                     }
                 }
                 DispatchQueue.main.async(execute: {
-                    
-                    if dataArr.count>0{
-                        let tempArray = NSMutableArray()
+                    if !dataArr.isEmpty{
+                        dataArr = BackgroundMapStats.sortAndShow(searchDataArr: dataArr, myLocation: currentLocation)
+                        let golfName = (dataArr[0].value(forKey: "Name") as? String) ?? ""
+                        let golfDistance = (dataArr[0].value(forKey: "Distance") as? Double) ?? 0.0
                         
-                        for i in 0..<dataArr.count {
-                            let distancesDic = NSMutableDictionary()
-                            
-                            let pinLatitude = Double((dataArr[i] as AnyObject).value(forKey: "Latitude") as! String)!
-                            let pinLongitude = Double((dataArr[i] as AnyObject).value(forKey: "Longitude") as! String)!
-                            
-                            let pinLoc = CLLocation(latitude: pinLatitude, longitude: pinLongitude)
-                            
-                            let distance: CLLocationDistance = pinLoc.distance(from: currentLocation)
-                            
-                            distancesDic["Distance"] = distance.toString()
-                            distancesDic["Id"] = (dataArr[i] as AnyObject).value(forKey: "Id")
-                            distancesDic["Name"] = (dataArr[i] as AnyObject).value(forKey: "Name")
-                            distancesDic["City"] = (dataArr[i] as AnyObject).value(forKey: "City")
-                            distancesDic["Country"] = (dataArr[i] as AnyObject).value(forKey: "Country")
-                            distancesDic["Latitude"] = (dataArr[i] as AnyObject).value(forKey: "Latitude")
-                            distancesDic["Longitude"] = (dataArr[i] as AnyObject).value(forKey: "Longitude")
-                            
-                            tempArray.insert(distancesDic, at: i)
-                        }
-                        
-                        dataArr.removeAllObjects()
-                        dataArr = NSMutableArray()
-                        dataArr.addObjects(from: tempArray as! [Any])
-                        
-                        let descriptor = NSSortDescriptor(key: "Distance", ascending: false)
-                        dataArr.sort(using: [descriptor])
-                        
-                        let golfName = ((dataArr[0] as AnyObject).value(forKey: "Name") as? String) ?? ""
-                        let golfDistance = ((dataArr[0] as AnyObject).value(forKey: "Distance") as? String) ?? "0.0"
-                        
-                        let distance: Double  = Double(golfDistance)!
-                        if distance < 1000.0 && golfName != ""{
+//                        let distance: Double  = Double(golfDistance)!
+                        if golfDistance < 1000.0 && golfName != ""{
                             UserDefaults.standard.set(golfName, forKey: "NearByGolfClub")
                             UserDefaults.standard.synchronize()
                             self.sendLocalNotificationToUSer()
@@ -568,7 +539,6 @@
         if let savedTodayDate = UserDefaults.standard.object(forKey: "Today_Date") as? String{
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd-MMM-yyyy"
-            
             let tomorrow = Date()
             let tomorrowDF = DateFormatter()
             tomorrowDF.dateFormat = "dd-MMM-yyyy"
@@ -680,7 +650,7 @@
         if let dynamicLink = dynamicLink {
             // Handle the deep link here.
             // Show promotional offer.
-            print("Dynamic link : \(dynamicLink.url)")
+            debugPrint("Dynamic link : \(dynamicLink.url)")
             return handleDynamicLink(dynamicLink)
         }
         return false

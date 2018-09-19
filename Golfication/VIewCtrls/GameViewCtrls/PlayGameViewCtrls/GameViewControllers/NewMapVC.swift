@@ -2816,18 +2816,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         debugPrint(sender.tag)
     }
     @IBAction func btnActionChangeHole(_ sender: Any) {
-        var strArr = [String]()
-        for hole in self.scoring{
-            if isHoleByHole{
+        if(!isHoleByHole){
+            var strArr = [String]()
+            for hole in self.scoring{
                 strArr.append("Hole \(hole.hole) - Par - \(hole.par)")
             }
+            ActionSheetStringPicker.show(withTitle: "Select Hole", rows: strArr, initialSelection: holeIndex, doneBlock: { (picker, value, index) in
+                self.holeIndex = value
+                self.updateMap(indexToUpdate: value)
+                return
+            }, cancel: { ActionMultipleStringCancelBlock in return }, origin: sender)
         }
-        ActionSheetStringPicker.show(withTitle: "Select Hole", rows: strArr, initialSelection: holeIndex, doneBlock: { (picker, value, index) in
-            self.holeIndex = value
-            self.updateMap(indexToUpdate: value)
-            return
-        }, cancel: { ActionMultipleStringCancelBlock in return }, origin: sender)
-        
     }
     func getClubName(club:String)->String{
         var clubToShow = String()

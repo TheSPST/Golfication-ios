@@ -71,7 +71,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     var selectedClubs = NSMutableArray()
     
     var clubsBtn = [UIButton]()
-    var dataArr = NSMutableArray()
+    var dataArr = [NSMutableDictionary]()
     var attrs = [
         NSAttributedStringKey.font : UIFont.systemFont(ofSize: 13.0),
         NSAttributedStringKey.foregroundColor : UIColor(rgb: 0xFE006B),
@@ -495,7 +495,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                 })
             }
             else{
-                self.dataArr =  NSMutableArray()
+                self.dataArr =  [NSMutableDictionary]()
                 
                 let (courses) = arg0
                 let group = DispatchGroup()
@@ -511,7 +511,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                     dataDic.setObject($0.value.Latitude, forKey : "Latitude" as NSCopying)
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
                     
-                    self.dataArr.add(dataDic)
+                    self.dataArr.append(dataDic)
                     group.leave()
                     
                     group.notify(queue: .main) {
@@ -520,7 +520,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                 DispatchQueue.main.async(execute: {
                     self.progressView.hide(navItem: self.navigationItem)
                     let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "SearchLocationVC") as! SearchLocationVC
-                    if self.dataArr.count>0 {
+                    if !self.dataArr.isEmpty {
                         viewCtrl.searchDataArr = self.dataArr
                     }
                     self.navigationController?.pushViewController(viewCtrl, animated: true)
