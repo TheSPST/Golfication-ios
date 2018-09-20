@@ -284,14 +284,15 @@ class NotificationVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-                
-                let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
-                viewCtrl.finalPlayersData = players
-                viewCtrl.finalScoreData = self.scoring
-                viewCtrl.isManualScoring = isManualScoring
-                viewCtrl.matchDataDict = matchDataDiction
-                viewCtrl.currentMatchId = matchId
-                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                if(!self.scoring.isEmpty){
+                    let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
+                    viewCtrl.finalPlayersData = players
+                    viewCtrl.finalScoreData = self.scoring
+                    viewCtrl.isManualScoring = isManualScoring
+                    viewCtrl.matchDataDict = matchDataDiction
+                    viewCtrl.currentMatchId = matchId
+                    self.navigationController?.pushViewController(viewCtrl, animated: true)
+                }
             })
         }
     }

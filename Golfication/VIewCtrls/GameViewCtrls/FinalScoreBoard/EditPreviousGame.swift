@@ -181,7 +181,7 @@ class EditPreviousGame: NSObject {
         let dict1 = NSMutableDictionary()
         dict1.setValue(true, forKey:self.currentMatchId!)
         ref.child("userData/\(self.userId!)/activeMatches/").updateChildValues(dict1 as! [AnyHashable : Any])
-        if self.feedKeyForDeletion.count > 2{
+        if self.feedKeyForDeletion.count > 3{
             ref.child("userData/\(self.userId!)/myFeeds/\(self.feedKeyForDeletion!)").setValue(NSNull())
             ref.child("feedData/").updateChildValues([self.feedKeyForDeletion! : NSNull()])
         }

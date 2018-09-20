@@ -2592,9 +2592,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(index < shotViseCurve.count){
             if(shotViseCurve[index].markerPosition.userData as! Int) != 0{
                 shotViseCurve[index].markerPosition.map = mapView
-                if(self.swingMatchId.count > 0){
-                    shotViseCurve[index].swingPosition.map = mapView
-                }
+//                if(self.swingMatchId.count > 0){
+//                    shotViseCurve[index].swingPosition.map = mapView
+//                }
             }else{
                 if let view = shotViseCurve[index].markerPosition.iconView as? ShotMarker{
                     let newIndex = stackViewForGreenShots.subviews.count
@@ -3456,7 +3456,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             swingMarker2.map = nil
             swingMarker2 = GMSMarker(position: labelPosition)
             swingMarker2.groundAnchor = CGPoint(x:-4.0,y:0.5)
-            swingMarker2.icon = #imageLiteral(resourceName: "edit_White")
+//            swingMarker2.icon = #imageLiteral(resourceName: "edit_White")
             swingMarker2.userData = "Swing"
             if(isInside){
                 markerInfo2.userData = 0
@@ -3483,7 +3483,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             swingMarker.map = nil
             swingMarker = GMSMarker(position: labelPosition)
             swingMarker.groundAnchor = CGPoint(x:-4.0,y:0.5)
-            swingMarker.icon = #imageLiteral(resourceName: "edit_White")
+//            swingMarker.icon = #imageLiteral(resourceName: "edit_White")
             swingMarker.userData = "Swing"
             if(isInside){
                 markerInfo.userData = 0
@@ -5329,13 +5329,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.selectedUserId = k as! String
                         self.lblPlayersName.text = "Your Score"
                         btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
-                        if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
-                            self.swingMatchId = swingKey
-                            if(swingKey != ""){
-                                self.getGameId(swingKey:self.swingMatchId)
-                            }
-
-                        }
+//                        if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
+//                            self.swingMatchId = swingKey
+//                            if(swingKey != ""){
+//                                self.getGameId(swingKey:self.swingMatchId)
+//                            }
+//
+//                        }
                     }else{
                         playersButton.append((button:btn, isSelected: false, id: k as! String,name:name))
                     }
@@ -5402,11 +5402,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.swingMatchId = data.key
                     }
                 }
-                if(!self.isContinue){
-                    ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
-                }else{
-                    self.getGameId(swingKey:self.swingMatchId)
-                }
+//                if(!self.isContinue){
+//                    ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+//                }
+//                else{
+//                    self.getGameId(swingKey:self.swingMatchId)
+//                }
             })
         }
     }
