@@ -12,9 +12,11 @@ import FirebaseAuth
 import ActionSheetPicker_3_0
 import FBSDKLoginKit
 import FirebaseDynamicLinks
+import FirebaseStorage
+
 //var profileGolfName = String()
 
-class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileVC: UIViewController {
     
     // MARK: - Set Outlets
     @IBOutlet weak var lblTryPremium: UILabel!
@@ -77,7 +79,9 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         NSAttributedStringKey.foregroundColor : UIColor(rgb: 0xFE006B),
         NSAttributedStringKey.underlineStyle : 1] as [NSAttributedStringKey : Any]
     var attributedString = NSMutableAttributedString(string:"")
-        
+    
+    var cropVC: PKCCropViewController!
+
     // MARK: connectBluetoothAction
     @IBAction func connectBluetoothAction(_ sender: Any) {
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
@@ -436,16 +440,45 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
             completion: nil)
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+    func uploadImageInFirebase(chosenImage: UIImage) {
+        cropVC.showIndicator()
+        let imageRef = Storage.storage().reference().child("profileImages").child("\(Auth.auth().currentUser!.uid)-\(Timestamp)-ios-profileImage.png")
+
+        self.uploadImage(chosenImage, at: imageRef) { (downloadURL) in
+            guard let downloadURL = downloadURL else {
+                return
+            }
+            let urlString = downloadURL.absoluteString
+            
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["image" :urlString] as [AnyHashable:String])
+            ref.child("userList/\(Auth.auth().currentUser!.uid)/").updateChildValues(["image" :urlString] as [AnyHashable:String])
+
+            let changeRequest = Auth.auth().currentUser!.createProfileChangeRequest()
+            changeRequest.photoURL = URL(string: urlString)
+            changeRequest.commitChanges { (error) in
+                self.cropVC.hideIndicator()
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
     }
     
-    func imagePickerController(_ picker: UIImagePickerController,
-                                        didFinishPickingMediaWithInfo info: [String : Any]){
-        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        //imageView.contentMode = .ScaleAspectFit
-        btnUserImg.setBackgroundImage(chosenImage, for: .normal)
-        dismiss(animated: true, completion: nil)
+    func uploadImage(_ image: UIImage, at reference: StorageReference, completion: @escaping (URL?) -> Void) {
+        guard let imageData = UIImageJPEGRepresentation(image, 0.1) else {
+            return completion(nil)
+        }
+        reference.putData(imageData, metadata: nil, completion: { (metadata, error) in
+            if let error = error {
+                assertionFailure(error.localizedDescription)
+                return completion(nil)
+            }
+            reference.downloadURL(completion: { (url, error) in
+                if let error = error {
+                    assertionFailure(error.localizedDescription)
+                    return completion(nil)
+                }
+                completion(url)
+            })
+        })
     }
     
     // MARK: btnActionChangeName
@@ -591,6 +624,9 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         btnFreeActiveIndiegogo.isHidden = true
         
         imagePicker.delegate=self
+        PKCCropHelper.shared.degressBeforeImage = UIImage(named: "pkc_crop_rotate_left.png")
+        PKCCropHelper.shared.degressAfterImage = UIImage(named: "pkc_crop_rotate_right.png")
+
         getData()
         
     }
@@ -1036,7 +1072,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         if Auth.auth().currentUser?.photoURL == nil{
             btnUserImg.setBackgroundImage(UIImage(named:"you"), for: .normal)
         }
-        self.btnUserImg.isEnabled = false //change in next build
+//        self.btnUserImg.isEnabled = false //change in next build
         self.btnUserName.setTitle("\(Auth.auth().currentUser?.displayName ?? "Guest")", for: .normal)
         self.btnUserName.isEnabled = false //change in next build
         self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
@@ -1084,4 +1120,69 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         self.lblClub.text = "\(selectedClubs.count) Clubs"
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag":self.selectedClubs] as [AnyHashable:Any])
     }*/
+}
+
+extension UIImage {
+    //https://stackoverflow.com/questions/43256005/swift-ios-reduce-image-size-before-upload
+    
+    func resizeWithPercent(width: CGFloat, percentage: CGFloat) -> UIImage? {
+        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width * percentage, height: width * percentage)))
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = self
+        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        imageView.layer.render(in: context)
+        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        UIGraphicsEndImageContext()
+        return result
+    }
+    func resizeWithWidth(width: CGFloat) -> UIImage? {
+        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))))
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = self
+        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        imageView.layer.render(in: context)
+        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        UIGraphicsEndImageContext()
+        return result
+}
+}
+
+extension ProfileVC: PKCCropDelegate{
+    //return Crop Image & Original Image
+    func pkcCropImage(_ image: UIImage?, originalImage: UIImage?) {
+        if let image = image{
+            //let compressedImage = image.resizeWithPercent(width: 70, percentage: 60)!
+            //let compressedImage = image.resizeWithWidth(width: 210)!
+            btnUserImg.setBackgroundImage(image, for: .normal)
+            uploadImageInFirebase(chosenImage: image)
+        }
+    }
+    
+    //If crop is canceled
+    func pkcCropCancel(_ viewController: PKCCropViewController) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    //Successful crop
+    func pkcCropComplete(_ viewController: PKCCropViewController) {
+//        self.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ProfileVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else{
+            return
+        }
+        //https://github.com/pikachu987/PKCCrop
+        PKCCropHelper.shared.isNavigationBarShow = false
+        cropVC = PKCCropViewController(image, tag: 1)
+        cropVC.delegate = self
+        picker.present(cropVC, animated: true, completion: nil)
+    }
 }

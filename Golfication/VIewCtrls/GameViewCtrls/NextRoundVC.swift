@@ -62,11 +62,11 @@ class NextRoundVC: UIViewController {
         btnRequestMapping.isHidden = true
         lblOverlapping.text = "Thanks for your request. We will notify you when this course is mapped for advanced scoring."
     }
-    
+    let locationManager = CLLocationManager()
+
     @IBAction func startGameAction(sender: UIButton) {
         if selectedMode == 0 && (selectedTab == 1 || selectedTab == 2){
             
-            let locationManager = CLLocationManager()
             switch CLLocationManager.authorizationStatus() {
             case .notDetermined:
                 // Request when-in-use authorization initially

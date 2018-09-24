@@ -510,7 +510,7 @@
                             self.roundData.setValue(matchDict.value(forKey: "courseId"), forKey: "courseId")
                             self.roundData.setValue(matchDict.value(forKey: "timestamp"), forKey: "timestamp")
                             self.roundData.setValue(matchDict.value(forKey: "matchType"), forKey: "type")
-                            self.roundData.setValue(self.parValue, forKey: "par")
+                            self.roundData.setValue(self.holeOutTrueParVal, forKey: "par")
                             
 //                            if (self.allParVal != self.holeOutTrueParVal){
 //                                let val : Double = (Double(self.scoreValue) / Double(self.holeOutTrueParVal))

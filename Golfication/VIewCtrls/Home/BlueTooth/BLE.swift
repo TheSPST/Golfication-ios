@@ -240,9 +240,10 @@ class BLE: NSObject {
         })
     }
     
-    
+    var timeOut = 0
     func sendFirstCommand(leftOrRight:UInt8,metric:UInt8){
-        if (charctersticsWrite != nil){
+        timeOut = 0
+        if(charctersticsWrite != nil){
             invalidateAllTimers()
             self.randomGenerator()
             var data:[UInt8] = [1,counter,leftOrRight, metric]
@@ -252,13 +253,22 @@ class BLE: NSObject {
             self.forPrintingServices()
             let writeData =  Data(bytes: data)
             deviceGolficationX.writeValue(writeData as Data, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
+            self.timeOut += 1
             timerForWriteCommand1 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                 self.randomGenerator()
                 data[1] = self.counter
                 self.currentCommandData = data
                 let writeData =  Data(bytes: data)
-                deviceGolficationX.writeValue(writeData as Data, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
+                if(self.timeOut > 3){
+                    UIApplication.shared.keyWindow?.makeToast("Request Timeout try again.")
+                    self.timerForWriteCommand1.invalidate()
+                }else{
+                    deviceGolficationX.writeValue(writeData as Data, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
+                }
+                self.timeOut += 1
             })
+        }else{
+            UIApplication.shared.keyWindow?.makeToast("No Service found please try again.")
         }
     }
     @objc private func getMatchId(_ notification: NSNotification){
@@ -303,7 +313,6 @@ class BLE: NSObject {
     }
     private func sendEleventhCommand(){
         if(charctersticsWrite != nil){
-            
             let currentLocation: CLLocation = self.locationManager.location!
             let lat:Double = currentLocation.coordinate.latitude
             let lng:Double = currentLocation.coordinate.longitude
@@ -348,43 +357,80 @@ class BLE: NSObject {
                 self.currentCommandData = param
             })
         }else{
-            debugPrint("device services nil")
+            UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
         }
     }
     
     @objc private func sendSecondCommand(_ notification: NSNotification){
-        
-        self.randomGenerator()
-        if let myDict = notification.object as? [(tag:Int ,club:Int,clubName:String)] {
-            var paramData : [UInt8] = [2,counter,UInt8(myDict.count)]
-            tagClubNumber = myDict
-            var i = 0
-            debugPrint(tagClubNumber)
-            self.clubsArr.removeAll()
-            for data in myDict{
-                self.clubsArr.append(data.clubName)
+        timeOut = 0
+        if(charctersticsWrite != nil) && timeOut < 3{
+            self.randomGenerator()
+            if let myDict = notification.object as? [(tag:Int ,club:Int,clubName:String)] {
+                var paramData : [UInt8] = [2,counter,UInt8(myDict.count)]
+                tagClubNumber = myDict
+                var i = 0
+                debugPrint(tagClubNumber)
+                self.clubsArr.removeAll()
+                for data in myDict{
+                    self.clubsArr.append(data.clubName)
+                }
+                self.updateMaxMin()
+                for data in myDict{
+                    paramData.append(UInt8(data.tag))
+                    paramData.append(UInt8(data.club))
+                    if(i == 6){
+                        break
+                    }
+                    i += 1
+                }
+                self.totalClub = UInt8(myDict.count)
+                if(tagClubNumber.count > i+1){
+                    tagClubNumber.removeFirst(i+1)
+                    self.totalTagInFirstPackate = i+1
+                }else{
+                    self.totalTagInFirstPackate = tagClubNumber.count
+                    tagClubNumber.removeAll()
+                    
+                }
+                
+                
+                self.invalidateAllTimers()
+                let total = paramData.count
+                if(total < 18){
+                    for _ in 0..<18-total{
+                        paramData.append(UInt8(0))
+                    }
+                }
+                let writeData =  Data(bytes: paramData)
+                deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
+                timeOut += 1
+                currentCommandData = paramData
+                timerForWriteCommand21 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+                    self.randomGenerator()
+                    paramData[1] = self.counter
+                    self.currentCommandData = paramData
+                    let writeData =  Data(bytes: paramData)
+                    deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
+                    self.timeOut += 1
+                })
+            }else{
+                UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
             }
-            self.updateMaxMin()
-            for data in myDict{
+        }
+
+    }
+    
+    private func sendSecondCommand2(){
+        timeOut = 0
+        if(charctersticsWrite != nil) && timeOut < 3{
+            self.invalidateAllTimers()
+            self.randomGenerator()
+            var paramData:[UInt8] = [2,counter]
+            debugPrint(tagClubNumber)
+            for data in tagClubNumber{
                 paramData.append(UInt8(data.tag))
                 paramData.append(UInt8(data.club))
-                if(i == 6){
-                    break
-                }
-                i += 1
             }
-            self.totalClub = UInt8(myDict.count)
-            if(tagClubNumber.count > i+1){
-                tagClubNumber.removeFirst(i+1)
-                self.totalTagInFirstPackate = i+1
-            }else{
-                self.totalTagInFirstPackate = tagClubNumber.count
-                tagClubNumber.removeAll()
-
-            }
-
-
-            self.invalidateAllTimers()
             let total = paramData.count
             if(total < 18){
                 for _ in 0..<18-total{
@@ -393,72 +439,62 @@ class BLE: NSObject {
             }
             let writeData =  Data(bytes: paramData)
             deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
-            currentCommandData = paramData
-            
-            timerForWriteCommand21 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+            timeOut += 1
+            self.currentCommandData = paramData
+            timerForWriteCommand22 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
                 self.randomGenerator()
                 paramData[1] = self.counter
                 self.currentCommandData = paramData
                 let writeData =  Data(bytes: paramData)
                 deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
+                self.timeOut += 1
             })
+        }else{
+            UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
         }
-    }
-    
-    private func sendSecondCommand2(){
-        self.invalidateAllTimers()
-        self.randomGenerator()
-        var paramData:[UInt8] = [2,counter]
-        debugPrint(tagClubNumber)
-        for data in tagClubNumber{
-            paramData.append(UInt8(data.tag))
-            paramData.append(UInt8(data.club))
-        }
-        let total = paramData.count
-        if(total < 18){
-            for _ in 0..<18-total{
-                paramData.append(UInt8(0))
-            }
-        }
-        let writeData =  Data(bytes: paramData)
-        deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
-        self.currentCommandData = paramData
-        timerForWriteCommand22 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
-            self.randomGenerator()
-            paramData[1] = self.counter
-            self.currentCommandData = paramData
-            let writeData =  Data(bytes: paramData)
-            deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
-        })
+        
     }
     private func sendThirdCommand(){
-        self.invalidateAllTimers()
-        self.randomGenerator()
-        var param:[UInt8] = [3,counter]
-        let writeData =  Data(bytes: param)
-        deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
-        self.currentCommandData = param
-        timerForWriteCommand3 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+        timeOut = 0
+        if(charctersticsWrite != nil) && timeOut < 3{
+            self.invalidateAllTimers()
             self.randomGenerator()
-            param[1] = self.counter
-            self.currentCommandData = param
+            var param:[UInt8] = [3,counter]
             let writeData =  Data(bytes: param)
             deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
-        })
+            timeOut += 1
+            self.currentCommandData = param
+            timerForWriteCommand3 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+                self.randomGenerator()
+                param[1] = self.counter
+                self.currentCommandData = param
+                let writeData =  Data(bytes: param)
+                deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
+                self.timeOut += 1
+            })
+        }else{
+            UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+        }
+
     }
     private func sendFourthCommand(param:[UInt8]?){
-        var writeData = Data()
-        self.currentCommandData = param!
-        writeData =  Data(bytes:param!)
-        deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
-        timerForWriteCommand4 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
-            var paramData = param!
-            self.randomGenerator()
-            paramData[1] = self.counter
-            writeData =  Data(bytes:paramData)
+        if(charctersticsWrite != nil) && timeOut < 3{
+            var writeData = Data()
+            self.currentCommandData = param!
+            writeData =  Data(bytes:param!)
             deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
-            self.currentCommandData = paramData
-        })
+            timerForWriteCommand4 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+                var paramData = param!
+                self.randomGenerator()
+                paramData[1] = self.counter
+                writeData =  Data(bytes:paramData)
+                deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
+                self.currentCommandData = paramData
+            })
+        }else{
+            UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+        }
+
     }
     
     private func sendsixthCommand1(){
@@ -1317,13 +1353,17 @@ extension BLE: CBPeripheralDelegate {
                             self.holeWithSwing.append((hole: 1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
                             self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, ba:0.0, tempo: 0.0, club: "",time:0))
                         }
-                        hole = Int(dataArray[2])
-                        holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[2])
-                        holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[3])
-                        memccpy(&backSwing, [dataArray[4],dataArray[5],dataArray[6],dataArray[7]], 4, 4)
-                        memccpy(&downSwing, [dataArray[8],dataArray[9],dataArray[10],dataArray[11]], 4, 4)
-                        memccpy(&handVelocity, [dataArray[12],dataArray[13],dataArray[14],dataArray[15]], 4, 4)
-                        
+                        hole = Int(dataArray[16])
+                        holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[16])
+                        holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[15])
+                        memccpy(&backSwing, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
+                        memccpy(&downSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
+                        memccpy(&handVelocity, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
+                        var clubNumber = 0
+                        if(dataArray[14] != 0){
+                            clubNumber = Int(dataArray[14]-1)
+                        }
+                        holeWithSwing[holeWithSwing.count-1].club = allClubs[clubNumber]
                         swingDetails[swingDetails.count-1].bs = Double(backSwing)
                         swingDetails[swingDetails.count-1].ds = Double(downSwing)
                         swingDetails[swingDetails.count-1].hv = Double(handVelocity)
@@ -1333,22 +1373,21 @@ extension BLE: CBPeripheralDelegate {
                 }else if (dataArray[0] == UInt8(82)) && (currentCommandData[1] == dataArray[1]){
                     if(isPracticeMatch){
                         memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
-                        memccpy(&backSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
+                        memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         swingDetails[shotNo-1].cv = Double(clubVelocity)
+                        swingDetails[shotNo-1].ba = Double(backAngle)
                         swingDetails[shotNo-1].shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])
-                        shotNo = byteArrayToInt32(value: [dataArray[2],dataArray[3]])+1
+                        shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])+1
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
                     }else{
-                        var clubNumber = 0
-                        if(dataArray[3] != 0){
-                            clubNumber = Int(dataArray[2])
-                        }
-                        memccpy(&clubVelocity, [dataArray[3],dataArray[4],dataArray[5],dataArray[6]], 4, 4)
-                        memccpy(&lat, [dataArray[7],dataArray[8],dataArray[9],dataArray[10]], 4, 4)
-                        memccpy(&lng, [dataArray[11],dataArray[12],dataArray[13],dataArray[14]], 4, 4)
+
+                        memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
+                        memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
+                        memccpy(&lat, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
+                        memccpy(&lng, [dataArray[14],dataArray[15],dataArray[16],dataArray[17]], 4, 4)
                         
-                        holeWithSwing[holeWithSwing.count-1].club = allClubs[clubNumber]
                         swingDetails[swingDetails.count-1].cv = Double(clubVelocity)
+                        swingDetails[swingDetails.count-1].ba = Double(backAngle)
                         holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
                         holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
                         self.updateSingleSwing(data:swingDetails.last!,hole:hole)
@@ -1380,7 +1419,6 @@ extension BLE: CBPeripheralDelegate {
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
                     self.timerForWriteCommand9.invalidate()
                 }else if(dataArray[0] == UInt8(91)){
-                    
                     if swingDetails.last == nil{
                         swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0))
                         holeWithSwing.append((hole: 0, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
@@ -1404,16 +1442,19 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
                         swingDetails[shotNo-1].time = Timestamp
                     }else{
-                        holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[2])
-                        holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[3])
-                        swingDetails[swingDetails.count-1].shotNo = Int(dataArray[3])
-                        if(Int(dataArray[3]) == 0){
+                        holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[16])
+                        holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[15])
+                        swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
+                        let clubNumber = 0
+//                                                let clubNumber = Int(dataArray[14]-1)
+                        holeWithSwing[holeWithSwing.count-1].club = allClubs[clubNumber]
+                        if(Int(dataArray[15]) == 0){
                             holeWithSwing[holeWithSwing.count-1].holeOut = true
                         }else{
                             holeWithSwing[holeWithSwing.count-1].holeOut = false
-                            memccpy(&backSwing, [dataArray[4],dataArray[5],dataArray[6],dataArray[7]], 4, 4)
-                            memccpy(&downSwing, [dataArray[8],dataArray[9],dataArray[10],dataArray[11]], 4, 4)
-                            memccpy(&handVelocity, [dataArray[12],dataArray[13],dataArray[14],dataArray[15]], 4, 4)
+                            memccpy(&backSwing, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
+                            memccpy(&downSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
+                            memccpy(&handVelocity, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
                             
                             swingDetails[swingDetails.count-1].bs = Double(backSwing)
                             swingDetails[swingDetails.count-1].ds = Double(downSwing)
@@ -1433,13 +1474,13 @@ extension BLE: CBPeripheralDelegate {
                         shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])+1
                         self.uploadSwingScore()
                     }else{
-                        let clubNumber = 0
-                        //                        let clubNumber = Int(dataArray[2]-1)
-                        memccpy(&clubVelocity, [dataArray[3],dataArray[4],dataArray[5],dataArray[6]], 4, 4)
-                        memccpy(&lat, [dataArray[7],dataArray[8],dataArray[9],dataArray[10]], 4, 4)
-                        memccpy(&lng, [dataArray[11],dataArray[12],dataArray[13],dataArray[14]], 4, 4)
-                        holeWithSwing[holeWithSwing.count-1].club = allClubs[clubNumber]
+
+                        memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
+                        memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
+                        memccpy(&lat, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
+                        memccpy(&lng, [dataArray[14],dataArray[15],dataArray[16],dataArray[17]], 4, 4)
                         swingDetails[swingDetails.count-1].cv = Double(clubVelocity)
+                        swingDetails[swingDetails.count-1].ba = Double(backAngle)
                         if(lat == 0) || (lng == 0){
                             if let location = self.locationManager.location{
                                 holeWithSwing[holeWithSwing.count-1].lat = location.coordinate.latitude
@@ -1449,11 +1490,6 @@ extension BLE: CBPeripheralDelegate {
                             holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
                             holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
                         }
-//                        if(true){
-//                                                        let currentLocation: CLLocation = self.locationManager.location!
-                        //                                holeWithSwing[holeWithSwing.count-1].lat = currentLocation.coordinate.latitude
-                        //                                holeWithSwing[holeWithSwing.count-1].lng = currentLocation.coordinate.longitude
-//                        }
                         self.updateSingleSwing(data:swingDetails.last!,hole:hole)
                         debugPrint(self.swingDetails)
                         debugPrint(self.holeWithSwing)

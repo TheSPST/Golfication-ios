@@ -846,7 +846,7 @@ class BackgroundMapStats: NSObject {
         for data in searchArr{
             let latt = data.value(forKey: "Latitude") as! String
             let lng = data.value(forKey: "Longitude") as! String
-            if(latt.count > 2) && (lng.count > 2){
+            if (Double(latt) != nil) && (Double(lng) != nil){
                 let coord = CLLocation(latitude: Double(latt)!, longitude: Double(lng)!)
                 data.setValue(myLocation.distance(from: coord), forKey: "Distance")
             }else{

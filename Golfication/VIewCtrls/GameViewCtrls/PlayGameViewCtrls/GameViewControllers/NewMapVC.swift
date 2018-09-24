@@ -214,6 +214,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             return false
         }
     }
+    var totalTimer:TimeInterval{
+        let state = UIApplication.shared.applicationState
+        if state == .background {
+            return 60.0
+        }else{
+            return 5.0
+        }
+    }
     // MARK:- All PanGesture Related Local Variables
     var panGesture  = UIPanGestureRecognizer()
     var btnPanGesture  = UIPanGestureRecognizer()
@@ -961,13 +969,21 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         assert(backgroundTask != UIBackgroundTaskInvalid)
     }
-    
+    @objc func reinstateBackgroundTask() {
+        if backgroundTask == UIBackgroundTaskInvalid{
+            registerBackgroundTask()
+        }
+    }
+    @objc func appDidEnterBackground() {
+        self.updateMap(indexToUpdate: self.holeIndex)
+    }
     func endBackgroundTask() {
         print("Background task ended.")
         UIApplication.shared.endBackgroundTask(backgroundTask)
         backgroundTask = UIBackgroundTaskInvalid
+        
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = true
@@ -2744,10 +2760,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.lblWindSpeed.isHidden = true
                     self.imgViewWind.isHidden = true
                 }else{
+                    NotificationCenter.default.addObserver(self, selector: #selector(reinstateBackgroundTask), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+                    NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+
                     setupPanGuesture()
-                    locationManager.delegate = self
-                    locationManager.startUpdatingLocation()
-                    self.mapView.isMyLocationEnabled = true
                 }
             }
         }else{
@@ -2812,6 +2828,58 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         self.getBotPlayersDataFromFirebase()
     }
+    func enableLocationServices() {
+        locationManager.delegate = self
+        switch CLLocationManager.authorizationStatus() {
+            case .authorizedWhenInUse, .restricted, .denied:
+                let alertController = UIAlertController(
+                    title: "Background Location Access",
+                    message: "For Rangefinder distance notification, please open this app's settings and set location access to 'Always'.",
+                    preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                alertController.addAction(cancelAction)
+                let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
+                    if let url = URL(string:UIApplicationOpenSettingsURLString) {
+                        UIApplication.shared.open(url, options:[:], completionHandler: { (isTrue) in
+                            debugPrint("setting Opened")
+                        })
+                    }
+                }
+                alertController.addAction(openAction)
+                self.present(alertController, animated: true, completion: nil)
+            case .authorizedAlways:
+                locationManager.allowsBackgroundLocationUpdates = true
+        case .notDetermined:
+                let alert = UIAlertController(title: "Alert" , message: "Please enable location to use this mode." , preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+        }
+        
+        
+//        switch CLLocationManager.authorizationStatus() {
+//        case .notDetermined:
+////             Request when-in-use authorization initially
+//            locationManager.requestWhenInUseAuthorization()
+//            locationManager.requestAlwaysAuthorization()
+//            break
+//
+//        case .restricted, .denied:
+
+//            break
+//
+//        case .authorizedWhenInUse:
+//
+//            // Enable basic location features
+//            locationManager.requestAlwaysAuthorization()
+//            break
+//
+//        case .authorizedAlways:
+//            // Enable any of your app's location features
+//            locationManager.allowsBackgroundLocationUpdates = true
+//            break
+//        }
+    }
+    
     @objc func markerAction(_ sender:UIButton){
         debugPrint(sender.tag)
     }
@@ -4402,28 +4470,28 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if let onCourse = self.matchDataDict.value(forKeyPath: "onCourse") as? Bool{
             if(onCourse) && !holeOutFlag && !isHoleByHole{
-                var counter = 0
+//                var counter = 0
                 if(clubInTrack != nil){
                     self.btnSelectClubs.setTitle(self.getClubName(club: clubInTrack.trim()).uppercased(), for: .normal)
                     let indexPath = IndexPath(row: courseData.clubs.index(of: clubInTrack.trim())!, section: 0)
                     self.btnSelectClubs.tag = indexPath.row
                     self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
                 }
-                
-                locationManager.delegate = self
                 locationManager.startUpdatingLocation()
-                let currentLocation: CLLocation = self.locationManager.location!
+                if let currentLocation: CLLocation = self.locationManager.location{
                 self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+                }
                 self.mapView.isMyLocationEnabled = true
                 if(self.positionsOfCurveLines.count > 1){
                     self.plotMarkerForCurvedLine(position: self.positionsOfCurveLines.last!, userData: self.positionsOfCurveLines.count-1)
                 }
                 if(userLocationForClub != nil) && (self.selectedUserId == Auth.auth().currentUser!.uid){
-                    mapTimer = Timer.scheduledTimer(withTimeInterval:5, repeats: true, block: { (timer) in
+                    mapTimer = Timer.scheduledTimer(withTimeInterval:self.totalTimer, repeats: true, block: { (timer) in
                         if(self.positionsOfDotLine.count > 2){
-                            if(self.isBackground){
-                                if(counter%60 == 0){
-                                    self.locationManager.startUpdatingLocation()
+//                            if(self.isBackground){
+//                                if(counter%60 == 0){
+                                debugPrint(self.totalTimer)
+                                self.locationManager.startUpdatingLocation()
                                     if self.locationManager.location == nil{
                                         self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
                                     }
@@ -4431,17 +4499,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     if let currentLocation: CLLocation = self.locationManager.location{
                                         self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
                                     }
-                                }
-                            }else{
-                                self.locationManager.startUpdatingLocation()
-                                if self.locationManager.location == nil{
-                                    self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
-                                }
-                                
-                                if let currentLocation: CLLocation = self.locationManager.location{
-                                    self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
-                                }
-                            }
+//                                }
+//                            }else{
+//                                self.locationManager.startUpdatingLocation()
+//                                if self.locationManager.location == nil{
+//                                    self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
+//                                }
+//
+//                                if let currentLocation: CLLocation = self.locationManager.location{
+//                                    self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+//                                }
+//                            }
                             let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
                             if (distance < 15000){
                                 self.positionsOfDotLine.remove(at: 0)
@@ -4496,7 +4564,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 self.lblCenterHeader.text = "\(Int(distanceC)) \(suffix)"
                                 debugPrint( "\(Int(distanceF)) \(Int(distanceC)) \(Int(distanceE)) \(Int(distanceC)) \(suffix)")
                                 
-                                if(counter%60 == 0){
+//                                if(counter%60 == 0){
                                     debugPrint("isTracking\(self.isTracking)")
                                     if(self.holeOutFlag){
                                         Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
@@ -4508,8 +4576,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                         }
                                         
                                     }
-                                }
-                                counter += 5
+//                                }
+//                                counter += 5
+//                                debugPrint("Counter = ",counter)
                                 if(!self.positionsOfCurveLines.isEmpty) && self.isTracking{
                                     for i in 0..<self.penaltyShots.count{
                                         if (self.penaltyShots[i]){
@@ -4590,8 +4659,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     self.markers.last?.icon = #imageLiteral(resourceName: "holeflag")
                                     self.markers.last?.groundAnchor = CGPoint(x:0,y:1)
                                 }
-                                debugPrint("positionofcurvedLine:\(self.positionsOfCurveLines)")
-                                debugPrint("count:\(self.positionsOfCurveLines.count)")
+//                                debugPrint("positionofcurvedLine:\(self.positionsOfCurveLines)")
+//                                debugPrint("count:\(self.positionsOfCurveLines.count)")
                                 
                             }else{
                                 let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)
@@ -5345,6 +5414,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         self.progressView.hide(navItem: self.navigationItem)
+        if(!isHoleByHole) && isOnCourse{
+            enableLocationServices()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+            self.mapView.isMyLocationEnabled = true
+        }
+        
         if(playersButton.count == 1){
             playersButton[0].isSelected = true
             self.btnMultiplayer.isHidden = true
@@ -6420,6 +6496,7 @@ extension NewMapVC : CLLocationManagerDelegate{
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
         self.mapView.isMyLocationEnabled = false
         let userLocation = locations.last
+        debugPrint("Location Updated",userLocation)
         userLocationForClub = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
         locationManager.stopUpdatingLocation()
     }

@@ -261,10 +261,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     // MARK: nearestCourseAction
+    let locationManager = CLLocationManager()
     @IBAction func nearestCourseAction(_ sender: Any) {
         searchTxtField.resignFirstResponder()
         
-        let locationManager = CLLocationManager()
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
             // Request when-in-use authorization initially

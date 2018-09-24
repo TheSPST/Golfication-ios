@@ -34,11 +34,11 @@ class TIOADViewController: UIViewController{
     @IBOutlet weak var TIOADActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var TIOADStartScanButton: UIButton!
     
-    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project6_FlashROM_oad_merged.bin?alt=media&token=336211e8-8136-4abe-9377-103425880bea"
-    let fileName = "Khelfie_project6_FlashROM_oad_merged.bin"
+    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad_merged.bin?alt=media&token=867a96d2-3b58-43e0-bb4d-a7428da056e9"
+    let fileName = "Khelfie_project2_FlashROM_oad_merged.bin"
     
-    //let urlStr1 = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project6_FlashROM_oad1_merged.bin?alt=media&token=bbbbca11-9767-4cb0-9be9-1e6b9d1b0e53"
-//    let fileName1 = "Khelfie_project6_FlashROM_oad1_merged.bin"
+    //let urlStr1 = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad1_merged.bin?alt=media&token=31ee2200-82e3-4214-8c44-e335f91b2488"
+//    let fileName1 = "Khelfie_project2_FlashROM_oad1_merged.bin"
 
     
     override func viewDidLoad() {

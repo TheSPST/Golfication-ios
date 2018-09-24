@@ -188,6 +188,9 @@ class EditPreviousGame: NSObject {
         if self.updatedValues.value(forKey: "statistics") != nil{
             ref.child("userData/\(self.userId!)/scoring").updateChildValues([self.currentMatchId!:NSNull()])
             ref.child("userData/\(self.userId!)/").updateChildValues(["statistics":self.updatedValues.value(forKey: "statistics")!])
+            if(self.scoringValues.count == 1){
+                ref.child("userData/\(self.userId!)/").updateChildValues(["statistics":NSNull()])
+            }
         }
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRound"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)

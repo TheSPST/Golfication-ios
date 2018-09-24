@@ -79,7 +79,8 @@ class FeedPostVC: UIViewController, UITextViewDelegate {
         ref.child("feedData/\(feedId)").updateChildValues(["userName": Auth.auth().currentUser!.displayName!])
 
         self.txtView.resignFirstResponder()
-        let imageRef = Storage.storage().reference().child("\(Auth.auth().currentUser!.uid)-\(beginTimestamp)-shareImage.png")
+        let imageRef = Storage.storage().reference().child("shareImages").child("\(Auth.auth().currentUser!.uid)-\(beginTimestamp)-ios-shareImage.png")
+        
         uploadImage(screenshot, at: imageRef) { (downloadURL) in
             guard let downloadURL = downloadURL else {
                 return

@@ -16,7 +16,7 @@ class StartGameModeObj: NSObject{
     var finalMatchDic = NSMutableDictionary()
     var scoring = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
     var requestedMatchId = String()
-
+    
     // MARK: setUpClassicMap
     func setUpClassicMap(onCourse:Int){
         matchDataDic = NSMutableDictionary()
@@ -24,7 +24,8 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
         }
 
         var imagUrl =  ""
@@ -152,7 +153,9 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
+
         }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
@@ -241,7 +244,8 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
         }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){

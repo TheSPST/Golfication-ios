@@ -89,13 +89,13 @@
                   symbolName = "Golfication.UYLNotificationDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Sep/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
-                  timestampString = "559125256.929478"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
+                  timestampString = "559482759.59918"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
                   endingLineNumber = "68"
-                  offsetFromSymbolStart = "6516">
+                  offsetFromSymbolStart = "7820">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -104,13 +104,13 @@
                   symbolName = "Golfication.UYLNotificationDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Sep/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
-                  timestampString = "559125256.933531"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
+                  timestampString = "559482759.603009"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
                   endingLineNumber = "68"
-                  offsetFromSymbolStart = "17504">
+                  offsetFromSymbolStart = "21057">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -266,7 +266,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/BackgroundMapStats.swift"
-            timestampString = "559057781.3098871"
+            timestampString = "559316657.3994401"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "224"
@@ -282,7 +282,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/BackgroundMapStats.swift"
-            timestampString = "559057781.3099639"
+            timestampString = "559316657.399573"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "225"
@@ -394,7 +394,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-            timestampString = "555665278.036791"
+            timestampString = "559221833.338701"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "258"
@@ -409,13 +409,13 @@
                   symbolName = "closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Sep/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "559125256.9871089"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "559482759.696211"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "1680">
+                  offsetFromSymbolStart = "1919">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -424,13 +424,13 @@
                   symbolName = "closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Sep/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "559125256.9895869"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "559482759.700577"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "2372">
+                  offsetFromSymbolStart = "2728">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -439,13 +439,13 @@
                   symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Sep/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "559125256.991972"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "559482759.704723"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "259"
                   endingLineNumber = "259"
-                  offsetFromSymbolStart = "56">
+                  offsetFromSymbolStart = "64">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -537,7 +537,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/InitialViewCtrls/AppDelegate.swift"
-            timestampString = "559060392.131687"
+            timestampString = "559313650.985749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "610"
@@ -553,7 +553,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/InitialViewCtrls/AppDelegate.swift"
-            timestampString = "559060392.131838"
+            timestampString = "559313650.985857"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "614"
@@ -665,11 +665,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/inviteViewCtrls/StartNewGameVC.swift"
-            timestampString = "558971744.109665"
+            timestampString = "559316657.40045"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "256"
-            endingLineNumber = "256"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
             landmarkName = "getScoreFromMatchDataScoring()"
             landmarkType = "7">
          </BreakpointContent>
@@ -681,11 +681,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "558960327.690135"
+            timestampString = "559316657.400589"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1302"
-            endingLineNumber = "1302"
+            startingLineNumber = "1338"
+            endingLineNumber = "1338"
             landmarkName = "peripheral(_:didUpdateValueFor:error:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -712,13 +712,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "559125256.054628"
+            filePath = "Golfication/VIewCtrls/InitialViewCtrls/NewUserProfileVC.swift"
+            timestampString = "559316657.4007699"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2819"
-            endingLineNumber = "2819"
-            landmarkName = "btnActionChangeHole(_:)"
+            startingLineNumber = "369"
+            endingLineNumber = "369"
+            landmarkName = "getNearByData(latitude:longitude:currentLocation:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -728,13 +728,45 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/InitialViewCtrls/NewUserProfileVC.swift"
-            timestampString = "559057781.310554"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
+            timestampString = "559316657.400854"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "369"
-            endingLineNumber = "369"
-            landmarkName = "getNearByData(latitude:longitude:currentLocation:)"
+            startingLineNumber = "1445"
+            endingLineNumber = "1445"
+            landmarkName = "peripheral(_:didUpdateValueFor:error:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
+            timestampString = "559316657.400949"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1478"
+            endingLineNumber = "1478"
+            landmarkName = "peripheral(_:didUpdateValueFor:error:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
+            timestampString = "559316657.4011101"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1496"
+            endingLineNumber = "1496"
+            landmarkName = "peripheral(_:didUpdateValueFor:error:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

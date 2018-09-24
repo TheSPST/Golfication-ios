@@ -94,45 +94,52 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         
-        // ----- Call APi -------------------
-        let gameCompleted = StartGameModeObj()
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
+        viewCtrl.totalPlayers = addPlayersArray
+        self.navigationController?.push(viewController: viewCtrl)
+
+    }
+    @objc func callApi(_ notification: NSNotification){
         
-        if selectedTab == 0{
-            // setup Classic Map
-            NotificationCenter.default.addObserver(self, selector: #selector(self.classicCompleted(_:)), name: NSNotification.Name(rawValue: "ClassicApiCompleted"), object: nil)
-            gameCompleted.setUpClassicMap(onCourse: selectedMode)
-        }
-        else if selectedTab == 1 && selectedMode == 0{
-            // setup rangefinder
-            NotificationCenter.default.addObserver(self, selector: #selector(self.rfApiCompleted(_:)), name: NSNotification.Name(rawValue: "RFApiCompleted"), object: nil)
-            
-            let golfId = "course_\(selectedGolfID)"
-            var isBot = false
-            if addPlayersArray.count>0{
-                for data in addPlayersArray{
-                    let player = data as! NSMutableDictionary
-                    let id = player.value(forKey: "id")
-                    if id as! String == "jpSgWiruZuOnWybYce55YDYGXP62"{
-                        isBot = true
-                        let alert = UIAlertController(title: "Alert", message: "Deejay Bot is only available in Advanced scoring.", preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                        break
-                    }
-                }
-                if(!isBot){
-                    gameCompleted.setUpRFMap(golfId: golfId, onCourse: selectedMode)
-                }
-            }else{
-                gameCompleted.setUpRFMap(golfId: golfId, onCourse: selectedMode)
-            }
-        }
-        else{
-            // setup post game short tracker or ultimate short tracking
-            NotificationCenter.default.addObserver(self, selector: #selector(self.defaultMapApiCompleted(_:)), name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
-            gameCompleted.showDefaultMap(onCourse: selectedMode)
-        }
+        // ----- Call APi -------------------
+         let gameCompleted = StartGameModeObj()
+         self.progressView.show(atView: self.view, navItem: self.navigationItem)
+         
+         if selectedTab == 0{
+         // setup Classic Map
+         NotificationCenter.default.addObserver(self, selector: #selector(self.classicCompleted(_:)), name: NSNotification.Name(rawValue: "ClassicApiCompleted"), object: nil)
+         gameCompleted.setUpClassicMap(onCourse: selectedMode)
+         }
+         else if selectedTab == 1 && selectedMode == 0{
+         // setup rangefinder
+         NotificationCenter.default.addObserver(self, selector: #selector(self.rfApiCompleted(_:)), name: NSNotification.Name(rawValue: "RFApiCompleted"), object: nil)
+         
+         let golfId = "course_\(selectedGolfID)"
+         var isBot = false
+         if addPlayersArray.count>0{
+         for data in addPlayersArray{
+         let player = data as! NSMutableDictionary
+         let id = player.value(forKey: "id")
+         if id as! String == "jpSgWiruZuOnWybYce55YDYGXP62"{
+         isBot = true
+         let alert = UIAlertController(title: "Alert", message: "Deejay Bot is only available in Advanced scoring.", preferredStyle: UIAlertControllerStyle.alert)
+         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+         self.present(alert, animated: true, completion: nil)
+         break
+         }
+         }
+         if(!isBot){
+         gameCompleted.setUpRFMap(golfId: golfId, onCourse: selectedMode)
+         }
+         }else{
+         gameCompleted.setUpRFMap(golfId: golfId, onCourse: selectedMode)
+         }
+         }
+         else{
+         // setup post game short tracker or ultimate short tracking
+         NotificationCenter.default.addObserver(self, selector: #selector(self.defaultMapApiCompleted(_:)), name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
+         gameCompleted.showDefaultMap(onCourse: selectedMode)
+         }
     }
     @objc func classicCompleted(_ notification: NSNotification) {
         let notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
@@ -461,7 +468,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         let buttonTitleStr = NSMutableAttributedString(string: "Add Guest Player", attributes:attrs)
         attributedString.append(buttonTitleStr)
         btnAddGuest.setAttributedTitle(attributedString, for: .normal)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(self.callApi(_:)), name: NSNotification.Name(rawValue: "callApi"), object: nil)
         //btnFiveUsr.backgroundColor = UIColor.clear
         selectedBtnArray = [btnOneUsr, btnTwoUsr, btnThreeUsr, btnFourUsr, btnFiveUsr]
         for btn in selectedBtnArray{

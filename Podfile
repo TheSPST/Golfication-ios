@@ -33,6 +33,5 @@ target 'Golfication' do
     pod 'GoogleMaps'
     pod 'GooglePlaces'
     pod 'DeviceKit', '~> 1.3'
-    
 
 end

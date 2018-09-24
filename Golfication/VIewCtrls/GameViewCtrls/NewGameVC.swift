@@ -28,7 +28,9 @@ var matchId = String()
 var mode = Int()
 var selectedTee = ""
 var selectedSlope = Int()
-var selectedRating = Int()
+var selectedRating = Double()
+var teeArr = [(name:String,type:String,rating:String,slope:String)]()
+var handicap = Double()
 class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     // MARK: Set Outlets
@@ -135,14 +137,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             attributes: [NSAttributedStringKey.foregroundColor: UIColor.glfBluegreen, NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 15.0)!])
         myController.setValue(messageAttributed, forKey: "attributedMessage")
         var i = 0
-        for tee in self.teeArr{
+        for tee in teeArr{
             let whiteTee = (UIAlertAction(title: "\(tee.name) (\(tee.type) Tee)", style: UIAlertActionStyle.default, handler: { action in
                 self.lblTeeName.text = "\(tee.name)"
                 self.lblTeeType.text = "(\(tee.type) Tee)"
                 self.lblTeeRating.text = tee.rating
                 self.lblTeeSlope.text = tee.slope
                 selectedSlope = Int(tee.slope)!
-                selectedRating = Int(tee.rating)!
+                selectedRating = Double(tee.rating)!
                 selectedTee = "\(tee.name)"
             }))
             myController.addAction(whiteTee)
@@ -153,6 +155,13 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         })
         myController.addAction(cancelOption)
         present(myController, animated: true, completion: nil)
+    }
+    func getHandicap(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "handicap") { (snapshot) in
+            if let handic = snapshot.value as? String{
+                handicap = handic == "-" ? 0:Double(handic)!
+            }
+        }
     }
     // MARK: backAction
     @IBAction func backAction(sender: UIBarButtonItem) {
@@ -376,7 +385,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         imagePicker.delegate = self
-
+        self.getHandicap()
         // for Bluetooth device setup
         barBtnBLE = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(self.golfXAction))
         barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
@@ -603,7 +612,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
 //        }
 //        else{
             self.navigationItem.rightBarButtonItem = nil
-        //}
+//        }
     }
     
     // MARK: setInitialUi
@@ -693,7 +702,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: nearestCourseAction
     @IBAction func nearestCourseAction(_ sender: Any) {
-        let locationManager = CLLocationManager()
+//        let locationManager = CLLocationManager()
         if(locationManager.location == nil){
             locationManager.requestAlwaysAuthorization()
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -705,8 +714,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
 
             let alert = UIAlertController(title: "Alert", message: "Please enable GPS to get your nearest course.", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
-                locationManager.requestAlwaysAuthorization()
-                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                self.locationManager.requestAlwaysAuthorization()
+                self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
             }))
             self.present(alert, animated: true, completion: nil)
         }
@@ -1151,20 +1160,19 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         btnStartContinue.isHidden = false
     }
-    var teeArr = [(name:String,type:String,rating:String,slope:String)]()
     // MARK: selectedGameTypeFromFirebase
     func checkRangeFinderHoleData() {
         if  !(selectedGolfID == "") {
             teeArr.removeAll()
             let golfId = "course_\(selectedGolfID)"
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/stats") { (snapshot) in
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/courseDetails") { (snapshot) in
                 var rangeFinArr = [NSMutableDictionary]()
                 if let rangeFin = snapshot.value as? [NSMutableDictionary]{
                     rangeFinArr = rangeFin
                 }
                 DispatchQueue.main.async(execute: {
                     if (rangeFinArr.isEmpty){
-                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/stableford/stats") { (snapshot) in
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/stableford/courseDetails") { (snapshot) in
                             if let rangeFin = snapshot.value as? [NSMutableDictionary]{
                                 rangeFinArr = rangeFin
                             }
@@ -1181,25 +1189,25 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
         for data in rangeFinArr{
-            let rating = data.value(forKey: "rating") as! Int
-            let slope = data.value(forKey: "slope") as! Int
-            let teeName = data.value(forKey: "teeColorType") as! String
-            let teeType = data.value(forKey: "teeType") as! String
-            self.teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:"\(rating)", slope:"\(slope)"))
+            let rating = data.value(forKey: "courseRating") as! Double
+            let slope = data.value(forKey: "slopeRating") as! Int
+            let teeName = data.value(forKey: "teeColor") as! String
+            let teeType = data.value(forKey: "tee") as! String
+            teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:"\(rating)", slope:"\(slope)"))
         }
-        if(!self.teeArr.isEmpty){
+        if(!teeArr.isEmpty){
             self.startingTeeCardView.isHidden = false
-            self.lblTeeName.text = "\(self.teeArr[0].name)"
-            self.lblTeeType.text = "(\(self.teeArr[0].type) Tee)"
-            self.lblTeeSlope.text = self.teeArr[0].slope
-            self.lblTeeRating.text = self.teeArr[0].rating
-            selectedSlope = Int(self.teeArr[0].slope)!
-            selectedRating = Int(self.teeArr[0].rating)!
-            selectedTee = self.teeArr[0].name
+            self.lblTeeName.text = "\(teeArr[0].name)"
+            self.lblTeeType.text = "(\(teeArr[0].type) Tee)"
+            self.lblTeeSlope.text = teeArr[0].slope
+            self.lblTeeRating.text = teeArr[0].rating
+            selectedSlope = Int(teeArr[0].slope)!
+            selectedRating = Double(teeArr[0].rating)!
+            selectedTee = teeArr[0].name
         }else{
             selectedTee = ""
             selectedSlope = 0
-            selectedRating = 0
+            selectedRating = 0.0
             
             self.startingTeeCardView.isHidden = true
             
@@ -1220,8 +1228,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }
                 DispatchQueue.main.async(execute: {
                     self.progressView.hide(navItem: self.navigationItem)
-                    
+
                     if !self.isImagePicked && !chkStableford{
+
                         self.requestSFPopupView = Bundle.main.loadNibNamed("RequestSFPopup", owner: self, options: nil)![0] as! UIView
                         self.requestSFPopupView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
                         
@@ -1240,7 +1249,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         self.isImagePicked = false
                         self.requestSFPopupView.removeFromSuperview()
                         
-                        let imageRef = Storage.storage().reference().child("\(Auth.auth().currentUser!.uid)-\(Timestamp)-stablefordImage.png")
+                        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+                        
+                        let imageRef = Storage.storage().reference().child("stablefordImages").child("\(Auth.auth().currentUser!.uid)-\(Timestamp)-ios-stablefordImage.png")
+
                         self.uploadImage(self.chosenImage, at: imageRef) { (downloadURL) in
                             guard let downloadURL = downloadURL else {
                                 return
@@ -1260,6 +1272,13 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                             ref.child("stablefordRequest").updateChildValues(courseDetailDic as! [AnyHashable : Any])
                             
                             ref.child("userData/\(Auth.auth().currentUser!.uid)/stablefordCourse/").updateChildValues([selectedGolfID:Timestamp])
+                            
+                            self.progressView.hide(navItem: self.navigationItem)
+
+                            let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
+                            let action = UIAlertAction(title: "Done", style: UIAlertAction.Style.default, handler: nil)
+                            alertVC.addAction(action)
+                            self.present(alertVC, animated: true, completion: nil)
                         }
                     }
                 })
@@ -1339,9 +1358,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
 
         if  !(selectedGolfID == "") {
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
-
             let golfId = "course_\(selectedGolfID)"
-//            self.checkRangeFinderHoleData()
+            if(matchId.count == 0){
+                self.checkRangeFinderHoleData()
+            }
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)") { (snapshot) in
                 if snapshot.value != nil{
 
@@ -1460,7 +1480,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         debugPrint("ModeGame",self.gameMode)
                         debugPrint("modeScoring",self.scoringMode)
 
-                        /*if isDevice{
+             /*           if isDevice{
                             self.lblLegacyAppMode.isHidden = false
                             self.golficationXView.isHidden = false
                             
@@ -1667,7 +1687,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     func checkingLocation(){
         let onCourse = matchDataDic.value(forKey: "onCourse") as! Bool
         if onCourse{
-            let locationManager = CLLocationManager()
+//            let locationManager = CLLocationManager()
             if(locationManager.location == nil){
                 locationManager.requestAlwaysAuthorization()
                 locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -1824,13 +1844,13 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
     
+    let locationManager = CLLocationManager()
     func playGolfX(){
-        let locationManager = CLLocationManager()
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
             // Request when-in-use authorization initially
-            locationManager.requestAlwaysAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            self.locationManager.requestAlwaysAuthorization()
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
             break
             
         case .restricted, .denied:
@@ -2213,7 +2233,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
         }
 
         var imagUrl =  ""
@@ -2323,7 +2344,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
+            
         }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
@@ -2405,7 +2428,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "selectedTee" as NSCopying)
+            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
         }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){

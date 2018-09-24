@@ -159,6 +159,8 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             })
         }
     }
+    let locationManager = CLLocationManager()
+
     func getScoreFromMatchDataScoring(){
         
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchId!)") { (snapshot) in
@@ -218,12 +220,11 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.actvtIndView.stopAnimating()
                 self.view.isUserInteractionEnabled = true
                 if(isOnCourse){
-                    let locationManager = CLLocationManager()
                     switch CLLocationManager.authorizationStatus() {
                     case .notDetermined:
                         // Request when-in-use authorization initially
-                        locationManager.requestAlwaysAuthorization()
-                        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                        self.locationManager.requestAlwaysAuthorization()
+                        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
                         break
                         
                     case .restricted, .denied:
@@ -239,7 +240,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                         
                     case .authorizedWhenInUse, .authorizedAlways:
                         // Enable basic location features
-                        if let currentLocation: CLLocation = locationManager.location{
+                        if let currentLocation: CLLocation = self.locationManager.location{
                             
                             var currentCoord = CLLocationCoordinate2D()
                             currentCoord = currentLocation.coordinate
