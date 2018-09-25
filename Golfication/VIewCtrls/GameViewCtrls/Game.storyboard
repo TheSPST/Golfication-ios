@@ -4543,10 +4543,10 @@
             </objects>
             <point key="canvasLocation" x="776.25" y="1816.9014084507041"/>
         </scene>
-        <!--ScoreBoardForInputViewCtrl-->
+        <!--ScoreBoardVC-->
         <scene sceneID="NpH-Yw-Ax1">
             <objects>
-                <viewController storyboardIdentifier="ScoreBoardVC" id="USz-vC-Gad" userLabel="ScoreBoardForInputViewCtrl" customClass="ScoreBoardVC" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScoreBoardVC" id="USz-vC-Gad" userLabel="ScoreBoardVC" customClass="ScoreBoardVC" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="czv-lc-GOv"/>
                         <viewControllerLayoutGuide type="bottom" id="6PT-hR-Don"/>
