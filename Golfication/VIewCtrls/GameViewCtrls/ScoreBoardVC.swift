@@ -107,38 +107,42 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.navigationController?.navigationBar.backItem?.title = ""
         self.automaticallyAdjustsScrollViewInsets = false
 
+        let holeDic = NSMutableDictionary()
+        holeDic.setObject(scoreData.count, forKey: "Hole" as NSCopying)
+        sectionNames.insert(holeDic, at: 0)
+
         let tempDic = NSMutableDictionary()
         tempDic.setObject("parId", forKey: "id" as NSCopying)
         tempDic.setObject("Par", forKey: "name" as NSCopying)
-        sectionNames.insert(tempDic, at: 0)
+        sectionNames.insert(tempDic, at: 1)
         
         for i in 0..<playerData.count{
             
-            sectionNames.insert(playerData[i], at: i+1)
+            sectionNames.insert(playerData[i], at: i+2)
         }
-        debugPrint("sectionNames== ",sectionNames)
+        debugPrint("sectionNames== ",sectionNames.count)
 
         //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
-        sectionItems = [[],["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"]]
+        sectionItems = [[],["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"]]
         if mode == 1{
-        sectionItems = [[],["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"]]
+        sectionItems = [[],["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"]]
         }
-        menueTableView =  UITableView(frame: CGRect(x: 0, y: 64+10, width: 180, height: self.view.frame.size.height-(64+10)), style: .grouped)
+        menueTableView =  UITableView(frame: CGRect(x: 0, y: 64+10, width: 180, height: self.view.frame.size.height-(64+10)), style: .plain)
         menueTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MenueCell")
         menueTableView.dataSource = self
         menueTableView.delegate = self
         menueTableView.tag = 0
         menueTableView.backgroundColor = UIColor.clear
-        menueTableView.separatorStyle = .none
-        //menueTableView.alwaysBounceVertical = false
+//        menueTableView.separatorStyle = .none
+        menueTableView.separatorColor = UIColor(rgb: 0xF0F0EE)
         menueTableView.showsVerticalScrollIndicator = false
         self.menueTableView!.tableFooterView = UIView()
         view.addSubview(menueTableView)
@@ -154,13 +158,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             
             tableWidth = 10+(width+padding)*CGFloat(i+2)
         }
-        tblView =  UITableView(frame: CGRect(x: 0, y: 0, width: tableWidth, height: scrollView.frame.size.height), style: .grouped)
+        tblView =  UITableView(frame: CGRect(x: 0, y: 0, width: tableWidth, height: scrollView.frame.size.height), style: .plain)
         tblView.register(UITableViewCell.self, forCellReuseIdentifier: "DataCell")
         tblView.dataSource = self
         tblView.delegate = self
         tblView.tag = 1
         tblView.backgroundColor = UIColor.clear
-        tblView.separatorColor = UIColor(rgb: 0x01AD8C)
+        tblView.separatorColor = UIColor(rgb: 0xF0F0EE)
         tblView.alwaysBounceVertical = false
         tblView.tableFooterView = UIView()
         scrollView.addSubview(tblView)
@@ -168,8 +172,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         scrollView.contentSize = CGSize(width: tblView.frame.size.width, height: tblView.frame.size.height)
         
         let imgView = UIImageView()
-        self.expandedSectionHeaderNumber = 1
-        tableViewExpandSection(1, imageView: imgView)
+        self.expandedSectionHeaderNumber = 2
+        tableViewExpandSection(2, imageView: imgView)
     }
     
     // MARK: - Tableview Methods
@@ -193,7 +197,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if section == 0 {
+        if section == 0 ||  section == 1{
             return 0
         }
         else if (self.expandedSectionHeaderNumber == section) {
@@ -212,9 +216,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         if tableView.tag == 0 {
             
-            let usrImageView = UIImageView(frame: CGRect(x: 10, y: 6, width: 32, height: 32))
+            let usrImageView = UIImageView(frame: CGRect(x: 10, y: 8, width: 32, height: 32))
             usrImageView.setCircle(frame: usrImageView.frame)
-            if section != 0{
+            if section > 1{
                 usrImageView.image = #imageLiteral(resourceName: "you")
                 if let url = (self.sectionNames[section] as AnyObject).value(forKey: "image") as? String{
                     usrImageView.sd_setImage(with: URL(string: url), placeholderImage: #imageLiteral(resourceName: "you"), completed: nil)
@@ -225,9 +229,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 usrImageView.tag = kHeaderSectionTag + section
                 let label = UILabel()
                 
-                label.frame = CGRect(x: usrImageView.frame.origin.x + usrImageView.frame.size.width+10, y: 13, width: 80, height: 15)
+                label.frame = CGRect(x: usrImageView.frame.origin.x + usrImageView.frame.size.width+10, y: 15, width: 80, height: 15)
                 label.text = (self.sectionNames[section] as AnyObject).value(forKey: "name") as? String
-                label.textColor = UIColor.glfBluegreen
+                label.textColor = UIColor.glfFlatBlue
                 label.font = UIFont(name: "SFProDisplay-Regular", size: 14.0)
                 header.addSubview(label)
                 
@@ -260,51 +264,67 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 //                    })
 //                }
                }
-            else{
-                let label = UILabel()
-                
-                label.frame = CGRect(x: usrImageView.frame.origin.x + usrImageView.frame.size.width+10, y: 16, width: 80, height: 15)
-                label.text = (self.sectionNames[section] as AnyObject).value(forKey: "name") as? String
-                label.sizeToFit()
-                header.addSubview(label)
+            else if section == 0{
+                header.backgroundColor = UIColor(rgb: 0x2E9F80)
+
                 let holeLbl = UILabel()
-                holeLbl.frame = CGRect(x: label.frame.origin.x + label.frame.size.width+5, y: 5, width: 80, height: 15)
-                holeLbl.textColor = UIColor.glfBluegreen
+                holeLbl.frame = CGRect(x: usrImageView.frame.origin.x, y: 9, width: 80, height: 15)
+                holeLbl.textColor = UIColor.white
                 holeLbl.text = "Hole"
                 header.addSubview(holeLbl)
+            }
+            else{
+                header.backgroundColor = UIColor(rgb:0xACE675)
+                let label = UILabel()
+                
+                label.frame = CGRect(x: usrImageView.frame.origin.x, y: 9, width: 80, height: 15)
+                label.text = (self.sectionNames[section] as AnyObject).value(forKey: "name") as? String
+                label.textColor = UIColor.glfBluegreen
+                label.sizeToFit()
+                header.addSubview(label)
             }
         }
         else{
             if section == 0{
-                header.backgroundColor = UIColor.white
-                //header.textLabel?.textColor = UIColor.black
+                header.backgroundColor = UIColor(rgb: 0x2E9F80)
                 
-                for i in 0..<scoreData.count{
-                    //var scoreData = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
-                    let label =  UILabel(frame: CGRect(x: 10+(width + padding)*CGFloat(i), y: 20, width: 50, height: 15))
-                    label.text = "\(self.scoreData[i].par)"
-                    label.textAlignment = .center
-                    label.textColor = UIColor.black
-                    header.addSubview(label)
-                }
-                let label =  UILabel(frame: CGRect(x: 10+(width + padding)*CGFloat(scoreData.count), y: 20, width: 50, height: 15))
+                let label =  UILabel(frame: CGRect(x: 10+(width + padding)*CGFloat(scoreData.count), y: 12, width: 50, height: 15))
                 label.text = "Total"
                 label.textAlignment = .center
-                label.textColor = UIColor.black
+                label.textColor = UIColor.white
                 header.addSubview(label)
 
                 for i in 0..<scoreData.count{
                     
-                    let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 7, width: 50, height: 15))
+                    let label =  UILabel(frame: CGRect(x: 25+(width + padding)*CGFloat(i), y: 9, width: 35, height: 15))
                     label.text = "\(i+1)"
                     label.textAlignment = .center
-                    label.textColor = UIColor.glfBluegreen
-                    
+                    label.textColor = UIColor.white
                     header.addSubview(label)
                 }
             }
+            else if section == 1{
+                header.backgroundColor = UIColor(rgb:0xACE675)
+
+                var totalpar = 0
+                for i in 0..<scoreData.count{
+                    //var scoreData = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
+                    let label =  UILabel(frame: CGRect(x: 25+(width + padding)*CGFloat(i), y: 9, width: 35, height: 15))
+                    label.text = "\(self.scoreData[i].par)"
+                    label.textAlignment = .center
+                    label.textColor = UIColor.black
+                    header.addSubview(label)
+                    
+                    totalpar += self.scoreData[i].par
+                }
+                let label =  UILabel(frame: CGRect(x: 25+(width + padding)*CGFloat(scoreData.count), y: 9, width: 35, height: 15))
+                label.text = "\(totalpar)"
+                label.textAlignment = .center
+                label.textColor = UIColor.black
+                header.addSubview(label)
+            }
             else{
-                header.backgroundColor = UIColor(rgb: 0x2E9F80)
+                header.backgroundColor = UIColor(rgb: 0xF7F7F5)
                 
                 let playerId = (self.sectionNames[section] as AnyObject).value(forKey: "id") as? String
                 for view in header.subviews{
@@ -322,7 +342,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     
                     let btn =  UIButton(frame: CGRect(x: 5, y: 5, width: 25, height: 25))
                     btn.titleLabel?.textAlignment = .center
-                    btn.titleLabel?.textColor = UIColor.white
+                    btn.setTitleColor(UIColor.black, for: .normal)
                     btn.setTitle("-", for: .normal)
                     subView.addSubview(btn)
                     
@@ -359,29 +379,29 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 //double circle
                                                 subView.layer.borderWidth = 1.0
                                                 subView.layer.cornerRadius = subView.frame.size.height/2
-                                                subView.layer.borderColor = UIColor.white.cgColor
+                                                subView.layer.borderColor = UIColor.glfBluegreen.cgColor
                                                 
                                                 btn.layer.borderWidth = 1.0
                                                 btn.layer.cornerRadius = btn.frame.size.height/2
-                                                btn.layer.borderColor = UIColor.white.cgColor
+                                                btn.layer.borderColor = UIColor.glfBluegreen.cgColor
                                             }
                                             else if allScore == -1{
                                                 //single circle
                                                 btn.layer.borderWidth = 1.0
                                                 btn.layer.cornerRadius = btn.frame.size.height/2
-                                                btn.layer.borderColor = UIColor.white.cgColor
+                                                btn.layer.borderColor = UIColor.glfBluegreen.cgColor
                                             }
                                             else if allScore == 1{
                                                 //single square
                                                 btn.layer.borderWidth = 1.0
-                                                btn.layer.borderColor = UIColor.white.cgColor
+                                                btn.layer.borderColor = UIColor.red.cgColor
                                             }
                                             else if allScore >= 2 || allScore >= 3{
                                                 //double square
                                                 subView.layer.borderWidth = 1.0
-                                                subView.layer.borderColor = UIColor.white.cgColor
+                                                subView.layer.borderColor = UIColor.red.cgColor
                                                 btn.layer.borderWidth = 1.0
-                                                btn.layer.borderColor = UIColor.white.cgColor
+                                                btn.layer.borderColor = UIColor.red.cgColor
                                             }
                                             else{
                                                 // do nothing
@@ -398,7 +418,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 header.addSubview(subView)
                 let btn =  UIButton(frame: CGRect(x: 3, y: 5, width: 25, height: 25))
                 btn.titleLabel?.textAlignment = .center
-                btn.titleLabel?.textColor = UIColor.white
+                btn.setTitleColor(UIColor.black, for: .normal)
                 btn.setTitle("-", for: .normal)
                 btn.titleLabel?.font = UIFont(name: "SFProDisplay-Regular", size: 16.0)
                 if totalStrokes > 0{
@@ -411,7 +431,12 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 44.0
+        if section>1{
+            return 45
+        }
+        else{
+        return 32.0
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat{
@@ -435,7 +460,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
-        if indexPath.section > 0{
+        if indexPath.section > 1{
             
             if tableView.tag == 0 {
                 let section = self.sectionItems[indexPath.section] as! NSArray
@@ -443,9 +468,42 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 
                 cell.backgroundColor = UIColor.white
                 cell.textLabel?.textColor = UIColor.black
+                
+                if mode == 1{
+                    if indexPath.row == 8{
+                        cell.backgroundColor = UIColor(rgb: 0xE7E7E7)
+                    }
+                    else if indexPath.row == 9 || indexPath.row == 10{
+                        cell.backgroundColor = UIColor(rgb: 0x98B6CD)
+                    }
+                }
+                else{
+                    if indexPath.row == 6{
+                        cell.backgroundColor = UIColor(rgb: 0xE7E7E7)
+                    }
+                    else if indexPath.row == 7 || indexPath.row == 8{
+                        cell.backgroundColor = UIColor(rgb: 0x98B6CD)
+                    }
+                }
             }
             else{
-                cell.backgroundColor = UIColor(rgb: 0x2E9F80)
+                cell.backgroundColor = UIColor(rgb: 0xF7F7F5)
+                if mode == 1{
+                    if indexPath.row == 8{
+                        cell.backgroundColor = UIColor(rgb: 0xE7E7E7)
+                    }
+                    else if indexPath.row == 9 || indexPath.row == 10{
+                        cell.backgroundColor = UIColor(rgb: 0x98B6CD)
+                    }
+                }
+                else{
+                    if indexPath.row == 6{
+                        cell.backgroundColor = UIColor(rgb: 0xE7E7E7)
+                    }
+                    else if indexPath.row == 7 || indexPath.row == 8{
+                        cell.backgroundColor = UIColor(rgb: 0x98B6CD)
+                    }
+                }
                 cell.textLabel?.textColor = UIColor.clear
                 cell.textLabel?.text = ""
                 let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String
@@ -469,7 +527,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     label.text = "-"
                     label.textAlignment = .center
                     label.font = UIFont(name: "SFProDisplay-Regular", size: 14.0)
-                    label.textColor = UIColor.white
+                    label.textColor = UIColor.black
                     label.backgroundColor = UIColor.clear
                     cell.contentView.addSubview(label)
                     
@@ -504,17 +562,20 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             if(fairway == "H"){
                                                 let backBtnImage1 = #imageLiteral(resourceName: "hit").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                 theImageView.setImage(backBtnImage1, for: .normal)
+                                                theImageView.tintColor = UIColor.glfBluegreen
+
                                                 frwHit += 1
 
                                             }else if(fairway == "L"){
                                                 let backBtnImage1 = #imageLiteral(resourceName: "fairway_left").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                 theImageView.setImage(backBtnImage1, for: .normal)
+                                                theImageView.tintColor = UIColor.glfFlatBlue
+
                                             }else{
                                                 let backBtnImage1 = #imageLiteral(resourceName: "fairway_right").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                 theImageView.setImage(backBtnImage1, for: .normal)
+                                                theImageView.tintColor = UIColor.glfFlatBlue
                                             }
-                                            theImageView.tintColor = UIColor.glfWhite
-                                            theImageView.imageView?.tintImageColor(color: UIColor.glfWhite)
                                             cell.contentView.addSubview(theImageView)
                                         }
                                     }
@@ -545,8 +606,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                 theImageView.setImage(backBtnImage1, for: .normal)
                                             }
-                                            theImageView.tintColor = UIColor.glfWhite
-                                            theImageView.imageView?.tintImageColor(color: UIColor.glfWhite)
+                                            theImageView.tintColor = UIColor.glfBluegreen
                                             cell.contentView.addSubview(theImageView)
                                         }
                                     }
@@ -564,8 +624,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                     let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                     theImageView.setImage(backBtnImage1, for: .normal)
                                                 }
-                                                theImageView.tintColor = UIColor.glfWhite
-                                                theImageView.imageView?.tintImageColor(color: UIColor.glfWhite)
+                                                theImageView.tintColor = UIColor.glfBluegreen
                                                 cell.contentView.addSubview(theImageView)
                                             }
                                         }
@@ -584,8 +643,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                     let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                     theImageView.setImage(backBtnImage1, for: .normal)
                                                 }
-                                                theImageView.tintColor = UIColor.glfWhite
-                                                theImageView.imageView?.tintImageColor(color: UIColor.glfWhite)
+                                                theImageView.tintColor = UIColor.glfBluegreen
                                                 cell.contentView.addSubview(theImageView)
                                             }
                                         }
@@ -613,17 +671,19 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                     if(fairway == "H"){
                                                         let backBtnImage1 = #imageLiteral(resourceName: "hit").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                         theImageView.setImage(backBtnImage1, for: .normal)
+                                                        theImageView.tintColor = UIColor.glfBluegreen
+
                                                         frwHit += 1
                                                         
                                                     }else if(fairway == "L"){
                                                         let backBtnImage1 = #imageLiteral(resourceName: "fairway_left").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                         theImageView.setImage(backBtnImage1, for: .normal)
+                                                        theImageView.tintColor = UIColor.glfFlatBlue
                                                     }else{
                                                         let backBtnImage1 = #imageLiteral(resourceName: "fairway_right").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                         theImageView.setImage(backBtnImage1, for: .normal)
+                                                        theImageView.tintColor = UIColor.glfFlatBlue
                                                     }
-                                                    theImageView.tintColor = UIColor.glfWhite
-                                                    theImageView.imageView?.tintImageColor(color: UIColor.glfWhite)
                                                     cell.contentView.addSubview(theImageView)
                                                 }
                                             }
@@ -641,8 +701,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                         let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                         theImageView.setImage(backBtnImage1, for: .normal)
                                                     }
-                                                    theImageView.tintColor = UIColor.glfWhite
-                                                    theImageView.imageView?.tintImageColor(color: UIColor.glfWhite)
+                                                    theImageView.tintColor = UIColor.glfBluegreen
                                                     cell.contentView.addSubview(theImageView)
                                                 }
 
@@ -661,8 +720,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                             let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                             theImageView.setImage(backBtnImage1, for: .normal)
                                                         }
-                                                        theImageView.tintColor = UIColor.glfWhite
-                                                        theImageView.imageView?.tintImageColor(color: UIColor.glfWhite)
+                                                        theImageView.tintColor = UIColor.glfBluegreen
                                                         cell.contentView.addSubview(theImageView)
                                                     }
                                                 }
@@ -681,8 +739,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                             let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                             theImageView.setImage(backBtnImage1, for: .normal)
                                                         }
-                                                        theImageView.tintColor = UIColor.glfWhite
-                                                        theImageView.imageView?.tintImageColor(color: UIColor.glfWhite)
+                                                        theImageView.tintColor = UIColor.glfBluegreen
                                                         cell.contentView.addSubview(theImageView)
                                                     }
                                                 }
@@ -794,7 +851,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         }
                 }
                 label.textAlignment = .center
-                label.textColor = UIColor.white
+                label.textColor = UIColor.black
                 label.font = UIFont(name: "SFProDisplay-Regular", size: 14.0)
                 label.backgroundColor = UIColor.clear
                 cell.contentView.addSubview(label)

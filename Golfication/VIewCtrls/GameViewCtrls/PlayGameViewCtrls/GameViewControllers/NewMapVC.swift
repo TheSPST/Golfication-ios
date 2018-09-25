@@ -281,6 +281,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var scoring = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
     var playerArrayWithDetails = NSMutableDictionary()
     var playersButton = [(button:UIButton,isSelected:Bool,id:String,name:String)]()
+    var teeTypeArr = [(tee:String,handicap:Double)]()
+
     var currentMatchId = String()
     var holeOutCount = Int()
     var gir = Bool()
@@ -3822,8 +3824,22 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnMoveToMapGround.isHidden = !isHide
         self.viewForground.isHidden = !isHide
     }
-    func calculateTotalExtraShots()->Double{
-        let data = (courseData.handicap * Double(selectedSlope))
+    func calculateTotalExtraShots(playerID:String)->Double{
+        var index = 0
+        for playersdata in self.playersButton{
+            if (playersdata.isSelected){
+                break
+            }
+            index += 1
+        }
+        var slopeIndex = 0
+        for data in teeArr{
+            if(data.name == self.teeTypeArr[index].tee){
+                break
+            }
+            slopeIndex += 1
+        }
+        let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
         return (Double(data / 113))
     }
     @objc func loadMap(_ notification: NSNotification) {
@@ -3846,7 +3862,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         debugPrint(courseData.totalTee)
-        let extraShots = calculateTotalExtraShots()
+        let extraShots = calculateTotalExtraShots(playerID: self.selectedUserId)
         debugPrint("extraShots: ",extraShots)
         
         if(!isContinue) && (!isAcceptInvite){
@@ -5390,6 +5406,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             btn1.setImage(#imageLiteral(resourceName: "0_you"), for: .normal)
                         }
                     }
+                    var teeOfP = String()
+                    if let tee = (v as! NSMutableDictionary).value(forKeyPath: "tee") as? String{
+                        teeOfP = tee
+                    }
+                    var handicapOfP = Double()
+                    if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? Double{
+                        handicapOfP = hcp
+                    }
+                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
                     i += 1
                     if(k as! String == Auth.auth().currentUser!.uid){
                         playersButton.append((button:btn, isSelected: true, id: k as! String,name:name))
@@ -5911,8 +5936,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         let par = scoring[holeIndex].par
-        let extrashotsReminder = Int(self.calculateTotalExtraShots()) % scoring.count
-        let extrashotsDiv = Int(self.calculateTotalExtraShots()) / scoring.count
+        let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoring.count
+        let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoring.count
         var hcp = 0
         var totalShotsInThishole = 0
         for tee in self.courseData.totalTee{

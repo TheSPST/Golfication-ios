@@ -90,12 +90,12 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
-                  timestampString = "559482759.59918"
+                  timestampString = "559556867.234897"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
                   endingLineNumber = "68"
-                  offsetFromSymbolStart = "7820">
+                  offsetFromSymbolStart = "6516">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -105,12 +105,12 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
-                  timestampString = "559482759.603009"
+                  timestampString = "559556867.238062"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
                   endingLineNumber = "68"
-                  offsetFromSymbolStart = "21057">
+                  offsetFromSymbolStart = "17504">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -410,12 +410,12 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "559482759.696211"
+                  timestampString = "559556867.310069"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "1919">
+                  offsetFromSymbolStart = "1680">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -425,12 +425,12 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "559482759.700577"
+                  timestampString = "559556867.313399"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "2728">
+                  offsetFromSymbolStart = "2372">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -440,12 +440,12 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/khelfie/Desktop/Golfication-24-Sep-Eve/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "559482759.704723"
+                  timestampString = "559556867.316673"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "259"
                   endingLineNumber = "259"
-                  offsetFromSymbolStart = "64">
+                  offsetFromSymbolStart = "56">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -767,6 +767,22 @@
             startingLineNumber = "1496"
             endingLineNumber = "1496"
             landmarkName = "peripheral(_:didUpdateValueFor:error:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/CourseData.swift"
+            timestampString = "559556866.319921"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "getGolfCourseDataFromFirebase(courseId:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

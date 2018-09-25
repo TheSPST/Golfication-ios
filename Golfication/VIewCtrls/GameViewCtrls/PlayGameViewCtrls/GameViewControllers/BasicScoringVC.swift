@@ -43,7 +43,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var chipShotStackView: UIStackView!
     @IBOutlet weak var greenSideSandShotStackView: UIStackView!
     @IBOutlet weak var penalitiesStackView: UIStackView!
-    @IBOutlet weak var lblHoleNumber: UILabel!
     @IBOutlet weak var lblParNumber: UILabel!
     @IBOutlet weak var btnDownArraow: UIButton!
     @IBOutlet weak var lblCourseName: UILabel!
@@ -57,7 +56,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var lblPlayerNameDSV: UILabel!
     @IBOutlet weak var lblPlayerNameSSV: UILabel!
     @IBOutlet weak var exitGamePopUpView: ExitGamePopUpView!
-    
+    @IBOutlet weak var hcpView: UIView!
+    @IBOutlet weak var parView: UIView!
     var progressView = SDLoader()
     var buttonsArrayForStrokes = [UIButton]()
     var buttonsArrayForFairwayHit = [UIButton]()
@@ -77,6 +77,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var matchDataDict = NSMutableDictionary()
     var isContinue = false
     var playersButton = [(button:UIButton,isSelected:Bool,id:String,name:String)]()
+    var teeTypeArr = [(tee:String,handicap:Double)]()
     let swipePrev = UISwipeGestureRecognizer()
     let swipeNext = UISwipeGestureRecognizer()
     var holeOutforAppsFlyer = [Int]()
@@ -277,13 +278,42 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             generateStats.matchKey = matchId
             generateStats.generateStats()
         }
-        // ------------------------------------------------------------------
-
-//        self.progressView.show()
-//        let generateStats = GenerateStats()
-//        generateStats.matchKey = matchId
-//        generateStats.generateStats()
-        
+    }
+    func uploadStableFordPints(playerId:String,strokes:Int){
+        var index = 0
+        for playersdata in self.playersButton{
+            if (playersdata.isSelected){
+                break
+            }
+            index += 1
+        }
+        let par = scoreData[holeIndex].par
+        let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoreData.count
+        let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoreData.count
+        var hcp = 0
+        var totalShotsInThishole = 0
+        for tee in holeHcpWithTee{
+            if tee.hole == holeIndex+1{
+                for data in tee.teeBox{
+                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
+                break
+            }
+        }
+        if hcp > 0 && hcp <= extrashotsReminder{
+            totalShotsInThishole = par + extrashotsDiv + 1
+        }else{
+            totalShotsInThishole = par + extrashotsDiv
+        }
+        let sbPoint = totalShotsInThishole - strokes + 2
+        let netScore = strokes - (totalShotsInThishole - par)
+        holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
+        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/stableFordPoints").setValue(sbPoint)
+        holeWiseShots.setObject(netScore, forKey: "netScore" as NSCopying)
+        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/netScore").setValue(netScore)
     }
     @objc func statsCompleted(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
@@ -541,7 +571,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.loadStableFordData()
         holeParDDView.layer.cornerRadius = 15.0
+        hcpView.layer.cornerRadius = 3
+        parView.layer.cornerRadius = 3
+        btnDownArraow.layer.cornerRadius = 17.5
         btnDetailScoring.setCorner(color: UIColor.clear.cgColor)
         btnExpendScore.setCorner(color: UIColor.clear.cgColor)
         btnScore.setCornerWithCircleWidthOne(color: UIColor.white.cgColor)
@@ -603,6 +637,15 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                     }
                     i += 1
                     playersButton.append((button:btn, isSelected: isSelected, id: k as! String,name:name))
+                    var teeOfP = String()
+                    if let tee = (v as! NSMutableDictionary).value(forKeyPath: "tee") as? String{
+                        teeOfP = tee
+                    }
+                    var handicapOfP = Double()
+                    if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? Double{
+                        handicapOfP = hcp
+                    }
+                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
                 }
                 if(i == 1){
                     self.stackViewForMultiplayer.isHidden = true
@@ -681,7 +724,63 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @objc func swipedViewNext(){
         self.prevAction(Any.self)
     }
-    
+    func loadStableFordData(){
+        if  !(selectedGolfID == "") {
+            let golfId = "course_\(selectedGolfID)"
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/holes") { (snapshot) in
+                var rangeFinArr = [NSMutableDictionary]()
+                if let rangeFin = snapshot.value as? [NSMutableDictionary]{
+                    rangeFinArr = rangeFin
+                }
+                DispatchQueue.main.async(execute: {
+                    if (rangeFinArr.isEmpty){
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/stableford/holes") { (snapshot) in
+                            if let rangeFin = snapshot.value as? [NSMutableDictionary]{
+                                rangeFinArr = rangeFin
+                            }
+                            DispatchQueue.main.async(execute: {
+                                self.processSelectTee(rangeFinArr: rangeFinArr)
+                            })
+                        }
+                    }else{
+                        self.processSelectTee(rangeFinArr: rangeFinArr)
+                    }
+                })
+            }
+        }
+    }
+    var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
+    private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
+        var i = 1
+        for data in rangeFinArr{
+            if let teeBox = data.value(forKey: "teeBoxes") as? NSMutableArray{
+                var teeData = [NSMutableDictionary]()
+                for data in teeBox{
+                    teeData.append(data as! NSMutableDictionary)
+                }
+                holeHcpWithTee.append((hole: i, teeBox: teeData))
+            }
+            i += 1
+        }
+    }
+    func calculateTotalExtraShots(playerID:String)->Double{
+        var index = 0
+        for playersdata in self.playersButton{
+            if (playersdata.isSelected){
+                break
+            }
+            index += 1
+        }
+        var slopeIndex = 0
+        for data in teeArr{
+            if(data.name.lowercased() == self.teeTypeArr[index].tee){
+                break
+            }
+            slopeIndex += 1
+        }
+        let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
+        return (Double(data / 113))
+    }
     func saveNExitPressed(button:UIButton) {
         var playerIndex = Int()
         NotificationCenter.default.addObserver(self, selector: #selector(self.statsCompleted(_:)), name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
@@ -766,8 +865,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         
         self.holeWiseShots = NSMutableDictionary()
         self.btnExpendScore.isHidden = false
-        
-        self.lblHoleNumber.text = "Hole \(indexToUpdate+1)"
+        self.btnDownArraow.setTitle("Hole \(indexToUpdate+1)", for: .normal)
         self.lblParNumber.text = "Par \(self.scoreData[indexToUpdate].par)"
         self.fairwayHitStackView.superview?.isHidden = false
         if(self.scoreData[indexToUpdate].par == 3){
@@ -1181,6 +1279,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
 //            lay.borderWidth = 1
 //            lay.borderColor = UIColor.glfBluegreen.cgColor
 //        }
+        self.uploadStableFordPints(playerId: self.playerId,strokes:Int(title!)!)
         updateScoreData()
     }
     

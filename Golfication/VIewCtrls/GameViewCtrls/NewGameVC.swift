@@ -1229,7 +1229,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 DispatchQueue.main.async(execute: {
                     self.progressView.hide(navItem: self.navigationItem)
 
-                    if !self.isImagePicked && !chkStableford{
+                    if !self.isImagePicked && !chkStableford && matchId.count == 0{
 
                         self.requestSFPopupView = Bundle.main.loadNibNamed("RequestSFPopup", owner: self, options: nil)![0] as! UIView
                         self.requestSFPopupView.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
@@ -1359,9 +1359,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         if  !(selectedGolfID == "") {
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
             let golfId = "course_\(selectedGolfID)"
-            if(matchId.count == 0){
-                self.checkRangeFinderHoleData()
-            }
+            self.checkRangeFinderHoleData()
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)") { (snapshot) in
                 if snapshot.value != nil{
 

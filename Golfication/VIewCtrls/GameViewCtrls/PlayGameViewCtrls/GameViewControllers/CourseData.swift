@@ -19,28 +19,10 @@ class CourseData:NSObject{
     var clubs = ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu","more"]
     var holeGreenDataArr = [GreenData]()
     var totalTee = [NSMutableDictionary]()
-    var handicap = Double()
     var startingIndex : Int!
     var gameTypeIndex = 18
-    func measure(title: String!, call: () -> Void) {
-        let startTime = CACurrentMediaTime()
-        call()
-        let endTime = CACurrentMediaTime()
-        if let title = title {
-            print("\(title): ")
-        }
-        print("Time - \(endTime - startTime)")
-    }
-    func getHandicap(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "handicap") { (snapshot) in
-            if let handic = snapshot.value as? String{
-                self.handicap = handic == "-" ? 0:Double(handic)!
-            }
-        }
-    }
     func getGolfCourseDataFromFirebase(courseId:String){
 //        courseId = "course_9999999"
-        self.getHandicap()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
@@ -102,9 +84,9 @@ class CourseData:NSObject{
                 else if ((key as! String) == "rangefinder"){
                     let dict = value as! NSMutableDictionary
                     rangeFinderHoles = dict.value(forKey: "holes") as! NSArray
-                }else if((key as! String) == "stats"){
-                   // let dict = value as! NSMutableDictionary
-                   // stableFordHoles = dict.value(forKey: "holes") as! NSArray
+                }else if((key as! String) == "stableford"){
+                    let dict = value as! NSMutableDictionary
+                    stableFordHoles = dict.value(forKey: "holes") as! NSArray
                 }
                 group.leave()
             }            
@@ -121,23 +103,25 @@ class CourseData:NSObject{
                         if let hcp = (teeBoxes[0] as AnyObject).object(forKey:"hcp") as? Int{
                             dataDic.setObject(hcp, forKey: "hcp" as NSCopying)
                         }
-//                        for tee in teeBoxes{
-//                            let teeB = tee as! NSMutableDictionary
-//                            let dict = NSMutableDictionary()
-//                            dict.addEntries(from: ["hole" : i])
-//                            if let hcp = teeB.value(forKey: "hcp") as? Int{
-//                                dict.addEntries(from: ["hcp" : hcp])
-//                            }else{
-//                                dict.addEntries(from: ["hcp" : i+1])
-//                            }
-//                            if let name = teeB.value(forKey: "teeColorType") as? String{
-//                                if name.capitalizingFirstLetter() == selectedTee{
-//                                    self.totalTee.append(dict)
-//                                    dataDic.setObject((teeB.value(forKey:"lat") as! Double), forKey: "teeLat" as NSCopying)
-//                                    dataDic.setObject((teeB.value(forKey:"lng") as! Double), forKey: "teeLong" as NSCopying)
-//                                }
-//                            }
-//                        }
+                        for tee in teeBoxes{
+                            let teeB = tee as! NSMutableDictionary
+                            let dict = NSMutableDictionary()
+                            dict.addEntries(from: ["hole" : i])
+                            if let hcp = teeB.value(forKey: "hcp") as? Int{
+                                dict.addEntries(from: ["hcp" : hcp])
+                            }else{
+                                dict.addEntries(from: ["hcp" : 0])
+                            }
+                            dict.addEntries(from: ["name" : teeB.value(forKey: "teeColorType") as! String])
+                            self.totalTee.append(dict)
+                            
+                            if let name = teeB.value(forKey: "teeColorType") as? String{
+                                if name.capitalizingFirstLetter() == selectedTee{
+                                    dataDic.setObject((teeB.value(forKey:"lat") as! Double), forKey: "teeLat" as NSCopying)
+                                    dataDic.setObject((teeB.value(forKey:"lng") as! Double), forKey: "teeLong" as NSCopying)
+                                }
+                            }
+                        }
                         let tee = CLLocationCoordinate2D(latitude:dataDic.value(forKey: "teeLat") as! CLLocationDegrees, longitude:dataDic.value(forKey: "teeLong") as! CLLocationDegrees )
                         
                         let distance = GMSGeometryDistance(tee, green)
@@ -195,20 +179,17 @@ class CourseData:NSObject{
                                 indexOfMaxDistanceTee = t
                             }
                         }
-//                        if(stableFordHoles.count  == self.numberOfHoles.count){
-//                            let teeBoxes = (stableFordHoles[i] as AnyObject).object(forKey: "teeBoxes") as! NSArray
-//                            for tee in teeBoxes{
-//                                let teeB = tee as! NSMutableDictionary
-//                                let dict = NSMutableDictionary()
-//                                dict.addEntries(from: ["hole" : i])
-//                                dict.addEntries(from: ["hcp" : teeB.value(forKey: "hcp") as! Int])
-//                                if let name = teeB.value(forKey: "teeColorType") as? String{
-//                                    if name.capitalizingFirstLetter() == selectedTee{
-//                                        self.totalTee.append(dict)
-//                                    }
-//                                }
-//                            }
-//                        }
+                        if(stableFordHoles.count  == self.numberOfHoles.count){
+                            let teeBoxes = (stableFordHoles[i] as AnyObject).object(forKey: "teeBoxes") as! NSArray
+                            for tee in teeBoxes{
+                                let teeB = tee as! NSMutableDictionary
+                                let dict = NSMutableDictionary()
+                                dict.addEntries(from: ["hole" : i])
+                                dict.addEntries(from: ["hcp" : teeB.value(forKey: "hcp") as! Int])
+                                dict.addEntries(from: ["name" : teeB.value(forKey: "teeColorType") as! String])
+                                self.totalTee.append(dict)
+                            }
+                        }
                         let centerTee = centerOfTee[indexOfMaxDistanceTee]
                         let centerOfGreen = BackgroundMapStats.middlePointOfListMarkers(listCoords:data.green)
                         let headingAngle = GMSGeometryHeading(centerTee, centerOfGreen)

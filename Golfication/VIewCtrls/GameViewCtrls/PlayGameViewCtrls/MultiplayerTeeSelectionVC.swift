@@ -17,6 +17,7 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchHandicapOfAllUser()
+        self.title = "Player Stats"
         // Do any additional setup after loading the view.
     }
     func fetchHandicapOfAllUser(){
@@ -74,7 +75,7 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
             cell.btnUserImg.sd_setImage(with: URL(string: img), for: .normal, placeholderImage: UIImage(named: "0_you"), completed: nil)
         }
         cell.lblTeeRating.text = "\(selectedRating)"
-        cell.lblTeeName.text = selectedTee
+        cell.lblTeeName.text = selectedTee.lowercased()
         cell.lblTeeSlope.text = "\(selectedSlope)"
         if let userData = self.totalPlayers[indexPath.row] as? NSMutableDictionary{
             userData.addEntries(from: ["tee" : selectedTee])
@@ -88,7 +89,7 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
     @objc func btnActionHadicap(sender:UIButton){
         debugPrint("Handicap Action")
         if let userData = self.totalPlayers[sender.tag] as? NSMutableDictionary{
-            let alert = UIAlertController(title: "Enter Handicap for \(userData.value(forKey: "name") as! String)", message: "", preferredStyle: .alert)
+            let alert = UIAlertController(title: "\(userData.value(forKey: "name") as! String)", message: "", preferredStyle: .alert)
             alert.addTextField { (textField) in
                 textField.placeholder = "0.0"
                 textField.keyboardType = UIKeyboardType.decimalPad
