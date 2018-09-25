@@ -18,9 +18,11 @@ class CourseData:NSObject{
     var clubData = [(name:String,max:Int,min:Int)]()
     var clubs = ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu","more"]
     var holeGreenDataArr = [GreenData]()
-    var totalTee = [NSMutableDictionary]()
+    
     var startingIndex : Int!
     var gameTypeIndex = 18
+    var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
+
     func getGolfCourseDataFromFirebase(courseId:String){
 //        courseId = "course_9999999"
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
@@ -97,31 +99,19 @@ class CourseData:NSObject{
                         dataDic.setObject((rangeFinderHoles[i] as AnyObject).object(forKey: "greenLat")!, forKey: "greenLat" as NSCopying)
                         dataDic.setObject((rangeFinderHoles[i] as AnyObject).object(forKey: "greenLng")!, forKey: "greenLng" as NSCopying)
                         let green = CLLocationCoordinate2D(latitude:dataDic.value(forKey: "greenLat") as! CLLocationDegrees, longitude:dataDic.value(forKey: "greenLng") as! CLLocationDegrees )
-                        let teeBoxes = (rangeFinderHoles[i] as AnyObject).object(forKey: "teeBoxes") as! NSArray
-                        dataDic.setObject(((teeBoxes[0] as AnyObject).object(forKey:"lat") as! Double), forKey: "teeLat" as NSCopying)
-                        dataDic.setObject(((teeBoxes[0] as AnyObject).object(forKey:"lng") as! Double), forKey: "teeLong" as NSCopying)
-                        if let hcp = (teeBoxes[0] as AnyObject).object(forKey:"hcp") as? Int{
-                            dataDic.setObject(hcp, forKey: "hcp" as NSCopying)
-                        }
-                        for tee in teeBoxes{
-                            let teeB = tee as! NSMutableDictionary
-                            let dict = NSMutableDictionary()
-                            dict.addEntries(from: ["hole" : i])
-                            if let hcp = teeB.value(forKey: "hcp") as? Int{
-                                dict.addEntries(from: ["hcp" : hcp])
-                            }else{
-                                dict.addEntries(from: ["hcp" : 0])
+                        if let teeBoxes = (rangeFinderHoles[i] as AnyObject).object(forKey: "teeBoxes") as? NSArray{
+                            dataDic.setObject(((teeBoxes[0] as AnyObject).object(forKey:"lat") as! Double), forKey: "teeLat" as NSCopying)
+                            dataDic.setObject(((teeBoxes[0] as AnyObject).object(forKey:"lng") as! Double), forKey: "teeLong" as NSCopying)
+                            if let hcp = (teeBoxes[0] as AnyObject).object(forKey:"hcp") as? Int{
+                                dataDic.setObject(hcp, forKey: "hcp" as NSCopying)
                             }
-                            dict.addEntries(from: ["name" : teeB.value(forKey: "teeColorType") as! String])
-                            self.totalTee.append(dict)
-                            
-                            if let name = teeB.value(forKey: "teeColorType") as? String{
-                                if name.capitalizingFirstLetter() == selectedTee{
-                                    dataDic.setObject((teeB.value(forKey:"lat") as! Double), forKey: "teeLat" as NSCopying)
-                                    dataDic.setObject((teeB.value(forKey:"lng") as! Double), forKey: "teeLong" as NSCopying)
-                                }
+                            var teeData = [NSMutableDictionary]()
+                            for data in teeBoxes{
+                                teeData.append(data as! NSMutableDictionary)
                             }
+                            self.holeHcpWithTee.append((hole: i+1, teeBox: teeData))
                         }
+
                         let tee = CLLocationCoordinate2D(latitude:dataDic.value(forKey: "teeLat") as! CLLocationDegrees, longitude:dataDic.value(forKey: "teeLong") as! CLLocationDegrees )
                         
                         let distance = GMSGeometryDistance(tee, green)
@@ -181,14 +171,11 @@ class CourseData:NSObject{
                         }
                         if(stableFordHoles.count  == self.numberOfHoles.count){
                             let teeBoxes = (stableFordHoles[i] as AnyObject).object(forKey: "teeBoxes") as! NSArray
-                            for tee in teeBoxes{
-                                let teeB = tee as! NSMutableDictionary
-                                let dict = NSMutableDictionary()
-                                dict.addEntries(from: ["hole" : i])
-                                dict.addEntries(from: ["hcp" : teeB.value(forKey: "hcp") as! Int])
-                                dict.addEntries(from: ["name" : teeB.value(forKey: "teeColorType") as! String])
-                                self.totalTee.append(dict)
+                            var teeData = [NSMutableDictionary]()
+                            for data in teeBoxes{
+                                teeData.append(data as! NSMutableDictionary)
                             }
+                            self.holeHcpWithTee.append((hole: i+1, teeBox: teeData))
                         }
                         let centerTee = centerOfTee[indexOfMaxDistanceTee]
                         let centerOfGreen = BackgroundMapStats.middlePointOfListMarkers(listCoords:data.green)
@@ -207,11 +194,15 @@ class CourseData:NSObject{
                     debugPrint(self.gameTypeIndex)
                     debugPrint(self.startingIndex)
                     debugPrint(self.holeGreenDataArr.count)
-                    
+                    debugPrint(self.holeHcpWithTee)
                     if(self.numberOfHoles.count < self.gameTypeIndex){
                         var tempArr = self.propertyArray
                         var tempHoleArr = self.centerPointOfTeeNGreen
                         var tempNuOfHole = self.numberOfHoles
+                        var temp = self.holeHcpWithTee
+                        for data in self.holeHcpWithTee{
+                            temp.append(data)
+                        }
                         for data in self.propertyArray{
                             tempArr.append(data)
                         }
@@ -228,6 +219,7 @@ class CourseData:NSObject{
                         self.numberOfHoles = tempNuOfHole
                         self.propertyArray = tempArr
                         self.centerPointOfTeeNGreen = tempHoleArr
+                        self.holeHcpWithTee = temp
                     }
                     let min = self.startingIndex-1
                     var max = self.numberOfHoles.count-1
@@ -243,10 +235,11 @@ class CourseData:NSObject{
                     temp.removeAll()
                     var newTemp = self.centerPointOfTeeNGreen
                     newTemp.removeAll()
-                    var ttemp = [NSMutableDictionary]()
                     var tempholeGreenDataArr = [GreenData]()
                     var tempNumofHole = self.numberOfHoles
                     tempNumofHole.removeAll()
+                    var tempHcp = self.holeHcpWithTee
+                    tempHcp.removeAll()
                     
                     for i in self.startingIndex-1..<self.gameTypeIndex+self.startingIndex-1{
                         debugPrint("index:",i)
@@ -258,20 +251,22 @@ class CourseData:NSObject{
                             }
                         }
                         newTemp.append(self.centerPointOfTeeNGreen[newIndex])
-                        if(self.totalTee.count > 0){
-                            ttemp.append(self.totalTee[newIndex])
-                        }
-                        if(self.holeGreenDataArr.count > 0){
+                        if(!self.holeGreenDataArr.isEmpty){
                             tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
                         }
                         tempNumofHole.append(self.numberOfHoles[newIndex])
+                        if(!self.holeHcpWithTee.isEmpty){
+                            tempHcp.append(self.holeHcpWithTee[newIndex])
+                            tempHcp[newIndex].hole = newIndex+1
+                        }
                     }
                     if(!newTemp.isEmpty){
                         self.centerPointOfTeeNGreen = newTemp
                         self.propertyArray = temp
-                        self.totalTee = ttemp
+                 
                         self.holeGreenDataArr = tempholeGreenDataArr
                         self.numberOfHoles = tempNumofHole
+                        self.holeHcpWithTee = tempHcp
                     }
                 }
                 self.getGolfBagData()

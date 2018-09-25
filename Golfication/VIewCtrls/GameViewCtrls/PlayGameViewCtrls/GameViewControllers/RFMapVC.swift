@@ -636,7 +636,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 players.add(dict)
             }
         }
-        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardForInputViewCtrl") as! ScoreBoardForInputViewCtrl
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = scoring
         viewCtrl.playerData = players
         viewCtrl.isContinue = true

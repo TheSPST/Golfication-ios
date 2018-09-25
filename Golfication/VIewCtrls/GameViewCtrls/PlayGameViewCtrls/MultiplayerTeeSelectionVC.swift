@@ -75,10 +75,10 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
             cell.btnUserImg.sd_setImage(with: URL(string: img), for: .normal, placeholderImage: UIImage(named: "0_you"), completed: nil)
         }
         cell.lblTeeRating.text = "\(selectedRating)"
-        cell.lblTeeName.text = selectedTee.lowercased()
+        cell.lblTeeName.text = selectedTee
         cell.lblTeeSlope.text = "\(selectedSlope)"
         if let userData = self.totalPlayers[indexPath.row] as? NSMutableDictionary{
-            userData.addEntries(from: ["tee" : selectedTee])
+            userData.addEntries(from: ["tee" : selectedTee.lowercased()])
             userData.addEntries(from: ["handicap" : self.handicap[indexPath.row]])
             debugPrint(userData)
         }
@@ -121,7 +121,7 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
                 cell.lblTeeRating.text = tee.rating
                 cell.lblTeeSlope.text = tee.slope
                 if let userData = self.totalPlayers[sender.tag] as? NSMutableDictionary{
-                    userData.addEntries(from: ["tee" : tee.name])
+                    userData.addEntries(from: ["tee" : tee.name.lowercased()])
                     debugPrint(userData)
                 }
             }))

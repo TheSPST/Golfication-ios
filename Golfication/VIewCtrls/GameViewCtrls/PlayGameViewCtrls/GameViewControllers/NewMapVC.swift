@@ -3861,7 +3861,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 allWaterHazard.append(wh)
             }
         }
-        debugPrint(courseData.totalTee)
+        debugPrint(courseData.holeHcpWithTee)
         let extraShots = calculateTotalExtraShots(playerID: self.selectedUserId)
         debugPrint("extraShots: ",extraShots)
         
@@ -5940,9 +5940,21 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoring.count
         var hcp = 0
         var totalShotsInThishole = 0
-        for tee in self.courseData.totalTee{
-            if (tee.value(forKey: "hole") as! Int) == holeIndex{
-                hcp = tee.value(forKey:"hcp") as! Int
+        var index = 0
+        for playersdata in self.playersButton{
+            if (playersdata.id == playerId){
+                break
+            }
+            index += 1
+        }
+        for tee in self.courseData.holeHcpWithTee{
+            if tee.hole == holeIndex{
+                for data in tee.teeBox{
+                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
                 break
             }
         }

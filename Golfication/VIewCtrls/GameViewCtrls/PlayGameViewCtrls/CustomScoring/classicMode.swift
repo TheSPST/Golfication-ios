@@ -17,4 +17,6 @@ class classicMode{
         var chipShot: Int?
         var sandShot: Int?
         var holeOut: Bool?
+        var netScore:Int?
+        var stableFordScore:Int?
 }

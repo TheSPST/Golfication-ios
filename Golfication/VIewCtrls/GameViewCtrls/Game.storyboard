@@ -1266,27 +1266,6 @@
             </objects>
             <point key="canvasLocation" x="-750" y="2190"/>
         </scene>
-        <!--Score BoardVC-->
-        <scene sceneID="csl-pO-zFF">
-            <objects>
-                <viewController storyboardIdentifier="ScoreBoardVC" id="XPF-Ux-zdO" customClass="ScoreBoardVC" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="NCv-qX-s84"/>
-                        <viewControllerLayoutGuide type="bottom" id="aPh-bg-EAa"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="A6U-oL-6Hs">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <viewLayoutGuide key="safeArea" id="mZw-cR-h7o"/>
-                    </view>
-                    <toolbarItems/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="JYX-yv-EJm" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1038" y="1385"/>
-        </scene>
         <!--Custom Pop Up View Controller-->
         <scene sceneID="Tag-rv-bEo">
             <objects>
@@ -2368,7 +2347,7 @@
                                                         </state>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3KA-UU-Ocv">
-                                                        <rect key="frame" x="158" y="0.0" width="53" height="30"/>
+                                                        <rect key="frame" x="158" y="0.0" width="95" height="30"/>
                                                         <color key="backgroundColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="95" id="rZF-f0-dGW"/>
@@ -2383,7 +2362,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vjk-UG-klx">
-                                                        <rect key="frame" x="219" y="0.0" width="69" height="30"/>
+                                                        <rect key="frame" x="261" y="0.0" width="27" height="30"/>
                                                         <color key="backgroundColor" red="0.0" green="0.54117647059999996" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="69" id="3Ep-Lk-l3d"/>
@@ -4567,7 +4546,7 @@
         <!--ScoreBoardForInputViewCtrl-->
         <scene sceneID="NpH-Yw-Ax1">
             <objects>
-                <viewController storyboardIdentifier="ScoreBoardForInputViewCtrl" id="USz-vC-Gad" userLabel="ScoreBoardForInputViewCtrl" customClass="ScoreBoardForInputViewCtrl" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScoreBoardVC" id="USz-vC-Gad" userLabel="ScoreBoardForInputViewCtrl" customClass="ScoreBoardVC" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="czv-lc-GOv"/>
                         <viewControllerLayoutGuide type="bottom" id="6PT-hR-Don"/>

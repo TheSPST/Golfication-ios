@@ -102,7 +102,6 @@
 		4B1F6BC92090A29F00312EA7 /* ShareMapScoreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B9A2090A29F00312EA7 /* ShareMapScoreVC.swift */; };
 		4B1F6BCA2090A29F00312EA7 /* ManualScoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B9C2090A29F00312EA7 /* ManualScoring.swift */; };
 		4B1F6BCB2090A29F00312EA7 /* classicMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B9D2090A29F00312EA7 /* classicMode.swift */; };
-		4B1F6BCC2090A29F00312EA7 /* ScoreBoardForInputViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B9E2090A29F00312EA7 /* ScoreBoardForInputViewCtrl.swift */; };
 		4B1F6BCD2090A29F00312EA7 /* CustomScoringViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B9F2090A29F00312EA7 /* CustomScoringViewCtrl.swift */; };
 		4B1F6BCE2090A29F00312EA7 /* CustomPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BA02090A29F00312EA7 /* CustomPopUpViewController.swift */; };
 		4B1F6BCF2090A29F00312EA7 /* ScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BA12090A29F00312EA7 /* ScoreTableViewCell.swift */; };
@@ -344,7 +343,6 @@
 		4B1F6B9A2090A29F00312EA7 /* ShareMapScoreVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareMapScoreVC.swift; sourceTree = "<group>"; };
 		4B1F6B9C2090A29F00312EA7 /* ManualScoring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManualScoring.swift; sourceTree = "<group>"; };
 		4B1F6B9D2090A29F00312EA7 /* classicMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = classicMode.swift; sourceTree = "<group>"; };
-		4B1F6B9E2090A29F00312EA7 /* ScoreBoardForInputViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreBoardForInputViewCtrl.swift; sourceTree = "<group>"; };
 		4B1F6B9F2090A29F00312EA7 /* CustomScoringViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomScoringViewCtrl.swift; sourceTree = "<group>"; };
 		4B1F6BA02090A29F00312EA7 /* CustomPopUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPopUpViewController.swift; sourceTree = "<group>"; };
 		4B1F6BA12090A29F00312EA7 /* ScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -755,7 +753,6 @@
 			children = (
 				4B1F6B9C2090A29F00312EA7 /* ManualScoring.swift */,
 				4B1F6B9D2090A29F00312EA7 /* classicMode.swift */,
-				4B1F6B9E2090A29F00312EA7 /* ScoreBoardForInputViewCtrl.swift */,
 				4B1F6B9F2090A29F00312EA7 /* CustomScoringViewCtrl.swift */,
 			);
 			path = CustomScoring;
@@ -1561,7 +1558,6 @@
 				4BB26D271FF77EDB001E9556 /* SessionReportTableViewCell.swift in Sources */,
 				4B04C4CC20C03930000D2C23 /* ClockwiseAnimation.swift in Sources */,
 				4B1F6BE12090A29F00312EA7 /* ARConfiguration.swift in Sources */,
-				4B1F6BCC2090A29F00312EA7 /* ScoreBoardForInputViewCtrl.swift in Sources */,
 				3EADEC9A2073D0370037A14E /* UYLNotificationDelegate.swift in Sources */,
 				3EB6D3B72137CA72000DA1BE /* FBSomeEvents.swift in Sources */,
 				4BE11A6B21353568008E529A /* CustomColorSlider.swift in Sources */,
