@@ -143,6 +143,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                             self.mapLat = Double(userDict["lat"] as! String)!
                             self.mapLng = Double(userDict["lng"] as! String)!
                             self.courseId = (userDict["courseId"] as! String)
+                            self.checkRangeFinderHoleData(courseId:self.courseId)
                             self.lblStartingHole.text = "Starting Hole : " + (userDict["startingHole"] as! String)
                             if((userDict["scoringMode"]) != nil){
                                 self.scoringMode = userDict["scoringMode"] as! String
@@ -157,6 +158,52 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
                 }
             })
+        }
+    }
+    // MARK: selectedGameTypeFromFirebase
+    func checkRangeFinderHoleData(courseId:String) {
+        teeArr.removeAll()
+        let golfId = "course_\(courseId)"
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/courseDetails") { (snapshot) in
+            var rangeFinArr = [NSMutableDictionary]()
+            if let rangeFin = snapshot.value as? [NSMutableDictionary]{
+                rangeFinArr = rangeFin
+            }
+            DispatchQueue.main.async(execute: {
+                if (rangeFinArr.isEmpty){
+                    FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/stableford/courseDetails") { (snapshot) in
+                        if let rangeFin = snapshot.value as? [NSMutableDictionary]{
+                            rangeFinArr = rangeFin
+                        }
+                        DispatchQueue.main.async(execute: {
+                            self.processSelectTee(rangeFinArr: rangeFinArr)
+                        })
+                    }
+                }else{
+                    self.processSelectTee(rangeFinArr: rangeFinArr)
+                }
+            })
+        }
+    }
+    private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
+        for data in rangeFinArr{
+            let rating = data.value(forKey: "courseRating") as! Double
+            var slope = 113
+            if let slo = data.value(forKey: "slopeRating") as? Int{
+                slope = slo
+            }
+            let teeName = data.value(forKey: "teeColor") as! String
+            let teeType = data.value(forKey: "tee") as! String
+            teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:"\(rating)", slope:"\(slope)"))
+        }
+        if(!teeArr.isEmpty){
+            selectedSlope = Int(teeArr[0].slope)!
+            selectedRating = Double(teeArr[0].rating)!
+            selectedTee = teeArr[0].name
+        }else{
+            selectedTee = ""
+            selectedSlope = 113
+            selectedRating = 0.0
         }
     }
     let locationManager = CLLocationManager()

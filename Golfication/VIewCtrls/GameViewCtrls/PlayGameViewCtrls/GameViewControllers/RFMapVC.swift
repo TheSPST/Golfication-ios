@@ -465,9 +465,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
         }
     }
-    func ifnoStableFord(){
+    func statusStableFord(){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        var chkStableford = false
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
             var dataDic = [String:Int]()
             if(snapshot.childrenCount > 0){
@@ -476,14 +475,36 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             if !dataDic.isEmpty{
                 for (key, _) in dataDic{
                     if key == selectedGolfID{
-                        chkStableford = true
+                        self.chkStableford = true
                         break
                     }
                 }
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-                if !chkStableford{
+                self.stablefordView.isHidden = self.chkStableford
+            })
+        }
+    }
+    var chkStableford = false
+    func ifnoStableFord(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+            var dataDic = [String:Int]()
+            if(snapshot.childrenCount > 0){
+                dataDic = (snapshot.value as? [String : Int])!
+            }
+            if !dataDic.isEmpty{
+                for (key, _) in dataDic{
+                    if key == selectedGolfID{
+                        self.chkStableford = true
+                        break
+                    }
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                if !self.chkStableford{
                     let viewCtrl = RequestSFPopup(nibName:"RequestSFPopup", bundle:nil)
                     viewCtrl.modalPresentationStyle = .overCurrentContext
                     self.present(viewCtrl, animated: true, completion: nil)
@@ -670,7 +691,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         for tee in self.courseData.holeHcpWithTee{
             if tee.hole == holeNo+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }
@@ -815,6 +836,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         mapTimer.invalidate()
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
+    }
+    @objc func hideStableFord(_ notification:NSNotification){
+        statusStableFord()
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     // ------------------------ By Amit ----------------------
     @IBAction func scoreBtnTapped(_ sender: UIButton) {
@@ -1036,6 +1062,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.sendNotificationOnCourse(_:)), name: NSNotification.Name(rawValue: "updateLocation"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
+
 
         //         getGolfCourseDataFromFirebase()
     }
@@ -1747,7 +1775,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         var slopeIndex = 0
         for data in teeArr{
-            if(data.name.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()){
                 break
             }
             slopeIndex += 1
@@ -1771,7 +1799,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         for tee in self.courseData.holeHcpWithTee{
             if tee.hole == holeIndex+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }

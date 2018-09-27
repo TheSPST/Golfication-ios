@@ -1006,6 +1006,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = true
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
+
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(false)
@@ -1039,7 +1041,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.shareShotsDissmiss(_:)), name: NSNotification.Name(rawValue: "ShareShots"),object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
+
         if(!self.isHoleByHole){
             self.startingIndex = Int(self.matchDataDict.value(forKeyPath: "startingHole") as! String)!
             self.gameTypeIndex = self.matchDataDict.value(forKey: "matchType") as! String == "9 holes" ? 9:18
@@ -1052,6 +1055,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
         
+    }
+    @objc func hideStableFord(_ notification:NSNotification){
+        statusStableFord()
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     @IBAction func btnActionStableford(_ sender: UIButton) {
         if self.teeTypeArr.isEmpty{
@@ -1085,9 +1092,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
     }
-    func ifnoStableFord(){
+    var chkStableford = false
+    func statusStableFord(){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        var chkStableford = false
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
             var dataDic = [String:Int]()
             if(snapshot.childrenCount > 0){
@@ -1096,19 +1103,37 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             if !dataDic.isEmpty{
                 for (key, _) in dataDic{
                     if key == selectedGolfID{
-                        chkStableford = true
+                        self.chkStableford = true
                         break
                     }
                 }
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-                if !chkStableford{
+                self.stableFordView.isHidden = self.chkStableford
+            })
+        }
+    }
+    func ifnoStableFord(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+            var dataDic = [String:Int]()
+            if(snapshot.childrenCount > 0){
+                dataDic = (snapshot.value as? [String : Int])!
+            }
+            if !dataDic.isEmpty{
+                for (key, _) in dataDic{
+                    if key == selectedGolfID{
+                        self.chkStableford = true
+                        break
+                    }
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                if !self.chkStableford{
                     let viewCtrl = RequestSFPopup(nibName:"RequestSFPopup", bundle:nil)
                     viewCtrl.modalPresentationStyle = .overCurrentContext
                     self.present(viewCtrl, animated: true, completion: nil)
-                }else{
-                    
                 }
             })
         }
@@ -3915,7 +3940,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         var slopeIndex = 0
         for data in teeArr{
-            if(data.name.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()){
                 break
             }
             slopeIndex += 1
@@ -3928,7 +3953,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(!self.isHoleByHole){
             self.currentMatchId = matchId
         }
-        
+        statusStableFord()
         let playerData = NSMutableArray()
         for clu in courseData.clubs{
             self.clubsWithFullName.append(self.getClubName(club: clu))
@@ -3996,7 +4021,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for tee in self.courseData.holeHcpWithTee{
             if tee.hole == holeNo+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }
@@ -6101,7 +6126,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for tee in self.courseData.holeHcpWithTee{
             if tee.hole == holeIndex{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }

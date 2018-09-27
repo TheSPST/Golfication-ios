@@ -36,6 +36,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var stackBtmConstraint: NSLayoutConstraint!
     @IBOutlet weak var btnChangeHole: UIButton!
     
+    @IBOutlet weak var imgViewRefreshScore: UIImageView!
+    @IBOutlet weak var imgViewInfo: UIImageView!
     @IBOutlet weak var stableFordView: UIView!
     @IBOutlet weak var lblStableFordScore: UILabel!
     @IBOutlet weak var lblHCP: UILabel!
@@ -545,7 +547,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        topView.backgroundColor = UIColor.glfBluegreen
+        imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
+        imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
         topView.layer.cornerRadius = topView.frame.height/2
         holeParDDView.layer.cornerRadius = 15.0
         hcpView.layer.cornerRadius = 3
@@ -554,7 +557,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         stableFordView.layer.borderWidth = 1.0
         stableFordView.layer.cornerRadius = 3
         stableFordView.layer.borderColor = UIColor.glfWhite.cgColor
-        stableFordView.isHidden = true
         btnDetailScoring.setCorner(color: UIColor.clear.cgColor)
         btnExpendScore.setCorner(color: UIColor.clear.cgColor)
         btnScore.setCornerWithCircleWidthOne(color: UIColor.white.cgColor)
@@ -580,7 +582,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateView(_:)), name: NSNotification.Name(rawValue: "updateView"),object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
         lblCourseName.text = "\(matchDataDict.value(forKey: "courseName")!)"
         for (key,value) in self.matchDataDict{
             let keyData = key as! String
@@ -637,12 +639,14 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         if(!self.teeTypeArr.isEmpty){
             self.loadStableFordData()
-            self.stableFordView.isHidden = false
             self.topView.isHidden = true
             self.holeParDDView.isHidden = false
+            self.imgViewInfo.isHidden = true
         }else{
             self.topView.isHidden = false
             self.holeParDDView.isHidden = true
+            self.imgViewRefreshScore.isHidden = true
+            self.lblStableFordScore.text = "n/a"
             if(!isContinue) && (!isAccept){
                 if(matchDataDict.object(forKey: "player") != nil){
                     let tempArray = matchDataDict.object(forKey: "player")! as! NSMutableDictionary
@@ -674,7 +678,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         
         setInitialUI()
         hideDetailScoreView()
-        
+        statusStableFord()
         if(isContinue){
             if let current = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
                 self.holeIndex = Int(current)!-1
@@ -773,7 +777,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         var slopeIndex = 0
         for data in teeArr{
-            if(data.name.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()){
                 break
             }
             slopeIndex += 1
@@ -1111,19 +1115,75 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @IBAction func btnActionStblScore(_ sender: UIButton) {
-        self.updateHoleWiseShots()
-        if self.btnStableScore.currentTitle!.contains("Stable"){
-           self.btnStableScore.setTitle("Net Score", for: .normal)
-           self.lblStableFordScore.text = "\(classicScoring.netScore!)"
-        }else if self.btnStableScore.currentTitle!.contains("Net"){
-           self.btnStableScore.setTitle("Gross Score", for: .normal)
-           self.lblStableFordScore.text = "\(classicScoring.strokesCount!)"
+        if(self.teeTypeArr.isEmpty){
+            self.ifnoStableFord()
         }else{
-           self.btnStableScore.setTitle("Stableford Score", for: .normal)
-            self.lblStableFordScore.text = "\(classicScoring.stableFordScore!)"
+            self.updateHoleWiseShots()
+            if self.btnStableScore.currentTitle!.contains("Stable"){
+                self.btnStableScore.setTitle("Net Score", for: .normal)
+                self.lblStableFordScore.text = "\(classicScoring.netScore!)"
+            }else if self.btnStableScore.currentTitle!.contains("Net"){
+                self.btnStableScore.setTitle("Gross Score", for: .normal)
+                self.lblStableFordScore.text = "\(classicScoring.strokesCount!)"
+            }else{
+                self.btnStableScore.setTitle("Stableford Score", for: .normal)
+                self.lblStableFordScore.text = "\(classicScoring.stableFordScore!)"
+            }
         }
     }
-    
+    @objc func hideStableFord(_ notification:NSNotification){
+        statusStableFord()
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
+    }
+    func statusStableFord(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+            var dataDic = [String:Int]()
+            if(snapshot.childrenCount > 0){
+                dataDic = (snapshot.value as? [String : Int])!
+            }
+            if !dataDic.isEmpty{
+                for (key, _) in dataDic{
+                    if key == selectedGolfID{
+                        self.chkStableford = true
+                        break
+                    }
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                self.stableFordView.isHidden = self.chkStableford
+            })
+        }
+    }
+    var chkStableford = false
+    func ifnoStableFord(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+            var dataDic = [String:Int]()
+            if(snapshot.childrenCount > 0){
+                dataDic = (snapshot.value as? [String : Int])!
+            }
+            if !dataDic.isEmpty{
+                for (key, _) in dataDic{
+                    if key == selectedGolfID{
+                        self.chkStableford = true
+                        break
+                    }
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                if !self.chkStableford{
+                    let viewCtrl = RequestSFPopup(nibName:"RequestSFPopup", bundle:nil)
+                    viewCtrl.modalPresentationStyle = .overCurrentContext
+                    self.present(viewCtrl, animated: true, completion: nil)
+                }else{
+                    
+                }
+            })
+        }
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
@@ -1131,7 +1191,10 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
     }
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
+    }
     func setInitialUI(){
         var tag = 0
         for view in fairwayHitStackView.subviews{
@@ -1317,7 +1380,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         for tee in holeHcpWithTee{
             if tee.hole == holeIndex+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }
@@ -1660,7 +1723,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         for tee in holeHcpWithTee{
             if tee.hole == holeNo+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }

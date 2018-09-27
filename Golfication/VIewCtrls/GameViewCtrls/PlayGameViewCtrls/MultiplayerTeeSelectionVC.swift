@@ -126,7 +126,7 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
                 cell.lblTeeRating.text = tee.rating
                 cell.lblTeeSlope.text = tee.slope
                 if let userData = self.totalPlayers[sender.tag] as? NSMutableDictionary{
-                    userData.addEntries(from: ["tee" : tee.name.lowercased()])
+                    userData.addEntries(from: ["tee" : tee.type.lowercased()])
                     debugPrint(userData)
                 }
             }))
