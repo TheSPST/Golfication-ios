@@ -90,7 +90,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     var matchDataDict = NSMutableDictionary()
     var isContinue = false
     var holeOutforAppsFlyer = Int()
-    
+    var teeTypeArr = [(tee:String,handicap:Double)]()
     // ----------------------------- Old Outlet & Variables ----------------------------------------
     var playerData = NSMutableArray()
     let bView = BottomViewInScore()
@@ -391,18 +391,26 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 //        bView.isHidden = true
         self.navigationItem.rightBarButtonItem?.isEnabled = isContinue
         bView.isHidden = !isContinue
-//        for data in playerData{
-//            if let player = data as? NSMutableDictionary{
-//                let id = player.value(forKey: "id") as! String
-//                if id == Auth.auth().currentUser!.uid{
-//                    let status = player.value(forKey: "status") as! Int
-//                    if status == 2{
-//                        bView.isHidden = false
-//                        break
-//                    }
-//                }
-//            }
-//        }
+        for data in playerData{
+            if let player = data as? NSMutableDictionary{
+                var teeOfP = String()
+                if let tee = player.value(forKeyPath: "tee") as? String{
+                    teeOfP = tee
+                }
+                var handicapOfP = Double()
+                if let hcp = player.value(forKeyPath: "handicap") as? String{
+                    handicapOfP = Double(hcp)!
+                }
+                if(teeOfP != ""){
+                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
+                }
+            }
+        }
+        if !teeTypeArr.isEmpty{
+            self.loadStableFordData()
+        }else{
+            
+        }
         let bottomLbl = UILabel()
         bottomLbl.frame = CGRect(x: 50, y: self.view.frame.height-40-(30+5), width: self.view.frame.width-100, height: 30)
         bottomLbl.numberOfLines = 2
@@ -502,7 +510,45 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let tap = UITapGestureRecognizer(target: self, action:  #selector (self.superViewTouchAction (_:)))
         self.scoringSuperView.addGestureRecognizer(tap)
     }
-    
+    func loadStableFordData(){
+        if  !(selectedGolfID == "") {
+            let golfId = "course_\(selectedGolfID)"
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/holes") { (snapshot) in
+                var rangeFinArr = [NSMutableDictionary]()
+                if let rangeFin = snapshot.value as? [NSMutableDictionary]{
+                    rangeFinArr = rangeFin
+                }
+                DispatchQueue.main.async(execute: {
+                    if (rangeFinArr.isEmpty){
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/stableford/holes") { (snapshot) in
+                            if let rangeFin = snapshot.value as? [NSMutableDictionary]{
+                                rangeFinArr = rangeFin
+                            }
+                            DispatchQueue.main.async(execute: {
+                                self.processSelectTee(rangeFinArr: rangeFinArr)
+                            })
+                        }
+                    }else{
+                        self.processSelectTee(rangeFinArr: rangeFinArr)
+                    }
+                })
+            }
+        }
+    }
+    var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
+    private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
+        var i = 1
+        for data in rangeFinArr{
+            if let teeBox = data.value(forKey: "teeBoxes") as? NSMutableArray{
+                var teeData = [NSMutableDictionary]()
+                for data in teeBox{
+                    teeData.append(data as! NSMutableDictionary)
+                }
+                holeHcpWithTee.append((hole: i, teeBox: teeData))
+            }
+            i += 1
+        }
+    }
     func setHoleShotDetails(par:Int,shots:Int){
         var holeFinishStatus = String()
         var color = UIColor()
@@ -933,7 +979,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.index = sender.tag
         self.classicScoring = self.getScoreIntoClassicNode(hole: self.index,playerKey: self.playerId!)
         self.updateValue()
-        self.holeWiseShots.removeAllObjects()
         lblHolePar.text = "Hole \(self.index+1) - Par \(self.scoreData[self.index].par)"
     }
     
@@ -951,6 +996,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     classicScore.strokesCount = strokesCount
                 }
                 if let holeOut = dic.value(forKey: "holeOut") as? Bool{
+//                        classicScore.holeOut = classicScore.strokesCount != nil ? true : false
                     classicScore.holeOut = holeOut
                 }
                 if let putting = dic.value(forKey: "putting") as? Int{
@@ -964,9 +1010,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 }
                 if let gir = dic.value(forKey: "gir") as? Bool{
                     classicScore.gir = gir
-                }
-                if let holeOut = dic.value(forKey: "holeOut") as? Bool{
-                    classicScore.holeOut = holeOut
                 }
             }
         }
@@ -1311,64 +1354,56 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 
                     for dataDict in self.scoreData[i].players{
                         for (key,value) in dataDict{
-                            
-                            let dic = value as! NSDictionary
-                            if dic.value(forKey: "holeOut") as! Bool == true{
-                                
-                                if(key as? String == playerId){
-                                    
-                                    if(key as? String == playerId){
-                                        
-                                        for (key,value) in value as! NSMutableDictionary
-                                        {
-                                            var totalShots = 0
-                                            var allScore = Int()
-                                            if(key as! String == "shots"){
-                                                let shotsArray = value as! NSArray
-                                                allScore  = shotsArray.count - (self.scoreData[i].par)
-                                                totalShots = shotsArray.count
-                                                btn.setTitle("\(totalShots)", for: .normal)
-                                                
-                                                totalStrokes += totalShots
-                                            }
-                                            else if (key as! String == "strokes"){
-                                                allScore  = (value as! Int) - (self.scoreData[i].par)
-                                                totalShots = (value as! Int)
-                                                btn.setTitle("\(totalShots)", for: .normal)
-                                                
-                                                totalStrokes += totalShots
-                                            }
-                                            if allScore <= -2 || allScore <= -3{
-                                                //double circle
-                                                subView.layer.borderWidth = 1.0
-                                                subView.layer.cornerRadius = subView.frame.size.height/2
-                                                subView.layer.borderColor = UIColor.glfBluegreen.cgColor
-                                                
-                                                btn.layer.borderWidth = 1.0
-                                                btn.layer.cornerRadius = btn.frame.size.height/2
-                                                btn.layer.borderColor = UIColor.glfBluegreen.cgColor
-                                            }
-                                            else if allScore == -1{
-                                                //single circle
-                                                btn.layer.borderWidth = 1.0
-                                                btn.layer.cornerRadius = btn.frame.size.height/2
-                                                btn.layer.borderColor = UIColor.glfBluegreen.cgColor
-                                            }
-                                            else if allScore == 1{
-                                                //single square
-                                                btn.layer.borderWidth = 1.0
-                                                btn.layer.borderColor = UIColor.red.cgColor
-                                            }
-                                            else if allScore >= 2 || allScore >= 3{
-                                                //double square
-                                                subView.layer.borderWidth = 1.0
-                                                subView.layer.borderColor = UIColor.red.cgColor
-                                                btn.layer.borderWidth = 1.0
-                                                btn.layer.borderColor = UIColor.red.cgColor
-                                            }
-                                            else{
-                                                // do nothing
-                                            }
+                            if(key as? String == playerId){
+                                if let valueDict = value as? NSMutableDictionary{
+                                    for (key,value) in valueDict{
+                                        var totalShots = 0
+                                        var allScore = Int()
+                                        if(key as! String == "shots"){
+                                            let shotsArray = value as! NSArray
+                                            allScore  = shotsArray.count - (self.scoreData[i].par)
+                                            totalShots = shotsArray.count
+                                            btn.setTitle("\(totalShots)", for: .normal)
+                                            
+                                            totalStrokes += totalShots
+                                        }
+                                        else if (key as! String == "strokes"){
+                                            allScore  = (value as! Int) - (self.scoreData[i].par)
+                                            totalShots = (value as! Int)
+                                            btn.setTitle("\(totalShots)", for: .normal)
+                                            
+                                            totalStrokes += totalShots
+                                        }
+                                        if allScore <= -2 || allScore <= -3{
+                                            //double circle
+                                            subView.layer.borderWidth = 1.0
+                                            subView.layer.cornerRadius = subView.frame.size.height/2
+                                            subView.layer.borderColor = UIColor.glfBluegreen.cgColor
+                                            
+                                            btn.layer.borderWidth = 1.0
+                                            btn.layer.cornerRadius = btn.frame.size.height/2
+                                            btn.layer.borderColor = UIColor.glfBluegreen.cgColor
+                                        }
+                                        else if allScore == -1{
+                                            //single circle
+                                            btn.layer.borderWidth = 1.0
+                                            btn.layer.cornerRadius = btn.frame.size.height/2
+                                            btn.layer.borderColor = UIColor.glfBluegreen.cgColor
+                                        }
+                                        else if allScore == 1{
+                                            //single square
+                                            btn.layer.borderWidth = 1.0
+                                            btn.layer.borderColor = UIColor.red.cgColor
+                                        }
+                                        else if allScore >= 2 || allScore >= 3{
+                                            //double square
+                                            subView.layer.borderWidth = 1.0
+                                            subView.layer.borderColor = UIColor.red.cgColor
+                                            btn.layer.borderWidth = 1.0
+                                            btn.layer.borderColor = UIColor.red.cgColor
+                                        }
+                                        else{
+                                            // do nothing
                                         }
                                     }
                                 }
@@ -1509,7 +1544,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 //                    label.backgroundColor = UIColor.clear
 //                    cell.contentView.addSubview(label)
                     
-                    let theImageView = UIButton(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 32, height: 32))
+//                    let theImageView = UIButton(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 32, height: 32))
                     
                     for dataDict in self.scoreData[i].players{
 
@@ -1542,22 +1577,22 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             btn.setTitle("", for: .normal)
                                             if(fairway == "H"){
                                                 let backBtnImage1 = #imageLiteral(resourceName: "hit").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                theImageView.setImage(backBtnImage1, for: .normal)
-                                                theImageView.tintColor = UIColor.glfBluegreen
+                                                btn.setImage(backBtnImage1, for: .normal)
+                                                btn.tintColor = UIColor.glfBluegreen
 
                                                 frwHit += 1
 
                                             }else if(fairway == "L"){
                                                 let backBtnImage1 = #imageLiteral(resourceName: "fairway_left").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                theImageView.setImage(backBtnImage1, for: .normal)
-                                                theImageView.tintColor = UIColor.glfFlatBlue
+                                                btn.setImage(backBtnImage1, for: .normal)
+                                                btn.tintColor = UIColor.glfFlatBlue
 
                                             }else{
                                                 let backBtnImage1 = #imageLiteral(resourceName: "fairway_right").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                theImageView.setImage(backBtnImage1, for: .normal)
-                                                theImageView.tintColor = UIColor.glfFlatBlue
+                                                btn.setImage(backBtnImage1, for: .normal)
+                                                btn.tintColor = UIColor.glfFlatBlue
                                             }
-                                            cell.contentView.addSubview(theImageView)
+                                            //cell.contentView.addSubview(btn)
                                         }
                                     }
                                     else if indexPath.row == 2{
@@ -1582,15 +1617,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             if gir{
                                                 let originalImage1 = imgArray[0]
                                                 let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                theImageView.setImage(backBtnImage1, for: .normal)
+                                                btn.setImage(backBtnImage1, for: .normal)
                                                 girTotal += 1
                                             }else{
                                                 let originalImage1 = imgArray[1]
                                                 let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                theImageView.setImage(backBtnImage1, for: .normal)
+                                                btn.setImage(backBtnImage1, for: .normal)
                                             }
-                                            theImageView.tintColor = UIColor.glfBluegreen
-                                            cell.contentView.addSubview(theImageView)
+                                            btn.tintColor = UIColor.glfBluegreen
+//                                            cell.contentView.addSubview(btn)
                                         }
                                     }
                                     else if indexPath.row == 4{
@@ -1601,15 +1636,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 if chipUpDown{
                                                     let originalImage1 = imgArray[0]
                                                     let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                    theImageView.setImage(backBtnImage1, for: .normal)
+                                                    btn.setImage(backBtnImage1, for: .normal)
                                                     chipDown += 1
                                                 }else{
                                                     let originalImage1 = imgArray[1]
                                                     let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                    theImageView.setImage(backBtnImage1, for: .normal)
+                                                    btn.setImage(backBtnImage1, for: .normal)
                                                 }
-                                                theImageView.tintColor = UIColor.glfBluegreen
-                                                cell.contentView.addSubview(theImageView)
+                                                btn.tintColor = UIColor.glfBluegreen
+//                                                cell.contentView.addSubview(btn)
                                             }
                                         }
                                     }
@@ -1621,15 +1656,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 if sandDown{
                                                     let originalImage1 = imgArray[0]
                                                     let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                    theImageView.setImage(backBtnImage1, for: .normal)
+                                                    btn.setImage(backBtnImage1, for: .normal)
                                                     sandTotal += 1
                                                 }else{
                                                     let originalImage1 = imgArray[1]
                                                     let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                    theImageView.setImage(backBtnImage1, for: .normal)
+                                                    btn.setImage(backBtnImage1, for: .normal)
                                                 }
-                                                theImageView.tintColor = UIColor.glfBluegreen
-                                                cell.contentView.addSubview(theImageView)
+                                                btn.tintColor = UIColor.glfBluegreen
+//                                                cell.contentView.addSubview(btn)
                                             }
                                         }
                                     }
@@ -1686,21 +1721,21 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 
                                                     if(fairway == "H"){
                                                         let backBtnImage1 = #imageLiteral(resourceName: "hit").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                        theImageView.setImage(backBtnImage1, for: .normal)
-                                                        theImageView.tintColor = UIColor.glfBluegreen
+                                                        btn.setImage(backBtnImage1, for: .normal)
+                                                        btn.tintColor = UIColor.glfBluegreen
 
                                                         frwHit += 1
                                                         
                                                     }else if(fairway == "L"){
                                                         let backBtnImage1 = #imageLiteral(resourceName: "fairway_left").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                        theImageView.setImage(backBtnImage1, for: .normal)
-                                                        theImageView.tintColor = UIColor.glfFlatBlue
+                                                        btn.setImage(backBtnImage1, for: .normal)
+                                                        btn.tintColor = UIColor.glfFlatBlue
                                                     }else{
                                                         let backBtnImage1 = #imageLiteral(resourceName: "fairway_right").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                        theImageView.setImage(backBtnImage1, for: .normal)
-                                                        theImageView.tintColor = UIColor.glfFlatBlue
+                                                        btn.setImage(backBtnImage1, for: .normal)
+                                                        btn.tintColor = UIColor.glfFlatBlue
                                                     }
-                                                    cell.contentView.addSubview(theImageView)
+//                                                    cell.contentView.addSubview(btn)
                                                 }
                                             }
                                             else if indexPath.row == 1{
@@ -1712,15 +1747,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                     if gir{
                                                         let originalImage1 = imgArray[0]
                                                         let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                        theImageView.setImage(backBtnImage1, for: .normal)
+                                                        btn.setImage(backBtnImage1, for: .normal)
                                                         girTotal += 1
                                                     }else{
                                                         let originalImage1 = imgArray[1]
                                                         let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                        theImageView.setImage(backBtnImage1, for: .normal)
+                                                        btn.setImage(backBtnImage1, for: .normal)
                                                     }
-                                                    theImageView.tintColor = UIColor.glfBluegreen
-                                                    cell.contentView.addSubview(theImageView)
+                                                    btn.tintColor = UIColor.glfBluegreen
+//                                                    cell.contentView.addSubview(btn)
                                                 }
 
                                             }
@@ -1733,15 +1768,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                         if chipUpDown{
                                                             let originalImage1 = imgArray[0]
                                                             let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                            theImageView.setImage(backBtnImage1, for: .normal)
+                                                            btn.setImage(backBtnImage1, for: .normal)
                                                             chipDown += 1
                                                         }else{
                                                             let originalImage1 = imgArray[1]
                                                             let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                            theImageView.setImage(backBtnImage1, for: .normal)
+                                                            btn.setImage(backBtnImage1, for: .normal)
                                                         }
-                                                        theImageView.tintColor = UIColor.glfBluegreen
-                                                        cell.contentView.addSubview(theImageView)
+                                                        btn.tintColor = UIColor.glfBluegreen
+//                                                        cell.contentView.addSubview(btn)
                                                     }
                                                 }
                                             }
@@ -1754,15 +1789,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                         if sandDown{
                                                             let originalImage1 = imgArray[0]
                                                             let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                            theImageView.setImage(backBtnImage1, for: .normal)
+                                                            btn.setImage(backBtnImage1, for: .normal)
                                                             sandTotal += 1
                                                         }else{
                                                             let originalImage1 = imgArray[1]
                                                             let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                            theImageView.setImage(backBtnImage1, for: .normal)
+                                                            btn.setImage(backBtnImage1, for: .normal)
                                                         }
-                                                        theImageView.tintColor = UIColor.glfBluegreen
-                                                        cell.contentView.addSubview(theImageView)
+                                                        btn.tintColor = UIColor.glfBluegreen
+//                                                        cell.contentView.addSubview(btn)
                                                     }
                                                 }
                                             }

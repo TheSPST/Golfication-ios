@@ -25,7 +25,7 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
             tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
+            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
         }
 
         var imagUrl =  ""
@@ -154,7 +154,7 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
             tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
+            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
 
         }
         var imagUrl =  ""
@@ -245,7 +245,7 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
             tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
+            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
         }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){

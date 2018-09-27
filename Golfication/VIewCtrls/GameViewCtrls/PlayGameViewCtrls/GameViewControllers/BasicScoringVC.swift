@@ -62,6 +62,12 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var exitGamePopUpView: ExitGamePopUpView!
     @IBOutlet weak var hcpView: UIView!
     @IBOutlet weak var parView: UIView!
+    
+    @IBOutlet weak var lblHole: UILabel!
+    @IBOutlet weak var lblPar: UILabel!
+    @IBOutlet weak var topView: UIView!
+    
+    
     var progressView = SDLoader()
     var buttonsArrayForStrokes = [UIButton]()
     var buttonsArrayForFairwayHit = [UIButton]()
@@ -282,45 +288,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             generateStats.matchKey = matchId
             generateStats.generateStats()
         }
-    }
-    func uploadStableFordPints(playerId:String,strokes:Int){
-        var index = 0
-        for playersdata in self.playersButton{
-            if (playersdata.isSelected){
-                break
-            }
-            index += 1
-        }
-        let par = scoreData[holeIndex].par
-        let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoreData.count
-        let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoreData.count
-        var hcp = 0
-        var totalShotsInThishole = 0
-        for tee in holeHcpWithTee{
-            if tee.hole == holeIndex+1{
-                for data in tee.teeBox{
-                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
-                        hcp = data.value(forKey:"hcp") as? Int ?? 0
-                        break
-                    }
-                }
-                break
-            }
-        }
-        if hcp > 0 && hcp <= extrashotsReminder{
-            totalShotsInThishole = par + extrashotsDiv + 1
-        }else{
-            totalShotsInThishole = par + extrashotsDiv
-        }
-        let sbPoint = totalShotsInThishole - strokes + 2
-        let netScore = strokes - (totalShotsInThishole - par)
-        holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
-        lblStableFordScore.text = "\(sbPoint)"
-        btnStableScore.setTitle("Stableford Score", for: .normal)
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/stableFordPoints").setValue(sbPoint)
-        holeWiseShots.setObject(netScore, forKey: "netScore" as NSCopying)
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/netScore").setValue(netScore)
-        updateScoreData()
     }
     @objc func statsCompleted(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
@@ -578,6 +545,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        topView.backgroundColor = UIColor.glfBluegreen
+        topView.layer.cornerRadius = topView.frame.height/2
         holeParDDView.layer.cornerRadius = 15.0
         hcpView.layer.cornerRadius = 3
         parView.layer.cornerRadius = 3
@@ -652,8 +621,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                         teeOfP = tee
                     }
                     var handicapOfP = Double()
-                    if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? Double{
-                        handicapOfP = hcp
+                    if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? String{
+                        handicapOfP = Double(hcp)!
                     }
                     if(teeOfP != ""){
                         self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
@@ -669,7 +638,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         if(!self.teeTypeArr.isEmpty){
             self.loadStableFordData()
             self.stableFordView.isHidden = false
+            self.topView.isHidden = true
+            self.holeParDDView.isHidden = false
         }else{
+            self.topView.isHidden = false
+            self.holeParDDView.isHidden = true
             if(!isContinue) && (!isAccept){
                 if(matchDataDict.object(forKey: "player") != nil){
                     let tempArray = matchDataDict.object(forKey: "player")! as! NSMutableDictionary
@@ -728,7 +701,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.swipePrev.isEnabled = false
             self.btnFinishRound.isHidden = false
         }
-        
         if(self.gameTypeIndex < scoreData.count){
             self.btnChangeHole.isUserInteractionEnabled = false
         }else{
@@ -801,7 +773,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         var slopeIndex = 0
         for data in teeArr{
-            if(data.name.lowercased() == self.teeTypeArr[index].tee){
+            if(data.name.lowercased() == self.teeTypeArr[index].tee.lowercased()){
                 break
             }
             slopeIndex += 1
@@ -897,6 +869,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.lblParNumber.text = "PAR \(self.scoreData[indexToUpdate].par)"
         let hcp = self.getHCPValue(playerID: self.playerId, holeNo: indexToUpdate)
         self.lblHCP.text = "HCP \(hcp == 0 ? "-":"\(hcp)")"
+        self.lblHole.text = "Hole \(indexToUpdate+1)"
+        self.lblPar.text = "Par \(self.scoreData[indexToUpdate].par)"
         self.fairwayHitStackView.superview?.isHidden = false
         if(self.scoreData[indexToUpdate].par == 3){
             self.fairwayHitStackView.superview?.isHidden = true
@@ -1327,7 +1301,45 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
 
     }
-    
+    func uploadStableFordPints(playerId:String,strokes:Int){
+        var index = 0
+        for playersdata in self.playersButton{
+            if (playersdata.isSelected){
+                break
+            }
+            index += 1
+        }
+        let par = scoreData[holeIndex].par
+        let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoreData.count
+        let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoreData.count
+        var hcp = 0
+        var totalShotsInThishole = 0
+        for tee in holeHcpWithTee{
+            if tee.hole == holeIndex+1{
+                for data in tee.teeBox{
+                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
+                break
+            }
+        }
+        if hcp > 0 && hcp <= extrashotsReminder{
+            totalShotsInThishole = par + extrashotsDiv + 1
+        }else{
+            totalShotsInThishole = par + extrashotsDiv
+        }
+        let sbPoint = totalShotsInThishole - strokes + 2
+        let netScore = strokes - (totalShotsInThishole - par)
+        holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
+        lblStableFordScore.text = "\(sbPoint)"
+        btnStableScore.setTitle("Stableford Score", for: .normal)
+        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/stableFordPoints").setValue(sbPoint)
+        holeWiseShots.setObject(netScore, forKey: "netScore" as NSCopying)
+        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/netScore").setValue(netScore)
+        updateScoreData()
+    }
     @objc func fairwayHitAction(sender: UIButton!) {
         var imgArray = [#imageLiteral(resourceName: "fairway_left"),#imageLiteral(resourceName: "hit"),#imageLiteral(resourceName: "fairway_right")]
         holeWiseShots.removeObject(forKey: "fairway")

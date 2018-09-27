@@ -16,6 +16,7 @@ import FirebaseAnalytics
 import UserNotifications
 import CTShowcase
 
+
 private enum State {
     case closed
     case open
@@ -197,6 +198,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var btnShareHoleStats: UIButton!
     @IBOutlet weak var btnRestartShot: UIButton!
     @IBOutlet weak var btnRestartLbl: UIButton!
+    @IBOutlet weak var topHoleParView: UIView!
+    @IBOutlet weak var topHoleParHCPView: UIView!
+    @IBOutlet weak var lblTopPar: UILabel!
+    @IBOutlet weak var lblTopHCP: UILabel!
+    @IBOutlet weak var btnHole: UIButton!
+    @IBOutlet weak var topParView: UIView!
+    @IBOutlet weak var topHCPView: UIView!
     
     @IBOutlet weak var centerSVWidthConstraints: NSLayoutConstraint!
     @IBOutlet weak var playerStatsHeightConst: NSLayoutConstraint!
@@ -205,6 +213,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var btnClubWidthConst: NSLayoutConstraint!
     @IBOutlet weak var btnTrackShotWidth: NSLayoutConstraint!
     @IBOutlet weak var btnTrackShotHeight: NSLayoutConstraint!
+    
+    @IBOutlet weak var stableFordView: UIView!
+    @IBOutlet weak var btnStableScore: UIButton!
+    @IBOutlet weak var lblStblScore: UILabel!
+    @IBOutlet weak var imgViewStableFordInfo: UIImageView!
+    @IBOutlet weak var imgViewRefreshScore: UIImageView!
+    @IBOutlet weak var stablefordSubView: UIView!
+    
     
     var isBackground : Bool{
         let state = UIApplication.shared.applicationState
@@ -282,7 +298,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var playerArrayWithDetails = NSMutableDictionary()
     var playersButton = [(button:UIButton,isSelected:Bool,id:String,name:String)]()
     var teeTypeArr = [(tee:String,handicap:Double)]()
-
+    var stblefordScore = [(hole:Int,sFPoint:Int,newScore:Int,totalsShot:Int)]()
     var currentMatchId = String()
     var holeOutCount = Int()
     var gir = Bool()
@@ -608,6 +624,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.multiplayerPageControl.isHidden = true
             self.lblRaceToFlagTitle.isHidden = true
             self.barChartParentStackView.isHidden = true
+            self.stableFordView.isHidden = !self.holeOutFlag
             if(self.playersButton.count > 1){
                 self.updateRaceToFlag()
                 if (btnMultiplayer.tag == 1){
@@ -1036,6 +1053,66 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
         
     }
+    @IBAction func btnActionStableford(_ sender: UIButton) {
+        if self.teeTypeArr.isEmpty{
+            self.ifnoStableFord()
+        }else{
+            var netScore : Int!
+            var sbScore : Int!
+            var grossScore:Int!
+            for data in self.scoring[self.holeIndex].players{
+                if let dataDic = data.value(forKey: self.selectedUserId) as? NSMutableDictionary{
+                    if let netScoring = dataDic.value(forKey: "netScore") as? Int{
+                        netScore = netScoring
+                    }
+                    if let netScoring = dataDic.value(forKey: "stableFordPoints") as? Int{
+                        sbScore = netScoring
+                    }
+                    if let netScoring = dataDic.value(forKey: "shots") as? NSArray{
+                        grossScore = netScoring.count
+                    }
+                }
+            }
+            if self.btnStableScore.currentTitle!.contains("Stable"){
+                self.btnStableScore.setTitle("Net Score", for: .normal)
+                self.lblStblScore.text = "\(netScore!)"
+            }else if self.btnStableScore.currentTitle!.contains("Net"){
+                self.btnStableScore.setTitle("Gross Score", for: .normal)
+                self.lblStblScore.text = "\(grossScore!)"
+            }else{
+                self.btnStableScore.setTitle("Stableford Score", for: .normal)
+                self.lblStblScore.text = "\(sbScore!)"
+            }
+        }
+    }
+    func ifnoStableFord(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        var chkStableford = false
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+            var dataDic = [String:Int]()
+            if(snapshot.childrenCount > 0){
+                dataDic = (snapshot.value as? [String : Int])!
+            }
+            if !dataDic.isEmpty{
+                for (key, _) in dataDic{
+                    if key == selectedGolfID{
+                        chkStableford = true
+                        break
+                    }
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                if !chkStableford{
+                    let viewCtrl = RequestSFPopup(nibName:"RequestSFPopup", bundle:nil)
+                    viewCtrl.modalPresentationStyle = .overCurrentContext
+                    self.present(viewCtrl, animated: true, completion: nil)
+                }else{
+                    
+                }
+            })
+        }
+    }
     @objc func shareShotsDissmiss(_ notification:NSNotification){
         self.updateMap(indexToUpdate: self.holeIndex)
     }
@@ -1431,13 +1508,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.scoring.removeAll()
         let scoring = NSMutableDictionary()
         var holeArray = [NSMutableDictionary]()
-        for i in 0..<courseData.numberOfHoles.count{
+        for i in 0..<self.courseData.numberOfHoles.count{
             self.scoring.append((hole: courseData.numberOfHoles[i].hole, par: courseData.numberOfHoles[i].par,players:[NSMutableDictionary]()))
+        }
+        setupMultiplayersButton()
+        for i in 0..<courseData.numberOfHoles.count{
             let player = NSMutableDictionary()
             for j in 0..<playerData.count{
                 let data = playerData[j] as! NSMutableDictionary
                 let playerScore = NSMutableDictionary()
-                let playerDataHole = ["holeOut":false]
+                let hcp = getHCPValue(playerID: data.value(forKey: "id") as! String, holeNo: i)
+                let playerDataHole = ["holeOut":false,"hcp":hcp == 0 ? NSNull():hcp] as [String : Any]
                 player.setObject(playerDataHole, forKey: (data.value(forKey: "id") as! String) as NSCopying)
                 playerScore.setObject(playerDataHole, forKey: (data.value(forKey: "id") as! String) as NSCopying)
                 self.scoring[i].players.append(playerScore)
@@ -1449,7 +1530,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(!self.isAcceptInvite){
             ref.child("matchData/\(self.currentMatchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
-        setupMultiplayersButton()
+        
     }
     @IBAction func btnActionTrackShots(_ sender: UIButton) {
         let shotClub = courseData.clubs[self.btnSelectClubs.tag]
@@ -1637,8 +1718,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 self.uploadSandUpNDown(playerId: playerId)
                                 self.uploadPutting(playerId: playerId)
                                 self.uploadPenalty(playerId: playerId)
-                                self.uploadStableFordPints(playerId: playerId)
-
+                                if(!self.teeTypeArr.isEmpty){
+                                    self.uploadStableFordPints(playerId: playerId)
+                                }
                             }
                             
                         }
@@ -1857,12 +1939,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.progressView.hide(navItem: self.navigationItem)
                 self.shotsDetails = self.getShotDataOrdered(indexToUpdate: self.holeIndex,playerId: self.selectedUserId)
                 self.allMarkers = self.markers
-                //                let landedOnACtoProgram = self.callFindPositionInsideFeature(position:self.positionsOfCurveLines.last!)
-                //                if(landedOnACtoProgram == "WH"){
-                //                    self.tappedMarker = self.shotViseCurve.last!.markerPosition
-                //                    self.btnPenaltyShot.tag = 0
-                //                    self.btnActionPenaltyShot(self.btnPenaltyShot)
-                //                }
                 if(self.isPintMarker) && !fromHoleOut && self.holeOutFlag{
                     self.isPintMarker = false
                     self.mapView(self.mapView, didEndDragging: self.markersForCurved.last!)
@@ -1883,8 +1959,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     
     func editShotAction(){
+        self.shotsDetails = self.getShotDataOrdered(indexToUpdate: self.holeIndex,playerId: self.selectedUserId)
         if(tappedMarker != nil){
-            
             self.letsRotateWithZoom(latLng1: self.positionsOfCurveLines[tappedMarker.iconView!.tag], latLng2: self.positionsOfCurveLines[tappedMarker.iconView!.tag+1])
             for mark in shotViseCurve{
                 mark.markerPosition.isTappable = false
@@ -2658,7 +2734,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let backBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnBack.setImage(backBtnImage, for: .normal)
         btnBack.tintColor = UIColor.glfBluegreen
-        
+        btnHole.setCornerWithRadius(color: UIColor.clear.cgColor, radius: self.btnHole.frame.height/2)
+        topParView.setCornerView(color: UIColor.glfWhite.cgColor)
+        topHCPView.setCornerView(color: UIColor.glfWhite.cgColor)
+        stablefordSubView.setCornerView(color: UIColor.glfWhite.cgColor)
+        imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
         btnPrev.setCircle(frame: self.btnPrev.frame)
         btnNext.setCircle(frame: self.btnNext.frame)
         btnCenter.roundCorners([.bottomLeft,.bottomRight], radius: 3.0)
@@ -3232,8 +3312,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             uploadSandUpNDown(playerId: playerId)
             uploadPutting(playerId: playerId)
             self.uploadPenalty(playerId: playerId)
-            self.uploadStableFordPints(playerId: playerId)
-
+            if(!self.teeTypeArr.isEmpty){
+                self.uploadStableFordPints(playerId: playerId)
+            }
         }
         
         uploadApproachAndApproachShots(playerId: playerId)
@@ -3834,7 +3915,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         var slopeIndex = 0
         for data in teeArr{
-            if(data.name == self.teeTypeArr[index].tee){
+            if(data.name.lowercased() == self.teeTypeArr[index].tee.lowercased()){
                 break
             }
             slopeIndex += 1
@@ -3861,10 +3942,28 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 allWaterHazard.append(wh)
             }
         }
-        debugPrint(courseData.holeHcpWithTee)
-        let extraShots = calculateTotalExtraShots(playerID: self.selectedUserId)
-        debugPrint("extraShots: ",extraShots)
-        
+        self.teeTypeArr.removeAll()
+        if let players = self.matchDataDict.value(forKey: "player") as? NSMutableDictionary{
+            for data in players{
+                let v = data.value as! NSMutableDictionary
+                var teeOfP = String()
+                var handicapOfP = Double()
+                if let tee = v.value(forKeyPath: "tee") as? String{
+                    teeOfP = tee
+                }
+                if let hcp = v.value(forKeyPath: "handicap") as? String{
+                    handicapOfP = Double(hcp)!
+                }
+                if(teeOfP != "") && (handicapOfP != 0.0){
+                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
+                }
+
+            }
+        }
+        if(!self.teeTypeArr.isEmpty){
+            self.topHoleParView.isHidden = true
+            self.topHoleParHCPView.isHidden = false
+        }
         if(!isContinue) && (!isAcceptInvite){
             if(self.matchDataDict.object(forKey: "player") != nil){
                 let tempArray = self.matchDataDict.object(forKey: "player")! as! NSMutableDictionary
@@ -3884,6 +3983,28 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             setupMultiplayersButton()
         }
         
+    }
+    private func getHCPValue(playerID:String,holeNo:Int)->Int{
+        var index = 0
+        var hcp = 0
+        for playersdata in self.playersButton{
+            if (playersdata.id == playerID){
+                break
+            }
+            index += 1
+        }
+        for tee in self.courseData.holeHcpWithTee{
+            if tee.hole == holeNo+1{
+                for data in tee.teeBox{
+                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
+                break
+            }
+        }
+        return hcp
     }
     func plotMarker(position:CLLocationCoordinate2D, userData:Int){
         let marker = GMSMarker(position: position)
@@ -4208,6 +4329,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.lblHoleNumber2.text = "Hole \(self.scoring[indexToUpdate].hole)"
         self.lblParNumber.text = "par \(self.scoring[indexToUpdate].par)"
         self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
+        self.lblTopPar.text = "PAR  \(self.scoring[indexToUpdate].par)"
+        self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: indexToUpdate))"
+        self.btnHole.setTitle("Hole \(self.scoring[indexToUpdate].hole)", for: .normal)
         self.shotViseCurve.removeAll()
         self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
         if(self.scoring[indexToUpdate].par == 3){
@@ -4269,8 +4393,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     shotsArray = value as! NSArray
                                 }else if(key as! String == "holeOut"){
                                     holeOutFlag = value as! Bool
+                                    self.stableFordView.isHidden = !holeOutFlag
+                                    self.imgViewStableFordInfo.isHidden = !self.teeTypeArr.isEmpty
+                                    self.lblStblScore.text = "n/a"
+                                    self.imgViewRefreshScore.isHidden = self.teeTypeArr.isEmpty
                                 }else if(key as! String == "gir"){
                                     gir = value as! Bool
+                                }else if(key as! String == "stableFordPoints"){
+                                    self.lblStblScore.text = "\(value)"
+                                    self.btnStableScore.setTitle("Stableford Score", for: .normal)
                                 }else if(key as! String == "shotTracking"){
                                     if let newDict = value as? NSMutableDictionary{
                                         clubInTrack = newDict.value(forKey: "club") as! String
@@ -5100,7 +5231,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     func updateRaceToFlag(){
         var strokesGainedHoleWise = [(user:String,strkgnd:Double,name:String,img:UIImage)]()
         let holeNumber = self.holeIndex
-        self.multiplayerPageControl.isHidden = false
+//        self.multiplayerPageControl.isHidden = false
         self.lblRaceToFlagTitle.isHidden = false
         self.barChartParentStackView.isHidden = false
         
@@ -5406,15 +5537,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             btn1.setImage(#imageLiteral(resourceName: "0_you"), for: .normal)
                         }
                     }
-                    var teeOfP = String()
-                    if let tee = (v as! NSMutableDictionary).value(forKeyPath: "tee") as? String{
-                        teeOfP = tee
-                    }
-                    var handicapOfP = Double()
-                    if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? Double{
-                        handicapOfP = hcp
-                    }
-                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
                     i += 1
                     if(k as! String == Auth.auth().currentUser!.uid){
                         playersButton.append((button:btn, isSelected: true, id: k as! String,name:name))
@@ -5827,9 +5949,25 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             if(i == sender.tag){
                 self.shotsDetails = self.getShotDataOrdered(indexToUpdate: self.holeIndex,playerId: playersButton[i].id)
-                self.scoreTableView.reloadData()
-                self.constraintTableHeight.constant = tableViewHeight
-                self.updateRaceToFlag()
+                if(self.shotsDetails.isEmpty){
+                    self.scoreTableView.reloadData()
+                    self.constraintTableHeight.constant = tableViewHeight
+                    self.updateRaceToFlag()
+                    self.stableFordView.isHidden = true
+                    for i in 0..<self.scoring[holeIndex].players.count where self.scoring[holeIndex].players[i].value(forKey: playersButton[i].id) != nil{
+                        if let scoringDict = (self.scoring[self.holeIndex].players[i].value(forKey: playersButton[i].id) as? NSMutableDictionary){
+                            if let isholeout = (scoringDict.value(forKey: "holeOut") as? Bool){
+                                self.stableFordView.isHidden =  !isholeout
+                                self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: playersButton[i].id, holeNo: self.holeIndex))"
+                            }
+                        }
+                    }
+                    self.btnTotalShotsNumber.isHidden = true
+                    self.btnShotRanking.isHidden = true
+                }else{
+                    self.buttonAction(sender: playersButton[sender.tag].button)
+                }
+                
                 self.lblPlayersName.text = "\(playersButton[i].name)'s Score"
                 if(playersButton[i].id == Auth.auth().currentUser!.uid){
                     self.lblPlayersName.text = "Your Score"
@@ -5841,6 +5979,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
     }
+//    func updateStableF(playerKey:String){
+//        for i in 0..<self.scoring[holeIndex].players.count where self.scoring[holeIndex].players[i].value(forKey: playerKey) != nil{
+//            if let scoringDict = (self.scoring[self.holeIndex].players[i].value(forKey: playerKey) as? NSMutableDictionary){
+//                if let isholeout = (scoringDict.value(forKey: "holeOut") as? Bool){
+//                    self.stableFordView.isHidden =  !isholeout
+//                    self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: playerKey, holeNo: self.holeIndex))"
+//                }
+//            }
+//        }
+//
+//    }
     func getScoreFromMatchData(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchId)/scoring/\(self.holeIndex)/") { (snapshot) in
             if  let score = (snapshot.value as? NSDictionary){
@@ -5915,7 +6064,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     uploadSandUpNDown(playerId: playerId)
                     uploadPutting(playerId: playerId)
                     self.uploadPenalty(playerId: playerId)
-                    self.uploadStableFordPints(playerId: playerId)
+                    if(!self.teeTypeArr.isEmpty){
+                        self.uploadStableFordPints(playerId: playerId)
+                    }
                 }
                 Notification.sendLocaNotificatonToUser()
                 
@@ -5964,7 +6115,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             totalShotsInThishole = par + extrashotsDiv
         }
         let sbPoint = totalShotsInThishole - strokes + 2
-        let netScore = strokes - totalShotsInThishole - par
+        let netScore = strokes - (totalShotsInThishole - par)
+        self.lblStblScore.text = "\(sbPoint)"
         playerArrayWithDetails.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
         ref.child("matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(playerId)/stableFordPoints").setValue(sbPoint)
         

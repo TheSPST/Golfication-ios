@@ -68,6 +68,22 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var lblEndDist: UILabel!
     @IBOutlet weak var lblCenterHeader: UILabel!
     @IBOutlet weak var viewForground : UIView!
+    
+    @IBOutlet weak var stablefordView: UIView!
+    @IBOutlet weak var stablefordSubView: UIView!
+    @IBOutlet weak var imgViewStblReferesh: UIImageView!
+    @IBOutlet weak var btnStablefordScore: UIButton!
+    @IBOutlet weak var lblStblScore: UILabel!
+    @IBOutlet weak var imgViewStblfordInfo: UIImageView!
+    
+    @IBOutlet weak var topHoleParView: UIView!
+    @IBOutlet weak var topHoleParHCPView: UIView!
+    @IBOutlet weak var topParView: UIView!
+    @IBOutlet weak var lblTopPar: UILabel!
+    @IBOutlet weak var topHCPView: UIView!
+    @IBOutlet weak var lblTopHCP: UILabel!
+    @IBOutlet weak var btnTopHoleNo: UIButton!
+    var teeTypeArr = [(tee:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
     var buttonsArrayForGIR = [UIButton]()
     var buttonsArrayForPutts = [UIButton]()
@@ -372,7 +388,32 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             j += 1
         }
-        
+        self.teeTypeArr.removeAll()
+        if let players = matchDataDic.value(forKey: "player") as? NSMutableDictionary{
+            for data in players{
+                let v = data.value
+                var teeOfP = String()
+                if let tee = (v as! NSMutableDictionary).value(forKeyPath: "tee") as? String{
+                    teeOfP = tee
+                }
+                var handicapOfP = Double()
+                if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? String{
+                    handicapOfP = Double(hcp)!
+                }
+                if(teeOfP != "") && (handicapOfP != 0.0){
+                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
+                }
+            }
+        }
+        if !self.teeTypeArr.isEmpty{
+            self.stablefordView.isHidden = false
+            self.topHoleParView.isHidden = true
+            self.topHoleParHCPView.isHidden = false
+            self.imgViewStblfordInfo.isHidden = true
+        }else{
+            self.imgViewStblReferesh.isHidden = true
+            self.lblStblScore.text = "n/a"
+        }
         var currentHole = self.startingIndex
         if(self.isContinueMatch){
             
@@ -405,6 +446,52 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.updateMap(indexToUpdate: self.holeIndex)
     
+    }
+    
+    @IBAction func btnActionStableford(_ sender: Any) {
+        if self.teeTypeArr.isEmpty{
+            self.ifnoStableFord()
+        }else{
+            self.updateHoleWiseShots()
+            if self.btnStablefordScore.currentTitle!.contains("Stable"){
+                self.btnStablefordScore.setTitle("Net Score", for: .normal)
+                self.lblStblScore.text = "\(classicScoring.netScore!)"
+            }else if self.btnStablefordScore.currentTitle!.contains("Net"){
+                self.btnStablefordScore.setTitle("Gross Score", for: .normal)
+                self.lblStblScore.text = "\(classicScoring.strokesCount!)"
+            }else{
+                self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
+                self.lblStblScore.text = "\(classicScoring.stableFordScore!)"
+            }
+        }
+    }
+    func ifnoStableFord(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        var chkStableford = false
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+            var dataDic = [String:Int]()
+            if(snapshot.childrenCount > 0){
+                dataDic = (snapshot.value as? [String : Int])!
+            }
+            if !dataDic.isEmpty{
+                for (key, _) in dataDic{
+                    if key == selectedGolfID{
+                        chkStableford = true
+                        break
+                    }
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                if !chkStableford{
+                    let viewCtrl = RequestSFPopup(nibName:"RequestSFPopup", bundle:nil)
+                    viewCtrl.modalPresentationStyle = .overCurrentContext
+                    self.present(viewCtrl, animated: true, completion: nil)
+                }else{
+                    
+                }
+            })
+        }
     }
     func updateScoringHoleData(){
         for i in 0..<courseData.numberOfHoles.count{
@@ -571,6 +658,28 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.present(viewCtrl, animated: true, completion: nil)
     }
+    private func getHCPValue(playerID:String,holeNo:Int)->Int{
+        var index = 0
+        var hcp = 0
+        for playersdata in self.playersButton{
+            if (playersdata.id == playerID){
+                break
+            }
+            index += 1
+        }
+        for tee in self.courseData.holeHcpWithTee{
+            if tee.hole == holeNo+1{
+                for data in tee.teeBox{
+                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
+                break
+            }
+        }
+        return hcp
+    }
     var isUserInsideBound = false
     
     var mapTimer = Timer()
@@ -680,6 +789,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 if let holeOut = dic.value(forKey: "holeOut") as? Bool{
                     classicScore.holeOut = holeOut
                 }
+                if let sb = dic.value(forKey: "stableFordPoints") as? Int{
+                    classicScore.stableFordScore = sb
+                }
+                if let netScore = dic.value(forKey: "netScore") as? Int{
+                    classicScore.netScore = netScore
+                }
             }
         }
         return classicScore
@@ -712,7 +827,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         })
         self.view.layoutIfNeeded()
         self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
-
+        
     }
     @IBAction func expendScoreAction(_ sender: Any) {
         self.view.layoutIfNeeded()
@@ -1082,6 +1197,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         lblEditShotNumber.layer.cornerRadius = lblEditShotNumber.frame.size.height/2
         lblEditShotNumber.layer.masksToBounds = true
         
+        topHCPView.setCornerView(color: UIColor.glfWhite.cgColor)
+        topParView.setCornerView(color: UIColor.glfWhite.cgColor)
+        btnTopHoleNo.setCornerWithRadius(color: UIColor.clear.cgColor, radius: btnTopHoleNo.frame.height/2)
+        stablefordSubView.setCornerView(color: UIColor.glfWhite.cgColor)
+        imgViewStblReferesh.tintImageColor(color: UIColor.glfWhite)
         scrlView.isHidden = true
         btnNext.isHidden = false
         btnPrev.isHidden = false
@@ -1611,6 +1731,67 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         })
         self.view.layoutIfNeeded()
         self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
+        if(!self.teeTypeArr.isEmpty){
+            self.uploadStableFordPints(playerId: self.playerId,strokes:Int(title!)!)
+        }else{
+            updateScoreData()
+        }
+    }
+    func calculateTotalExtraShots(playerID:String)->Double{
+        var index = 0
+        for playersdata in self.playersButton{
+            if (playersdata.isSelected){
+                break
+            }
+            index += 1
+        }
+        var slopeIndex = 0
+        for data in teeArr{
+            if(data.name.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+                break
+            }
+            slopeIndex += 1
+        }
+        let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
+        return (Double(data / 113))
+    }
+    func uploadStableFordPints(playerId:String,strokes:Int){
+        var index = 0
+        for playersdata in self.playersButton{
+            if (playersdata.isSelected){
+                break
+            }
+            index += 1
+        }
+        let par = self.scoring[holeIndex].par
+        let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % self.scoring.count
+        let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / self.scoring.count
+        var hcp = 0
+        var totalShotsInThishole = 0
+        for tee in self.courseData.holeHcpWithTee{
+            if tee.hole == holeIndex+1{
+                for data in tee.teeBox{
+                    if (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
+                break
+            }
+        }
+        if hcp > 0 && hcp <= extrashotsReminder{
+            totalShotsInThishole = par + extrashotsDiv + 1
+        }else{
+            totalShotsInThishole = par + extrashotsDiv
+        }
+        let sbPoint = totalShotsInThishole - strokes + 2
+        let netScore = strokes - (totalShotsInThishole - par)
+        holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
+        lblStblScore.text = "\(sbPoint)"
+        btnStablefordScore.setTitle("Stableford Score", for: .normal)
+        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/stableFordPoints").setValue(sbPoint)
+        holeWiseShots.setObject(netScore, forKey: "netScore" as NSCopying)
+        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/netScore").setValue(netScore)
         updateScoreData()
     }
     @IBAction func btnActionScore(_ sender: UIButton) {
@@ -1802,8 +1983,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.scoreSV2.isHidden = false
             lblEditShotNumber.isHidden = self.btnPlayerStats.isHidden ? true:false
             lblEditShotNumber.text = " \(classicScoring.strokesCount!) "
+//            self.lblStblScore.text = "\(self.classicScoring.strokesCount!)"
+//            self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
         }else{
-            
             self.scoreSV.isHidden = false
             self.scoreSV2.isHidden = true
             lblEditShotNumber.isHidden = true
@@ -2137,7 +2319,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             let player = NSMutableDictionary()
             for j in 0..<playersButton.count{
                 let playerScore = NSMutableDictionary()
-                let playerData = ["holeOut":false]
+                let hcp = getHCPValue(playerID: playersButton[j].id, holeNo: i)
+                let playerData = ["holeOut":false,"hcp":hcp == 0 ? NSNull():hcp] as [String : Any]
                 player.setObject(playerData, forKey: playersButton[j].id as NSCopying)
                 playerScore.setObject(playerData, forKey: playersButton[j].id as NSCopying)
                 self.scoring[i].players.append(playerScore)
@@ -2200,6 +2383,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         self.lblHoleNumber2.text = "Hole\(self.scoring[indexToUpdate].hole)"
         self.lblParNumber.text = "par \(self.scoring[indexToUpdate].par)"
         self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
+        
+        self.lblTopPar.text = "PAR \(self.scoring[indexToUpdate].par)"
+        let hcp = self.getHCPValue(playerID: self.playerId, holeNo: indexToUpdate)
+        self.lblTopHCP.text = "HCP \(hcp == 0 ? "-":"\(hcp)")"
         
         locationManager.startUpdatingLocation()
         self.positionsOfDotLine.removeAll()
@@ -2333,7 +2520,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }else{
                 self.scrlView.isHidden = false
             }
-
+            if self.classicScoring.stableFordScore != nil{
+                self.lblStblScore.text = "\(self.classicScoring.stableFordScore!)"
+                self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
+            }
             self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
             self.view.layoutIfNeeded()
         })

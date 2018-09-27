@@ -2347,7 +2347,7 @@
                                                         </state>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3KA-UU-Ocv">
-                                                        <rect key="frame" x="158" y="0.0" width="95" height="30"/>
+                                                        <rect key="frame" x="158" y="0.0" width="53" height="30"/>
                                                         <color key="backgroundColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="95" id="rZF-f0-dGW"/>
@@ -2362,7 +2362,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vjk-UG-klx">
-                                                        <rect key="frame" x="261" y="0.0" width="27" height="30"/>
+                                                        <rect key="frame" x="219" y="0.0" width="69" height="30"/>
                                                         <color key="backgroundColor" red="0.0" green="0.54117647059999996" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="69" id="3Ep-Lk-l3d"/>
@@ -5447,6 +5447,12 @@
                         <viewLayoutGuide key="safeArea" id="Lnj-Hn-JyW"/>
                     </view>
                     <navigationItem key="navigationItem" title="CustomScoringMode" id="LB3-R8-8Im" userLabel="ScoreBoardScene">
+                        <barButtonItem key="leftBarButtonItem" image="backArrow" id="2Fw-5t-dEm">
+                            <color key="tintColor" red="0.22352941179999999" green="0.56470588239999997" blue="0.41568627450000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="backBtnAction:" destination="USz-vC-Gad" id="IrL-zh-Dhx"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="menu_white" id="bas-rd-UGq">
                             <color key="tintColor" red="0.18039215689999999" green="0.62352941179999999" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>

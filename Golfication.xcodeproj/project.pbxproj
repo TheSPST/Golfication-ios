@@ -48,6 +48,8 @@
 		3E40F98220E6063600092170 /* NewMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E40F98020E6063600092170 /* NewMapVC.swift */; };
 		3E40F98420E62E2A00092170 /* ShotDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E40F98320E62E2A00092170 /* ShotDetailsTableViewCell.swift */; };
 		3E4CDC6F211C56B700C2C1C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E4CDC6E211C56B700C2C1C6 /* Assets.xcassets */; };
+		3E576469215BDA4500658D78 /* RequestSFPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E576468215BDA4500658D78 /* RequestSFPopup.swift */; };
+		3E57646B215BDA5400658D78 /* ProfilePhotoDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E57646A215BDA5400658D78 /* ProfilePhotoDetailVC.swift */; };
 		3E59234920A991C60056D446 /* GolfBagVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E59234720A991C50056D446 /* GolfBagVC.swift */; };
 		3E59234A20A991C60056D446 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E59234820A991C60056D446 /* Home.storyboard */; };
 		3E5EAB041FF7AD2B00F69661 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5EAB031FF7AD2B00F69661 /* AppDelegate.swift */; };
@@ -288,6 +290,8 @@
 		3E40F98320E62E2A00092170 /* ShotDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		3E4CDC6E211C56B700C2C1C6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3E5309792154D6550044B59C /* Golfication-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Golfication-Bridging-Header.h"; sourceTree = "<group>"; };
+		3E576468215BDA4500658D78 /* RequestSFPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestSFPopup.swift; sourceTree = "<group>"; };
+		3E57646A215BDA5400658D78 /* ProfilePhotoDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePhotoDetailVC.swift; sourceTree = "<group>"; };
 		3E59234720A991C50056D446 /* GolfBagVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GolfBagVC.swift; sourceTree = "<group>"; };
 		3E59234820A991C60056D446 /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		3E5EAB001FF7AC4400F69661 /* Golfication.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Golfication.entitlements; sourceTree = "<group>"; };
@@ -617,6 +621,7 @@
 		3E40F97A20E604BA00092170 /* GameViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				3E576468215BDA4500658D78 /* RequestSFPopup.swift */,
 				3E3BB30D2143F52300321A1D /* RequestSFPopup.xib */,
 				3E3D120B213D6A3F00B2978D /* MapShotPopupVC.swift */,
 				3E3D1207213D1E1400B2978D /* MapShotPopupView.xib */,
@@ -954,6 +959,7 @@
 		4BB26CD51FF77EDB001E9556 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				3E57646A215BDA5400658D78 /* ProfilePhotoDetailVC.swift */,
 				3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */,
 				3EF55F5720E77A2200068C4B /* NewHomeVC.swift */,
 				3E59234820A991C60056D446 /* Home.storyboard */,
@@ -1448,6 +1454,7 @@
 				4BB26D241FF77EDB001E9556 /* SmartCaddieVC.swift in Sources */,
 				4B1F6BD42090A29F00312EA7 /* FinalScoreBoardViewCtrl.swift in Sources */,
 				4B4ED1AA20BD74AD00D9C6DC /* PerformanceVC.swift in Sources */,
+				3E576469215BDA4500658D78 /* RequestSFPopup.swift in Sources */,
 				4BB26D311FF77EDB001E9556 /* StartNewGameVC.swift in Sources */,
 				4B1F6BD22090A29F00312EA7 /* ClassicScoringTableViewCell.swift in Sources */,
 				3E59234920A991C60056D446 /* GolfBagVC.swift in Sources */,
@@ -1488,6 +1495,7 @@
 				3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */,
 				3EEC413820E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift in Sources */,
 				4BB26D451FF77EED001E9556 /* ServerHandler.swift in Sources */,
+				3E57646B215BDA5400658D78 /* ProfilePhotoDetailVC.swift in Sources */,
 				3E15D32E1FFE0800005F4068 /* notificationExtension.swift in Sources */,
 				4BD6AABD20A9B0E300F1839C /* GolfBagTabsVC.swift in Sources */,
 				4BB26D221FF77EDB001E9556 /* Club.swift in Sources */,

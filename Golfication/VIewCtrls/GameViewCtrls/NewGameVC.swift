@@ -1190,7 +1190,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
         for data in rangeFinArr{
             let rating = data.value(forKey: "courseRating") as! Double
-            let slope = data.value(forKey: "slopeRating") as! Int
+            var slope = 113
+            if let slo = data.value(forKey: "slopeRating") as? Int{
+                slope = slo
+            }
             let teeName = data.value(forKey: "teeColor") as! String
             let teeType = data.value(forKey: "tee") as! String
             teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:"\(rating)", slope:"\(slope)"))
@@ -1210,8 +1213,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             selectedRating = 0.0
             
             self.startingTeeCardView.isHidden = true
-            
-            var chkStableford = false
+   /*         var chkStableford = false
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
             FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
                 var dataDic = [String:Int]()
@@ -1282,7 +1284,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         }
                     }
                 })
-            }
+            }*/
         }
     }
     func uploadImage(_ image: UIImage, at reference: StorageReference, completion: @escaping (URL?) -> Void) {
@@ -2232,7 +2234,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
             tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
+            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
         }
 
         var imagUrl =  ""
@@ -2343,7 +2345,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
             tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
+            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
             
         }
         var imagUrl =  ""
@@ -2427,7 +2429,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if selectedTee.count > 1{
             tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(handicap, forKey: "handicap" as NSCopying)
+            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
         }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){

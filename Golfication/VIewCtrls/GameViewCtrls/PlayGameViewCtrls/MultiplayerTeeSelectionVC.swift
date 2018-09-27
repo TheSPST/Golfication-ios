@@ -70,16 +70,21 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
         cell.btnHandicap.addTarget(self, action: #selector(btnActionHadicap), for: .touchUpInside)
         cell.btnDropDownTee.addTarget(self, action: #selector(btnActionSelectTee), for: .touchUpInside)
         cell.lblUserName.text = ((self.totalPlayers[indexPath.row] as! NSMutableDictionary).value(forKey: "name") as! String)
-        cell.btnHandicap.setTitle("\(self.handicap[indexPath.row])", for: .normal)
+        cell.btnHandicap.setTitle(String(self.handicap[indexPath.row]) == "0.0" ? "-":String(self.handicap[indexPath.row]), for: .normal)
         if let img = (self.totalPlayers[indexPath.row] as! NSMutableDictionary).value(forKey: "image") as? String, img.count > 2{
             cell.btnUserImg.sd_setImage(with: URL(string: img), for: .normal, placeholderImage: UIImage(named: "0_you"), completed: nil)
         }
         cell.lblTeeRating.text = "\(selectedRating)"
         cell.lblTeeName.text = selectedTee
         cell.lblTeeSlope.text = "\(selectedSlope)"
+        for i in teeArr{
+            if(i.name == selectedTee){
+                cell.lblTeeType.text = "(\(i.type) Tee)"
+            }
+        }
         if let userData = self.totalPlayers[indexPath.row] as? NSMutableDictionary{
             userData.addEntries(from: ["tee" : selectedTee.lowercased()])
-            userData.addEntries(from: ["handicap" : self.handicap[indexPath.row]])
+            userData.addEntries(from: ["handicap" : String(self.handicap[indexPath.row]) == "0.0" ? "18.0":String(self.handicap[indexPath.row])])
             debugPrint(userData)
         }
         
@@ -91,13 +96,13 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
         if let userData = self.totalPlayers[sender.tag] as? NSMutableDictionary{
             let alert = UIAlertController(title: "\(userData.value(forKey: "name") as! String)", message: "", preferredStyle: .alert)
             alert.addTextField { (textField) in
-                textField.placeholder = "0.0"
+                textField.placeholder = "-"
                 textField.keyboardType = UIKeyboardType.decimalPad
             }
             alert.addAction(UIAlertAction(title: "Submit", style: .default, handler: { [weak alert] (_) in
                 let textField = alert!.textFields!.first!
-                self.handicap[sender.tag] = Double(textField.text as! String) != nil ? Double(textField.text as! String)! : 0.0
-                userData.addEntries(from: ["handicap" : self.handicap[sender.tag]])
+                self.handicap[sender.tag] = Double(textField.text as! String) != nil ? Double(textField.text as! String)! : 18.0
+                userData.addEntries(from: ["handicap" : textField.text!])
                 let cell = self.tableViewMultiplayerTee.cellForRow(at: IndexPath(row: sender.tag, section: 0))  as! MultiplayerTeeSelectionTableViewCell
                 cell.btnHandicap.setTitle("\(self.handicap[sender.tag])", for: .normal)
                 debugPrint(userData)

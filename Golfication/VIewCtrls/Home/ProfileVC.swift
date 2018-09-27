@@ -396,32 +396,40 @@ class ProfileVC: UIViewController {
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
+    // MARK: editImageAction
+    @IBAction func editImageAction(_ sender: Any) {
+        ActionSheetStringPicker.show(withTitle: "Select a source:", rows: ["Camera", "Gallery"], initialSelection: 0, doneBlock: {
+         picker, value, index in
+         if value == 0 {
+         if UIImagePickerController.isSourceTypeAvailable(.camera) {
+         self.imagePicker.allowsEditing = false
+         self.imagePicker.sourceType = .camera
+         self.imagePicker.cameraCaptureMode = .photo
+         self.imagePicker.modalPresentationStyle = .fullScreen
+         self.present(self.imagePicker,animated: true,completion: nil)
+         }
+         else {
+         self.noCamera()
+         }
+         }
+         else{
+         self.imagePicker.allowsEditing = false
+         self.imagePicker.sourceType = .photoLibrary
+         self.present(self.imagePicker, animated: true, completion: nil)
+         }
+         return
+         }, cancel: { ActionStringCancelBlock in
+         return
+         }, origin: sender)
+    }
+    
     // MARK: btnActionChangeImage
     @IBAction func btnActionChangeImage(_ sender: Any) {
         
-        ActionSheetStringPicker.show(withTitle: "Select a source:", rows: ["Camera", "Gallery"], initialSelection: 0, doneBlock: {
-            picker, value, index in
-            if value == 0 {
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    self.imagePicker.allowsEditing = false
-                    self.imagePicker.sourceType = .camera
-                    self.imagePicker.cameraCaptureMode = .photo
-                    self.imagePicker.modalPresentationStyle = .fullScreen
-                    self.present(self.imagePicker,animated: true,completion: nil)
-                }
-                else {
-                    self.noCamera()
-                }
-            }
-            else{
-                self.imagePicker.allowsEditing = false
-                self.imagePicker.sourceType = .photoLibrary
-                self.present(self.imagePicker, animated: true, completion: nil)
-            }
-            return
-        }, cancel: { ActionStringCancelBlock in
-            return
-        }, origin: sender)
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProfilePhotoDetailVC") as! ProfilePhotoDetailVC
+        viewCtrl.modalPresentationStyle = .overCurrentContext
+        viewCtrl.modalTransitionStyle = .crossDissolve
+        self.present(viewCtrl, animated: true, completion: nil)
     }
     
     func noCamera(){
@@ -678,17 +686,19 @@ class ProfileVC: UIViewController {
                             self.view.layoutIfNeeded()
                     }
                     else{*/
-                    
+                    self.viewTopWhatIsPro.isHidden = false
+                    self.whatISProHeightConstraint.constant = 57.0
+
                     self.lblInactivePrice.text = "FREE for 30 Days"
                     if (userData.value(forKey: "trial") as? Bool) != nil{
                         self.lblInactivePrice.text = "Your Pro Membership has been expired"
+                        self.viewTopWhatIsPro.isHidden = true
+                        self.whatISProHeightConstraint.constant = 0.0
                     }
                     self.viewUpgradeInactive.isHidden = false
                     self.viewUpgradeFreeActive.isHidden = true
                     self.viewUpgradeActive.isHidden = true
-                    self.viewTopWhatIsPro.isHidden = false
-                    self.whatISProHeightConstraint.constant = 57.0
-                    self.view.layoutIfNeeded()
+//                    self.view.layoutIfNeeded()
                     //}
                 }
                 for (key,value) in userData{
