@@ -2351,6 +2351,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     func initilizeScoreNode(){
         let scoring = NSMutableDictionary()
         var holeArray = [NSMutableDictionary]()
+        self.scoring.removeAll()
         for i in 0..<courseData.numberOfHoles.count{
             self.scoring.append((hole: courseData.numberOfHoles[i].hole, par: 0,players:[NSMutableDictionary]()))
             let player = NSMutableDictionary()

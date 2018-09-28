@@ -1697,6 +1697,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     func initilizeScoreNode(){
         let scoring = NSMutableDictionary()
         var holeArray = [NSMutableDictionary]()
+        self.scoreData.removeAll()
         for i in 0..<courseData.numberOfHoles.count{
             self.scoreData.append((hole: courseData.numberOfHoles[i].hole, par: 0,players:[NSMutableDictionary]()))
             let player = NSMutableDictionary()

@@ -224,7 +224,7 @@ class NextRoundVC: UIViewController {
         lblTopTitle.text = "Classic Scorecard"
         lblTopSubTitle.text = "(For Basic Users)"
         lblBottomTitle.text = "Fast and easy"
-        lblBottomSubTitle.text = "Record hole-scores, fiarways, GIRs and\nputts for you and your friends."
+        lblBottomSubTitle.text = "Record hole-scores, fairways, GIRs and\nputts for you and your friends."
         imageVIew.image = #imageLiteral(resourceName: "classic_score")
         
         

@@ -549,13 +549,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
         if !teeTypeArr.isEmpty{
-            sectionItems = [[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+            sectionItems = [[],[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
                             ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
                             ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
                             ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
                             ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"]]
             if mode == 1{
-                sectionItems = [[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                sectionItems = [[],[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
                                 ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
                                 ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
                                 ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
@@ -563,13 +563,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
         }
         else{
-            sectionItems = [[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+            sectionItems = [[],[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
                             ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
                             ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
                             ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
                             ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"]]
             if mode == 1{
-                sectionItems = [[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                sectionItems = [[],[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
                                 ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
                                 ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
                                 ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
