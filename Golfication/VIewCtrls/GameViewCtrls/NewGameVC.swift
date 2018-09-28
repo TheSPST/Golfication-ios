@@ -145,7 +145,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 self.lblTeeSlope.text = tee.slope
                 selectedSlope = Int(tee.slope)!
                 selectedRating = Double(tee.rating)!
-                selectedTee = "\(tee.name)"
+                selectedTee = "\(tee.type)"
             }))
             myController.addAction(whiteTee)
             i += 1

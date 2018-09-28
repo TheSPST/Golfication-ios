@@ -22,7 +22,6 @@ class CourseData:NSObject{
     var startingIndex : Int!
     var gameTypeIndex = 18
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
-
     func getGolfCourseDataFromFirebase(courseId:String){
 //        courseId = "course_9999999"
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
@@ -94,6 +93,7 @@ class CourseData:NSObject{
             }            
             group.notify(queue: .main){
                 if(self.propertyArray.isEmpty){
+                    self.holeHcpWithTee.removeAll()
                     for i in 0..<rangeFinderHoles.count{
                         let dataDic = NSMutableDictionary()
                         dataDic.setObject((rangeFinderHoles[i] as AnyObject).object(forKey: "greenLat")!, forKey: "greenLat" as NSCopying)
@@ -156,6 +156,7 @@ class CourseData:NSObject{
                 }
                 if(self.centerPointOfTeeNGreen.isEmpty){
                     var i = 0
+                    self.holeHcpWithTee.removeAll()
                     for data in self.numberOfHoles{
                         var centerOfTee = [CLLocationCoordinate2D]()
                         var indexOfMaxDistanceTee = 0
@@ -171,6 +172,13 @@ class CourseData:NSObject{
                         }
                         if(stableFordHoles.count  == self.numberOfHoles.count){
                             let teeBoxes = (stableFordHoles[i] as AnyObject).object(forKey: "teeBoxes") as! NSArray
+                            var teeData = [NSMutableDictionary]()
+                            for data in teeBoxes{
+                                teeData.append(data as! NSMutableDictionary)
+                            }
+                            self.holeHcpWithTee.append((hole: i+1, teeBox: teeData))
+                        }else if(rangeFinderHoles.count  == self.numberOfHoles.count){
+                            let teeBoxes = (rangeFinderHoles[i] as AnyObject).object(forKey: "teeBoxes") as! NSArray
                             var teeData = [NSMutableDictionary]()
                             for data in teeBoxes{
                                 teeData.append(data as! NSMutableDictionary)

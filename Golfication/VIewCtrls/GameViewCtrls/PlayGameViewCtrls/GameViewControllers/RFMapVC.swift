@@ -770,6 +770,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         viewCtrl.scoreData = scoring
         viewCtrl.playerData = players
         viewCtrl.isContinue = true
+        viewCtrl.holeHcpWithTee = self.courseData.holeHcpWithTee
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
@@ -831,15 +832,20 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        statusStableFord()
         self.navigationController?.navigationBar.isHidden = true
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         mapTimer.invalidate()
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     @objc func hideStableFord(_ notification:NSNotification){
-        statusStableFord()
+        let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
+        let action = UIAlertAction(title: "Done", style: UIAlertAction.Style.default, handler: nil)
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+        self.chkStableford = true
+        self.stablefordView.isHidden = true
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     // ------------------------ By Amit ----------------------
@@ -2347,8 +2353,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             let player = NSMutableDictionary()
             for j in 0..<playersButton.count{
                 let playerScore = NSMutableDictionary()
-                let hcp = getHCPValue(playerID: playersButton[j].id, holeNo: i)
-                let playerData = ["holeOut":false,"hcp":hcp == 0 ? NSNull():hcp] as [String : Any]
+                let playerData = ["holeOut":false] as [String : Any]
                 player.setObject(playerData, forKey: playersButton[j].id as NSCopying)
                 playerScore.setObject(playerData, forKey: playersButton[j].id as NSCopying)
                 self.scoring[i].players.append(playerScore)
@@ -2970,40 +2975,4 @@ extension RFMapVC{
         }
         task.resume()
     }
-    
 }
-/*
- func getValidIndex(isNext:Bool)->Int{
- var min = self.startingIndex-1
- var max = self.scoring.count-1
- if(self.scoring.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.scoring.count{
- max = (self.startingIndex+self.gameTypeIndex) - 1
- }else if self.startingIndex+self.gameTypeIndex-1 > self.scoring.count{
- if(self.gameTypeIndex < self.scoring.count){
- max =  (self.startingIndex+self.gameTypeIndex-1) - self.scoring.count
- }
- }
- if(self.gameTypeIndex == self.scoring.count){
- max = self.scoring.count
- min = 0
- }
- if(min < max){
- if(self.holeIndex >= min) && (self.holeIndex < max){
- return self.holeIndex
- }else{
- return isNext ? min : max-1
- }
- }else{
- if(self.holeIndex < 0){
- self.holeIndex = self.scoring.count-1
- }else if(self.holeIndex == self.scoring.count){
- self.holeIndex = 0
- }else if (self.holeIndex >= max){
- self.holeIndex = isNext ? (min<=self.holeIndex ? self.holeIndex:min) : (min > self.holeIndex ? max-1:self.holeIndex)
- }else if (self.holeIndex <= min){
- self.holeIndex = isNext ? (max == self.holeIndex ? min:self.holeIndex):(self.holeIndex == min ? max:self.holeIndex)
- }
- return self.holeIndex
- }
- }
-*/

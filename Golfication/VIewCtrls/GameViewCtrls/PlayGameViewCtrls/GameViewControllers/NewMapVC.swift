@@ -624,7 +624,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.multiplayerPageControl.isHidden = true
             self.lblRaceToFlagTitle.isHidden = true
             self.barChartParentStackView.isHidden = true
-            self.stableFordView.isHidden = !self.holeOutFlag
+            self.stableFordView.isHidden = !self.holeOutFlag || chkStableford
             if(self.playersButton.count > 1){
                 self.updateRaceToFlag()
                 if (btnMultiplayer.tag == 1){
@@ -980,6 +980,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         viewCtrl.playerData = players
+        viewCtrl.holeHcpWithTee = self.courseData.holeHcpWithTee
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     func registerBackgroundTask() {
@@ -1000,14 +1001,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         print("Background task ended.")
         UIApplication.shared.endBackgroundTask(backgroundTask)
         backgroundTask = UIBackgroundTaskInvalid
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        statusStableFord()
         self.navigationController?.navigationBar.isHidden = true
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
-
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(false)
@@ -1057,7 +1056,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
     }
     @objc func hideStableFord(_ notification:NSNotification){
-        statusStableFord()
+        let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
+        let action = UIAlertAction(title: "Done", style: UIAlertAction.Style.default, handler: nil)
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+        self.chkStableford = true
+        self.stableFordView.isHidden = true
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     @IBAction func btnActionStableford(_ sender: UIButton) {
@@ -1134,6 +1138,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     let viewCtrl = RequestSFPopup(nibName:"RequestSFPopup", bundle:nil)
                     viewCtrl.modalPresentationStyle = .overCurrentContext
                     self.present(viewCtrl, animated: true, completion: nil)
+                }else{
+                    self.stableFordView.isHidden = self.chkStableford
                 }
             })
         }
@@ -1533,17 +1539,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.scoring.removeAll()
         let scoring = NSMutableDictionary()
         var holeArray = [NSMutableDictionary]()
-        for i in 0..<self.courseData.numberOfHoles.count{
-            self.scoring.append((hole: courseData.numberOfHoles[i].hole, par: courseData.numberOfHoles[i].par,players:[NSMutableDictionary]()))
-        }
-        setupMultiplayersButton()
         for i in 0..<courseData.numberOfHoles.count{
+            self.scoring.append((hole: courseData.numberOfHoles[i].hole, par: courseData.numberOfHoles[i].par,players:[NSMutableDictionary]()))
             let player = NSMutableDictionary()
             for j in 0..<playerData.count{
                 let data = playerData[j] as! NSMutableDictionary
                 let playerScore = NSMutableDictionary()
-                let hcp = getHCPValue(playerID: data.value(forKey: "id") as! String, holeNo: i)
-                let playerDataHole = ["holeOut":false,"hcp":hcp == 0 ? NSNull():hcp] as [String : Any]
+                let playerDataHole = ["holeOut":false]
                 player.setObject(playerDataHole, forKey: (data.value(forKey: "id") as! String) as NSCopying)
                 playerScore.setObject(playerDataHole, forKey: (data.value(forKey: "id") as! String) as NSCopying)
                 self.scoring[i].players.append(playerScore)
@@ -1555,7 +1557,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(!self.isAcceptInvite){
             ref.child("matchData/\(self.currentMatchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
-        
+        setupMultiplayersButton()
     }
     @IBAction func btnActionTrackShots(_ sender: UIButton) {
         let shotClub = courseData.clubs[self.btnSelectClubs.tag]
@@ -4298,7 +4300,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     func updateMap(indexToUpdate:Int){
         var indexToUpdate = indexToUpdate
         mapView.clear()
-        
+        self.stableFordView.isHidden = true
         self.allMarkers.removeAll()
         self.suggestedMarkerOffCourse.map = nil
         self.suggestedMarker1.map = nil
@@ -4418,10 +4420,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     shotsArray = value as! NSArray
                                 }else if(key as! String == "holeOut"){
                                     holeOutFlag = value as! Bool
-                                    self.stableFordView.isHidden = !holeOutFlag
+                                    self.stableFordView.isHidden = !holeOutFlag || chkStableford
                                     self.imgViewStableFordInfo.isHidden = !self.teeTypeArr.isEmpty
                                     self.lblStblScore.text = "n/a"
                                     self.imgViewRefreshScore.isHidden = self.teeTypeArr.isEmpty
+                                    
                                 }else if(key as! String == "gir"){
                                     gir = value as! Bool
                                 }else if(key as! String == "stableFordPoints"){
@@ -5978,11 +5981,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.scoreTableView.reloadData()
                     self.constraintTableHeight.constant = tableViewHeight
                     self.updateRaceToFlag()
-                    self.stableFordView.isHidden = true
                     for i in 0..<self.scoring[holeIndex].players.count where self.scoring[holeIndex].players[i].value(forKey: playersButton[i].id) != nil{
                         if let scoringDict = (self.scoring[self.holeIndex].players[i].value(forKey: playersButton[i].id) as? NSMutableDictionary){
                             if let isholeout = (scoringDict.value(forKey: "holeOut") as? Bool){
-                                self.stableFordView.isHidden =  !isholeout
+                                self.stableFordView.isHidden =  !isholeout || chkStableford
                                 self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: playersButton[i].id, holeNo: self.holeIndex))"
                             }
                         }

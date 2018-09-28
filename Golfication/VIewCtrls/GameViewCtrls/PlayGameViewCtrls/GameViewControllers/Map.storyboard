@@ -1413,10 +1413,10 @@
                                                         <rect key="frame" x="75" y="44" width="170" height="35"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NT6-zq-VaB">
-                                                                <rect key="frame" x="4" y="6.5" width="50" height="22"/>
+                                                                <rect key="frame" x="4" y="6.5" width="52" height="22"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PAR 5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2c7-fn-3nS">
-                                                                        <rect key="frame" x="0.0" y="3" width="50" height="16"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PAR 5" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2c7-fn-3nS">
+                                                                        <rect key="frame" x="2" y="3" width="48" height="16"/>
                                                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                                                                         <color key="textColor" red="0.0" green="0.7725490196" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
@@ -1425,17 +1425,17 @@
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="22" id="9am-Y9-tgM"/>
-                                                                    <constraint firstItem="2c7-fn-3nS" firstAttribute="leading" secondItem="NT6-zq-VaB" secondAttribute="leading" id="S2L-JQ-7YU"/>
+                                                                    <constraint firstItem="2c7-fn-3nS" firstAttribute="leading" secondItem="NT6-zq-VaB" secondAttribute="leading" constant="2" id="S2L-JQ-7YU"/>
                                                                     <constraint firstItem="2c7-fn-3nS" firstAttribute="centerY" secondItem="NT6-zq-VaB" secondAttribute="centerY" id="V8x-ZZ-HLz"/>
                                                                     <constraint firstItem="2c7-fn-3nS" firstAttribute="centerX" secondItem="NT6-zq-VaB" secondAttribute="centerX" id="pO8-PJ-RCM"/>
-                                                                    <constraint firstAttribute="width" constant="50" id="wZZ-V3-gxl"/>
+                                                                    <constraint firstAttribute="width" constant="52" id="wZZ-V3-gxl"/>
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MB5-9U-fZ0">
-                                                                <rect key="frame" x="111" y="6.5" width="50" height="22"/>
+                                                                <rect key="frame" x="126" y="6.5" width="52" height="22"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HCP 5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8kg-ep-fFp">
-                                                                        <rect key="frame" x="0.0" y="3" width="50" height="16"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HCP 5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8kg-ep-fFp">
+                                                                        <rect key="frame" x="2" y="3" width="48" height="16"/>
                                                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                                                                         <color key="textColor" red="0.0" green="0.7725490196" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
@@ -1443,19 +1443,19 @@
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
-                                                                    <constraint firstItem="8kg-ep-fFp" firstAttribute="leading" secondItem="MB5-9U-fZ0" secondAttribute="leading" id="MTb-MO-ScI"/>
+                                                                    <constraint firstItem="8kg-ep-fFp" firstAttribute="leading" secondItem="MB5-9U-fZ0" secondAttribute="leading" constant="2" id="MTb-MO-ScI"/>
                                                                     <constraint firstItem="8kg-ep-fFp" firstAttribute="centerX" secondItem="MB5-9U-fZ0" secondAttribute="centerX" id="SLk-9q-5vA"/>
                                                                     <constraint firstItem="8kg-ep-fFp" firstAttribute="centerY" secondItem="MB5-9U-fZ0" secondAttribute="centerY" id="Zae-65-Wtb"/>
                                                                     <constraint firstAttribute="height" constant="22" id="caY-Vf-ix1"/>
-                                                                    <constraint firstAttribute="width" constant="50" id="gwg-Pl-gu5"/>
+                                                                    <constraint firstAttribute="width" constant="52" id="gwg-Pl-gu5"/>
                                                                 </constraints>
                                                             </view>
                                                             <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d2A-KR-Qrz">
-                                                                <rect key="frame" x="51" y="0.0" width="65" height="35"/>
+                                                                <rect key="frame" x="51" y="0.0" width="80" height="35"/>
                                                                 <color key="backgroundColor" red="0.086274509799999996" green="0.21176470589999999" blue="0.1215686275" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="35" id="nEd-jA-NTt"/>
-                                                                    <constraint firstAttribute="width" constant="65" id="p0K-l0-LsZ"/>
+                                                                    <constraint firstAttribute="width" constant="80" id="p0K-l0-LsZ"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                                 <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
@@ -1482,7 +1482,7 @@
                                                             <constraint firstAttribute="width" constant="170" id="L2m-Xv-iLD"/>
                                                             <constraint firstItem="NT6-zq-VaB" firstAttribute="centerY" secondItem="NWQ-8M-N4z" secondAttribute="centerY" id="U7V-Aq-ACP"/>
                                                             <constraint firstItem="zSv-Ku-dBz" firstAttribute="leading" secondItem="NWQ-8M-N4z" secondAttribute="leading" id="Uhh-Sq-BM7"/>
-                                                            <constraint firstItem="d2A-KR-Qrz" firstAttribute="leading" secondItem="NT6-zq-VaB" secondAttribute="trailing" constant="-3" id="V6o-az-BVY"/>
+                                                            <constraint firstItem="d2A-KR-Qrz" firstAttribute="leading" secondItem="NT6-zq-VaB" secondAttribute="trailing" constant="-5" id="V6o-az-BVY"/>
                                                             <constraint firstAttribute="height" constant="35" id="WG2-Cj-mrS"/>
                                                             <constraint firstItem="d2A-KR-Qrz" firstAttribute="top" secondItem="NWQ-8M-N4z" secondAttribute="top" id="Wwo-Sy-CyI"/>
                                                             <constraint firstItem="d2A-KR-Qrz" firstAttribute="centerY" secondItem="NWQ-8M-N4z" secondAttribute="centerY" id="XPL-ov-2Rf"/>
@@ -2575,7 +2575,7 @@
                                     <constraint firstItem="4Pr-3m-a7W" firstAttribute="width" secondItem="lc3-CI-l1U" secondAttribute="width" id="PF4-Lj-hmf"/>
                                 </constraints>
                             </stackView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M07-jE-eLq" customClass="ExitGamePopUpView" customModule="Golfication" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M07-jE-eLq" customClass="ExitGamePopUpView" customModule="Golfication" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <color key="backgroundColor" white="0.67000000000000004" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>

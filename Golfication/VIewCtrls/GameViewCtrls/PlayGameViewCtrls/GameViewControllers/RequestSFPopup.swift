@@ -127,13 +127,7 @@ class RequestSFPopup: UIViewController, UIImagePickerControllerDelegate, UINavig
             ref.child("stablefordRequest").updateChildValues(courseDetailDic as! [AnyHashable : Any])
             
             ref.child("userData/\(Auth.auth().currentUser!.uid)/stablefordCourse/").updateChildValues([selectedGolfID:Timestamp])
-            
 //            self.progressView.hide(navItem: self.navigationItem)
-            
-            let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
-            let action = UIAlertAction(title: "Done", style: UIAlertAction.Style.default, handler: nil)
-            alertVC.addAction(action)
-            self.present(alertVC, animated: true, completion: nil)
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "hideStableFord"),object : nil)
         }
         })

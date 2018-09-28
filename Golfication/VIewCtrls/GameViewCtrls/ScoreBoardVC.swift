@@ -68,8 +68,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     @IBOutlet weak var lblHolePar: UILabel!
     
-    var progressView = SDLoader()
+    @IBOutlet weak var stablefordView: UIView!
+    @IBOutlet weak var imgViewRefreshScore: UIImageView!
+    @IBOutlet weak var btnStableScore: UIButton!
+    @IBOutlet weak var lblStableScore: UILabel!
+    @IBOutlet weak var imgViewInfo: UIImageView!
     
+    var progressView = SDLoader()
     @IBOutlet weak var btnMenu: UIBarButtonItem!
 
     var buttonsArrayForStrokes = [UIButton]()
@@ -112,22 +117,10 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     let padding: CGFloat = 10.0
     let width: CGFloat = 50.0
-
-    /*func scrollViewDidEndDragging(_ scrollView1: UIScrollView,
-     willDecelerate decelerate: Bool)
-     {
-     scrollView = (scrollView1 == tblView) ? menueTableView : tblView
-     scrollView.setContentOffset(scrollView1.contentOffset, animated: false)
-     
-     /*let x =  CGFloat(self.pageControl.currentPage) * (pageWidth - 20)
-     scrollView.setContentOffset(CGPoint(x:x, y:0), animated: false)*/
-     }*/
-    
     func scrollViewDidScroll(_ scrollView1: UIScrollView)
     {
         //http://jayeshkawli.ghost.io/manually-scrolling-uiscrollview-ios-swift/
         //https://stackoverflow.com/questions/6949142/iphone-how-to-scroll-two-uitableviews-symmetrically
-        
         if (!(scrollView1.contentOffset.x>0 || scrollView1.contentOffset.x<0)) && scrollView1 == self.menueTableView {
            tblView.isScrollEnabled = true
 
@@ -151,9 +144,86 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateView"), object: nil)
         ref.child("matchData/\(matchId)/scoring/\(self.index)/\(self.playerId!)").removeAllObservers()
     }
+    
+    @IBAction func refreshStableFordAction(_ sender: UIButton) {
+        if self.teeTypeArr.isEmpty{
+            self.ifnoStableFord()
+        }else{
+            if self.btnStableScore.currentTitle!.contains("Stable"){
+                self.btnStableScore.setTitle("Net Score", for: .normal)
+                self.lblStableScore.text = "\(classicScoring.netScore!)"
+            }else if self.btnStableScore.currentTitle!.contains("Net"){
+                self.btnStableScore.setTitle("Gross Score", for: .normal)
+                self.lblStableScore.text = "\(classicScoring.strokesCount!)"
+            }else{
+                self.btnStableScore.setTitle("Stableford Score", for: .normal)
+                self.lblStableScore.text = "\(classicScoring.stableFordScore!)"
+            }
+        }
+    }
+    func statusStableFord(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+            var dataDic = [String:Int]()
+            if(snapshot.childrenCount > 0){
+                dataDic = (snapshot.value as? [String : Int])!
+            }
+            if !dataDic.isEmpty{
+                for (key, _) in dataDic{
+                    if key == selectedGolfID{
+                        self.chkStableford = true
+                        break
+                    }
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                self.stablefordView.isHidden = self.chkStableford
+            })
+        }
+    }
+    var chkStableford = false
+    func ifnoStableFord(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
+            var dataDic = [String:Int]()
+            if(snapshot.childrenCount > 0){
+                dataDic = (snapshot.value as? [String : Int])!
+            }
+            if !dataDic.isEmpty{
+                for (key, _) in dataDic{
+                    if key == selectedGolfID{
+                        self.chkStableford = true
+                        break
+                    }
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                if !self.chkStableford{
+                    let viewCtrl = RequestSFPopup(nibName:"RequestSFPopup", bundle:nil)
+                    viewCtrl.modalPresentationStyle = .overCurrentContext
+                    self.present(viewCtrl, animated: true, completion: nil)
+                }else{
+                    
+                }
+            })
+        }
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-           self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.isHidden = false
+        statusStableFord()
+    }
+
+    @objc func hideStableFord(_ notification:NSNotification){
+        let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
+        let action = UIAlertAction(title: "Done", style: UIAlertAction.Style.default, handler: nil)
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+        self.chkStableford = true
+        self.stablefordView.isHidden = true
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     @objc func btnContinueAction(){
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "continueAction"), object: nil)
@@ -230,8 +300,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     func getScoreFromMatchDataFirebase(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchId)/") { (snapshot) in
-            self.actvtIndView.isHidden = false
-            self.actvtIndView.startAnimating()
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
             self.scoreData.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
                 matchDataDic = matchDict as! NSMutableDictionary
@@ -267,9 +336,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
             
             DispatchQueue.main.async(execute: {
-                self.actvtIndView.isHidden = true
-                self.actvtIndView.stopAnimating()
-                self.menueTableView.reloadData()
+                self.progressView.hide(navItem: self.navigationItem)
                 self.tblView.reloadData()
             })
         }
@@ -277,8 +344,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     func resetScoreNodeForMe(){
         for i in 0..<self.scoreData.count{
             let player = NSMutableDictionary()
-            for j in 0..<self.scoreData[0].players.count{
-                let id = (self.scoreData[0].players[j]).allKeys[0] as! String
+            for j in 0..<self.scoreData[i].players.count{
+                let id = (self.scoreData[i].players[j]).allKeys[0] as! String
                 if(id == Auth.auth().currentUser?.uid){
                     let playerData = ["holeOut":false]
                     player.setObject(playerData, forKey: id as NSCopying)
@@ -379,7 +446,28 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
         }
     }
-    
+    private func getHCPValue(playerID:String,holeNo:Int)->Int{
+        var index = 0
+        var hcp = 0
+        for playersdata in self.playerData{
+            if ((playersdata as! NSMutableDictionary).value(forKey: "id") as! String) == playerID{
+                break
+            }
+            index += 1
+        }
+        for tee in holeHcpWithTee{
+            if tee.hole == holeNo+1{
+                for data in tee.teeBox{
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
+                break
+            }
+        }
+        return hcp
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.glfBluegreen
@@ -387,7 +475,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         bView.frame = CGRect(x: 0, y: self.view.frame.height-40, width: self.view.frame.width, height: 40)
         bView.btn.frame = CGRect(x: 0, y: 0, width: bView.frame.size.width, height: bView.frame.size.height)
         bView.btn.addTarget(self, action: #selector(btnContinueAction), for: .touchUpInside)
-
+        self.stablefordView.setCornerView(color: UIColor.glfWhite.cgColor)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
+        
 //        bView.isHidden = true
         self.navigationItem.rightBarButtonItem?.isEnabled = isContinue
         bView.isHidden = !isContinue
@@ -444,17 +534,34 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         debugPrint("sectionNames== ",sectionNames.count)
 
         //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
-        sectionItems = [[],["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                        ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"]]
-        if mode == 1{
-        sectionItems = [[],["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                        ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"]]
+        if !teeTypeArr.isEmpty{
+            sectionItems = [[],["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"]]
+            if mode == 1{
+                sectionItems = [[],["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
+                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"]]
+            }
+        }
+        else{
+            sectionItems = [[],["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
+                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
+                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
+                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
+                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"]]
+            if mode == 1{
+                sectionItems = [[],["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
+                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
+                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
+                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
+                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"]]
+            }
+            
         }
 
         menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+75+5)), style: .plain)
@@ -473,8 +580,16 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         scrollView.delegate = self
         scrollView.backgroundColor = UIColor.clear
         scrollView.showsHorizontalScrollIndicator = false
+        self.imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
+        self.imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
         view.addSubview(scrollView)
-        view.addSubview(bottomLbl)
+        if teeTypeArr.isEmpty{
+            view.addSubview(bottomLbl)
+            self.imgViewRefreshScore.isHidden = true
+            self.lblStableScore.text = "n/a"
+        }else{
+            self.imgViewInfo.isHidden = true
+        }
         view.addSubview(bView)
         
         var tableWidth = CGFloat()
@@ -499,7 +614,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.expandedSectionHeaderNumber = 2
         tableViewExpandSection(2, imageView: imgView)
         
-        self.playerId = (self.sectionNames[1] as AnyObject).value(forKey: "id") as! String
+        self.playerId = ((self.sectionNames[1] as AnyObject).value(forKey: "id") as! String)
 
         self.scoringSuperView.isHidden = true
         btnDetailScoring.setCorner(color: UIColor.clear.cgColor)
@@ -509,31 +624,43 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 
         let tap = UITapGestureRecognizer(target: self, action:  #selector (self.superViewTouchAction (_:)))
         self.scoringSuperView.addGestureRecognizer(tap)
-    }
-    func loadStableFordData(){
-        if  !(selectedGolfID == "") {
-            let golfId = "course_\(selectedGolfID)"
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/holes") { (snapshot) in
-                var rangeFinArr = [NSMutableDictionary]()
-                if let rangeFin = snapshot.value as? [NSMutableDictionary]{
-                    rangeFinArr = rangeFin
-                }
-                DispatchQueue.main.async(execute: {
-                    if (rangeFinArr.isEmpty){
-                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/stableford/holes") { (snapshot) in
-                            if let rangeFin = snapshot.value as? [NSMutableDictionary]{
-                                rangeFinArr = rangeFin
-                            }
-                            DispatchQueue.main.async(execute: {
-                                self.processSelectTee(rangeFinArr: rangeFinArr)
-                            })
-                        }
-                    }else{
-                        self.processSelectTee(rangeFinArr: rangeFinArr)
-                    }
-                })
-            }
+        if scoreData.count == 0{
+            menueTableView.isHidden = true
+            scrollView.isHidden = true
+            bottomLbl.isHidden = true
+            bView.isHidden = true
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+            
+            let emptyLbl = UILabel()
+            emptyLbl.frame = CGRect(x: 10, y: self.view.frame.height/2 - 20, width: self.view.frame.width-20, height: 40)
+            emptyLbl.numberOfLines = 2
+            emptyLbl.textAlignment = .center
+            emptyLbl.text = "No Data Found"
+            emptyLbl.backgroundColor = UIColor.clear
+            self.view.addSubview(emptyLbl)
         }
+    }
+    var courseData = CourseData()
+    func loadStableFordData(){
+        if  self.holeHcpWithTee.isEmpty && !isContinue{
+            let startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
+            let gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+            self.courseData.startingIndex = startingIndex
+            self.courseData.gameTypeIndex = gameTypeIndex
+            let courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+            self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
+            NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
+        }
+    }
+    @objc func loadMap(_ notification:NSNotification){
+        self.progressView.hide(navItem: navigationItem)
+        for i in 0..<courseData.numberOfHoles.count{
+            self.scoreData[i].hole = courseData.numberOfHoles[i].hole
+        }
+        self.holeHcpWithTee = self.courseData.holeHcpWithTee
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
+        self.tblView.reloadData()
     }
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
@@ -986,6 +1113,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let classicScore = classicMode()
         for data in scoreData[hole].players{
             if let dic = (data).value(forKey: playerKey) as? NSMutableDictionary{
+                self.holeWiseShots = dic
                 if let chipShot = dic.value(forKey: "chipCount") as? Int{
                     classicScore.chipShot = chipShot
                 }
@@ -996,7 +1124,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     classicScore.strokesCount = strokesCount
                 }
                 if let holeOut = dic.value(forKey: "holeOut") as? Bool{
-//                        classicScore.holeOut = classicScore.strokesCount != nil ? true : false
                     classicScore.holeOut = holeOut
                 }
                 if let putting = dic.value(forKey: "putting") as? Int{
@@ -1010,6 +1137,12 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 }
                 if let gir = dic.value(forKey: "gir") as? Bool{
                     classicScore.gir = gir
+                }
+                if let sb = dic.value(forKey: "stableFordPoints") as? Int{
+                    classicScore.stableFordScore = sb
+                }
+                if let netScore = dic.value(forKey: "netScore") as? Int{
+                    classicScore.netScore = netScore
                 }
             }
         }
@@ -1167,10 +1300,70 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.btnScore.setTitle("\(title!)", for: .normal)
         self.scoreSV.isHidden = true
         self.detailScoreSV.isHidden = false
-        //btnDetailsScoringConstraints.constant = 16
+        if(!self.teeTypeArr.isEmpty){
+            self.uploadStableFordPints(playerId: self.playerId!,strokes:Int(title!)!)
+        }else{
+            updateScoreData()
+        }
+    }
+    func uploadStableFordPints(playerId:String,strokes:Int){
+        var index = 0
+        for playersdata in self.playerData{
+            if (playersdata as! NSMutableDictionary).value(forKey: "id") as! String == playerId{
+                break
+            }
+            index += 1
+        }
+        let par = scoreData[index].par
+        let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoreData.count
+        let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoreData.count
+        var hcp = 0
+        var totalShotsInThishole = 0
+        for tee in holeHcpWithTee{
+            if tee.hole == self.index+1{
+                for data in tee.teeBox{
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
+                break
+            }
+        }
+        if hcp > 0 && hcp <= extrashotsReminder{
+            totalShotsInThishole = par + extrashotsDiv + 1
+        }else{
+            totalShotsInThishole = par + extrashotsDiv
+        }
+        let sbPoint = totalShotsInThishole - strokes + 2
+        let netScore = strokes - (totalShotsInThishole - par)
+        holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
+//        lblStableFordScore.text = "\(sbPoint)"
+//        btnStableScore.setTitle("Stableford Score", for: .normal)
+        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)/stableFordPoints").setValue(sbPoint)
+        holeWiseShots.setObject(netScore, forKey: "netScore" as NSCopying)
+        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)/netScore").setValue(netScore)
         updateScoreData()
     }
-    
+    func calculateTotalExtraShots(playerID:String)->Double{
+        var index = 0
+        for playersdata in self.playerData{
+            if ((playersdata as! NSMutableDictionary).value(forKey: "id") as! String) == playerId{
+                break
+            }
+            index += 1
+        }
+        
+        var slopeIndex = 0
+        for data in teeArr{
+            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+                break
+            }
+            slopeIndex += 1
+        }
+        let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
+        return (Double(data / 113))
+    }
     // MARK: - Tableview Methods
     func numberOfSections(in tableView: UITableView) -> Int {
         if sectionNames.count > 0 {
@@ -1686,12 +1879,10 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                         }
                                     }
                                     else if indexPath.row == 8{
-                                        if(key as! String == "hcp"){
-                                            let hcp = value as! Int
-//                                            label.text = "\(hcp)"
-                                            btn.setTitle("\(hcp)", for: .normal)
-                                            hcpTotal += hcp
-                                        }
+                                        let hcp = self.getHCPValue(playerID:playerId!,holeNo: i)
+                                        debugPrint(i)
+                                        btn.setTitle("\(hcp)", for: .normal)
+                                        hcpTotal += hcp
                                     }
                                     else if indexPath.row == 9{
                                         if(key as! String == "stableFordPoints"){
@@ -1818,12 +2009,10 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 6{
-                                                if(key as! String == "hcp"){
-                                                    let hcp = value as! Int
-//                                                    label.text = "\(hcp)"
-                                                    btn.setTitle("\(hcp)", for: .normal)
-                                                    hcpTotal += hcp
-                                                }
+                                                let hcp = self.getHCPValue(playerID:playerId!,holeNo:i)
+                                                debugPrint(i)
+                                                btn.setTitle("\(hcp)", for: .normal)
+                                                hcpTotal += hcp
                                             }
                                             else if indexPath.row == 7{
                                                 if(key as! String == "stableFordPoints"){
@@ -1902,7 +2091,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 }
                 else if indexPath.row == 8{
                     if hcpTotal>0{
-                        label.text = "\(hcpTotal)"
+                        label.text = ""
                     }
                 }
                 else if indexPath.row == 9{
@@ -1949,7 +2138,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         }
                         else if indexPath.row == 6{
                             if hcpTotal>0{
-                                label.text = "\(hcpTotal)"
+                                label.text = ""
                             }
                         }
 

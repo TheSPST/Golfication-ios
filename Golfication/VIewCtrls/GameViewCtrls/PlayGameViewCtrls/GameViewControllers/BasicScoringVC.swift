@@ -69,6 +69,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var lblPar: UILabel!
     @IBOutlet weak var topView: UIView!
     
+    var courseData = CourseData()
     
     var progressView = SDLoader()
     var buttonsArrayForStrokes = [UIButton]()
@@ -402,14 +403,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @IBAction func nextAction(_ sender: Any) {
-        var maxLimit = scoreData.count-1
-        if(self.scoreData.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.scoreData.count{
-            maxLimit = (self.startingIndex+self.gameTypeIndex) - 2
-        }else if self.startingIndex+self.gameTypeIndex-1 > self.scoreData.count{
-            if(self.gameTypeIndex < self.scoreData.count){
-                maxLimit =  (self.startingIndex+self.gameTypeIndex-1) - self.scoreData.count
-            }
-        }
         menuStackView.isHidden = true
         holeIndex += 1
         self.btnNext.isHidden = false
@@ -417,18 +410,15 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.btnPrev.isEnabled = true
         self.swipeNext.isEnabled = true
         self.swipePrev.isEnabled = true
-        if(holeIndex == scoreData.count){
-            holeIndex = 0
+        if(holeIndex == scoreData.count-1){
+            self.btnNext.isHidden = true
+            self.swipePrev.isEnabled = false
+            self.btnFinishRound.isHidden = false
         }
         updateData(indexToUpdate: self.holeIndex)
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
-        if(holeIndex == maxLimit){
-            self.btnNext.isHidden = true
-            self.swipePrev.isEnabled = false
-            self.btnFinishRound.isHidden = false
-        }
         let transition = CATransition()
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromRight
@@ -436,30 +426,19 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @IBAction func prevAction(_ sender: Any) {
-        var minLimit = 0
-        if(self.startingIndex != 1){
-            if(self.scoreData.count > self.gameTypeIndex){
-                minLimit = self.startingIndex - 1
-            }
-        }
-        
         menuStackView.isHidden = true
         holeIndex -= 1
         self.btnNext.isHidden = false
         self.swipePrev.isEnabled = true
         self.btnFinishRound.isHidden = true
-        if(holeIndex < 0){
-            holeIndex = scoreData.count-1
+        if(holeIndex == 0){
+            self.swipeNext.isEnabled = false
+            self.btnPrev.isEnabled = false
         }
         updateData(indexToUpdate: self.holeIndex)
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
-        if(holeIndex == minLimit){
-            self.swipeNext.isEnabled = false
-            self.btnPrev.isEnabled = false
-        }
-        
         let transition = CATransition()
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromLeft
@@ -524,6 +503,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         viewCtrl.scoreData = scoreData
         viewCtrl.playerData = players
         viewCtrl.isContinue = true
+        viewCtrl.holeHcpWithTee = self.holeHcpWithTee
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
@@ -547,6 +527,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        setInitialUI()
         imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
         imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
         topView.layer.cornerRadius = topView.frame.height/2
@@ -656,7 +637,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                         playerData.add(dict)
                     }
                 }
-                self.initilizeScoreNode()
             }
         }
         for data in playersButton{
@@ -676,28 +656,55 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         scorePopView.addGestureRecognizer(swipeNext)
         containerView.addGestureRecognizer(swipeNext)
         
-        setInitialUI()
-        hideDetailScoreView()
-        statusStableFord()
-        if(isContinue){
-            if let current = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
-                self.holeIndex = Int(current)!-1
-            }else{
-                if let current = self.matchDataDict.value(forKeyPath: "currentHole") as? String{
-                    self.holeIndex = current == "" ? startingIndex : Int(current)! - 1
+        self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
+        self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+        self.courseData.startingIndex = self.startingIndex
+        self.courseData.gameTypeIndex = self.gameTypeIndex
+        let courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
+        self.progressView.show(atView: self.view, navItem: navigationItem)
+        self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
+    }
+    @objc func loadMap(_ notification: NSNotification) {
+        self.progressView.hide(navItem: navigationItem)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
+        if(!isContinue) && (!isAccept){
+            if(matchDataDict.object(forKey: "player") != nil) && self.playerData.count == 0{
+                let tempArray = matchDataDict.object(forKey: "player")! as! NSMutableDictionary
+                for (k,v) in tempArray{
+                    let dict = v as! NSMutableDictionary
+                    dict.addEntries(from: ["id":k])
+                    playerData.add(dict)
                 }
             }
+            self.initilizeScoreNode()
+        }
+        var currenthole = 0
+        if(isContinue){
+            if let current = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
+                currenthole = Int(current)!-1
+            }else{
+                if let current = self.matchDataDict.value(forKeyPath: "currentHole") as? String{
+                    currenthole = current == "" ? startingIndex : Int(current)! - 1
+                }
+            }
+            updateScoringHoleData()
         }else{
             self.holeIndex = startingIndex - 1
+        }
+        for i in 0..<self.scoreData.count{
+            if(self.scoreData[i].hole == currenthole){
+                self.holeIndex = i
+                break
+            }
         }
         self.exitGamePopUpView.show(navItem: self.navigationItem)
         self.exitGamePopUpView.delegate = self
         self.exitGamePopUpView.isHidden = true
-        if(self.holeIndex > self.scoreData.count){
-           self.holeIndex = 0
-        }
+        hideDetailScoreView()
+        statusStableFord()
         updateData(indexToUpdate: self.holeIndex)
-        if(self.holeIndex == startingIndex - 1){
+        if(self.holeIndex == 0){
             self.btnPrev.isEnabled = false
             self.swipeNext.isEnabled = false
         }else if(self.holeIndex == scoreData.count-1){
@@ -709,6 +716,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.btnChangeHole.isUserInteractionEnabled = false
         }else{
             self.btnChangeHole.isUserInteractionEnabled = true
+        }
+    }
+    func updateScoringHoleData(){
+        for i in 0..<courseData.numberOfHoles.count{
+            self.scoreData[i].hole = courseData.numberOfHoles[i].hole
         }
     }
     @objc func swipedViewPrev(){
@@ -755,22 +767,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             i += 1
         }
-        if(!isContinue) && (!isAccept){
-            if(matchDataDict.object(forKey: "player") != nil) && self.playerData.count == 0{
-                let tempArray = matchDataDict.object(forKey: "player")! as! NSMutableDictionary
-                for (k,v) in tempArray{
-                    let dict = v as! NSMutableDictionary
-                    dict.addEntries(from: ["id":k])
-                    playerData.add(dict)
-                }
-            }
-            self.initilizeScoreNode()
-        }
     }
     func calculateTotalExtraShots(playerID:String)->Double{
         var index = 0
-        for playersdata in self.playersButton{
-            if (playersdata.isSelected){
+        for playersdata in self.playerData{
+            if (playersdata as! NSMutableDictionary).value(forKey: "id") as! String == playerID{
                 break
             }
             index += 1
@@ -1132,7 +1133,12 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
     }
     @objc func hideStableFord(_ notification:NSNotification){
-        statusStableFord()
+        let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
+        let action = UIAlertAction(title: "Done", style: UIAlertAction.Style.default, handler: nil)
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+        self.chkStableford = true
+        self.stableFordView.isHidden = true
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     func statusStableFord(){
@@ -1190,10 +1196,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     func setInitialUI(){
         var tag = 0
@@ -1691,25 +1693,24 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     func initilizeScoreNode(){
         let scoring = NSMutableDictionary()
         var holeArray = [NSMutableDictionary]()
-        for i in 0..<self.scoreData.count{
+        for i in 0..<courseData.numberOfHoles.count{
+            self.scoreData.append((hole: courseData.numberOfHoles[i].hole, par: 0,players:[NSMutableDictionary]()))
             let player = NSMutableDictionary()
-            for j in 0..<playerData.count{
-                let data = playerData[j] as! NSMutableDictionary
+            for j in 0..<playersButton.count{
                 let playerScore = NSMutableDictionary()
-                let hcp = getHCPValue(playerID: data.value(forKey: "id") as! String, holeNo: i)
-                let playerDataHole = ["holeOut":false,"hcp":hcp == 0 ? NSNull():hcp] as [String : Any]
-                player.setObject(playerDataHole, forKey: (data.value(forKey: "id") as! String) as NSCopying)
-                playerScore.setObject(playerDataHole, forKey: (data.value(forKey: "id") as! String) as NSCopying)
+                let playerData = ["holeOut":false] as [String : Any]
+                player.setObject(playerData, forKey: playersButton[j].id as NSCopying)
+                playerScore.setObject(playerData, forKey: playersButton[j].id as NSCopying)
                 self.scoreData[i].players.append(playerScore)
             }
-            player.setObject(self.scoreData[i].par, forKey: "par" as NSCopying)
+            self.scoreData[i].par = courseData.numberOfHoles[i].par
+            player.setObject(courseData.numberOfHoles[i].par, forKey: "par" as NSCopying)
             holeArray.append(player)
         }
         scoring.setObject(holeArray, forKey: "scoring" as NSCopying)
-        if !(isAccept){
+        if(!isAccept){
             ref.child("matchData/\(matchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
-
     }
     private func getHCPValue(playerID:String,holeNo:Int)->Int{
         var index = 0

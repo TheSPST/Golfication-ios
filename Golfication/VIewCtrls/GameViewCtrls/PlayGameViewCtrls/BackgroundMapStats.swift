@@ -616,6 +616,7 @@ class BackgroundMapStats: NSObject {
         }
         return distanceArray.index(of: distanceArray.min()!) ?? 0
     }
+    
     static func setHoleShotDetails(par:Int,shots:Int)->(String,UIColor){
         var holeFinishStatus = String()
         var color = UIColor()

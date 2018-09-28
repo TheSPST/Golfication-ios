@@ -102,7 +102,7 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
             alert.addAction(UIAlertAction(title: "Submit", style: .default, handler: { [weak alert] (_) in
                 let textField = alert!.textFields!.first!
                 self.handicap[sender.tag] = Double(textField.text as! String) != nil ? Double(textField.text as! String)! : 18.0
-                userData.addEntries(from: ["handicap" : textField.text!])
+                userData.addEntries(from: ["handicap" : "\(self.handicap[sender.tag])"])
                 let cell = self.tableViewMultiplayerTee.cellForRow(at: IndexPath(row: sender.tag, section: 0))  as! MultiplayerTeeSelectionTableViewCell
                 cell.btnHandicap.setTitle("\(self.handicap[sender.tag])", for: .normal)
                 debugPrint(userData)
