@@ -11,7 +11,6 @@ import FirebaseAuth
 import Charts
 import Google
 import DeviceKit
-
 var strokesGainedDict = [NSMutableDictionary]()
 var isUpdateInfo = false
 var isProfileUpdated = false
@@ -257,7 +256,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)
 
         //        Notification.sendNotification(reciever: "UhEPp4X2cAaPNOKdY6OOsoZ348L2", message: "Amit just finished a round at Qutab Golf Course.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
