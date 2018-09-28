@@ -6138,7 +6138,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }else{
             totalShotsInThishole = par + extrashotsDiv
         }
-        let sbPoint = totalShotsInThishole - strokes + 2
+        var sbPoint = totalShotsInThishole - strokes + 2
+        if sbPoint<0 {
+            sbPoint = 0
+        }
         let netScore = strokes - (totalShotsInThishole - par)
         self.lblStblScore.text = "\(sbPoint)"
         playerArrayWithDetails.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)

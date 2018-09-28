@@ -1399,7 +1399,10 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }else{
             totalShotsInThishole = par + extrashotsDiv
         }
-        let sbPoint = totalShotsInThishole - strokes + 2
+        var sbPoint = totalShotsInThishole - strokes + 2
+        if sbPoint<0 {
+            sbPoint = 0
+        }
         let netScore = strokes - (totalShotsInThishole - par)
         holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
         lblStableFordScore.text = "\(sbPoint)"

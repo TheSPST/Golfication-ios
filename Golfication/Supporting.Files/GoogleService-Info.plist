@@ -7,34 +7,34 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>106044870828-dl43oe95dmin4nc8hqj2dmeqvnqn8d03.apps.googleusercontent.com</string>
+	<string>328755607579-1irbc60tr1mkor2k8ccig7bblm7lpc43.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.106044870828-dl43oe95dmin4nc8hqj2dmeqvnqn8d03</string>
+	<string>com.googleusercontent.apps.328755607579-1irbc60tr1mkor2k8ccig7bblm7lpc43</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAPI10BvC_O4nPo1XOonGI-A3Cmy8ZO-I0</string>
+	<string>AIzaSyA3de-8MJ881lGthvBaum9SZm17qI_J6bQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>106044870828</string>
+	<string>328755607579</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.khelfie.Khelfie</string>
 	<key>PROJECT_ID</key>
-	<string>golfication-4f97b</string>
+	<string>golficationtest</string>
 	<key>STORAGE_BUCKET</key>
-	<string>golfication-4f97b.appspot.com</string>
+	<string>golficationtest.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<false/>
 	<key>IS_GCM_ENABLED</key>
 	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:106044870828:ios:0a65ed6e3eb35bb2</string>
+	<string>1:328755607579:ios:0a65ed6e3eb35bb2</string>
 	<key>DATABASE_URL</key>
-	<string>https://golfication-4f97b.firebaseio.com</string>
+	<string>https://golficationtest.firebaseio.com</string>
 </dict>
 </plist>
