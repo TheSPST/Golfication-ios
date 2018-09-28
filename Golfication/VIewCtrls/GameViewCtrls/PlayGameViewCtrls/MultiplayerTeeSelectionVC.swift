@@ -71,6 +71,9 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
         cell.btnDropDownTee.addTarget(self, action: #selector(btnActionSelectTee), for: .touchUpInside)
         cell.lblUserName.text = ((self.totalPlayers[indexPath.row] as! NSMutableDictionary).value(forKey: "name") as! String)
         cell.btnHandicap.setTitle(String(self.handicap[indexPath.row]) == "0.0" ? "-":String(self.handicap[indexPath.row]), for: .normal)
+        if(self.handicap[indexPath.row] != 0.0){
+            cell.btnHandicap.isUserInteractionEnabled = false
+        }
         if let img = (self.totalPlayers[indexPath.row] as! NSMutableDictionary).value(forKey: "image") as? String, img.count > 2{
             cell.btnUserImg.sd_setImage(with: URL(string: img), for: .normal, placeholderImage: UIImage(named: "0_you"), completed: nil)
         }
