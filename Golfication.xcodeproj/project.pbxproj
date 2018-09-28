@@ -1341,12 +1341,13 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/$(Golficaiton)Golfication/Info.plist",
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" ef0bfef28fb0d10e96ada60dc62e2594228cac4a 3cb7e3a29a12db82d0d59d54ccf639a41b1fadeb0762d53aa94a2d66a9e5e31b";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ef0bfef28fb0d10e96ada60dc62e2594228cac4a 3cb7e3a29a12db82d0d59d54ccf639a41b1fadeb0762d53aa94a2d66a9e5e31b\n";
 		};
 		3EC2B2702011C31D00E9AF6A /* Upload Symbols for crash reporting */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1360,7 +1361,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Replace this with the GOOGLE_APP_ID from your GoogleService-Info.plist file\nGOOGLE_APP_ID=1:1:328755607579:ios:47c3350c8b1fab38\n\n# Replace the /Path/To/ServiceAccount.json with the path to the key you just downloaded\n\"${PODS_ROOT}\"/FirebaseCrash/upload-sym-util.bash \"${PROJECT_DIR}/Keys/golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json\"";
+			shellScript = "# Replace this with the GOOGLE_APP_ID from your GoogleService-Info.plist file\nGOOGLE_APP_ID=1:1:328755607579:ios:47c3350c8b1fab38\n\n# Replace the /Path/To/ServiceAccount.json with the path to the key you just downloaded\n#\"${PODS_ROOT}\"/FirebaseCrash/upload-sym-util.bash \"${PROJECT_DIR}/Keys/golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json\"\n";
 		};
 		4AFE56CE58A2B1A7A5427564 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

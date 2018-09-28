@@ -93,10 +93,18 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
             }
         }
-        
-        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
-        viewCtrl.totalPlayers = addPlayersArray
-        self.navigationController?.push(viewController: viewCtrl)
+        if(addPlayersArray.count != 0){
+            if(!teeArr.isEmpty){
+                let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
+                viewCtrl.totalPlayers = addPlayersArray
+                self.navigationController?.push(viewController: viewCtrl)
+            }else{
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "callApi"), object: nil)
+            }
+        }else{
+            self.view.makeToast("Please Select at least one friend to continue..")
+        }
+
 
     }
     @objc func callApi(_ notification: NSNotification){
@@ -129,10 +137,10 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
          }
          }
          if(!isBot){
-         gameCompleted.setUpRFMap(golfId: golfId, onCourse: selectedMode)
+            gameCompleted.setUpRFMap(golfId: golfId, onCourse: selectedMode)
          }
          }else{
-         gameCompleted.setUpRFMap(golfId: golfId, onCourse: selectedMode)
+            gameCompleted.setUpRFMap(golfId: golfId, onCourse: selectedMode)
          }
          }
          else{

@@ -10,8 +10,8 @@ PODS:
   - Charts (3.1.1):
     - Charts/Core (= 3.1.1)
   - Charts/Core (3.1.1)
-  - Crashlytics (3.9.3):
-    - Fabric (~> 1.7.2)
+  - Crashlytics (3.10.1):
+    - Fabric (~> 1.7.5)
   - CTShowcase (2.2.0)
   - DeviceKit (1.6.0)
   - Dropper (2.7.6)
@@ -26,9 +26,6 @@ PODS:
   - Firebase/Core (4.12.0):
     - FirebaseAnalytics (= 4.1.0)
     - FirebaseCore (= 4.0.19)
-  - Firebase/Crash (4.12.0):
-    - Firebase/Core
-    - FirebaseCrash (= 2.0.2)
   - Firebase/Database (4.12.0):
     - Firebase/Core
     - FirebaseDatabase (= 4.1.5)
@@ -49,12 +46,6 @@ PODS:
     - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseCore (4.0.19):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-  - FirebaseCrash (2.0.2):
-    - FirebaseAnalytics (~> 4.0)
-    - FirebaseInstanceID (~> 2.0)
-    - GoogleToolboxForMac/Logger (~> 2.1)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-    - Protobuf (~> 3.1)
   - FirebaseDatabase (4.1.5):
     - FirebaseAnalytics (~> 4.1)
     - FirebaseCore (~> 4.0)
@@ -130,16 +121,15 @@ DEPENDENCIES:
   - ActionSheetPicker-3.0
   - Bolts
   - Charts
-  - Crashlytics (~> 3.9.3)
+  - Crashlytics (~> 3.10)
   - CTShowcase (~> 2.2)
   - DeviceKit (~> 1.3)
   - Dropper
-  - Fabric (~> 1.7.2)
+  - Fabric
   - FBSDKCoreKit
   - FBSDKLoginKit
   - Firebase/Auth
   - Firebase/Core
-  - Firebase/Crash
   - Firebase/Database
   - Firebase/DynamicLinks
   - Firebase/Messaging
@@ -159,7 +149,7 @@ SPEC CHECKSUMS:
   ActionSheetPicker-3.0: d11a4c12c6aaf704b8a3f56d179198c99f3e41e6
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
-  Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
+  Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
   CTShowcase: e7246c7294dc76a133582e8e20fb07f39e9e19c0
   DeviceKit: 3de509f9db7ae93bf676da5e97b945517bc957cd
   Dropper: 52a020beb6fef2e4b1d55447f17099e5776954ef
@@ -170,7 +160,6 @@ SPEC CHECKSUMS:
   FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
   FirebaseAuth: 85a1b118a89838efc6f6ab3f2b1f94747d72a915
   FirebaseCore: ff49ebb37e0f63a570d78c4f1c1c0befe8659d5c
-  FirebaseCrash: a7d980468dc8aa2db9792493c3e02722d601f6ab
   FirebaseDatabase: 5f0bc6134c5c237cf55f9e1249d406770a75eafd
   FirebaseDynamicLinks: 38b68641d24e78d0277a9205d988ce22875d5a25
   FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
@@ -196,6 +185,6 @@ SPEC CHECKSUMS:
   XLPagerTabStrip: d1ab378af0923320ec0b5eab11d7b2f803d31261
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: a5ed47eb194f36aae79805be8e3a8e97422addab
+PODFILE CHECKSUM: e2bc1327620450f1cd5b113fe0b465f3d0861f8d
 
 COCOAPODS: 1.3.1

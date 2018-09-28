@@ -17,7 +17,7 @@ class BottomViewInScore:UIView{
         btn.backgroundColor = UIColor.glfBluegreen
         btn.setTitle("Continue", for: .normal)
         btn.setTitleColor(UIColor.glfWhite, for: .normal)
-//        btn.layer.cornerRadius = 15
+        //        btn.layer.cornerRadius = 15
         backgroundColor = UIColor.glfBlack75
         
         addSubview(btn)
@@ -74,9 +74,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     @IBOutlet weak var lblStableScore: UILabel!
     @IBOutlet weak var imgViewInfo: UIImageView!
     
+    
     var progressView = SDLoader()
     @IBOutlet weak var btnMenu: UIBarButtonItem!
-
+    var isFinalSummary = false
+    var isBasic = false
     var buttonsArrayForStrokes = [UIButton]()
     var buttonsArrayForFairwayHit = [UIButton]()
     var buttonsArrayForGIR = [UIButton]()
@@ -122,17 +124,17 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         //http://jayeshkawli.ghost.io/manually-scrolling-uiscrollview-ios-swift/
         //https://stackoverflow.com/questions/6949142/iphone-how-to-scroll-two-uitableviews-symmetrically
         if (!(scrollView1.contentOffset.x>0 || scrollView1.contentOffset.x<0)) && scrollView1 == self.menueTableView {
-           tblView.isScrollEnabled = true
-
-           self.scrollView = (scrollView1 == self.menueTableView) ? self.tblView : scrollView1
-           self.scrollView.setContentOffset(scrollView1.contentOffset, animated: false)
+            tblView.isScrollEnabled = true
+            
+            self.scrollView = (scrollView1 == self.menueTableView) ? self.tblView : scrollView1
+            self.scrollView.setContentOffset(scrollView1.contentOffset, animated: false)
         }
         else
         {
             tblView.isScrollEnabled = false
         }
     }
-
+    
     @IBAction func backBtnAction(_ sender: Any) {
         //        for controller in self.navigationController!.viewControllers as Array {
         //            if controller.isKind(of: NewGameVC.self) {
@@ -141,7 +143,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         //            }
         //        }
         self.navigationController?.pop()
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateView"), object: nil)
+        if isBasic{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateView"), object: nil)
+        }
         ref.child("matchData/\(matchId)/scoring/\(self.index)/\(self.playerId!)").removeAllObservers()
     }
     
@@ -152,9 +156,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             if self.btnStableScore.currentTitle!.contains("Stable"){
                 self.btnStableScore.setTitle("Net Score", for: .normal)
                 self.lblStableScore.text = "\(classicScoring.netScore!)"
-            }else if self.btnStableScore.currentTitle!.contains("Net"){
-                self.btnStableScore.setTitle("Gross Score", for: .normal)
-                self.lblStableScore.text = "\(classicScoring.strokesCount!)"
             }else{
                 self.btnStableScore.setTitle("Stableford Score", for: .normal)
                 self.lblStableScore.text = "\(classicScoring.stableFordScore!)"
@@ -215,7 +216,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.navigationController?.navigationBar.isHidden = false
         statusStableFord()
     }
-
+    
     @objc func hideStableFord(_ notification:NSNotification){
         let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
         let action = UIAlertAction(title: "Done", style: UIAlertAction.Style.default, handler: nil)
@@ -468,9 +469,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         return hcp
     }
+    
+    @objc func cameraAction() {
+        let viewCtrl = RequestSFPopup(nibName:"RequestSFPopup", bundle:nil)
+        viewCtrl.modalPresentationStyle = .overCurrentContext
+        self.present(viewCtrl, animated: true, completion: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.glfBluegreen
+        //        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.glfBluegreen
         // Do any additional setup after loading the view.
         bView.frame = CGRect(x: 0, y: self.view.frame.height-40, width: self.view.frame.width, height: 40)
         bView.btn.frame = CGRect(x: 0, y: 0, width: bView.frame.size.width, height: bView.frame.size.height)
@@ -478,8 +485,10 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.stablefordView.setCornerView(color: UIColor.glfWhite.cgColor)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
         
-//        bView.isHidden = true
-        self.navigationItem.rightBarButtonItem?.isEnabled = isContinue
+        //        bView.isHidden = true
+        if !isContinue{
+            self.navigationItem.rightBarButtonItem = nil
+        }
         bView.isHidden = !isContinue
         for data in playerData{
             if let player = data as? NSMutableDictionary{
@@ -501,8 +510,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }else{
             
         }
+        
+        let cameraBtn =  UIButton(frame: CGRect(x: self.view.frame.width/2-15, y: self.view.frame.height-40-(30+5), width: 30, height: 30))
+        cameraBtn.setBackgroundImage(UIImage(named:"icon_camera"), for: .normal)
+        cameraBtn.addTarget(self, action: #selector(cameraAction), for: .touchUpInside)
+
         let bottomLbl = UILabel()
-        bottomLbl.frame = CGRect(x: 50, y: self.view.frame.height-40-(30+5), width: self.view.frame.width-100, height: 30)
+        bottomLbl.frame = CGRect(x: 50, y: self.view.frame.height-40-(30+30+5), width: self.view.frame.width-100, height: 30)
         bottomLbl.numberOfLines = 2
         bottomLbl.textAlignment = .center
         bottomLbl.textColor = UIColor.darkGray
@@ -512,16 +526,16 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         self.title = "Your Scorecard"
         self.view.backgroundColor = UIColor(rgb: 0xF8F8F7)
-//        self.navigationController?.navigationBar.backItem?.title = ""
+        //        self.navigationController?.navigationBar.backItem?.title = ""
         self.automaticallyAdjustsScrollViewInsets = false
         
         self.setInitialUI()
         self.scoringView.layer.cornerRadius = 5
-
+        
         let holeDic = NSMutableDictionary()
         holeDic.setObject(scoreData.count, forKey: "Hole" as NSCopying)
         sectionNames.insert(holeDic, at: 0)
-
+        
         let tempDic = NSMutableDictionary()
         tempDic.setObject("parId", forKey: "id" as NSCopying)
         tempDic.setObject("Par", forKey: "name" as NSCopying)
@@ -532,45 +546,48 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             sectionNames.insert(playerData[i], at: i+2)
         }
         debugPrint("sectionNames== ",sectionNames.count)
-
+        
         //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
         if !teeTypeArr.isEmpty{
-            sectionItems = [[],["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"]]
+            sectionItems = [[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"]]
             if mode == 1{
-                sectionItems = [[],["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"],
-                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty","HCP", "Stableford", "Net Score"]]
+                sectionItems = [[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"]]
             }
         }
         else{
-            sectionItems = [[],["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                            ["Drive Accuracy","GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"]]
+            sectionItems = [[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"]]
             if mode == 1{
-                sectionItems = [[],["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"],
-                                ["Driving Distance", "Drive Accuracy", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalty"]]
+                sectionItems = [[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"]]
             }
             
         }
-
-        menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+75+5)), style: .plain)
+        
+        menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+10)), style: .plain)
+        if isContinue{
+            menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+75+30+5)), style: .plain)
+        }
         menueTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MenueCell")
         menueTableView.dataSource = self
         menueTableView.delegate = self
         menueTableView.tag = 0
         menueTableView.backgroundColor = UIColor.clear
-//        menueTableView.separatorStyle = .none
+        //        menueTableView.separatorStyle = .none
         menueTableView.separatorColor = UIColor(rgb: 0xF0F0EE)
         menueTableView.showsVerticalScrollIndicator = false
         self.menueTableView!.tableFooterView = UIView()
@@ -583,8 +600,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
         self.imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
         view.addSubview(scrollView)
-        if teeTypeArr.isEmpty{
+        if isContinue{
+            view.addSubview(cameraBtn)
             view.addSubview(bottomLbl)
+        }
+        if teeTypeArr.isEmpty{
             self.imgViewRefreshScore.isHidden = true
             self.lblStableScore.text = "n/a"
         }else{
@@ -615,13 +635,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         tableViewExpandSection(2, imageView: imgView)
         
         self.playerId = ((self.sectionNames[1] as AnyObject).value(forKey: "id") as! String)
-
+        
         self.scoringSuperView.isHidden = true
         btnDetailScoring.setCorner(color: UIColor.clear.cgColor)
         btnExpendScore.setCorner(color: UIColor.clear.cgColor)
         btnScore.setCornerWithCircleWidthOne(color: UIColor.white.cgColor)
         btnShotRanking.layer.cornerRadius = 10.0
-
+        
         let tap = UITapGestureRecognizer(target: self, action:  #selector (self.superViewTouchAction (_:)))
         self.scoringSuperView.addGestureRecognizer(tap)
         if scoreData.count == 0{
@@ -629,7 +649,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             scrollView.isHidden = true
             bottomLbl.isHidden = true
             bView.isHidden = true
-            self.navigationItem.rightBarButtonItem?.isEnabled = false
+            self.navigationItem.rightBarButtonItem = nil
             
             let emptyLbl = UILabel()
             emptyLbl.frame = CGRect(x: 10, y: self.view.frame.height/2 - 20, width: self.view.frame.width-20, height: 40)
@@ -643,11 +663,18 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     var courseData = CourseData()
     func loadStableFordData(){
         if  self.holeHcpWithTee.isEmpty && !isContinue{
-            let startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
-            let gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+            var matchDataDictionary = NSMutableDictionary()
+            if(isFinalSummary){
+                matchDataDictionary = self.matchDataDict
+            }else{
+                matchDataDictionary = matchDataDic
+
+            }
+            let startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as! String)!
+            let gameTypeIndex = matchDataDictionary.value(forKey: "matchType") as! String == "9 holes" ? 9:18
             self.courseData.startingIndex = startingIndex
             self.courseData.gameTypeIndex = gameTypeIndex
-            let courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
+            let courseId = "course_\(matchDataDictionary.value(forKeyPath: "courseId") as! String)"
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
             self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
             NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
@@ -1338,8 +1365,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let sbPoint = totalShotsInThishole - strokes + 2
         let netScore = strokes - (totalShotsInThishole - par)
         holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
-//        lblStableFordScore.text = "\(sbPoint)"
-//        btnStableScore.setTitle("Stableford Score", for: .normal)
+        //        lblStableFordScore.text = "\(sbPoint)"
+        //        btnStableScore.setTitle("Stableford Score", for: .normal)
         ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)/stableFordPoints").setValue(sbPoint)
         holeWiseShots.setObject(netScore, forKey: "netScore" as NSCopying)
         ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)/netScore").setValue(netScore)
@@ -1398,7 +1425,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-       
+        
         let header = UIView()
         header.backgroundColor = UIColor.white
         
@@ -1443,22 +1470,23 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 headerTapGesture.addTarget(self, action: #selector(self.sectionHeaderWasTouched(_:)))
                 header.addGestureRecognizer(headerTapGesture)
                 
-//                UIView.animate(withDuration: 0.4, animations: {
-//                    theImageView.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
-//                })
-//                if (self.expandedSectionHeaderNumber == section) {
-//                    UIView.animate(withDuration: 0.4, animations: {
-//                        theImageView.transform = CGAffineTransform(rotationAngle: (180.0 * CGFloat(Double.pi)) / 180.0)
-//                    })
-//                }
-               }
+                //                UIView.animate(withDuration: 0.4, animations: {
+                //                    theImageView.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
+                //                })
+                //                if (self.expandedSectionHeaderNumber == section) {
+                //                    UIView.animate(withDuration: 0.4, animations: {
+                //                        theImageView.transform = CGAffineTransform(rotationAngle: (180.0 * CGFloat(Double.pi)) / 180.0)
+                //                    })
+                //                }
+            }
             else if section == 0{
                 header.backgroundColor = UIColor(rgb: 0x2E9F80)
-
+                
                 let holeLbl = UILabel()
                 holeLbl.frame = CGRect(x: usrImageView.frame.origin.x, y: 9, width: 80, height: 15)
                 holeLbl.textColor = UIColor.white
                 holeLbl.text = "Hole"
+                holeLbl.font = UIFont(name: "SFProDisplay-Medium", size: 17.0)
                 header.addSubview(holeLbl)
             }
             else{
@@ -1469,6 +1497,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 label.text = (self.sectionNames[section] as AnyObject).value(forKey: "name") as? String
                 label.textColor = UIColor.glfBluegreen
                 label.sizeToFit()
+                label.font = UIFont(name: "SFProDisplay-Medium", size: 17.0)
                 header.addSubview(label)
             }
         }
@@ -1478,10 +1507,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 
                 let label =  UILabel(frame: CGRect(x: 10+(width + padding)*CGFloat(scoreData.count), y: 12, width: 50, height: 15))
                 label.text = "Total"
+                label.font = UIFont(name: "SFProDisplay-Medium", size: 17.0)
                 label.textAlignment = .center
                 label.textColor = UIColor.white
                 header.addSubview(label)
-
+                
                 for i in 0..<scoreData.count{
                     
                     let label =  UILabel(frame: CGRect(x: 25+(width + padding)*CGFloat(i), y: 9, width: 35, height: 15))
@@ -1493,7 +1523,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
             else if section == 1{
                 header.backgroundColor = UIColor(rgb:0xACE675)
-
+                
                 var totalpar = 0
                 for i in 0..<scoreData.count{
                     //var scoreData = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
@@ -1507,6 +1537,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 }
                 let label =  UILabel(frame: CGRect(x: 25+(width + padding)*CGFloat(scoreData.count), y: 9, width: 35, height: 15))
                 label.text = "\(totalpar)"
+                label.font = UIFont(name: "SFProDisplay-Medium", size: 17.0)
                 label.textAlignment = .center
                 label.textColor = UIColor.black
                 header.addSubview(label)
@@ -1528,11 +1559,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     subView.backgroundColor = UIColor.clear
                     header.addSubview(subView)
                     
-//                    let btn =  UIButton(frame: CGRect(x: 5, y: 5, width: 25, height: 25))
-//                    btn.titleLabel?.textAlignment = .center
-//                    btn.setTitleColor(UIColor.black, for: .normal)
-//                    btn.setTitle("-", for: .normal)
-//                    subView.addSubview(btn)
+                    //                    let btn =  UIButton(frame: CGRect(x: 5, y: 5, width: 25, height: 25))
+                    //                    btn.titleLabel?.textAlignment = .center
+                    //                    btn.setTitleColor(UIColor.black, for: .normal)
+                    //                    btn.setTitle("-", for: .normal)
+                    //                    subView.addSubview(btn)
                     
                     let btn = CellButton()
                     btn.frame = CGRect(x: 5, y: 5, width: 25, height: 25)
@@ -1544,7 +1575,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     btn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
                     subView.addSubview(btn)
                     btn.isUserInteractionEnabled = isContinue
-
+                    
                     for dataDict in self.scoreData[i].players{
                         for (key,value) in dataDict{
                             if(key as? String == playerId){
@@ -1611,7 +1642,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 btn.titleLabel?.textAlignment = .center
                 btn.setTitleColor(UIColor.black, for: .normal)
                 btn.setTitle("-", for: .normal)
-                btn.titleLabel?.font = UIFont(name: "SFProDisplay-Regular", size: 16.0)
+                btn.titleLabel?.font = UIFont(name: "SFProDisplay-Medium", size: 17.0)
                 if totalStrokes > 0{
                     btn.setTitle("\(totalStrokes)", for: .normal)
                 }
@@ -1626,7 +1657,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             return 45
         }
         else{
-        return 32.0
+            return 32.0
         }
     }
     
@@ -1656,7 +1687,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             if tableView.tag == 0 {
                 let section = self.sectionItems[indexPath.section] as! NSArray
                 cell.textLabel?.text = section[indexPath.row] as? String
-                
+                cell.textLabel?.font = UIFont(name: "SFProDisplay-Regular", size: 14.0)
+
                 cell.backgroundColor = UIColor.white
                 cell.textLabel?.textColor = UIColor.black
                 
@@ -1715,9 +1747,10 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 var hcpTotal = 0
                 var stablefordTotal = 0
                 var netScoreTotal = 0
-
+                var chipCountTotal = 0
+                var sandCountTotal = 0
                 for i in 0..<scoreData.count{
-
+                    
                     let btn = CellButton(frame:CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 40, height: 32))
                     btn.setTitle("-", for: .normal)
                     btn.titleLabel?.textAlignment = .center
@@ -1729,212 +1762,84 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     cell.contentView.addSubview(btn)
                     btn.isUserInteractionEnabled = isContinue
                     
-//                    let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 40, height: 32))
-//                    label.text = "-"
-//                    label.textAlignment = .center
-//                    label.font = UIFont(name: "SFProDisplay-Regular", size: 14.0)
-//                    label.textColor = UIColor.black
-//                    label.backgroundColor = UIColor.clear
-//                    cell.contentView.addSubview(label)
+                    //                    let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 40, height: 32))
+                    //                    label.text = "-"
+                    //                    label.textAlignment = .center
+                    //                    label.font = UIFont(name: "SFProDisplay-Regular", size: 14.0)
+                    //                    label.textColor = UIColor.black
+                    //                    label.backgroundColor = UIColor.clear
+                    //                    cell.contentView.addSubview(label)
                     
-//                    let theImageView = UIButton(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 32, height: 32))
+                    //                    let theImageView = UIButton(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 32, height: 32))
                     
                     for dataDict in self.scoreData[i].players{
-
+                        
                         for (key,value) in dataDict{
-
+                            
                             var imgArray = [#imageLiteral(resourceName: "hit"),#imageLiteral(resourceName: "gir_false")]
                             if(key as? String == playerId){
                                 if let dict = value as? NSMutableDictionary{
-                                for (key,value) in dict{
-                                    if mode == 1{
-                                    if indexPath.row == 0{
-                                        if(key as! String == "drivingDistance"){
-                                            var drivingDistance = value as! Double
-                                            var suffix = "m"
-                                            if(distanceFilter != 1){
-                                                drivingDistance = drivingDistance*YARD
-                                                suffix = "yd"
-                                            }
-//                                            label.text = "\(Int(drivingDistance))\(suffix)"
-                                            btn.setTitle("\(Int(drivingDistance))\(suffix)", for: .normal)
-
-                                            drDistance += (Int(drivingDistance))
-                                            drivingCount += 1
-                                        }
-                                    }
-                                    else if indexPath.row == 1{
-                                        if(key as! String == "fairway"){
-                                            let fairway = value as! String
-//                                            label.text = ""
-                                            btn.setTitle("", for: .normal)
-                                            if(fairway == "H"){
-                                                let backBtnImage1 = #imageLiteral(resourceName: "hit").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                btn.setImage(backBtnImage1, for: .normal)
-                                                btn.tintColor = UIColor.glfBluegreen
-
-                                                frwHit += 1
-
-                                            }else if(fairway == "L"){
-                                                let backBtnImage1 = #imageLiteral(resourceName: "fairway_left").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                btn.setImage(backBtnImage1, for: .normal)
-                                                btn.tintColor = UIColor.glfFlatBlue
-
-                                            }else{
-                                                let backBtnImage1 = #imageLiteral(resourceName: "fairway_right").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                btn.setImage(backBtnImage1, for: .normal)
-                                                btn.tintColor = UIColor.glfFlatBlue
-                                            }
-                                            //cell.contentView.addSubview(btn)
-                                        }
-                                    }
-                                    else if indexPath.row == 2{
-                                        if(key as! String == "approachDistance"){
-                                            var approchDist = value as! Double
-                                            var suffix = "m"
-                                            if(distanceFilter != 1){
-                                                approchDist = approchDist*YARD
-                                                suffix = "yd"
-                                            }
-//                                            label.text = "\(Int(approchDist))\(suffix)"
-                                            btn.setTitle("\(Int(approchDist))\(suffix)", for: .normal)
-                                            aprchDistance += (Int(approchDist))
-                                            aprchCount += 1
-                                        }
-                                    }
-                                    else if indexPath.row == 3{
-                                        if(key as! String == "gir"){
-                                            let gir = value as! Bool
-//                                            label.text = ""
-                                            btn.setTitle("", for: .normal)
-                                            if gir{
-                                                let originalImage1 = imgArray[0]
-                                                let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                btn.setImage(backBtnImage1, for: .normal)
-                                                girTotal += 1
-                                            }else{
-                                                let originalImage1 = imgArray[1]
-                                                let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                btn.setImage(backBtnImage1, for: .normal)
-                                            }
-                                            btn.tintColor = UIColor.glfBluegreen
-//                                            cell.contentView.addSubview(btn)
-                                        }
-                                    }
-                                    else if indexPath.row == 4{
-                                        if(key as! String == "chipUpDown"){
-                                            if let chipUpDown = value as? Bool{
-//                                                label.text = ""
-                                                btn.setTitle("", for: .normal)
-                                                if chipUpDown{
-                                                    let originalImage1 = imgArray[0]
-                                                    let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                    btn.setImage(backBtnImage1, for: .normal)
-                                                    chipDown += 1
-                                                }else{
-                                                    let originalImage1 = imgArray[1]
-                                                    let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                    btn.setImage(backBtnImage1, for: .normal)
-                                                }
-                                                btn.tintColor = UIColor.glfBluegreen
-//                                                cell.contentView.addSubview(btn)
-                                            }
-                                        }
-                                    }
-                                    else if indexPath.row == 5{
-                                        if(key as! String == "sandUpDown"){
-                                            if let sandDown = value as? Bool{
-//                                                label.text = ""
-                                                btn.setTitle("", for: .normal)
-                                                if sandDown{
-                                                    let originalImage1 = imgArray[0]
-                                                    let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                    btn.setImage(backBtnImage1, for: .normal)
-                                                    sandTotal += 1
-                                                }else{
-                                                    let originalImage1 = imgArray[1]
-                                                    let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                                    btn.setImage(backBtnImage1, for: .normal)
-                                                }
-                                                btn.tintColor = UIColor.glfBluegreen
-//                                                cell.contentView.addSubview(btn)
-                                            }
-                                        }
-                                    }
-                                    else if indexPath.row == 6{
-                                        if(key as! String == "putting"){
-                                            let approchDist = value as! Int
-//                                            label.text = "\(approchDist)"
-                                            btn.setTitle("\(approchDist)", for: .normal)
-
-                                            puttsTotal += approchDist
-                                        }
-                                    }
-                                    else if indexPath.row == 7{
-                                        if(key as! String == "penaltyCount"){
-                                            let approchDist = value as! Int
-//                                            label.text = "\(approchDist)"
-                                            btn.setTitle("\(approchDist)", for: .normal)
-                                            penaltyTotal += approchDist
-                                        }
-                                    }
-                                    else if indexPath.row == 8{
-                                        let hcp = self.getHCPValue(playerID:playerId!,holeNo: i)
-                                        debugPrint(i)
-                                        btn.setTitle("\(hcp)", for: .normal)
-                                        hcpTotal += hcp
-                                    }
-                                    else if indexPath.row == 9{
-                                        if(key as! String == "stableFordPoints"){
-                                            let stableFord = value as! Int
-//                                            label.text = "\(stableFord)"
-                                            btn.setTitle("\(stableFord)", for: .normal)
-
-                                            stablefordTotal += stableFord
-                                        }
-                                        }
-                                    else if indexPath.row == 10{
-                                        if(key as! String == "netScore"){
-                                            let netScore = value as! Int
-//                                            label.text = "\(netScore)"
-                                            btn.setTitle("\(netScore)", for: .normal)
-
-                                            netScoreTotal += netScore
-                                        }
-                                        }
-                                    }
-                                    else{
+                                    for (key,value) in dict{
+                                        if mode == 1{
                                             if indexPath.row == 0{
+                                                if(key as! String == "drivingDistance"){
+                                                    var drivingDistance = value as! Double
+                                                    var suffix = "m"
+                                                    if(distanceFilter != 1){
+                                                        drivingDistance = drivingDistance*YARD
+                                                        suffix = "yd"
+                                                    }
+                                                    //                                            label.text = "\(Int(drivingDistance))\(suffix)"
+                                                    btn.setTitle("\(Int(drivingDistance))\(suffix)", for: .normal)
+                                                    
+                                                    drDistance += (Int(drivingDistance))
+                                                    drivingCount += 1
+                                                }
+                                            }
+                                            else if indexPath.row == 1{
                                                 if(key as! String == "fairway"){
                                                     let fairway = value as! String
-//                                                    label.text = ""
+                                                    //                                            label.text = ""
                                                     btn.setTitle("", for: .normal)
-
                                                     if(fairway == "H"){
                                                         let backBtnImage1 = #imageLiteral(resourceName: "hit").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                         btn.setImage(backBtnImage1, for: .normal)
                                                         btn.tintColor = UIColor.glfBluegreen
-
+                                                        
                                                         frwHit += 1
                                                         
                                                     }else if(fairway == "L"){
                                                         let backBtnImage1 = #imageLiteral(resourceName: "fairway_left").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                         btn.setImage(backBtnImage1, for: .normal)
                                                         btn.tintColor = UIColor.glfFlatBlue
+                                                        
                                                     }else{
                                                         let backBtnImage1 = #imageLiteral(resourceName: "fairway_right").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                                                         btn.setImage(backBtnImage1, for: .normal)
                                                         btn.tintColor = UIColor.glfFlatBlue
                                                     }
-//                                                    cell.contentView.addSubview(btn)
+                                                    //cell.contentView.addSubview(btn)
                                                 }
                                             }
-                                            else if indexPath.row == 1{
+                                            else if indexPath.row == 2{
+                                                if(key as! String == "approachDistance"){
+                                                    var approchDist = value as! Double
+                                                    var suffix = "m"
+                                                    if(distanceFilter != 1){
+                                                        approchDist = approchDist*YARD
+                                                        suffix = "yd"
+                                                    }
+                                                    //                                            label.text = "\(Int(approchDist))\(suffix)"
+                                                    btn.setTitle("\(Int(approchDist))\(suffix)", for: .normal)
+                                                    aprchDistance += (Int(approchDist))
+                                                    aprchCount += 1
+                                                }
+                                            }
+                                            else if indexPath.row == 3{
                                                 if(key as! String == "gir"){
                                                     let gir = value as! Bool
-//                                                    label.text = ""
+                                                    //                                            label.text = ""
                                                     btn.setTitle("", for: .normal)
-
                                                     if gir{
                                                         let originalImage1 = imgArray[0]
                                                         let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
@@ -1946,16 +1851,14 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                         btn.setImage(backBtnImage1, for: .normal)
                                                     }
                                                     btn.tintColor = UIColor.glfBluegreen
-//                                                    cell.contentView.addSubview(btn)
+                                                    //                                            cell.contentView.addSubview(btn)
                                                 }
-
                                             }
-                                            else if indexPath.row == 2{
+                                            else if indexPath.row == 4{
                                                 if(key as! String == "chipUpDown"){
                                                     if let chipUpDown = value as? Bool{
-//                                                        label.text = ""
+                                                        //                                                label.text = ""
                                                         btn.setTitle("", for: .normal)
-
                                                         if chipUpDown{
                                                             let originalImage1 = imgArray[0]
                                                             let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
@@ -1967,16 +1870,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                             btn.setImage(backBtnImage1, for: .normal)
                                                         }
                                                         btn.tintColor = UIColor.glfBluegreen
-//                                                        cell.contentView.addSubview(btn)
+                                                        //                                                cell.contentView.addSubview(btn)
                                                     }
                                                 }
                                             }
-                                            else if indexPath.row == 3{
+                                            else if indexPath.row == 5{
                                                 if(key as! String == "sandUpDown"){
                                                     if let sandDown = value as? Bool{
-//                                                        label.text = ""
+                                                        //                                                label.text = ""
                                                         btn.setTitle("", for: .normal)
-
                                                         if sandDown{
                                                             let originalImage1 = imgArray[0]
                                                             let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
@@ -1988,14 +1890,118 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                             btn.setImage(backBtnImage1, for: .normal)
                                                         }
                                                         btn.tintColor = UIColor.glfBluegreen
-//                                                        cell.contentView.addSubview(btn)
+                                                        //                                                cell.contentView.addSubview(btn)
+                                                    }
+                                                }
+                                            }
+                                            else if indexPath.row == 6{
+                                                if(key as! String == "putting"){
+                                                    let approchDist = value as! Int
+                                                    //                                            label.text = "\(approchDist)"
+                                                    btn.setTitle("\(approchDist)", for: .normal)
+                                                    
+                                                    puttsTotal += approchDist
+                                                }
+                                            }
+                                            else if indexPath.row == 7{
+                                                if(key as! String == "penaltyCount"){
+                                                    let approchDist = value as! Int
+                                                    //                                            label.text = "\(approchDist)"
+                                                    btn.setTitle("\(approchDist)", for: .normal)
+                                                    penaltyTotal += approchDist
+                                                }
+                                            }
+                                            else if indexPath.row == 8{
+                                                let hcp = self.getHCPValue(playerID:playerId!,holeNo: i)
+                                                debugPrint(i)
+                                                btn.setTitle("\(hcp)", for: .normal)
+                                                hcpTotal += hcp
+                                            }
+                                            else if indexPath.row == 9{
+                                                if(key as! String == "stableFordPoints"){
+                                                    let stableFord = value as! Int
+                                                    //                                            label.text = "\(stableFord)"
+                                                    btn.setTitle("\(stableFord)", for: .normal)
+                                                    
+                                                    stablefordTotal += stableFord
+                                                }
+                                            }
+                                            else if indexPath.row == 10{
+                                                if(key as! String == "netScore"){
+                                                    let netScore = value as! Int
+                                                    //                                            label.text = "\(netScore)"
+                                                    btn.setTitle("\(netScore)", for: .normal)
+                                                    
+                                                    netScoreTotal += netScore
+                                                }
+                                            }
+                                        }
+                                        else{
+                                            if indexPath.row == 0{
+                                                if(key as! String == "fairway"){
+                                                    let fairway = value as! String
+                                                    //                                                    label.text = ""
+                                                    btn.setTitle("", for: .normal)
+                                                    
+                                                    if(fairway == "H"){
+                                                        let backBtnImage1 = #imageLiteral(resourceName: "hit").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                                                        btn.setImage(backBtnImage1, for: .normal)
+                                                        btn.tintColor = UIColor.glfBluegreen
+                                                        
+                                                        frwHit += 1
+                                                        
+                                                    }else if(fairway == "L"){
+                                                        let backBtnImage1 = #imageLiteral(resourceName: "fairway_left").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                                                        btn.setImage(backBtnImage1, for: .normal)
+                                                        btn.tintColor = UIColor.glfFlatBlue
+                                                    }else{
+                                                        let backBtnImage1 = #imageLiteral(resourceName: "fairway_right").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                                                        btn.setImage(backBtnImage1, for: .normal)
+                                                        btn.tintColor = UIColor.glfFlatBlue
+                                                    }
+                                                    //                                                    cell.contentView.addSubview(btn)
+                                                }
+                                            }
+                                            else if indexPath.row == 1{
+                                                if(key as! String == "gir"){
+                                                    let gir = value as! Bool
+                                                    //                                                    label.text = ""
+                                                    btn.setTitle("", for: .normal)
+                                                    
+                                                    if gir{
+                                                        let originalImage1 = imgArray[0]
+                                                        let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                                                        btn.setImage(backBtnImage1, for: .normal)
+                                                        girTotal += 1
+                                                    }else{
+                                                        let originalImage1 = imgArray[1]
+                                                        let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                                                        btn.setImage(backBtnImage1, for: .normal)
+                                                    }
+                                                    btn.tintColor = UIColor.glfBluegreen
+                                                }
+                                                
+                                            }
+                                            else if indexPath.row == 2{
+                                                if(key as! String == "chipCount"){
+                                                    if let chipCount = value as? Int{
+                                                        btn.setTitle("\(chipCount)", for: .normal)
+                                                        chipCountTotal += chipCount
+
+                                                    }
+                                                }
+                                            }
+                                            else if indexPath.row == 3{
+                                                if(key as! String == "sandCount"){
+                                                    if let sandCount = value as? Int{
+                                                        btn.setTitle("\(sandCount)", for: .normal)
+                                                        sandCountTotal += sandCount
                                                     }
                                                 }
                                             }
                                             else if indexPath.row == 4{
                                                 if(key as! String == "putting"){
                                                     let approchDist = value as! Int
-//                                                    label.text = "\(approchDist)"
                                                     btn.setTitle("\(approchDist)", for: .normal)
                                                     puttsTotal += approchDist
                                                 }
@@ -2003,7 +2009,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             else if indexPath.row == 5{
                                                 if(key as! String == "penaltyCount"){
                                                     let approchDist = value as! Int
-//                                                    label.text = "\(approchDist)"
                                                     btn.setTitle("\(approchDist)", for: .normal)
                                                     penaltyTotal += approchDist
                                                 }
@@ -2017,7 +2022,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             else if indexPath.row == 7{
                                                 if(key as! String == "stableFordPoints"){
                                                     let stableFord = value as! Int
-//                                                    label.text = "\(stableFord)"
+                                                    //                                                    label.text = "\(stableFord)"
                                                     btn.setTitle("\(stableFord)", for: .normal)
                                                     stablefordTotal += stableFord
                                                 }
@@ -2025,12 +2030,12 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             else if indexPath.row == 8{
                                                 if(key as! String == "netScore"){
                                                     let netScore = value as! Int
-//                                                    label.text = "\(netScore)"
+                                                    //                                                    label.text = "\(netScore)"
                                                     btn.setTitle("\(netScore)", for: .normal)
                                                     netScoreTotal += netScore
                                                 }
+                                            }
                                         }
-                                      }
                                     }
                                 }
                             }
@@ -2041,121 +2046,121 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 label.text = "-"
                 
                 if mode == 1{
-                if indexPath.row == 0{
-                    if drDistance>0{
-                        var suffix = "m"
-                        if(distanceFilter != 1){
-                            suffix = "yd"
+                    if indexPath.row == 0{
+                        if drDistance>0{
+                            var suffix = "m"
+                            if(distanceFilter != 1){
+                                suffix = "yd"
+                            }
+                            label.text = "\(Int(drDistance/drivingCount))\(suffix)"
                         }
-                        label.text = "\(Int(drDistance/drivingCount))\(suffix)"
                     }
-                }
-                else if indexPath.row == 1{
-                    if frwHit>0{
-                        label.text = "\(frwHit)"
-                    }
-                }
-                else if indexPath.row == 2{
-                    if aprchDistance>0{
-                        var suffix = "m"
-                        if(distanceFilter != 1){
-                            suffix = "yd"
+                    else if indexPath.row == 1{
+                        if frwHit>0{
+                            label.text = "\(frwHit)"
                         }
-                        label.text = "\(Int(aprchDistance/aprchCount))\(suffix)"
                     }
-                }
-                else if indexPath.row == 3{
-                    if girTotal>0{
-                        label.text = "\(girTotal)"
+                    else if indexPath.row == 2{
+                        if aprchDistance>0{
+                            var suffix = "m"
+                            if(distanceFilter != 1){
+                                suffix = "yd"
+                            }
+                            label.text = "\(Int(aprchDistance/aprchCount))\(suffix)"
+                        }
                     }
-                }
-                else if indexPath.row == 4{
-                    if chipDown>0{
-                        label.text = "\(chipDown)"
+                    else if indexPath.row == 3{
+                        if girTotal>0{
+                            label.text = "\(girTotal)"
+                        }
                     }
-                }
-                else if indexPath.row == 5{
-                    if sandTotal>0{
-                        label.text = "\(sandTotal)"
+                    else if indexPath.row == 4{
+                        if chipDown>0{
+                            label.text = "\(chipDown)"
+                        }
                     }
-                }
-                else if indexPath.row == 6{
-                    if puttsTotal>0{
-                    label.text = "\(puttsTotal)"
+                    else if indexPath.row == 5{
+                        if sandTotal>0{
+                            label.text = "\(sandTotal)"
+                        }
                     }
-                }
-                else if indexPath.row == 7{
-                    if penaltyTotal>0{
-                    label.text = "\(penaltyTotal)"
+                    else if indexPath.row == 6{
+                        if puttsTotal>0{
+                            label.text = "\(puttsTotal)"
+                        }
                     }
-                }
-                else if indexPath.row == 8{
-                    if hcpTotal>0{
-                        label.text = ""
+                    else if indexPath.row == 7{
+                        if penaltyTotal>0{
+                            label.text = "\(penaltyTotal)"
+                        }
                     }
-                }
-                else if indexPath.row == 9{
-                    if stablefordTotal>0{
-                        label.text = "\(stablefordTotal)"
+                    else if indexPath.row == 8{
+                        if hcpTotal>0{
+                            label.text = ""
+                        }
                     }
+                    else if indexPath.row == 9{
+                        if stablefordTotal>0{
+                            label.text = "\(stablefordTotal)"
+                        }
                     }
-                else if indexPath.row == 10{
-                    if netScoreTotal>0{
-                        label.text = "\(netScoreTotal)"
-                    }
+                    else if indexPath.row == 10{
+                        if netScoreTotal>0{
+                            label.text = "\(netScoreTotal)"
+                        }
                     }
                 }
                 else{
-                        if indexPath.row == 0{
-                            if frwHit>0{
-                                label.text = "\(frwHit)"
-                            }
+                    if indexPath.row == 0{
+                        if frwHit>0{
+                            label.text = "\(frwHit)"
                         }
-                        else if indexPath.row == 1{
-                            if girTotal>0{
-                                label.text = "\(girTotal)"
-                            }
-                        }
-                        else if indexPath.row == 2{
-                            if chipDown>0{
-                                label.text = "\(chipDown)"
-                            }
-                        }
-                        else if indexPath.row == 3{
-                            if sandTotal>0{
-                                label.text = "\(sandTotal)"
-                            }
-                        }
-                        else if indexPath.row == 4{
-                            if puttsTotal>0{
-                            label.text = "\(puttsTotal)"
-                            }
-                        }
-                        else if indexPath.row == 5{
-                            if penaltyTotal>0{
-                            label.text = "\(penaltyTotal)"
-                            }
-                        }
-                        else if indexPath.row == 6{
-                            if hcpTotal>0{
-                                label.text = ""
-                            }
-                        }
-
-                        else if indexPath.row == 7{
-                            if stablefordTotal>0{
-                                label.text = "\(stablefordTotal)"
-                            }
                     }
-                        else if indexPath.row == 8{
-                            if netScoreTotal>0{
-                                label.text = "\(netScoreTotal)"
-                            }
+                    else if indexPath.row == 1{
+                        if girTotal>0{
+                            label.text = "\(girTotal)"
+                        }
+                    }
+                    else if indexPath.row == 2{
+                        if chipCountTotal>0{
+                            label.text = "\(chipCountTotal)"
+                        }
+                    }
+                    else if indexPath.row == 3{
+                        if sandCountTotal>0{
+                            label.text = "\(sandCountTotal)"
+                        }
+                    }
+                    else if indexPath.row == 4{
+                        if puttsTotal>0{
+                            label.text = "\(puttsTotal)"
+                        }
+                    }
+                    else if indexPath.row == 5{
+                        if penaltyTotal>0{
+                            label.text = "\(penaltyTotal)"
+                        }
+                    }
+                    else if indexPath.row == 6{
+                        if hcpTotal>0{
+                            label.text = ""
+                        }
+                    }
+                        
+                    else if indexPath.row == 7{
+                        if stablefordTotal>0{
+                            label.text = "\(stablefordTotal)"
+                        }
+                    }
+                    else if indexPath.row == 8{
+                        if netScoreTotal>0{
+                            label.text = "\(netScoreTotal)"
+                        }
                     }
                 }
                 label.textAlignment = .center
                 label.textColor = UIColor.black
-                label.font = UIFont(name: "SFProDisplay-Regular", size: 14.0)
+                label.font = UIFont(name: "SFProDisplay-Medium", size: 15.0)
                 label.backgroundColor = UIColor.clear
                 cell.contentView.addSubview(label)
             }
@@ -2176,7 +2181,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         if !(self.scoringView.isHidden){
             self.scoringView.isHidden = true
         }
-
+        
         let section    = headerView?.tag
         let eImageView = headerView?.viewWithTag(kHeaderSectionTag + section!) as? UIImageView
         
@@ -2189,7 +2194,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 tableViewCollapeSection(section!, imageView: eImageView!)
             }
             else {
-//                let cImageView = self.view.viewWithTag(kHeaderSectionTag + self.expandedSectionHeaderNumber) as? UIImageView
+                //                let cImageView = self.view.viewWithTag(kHeaderSectionTag + self.expandedSectionHeaderNumber) as? UIImageView
                 tableViewCollapeSection(self.expandedSectionHeaderNumber, imageView: eImageView!)
                 tableViewExpandSection(section!, imageView: eImageView!)
             }
@@ -2203,9 +2208,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         if (sectionData.count == 0) {
             return
         } else {
-//            UIView.animate(withDuration: 0.4, animations: {
-//                imageView.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
-//            })
+            //            UIView.animate(withDuration: 0.4, animations: {
+            //                imageView.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
+            //            })
             var indexesPath = [IndexPath]()
             for i in 0 ..< sectionData.count {
                 let index = IndexPath(row: i, section: section)
@@ -2228,9 +2233,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             self.expandedSectionHeaderNumber = -1
             return
         } else {
-//            UIView.animate(withDuration: 0.4, animations: {
-//                imageView.transform = CGAffineTransform(rotationAngle: (180.0 * CGFloat(Double.pi)) / 180.0)
-//            })
+            //            UIView.animate(withDuration: 0.4, animations: {
+            //                imageView.transform = CGAffineTransform(rotationAngle: (180.0 * CGFloat(Double.pi)) / 180.0)
+            //            })
             var indexesPath = [IndexPath]()
             for i in 0 ..< sectionData.count {
                 let index = IndexPath(row: i, section: section)

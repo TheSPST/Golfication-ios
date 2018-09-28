@@ -504,6 +504,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         viewCtrl.playerData = players
         viewCtrl.isContinue = true
         viewCtrl.holeHcpWithTee = self.holeHcpWithTee
+        viewCtrl.isBasic = true
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
@@ -655,12 +656,18 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         swipeNext.addTarget(self, action: #selector(self.swipedViewNext))
         scorePopView.addGestureRecognizer(swipeNext)
         containerView.addGestureRecognizer(swipeNext)
+        var matchDataDictionary = NSMutableDictionary()
+        if(isAccept){
+            matchDataDictionary = self.matchDataDict
+        }else{
+            matchDataDictionary = matchDataDic
+        }
         
-        self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
-        self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+        self.startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as! String)!
+        self.gameTypeIndex = matchDataDictionary.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         self.courseData.startingIndex = self.startingIndex
         self.courseData.gameTypeIndex = self.gameTypeIndex
-        let courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
+        let courseId = "course_\(matchDataDictionary.value(forKeyPath: "courseId") as! String)"
         self.progressView.show(atView: self.view, navItem: navigationItem)
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
@@ -1123,9 +1130,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             if self.btnStableScore.currentTitle!.contains("Stable"){
                 self.btnStableScore.setTitle("Net Score", for: .normal)
                 self.lblStableFordScore.text = "\(classicScoring.netScore!)"
-            }else if self.btnStableScore.currentTitle!.contains("Net"){
-                self.btnStableScore.setTitle("Gross Score", for: .normal)
-                self.lblStableFordScore.text = "\(classicScoring.strokesCount!)"
             }else{
                 self.btnStableScore.setTitle("Stableford Score", for: .normal)
                 self.lblStableFordScore.text = "\(classicScoring.stableFordScore!)"

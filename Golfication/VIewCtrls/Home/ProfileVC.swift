@@ -1076,7 +1076,7 @@ class ProfileVC: UIViewController {
     
     // MARK: setupInitialUI
     func setupInitialUI(){
-        self.lblTryPremium.text = "Update your profile and get a 30 days free trial"
+        self.lblTryPremium.text = "Get your 30 days membership absolutely FREE."
         self.btnUserImg.setCornerWithCircle(color: UIColor.glfBluegreen.cgColor)
         self.btnUserImg.sd_setBackgroundImage(with: Auth.auth().currentUser?.photoURL ?? URL(string:""), for: .normal, completed: nil)
         if Auth.auth().currentUser?.photoURL == nil{

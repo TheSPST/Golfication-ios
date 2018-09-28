@@ -69,6 +69,12 @@
                                                 <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2G8-FL-zDS">
+                                                <rect key="frame" x="104" y="0.0" width="0.0" height="50"/>
+                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="16"/>
+                                                <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Lq5-mC-Se9">
@@ -1304,6 +1310,7 @@
                         <outlet property="lblDistance" destination="8Qi-fw-Rb5" id="xK5-1P-PxB"/>
                         <outlet property="lblEditShotNumber" destination="mAt-3n-ZDo" id="auy-j3-zy5"/>
                         <outlet property="lblFrontDistance" destination="jPs-z2-QLh" id="hsB-GT-Ip1"/>
+                        <outlet property="lblHCPHeader" destination="2G8-FL-zDS" id="fJ9-mh-48a"/>
                         <outlet property="lblHoleNumber" destination="8q7-M6-z0W" id="e5f-H7-x7e"/>
                         <outlet property="lblHoleNumber2" destination="mUr-vS-hgT" id="lti-4i-Qf9"/>
                         <outlet property="lblParNumber" destination="Zti-QF-jGz" id="Q25-oW-3eJ"/>

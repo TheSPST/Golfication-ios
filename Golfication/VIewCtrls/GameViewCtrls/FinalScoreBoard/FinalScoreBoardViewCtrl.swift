@@ -1645,6 +1645,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = finalScoreData
         viewCtrl.playerData = finalPlayerMArray
+        viewCtrl.matchDataDict = self.matchDataDict
+        viewCtrl.isFinalSummary = true
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     @objc func afterResponseEditRound(_ notification:NSNotification){

@@ -214,9 +214,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.actvtIndView.isHidden = false
             self.actvtIndView.startAnimating()
             self.view.isUserInteractionEnabled = false
-            
             let matchDict = (snapshot.value as? NSDictionary)!
-            
             var scoreArray = NSArray()
             var keyData = String()
             var playersKey = [String]()

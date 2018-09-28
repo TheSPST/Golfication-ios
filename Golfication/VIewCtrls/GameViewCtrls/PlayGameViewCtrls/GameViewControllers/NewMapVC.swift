@@ -220,6 +220,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var imgViewStableFordInfo: UIImageView!
     @IBOutlet weak var imgViewRefreshScore: UIImageView!
     @IBOutlet weak var stablefordSubView: UIView!
+    @IBOutlet weak var lblHCPHeader: UILabel!
     
     
     var isBackground : Bool{
@@ -1070,7 +1071,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }else{
             var netScore : Int!
             var sbScore : Int!
-            var grossScore:Int!
+            
             for data in self.scoring[self.holeIndex].players{
                 if let dataDic = data.value(forKey: self.selectedUserId) as? NSMutableDictionary{
                     if let netScoring = dataDic.value(forKey: "netScore") as? Int{
@@ -1079,18 +1080,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     if let netScoring = dataDic.value(forKey: "stableFordPoints") as? Int{
                         sbScore = netScoring
                     }
-                    if let netScoring = dataDic.value(forKey: "shots") as? NSArray{
-                        grossScore = netScoring.count
-                    }
                 }
             }
             if self.btnStableScore.currentTitle!.contains("Stable"){
                 self.btnStableScore.setTitle("Net Score", for: .normal)
                 self.lblStblScore.text = "\(netScore!)"
             }else if self.btnStableScore.currentTitle!.contains("Net"){
-                self.btnStableScore.setTitle("Gross Score", for: .normal)
-                self.lblStblScore.text = "\(grossScore!)"
-            }else{
                 self.btnStableScore.setTitle("Stableford Score", for: .normal)
                 self.lblStblScore.text = "\(sbScore!)"
             }
@@ -3981,7 +3976,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if let hcp = v.value(forKeyPath: "handicap") as? String{
                     handicapOfP = Double(hcp)!
                 }
-                if(teeOfP != "") && (handicapOfP != 0.0){
+                if(teeOfP != ""){
                     self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
                 }
 
@@ -3990,6 +3985,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(!self.teeTypeArr.isEmpty){
             self.topHoleParView.isHidden = true
             self.topHoleParHCPView.isHidden = false
+            self.lblHCPHeader.isHidden = false
         }
         if(!isContinue) && (!isAcceptInvite){
             if(self.matchDataDict.object(forKey: "player") != nil){
@@ -4358,6 +4354,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
         self.lblTopPar.text = "PAR  \(self.scoring[indexToUpdate].par)"
         self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: indexToUpdate))"
+        self.lblHCPHeader.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: indexToUpdate))"
         self.btnHole.setTitle("Hole \(self.scoring[indexToUpdate].hole)", for: .normal)
         self.shotViseCurve.removeAll()
         self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].tee)

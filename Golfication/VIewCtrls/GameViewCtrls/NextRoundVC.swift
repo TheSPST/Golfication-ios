@@ -97,7 +97,7 @@ class NextRoundVC: UIViewController {
                     let distance : CLLocationDistance = location1.distance(from: location2)
                     debugPrint("distance = \(distance) m")
                     
-                    if(distance <= 40000.0){
+                    if(distance <= 15000.0){
                         popUpContainerView.isHidden = false
                     }
                     else{

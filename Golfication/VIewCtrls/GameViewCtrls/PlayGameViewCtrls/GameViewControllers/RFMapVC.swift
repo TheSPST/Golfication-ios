@@ -456,9 +456,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             if self.btnStablefordScore.currentTitle!.contains("Stable"){
                 self.btnStablefordScore.setTitle("Net Score", for: .normal)
                 self.lblStblScore.text = "\(classicScoring.netScore!)"
-            }else if self.btnStablefordScore.currentTitle!.contains("Net"){
-                self.btnStablefordScore.setTitle("Gross Score", for: .normal)
-                self.lblStblScore.text = "\(classicScoring.strokesCount!)"
             }else{
                 self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
                 self.lblStblScore.text = "\(classicScoring.stableFordScore!)"
@@ -1058,11 +1055,17 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 self.registerBackgroundTask()
             }
         }
-        self.startingIndex = Int(matchDataDic.value(forKeyPath: "startingHole") as! String)!
-        self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+        var matchDataDictionary = NSMutableDictionary()
+        if(self.isAcceptInvite){
+            matchDataDictionary = self.matchDataDic
+        }else{
+            matchDataDictionary = matchDataDic
+        }
+        self.startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as! String)!
+        self.gameTypeIndex = matchDataDictionary.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         self.courseData.startingIndex = self.startingIndex
         self.courseData.gameTypeIndex = self.gameTypeIndex
-        courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
+        courseId = "course_\(matchDataDictionary.value(forKeyPath: "courseId") as! String)"
         progressView.show()
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)

@@ -1322,6 +1322,10 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                     matchDataDiction.setObject(value, forKey: "courseId" as NSCopying)
                 }else if (keyData == "courseName"){
                     matchDataDiction.setObject(value, forKey: "courseName" as NSCopying)
+                }else if(keyData == "startingHole"){
+                    matchDataDiction.setObject(value, forKey: "startingHole" as NSCopying)
+                }else if (keyData == "matchType"){
+                    matchDataDiction.setObject(value, forKey: "matchType" as NSCopying)
                 }
             }
             for i in 0..<scoreArray.count {
