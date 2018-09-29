@@ -60,7 +60,6 @@
 		3E7861882111C45200CDD63F /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7861872111C45200CDD63F /* Toast.swift */; };
 		3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E832329201A1ABC0015A5D3 /* Together.storyboard */; };
 		3E89BC9920F62C4B00D47590 /* RFMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E89BC9820F62C4B00D47590 /* RFMapVC.swift */; };
-		3E9AC6BA215E6E52008820B5 /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E9AC6B9215E6E51008820B5 /* GoogleService-Info-demo.plist */; };
 		3EA0E268212AEC19009D7405 /* SwingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA0E267212AEC19009D7405 /* SwingTableViewCell.swift */; };
 		3EA43D032015D80E0077B14A /* ExploreDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43CFE2015D80E0077B14A /* ExploreDetailPageVC.swift */; };
 		3EA43D042015D80E0077B14A /* ExploreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43CFF2015D80E0077B14A /* ExploreVC.swift */; };
@@ -72,6 +71,7 @@
 		3EAE867D2125573F0081857B /* ScanningVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE86792125573E0081857B /* ScanningVC.swift */; };
 		3EAE867E2125573F0081857B /* PracticePageContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */; };
 		3EAE867F2125573F0081857B /* Device.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EAE867B2125573E0081857B /* Device.storyboard */; };
+		3EB5D2EF215E7479007C55E3 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EB5D2EE215E7478007C55E3 /* GoogleService-Info-live.plist */; };
 		3EB6D3B72137CA72000DA1BE /* FBSomeEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */; };
 		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
@@ -303,7 +303,6 @@
 		3E7861872111C45200CDD63F /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		3E832329201A1ABC0015A5D3 /* Together.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Together.storyboard; sourceTree = "<group>"; };
 		3E89BC9820F62C4B00D47590 /* RFMapVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RFMapVC.swift; sourceTree = "<group>"; };
-		3E9AC6B9215E6E51008820B5 /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		3EA0E267212AEC19009D7405 /* SwingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwingTableViewCell.swift; sourceTree = "<group>"; };
 		3EA43CFE2015D80E0077B14A /* ExploreDetailPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreDetailPageVC.swift; sourceTree = "<group>"; };
 		3EA43CFF2015D80E0077B14A /* ExploreVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreVC.swift; sourceTree = "<group>"; };
@@ -315,6 +314,7 @@
 		3EAE86792125573E0081857B /* ScanningVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanningVC.swift; sourceTree = "<group>"; };
 		3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticePageContainerVC.swift; sourceTree = "<group>"; };
 		3EAE867B2125573E0081857B /* Device.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Device.storyboard; sourceTree = "<group>"; };
+		3EB5D2EE215E7478007C55E3 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSomeEvents.swift; sourceTree = "<group>"; };
 		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
@@ -1126,7 +1126,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3E9AC6B9215E6E51008820B5 /* GoogleService-Info-demo.plist */,
+				3EB5D2EE215E7478007C55E3 /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1204,7 +1204,7 @@
 				TargetAttributes = {
 					0D5D4A361F94D382004621C7 = {
 						CreatedOnToolsVersion = 9.0;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1261,7 +1261,6 @@
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
-				3E9AC6BA215E6E52008820B5 /* GoogleService-Info-demo.plist in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
 				4B8C8D3C1FF674D0001F5D01 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
@@ -1289,6 +1288,7 @@
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
 				4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */,
+				3EB5D2EF215E7479007C55E3 /* GoogleService-Info-live.plist in Resources */,
 				3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */,
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
@@ -1746,9 +1746,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -1758,7 +1758,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1771,9 +1771,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -1783,7 +1783,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;

@@ -3943,7 +3943,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             slopeIndex += 1
         }
         let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
-        return (Double(data / 113))
+        return (Double(data / 113)).rounded()
     }
     @objc func loadMap(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)

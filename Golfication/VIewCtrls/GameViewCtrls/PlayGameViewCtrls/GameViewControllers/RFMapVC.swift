@@ -1790,7 +1790,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             slopeIndex += 1
         }
         let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
-        return (Double(data / 113))
+        return (Double(data / 113)).rounded()
     }
     func uploadStableFordPints(playerId:String,strokes:Int){
         var index = 0
@@ -2304,45 +2304,48 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     
     func setHoleShotDetails(par:Int,shots:Int){
         var holeFinishStatus = String()
-//        var color = UIColor()
-        switch shots-par{
-        case -1:
-            holeFinishStatus = "  Birdie  "
-//            color = UIColor.glfFlatBlue
-            break
-        case -2:
-            holeFinishStatus = "  Eagle  "
-//            color = UIColor.glfFlatBlue
-            break
-        case -3:
-            holeFinishStatus = "  Albatross  "
-//            color = UIColor.glfFlatBlue
-            break
-        case 0:
+        if (shots > par) {
+            if (shots - par > 1) {
+                holeFinishStatus = " \(shots-par) Bogey"
+            } else {
+                holeFinishStatus = " Bogey"
+            }
+        } else if (shots < par) {
+            if (par == 3) {
+                if (par - shots == 1) {
+                    holeFinishStatus = "  Birdie  "
+                } else if (par - shots == 2) {
+                    holeFinishStatus = " Hole In One "
+                }
+            } else if (par == 4) {
+                if (par - shots == 1) {
+                    holeFinishStatus = "  Birdie  "
+                } else if (par - shots == 2) {
+                    holeFinishStatus = "  Eagle  "
+                } else if (par - shots == 3) {
+                    holeFinishStatus = " Hole In One "
+                }
+            } else if (par == 5) {
+                if (par - shots == 1) {
+                    holeFinishStatus = "  Birdie  "
+                } else if (par - shots == 2) {
+                    holeFinishStatus = "  Eagle  "
+                } else if (par - shots == 3) {
+                    holeFinishStatus = "  Albatross  "
+                } else if (par - shots == 4) {
+                    holeFinishStatus = " Hole In One "
+                }
+            }
+        } else if (shots == par) {
             holeFinishStatus = "  Par  "
-//            color = UIColor.glfFlatBlue
-            break
-        case 1:
-            holeFinishStatus = "  Bogey  "
-//            color = UIColor.glfWarmGrey
-            break
-        case 2:
-            holeFinishStatus = "  D. Bogey  "
-//            color = UIColor.glfWarmGrey
-            break
-        default:
-            holeFinishStatus = " \(shots-par) Bogey"
-//            color = UIColor.glfRosyPink
         }
         btnShotRanking.setTitle(holeFinishStatus, for: .normal)
-        
         btnTopShotRanking.setTitle(holeFinishStatus, for: .normal)
         btnTopShotRanking.isHidden = false
     }
     
     
     func getNearbymarkers(position:CLLocationCoordinate2D,markers:[GMSMarker])->Int{
-        
         var distanceArray = [Double]()
         for markers in markers{
             let distance = GMSGeometryDistance(markers.position, position)

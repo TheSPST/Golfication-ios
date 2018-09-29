@@ -360,7 +360,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     @IBAction func btnActionScore(_ sender: UIButton) {
         if let str = holeWiseShots.value(forKey: "strokes") as? Int{
             self.detailScoreSV.isHidden = true
-            if (str > self.scoreData[self.index].par+2){
+            if (str > self.scoreData[self.index].par+2) || (str < self.scoreData[self.index].par-2){
+
                 self.scoreSV.isHidden = false
                 self.scoreSecondSV.isHidden = false
                 self.btnExpendScore.isHidden = true
@@ -706,34 +707,52 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     func setHoleShotDetails(par:Int,shots:Int){
         var holeFinishStatus = String()
         var color = UIColor()
-        switch shots-par{
-        case -1:
-            holeFinishStatus = "  Birdie  "
-            color = UIColor.glfFlatBlue
-            break
-        case -2:
-            holeFinishStatus = "  Eagle  "
-            color = UIColor.glfFlatBlue
-            break
-        case -3:
-            holeFinishStatus = "  Albatross  "
-            color = UIColor.glfFlatBlue
-            break
-        case 0:
+        if (shots > par) {
+            if (shots - par > 1) {
+                holeFinishStatus = " \(shots-par) Bogey"
+                color = UIColor.glfRosyPink
+            } else {
+                holeFinishStatus = " Bogey"
+                color = UIColor.glfRosyPink
+            }
+        } else if (shots < par) {
+            if (par == 3) {
+                if (par - shots == 1) {
+                    holeFinishStatus = "  Birdie  "
+                    color = UIColor.glfFlatBlue
+                } else if (par - shots == 2) {
+                    holeFinishStatus = " Hole In One "
+                    color = UIColor.glfFlatBlue
+                }
+            } else if (par == 4) {
+                if (par - shots == 1) {
+                    holeFinishStatus = "  Birdie  "
+                    color = UIColor.glfFlatBlue
+                } else if (par - shots == 2) {
+                    holeFinishStatus = "  Eagle  "
+                    color = UIColor.glfFlatBlue
+                } else if (par - shots == 3) {
+                    holeFinishStatus = " Hole In One "
+                    color = UIColor.glfFlatBlue
+                }
+            } else if (par == 5) {
+                if (par - shots == 1) {
+                    holeFinishStatus = "  Birdie  "
+                    color = UIColor.glfFlatBlue
+                } else if (par - shots == 2) {
+                    holeFinishStatus = "  Eagle  "
+                    color = UIColor.glfFlatBlue
+                } else if (par - shots == 3) {
+                    holeFinishStatus = "  Albatross  "
+                    color = UIColor.glfFlatBlue
+                } else if (par - shots == 4) {
+                    holeFinishStatus = " Hole In One "
+                    color = UIColor.glfFlatBlue
+                }
+            }
+        } else if (shots == par) {
             holeFinishStatus = "  Par  "
             color = UIColor.glfFlatBlue
-            break
-        case 1:
-            holeFinishStatus = "  Bogey  "
-            color = UIColor.glfWarmGrey
-            break
-        case 2:
-            holeFinishStatus = "  D. Bogey  "
-            color = UIColor.glfWarmGrey
-            break
-        default:
-            holeFinishStatus = " \(shots-par) Bogey"
-            color = UIColor.glfRosyPink
         }
         btnShotRanking.setTitle(holeFinishStatus, for: .normal)
         btnShotRanking.backgroundColor = color
@@ -1392,7 +1411,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             slopeIndex += 1
         }
         let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
-        return (Double(data / 113))
+        return (Double(data / 113)).rounded()
     }
     // MARK: - Tableview Methods
     func numberOfSections(in tableView: UITableView) -> Int {

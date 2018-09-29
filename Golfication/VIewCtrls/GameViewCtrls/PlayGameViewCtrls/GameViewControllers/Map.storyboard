@@ -1960,7 +1960,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="zTn-XK-1cO">
-                                                                        <rect key="frame" x="83" y="64" width="114" height="20"/>
+                                                                        <rect key="frame" x="96" y="64" width="88" height="20"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iDZ-YO-QoR">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="17" height="20"/>
@@ -1970,10 +1970,9 @@
                                                                                 </constraints>
                                                                             </view>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRk-xn-wTb">
-                                                                                <rect key="frame" x="22" y="0.0" width="70" height="20"/>
+                                                                                <rect key="frame" x="22" y="0.0" width="44" height="20"/>
                                                                                 <color key="backgroundColor" red="0.17254901959999999" green="0.25882352939999997" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="70" id="c5c-iX-SJh"/>
                                                                                     <constraint firstAttribute="height" constant="20" id="qQK-2M-XCC"/>
                                                                                 </constraints>
                                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="14"/>
@@ -1985,7 +1984,7 @@
                                                                                 </connections>
                                                                             </button>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G0L-S3-5JT">
-                                                                                <rect key="frame" x="98" y="0.0" width="16" height="20"/>
+                                                                                <rect key="frame" x="72" y="0.0" width="16" height="20"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                                 <state key="normal" image="text_edit"/>
                                                                                 <connections>
@@ -3655,14 +3654,13 @@
                                                                 </connections>
                                                             </button>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="msg-oV-vwe">
-                                                                <rect key="frame" x="94.5" y="114" width="91" height="20"/>
+                                                                <rect key="frame" x="107.5" y="114" width="65" height="20"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3lc-Xf-vlk">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="20"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="44" height="20"/>
                                                                         <color key="backgroundColor" red="0.17254901959999999" green="0.25882352939999997" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="20" id="EeW-ha-bjz"/>
-                                                                            <constraint firstAttribute="width" constant="70" id="eV9-Wa-8iP"/>
                                                                         </constraints>
                                                                         <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="14"/>
                                                                         <state key="normal" title="BIRDIE">
@@ -3673,7 +3671,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HiQ-6S-wOs">
-                                                                        <rect key="frame" x="75" y="0.0" width="16" height="20"/>
+                                                                        <rect key="frame" x="49" y="0.0" width="16" height="20"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                         <state key="normal" image="text_edit"/>
                                                                         <connections>
