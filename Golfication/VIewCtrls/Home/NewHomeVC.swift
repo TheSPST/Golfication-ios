@@ -19,7 +19,7 @@ var ble: BLE!
 var clubWithMaxMin = [(name:String,max:Int,min:Int)]()
 var isDevice = Bool()
 var isProMode = Bool()
-
+var firmwareVersion : Int!
 enum VersionError: Error {
     case invalidResponse, invalidBundleInfo
 }
@@ -326,8 +326,18 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         self.setInitialUI()
         self.getStrokesGainedFirebaseData()
+        self.getGolficationXVersion()
     }
-    
+    func getGolficationXVersion(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion/version") { (snapshot) in
+            let vNumber = snapshot.value as? Int
+            DispatchQueue.main.async(execute: {
+                if(vNumber != nil){
+                    firmwareVersion = vNumber
+                }
+            })
+        }
+    }
     func getClubDataFromFirebase(isShow:Bool){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "clubsData") { (snapshot) in
             let clubDataDict = snapshot.value as! [String:NSMutableDictionary]

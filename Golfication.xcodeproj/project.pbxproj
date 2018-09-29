@@ -71,7 +71,8 @@
 		3EAE867D2125573F0081857B /* ScanningVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE86792125573E0081857B /* ScanningVC.swift */; };
 		3EAE867E2125573F0081857B /* PracticePageContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */; };
 		3EAE867F2125573F0081857B /* Device.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EAE867B2125573E0081857B /* Device.storyboard */; };
-		3EB5D2F5215F69F0007C55E3 /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EB5D2F4215F69F0007C55E3 /* GoogleService-Info-demo.plist */; };
+		3EB5D2F7215F7397007C55E3 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EB5D2F6215F7397007C55E3 /* GoogleService-Info-live.plist */; };
+		3EB5D2F9215F78CD007C55E3 /* GolficationXFirmware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB5D2F8215F78CD007C55E3 /* GolficationXFirmware.swift */; };
 		3EB6D3B72137CA72000DA1BE /* FBSomeEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */; };
 		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
@@ -314,7 +315,8 @@
 		3EAE86792125573E0081857B /* ScanningVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanningVC.swift; sourceTree = "<group>"; };
 		3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticePageContainerVC.swift; sourceTree = "<group>"; };
 		3EAE867B2125573E0081857B /* Device.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Device.storyboard; sourceTree = "<group>"; };
-		3EB5D2F4215F69F0007C55E3 /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
+		3EB5D2F6215F7397007C55E3 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
+		3EB5D2F8215F78CD007C55E3 /* GolficationXFirmware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolficationXFirmware.swift; sourceTree = "<group>"; };
 		3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSomeEvents.swift; sourceTree = "<group>"; };
 		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
@@ -883,6 +885,7 @@
 				4B9578DC20B4409E008B2C61 /* AssignTabsVC.swift */,
 				4B9578DD20B4409E008B2C61 /* BluetootheConnectionTesting.swift */,
 				3E63509620D3A150005BF851 /* BLE.swift */,
+				3EB5D2F8215F78CD007C55E3 /* GolficationXFirmware.swift */,
 			);
 			path = BlueTooth;
 			sourceTree = "<group>";
@@ -1126,7 +1129,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3EB5D2F4215F69F0007C55E3 /* GoogleService-Info-demo.plist */,
+				3EB5D2F6215F7397007C55E3 /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1261,7 +1264,6 @@
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
-				3EB5D2F5215F69F0007C55E3 /* GoogleService-Info-demo.plist in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
 				4B8C8D3C1FF674D0001F5D01 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
@@ -1289,6 +1291,7 @@
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
 				4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */,
+				3EB5D2F7215F7397007C55E3 /* GoogleService-Info-live.plist in Resources */,
 				3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */,
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
@@ -1494,6 +1497,7 @@
 				4BCC816420AD64F600AD3108 /* ScanProgressView.swift in Sources */,
 				4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */,
 				3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */,
+				3EB5D2F9215F78CD007C55E3 /* GolficationXFirmware.swift in Sources */,
 				3EEC413820E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift in Sources */,
 				4BB26D451FF77EED001E9556 /* ServerHandler.swift in Sources */,
 				3E57646B215BDA5400658D78 /* ProfilePhotoDetailVC.swift in Sources */,

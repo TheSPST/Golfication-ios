@@ -101,7 +101,7 @@ class BLE: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(sendEightCommand(_:)), name: NSNotification.Name(rawValue: "command8"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(getMatchId(_:)), name: NSNotification.Name(rawValue: "getMatchId"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendThirdCommandFromMap(_:)), name: NSNotification.Name(rawValue: "command3"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(sendEleventhCommmandNotif(_:)), name: NSNotification.Name(rawValue: "command11"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(sendEleventhCommmandNotif(_:)), name: NSNotification.Name(rawValue: "command11"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(startMatchCalling(_:)), name: NSNotification.Name(rawValue: "startMatchCalling"), object: nil)
 
@@ -308,56 +308,27 @@ class BLE: NSObject {
         }
         self.sendThirdCommand()
     }
-    @objc private func sendEleventhCommmandNotif(_ notification: NSNotification){
-        self.sendEleventhCommand()
-    }
+//    @objc private func sendEleventhCommmandNotif(_ notification: NSNotification){
+//        self.sendEleventhCommand()
+//    }
     private func sendEleventhCommand(){
         if(charctersticsWrite != nil){
-            let currentLocation: CLLocation = self.locationManager.location!
-            let lat:Double = currentLocation.coordinate.latitude
-            let lng:Double = currentLocation.coordinate.longitude
-            
-            var newByteArrayLat = toByteArray(lat)
-            newByteArrayLat.removeLast(4)
-            
-            var newByteArrayLng = toByteArray(lng)
-            newByteArrayLng.removeLast(4)
-            
-            var param : [UInt8] = [11]
-            for i in newByteArrayLat{
-                param.append(i)
-            }
-            for i in newByteArrayLng{
-                param.append(i)
-            }
+            let param : [UInt8] = [11]
             var writeData = Data()
             self.currentCommandData = param
             writeData =  Data(bytes:param)
             deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
             self.timerForWriteCommand11 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
-                var param : [UInt8] = [11]
-                let currentLocation: CLLocation = self.locationManager.location!
-                let lat1 = Float(currentLocation.coordinate.latitude)
-                let lng1 = Float(currentLocation.coordinate.longitude)
-                
-                let newByteArrayLat1 = self.toByteArray(lat1)
-                debugPrint(newByteArrayLat1)
-                
-                let newByteArrayLng1 = self.toByteArray(lng1)
-                debugPrint(newByteArrayLng1)
-                
-                for i in newByteArrayLat1{
-                    param.append(i)
-                }
-                for i in newByteArrayLng1{
-                    param.append(i)
-                }
+                let param : [UInt8] = [11]
                 writeData =  Data(bytes:param)
                 deviceGolficationX.writeValue(writeData, for: self.charctersticsWrite!, type: CBCharacteristicWriteType.withResponse)
                 self.currentCommandData = param
             })
         }else{
-            UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+            }
+
         }
     }
     
@@ -414,8 +385,9 @@ class BLE: NSObject {
                     self.timeOut += 1
                 })
             }else{
-                UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
-            }
+                DispatchQueue.main.async {
+                    UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+                }            }
         }
 
     }
@@ -450,8 +422,9 @@ class BLE: NSObject {
                 self.timeOut += 1
             })
         }else{
-            UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
-        }
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+            }        }
         
     }
     private func sendThirdCommand(){
@@ -473,8 +446,9 @@ class BLE: NSObject {
                 self.timeOut += 1
             })
         }else{
-            UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
-        }
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+            }        }
 
     }
     private func sendFourthCommand(param:[UInt8]?){
@@ -492,7 +466,9 @@ class BLE: NSObject {
                 self.currentCommandData = paramData
             })
         }else{
-            UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+            }
         }
 
     }
@@ -767,7 +743,7 @@ extension BLE: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         debugPrint(peripheral)
         debugPrint("advertisementData :\(advertisementData)")
-        if (peripheral.name == "Golfication X") || (peripheral.name == "Holfication X") /*|| (peripheral.name == "Peripheral Observer") || (peripheral.name == "CC2650 SensorTag") || (peripheral.name == "PeripheralObserver") || (peripheral.name == "SBP OAD off-chip")*/{
+        if (peripheral.name == "Golfication X") || (peripheral.name == "Holfication X") || (peripheral.name == "Peripheral Observer") /*|| (peripheral.name == "CC2650 SensorTag") || (peripheral.name == "PeripheralObserver") || (peripheral.name == "SBP OAD off-chip")*/{
             debugPrint("advertisementData :\(advertisementData)")
             deviceGolficationX = peripheral
             peripheral.delegate = self
@@ -909,7 +885,7 @@ extension BLE: CBPeripheralDelegate {
                     deviceGolficationX.discoverCharacteristics(nil, for: service_Write)
                 }
             }
-            if(service_Write != nil) && (service_Write != nil){
+            if(service_Write != nil) && (service_Read != nil){
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "DeviceConnected"), object: nil)
             }
             
@@ -926,12 +902,13 @@ extension BLE: CBPeripheralDelegate {
             if(characteristic.uuid == golficationXCharacteristicCBUUIDWrite){
                 self.charctersticsWrite = characteristic
                 charctersticsGlobalForWrite = characteristic
+                self.sendEleventhCommand()
             }else if (characteristic.uuid == golficationXCharacteristicCBUUIDRead){
                 self.charctersticsRead = characteristic
                 deviceGolficationX.setNotifyValue(true, for: self.charctersticsRead)
             }
-            
         }
+        
     }
     func uploadSwingScore(){
         DispatchQueue.main.async(execute: {
@@ -1316,7 +1293,7 @@ extension BLE: CBPeripheralDelegate {
                                 let gameAlert = UIAlertController(title: "Device GPS", message: "Which GPS you want to use?", preferredStyle: UIAlertControllerStyle.alert)
                                 gameAlert.addAction(UIAlertAction(title: "Phone GPS", style: .default, handler: { (action: UIAlertAction!) in
                                     ref.child("matchData/\(self.activeMatchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"phone"])
-                                    self.sendEleventhCommand()
+                                    
                                 }))
                                 gameAlert.addAction(UIAlertAction(title: "Device GPS", style: .default, handler: { (action: UIAlertAction!) in
                                     ref.child("matchData/\(self.activeMatchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"device"])
@@ -1509,6 +1486,20 @@ extension BLE: CBPeripheralDelegate {
 //                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":false])
 //                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":false])
                     self.invalidateAllTimers()
+                }else if (dataArray[0] == UInt8(11)){
+                    let version = byteArrayToInt32(value: [dataArray[1],dataArray[2]])
+                    if(version < firmwareVersion){
+                        let gameAlert = UIAlertController(title: "Firmware Update", message: "New version \(version) found for GolficationX", preferredStyle: UIAlertControllerStyle.alert)
+                        gameAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+                            debugPrint("Cancel")
+                        }))
+                        gameAlert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (action: UIAlertAction!) in
+                            debugPrint("Updating")
+                            //                            self.sendTwelthCommand()
+                        }))
+                        UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                    }
+                     self.invalidateAllTimers()
                 }
             }
             break

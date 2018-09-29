@@ -16,7 +16,6 @@ import FirebaseAnalytics
 import UserNotifications
 import CTShowcase
 
-
 private enum State {
     case closed
     case open
@@ -6712,7 +6711,6 @@ extension NewMapVC : CLLocationManagerDelegate{
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
         self.mapView.isMyLocationEnabled = false
         let userLocation = locations.last
-        debugPrint("Location Updated",userLocation)
         userLocationForClub = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
         locationManager.stopUpdatingLocation()
     }
@@ -6721,22 +6719,10 @@ extension NewMapVC : DropperDelegate{
     
     func DropperSelectedRow(_ path: IndexPath, contents: String) {
         if(clubsWithFullName.contains(contents)){
-            //                if(contents == "more"){
-            //                    let remainingClubs = [String]()
-            //                    ActionSheetStringPicker.show(withTitle: "More Clubs", rows: ["4w","7w","1h","2h","3h","4h","5h","6h","7h","1i","2i","Gw"], initialSelection: 1, doneBlock: { (picker, value, index) in
-            //                        if(!self.courseData.clubs.contains(index as! String)){
-            //                            self.courseData.clubs.insert(index as! String, at: self.courseData.clubs.count-1)
-            //                            self.selectClubDropper.items = self.courseData.clubs// Item displayed
-            //                        }
-            //                        self.btnSelectClubs.setTitle("\(index!)", for: .normal)
-            //                    }, cancel: { ActionMultipleStringCancelBlock in return }, origin: self.btnSelectClubs)
-            //                }
-            //                else{
             self.btnSelectClubs.setTitle("\(contents)", for: .normal)
             self.btnSelectClubs.tag = path.row
             self.btnTrackShot.backgroundColor = UIColor.glfBluegreen
             self.selectClubDropper.TableMenu.scrollToRow(at: path, at: UITableViewScrollPosition.middle, animated: true)
-            //                }
         }
     }
 }
