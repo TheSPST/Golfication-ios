@@ -71,7 +71,7 @@
 		3EAE867D2125573F0081857B /* ScanningVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE86792125573E0081857B /* ScanningVC.swift */; };
 		3EAE867E2125573F0081857B /* PracticePageContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */; };
 		3EAE867F2125573F0081857B /* Device.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EAE867B2125573E0081857B /* Device.storyboard */; };
-		3EB5D2EF215E7479007C55E3 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EB5D2EE215E7478007C55E3 /* GoogleService-Info-live.plist */; };
+		3EB5D2F5215F69F0007C55E3 /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EB5D2F4215F69F0007C55E3 /* GoogleService-Info-demo.plist */; };
 		3EB6D3B72137CA72000DA1BE /* FBSomeEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */; };
 		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
@@ -314,7 +314,7 @@
 		3EAE86792125573E0081857B /* ScanningVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanningVC.swift; sourceTree = "<group>"; };
 		3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticePageContainerVC.swift; sourceTree = "<group>"; };
 		3EAE867B2125573E0081857B /* Device.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Device.storyboard; sourceTree = "<group>"; };
-		3EB5D2EE215E7478007C55E3 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
+		3EB5D2F4215F69F0007C55E3 /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSomeEvents.swift; sourceTree = "<group>"; };
 		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
@@ -1126,7 +1126,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3EB5D2EE215E7478007C55E3 /* GoogleService-Info-live.plist */,
+				3EB5D2F4215F69F0007C55E3 /* GoogleService-Info-demo.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1261,6 +1261,7 @@
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
+				3EB5D2F5215F69F0007C55E3 /* GoogleService-Info-demo.plist in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
 				4B8C8D3C1FF674D0001F5D01 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
@@ -1288,7 +1289,6 @@
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
 				4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */,
-				3EB5D2EF215E7479007C55E3 /* GoogleService-Info-live.plist in Resources */,
 				3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */,
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,

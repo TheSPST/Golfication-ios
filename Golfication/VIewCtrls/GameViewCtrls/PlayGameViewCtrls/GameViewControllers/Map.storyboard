@@ -28,7 +28,7 @@
         </array>
     </customFonts>
     <scenes>
-        <!--New MapVC-->
+        <!--New Map-->
         <scene sceneID="FCr-5x-xoo">
             <objects>
                 <viewController storyboardIdentifier="NewMapVC" id="gCh-bB-Yak" customClass="NewMapVC" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
@@ -1248,6 +1248,14 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="a4G-Kv-2Hj"/>
                     </view>
+                    <navigationItem key="navigationItem" title="New Map" id="Hcz-J3-mhT">
+                        <barButtonItem key="leftBarButtonItem" image="backArrow" id="AyO-Hh-l3d">
+                            <color key="tintColor" red="0.18039215689999999" green="0.62352941179999999" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="backButtonAction:" destination="X47-5X-6rK" id="aGy-7f-Oib"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="barChartParentStackView" destination="iSd-ja-Qd5" id="vLe-Jy-OSz"/>
                         <outlet property="btnAddPenaltyLbl" destination="ccu-Pu-g8w" id="WPw-xy-KzG"/>
@@ -1347,7 +1355,7 @@
             </objects>
             <point key="canvasLocation" x="283" y="-190"/>
         </scene>
-        <!--Basic ScoringVC-->
+        <!--Basic Scoring-->
         <scene sceneID="rk0-og-XDf">
             <objects>
                 <viewController storyboardIdentifier="BasicScoringVC" id="l6N-0K-2bQ" customClass="BasicScoringVC" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
@@ -2661,6 +2669,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ccJ-rT-fNH"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Basic Scoring" id="hey-S2-547">
+                        <barButtonItem key="leftBarButtonItem" image="backArrow" id="l7f-FZ-quy">
+                            <color key="tintColor" red="0.18039215689999999" green="0.62352941179999999" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="btnBack" destination="wW6-W3-HZK" id="xTL-f9-hYm"/>
                         <outlet property="btnChangeHole" destination="zSv-Ku-dBz" id="po1-qf-pd4"/>
