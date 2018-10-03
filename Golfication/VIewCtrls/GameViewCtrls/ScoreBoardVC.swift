@@ -97,7 +97,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     var matchDataDict = NSMutableDictionary()
     var isContinue = false
     var holeOutforAppsFlyer = Int()
-    var teeTypeArr = [(tee:String,handicap:Double)]()
+    var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     // ----------------------------- Old Outlet & Variables ----------------------------------------
     var playerData = NSMutableArray()
     let bView = BottomViewInScore()
@@ -119,13 +119,28 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     let padding: CGFloat = 10.0
     let width: CGFloat = 50.0
+    
     func scrollViewDidScroll(_ scrollView1: UIScrollView)
     {
+        if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
+
+            if #available(iOS 11.0, *) {
+                self.scrollView.contentInsetAdjustmentBehavior = .never
+                self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+                self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset
+                
+            } else {
+                // Fallback on earlier versions
+            }
+        }
         //http://jayeshkawli.ghost.io/manually-scrolling-uiscrollview-ios-swift/
         //https://stackoverflow.com/questions/6949142/iphone-how-to-scroll-two-uitableviews-symmetrically
         if (!(scrollView1.contentOffset.x>0 || scrollView1.contentOffset.x<0)) && scrollView1 == self.menueTableView {
             tblView.isScrollEnabled = true
             
+            if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
+            tblView.frame.origin.y = 0
+            }
             self.scrollView = (scrollView1 == self.menueTableView) ? self.tblView : scrollView1
             self.scrollView.setContentOffset(scrollView1.contentOffset, animated: false)
         }
@@ -270,7 +285,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     @IBAction func btnMenuAction(_ sender: Any) {
         self.holeOutforAppsFlyer = self.checkHoleOutZero(playerId: Auth.auth().currentUser!.uid)
-        ActionSheetStringPicker.show(withTitle: "Menu", rows: ["Finish Round","Restart Round","End Round"], initialSelection: 0, doneBlock: { (picker, value, index) in
+        var descardRound = "Discard Round"
+        if isEdited{
+            descardRound = "Delete Round"
+        }
+        ActionSheetStringPicker.show(withTitle: "Menu", rows: ["Save Round","Restart Round","\(descardRound)"], initialSelection: 0, doneBlock: { (picker, value, index) in
             if value != 1{
                 for controller in self.navigationController!.viewControllers as Array {
                     if controller.isKind(of: NewGameVC.self) {
@@ -460,7 +479,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         for tee in holeHcpWithTee{
             if tee.hole == holeNo+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }
@@ -497,12 +516,16 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 if let tee = player.value(forKeyPath: "tee") as? String{
                     teeOfP = tee
                 }
+                var teeColorOfP = String()
+                if let tee = player.value(forKeyPath: "teeColor") as? String{
+                    teeColorOfP = tee
+                }
                 var handicapOfP = Double()
                 if let hcp = player.value(forKeyPath: "handicap") as? String{
                     handicapOfP = Double(hcp)!
                 }
                 if(teeOfP != ""){
-                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
+                    self.teeTypeArr.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
                 }
             }
         }
@@ -595,6 +618,10 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         view.addSubview(menueTableView)
         
         scrollView =  UIScrollView(frame: CGRect(x: menueTableView.frame.origin.x + menueTableView.frame.size.width, y: menueTableView.frame.origin.y, width: view.frame.size.width - menueTableView.frame.size.width-2, height: menueTableView.frame.size.height))
+        if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
+            
+            scrollView =  UIScrollView(frame: CGRect(x: menueTableView.frame.origin.x + menueTableView.frame.size.width, y: menueTableView.frame.origin.y+24, width: view.frame.size.width - menueTableView.frame.size.width-2, height: menueTableView.frame.size.height-24))
+        }
         scrollView.delegate = self
         scrollView.backgroundColor = UIColor.clear
         scrollView.showsHorizontalScrollIndicator = false
@@ -1363,19 +1390,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let par = scoreData[index].par
         let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoreData.count
         let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoreData.count
-        var hcp = 0
+        var hcp = self.getHCPValue(playerID: playerId, holeNo: index)
         var totalShotsInThishole = 0
-        for tee in holeHcpWithTee{
-            if tee.hole == self.index+1{
-                for data in tee.teeBox{
-                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
-                        hcp = data.value(forKey:"hcp") as? Int ?? 0
-                        break
-                    }
-                }
-                break
-            }
-        }
         if hcp > 0 && hcp <= extrashotsReminder{
             totalShotsInThishole = par + extrashotsDiv + 1
         }else{
@@ -1405,7 +1421,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         var slopeIndex = 0
         for data in teeArr{
-            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()) && (data.name.lowercased() == self.teeTypeArr[index].color.lowercased()){
                 break
             }
             slopeIndex += 1

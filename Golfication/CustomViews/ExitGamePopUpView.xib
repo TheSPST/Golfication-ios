@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,6 +20,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ExitGamePopUpView" customModule="Golfication" customModuleProvider="target">
             <connections>
+                <outlet property="btnDiscard" destination="0vV-ir-ZQt" id="d2n-vu-A2m"/>
                 <outlet property="btnSaveNExit" destination="qx1-OF-bfo" id="6VR-kX-CWq"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="sji-mE-Tvd"/>
                 <outlet property="lblHole" destination="fTl-cD-yBS" id="tmM-gV-7eC"/>
@@ -68,7 +69,7 @@
                                 <constraint firstAttribute="height" constant="40" id="bnD-FX-K7F"/>
                             </constraints>
                             <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="17"/>
-                            <state key="normal" title="Save &amp; Exit">
+                            <state key="normal" title="Save Round">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <connections>
@@ -117,6 +118,6 @@
         </view>
     </objects>
     <resources>
-        <image name="gir_false" width="12" height="12"/>
+        <image name="gir_false" width="20" height="20"/>
     </resources>
 </document>

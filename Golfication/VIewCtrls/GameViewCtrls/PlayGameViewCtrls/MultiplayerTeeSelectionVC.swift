@@ -87,11 +87,10 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
         }
         if let userData = self.totalPlayers[indexPath.row] as? NSMutableDictionary{
             userData.addEntries(from: ["tee" : selectedTee.lowercased()])
+            userData.addEntries(from: ["teeColor" : selectedTeeColor.lowercased()])
             userData.addEntries(from: ["handicap" : String(self.handicap[indexPath.row]) == "0.0" ? "18.0":String(self.handicap[indexPath.row])])
             debugPrint(userData)
         }
-        
-        
         return cell
     }
     @objc func btnActionHadicap(sender:UIButton){
@@ -130,6 +129,7 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
                 cell.lblTeeSlope.text = tee.slope
                 if let userData = self.totalPlayers[sender.tag] as? NSMutableDictionary{
                     userData.addEntries(from: ["tee" : tee.type.lowercased()])
+                    userData.addEntries(from: ["teeColor" : tee.name.lowercased()])
                     debugPrint(userData)
                 }
             }))

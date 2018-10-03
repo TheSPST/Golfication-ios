@@ -199,9 +199,11 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         if(!teeArr.isEmpty){
             selectedSlope = Int(teeArr[0].slope)!
             selectedRating = Double(teeArr[0].rating)!
-            selectedTee = teeArr[0].name
+            selectedTee = teeArr[0].type
+            selectedTeeColor = teeArr[0].name
         }else{
             selectedTee = ""
+            selectedTeeColor = ""
             selectedSlope = 113
             selectedRating = 0.0
         }

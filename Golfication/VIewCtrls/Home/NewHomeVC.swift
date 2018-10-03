@@ -270,7 +270,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let versionDetails = ["info":versionInfo]
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(versionDetails)
         //-----------------------------------------------------------------------------------------
-        
         self.feedTableView.isHidden = true
         self.view.layoutIfNeeded()
         // ------------------------ Set User Name & Profile Image ------------------------------

@@ -27,10 +27,12 @@ var startingHole: String = "1"
 var matchId = String()
 var mode = Int()
 var selectedTee = ""
+var selectedTeeColor = ""
 var selectedSlope = Int()
 var selectedRating = Double()
 var teeArr = [(name:String,type:String,rating:String,slope:String)]()
 var handicap = Double()
+var isEdited = Bool()
 class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     // MARK: Set Outlets
@@ -146,6 +148,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 selectedSlope = Int(tee.slope)!
                 selectedRating = Double(tee.rating)!
                 selectedTee = "\(tee.type)"
+                selectedTeeColor = "\(tee.name)"
             }))
             myController.addAction(whiteTee)
             i += 1
@@ -384,6 +387,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         imagePicker.delegate = self
         self.getHandicap()
         // for Bluetooth device setup
@@ -891,11 +895,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: getActiveMatches
     func getActiveMatches(){
-        
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseUserData(addedPath: "\(Auth.auth().currentUser!.uid)/activeMatches") { (snapshot) in
-            
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "activeMatches") { (snapshot) in
             let group = DispatchGroup()
             var dataDic = [String:Bool]()
             if(snapshot.childrenCount > 0){
@@ -915,10 +916,29 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             group.notify(queue: .main){
 //                self.progressView.hide(navItem: self.navigationItem)
                 self.setActiveMatchUI()
+                self.getDeletedMAtch()
             }
         }
     }
-    
+    var allDeletedMatchID = [String]()
+    func getDeletedMAtch(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "deletedMatches") { (snapshot) in
+            var dict = NSMutableDictionary()
+            if snapshot.value != nil{
+                dict = snapshot.value as! NSMutableDictionary
+            }
+            DispatchQueue.main.async(execute: {
+                if dict.count != 0{
+                    self.allDeletedMatchID = dict.allKeys as! [String]
+                }
+                if self.allDeletedMatchID.contains(matchId){
+                    isEdited = true
+                }else{
+                    isEdited = false
+                }
+            })
+        }
+    }
     // MARK: getStrokesGainedFirebaseData
     func getStrokesGainedFirebaseData(){
         
@@ -1206,8 +1226,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             selectedSlope = Int(teeArr[0].slope)!
             selectedRating = Double(teeArr[0].rating)!
             selectedTee = teeArr[0].type
+            selectedTeeColor = teeArr[0].name
         }else{
             selectedTee = ""
+            selectedTeeColor = ""
             selectedSlope = 0
             selectedRating = 0.0
             self.startingTeeCardView.isHidden = true
@@ -1408,9 +1430,12 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         for (k,v) in value as! NSMutableDictionary{
                             playersKey.append(k as! String)
                             if(k as! String) == Auth.auth().currentUser!.uid{
-                                if let tee = (v as! NSMutableDictionary).value(forKey: "selectedTee") as? String{
+                                if let tee = (v as! NSMutableDictionary).value(forKey: "tee") as? String{
                                     selectedTee = tee
                                     selectedTee.capitalizeFirstLetter()
+                                }
+                                if let teeColor = (v as! NSMutableDictionary).value(forKey: "teeColor") as? String{
+                                    selectedTeeColor = teeColor
                                 }
                             }
                         }
@@ -1686,7 +1711,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     @IBAction func startContinueAction(_ sender: Any) {
         // Amit's Changes
-        
         if btnStartContinue.titleLabel?.text == "Continue Round"{
             isContinueClicked = true
             setActiveMatchUI()
@@ -2360,23 +2384,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: endAction
     @IBAction func endAction(_ sender: Any) {
-        
-        /*ActionSheetStringPicker.show(withTitle: "Round in progress", rows: ["View Scorecard & Save", "Exit without saving"], initialSelection: 0, doneBlock: {
-            picker, value, index in
-            
-            if value == 0 {
-                
-                self.saveAndviewScore()
-                
-            }
-            else{
-                self.exitWithoutSave()
-            }
-            return
-        }, cancel: { ActionStringCancelBlock in
-            return
-        }, origin: sender)*/
-        
         var myVal: Int = 0
         for i in 0..<scoring.count{
             for dataDict in scoring[i].players{
@@ -2403,10 +2410,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             attributes: [NSAttributedStringKey.foregroundColor: UIColor.glfBluegreen, NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 16.0)!])
         myController.setValue(messageAttributed, forKey: "attributedMessage")
         
-        let saveOption = (UIAlertAction(title: "View Scorecard & Save", style: UIAlertActionStyle.default, handler: { action in
+        let saveOption = (UIAlertAction(title: "Save Round", style: UIAlertActionStyle.default, handler: { action in
             self.saveAndviewScore()
         }))
-        let discardOption = (UIAlertAction(title: "Exit without saving", style: UIAlertActionStyle.default, handler: { action in
+        var descardRound = "Discard Round"
+        if isEdited{
+            descardRound = "Delete Round"
+        }
+        let discardOption = (UIAlertAction(title: descardRound, style: UIAlertActionStyle.default, handler: { action in
             self.exitWithoutSave()
         }))
         let cancelOption = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { action in

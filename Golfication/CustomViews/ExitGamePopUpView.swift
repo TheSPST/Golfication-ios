@@ -21,12 +21,16 @@ class ExitGamePopUpView: UIView {
     @IBOutlet weak var btnSaveNExit: UIButton!
     @IBOutlet weak var lblHole: UILabel!
     @IBOutlet weak var lblStatic: UILabel!
-
+    @IBOutlet weak var btnDiscard: UIButton!
+    
     var labelText: String? {
         get { return lblHole?.text }
         set { lblHole.text = newValue }
     }
-    
+    var btnDiscardText:String?{
+        get { return btnDiscard.currentTitle }
+        set{ btnDiscard.titleLabel?.text = newValue }
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()

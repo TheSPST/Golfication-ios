@@ -3113,13 +3113,13 @@
                                                                     <rect key="frame" x="82.5" y="0.0" width="135" height="100"/>
                                                                     <subviews>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="vXd-wd-Xxb">
-                                                                            <rect key="frame" x="27" y="78" width="81" height="14"/>
+                                                                            <rect key="frame" x="24" y="71" width="87" height="21"/>
                                                                             <subviews>
                                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locked" translatesAutoresizingMaskIntoConstraints="NO" id="Jcp-OV-lr4">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="12" height="14"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="18" height="21"/>
                                                                                 </imageView>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device required" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a8C-Oh-6HX">
-                                                                                    <rect key="frame" x="17" y="0.0" width="64" height="14"/>
+                                                                                    <rect key="frame" x="23" y="0.0" width="64" height="21"/>
                                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="10"/>
                                                                                     <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
                                                                                     <nil key="highlightedColor"/>
@@ -3292,7 +3292,7 @@
                                                                             </constraints>
                                                                         </imageView>
                                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locked" translatesAutoresizingMaskIntoConstraints="NO" id="Yvc-0Z-xio">
-                                                                            <rect key="frame" x="42.5" y="76" width="12" height="14"/>
+                                                                            <rect key="frame" x="39.5" y="76" width="18" height="21"/>
                                                                         </imageView>
                                                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lYa-NU-zdK">
                                                                             <rect key="frame" x="0.0" y="-0.66666666666665719" width="128" height="123"/>
@@ -3681,7 +3681,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="150" height="35"/>
                                                             <subviews>
                                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dLS-MC-oe5" userLabel="LikeButton">
-                                                                    <rect key="frame" x="10" y="5" width="25" height="22"/>
+                                                                    <rect key="frame" x="10" y="5" width="25" height="25"/>
                                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="25" id="X9c-sJ-bdT"/>
@@ -7513,10 +7513,10 @@
                                                             </constraints>
                                                         </imageView>
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="COe-qD-DJR">
-                                                            <rect key="frame" x="106" y="211" width="186" height="17"/>
+                                                            <rect key="frame" x="81" y="196" width="211" height="32"/>
                                                             <subviews>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1hi-fE-r0a">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="17"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="89" height="32"/>
                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                                     <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                                     <inset key="imageEdgeInsets" minX="-15" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -7525,7 +7525,7 @@
                                                                     </state>
                                                                 </button>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1sM-41-jaX">
-                                                                    <rect key="frame" x="96" y="0.0" width="90" height="17"/>
+                                                                    <rect key="frame" x="105" y="0.0" width="106" height="32"/>
                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                                     <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                                     <inset key="imageEdgeInsets" minX="-15" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -8797,7 +8797,7 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="980"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U2j-WI-k7v">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1105"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="967"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BBA-EU-2LQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="57"/>
@@ -8882,7 +8882,7 @@
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="bFq-E2-mxE">
-                                                <rect key="frame" x="10" y="167" width="394" height="918"/>
+                                                <rect key="frame" x="10" y="167" width="394" height="780"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rWt-PO-Kho" customClass="CardView" customModule="Golfication" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="394" height="56.5"/>
@@ -9132,8 +9132,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-YD-Vey">
-                                                        <rect key="frame" x="0.0" y="581.5" width="394" height="128"/>
+                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-YD-Vey">
+                                                        <rect key="frame" x="0.0" y="576.5" width="394" height="128"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="device1" translatesAutoresizingMaskIntoConstraints="NO" id="Ch6-HH-uoy">
                                                                 <rect key="frame" x="8" y="8" width="126" height="112"/>
@@ -9196,7 +9196,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vys-1b-H8R" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="719.5" width="394" height="99"/>
+                                                        <rect key="frame" x="0.0" y="581.5" width="394" height="99"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pvn-71-CDB">
                                                                 <rect key="frame" x="5" y="5" width="384" height="89"/>
@@ -9392,7 +9392,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VXc-Vu-xo1" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="828.5" width="394" height="89.5"/>
+                                                        <rect key="frame" x="0.0" y="690.5" width="394" height="89.5"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="referal_BG" translatesAutoresizingMaskIntoConstraints="NO" id="oTA-QS-iLl">
                                                                 <rect key="frame" x="-4" y="-2" width="402" height="95.5"/>
@@ -9776,7 +9776,7 @@
                                                                 <rect key="frame" x="0.0" y="26" width="364" height="44"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vGZ-5u-fus">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="174.5" height="44"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="364" height="44"/>
                                                                         <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="44" id="pMf-VU-9Xz"/>
@@ -9791,8 +9791,8 @@
                                                                             <action selector="playFriendsAction:" destination="WFi-Lt-UiN" eventType="touchUpInside" id="kdL-D7-kTV"/>
                                                                         </connections>
                                                                     </button>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivD-Ha-lfz">
-                                                                        <rect key="frame" x="189.5" y="0.0" width="174.5" height="44"/>
+                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivD-Ha-lfz">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
                                                                         <color key="backgroundColor" red="0.22352941179999999" green="0.56470588239999997" blue="0.41568627450000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="44" id="YlE-KE-YQ7"/>
@@ -10923,10 +10923,10 @@
                                                                             </constraints>
                                                                         </imageView>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="ox0-5y-FBT">
-                                                                            <rect key="frame" x="106" y="211" width="280" height="17"/>
+                                                                            <rect key="frame" x="73" y="196" width="313" height="32"/>
                                                                             <subviews>
                                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hNP-dH-nw4">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="17"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="89" height="32"/>
                                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                                                     <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                                                     <inset key="imageEdgeInsets" minX="-15" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -10935,7 +10935,7 @@
                                                                                     </state>
                                                                                 </button>
                                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a7l-8g-h8g">
-                                                                                    <rect key="frame" x="96" y="0.0" width="90" height="17"/>
+                                                                                    <rect key="frame" x="105" y="0.0" width="106" height="32"/>
                                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                                                     <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                                                     <inset key="imageEdgeInsets" minX="-15" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -10944,7 +10944,7 @@
                                                                                     </state>
                                                                                 </button>
                                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s1p-yE-TI8">
-                                                                                    <rect key="frame" x="202" y="0.0" width="78" height="17"/>
+                                                                                    <rect key="frame" x="227" y="0.0" width="86" height="32"/>
                                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                                                     <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                                                                     <inset key="imageEdgeInsets" minX="-15" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -11135,41 +11135,41 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Advancedstats" width="373" height="282"/>
+        <image name="Advancedstats" width="747" height="564"/>
         <image name="Pop_graph" width="592" height="238"/>
         <image name="approach" width="142" height="142"/>
         <image name="backArrow" width="15" height="28"/>
         <image name="chipping" width="208" height="201"/>
         <image name="club" width="93" height="70"/>
         <image name="control" width="194" height="200"/>
-        <image name="controlPro" width="279" height="277"/>
-        <image name="cross" width="25" height="25"/>
+        <image name="controlPro" width="558" height="555"/>
+        <image name="cross" width="124.13793182373047" height="124.13793182373047"/>
         <image name="dashboard" width="16" height="8"/>
-        <image name="device1" width="225" height="301"/>
-        <image name="facebook" width="32" height="32"/>
+        <image name="device1" width="450" height="603"/>
+        <image name="facebook" width="329.14285278320312" height="329.14285278320312"/>
         <image name="filter" width="25" height="27"/>
         <image name="golf_ball" width="24" height="38"/>
-        <image name="golficationX" width="360" height="174"/>
+        <image name="golficationX" width="720" height="348"/>
         <image name="green_bg" width="250" height="180"/>
-        <image name="icon_camera" width="40" height="40"/>
-        <image name="insta" width="32" height="32"/>
-        <image name="like" width="16" height="16"/>
-        <image name="locked" width="12" height="14"/>
-        <image name="lockrefer" width="23" height="28"/>
-        <image name="logout" width="25" height="25"/>
-        <image name="mapPin" width="50" height="50"/>
-        <image name="nav" width="50" height="50"/>
+        <image name="icon_camera" width="64" height="64"/>
+        <image name="insta" width="460.79998779296875" height="460.79998779296875"/>
+        <image name="like" width="25.600000381469727" height="25.600000381469727"/>
+        <image name="locked" width="18.75" height="21.75"/>
+        <image name="lockrefer" width="34.5" height="42"/>
+        <image name="logout" width="40" height="40"/>
+        <image name="mapPin" width="37.5" height="37.5"/>
+        <image name="nav" width="32.142856597900391" height="32.142856597900391"/>
         <image name="notification" width="20" height="31"/>
-        <image name="referal_BG" width="242" height="67"/>
+        <image name="referal_BG" width="728" height="202"/>
         <image name="sand" width="208" height="201"/>
-        <image name="setting" width="30" height="30"/>
-        <image name="sg" width="381" height="165"/>
-        <image name="share" width="16" height="16"/>
-        <image name="strokesGained" width="22" height="22"/>
-        <image name="text_edit" width="16" height="16"/>
+        <image name="setting" width="24" height="24"/>
+        <image name="sg" width="762" height="330"/>
+        <image name="share" width="32" height="32"/>
+        <image name="strokesGained" width="22.5" height="22.5"/>
+        <image name="text_edit" width="24" height="24"/>
         <image name="thirdHalf" width="242" height="100"/>
-        <image name="twitter" width="32" height="32"/>
-        <image name="whatsapp" width="32" height="32"/>
+        <image name="twitter" width="418.90908813476562" height="418.90908813476562"/>
+        <image name="whatsapp" width="418.90908813476562" height="418.90908813476562"/>
         <image name="you" width="22" height="22"/>
     </resources>
 </document>

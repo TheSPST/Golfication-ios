@@ -281,6 +281,12 @@ class ExploreDetailPageVC:  UIViewController, UIScrollViewDelegate {
     }   
 }
 extension UIDevice {
+    var iPhoneXSMax: Bool {
+        return UIScreen.main.nativeBounds.height == 2688
+    }
+    var iPhoneXR: Bool {
+        return UIScreen.main.nativeBounds.height == 1792
+    }
     var iPhoneX: Bool {
         return UIScreen.main.nativeBounds.height == 2436
     }

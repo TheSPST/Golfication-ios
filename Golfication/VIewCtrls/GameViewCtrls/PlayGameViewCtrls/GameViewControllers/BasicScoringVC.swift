@@ -90,7 +90,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var matchDataDict = NSMutableDictionary()
     var isContinue = false
     var playersButton = [(button:UIButton,isSelected:Bool,id:String,name:String)]()
-    var teeTypeArr = [(tee:String,handicap:Double)]()
+    var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     let swipePrev = UISwipeGestureRecognizer()
     let swipeNext = UISwipeGestureRecognizer()
     var holeOutforAppsFlyer = [Int]()
@@ -103,11 +103,29 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             j += 1
         }
         
-        if(menuStackView.isHidden){
-            menuStackView.isHidden = false
-        }else{
-            menuStackView.isHidden = true
+        let myController = UIAlertController(title: "Menu", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
+        let saveOption = (UIAlertAction(title: "Save Round", style: UIAlertActionStyle.default, handler: { action in
+            self.saveAndviewScore()
+        }))
+        let restartOption = (UIAlertAction(title: "Restart Round", style: UIAlertActionStyle.default, handler: { action in
+            self.btnActionRestartRound(Any.self)
+        }))
+        var descardRound = "Discard Round"
+        if isEdited{
+            descardRound = "Delete Round"
         }
+        let discardOption = (UIAlertAction(title: descardRound, style: UIAlertActionStyle.default, handler: { action in
+            self.discardPressed(button: UIButton().self)
+        }))
+        let cancelOption = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { action in
+            debugPrint("Cancelled")
+        })
+        discardOption.setValue(UIColor.red, forKey: "titleTextColor")
+        myController.addAction(saveOption)
+        myController.addAction(restartOption)
+        myController.addAction(discardOption)
+        myController.addAction(cancelOption)
+        present(myController, animated: true, completion: nil)
     }
     @IBAction func btnActionChangeHole(_ sender: Any) {
         menuStackView.isHidden = true
@@ -117,7 +135,20 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         ActionSheetStringPicker.show(withTitle: "Select Hole", rows: strArr, initialSelection: holeIndex, doneBlock: { (picker, value, index) in
             self.holeIndex = value
-            self.updateData(indexToUpdate: value)
+            if(self.holeIndex == 0){
+                self.btnPrev.isEnabled = false
+                self.swipeNext.isEnabled = false
+                self.swipePrev.isEnabled = true
+                self.btnFinishRound.isHidden = true
+                self.btnNext.isHidden = false
+            }else if (self.holeIndex == self.scoreData.count-1){
+                self.btnPrev.isEnabled = true
+                self.swipeNext.isEnabled = true
+                self.btnNext.isHidden = true
+                self.swipePrev.isEnabled = false
+                self.btnFinishRound.isHidden = false
+            }
+            self.updateData(indexToUpdate: self.holeIndex)
             return
         }, cancel: { ActionMultipleStringCancelBlock in return }, origin: sender)
         
@@ -198,7 +229,9 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             i += 1
         }
-        
+        if isEdited{
+            self.exitGamePopUpView.btnDiscardText = "Delete Round"
+        }
         self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoreData.count) Holes Completed."
         self.exitGamePopUpView.isHidden = false
     }
@@ -604,12 +637,16 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                     if let tee = (v as! NSMutableDictionary).value(forKeyPath: "tee") as? String{
                         teeOfP = tee
                     }
+                    var teeColorOfP = String()
+                    if let tee = (v as! NSMutableDictionary).value(forKeyPath: "teeColor") as? String{
+                        teeColorOfP = tee
+                    }
                     var handicapOfP = Double()
                     if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? String{
                         handicapOfP = Double(hcp)!
                     }
                     if(teeOfP != ""){
-                        self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
+                        self.teeTypeArr.append((tee: teeOfP,color:teeColorOfP,handicap: handicapOfP))
                     }
                 }
                 if(i == 1){
@@ -710,7 +747,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.exitGamePopUpView.isHidden = true
         hideDetailScoreView()
         statusStableFord()
-        updateData(indexToUpdate: self.holeIndex)
+        
         if(self.holeIndex == 0){
             self.btnPrev.isEnabled = false
             self.swipeNext.isEnabled = false
@@ -719,6 +756,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.swipePrev.isEnabled = false
             self.btnFinishRound.isHidden = false
         }
+        updateData(indexToUpdate: self.holeIndex)
         if(self.gameTypeIndex < scoreData.count){
             self.btnChangeHole.isUserInteractionEnabled = false
         }else{
@@ -785,7 +823,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         var slopeIndex = 0
         for data in teeArr{
-            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()) && (data.name.lowercased() == self.teeTypeArr[index].color.lowercased()){
                 break
             }
             slopeIndex += 1
@@ -1399,19 +1437,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         let par = scoreData[holeIndex].par
         let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoreData.count
         let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoreData.count
-        var hcp = 0
+        var hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
         var totalShotsInThishole = 0
-        for tee in holeHcpWithTee{
-            if tee.hole == holeIndex+1{
-                for data in tee.teeBox{
-                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
-                        hcp = data.value(forKey:"hcp") as? Int ?? 0
-                        break
-                    }
-                }
-                break
-            }
-        }
         if hcp > 0 && hcp <= extrashotsReminder{
             totalShotsInThishole = par + extrashotsDiv + 1
         }else{
@@ -1750,7 +1777,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         for tee in holeHcpWithTee{
             if tee.hole == holeNo+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }

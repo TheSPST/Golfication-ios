@@ -297,7 +297,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var scoring = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
     var playerArrayWithDetails = NSMutableDictionary()
     var playersButton = [(button:UIButton,isSelected:Bool,id:String,name:String)]()
-    var teeTypeArr = [(tee:String,handicap:Double)]()
+    var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var stblefordScore = [(hole:Int,sFPoint:Int,newScore:Int,totalsShot:Int)]()
     var currentMatchId = String()
     var holeOutCount = Int()
@@ -816,6 +816,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             i += 1
         }
         self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) Holes Completed."
+        if isEdited{
+            self.exitGamePopUpView.btnDiscardText = "Delete Round"
+        }
         self.exitGamePopUpView.isHidden = false
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
         //        if(self.holeOutforAppsFlyer[playerIndex] != self.scoring.count){
@@ -2765,8 +2768,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         btnCenter.roundCorners([.bottomLeft,.bottomRight], radius: 3.0)
         btnMoveToMapGround.roundCorners([.bottomLeft,.bottomRight], radius: 3.0)
         
-        btnEndRound.setCornerWithRadius(color: UIColor.glfWhite.cgColor, radius: btnEndRound.frame.height/2)
-        btnViewScorecard.setCornerWithRadius(color: UIColor.clear.cgColor,radius: btnViewScorecard.frame.height/2)
+        btnEndRound.setCorner(color: UIColor.glfWhite.cgColor)
+        btnViewScorecard.setCorner(color: UIColor.clear.cgColor)
         btnViewScorecard.layer.masksToBounds = true
         let gradient2 = CAGradientLayer()
         gradient2.colors = [UIColor.glfFlatBlue.cgColor, UIColor(rgb: 0x2C4094).cgColor]
@@ -3900,7 +3903,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         var slopeIndex = 0
         for data in teeArr{
-            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()) && (data.name.lowercased() == self.teeTypeArr[index].color.lowercased()){
                 break
             }
             slopeIndex += 1
@@ -3932,15 +3935,19 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             for data in players{
                 let v = data.value as! NSMutableDictionary
                 var teeOfP = String()
+                var teeColorOfP = String()
                 var handicapOfP = Double()
                 if let tee = v.value(forKeyPath: "tee") as? String{
                     teeOfP = tee
+                }
+                if let teeColor = v.value(forKeyPath: "teeColor") as? String{
+                    teeColorOfP = teeColor
                 }
                 if let hcp = v.value(forKeyPath: "handicap") as? String{
                     handicapOfP = Double(hcp)!
                 }
                 if(teeOfP != ""){
-                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
+                    self.teeTypeArr.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
                 }
 
             }
@@ -3982,7 +3989,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for tee in self.courseData.holeHcpWithTee{
             if tee.hole == holeNo+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }
@@ -5992,26 +5999,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let par = scoring[holeIndex].par
         let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoring.count
         let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoring.count
-        var hcp = 0
+        var hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
         var totalShotsInThishole = 0
         var index = 0
-        for playersdata in self.playersButton{
-            if (playersdata.id == playerId){
-                break
-            }
-            index += 1
-        }
-        for tee in self.courseData.holeHcpWithTee{
-            if tee.hole == holeIndex{
-                for data in tee.teeBox{
-                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
-                        hcp = data.value(forKey:"hcp") as? Int ?? 0
-                        break
-                    }
-                }
-                break
-            }
-        }
         if hcp > 0 && hcp <= extrashotsReminder{
             totalShotsInThishole = par + extrashotsDiv + 1
         }else{

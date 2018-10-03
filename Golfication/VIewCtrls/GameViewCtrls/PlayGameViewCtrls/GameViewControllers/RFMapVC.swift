@@ -83,7 +83,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var topHCPView: UIView!
     @IBOutlet weak var lblTopHCP: UILabel!
     @IBOutlet weak var btnTopHoleNo: UIButton!
-    var teeTypeArr = [(tee:String,handicap:Double)]()
+    var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
     var buttonsArrayForGIR = [UIButton]()
     var buttonsArrayForPutts = [UIButton]()
@@ -146,7 +146,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             i += 1
         }
         
-        
+        if isEdited{
+            self.exitGamePopUpView.btnDiscardText = "Delete Round"
+        }
         self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) Holes Completed."
         self.exitGamePopUpView.isHidden = false
     }
@@ -396,12 +398,16 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 if let tee = (v as! NSMutableDictionary).value(forKeyPath: "tee") as? String{
                     teeOfP = tee
                 }
+                var teeColorOfP = String()
+                if let tee = (v as! NSMutableDictionary).value(forKeyPath: "teeColor") as? String{
+                    teeColorOfP = tee
+                }
                 var handicapOfP = Double()
                 if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? String{
                     handicapOfP = Double(hcp)!
                 }
                 if(teeOfP != "") && (handicapOfP != 0.0){
-                    self.teeTypeArr.append((tee: teeOfP, handicap: handicapOfP))
+                    self.teeTypeArr.append((tee: teeOfP,color:teeColorOfP ,handicap: handicapOfP))
                 }
             }
         }
@@ -688,7 +694,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         for tee in self.courseData.holeHcpWithTee{
             if tee.hole == holeNo+1{
                 for data in tee.teeBox{
-                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
                     }
@@ -1784,7 +1790,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         var slopeIndex = 0
         for data in teeArr{
-            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()){
+            if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()) && (data.name.lowercased() == self.teeTypeArr[index].color.lowercased()){
                 break
             }
             slopeIndex += 1
@@ -1803,19 +1809,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         let par = self.scoring[holeIndex].par
         let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % self.scoring.count
         let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / self.scoring.count
-        var hcp = 0
+        var hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
         var totalShotsInThishole = 0
-        for tee in self.courseData.holeHcpWithTee{
-            if tee.hole == holeIndex+1{
-                for data in tee.teeBox{
-                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased(){
-                        hcp = data.value(forKey:"hcp") as? Int ?? 0
-                        break
-                    }
-                }
-                break
-            }
-        }
         if hcp > 0 && hcp <= extrashotsReminder{
             totalShotsInThishole = par + extrashotsDiv + 1
         }else{
