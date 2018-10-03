@@ -151,12 +151,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     @IBAction func backBtnAction(_ sender: Any) {
-        //        for controller in self.navigationController!.viewControllers as Array {
-        //            if controller.isKind(of: NewGameVC.self) {
-        //                _ =  self.navigationController!.popToViewController(controller, animated: !self.isAcceptInvite)
-        //                break
-        //            }
-        //        }
         self.navigationController?.pop()
         if isBasic{
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateView"), object: nil)
@@ -1403,11 +1397,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         let netScore = strokes - (totalShotsInThishole - par)
         holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
-        //        lblStableFordScore.text = "\(sbPoint)"
-        //        btnStableScore.setTitle("Stableford Score", for: .normal)
         ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)/stableFordPoints").setValue(sbPoint)
+        classicScoring.stableFordScore = sbPoint
         holeWiseShots.setObject(netScore, forKey: "netScore" as NSCopying)
         ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)/netScore").setValue(netScore)
+        classicScoring.netScore = netScore
         updateScoreData()
     }
     func calculateTotalExtraShots(playerID:String)->Double{

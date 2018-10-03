@@ -4653,7 +4653,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
 //                                }
 //                            }
                             let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
-                            if (distance < 15000){
+                            if (distance < 15000.0){
                                 self.positionsOfDotLine.remove(at: 0)
                                 self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
                                 self.isUserInsideBound = true
