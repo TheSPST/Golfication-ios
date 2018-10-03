@@ -64,6 +64,7 @@ class BluetootheConnectionTesting: UIViewController {
         self.getGolfBagData()
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.setupFinished(_:)), name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.responseFirstCommand(_:)), name: NSNotification.Name(rawValue: "responseFirstCommand"), object: nil)
 
 
     }
@@ -273,6 +274,9 @@ class BluetootheConnectionTesting: UIViewController {
         let leftOrRight :UInt8 = UInt8(self.sgmntCtrlOrientation.selectedSegmentIndex + 1)
         let metric :UInt8 = UInt8(self.sgmntCtrlMetric.selectedSegmentIndex + 1)
         ble.sendFirstCommand(leftOrRight: leftOrRight,metric: metric)
+    }
+    @objc func responseFirstCommand(_ notification: NSNotification){
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "responseFirstCommand"))
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "AssignTagVC") as! AssignTagVC
         viewCtrl.golfBagDriverArray = golfBagDriverArray
         viewCtrl.golfBagIronArray = golfBagIronArray
@@ -285,7 +289,6 @@ class BluetootheConnectionTesting: UIViewController {
         viewCtrl.golfBagArr = golfBagArr
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
-    
     @IBAction func btnActionScanForDevice(_ sender: UIButton) {
         ble = BLE()
         ble.startScanning()

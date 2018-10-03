@@ -291,7 +291,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var shotViseCurve = [(shot:Int,line:GMSPolyline,markerPosition:GMSMarker,swingPosition:GMSMarker)]()
     var userLocationForClub : CLLocationCoordinate2D?
     var previousUserLocation = CLLocationCoordinate2D()
-    var clubsFullForm = ["Dr":"Driver","w":"Wood","h":"Hybrid","i":"Iron","Pw":"P Wedge","Gw":"Gap Wedge","Sw":"Sand Wedge","Lw":"Lob Wedge","Pu":"Putter"]
+    
     var clubsWithFullName = [String]()
     var isUpdating :Bool!
     var scoring = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
@@ -2957,30 +2957,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
         }
-        
-        
-//        switch CLLocationManager.authorizationStatus() {
-//        case .notDetermined:
-////             Request when-in-use authorization initially
-//            locationManager.requestWhenInUseAuthorization()
-//            locationManager.requestAlwaysAuthorization()
-//            break
-//
-//        case .restricted, .denied:
-
-//            break
-//
-//        case .authorizedWhenInUse:
-//
-//            // Enable basic location features
-//            locationManager.requestAlwaysAuthorization()
-//            break
-//
-//        case .authorizedAlways:
-//            // Enable any of your app's location features
-//            locationManager.allowsBackgroundLocationUpdates = true
-//            break
-//        }
     }
     
     @objc func markerAction(_ sender:UIButton){
@@ -2998,18 +2974,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 return
             }, cancel: { ActionMultipleStringCancelBlock in return }, origin: sender)
         }
-    }
-    func getClubName(club:String)->String{
-        var clubToShow = String()
-        if(club.count > 0){
-            if let fullName = clubsFullForm[club]{
-                clubToShow =  fullName
-            }
-            else if let fullName = clubsFullForm["\(club.last!)"]{
-                clubToShow =  "\(club.first!) \(fullName)"
-            }
-        }
-        return clubToShow
     }
     
     func codeWhenClickToBackView(){
@@ -3729,7 +3693,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
                 markerClub = clubReco(dist: distance, lie: "G")
                 if (distance/3 < 100) {
-                    self.btnSelectClubs.setTitle(self.getClubName(club: markerClub.trim()).uppercased(), for: .normal)
+                    self.btnSelectClubs.setTitle(BackgroundMapStats.getClubName(club: markerClub.trim()).uppercased(), for: .normal)
                     let indexPath = IndexPath(row: courseData.clubs.index(of: markerClub.trim())!, section: 0)
                     self.btnSelectClubs.tag = indexPath.row
                     self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
@@ -3757,7 +3721,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }else{
                         markerClub1 = clubReco(dist: dist1, lie: "T")
                     }
-                    let markerClubText = self.getClubName(club: markerClub1.trim())
+                    let markerClubText = BackgroundMapStats.getClubName(club: markerClub1.trim())
                     self.btnSelectClubs.setTitle(markerClubText.uppercased(), for: .normal)
                     let indexPath = IndexPath(row: courseData.clubs.index(of: markerClub1.trim())!, section: 0)
                     self.btnSelectClubs.tag = indexPath.row
@@ -3785,7 +3749,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         markerClub = clubReco(dist: distance, lie: "T")
                     }
                     let lie = callFindPositionInsideFeature(position: position[1])
-                    let markerClubText = self.getClubName(club: markerClub.trim())
+                    let markerClubText = BackgroundMapStats.getClubName(club: markerClub.trim())
                     self.btnSelectClubs.setTitle(markerClubText.uppercased(), for: .normal)
                     let indexPath = IndexPath(row: courseData.clubs.index(of: markerClub.trim())!, section: 0)
                     self.btnSelectClubs.tag = indexPath.row
@@ -3952,7 +3916,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         statusStableFord()
         let playerData = NSMutableArray()
         for clu in courseData.clubs{
-            self.clubsWithFullName.append(self.getClubName(club: clu))
+            self.clubsWithFullName.append(BackgroundMapStats.getClubName(club: clu))
         }
         selectClubDropper = Dropper(width: 150, height: 300)
         selectClubDropper.items = clubsWithFullName
@@ -4099,7 +4063,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 markerClub = "Pu"
                 if (distance/3 < 100) {
                     if(!isFromPlotLine) || (isDraggingMarker){
-                        self.btnSelectClubs.setTitle(self.getClubName(club: markerClub.trim()).uppercased(), for: .normal)
+                        self.btnSelectClubs.setTitle(BackgroundMapStats.getClubName(club: markerClub.trim()).uppercased(), for: .normal)
                         let indexPath = IndexPath(row: courseData.clubs.index(of: markerClub.trim())!, section: 0)
                         self.btnSelectClubs.tag = indexPath.row
                         self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
@@ -4142,7 +4106,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                     if(markerClub1 != " - "){
                         if(!isFromPlotLine) || (isDraggingMarker){
-                            self.btnSelectClubs.setTitle(self.getClubName(club: markerClub1.trim()).uppercased(), for: .normal)
+                            self.btnSelectClubs.setTitle(BackgroundMapStats.getClubName(club: markerClub1.trim()).uppercased(), for: .normal)
                             let indexPath = IndexPath(row: courseData.clubs.index(of: markerClub1.trim())!, section: 0)
                             self.btnSelectClubs.tag = indexPath.row
                             self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
@@ -4180,7 +4144,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         markerClub = clubReco(dist: distance, lie: "T")
                     }
                     if(!isFromPlotLine) || isDraggingMarker {
-                        self.btnSelectClubs.setTitle(self.getClubName(club: markerClub.trim()).uppercased(), for: .normal)
+                        self.btnSelectClubs.setTitle(BackgroundMapStats.getClubName(club: markerClub.trim()).uppercased(), for: .normal)
                         let indexPath = IndexPath(row: courseData.clubs.index(of: markerClub.trim())!, section: 0)
                         self.btnSelectClubs.tag = indexPath.row
                         self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
@@ -4393,7 +4357,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].green)
-        let zoomLevel = getTheZoomLevel()
+        let zoomLevel = BackgroundMapStats.getTheZoomLevel(positionsOfDotLine:self.positionsOfDotLine)
         self.mapView.setMinZoom(zoomLevel.1-1, maxZoom: 22.0)
         //        self.updateWindSpeed(latLng: positionsOfDotLine[1], indexToUpdate: indexToUpdate)
         if(self.btnStylizedMapView.tag == 1){
@@ -4643,7 +4607,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             if(onCourse) && !holeOutFlag && !isHoleByHole{
 //                var counter = 0
                 if(clubInTrack != nil){
-                    self.btnSelectClubs.setTitle(self.getClubName(club: clubInTrack.trim()).uppercased(), for: .normal)
+                    self.btnSelectClubs.setTitle(BackgroundMapStats.getClubName(club: clubInTrack.trim()).uppercased(), for: .normal)
                     let indexPath = IndexPath(row: courseData.clubs.index(of: clubInTrack.trim())!, section: 0)
                     self.btnSelectClubs.tag = indexPath.row
                     self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
@@ -5335,67 +5299,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         return GreenData(front: front, center:courseData.centerPointOfTeeNGreen[ind].green , back: end)
     }
     
-    //------------getZoomLevel------------------//
-    func getTheZoomLevel()->(CLLocationCoordinate2D,Float){
-        var distance = 200.0
-        var midPoint = CLLocationCoordinate2D()
-        var lat = Int()
-        distance  = GMSGeometryDistance(positionsOfDotLine.first!, positionsOfDotLine.last!)
-        midPoint = BackgroundMapStats.middlePointOfListMarkers(listCoords: [positionsOfDotLine.first!, positionsOfDotLine.last!])
-        lat = Int(midPoint.latitude)
-        var zoom = 16.0
-        if(lat < 90 && lat > 60){
-            if (distance<100){
-                zoom = 17.2;
-            }else if (distance>100&&distance<150){
-                zoom = 17;
-            }else if (distance>150&&distance<200){
-                zoom = 16.8;
-            }else if (distance>200&&distance<250){
-                zoom = 16.5;
-            }else if (distance>250&&distance<300){
-                zoom = 16.1;
-            }else if (distance>300&&distance<350){
-                zoom = 16.0;
-            }else if (distance>350&&distance<400){
-                zoom = 15.7;
-            }else if (distance>400&&distance<450){
-                zoom = 15.6;
-            }else if (distance>450&&distance<500){
-                zoom = 15.5;
-            }else if (distance>500&&distance<550){
-                zoom = 15.4;
-            }else if (distance>550&&distance<600){
-                zoom = 15.3;
-            }
-        }else{
-            if (distance<100){
-                zoom = 18.7;
-            }else if (distance>100&&distance<150){
-                zoom = 18.5;
-            }else if (distance>150&&distance<200){
-                zoom = 18.3;
-            }else if (distance>200&&distance<250){
-                zoom = 18;
-            }else if (distance>250&&distance<300){
-                zoom = 17.6;
-            }else if (distance>300&&distance<350){
-                zoom = 17.5;
-            }else if (distance>350&&distance<400){
-                zoom = 17.2;
-            }else if (distance>400&&distance<450){
-                zoom = 17.1;
-            }else if (distance>450&&distance<500){
-                zoom = 17;
-            }else if (distance>500&&distance<550){
-                zoom = 16.8;
-            }else if (distance>550&&distance<600){
-                zoom = 16.7;
-            }
-        }
-        let middlePointWithZoom = (midPoint,Float(zoom))
-        return middlePointWithZoom
-    }
+
     func letsRotateWithZoom(latLng1:CLLocationCoordinate2D,latLng2 : CLLocationCoordinate2D,isScreenShot:Bool = false){
         
         let rotationAngle = GMSGeometryHeading(latLng1, latLng2)
@@ -5426,20 +5330,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             teePoint = latLng1
             let heading = GMSGeometryHeading(latLng1, latLng2)
             midPoint = GMSGeometryOffset(latLng1, distance*0.5, heading)
-            //                midPoint = BackgroundMapStats.middlePointOfListMarkers(listCoords: [latLng1, latLng1])
             lat = Int(midPoint.latitude)
-            //            if(holeOutFlag){
-            //                distance  = GMSGeometryDistance(positionsOfCurveLines.first!, positionsOfCurveLines.last!)
-            //                teePoint = positionsOfCurveLines.first!
-            //                midPoint = BackgroundMapStats.middlePointOfListMarkers(listCoords: [positionsOfCurveLines.first!, positionsOfCurveLines.last!])
-            //
-            //            }
-            //            else{
-            //                distance  = GMSGeometryDistance(positionsOfDotLine.first!, positionsOfDotLine.last!)
-            //                teePoint = positionsOfDotLine.first!
-            //                midPoint = BackgroundMapStats.middlePointOfListMarkers(listCoords: [positionsOfDotLine.first!, positionsOfDotLine.last!])
-            //                lat = Int(midPoint.latitude)
-            //            }
         }
         var zoom = 16.0
         if(lat < 90 && lat > 60){
@@ -6002,17 +5893,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
     }
-//    func updateStableF(playerKey:String){
-//        for i in 0..<self.scoring[holeIndex].players.count where self.scoring[holeIndex].players[i].value(forKey: playerKey) != nil{
-//            if let scoringDict = (self.scoring[self.holeIndex].players[i].value(forKey: playerKey) as? NSMutableDictionary){
-//                if let isholeout = (scoringDict.value(forKey: "holeOut") as? Bool){
-//                    self.stableFordView.isHidden =  !isholeout
-//                    self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: playerKey, holeNo: self.holeIndex))"
-//                }
-//            }
-//        }
-//
-//    }
     func getScoreFromMatchData(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchId)/scoring/\(self.holeIndex)/") { (snapshot) in
             if  let score = (snapshot.value as? NSDictionary){

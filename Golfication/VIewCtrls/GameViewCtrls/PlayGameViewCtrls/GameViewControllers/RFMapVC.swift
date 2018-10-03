@@ -2448,7 +2448,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.mapView.animate(toLocation: positionsOfDotLine[1])
         self.letsRotateWithZoom(latLng1: positionsOfDotLine.first!, latLng2: positionsOfDotLine.last!)
-        let zoomLevel = getTheZoomLevel()
+        let zoomLevel = BackgroundMapStats.getTheZoomLevel(positionsOfDotLine:positionsOfDotLine)
         self.mapView.setMinZoom(zoomLevel.1-1, maxZoom: 22.0)
         
         for i in 0..<positionsOfDotLine.count{
@@ -2736,7 +2736,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     func letsRotateWithZoom(latLng1:CLLocationCoordinate2D,latLng2 : CLLocationCoordinate2D){
         let rotationAngle = rotateView(latlng1: latLng1, latlng2: latLng2)
-        let middlePointWithZoom = getTheZoomLevel()
+        let middlePointWithZoom = BackgroundMapStats.getTheZoomLevel(positionsOfDotLine: self.positionsOfDotLine)
         let camera = GMSCameraPosition.camera(withLatitude: middlePointWithZoom.0.latitude,
                                               longitude: middlePointWithZoom.0.longitude,
                                               zoom: middlePointWithZoom.1)
@@ -2870,102 +2870,7 @@ extension RFMapVC{
             fairwayHitContainerSV.isHidden = true
         }
     }
-    
-    //-------------UtilitiesMrthods---------------------------//
-    func degreeToRadian(angle:CLLocationDegrees) -> CGFloat{
-        return (  (CGFloat(angle)) / 180.0 * CGFloat(Double.pi)  )
-    }
-    func radianToDegree(radian:CGFloat) -> CLLocationDegrees{
-        return CLLocationDegrees(  radian * CGFloat(180.0 / .pi)  )
-    }
-    
-    //-------------MiddlePointfromPolygon---------------------//
-    func middlePointOfListMarkers(listCoords: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D{
-        var x = 0.0 as CGFloat
-        var y = 0.0 as CGFloat
-        var z = 0.0 as CGFloat
-        
-        for coordinate in listCoords{
-            let lat:CGFloat = degreeToRadian(angle: coordinate.latitude)
-            let lon:CGFloat = degreeToRadian(angle: coordinate.longitude)
-            x = x + cos(lat) * cos(lon)
-            y = y + cos(lat) * sin(lon);
-            z = z + sin(lat);
-        }
-        x = x/CGFloat(listCoords.count)
-        y = y/CGFloat(listCoords.count)
-        z = z/CGFloat(listCoords.count)
-        
-        let resultLon: CGFloat = atan2(y, x)
-        let resultHyp: CGFloat = sqrt(x*x+y*y)
-        let resultLat:CGFloat = atan2(z, resultHyp)
-        let newLat = radianToDegree(radian: resultLat)
-        let newLon = radianToDegree(radian: resultLon)
-        let result:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: newLat, longitude: newLon)
-        return result
-    }
-    
-    //------------getZoomLevel------------------//
-    func getTheZoomLevel()->(CLLocationCoordinate2D,Float){
-        var distance = 200.0
-        var midPoint = CLLocationCoordinate2D()
-        var lat = Int()
-        distance  = GMSGeometryDistance(positionsOfDotLine.first!, positionsOfDotLine.last!)
-        midPoint = self.middlePointOfListMarkers(listCoords: [positionsOfDotLine.first!, positionsOfDotLine.last!])
-        lat = Int(midPoint.latitude)
-        var zoom = 16.0
-        if(lat < 90 && lat > 60){
-            if (distance<100){
-                zoom = 17.2;
-            }else if (distance>100&&distance<150){
-                zoom = 17;
-            }else if (distance>150&&distance<200){
-                zoom = 16.8;
-            }else if (distance>200&&distance<250){
-                zoom = 16.5;
-            }else if (distance>250&&distance<300){
-                zoom = 16.1;
-            }else if (distance>300&&distance<350){
-                zoom = 16.0;
-            }else if (distance>350&&distance<400){
-                zoom = 15.7;
-            }else if (distance>400&&distance<450){
-                zoom = 15.6;
-            }else if (distance>450&&distance<500){
-                zoom = 15.5;
-            }else if (distance>500&&distance<550){
-                zoom = 15.4;
-            }else if (distance>550&&distance<600){
-                zoom = 15.3;
-            }
-        }else{
-            if (distance<100){
-                zoom = 18.7;
-            }else if (distance>100&&distance<150){
-                zoom = 18.5;
-            }else if (distance>150&&distance<200){
-                zoom = 18.3;
-            }else if (distance>200&&distance<250){
-                zoom = 18;
-            }else if (distance>250&&distance<300){
-                zoom = 17.6;
-            }else if (distance>300&&distance<350){
-                zoom = 17.5;
-            }else if (distance>350&&distance<400){
-                zoom = 17.2;
-            }else if (distance>400&&distance<450){
-                zoom = 17.1;
-            }else if (distance>450&&distance<500){
-                zoom = 17;
-            }else if (distance>500&&distance<550){
-                zoom = 16.8;
-            }else if (distance>550&&distance<600){
-                zoom = 16.7;
-            }
-        }
-        let middlePointWithZoom = (midPoint,Float(zoom))
-        return middlePointWithZoom
-    }
+
     func getDataFromJson(lattitude:Double,longitude:Double, onCompletion: @escaping ([String:AnyObject]?, String?) -> Void) {
         let url = URL(string: "http://api.openweathermap.org/data/2.5/weather?lat=\(lattitude)&lon=\(longitude)&APPID=a261cc920ea8ff18f5c941b4675f1b8a")!
         var request = URLRequest(url: url)

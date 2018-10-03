@@ -31,6 +31,9 @@ class ScanningVC: UIViewController {
     var progressView = SDLoader()
     var tempTimer: Timer!
     var currentGameId = Int()
+    var activeMatchId = String()
+    var swingMatchId = String()
+    var isPracticeMatch = Bool()
     @IBAction func backAction(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
@@ -44,6 +47,7 @@ class ScanningVC: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.showShotsAfterSwing(_:)), name: NSNotification.Name(rawValue: "getSwing"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.noSetup(_:)), name: NSNotification.Name(rawValue: "noSetup"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.takeSwing(_:)), name: NSNotification.Name(rawValue: "readyToTakeSwing"), object: nil)
@@ -97,6 +101,7 @@ class ScanningVC: UIViewController {
                                                 ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false])
                                             }
                                         }
+                                        self.currentGameId = data.value(forKey: "gameId") as! Int
                                         let swings = data.value(forKey: "swings") as? NSMutableArray
                                         if let playType = data.value(forKey: "playType") as? String{
                                             if(playType != "match") && swings != nil{
@@ -132,9 +137,7 @@ class ScanningVC: UIViewController {
     }
     @objc func reloadData(_ notification:NSNotification){
         DispatchQueue.main.async {
-//            self.noDeviceSV.isHidden = true
-//            self.startScanningSV.isHidden = true
-//            self.startSwingingSV.isHidden = false
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
             self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
         }
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DeviceConnected"))
@@ -179,9 +182,7 @@ class ScanningVC: UIViewController {
         }
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "getSwing"))
     }
-    func readSwingData(){
-
-    }
+    
     func setInitialUI(){
         btnNoDevice.layer.cornerRadius = btnNoDevice.frame.size.height/2
         btnRetry.layer.cornerRadius = 3.0
@@ -216,7 +217,7 @@ class ScanningVC: UIViewController {
              if(deviceGolficationX == nil){
                 ble = BLE()
                 ble.startScanning()
-                self.deviceCircularView.setProgress(value: CGFloat(90), animationDuration: 2.5, completion: {
+                self.deviceCircularView.setProgress(value: CGFloat(90), animationDuration: 5.5, completion: {
                     if(deviceGolficationX != nil){
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
                     }else{
