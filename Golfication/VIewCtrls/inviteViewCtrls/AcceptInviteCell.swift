@@ -12,10 +12,14 @@ class AcceptInviteCell: UITableViewCell {
     @IBOutlet weak var btnPlayerImage: UIImageView!
     @IBOutlet weak var lblPlayerName: UILabel!
     @IBOutlet weak var lblPlayerStatus: UILabel!
+    @IBOutlet weak var btnAcceptInvite: UIButton!
+    @IBOutlet weak var btnDenyRequest: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         btnPlayerImage.setCircle(frame: btnPlayerImage.frame)
+        btnAcceptInvite.setCorner(color: UIColor.clear.cgColor)
+        btnDenyRequest.setCorner(color: UIColor.clear.cgColor)
         // Initialization code
     }
 

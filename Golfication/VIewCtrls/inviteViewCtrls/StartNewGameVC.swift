@@ -28,7 +28,10 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var tblAwaitingPlayer: UITableView!
     @IBOutlet weak var btnAcceptInvite : UIButton!
     @IBOutlet weak var btnDeclineGame : UIButton!
-
+    @IBOutlet weak var lblCourseName: UILabel!
+    @IBOutlet weak var imgViewInvitedBy: UIImageView!
+    @IBOutlet weak var lblInvitation: UILabel!
+    
     @IBOutlet weak var mapViewGame: MKMapView!
     var mapLat = Double()
     var mapLng = Double()
@@ -54,28 +57,29 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        btnDeclineGame.backgroundColor = UIColor.clear
-        btnDeclineGame.setCorner(color: UIColor.white.cgColor)
-        btnAcceptInvite.setCorner(color: UIColor.white.cgColor)
+        self.mapViewGame.isHidden = true
+//        btnDeclineGame.backgroundColor = UIColor.clear
+//        btnDeclineGame.setCorner(color: UIColor.white.cgColor)
+//        btnAcceptInvite.setCorner(color: UIColor.white.cgColor)
         btnAcceptInvite.backgroundColor = UIColor.glfBluegreen
-
+        imgViewInvitedBy.setCircle(frame: self.imgViewInvitedBy.frame)
         
-        courseName.textColor = UIColor.glfWhite
-        courseName.frame = CGRect(x: 10, y: 10, width: self.mapViewGame.frame.width - 20, height: 33)
-        lblStartingHole.frame = CGRect(x: 10, y: 40, width: self.mapViewGame.frame.width - 20, height: 33)
-        lblStartingHole.font = UIFont(name: "SFProDisplay-Medium", size: 14)
-        lblStartingHole.text = ""
-        lblStartingHole.textColor = UIColor.glfWhite
+//        courseName.textColor = UIColor.glfWhite
+//        courseName.frame = CGRect(x: 10, y: 10, width: self.mapViewGame.frame.width - 20, height: 33)
+//        lblStartingHole.frame = CGRect(x: 10, y: 40, width: self.mapViewGame.frame.width - 20, height: 33)
+//        lblStartingHole.font = UIFont(name: "SFProDisplay-Medium", size: 14)
+//        lblStartingHole.text = ""
+//        lblStartingHole.textColor = UIColor.glfWhite
         //        courseName.backgroundColor = UIColor.glfBluegreen
-        courseName.font = UIFont(name: "SFProDisplay-Medium", size: 21)
-        courseName.text = ""
-        mapViewGame.addSubview(courseName)
-        mapViewGame.addSubview(lblStartingHole)
-        btnDeclineGame.addTarget(self, action: #selector(btnActionDecline(_:)), for: .touchUpInside)
-        btnAcceptInvite.addTarget(self, action: #selector(btnActionInvite(_:)), for: .touchUpInside)
+//        courseName.font = UIFont(name: "SFProDisplay-Medium", size: 21)
+//        courseName.text = ""
+//        mapViewGame.addSubview(courseName)
+//        mapViewGame.addSubview(lblStartingHole)
+//        btnDeclineGame.addTarget(self, action: #selector(btnActionDecline(_:)), for: .touchUpInside)
+//        btnAcceptInvite.addTarget(self, action: #selector(btnActionInvite(_:)), for: .touchUpInside)
         
-        mapViewGame.addSubview(btnDeclineGame)
-        mapViewGame.addSubview(btnAcceptInvite)
+//        mapViewGame.addSubview(btnDeclineGame)
+//        mapViewGame.addSubview(btnAcceptInvite)
         getScoreFromMatchDataFirebase(matchID:self.matchId)
     }
     
@@ -140,6 +144,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                         .observeSingleEvent(of: .value, with: { (snapshot) in
                             let userDict = snapshot.value as! [String: Any]
                             self.courseName.text = (userDict["courseName"] as! String)
+                            self.lblCourseName.text = (userDict["courseName"] as! String)
                             self.mapLat = Double(userDict["lat"] as! String)!
                             self.mapLng = Double(userDict["lng"] as! String)!
                             self.courseId = (userDict["courseId"] as! String)
@@ -152,13 +157,22 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                                     self.isCustomGame = false
                                 }
                             }
-                            self.loadMapView()
+                            if let startedBy = userDict["startedBy"] as? String{
+                                self.getStartedByData(startedBy: startedBy)
+                            }
+//                            self.loadMapView()
                         })
                     self.tblAwaitingPlayer.reloadData()
                     
                 }
             })
         }
+    }
+    func getStartedByData(startedBy:String){
+        let index = self.playersKey.lastIndex(of: startedBy)!
+        lblInvitation.text = "\(self.playersName[index]) wants to add you to his game."
+        imgViewInvitedBy.sd_setImage(with: URL(string:self.playersImage[index]), placeholderImage: UIImage(imageLiteralResourceName: "0_you"), completed: nil)
+        
     }
     // MARK: selectedGameTypeFromFirebase
     func checkRangeFinderHoleData(courseId:String) {
@@ -368,6 +382,13 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             break
         default:
             cell.lblPlayerStatus.textColor = UIColor.glfBlack75
+        }
+        if(self.playersKey[indexPath.row] == Auth.auth().currentUser!.uid){
+            cell.btnAcceptInvite.isHidden = false
+            cell.btnDenyRequest.isHidden = false
+            cell.lblPlayerStatus.isHidden = true
+            cell.btnDenyRequest.addTarget(self, action: #selector(btnActionDecline(_:)), for: .touchUpInside)
+            cell.btnAcceptInvite.addTarget(self, action: #selector(btnActionInvite(_:)), for: .touchUpInside)
         }
         cell.lblPlayerStatus.text = status[states]
         return cell
