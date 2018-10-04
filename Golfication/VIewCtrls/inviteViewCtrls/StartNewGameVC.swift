@@ -187,25 +187,28 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
         for data in rangeFinArr{
-            let rating = data.value(forKey: "courseRating") as! Double
+            var ratin = "N/A"
+            if let rating = data.value(forKey: "courseRating") as? Double{
+                ratin = "\(rating)"
+            }
             var slope = 113
             if let slo = data.value(forKey: "slopeRating") as? Int{
                 slope = slo
             }
             let teeName = data.value(forKey: "teeColor") as! String
             let teeType = data.value(forKey: "tee") as! String
-            teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:"\(rating)", slope:"\(slope)"))
+            teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:ratin, slope:"\(slope)"))
         }
         if(!teeArr.isEmpty){
             selectedSlope = Int(teeArr[0].slope)!
-            selectedRating = Double(teeArr[0].rating)!
+            selectedRating = teeArr[0].rating
             selectedTee = teeArr[0].type
             selectedTeeColor = teeArr[0].name
         }else{
             selectedTee = ""
             selectedTeeColor = ""
             selectedSlope = 113
-            selectedRating = 0.0
+            selectedRating = ""
         }
     }
     let locationManager = CLLocationManager()

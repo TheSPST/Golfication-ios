@@ -29,7 +29,7 @@ var mode = Int()
 var selectedTee = ""
 var selectedTeeColor = ""
 var selectedSlope = Int()
-var selectedRating = Double()
+var selectedRating = String()
 var teeArr = [(name:String,type:String,rating:String,slope:String)]()
 var handicap = Double()
 var isEdited = Bool()
@@ -146,7 +146,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 self.lblTeeRating.text = tee.rating
                 self.lblTeeSlope.text = tee.slope
                 selectedSlope = Int(tee.slope)!
-                selectedRating = Double(tee.rating)!
+                selectedRating = tee.rating
                 selectedTee = "\(tee.type)"
                 selectedTeeColor = "\(tee.name)"
             }))
@@ -1208,14 +1208,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
         for data in rangeFinArr{
-            let rating = data.value(forKey: "courseRating") as! Double
+            var ratin = "N/A"
+            if let rating = data.value(forKey: "courseRating") as? Double{
+                ratin = "\(rating)"
+            }
             var slope = 113
             if let slo = data.value(forKey: "slopeRating") as? Int{
                 slope = slo
             }
             let teeName = data.value(forKey: "teeColor") as! String
             let teeType = data.value(forKey: "tee") as! String
-            teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:"\(rating)", slope:"\(slope)"))
+            teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:ratin, slope:"\(slope)"))
         }
         if(!teeArr.isEmpty){
             self.startingTeeCardView.isHidden = false
@@ -1224,14 +1227,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.lblTeeSlope.text = teeArr[0].slope
             self.lblTeeRating.text = teeArr[0].rating
             selectedSlope = Int(teeArr[0].slope)!
-            selectedRating = Double(teeArr[0].rating)!
+            selectedRating = teeArr[0].rating
             selectedTee = teeArr[0].type
             selectedTeeColor = teeArr[0].name
         }else{
             selectedTee = ""
             selectedTeeColor = ""
             selectedSlope = 0
-            selectedRating = 0.0
+            selectedRating = ""
             self.startingTeeCardView.isHidden = true
         }
     }
