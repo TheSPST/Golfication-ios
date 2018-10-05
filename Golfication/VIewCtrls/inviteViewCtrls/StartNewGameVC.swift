@@ -14,8 +14,6 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func backBtnAction(_ sender: Any) {
         self.navigationController?.popToRootViewController(animated: false)
     }
-    
-    @IBOutlet weak var actvtIndView: UIActivityIndicatorView!
     var matchId : String!
     @IBAction func btnActionStartNewGame(_ sender: Any) {
         let alertController = UIAlertController(title: "Alert", message:"Decline request to start New Game" , preferredStyle: .alert)
@@ -48,6 +46,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     let lblStartingHole = UILabel()
     var isAccept = false
     var scoringMode = String()
+    var progressView = SDLoader()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if(isAccept){
@@ -58,12 +57,12 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         self.mapViewGame.isHidden = true
-//        btnDeclineGame.backgroundColor = UIColor.clear
-//        btnDeclineGame.setCorner(color: UIColor.white.cgColor)
-//        btnAcceptInvite.setCorner(color: UIColor.white.cgColor)
         btnAcceptInvite.backgroundColor = UIColor.glfBluegreen
         imgViewInvitedBy.setCircle(frame: self.imgViewInvitedBy.frame)
-        
+        //        btnDeclineGame.backgroundColor = UIColor.clear
+        //        btnDeclineGame.setCorner(color: UIColor.white.cgColor)
+        //        btnAcceptInvite.setCorner(color: UIColor.white.cgColor)
+
 //        courseName.textColor = UIColor.glfWhite
 //        courseName.frame = CGRect(x: 10, y: 10, width: self.mapViewGame.frame.width - 20, height: 33)
 //        lblStartingHole.frame = CGRect(x: 10, y: 40, width: self.mapViewGame.frame.width - 20, height: 33)
@@ -116,6 +115,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func getScoreFromMatchDataFirebase(matchID:String){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchID)/player") { (snapshot) in
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
             var playerDict = NSMutableDictionary()
             if(snapshot.value != nil){
                 print(snapshot.value as! NSMutableDictionary)
@@ -165,6 +165,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.tblAwaitingPlayer.reloadData()
                     
                 }
+                self.progressView.hide(navItem:self.navigationItem)
             })
         }
     }
@@ -230,8 +231,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     func getScoreFromMatchDataScoring(){
         
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchId!)") { (snapshot) in
-            self.actvtIndView.isHidden = false
-            self.actvtIndView.startAnimating()
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
             self.view.isUserInteractionEnabled = false
             let matchDict = (snapshot.value as? NSDictionary)!
             var scoreArray = NSArray()
@@ -280,8 +280,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
             }
             DispatchQueue.main.async(execute: {
-                self.actvtIndView.isHidden = true
-                self.actvtIndView.stopAnimating()
+                self.progressView.hide(navItem: self.navigationItem)
                 self.view.isUserInteractionEnabled = true
                 if(isOnCourse){
                     switch CLLocationManager.authorizationStatus() {

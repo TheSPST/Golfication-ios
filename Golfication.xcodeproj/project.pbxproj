@@ -24,7 +24,6 @@
 		3E03F114207E2FE1001DDC5F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E03F113207E2FE1001DDC5F /* InviteViewController.swift */; };
 		3E03F11A207F593A001DDC5F /* ScrollableStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E03F119207F593A001DDC5F /* ScrollableStackView.swift */; };
 		3E03F1202080B36A001DDC5F /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E03F11F2080B36A001DDC5F /* SettingVC.swift */; };
-		3E0A120221660833007D02C4 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E0A120121660832007D02C4 /* GoogleService-Info-live.plist */; };
 		3E0D9D3320E676BE00FE02C6 /* BasicScoringVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0D9D3220E676BE00FE02C6 /* BasicScoringVC.swift */; };
 		3E13F3B8212E999C005D9B70 /* MapForInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E13F3B7212E999C005D9B70 /* MapForInputViewController.swift */; };
 		3E15C1202142B834002D43AF /* MultiplayerTeeSelectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15C11F2142B834002D43AF /* MultiplayerTeeSelectionTableViewCell.swift */; };
@@ -75,6 +74,7 @@
 		3EB5D2F9215F78CD007C55E3 /* GolficationXFirmware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB5D2F8215F78CD007C55E3 /* GolficationXFirmware.swift */; };
 		3EB6D3B72137CA72000DA1BE /* FBSomeEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */; };
 		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
+		3EBCAF4A2167453D007BB375 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EBCAF492167453D007BB375 /* GoogleService-Info-live.plist */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
 		3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */ = {isa = PBXBuildFile; fileRef = 3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */; };
 		3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED2C8792088C08800604F31 /* ProfileVC.swift */; };
@@ -265,7 +265,6 @@
 		3E03F113207E2FE1001DDC5F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		3E03F119207F593A001DDC5F /* ScrollableStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableStackView.swift; sourceTree = "<group>"; };
 		3E03F11F2080B36A001DDC5F /* SettingVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
-		3E0A120121660832007D02C4 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3E0D9D3220E676BE00FE02C6 /* BasicScoringVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicScoringVC.swift; sourceTree = "<group>"; };
 		3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3E13F3B7212E999C005D9B70 /* MapForInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapForInputViewController.swift; sourceTree = "<group>"; };
@@ -319,6 +318,7 @@
 		3EB5D2F8215F78CD007C55E3 /* GolficationXFirmware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolficationXFirmware.swift; sourceTree = "<group>"; };
 		3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSomeEvents.swift; sourceTree = "<group>"; };
 		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
+		3EBCAF492167453D007BB375 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
 		3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json"; sourceTree = "<group>"; };
 		3ED2C8792088C08800604F31 /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
@@ -1129,7 +1129,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3E0A120121660832007D02C4 /* GoogleService-Info-live.plist */,
+				3EBCAF492167453D007BB375 /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1291,7 +1291,7 @@
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
 				4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */,
-				3E0A120221660833007D02C4 /* GoogleService-Info-live.plist in Resources */,
+				3EBCAF4A2167453D007BB375 /* GoogleService-Info-live.plist in Resources */,
 				3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */,
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
@@ -1754,7 +1754,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = FE7D783SLH;
+				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Golfication/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1779,7 +1779,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = FE7D783SLH;
+				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Golfication/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;

@@ -1807,14 +1807,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             index += 1
         }
         let par = self.scoring[holeIndex].par
-        let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % self.scoring.count
-        let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / self.scoring.count
-        var hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
-        var totalShotsInThishole = 0
-        if hcp > 0 && hcp <= extrashotsReminder{
-            totalShotsInThishole = par + extrashotsDiv + 1
-        }else{
-            totalShotsInThishole = par + extrashotsDiv
+        let courseHCP = Int(self.calculateTotalExtraShots(playerID: playerId))
+        let temp = courseHCP/18
+        var totalShotsInThishole = temp+par
+        let hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
+        
+        if (courseHCP - temp*18 >= hcp) {
+            totalShotsInThishole += 1;
         }
         var sbPoint = totalShotsInThishole - strokes + 2
         if sbPoint<0 {

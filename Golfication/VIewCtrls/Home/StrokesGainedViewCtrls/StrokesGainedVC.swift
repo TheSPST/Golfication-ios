@@ -702,8 +702,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         }
         else{
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-//        self.navigationController?.pushViewController(viewCtrl, animated: false)
-        self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.2)
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
             playButton.contentView.isHidden = true
             playButton.floatButton.isHidden = true
         }

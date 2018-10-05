@@ -277,8 +277,8 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         }
         else{
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.05)
-        
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
         }

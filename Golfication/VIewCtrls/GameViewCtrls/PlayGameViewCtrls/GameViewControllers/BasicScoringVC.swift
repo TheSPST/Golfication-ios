@@ -96,6 +96,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var holeOutforAppsFlyer = [Int]()
     var startingIndex = Int()
     var gameTypeIndex = Int()
+    var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     @IBAction func btnActionMenu(_ sender: Any) {
         var j = 0
         for player in playersButton{
@@ -551,6 +552,9 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 }
             }
         }
+        if(self.holeIndex == self.scoreData.count){
+            self.holeIndex = 0
+        }
         if(self.holeIndex == scoreData.count-1){
             self.btnNext.isHidden = true
             self.swipePrev.isEnabled = false
@@ -656,8 +660,10 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 }
             }
         }
+        if(self.holeIndex == self.scoreData.count){
+            self.holeIndex = 0
+        }
         if(!self.teeTypeArr.isEmpty){
-            self.loadStableFordData()
             self.topView.isHidden = true
             self.holeParDDView.isHidden = false
             self.imgViewInfo.isHidden = true
@@ -712,6 +718,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @objc func loadMap(_ notification: NSNotification) {
         self.progressView.hide(navItem: navigationItem)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
+        holeHcpWithTee = self.courseData.holeHcpWithTee
         if(!isContinue) && (!isAccept){
             if(matchDataDict.object(forKey: "player") != nil) && self.playerData.count == 0{
                 let tempArray = matchDataDict.object(forKey: "player")! as! NSMutableDictionary
@@ -747,7 +754,9 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.exitGamePopUpView.isHidden = true
         hideDetailScoreView()
         statusStableFord()
-        
+        if(self.holeIndex == self.scoreData.count){
+           self.holeIndex = 0
+        }
         if(self.holeIndex == 0){
             self.btnPrev.isEnabled = false
             self.swipeNext.isEnabled = false
@@ -773,45 +782,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     @objc func swipedViewNext(){
         self.prevAction(Any.self)
-    }
-    func loadStableFordData(){
-        if  !(selectedGolfID == "") {
-            let golfId = "course_\(selectedGolfID)"
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/holes") { (snapshot) in
-                var rangeFinArr = [NSMutableDictionary]()
-                if let rangeFin = snapshot.value as? [NSMutableDictionary]{
-                    rangeFinArr = rangeFin
-                }
-                DispatchQueue.main.async(execute: {
-                    if (rangeFinArr.isEmpty){
-                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/stableford/holes") { (snapshot) in
-                            if let rangeFin = snapshot.value as? [NSMutableDictionary]{
-                                rangeFinArr = rangeFin
-                            }
-                            DispatchQueue.main.async(execute: {
-                                self.processSelectTee(rangeFinArr: rangeFinArr)
-                            })
-                        }
-                    }else{
-                        self.processSelectTee(rangeFinArr: rangeFinArr)
-                    }
-                })
-            }
-        }
-    }
-    var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
-    private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
-        var i = 1
-        for data in rangeFinArr{
-            if let teeBox = data.value(forKey: "teeBoxes") as? NSMutableArray{
-                var teeData = [NSMutableDictionary]()
-                for data in teeBox{
-                    teeData.append(data as! NSMutableDictionary)
-                }
-                holeHcpWithTee.append((hole: i, teeBox: teeData))
-            }
-            i += 1
-        }
     }
     func calculateTotalExtraShots(playerID:String)->Double{
         var index = 0
@@ -915,11 +885,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         
         self.holeWiseShots = NSMutableDictionary()
         self.btnExpendScore.isHidden = false
-        self.btnDownArraow.setTitle("Hole \(indexToUpdate+1)", for: .normal)
+        self.btnDownArraow.setTitle("Hole \(scoreData[indexToUpdate].hole)", for: .normal)
         self.lblParNumber.text = "PAR \(self.scoreData[indexToUpdate].par)"
         let hcp = self.getHCPValue(playerID: self.playerId, holeNo: indexToUpdate)
         self.lblHCP.text = "HCP \(hcp == 0 ? "-":"\(hcp)")"
-        self.lblHole.text = "Hole \(indexToUpdate+1)"
+        self.lblHole.text = "Hole \(scoreData[indexToUpdate].hole)"
         self.lblPar.text = "Par \(self.scoreData[indexToUpdate].par)"
         self.fairwayHitStackView.superview?.isHidden = false
         if(self.scoreData[indexToUpdate].par == 3){
@@ -1435,14 +1405,13 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             index += 1
         }
         let par = scoreData[holeIndex].par
-        let extrashotsReminder = Int(self.calculateTotalExtraShots(playerID: playerId)) % scoreData.count
-        let extrashotsDiv = Int(self.calculateTotalExtraShots(playerID: playerId)) / scoreData.count
-        var hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
-        var totalShotsInThishole = 0
-        if hcp > 0 && hcp <= extrashotsReminder{
-            totalShotsInThishole = par + extrashotsDiv + 1
-        }else{
-            totalShotsInThishole = par + extrashotsDiv
+        let courseHCP = Int(self.calculateTotalExtraShots(playerID: playerId))
+        let temp = courseHCP/18
+        var totalShotsInThishole = temp+par
+        let hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
+        
+        if (courseHCP - temp*18 >= hcp) {
+            totalShotsInThishole += 1;
         }
         var sbPoint = totalShotsInThishole - strokes + 2
         if sbPoint<0 {

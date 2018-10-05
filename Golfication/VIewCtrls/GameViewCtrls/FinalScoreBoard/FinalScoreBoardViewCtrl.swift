@@ -435,7 +435,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     
     @IBAction func premiumBecomeAProAction(_ sender: UIButton){
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.2)
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     @IBAction func playNowAction(_ sender: UIButton){
@@ -1072,7 +1072,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     }
     func proLockBtnPressed(button:UIButton) {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.2)
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     func setSpreadOffTheTeaGraph(){
         var dataXAxis = [Double]()

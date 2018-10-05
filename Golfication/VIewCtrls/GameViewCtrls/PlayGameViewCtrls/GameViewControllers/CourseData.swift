@@ -185,12 +185,14 @@ class CourseData:NSObject{
                             }
                             self.holeHcpWithTee.append((hole: i+1, teeBox: teeData))
                         }
-                        let centerTee = centerOfTee[indexOfMaxDistanceTee]
-                        let centerOfGreen = BackgroundMapStats.middlePointOfListMarkers(listCoords:data.green)
-                        let headingAngle = GMSGeometryHeading(centerTee, centerOfGreen)
-                        let distance = GMSGeometryDistance(centerTee, centerOfGreen)
-                        let fairWayPoint = GMSGeometryOffset(centerTee, distance*0.8, headingAngle)
-                        self.centerPointOfTeeNGreen.append((tee: centerTee,fairway:fairWayPoint,green: centerOfGreen))
+                        if !centerOfTee.isEmpty{
+                            let centerTee = centerOfTee[indexOfMaxDistanceTee]
+                            let centerOfGreen = BackgroundMapStats.middlePointOfListMarkers(listCoords:data.green)
+                            let headingAngle = GMSGeometryHeading(centerTee, centerOfGreen)
+                            let distance = GMSGeometryDistance(centerTee, centerOfGreen)
+                            let fairWayPoint = GMSGeometryOffset(centerTee, distance*0.8, headingAngle)
+                            self.centerPointOfTeeNGreen.append((tee: centerTee,fairway:fairWayPoint,green: centerOfGreen))
+                        }
                         i += 1
                     }
                 }
@@ -246,8 +248,8 @@ class CourseData:NSObject{
                     var tempholeGreenDataArr = [GreenData]()
                     var tempNumofHole = self.numberOfHoles
                     tempNumofHole.removeAll()
-                    var tempHcp = self.holeHcpWithTee
-                    tempHcp.removeAll()
+                    var hcpData = self.holeHcpWithTee
+                    hcpData.removeAll()
                     
                     for i in self.startingIndex-1..<self.gameTypeIndex+self.startingIndex-1{
                         debugPrint("index:",i)
@@ -258,14 +260,16 @@ class CourseData:NSObject{
                                 temp.append(self.propertyArray[j])
                             }
                         }
-                        newTemp.append(self.centerPointOfTeeNGreen[newIndex])
+                        if !self.centerPointOfTeeNGreen.isEmpty{
+                            newTemp.append(self.centerPointOfTeeNGreen[newIndex])
+                        }
                         if(!self.holeGreenDataArr.isEmpty){
                             tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
                         }
                         tempNumofHole.append(self.numberOfHoles[newIndex])
                         if(!self.holeHcpWithTee.isEmpty){
-                            tempHcp.append(self.holeHcpWithTee[newIndex])
-                            tempHcp[newIndex].hole = newIndex+1
+                            self.holeHcpWithTee[newIndex].hole = newIndex+1
+                            hcpData.append(self.holeHcpWithTee[newIndex])
                         }
                     }
                     if(!newTemp.isEmpty){
@@ -274,7 +278,7 @@ class CourseData:NSObject{
                  
                         self.holeGreenDataArr = tempholeGreenDataArr
                         self.numberOfHoles = tempNumofHole
-                        self.holeHcpWithTee = tempHcp
+                        self.holeHcpWithTee = hcpData
                     }
                 }
                 self.getGolfBagData()

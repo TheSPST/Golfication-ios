@@ -236,8 +236,8 @@ class ProfileVC: UIViewController {
     @IBAction func yearlyPlanAction(_ sender: Any) {
         
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.05)
-        
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+
 //        viewUpgradeInactive.isHidden = true
 //        viewUpgradeFreeActive.isHidden = true
 //        viewUpgradeActive.isHidden = false
@@ -265,8 +265,10 @@ class ProfileVC: UIViewController {
         }
         if(valid){
             
-            checkTrialPreriod()
-            
+//            checkTrialPreriod()
+            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+
             /*let timeNow = NSDate()
             let calendar = NSCalendar.current
             let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(beginTimestamp/1000)))

@@ -39,11 +39,7 @@ class NetworkActivityIndicatorManager:NSObject{
 }
 
 class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
-    @IBOutlet weak var closeBtn: UIButton!
     
-    @IBAction func closeAction(_ sender: Any) {
-        self.navigationController?.pop()
-    }
     @IBOutlet weak var cardView1: CardView!
     @IBOutlet weak var cardView2: CardView!
     @IBOutlet weak var cardView3: CardView!
@@ -67,9 +63,13 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     
     @IBOutlet weak var view7Days: UIView!
     @IBOutlet weak var view30Days: UIView!
+    
+    @IBOutlet weak var lbl30DaysTrial: UILabel!
+
     //    @IBOutlet weak var btnTnC: UIButton!
     
-    @IBOutlet weak var actvtIndView: UIActivityIndicatorView!
+    var progressView = SDLoader()
+
     var trial = false
 
     @IBAction func privacyPolicyAction(_ sender: Any) {
@@ -116,19 +116,9 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
         return Int(NSDate().timeIntervalSince1970)
     }
     
-    func backAction() {
+    @IBAction func backAction(_ sender: UIBarButtonItem) {
         
-        let alert = UIAlertController(title: "Alert", message: "Congratulations! Your Pro MemberShip is now Active", preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
-            
-            self.navigationController?.isNavigationBarHidden = false
-            self.navigationController?.popToRootViewController(animated: true)
-            self.navigationController?.popViewController(animated: false)
-            self.navigationController?.pop(transitionType: kCATransitionFromTop, duration: 0.2)
-            
-        }))
-        self.present(alert, animated: true, completion: nil)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
     var titleLabel: UILabel!
@@ -151,7 +141,7 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
@@ -159,7 +149,7 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.title = "Upgrade to Pro Membership"
         // ----------------- Event Tracking ---------------------------------
         
         Analytics.logEvent("premium_popup", parameters: [:])
@@ -174,8 +164,6 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
         btnPrivacy.setAttributedTitle(attributedString1, for: .normal)
         
         self.automaticallyAdjustsScrollViewInsets = false
-        
-        closeBtn.setCircle(frame: closeBtn.frame)
         
         view7Days.layer.cornerRadius = 25.0
         view30Days.layer.cornerRadius = 25.0
@@ -200,18 +188,18 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
         btnMonthly.isEnabled = false
         btnYearly.isEnabled = false
 
-        self.actvtIndView.isHidden = false
-        self.actvtIndView.startAnimating()
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "trial") { (snapshot) in
             if(snapshot.value != nil){
                 self.trial = snapshot.value as! Bool
+                self.lbl30DaysTrial.isHidden = true
             }
             else{
                 self.trial = false
+                self.lbl30DaysTrial.isHidden = false
             }
             DispatchQueue.main.async( execute: {
-                self.actvtIndView.isHidden = true
-                self.actvtIndView.stopAnimating()
+                self.progressView.hide(navItem: self.navigationItem)
 
                 self.btnMonthly.isEnabled = true
                 self.btnYearly.isEnabled = true
@@ -229,8 +217,6 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
                         let alertView = UIAlertController(title: "", message: type.message(), preferredStyle: .alert)
                         let action = UIAlertAction(title: "OK", style: .default, handler: { (alert) in
                             self?.navigationController?.popToRootViewController(animated: true)
-                            self?.navigationController?.popViewController(animated: false)
-                            self?.navigationController?.pop(transitionType: kCATransitionFromTop, duration: 0.2)
                         })
                         alertView.addAction(action)
                         strongSelf.present(alertView, animated: true, completion: nil)
@@ -242,7 +228,6 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.isNavigationBarHidden = false
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentStarted"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentFinished"), object: nil)
         
@@ -251,30 +236,33 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     }
     
     @objc func startFetchingDetails(_ notification: NSNotification) {
-        self.actvtIndView.isHidden = false
-        self.actvtIndView.startAnimating()
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
         btnMonthly.isEnabled = false
         btnYearly.isEnabled = false
     }
     @objc func endFetchingDetails(_ notification: NSNotification) {
-        self.actvtIndView.isHidden = true
-        self.actvtIndView.stopAnimating()
+        self.progressView.hide(navItem: self.navigationItem)
         btnMonthly.isEnabled = true
         btnYearly.isEnabled = true
     }
     
     @objc func startPaymentRequest(_ notification: NSNotification) {
-        self.actvtIndView.isHidden = false
-        self.actvtIndView.startAnimating()
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
         btnMonthly.isEnabled = false
         btnYearly.isEnabled = false
     }
     
     @objc func endPaymentRequest(_ notification: NSNotification) {
-        self.actvtIndView.isHidden = true
-        self.actvtIndView.stopAnimating()
+        
+        self.progressView.hide(navItem: self.navigationItem)
         btnMonthly.isEnabled = true
         btnYearly.isEnabled = true
+        
+        let alert = UIAlertController(title: "Alert", message: "Congratulations! Your Pro MemberShip is now Active", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
+            self.navigationController?.popToRootViewController(animated: true)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: – ScrollViewDelegate

@@ -146,7 +146,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - upgradeAction
     @IBAction func upgradeAction(_ sender: Any) {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.05)
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     // MARK: - playFriendsAction
@@ -231,11 +231,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - goProAction
     @IBAction func goProAction(_ sender: Any) {
         
-        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "HomeFreeProMemberVC") as! HomeFreeProMemberVC
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+
+        /*let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "HomeFreeProMemberVC") as! HomeFreeProMemberVC
         viewCtrl.modalPresentationStyle = .overCurrentContext
         present(viewCtrl, animated: true, completion: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.free30DaysProActivated(_:)), name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.free30DaysProActivated(_:)), name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)*/
     }
     
     @objc func free30DaysProActivated(_ notification: NSNotification) {
@@ -576,8 +579,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     func proLockBtnPressed(button:UIButton) {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.2)
-        
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
     }
@@ -857,7 +860,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                         debugPrint("RENEW Alert: \(alert?.title ?? "")")
                                         
                                         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-                                        self.navigationController?.push(viewController: viewCtrl, transitionType: kCATransitionFromTop, duration: 0.05)
+                                        self.navigationController?.pushViewController(viewCtrl, animated: true)
                                     }))
                                     self.present(alert, animated: true, completion: nil)
                                     }
