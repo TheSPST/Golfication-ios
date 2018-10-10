@@ -887,7 +887,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.btnExpendScore.isHidden = false
         self.btnDownArraow.setTitle("Hole \(scoreData[indexToUpdate].hole)", for: .normal)
         self.lblParNumber.text = "PAR \(self.scoreData[indexToUpdate].par)"
-        let hcp = self.getHCPValue(playerID: self.playerId, holeNo: indexToUpdate)
+        let hcp = self.getHCPValue(playerID: self.playerId, holeNo: scoreData[indexToUpdate].hole)
         self.lblHCP.text = "HCP \(hcp == 0 ? "-":"\(hcp)")"
         self.lblHole.text = "Hole \(scoreData[indexToUpdate].hole)"
         self.lblPar.text = "Par \(self.scoreData[indexToUpdate].par)"
@@ -1408,7 +1408,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         let courseHCP = Int(self.calculateTotalExtraShots(playerID: playerId))
         let temp = courseHCP/18
         var totalShotsInThishole = temp+par
-        let hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
+        let hcp = self.getHCPValue(playerID: playerId, holeNo: self.scoreData[self.holeIndex].hole)
         
         if (courseHCP - temp*18 >= hcp) {
             totalShotsInThishole += 1;
@@ -1744,8 +1744,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             index += 1
         }
         for tee in holeHcpWithTee{
-            if tee.hole == holeNo+1{
-                for data in tee.teeBox{
+            if tee.hole == holeNo{
+                for data in tee.teeBox where !teeTypeArr.isEmpty{
                     if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break

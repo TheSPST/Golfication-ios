@@ -51,6 +51,9 @@
 		3E57646B215BDA5400658D78 /* ProfilePhotoDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E57646A215BDA5400658D78 /* ProfilePhotoDetailVC.swift */; };
 		3E59234920A991C60056D446 /* GolfBagVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E59234720A991C50056D446 /* GolfBagVC.swift */; };
 		3E59234A20A991C60056D446 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E59234820A991C60056D446 /* Home.storyboard */; };
+		3E5E2694216BADFE004388BB /* CustomARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E2693216BADFE004388BB /* CustomARViewController.swift */; };
+		3E5E2696216CDA87004388BB /* ARPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E2695216CDA87004388BB /* ARPlanViewController.swift */; };
+		3E5E269A216E2F4B004388BB /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E2699216E2F4B004388BB /* GoogleService-Info-live.plist */; };
 		3E5EAB041FF7AD2B00F69661 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5EAB031FF7AD2B00F69661 /* AppDelegate.swift */; };
 		3E626A79201C4EB3002D6176 /* NotificationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E626A78201C4EB3002D6176 /* NotificationViewCell.swift */; };
 		3E63509720D3A150005BF851 /* BLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E63509620D3A150005BF851 /* BLE.swift */; };
@@ -74,7 +77,6 @@
 		3EB5D2F9215F78CD007C55E3 /* GolficationXFirmware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB5D2F8215F78CD007C55E3 /* GolficationXFirmware.swift */; };
 		3EB6D3B72137CA72000DA1BE /* FBSomeEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */; };
 		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
-		3EBCAF4A2167453D007BB375 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EBCAF492167453D007BB375 /* GoogleService-Info-live.plist */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
 		3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */ = {isa = PBXBuildFile; fileRef = 3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */; };
 		3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED2C8792088C08800604F31 /* ProfileVC.swift */; };
@@ -294,6 +296,9 @@
 		3E57646A215BDA5400658D78 /* ProfilePhotoDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfilePhotoDetailVC.swift; sourceTree = "<group>"; };
 		3E59234720A991C50056D446 /* GolfBagVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GolfBagVC.swift; sourceTree = "<group>"; };
 		3E59234820A991C60056D446 /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
+		3E5E2693216BADFE004388BB /* CustomARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomARViewController.swift; sourceTree = "<group>"; };
+		3E5E2695216CDA87004388BB /* ARPlanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlanViewController.swift; sourceTree = "<group>"; };
+		3E5E2699216E2F4B004388BB /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3E5EAB001FF7AC4400F69661 /* Golfication.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Golfication.entitlements; sourceTree = "<group>"; };
 		3E5EAB031FF7AD2B00F69661 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3E626A78201C4EB3002D6176 /* NotificationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewCell.swift; sourceTree = "<group>"; };
@@ -318,7 +323,6 @@
 		3EB5D2F8215F78CD007C55E3 /* GolficationXFirmware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolficationXFirmware.swift; sourceTree = "<group>"; };
 		3EB6D3B62137CA71000DA1BE /* FBSomeEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSomeEvents.swift; sourceTree = "<group>"; };
 		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
-		3EBCAF492167453D007BB375 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
 		3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json"; sourceTree = "<group>"; };
 		3ED2C8792088C08800604F31 /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
@@ -739,6 +743,8 @@
 		4B1F6B942090A29F00312EA7 /* PlayGameViewCtrls */ = {
 			isa = PBXGroup;
 			children = (
+				3E5E2695216CDA87004388BB /* ARPlanViewController.swift */,
+				3E5E2693216BADFE004388BB /* CustomARViewController.swift */,
 				3E3367F12130231F00AC238F /* ScanningGolfX.xib */,
 				3E40F97A20E604BA00092170 /* GameViewControllers */,
 				4B7E5EFB20D118BA001847CC /* BackgroundMapStats.swift */,
@@ -1129,7 +1135,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3EBCAF492167453D007BB375 /* GoogleService-Info-live.plist */,
+				3E5E2699216E2F4B004388BB /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1291,7 +1297,7 @@
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
 				4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */,
-				3EBCAF4A2167453D007BB375 /* GoogleService-Info-live.plist in Resources */,
+				3E5E269A216E2F4B004388BB /* GoogleService-Info-live.plist in Resources */,
 				3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */,
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
@@ -1456,6 +1462,7 @@
 				3E40F98120E6063600092170 /* CourseData.swift in Sources */,
 				3E89BC9920F62C4B00D47590 /* RFMapVC.swift in Sources */,
 				4BB26D241FF77EDB001E9556 /* SmartCaddieVC.swift in Sources */,
+				3E5E2696216CDA87004388BB /* ARPlanViewController.swift in Sources */,
 				4B1F6BD42090A29F00312EA7 /* FinalScoreBoardViewCtrl.swift in Sources */,
 				4B4ED1AA20BD74AD00D9C6DC /* PerformanceVC.swift in Sources */,
 				3E576469215BDA4500658D78 /* RequestSFPopup.swift in Sources */,
@@ -1529,6 +1536,7 @@
 				3E380EF11FFCCD6000246865 /* CustomProModeView.swift in Sources */,
 				3E13F3B8212E999C005D9B70 /* MapForInputViewController.swift in Sources */,
 				4B1F6BD12090A29F00312EA7 /* PlayersTableViewCell.swift in Sources */,
+				3E5E2694216BADFE004388BB /* CustomARViewController.swift in Sources */,
 				4B9578E020B4409E008B2C61 /* BluetootheConnectionTesting.swift in Sources */,
 				3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */,
 				4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */,
@@ -1754,7 +1762,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Golfication/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1779,7 +1787,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Golfication/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;

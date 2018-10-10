@@ -471,8 +471,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             index += 1
         }
         for tee in holeHcpWithTee{
-            if tee.hole == holeNo+1{
-                for data in tee.teeBox{
+            if tee.hole == holeNo{
+                for data in tee.teeBox {
                     if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
@@ -1385,7 +1385,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let courseHCP = Int(self.calculateTotalExtraShots(playerID: playerId))
         let temp = courseHCP/18
         var totalShotsInThishole = temp+par
-        let hcp = self.getHCPValue(playerID: playerId, holeNo: self.index)
+        let hcp = self.getHCPValue(playerID: playerId, holeNo: self.scoreData[self.index].hole)
         if (courseHCP - temp*18 >= hcp) {
             totalShotsInThishole += 1;
         }
@@ -1942,7 +1942,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 8{
-                                                let hcp = self.getHCPValue(playerID:playerId!,holeNo: i)
+                                                let hcp = self.getHCPValue(playerID:playerId!,holeNo: self.scoreData[i].hole)
                                                 debugPrint(i)
                                                 btn.setTitle("\(hcp)", for: .normal)
                                                 hcpTotal += hcp
@@ -2044,7 +2044,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 6{
-                                                let hcp = self.getHCPValue(playerID:playerId!,holeNo:i)
+                                                let hcp = self.getHCPValue(playerID:playerId!,holeNo:self.scoreData[i].hole)
                                                 debugPrint(i)
                                                 btn.setTitle("\(hcp)", for: .normal)
                                                 hcpTotal += hcp

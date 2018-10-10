@@ -627,10 +627,6 @@ class ProfileVC: UIViewController {
         btnFreeActiveIndiegogo.setAttributedTitle(attributedString, for: .normal)
         btnActiveIndiegogo.setAttributedTitle(attributedString, for: .normal)
         btnInactiveIndiegogo.isHidden = true
-//        let attributeString: NSMutableAttributedString =  NSMutableAttributedString(string: lblInactivePrice.text!)
-//        attributeString.addAttribute(NSAttributedStringKey.strikethroughStyle, value: 1, range: NSMakeRange(0, attributeString.length))
-//        lblInactivePrice.attributedText = attributeString
-//        lblInactivePrice.isHidden = true
         btnFreeActiveIndiegogo.isHidden = true
         
         imagePicker.delegate=self
@@ -675,19 +671,6 @@ class ProfileVC: UIViewController {
 //                    }
                 }
                 if (userData.value(forKey: "proMembership") == nil){
-                    /*if (userData.value(forKey: "trial") as? Bool) != nil{
-                            self.viewUpgradeInactive.isHidden = true
-                            self.viewUpgradeFreeActive.isHidden = false
-                            self.viewUpgradeActive.isHidden = true
-
-                            self.lblDaysLeftTitle.text = "Upgrade to Pro Membership"
-//                          self.lblDaysLeft.text = "Your 30 days free trial has been expired"
-                            self.lblDaysLeft.text = "Your pro membership subscription has expired."
-                            self.viewTopWhatIsPro.isHidden = true
-                            self.whatISProHeightConstraint.constant = 0.0
-                            self.view.layoutIfNeeded()
-                    }
-                    else{*/
                     self.viewTopWhatIsPro.isHidden = false
                     self.whatISProHeightConstraint.constant = 57.0
 
@@ -700,8 +683,6 @@ class ProfileVC: UIViewController {
                     self.viewUpgradeInactive.isHidden = false
                     self.viewUpgradeFreeActive.isHidden = true
                     self.viewUpgradeActive.isHidden = true
-//                    self.view.layoutIfNeeded()
-                    //}
                 }
                 for (key,value) in userData{
                     let keys = key as! String
@@ -722,17 +703,6 @@ class ProfileVC: UIViewController {
                         self.sliderHandicapNumber.value = (value as! NSString).floatValue
                         self.lblHandicap.text = "Handicap \(self.sliderHandicapNumber.value)"
                     }
-                    /*else if(keys == "golfBag"){
-                        let golfBagArray = value as! NSMutableArray
-                        if golfBagArray.count > 0{
-                        for i in 0..<golfBagArray.count{
-                            let dict = golfBagArray[i] as! NSDictionary
-                                if (dict.value(forKey: "tag") as! Bool == true){
-                                    self.selectedClubs.add(dict)
-                                }
-                            }
-                        }
-                      }*/
                     else if(keys == "gender"){
                         self.genderCardView.isHidden = true
                         if value as? String == "male"{
@@ -748,64 +718,6 @@ class ProfileVC: UIViewController {
                         self.view.layoutIfNeeded()
                         
                     let dic  = value as! NSDictionary
-                        /*if (dic.value(forKey: "isMembershipActive") as! Int == 0){
-                            self.viewUpgradeInactive.isHidden = true
-                            self.viewUpgradeFreeActive.isHidden = false
-                            self.viewUpgradeActive.isHidden = true
-                            let number = "\(dic.value(forKey: "timestamp") as! Int64)"
-                            let array = number.compactMap{Int(String($0))}
-                            var newTimestamp = Int64()
-                            newTimestamp = (dic.value(forKey: "timestamp") as! Int64)
-                            if array.count != 13{
-                                newTimestamp = (dic.value(forKey: "timestamp") as! Int64) * 1000
-                                ref.child("userData/\(Auth.auth().currentUser!.uid)/proMembership/").updateChildValues(["timestamp": newTimestamp])
-                            }
-                            
-                            let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(newTimestamp/1000)))
-                            let timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-//                            let timeEnd = Calendar.current.date(byAdding: .minute, value: 2, to: timeStart as Date)
-
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
-                            let expiryStr = formatter.string(from: timeEnd!)
-                            let trnStr = formatter.string(from: timeStart  as Date)
-                            
-                            if dic.value(forKey: "productID") as? String == nil{
-                                ref.child("userData/\(Auth.auth().currentUser!.uid)/proMembership/").updateChildValues(["productID": "Free_Membership"])
-                                dic.setValue("Free_Membership", forKey: "productID")
-                             }
-                            if dic.value(forKey: "transactionDate") as? String == nil{
-                                ref.child("userData/\(Auth.auth().currentUser!.uid)/proMembership/").updateChildValues(["transactionDate": trnStr])
-                                dic.setValue(trnStr, forKey: "transactionDate")
-                            }
-                            if dic.value(forKey: "expiryDate") as? String == nil{
-                                ref.child("userData/\(Auth.auth().currentUser!.uid)/proMembership/").updateChildValues(["expiryDate": expiryStr])
-                                dic.setValue(expiryStr, forKey: "expiryDate")
-                            }
-                            
-                            let timeNow = NSDate()
-                            let calendar = NSCalendar.current
-                            
-                            var components = calendar.dateComponents([.day], from: timeNow as Date, to: timeEnd!)
-                            self.lblDaysLeft.text = "You have " + "\(components.day!)" + " days remaining on your Pro Membership"
-                            
-                            if dic.value(forKey: "productID") as! String == "Free_Membership_Yearly"{
-                                let timeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
-                                components = calendar.dateComponents([.day], from: timeNow as Date, to: timeEnd!)
-                                self.lblDaysLeft.text = "You have " + "\(components.day!)" + " days remaining on your Pro Membership"
-                                self.btnFreeActiveIndiegogo.isHidden = true
-                            }
-                            
-                            if components.day == 0 || components.day! < 0{
-                                self.lblDaysLeftTitle.text = "Upgrade to Pro Membership"
-                                self.lblDaysLeft.text = "Your 30 days free trial has been expired"
-                                if dic.value(forKey: "productID") as! String == "Free_Membership_Yearly"{
-                                    self.lblDaysLeft.text = "Your 1 year pro membership has been expired"
-                                    self.btnFreeActiveIndiegogo.isHidden = false
-                                }
-                            }
-                        }
-                        else{*/
                             self.viewUpgradeInactive.isHidden = true
                             self.viewUpgradeFreeActive.isHidden = true
                             self.viewUpgradeActive.isHidden = false
@@ -847,22 +759,13 @@ class ProfileVC: UIViewController {
                                                             self.viewUpgradeFreeActive.isHidden = true
                                                             self.viewUpgradeActive.isHidden = true
                                                             self.lblInactivePrice.text = "Your Pro Membership has been expired"
-
-//                                                            self.lblDaysLeftTitle.text = "Upgrade to Pro Membership"
-//                                                            self.lblDaysLeft.text = ""
-                                
                             case .orderedSame?          :   debugPrint("Both dates are same")
                                                             self.viewUpgradeInactive.isHidden = false
                                                             self.viewUpgradeFreeActive.isHidden = true
                                                             self.viewUpgradeActive.isHidden = true
                                                             self.lblInactivePrice.text = "Your Pro Membership has been expired"
-
-//                                                            self.lblDaysLeftTitle.text = "Upgrade to Pro Membership"
-//                                                            self.lblDaysLeft.text = ""
-                                
                             case .none: break
                             }
-                        //}
                     }
                 }
                 self.btnUpdradeNow.isEnabled = true

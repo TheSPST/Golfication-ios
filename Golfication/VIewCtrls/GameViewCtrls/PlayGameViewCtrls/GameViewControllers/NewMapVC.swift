@@ -230,14 +230,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             return false
         }
     }
-    var totalTimer:TimeInterval{
-        let state = UIApplication.shared.applicationState
-        if state == .background {
-            return 60.0
-        }else{
-            return 5.0
-        }
-    }
+    var totalTimer : TimeInterval = 3
+//    {
+//        let state = UIApplication.shared.applicationState
+//        if state == .background {
+//            return 60.0
+//        }else{
+//            return 5.0
+//        }
+//    }
     // MARK:- All PanGesture Related Local Variables
     var panGesture  = UIPanGestureRecognizer()
     var btnPanGesture  = UIPanGestureRecognizer()
@@ -451,7 +452,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         for i in 0..<courseData.numberOfHoles[holeIndex].tee.count{
             let address = self.matchDataDict.value(forKey: "courseName")
-            let holeIndex = (self.holeIndex+1) % courseData.numberOfHoles.count
+            let holeIndex = (self.holeIndex) % courseData.numberOfHoles.count
             let name = " Hole \(holeIndex+1) Tee"
             teeCoord.append(BackgroundMapStats.middlePointOfListMarkers(listCoords: courseData.numberOfHoles[holeIndex].tee[i]))
             let flagCoordinates = teeCoord[i]
@@ -499,15 +500,21 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let place = Place(location: location, reference: reference, name: name, address: address as! String)
         
         self.places.append(place)
-        
+//        for place in self.places{
+//            debugPrint(place)
+//        }
         DispatchQueue.main.async {
+//            let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "CustomARViewController") as! CustomARViewController
+//            viewCtrl.places = self.places
+//            self.navigationController?.pushViewController(viewCtrl, animated: true)
+
             let arViewController = ARViewController()
             arViewController.dataSource = self
             arViewController.maxDistance = 0
             arViewController.maxVisibleAnnotations = 30
             arViewController.maxVerticalLevel = 5
             arViewController.headingSmoothingFactor = 0.05
-            
+
             arViewController.trackingManager.userDistanceFilter = 25
             arViewController.trackingManager.reloadDistanceFilter = 75
             arViewController.setAnnotations(self.places)
@@ -684,6 +691,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     
     // MARK:- btnMapViewStylized
     @IBAction func btnActionMV(_ sender: Any) {
+        self.getBezierPathAllFeatures()
         if self.btnStylizedMapView.tag == 0{
             self.allPolygonOfOneHole.removeAll()
             self.updateMapWithColors()
@@ -998,6 +1006,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     @objc func appDidEnterBackground() {
+        if onCourseNotification == 0{
+            self.mapTimer.invalidate()
+        }else{
+            self.totalTimer = 60
+            self.updateMap(indexToUpdate: self.holeIndex)
+        }
+    }
+    @objc func appDidEnterForeground(){
+        self.view.makeToast("gathering location please wait........", duration: 3.0, position: .bottom)
+        self.mapTimer.invalidate()
+        self.totalTimer = 5
         self.updateMap(indexToUpdate: self.holeIndex)
     }
     func endBackgroundTask() {
@@ -1662,8 +1681,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             }
         }else if(self.btnTrackShot.currentImage! == #imageLiteral(resourceName: "edit_White")){
+            debugPrint("clicked on Edit Shots")
             self.editShotAction()
         }else if (self.btnTrackShot.currentImage == #imageLiteral(resourceName: "check_mark_fab")){
+            debugPrint("updating Moved Edited Shots")
             let landedOn = (self.btnLandedOnDropDown.titleLabel?.text)!.trim()
             self.showEditRelated(hide:false)
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
@@ -2868,6 +2889,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }else{
                     NotificationCenter.default.addObserver(self, selector: #selector(reinstateBackgroundTask), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
                     NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+                    NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
 
                     setupPanGuesture()
                 }
@@ -3987,8 +4009,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             index += 1
         }
         for tee in self.courseData.holeHcpWithTee{
-            if tee.hole == holeNo+1{
-                for data in tee.teeBox{
+            if tee.hole == holeNo{
+                for data in tee.teeBox {
                     if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
@@ -4323,8 +4345,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.lblParNumber.text = "par \(self.scoring[indexToUpdate].par)"
         self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
         self.lblTopPar.text = "PAR  \(self.scoring[indexToUpdate].par)"
-        self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: indexToUpdate))"
-        self.lblHCPHeader.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: indexToUpdate))"
+        self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: self.scoring[indexToUpdate].hole))"
+        self.lblHCPHeader.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: self.scoring[indexToUpdate].hole))"
         self.btnHole.setTitle("Hole \(self.scoring[indexToUpdate].hole)", for: .normal)
         self.shotViseCurve.removeAll()
         self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
@@ -4612,7 +4634,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if let onCourse = self.matchDataDict.value(forKeyPath: "onCourse") as? Bool{
             if(onCourse) && !holeOutFlag && !isHoleByHole{
-//                var counter = 0
                 if(clubInTrack != nil){
                     self.btnSelectClubs.setTitle(BackgroundMapStats.getClubName(club: clubInTrack.trim()).uppercased(), for: .normal)
                     let indexPath = IndexPath(row: courseData.clubs.index(of: clubInTrack.trim())!, section: 0)
@@ -4705,22 +4726,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 self.lblBackDistance.text = "\(Int(distanceE)) \(suffix)"
                                 self.lblCenterHeader.text = "\(Int(distanceC)) \(suffix)"
                                 debugPrint( "\(Int(distanceF)) \(Int(distanceC)) \(Int(distanceE)) \(Int(distanceC)) \(suffix)")
-                                
-//                                if(counter%60 == 0){
-                                    debugPrint("isTracking\(self.isTracking)")
-                                    if(self.holeOutFlag){
-                                        Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
+                                debugPrint("isTracking\(self.isTracking)")
+                                if(self.holeOutFlag){
+                                    Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
+                                }else{
+                                    if(BackgroundMapStats.findPositionOfPointInside(position: self.userLocationForClub!, whichFeature:self.courseData.numberOfHoles[self.holeIndex].green)){
+                                        Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
                                     }else{
-                                        if(BackgroundMapStats.findPositionOfPointInside(position: self.userLocationForClub!, whichFeature:self.courseData.numberOfHoles[self.holeIndex].green)){
-                                            Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
-                                        }else{
-                                            Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
-                                        }
-                                        
+                                        Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
                                     }
-//                                }
-//                                counter += 5
-//                                debugPrint("Counter = ",counter)
+                                    
+                                }
                                 if(!self.positionsOfCurveLines.isEmpty) && self.isTracking{
                                     for i in 0..<self.penaltyShots.count{
                                         if (self.penaltyShots[i]){
@@ -4803,7 +4819,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 }
 //                                debugPrint("positionofcurvedLine:\(self.positionsOfCurveLines)")
 //                                debugPrint("count:\(self.positionsOfCurveLines.count)")
-                                
                             }else{
                                 let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -4848,8 +4863,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(isHoleByHole){
             self.setupHoleByHole()
         }
-        debugPrint(self.positionsOfCurveLines)
-        debugPrint(self.positionsOfDotLine)
+        debugPrint("Curved Lines",self.positionsOfCurveLines)
+        debugPrint("Dotted Lines",self.positionsOfDotLine)
         if(self.btnStylizedMapView.tag == 1){
             self.allPolygonOfOneHole.removeAll()
             for i in 0..<shotViseCurve.count{
@@ -4933,7 +4948,37 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             plotLine(positions: self.positionsOfDotLine)
         }
     }
+    // For AR view we need all the feature's bezierPath
+    var allBezierFeatures = [UIBezierPath]()
+    func getBezierPathAllFeatures(){
+        allBezierFeatures.removeAll()
+        for i in 0..<courseData.numberOfHoles[holeIndex].tee.count{
+            allBezierFeatures.append(getBezierPath(polygonArr: (courseData.numberOfHoles[holeIndex].tee[i])))
+        }
+        for i in 0..<courseData.numberOfHoles[holeIndex].fairway.count{
+            allBezierFeatures.append(getBezierPath(polygonArr: (courseData.numberOfHoles[holeIndex].fairway[i])))
+        }
+        allBezierFeatures.append(getBezierPath(polygonArr: (courseData.numberOfHoles[holeIndex].green)))
+        for i in 0..<courseData.numberOfHoles[holeIndex].gb.count{
+            allBezierFeatures.append(getBezierPath(polygonArr: (courseData.numberOfHoles[holeIndex].gb[i])))
+        }
+        for i in 0..<courseData.numberOfHoles[holeIndex].fb.count{
+            allBezierFeatures.append(getBezierPath(polygonArr: (courseData.numberOfHoles[holeIndex].fb[i])))
+        }
+        for wh in allWaterHazard{
+            allBezierFeatures.append(getBezierPath(polygonArr: wh))
+        }
+    }
     
+    func getBezierPath(polygonArr:[CLLocationCoordinate2D])->UIBezierPath{
+        let breizerPath = UIBezierPath()
+        breizerPath.move(to: self.mapView.projection.point(for: polygonArr[0]))
+        for i in 1 ..< polygonArr.count{
+            breizerPath.addLine(to: self.mapView.projection.point(for: polygonArr[i]))
+        }
+        breizerPath.close()
+        return breizerPath
+    }
     func drawPolygonWithColor(polygonArray:[CLLocationCoordinate2D],color:UIColor){
         let path = GMSMutablePath()
         for position in polygonArray{
@@ -5531,7 +5576,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreen)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                self.getActiveRound()
+//                self.getActiveRound()
             })
         }
     }
@@ -5879,7 +5924,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         if let scoringDict = (self.scoring[self.holeIndex].players[i].value(forKey: playersButton[i].id) as? NSMutableDictionary){
                             if let isholeout = (scoringDict.value(forKey: "holeOut") as? Bool){
                                 self.stableFordView.isHidden =  !isholeout || chkStableford
-                                self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: playersButton[i].id, holeNo: self.holeIndex))"
+                                self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: playersButton[i].id, holeNo: self.scoring[self.holeIndex].hole))"
                             }
                         }
                     }
@@ -6000,7 +6045,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let courseHCP = Int(self.calculateTotalExtraShots(playerID: playerId))
         let temp = courseHCP/18
         var totalShotsInThishole = temp+par
-        let hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
+        let hcp = self.getHCPValue(playerID: playerId, holeNo: self.scoring[self.holeIndex].hole)
         if (courseHCP - temp*18 >= hcp) {
             totalShotsInThishole += 1;
         }
@@ -6455,6 +6500,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         debugPrint("Do Nothing")
+        debugPrint(coordinate)
         self.codeWhenClickToBackView()
         if(self.btnTrackShot.currentImage == #imageLiteral(resourceName: "edit_White")) && !holeOutFlag{
             self.btnActionClose(self.btnClose)
@@ -6589,6 +6635,14 @@ extension NewMapVC : DropperDelegate{
             self.btnSelectClubs.setTitle("\(contents)", for: .normal)
             self.btnSelectClubs.tag = path.row
             self.btnTrackShot.backgroundColor = UIColor.glfBluegreen
+            if isOnCourse{
+                if self.isTracking{
+                    self.btnTrackShot.backgroundColor = UIColor.glfWhite
+                    self.btnTrackShot.setImage(#imageLiteral(resourceName: "stop"), for: .normal)
+                }else{
+                    self.btnTrackShot.backgroundColor = UIColor.glfBluegreen
+                }
+            }
             self.selectClubDropper.TableMenu.scrollToRow(at: path, at: UITableViewScrollPosition.middle, animated: true)
         }
     }

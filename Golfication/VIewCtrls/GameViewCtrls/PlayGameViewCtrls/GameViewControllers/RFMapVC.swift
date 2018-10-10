@@ -692,8 +692,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             index += 1
         }
         for tee in self.courseData.holeHcpWithTee{
-            if tee.hole == holeNo+1{
-                for data in tee.teeBox{
+            if tee.hole == holeNo{
+                for data in tee.teeBox where !teeTypeArr.isEmpty{
                     if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
                         break
@@ -1078,6 +1078,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         NotificationCenter.default.addObserver(self, selector: #selector(self.sendNotificationOnCourse(_:)), name: NSNotification.Name(rawValue: "updateLocation"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+
 
 
         //         getGolfCourseDataFromFirebase()
@@ -1109,7 +1111,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         assert(backgroundTask != UIBackgroundTaskInvalid)
     }
-    
+    @objc func appDidEnterBackground() {
+        if onCourseNotification == 0{
+            self.mapTimer.invalidate()
+        }else{
+            self.updateMap(indexToUpdate: self.holeIndex)
+        }
+    }
     func endBackgroundTask() {
         print("Background task ended.")
         UIApplication.shared.endBackgroundTask(backgroundTask)
@@ -1810,7 +1818,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         let courseHCP = Int(self.calculateTotalExtraShots(playerID: playerId))
         let temp = courseHCP/18
         var totalShotsInThishole = temp+par
-        let hcp = self.getHCPValue(playerID: playerId, holeNo: holeIndex)
+        let hcp = self.getHCPValue(playerID: playerId, holeNo: self.scoring[holeIndex].hole)
         
         if (courseHCP - temp*18 >= hcp) {
             totalShotsInThishole += 1;
@@ -2422,7 +2430,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
         
         self.lblTopPar.text = "PAR \(self.scoring[indexToUpdate].par)"
-        let hcp = self.getHCPValue(playerID: self.playerId, holeNo: indexToUpdate)
+        let hcp = self.getHCPValue(playerID: self.playerId, holeNo: self.scoring[indexToUpdate].hole)
         self.lblTopHCP.text = "HCP \(hcp == 0 ? "-":"\(hcp)")"
         
         locationManager.startUpdatingLocation()
