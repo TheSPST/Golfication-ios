@@ -65,34 +65,30 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: Remove Selected Players
     
     @IBAction func continueAction(_ sender: UIButton) {
-        addPlayersArray.removeAllObjects()
-        addPlayersArray = NSMutableArray()
-        
         if selectedIndex.count>0{
-            
             for i in 0..<self.allUserListMArray.count{
-                
                 let timestamp = (allUserListMArray[i] as AnyObject).object(forKey:"timestamp")
-                
-                //                print("timestamp",timestamp ?? "")
-                
-                if !((timestamp as? String) == "" || timestamp == nil)
-                {
+                if !((timestamp as? String) == "" || timestamp == nil){
                     for j in 0..<selectedIndex.count{
-                        
                         if (selectedIndex[j] as? Int == timestamp as? Int) {
                             let tempdic = NSMutableDictionary()
                             tempdic.setObject((allUserListMArray[i] as AnyObject).object(forKey:"name")!, forKey: "name" as NSCopying)
                             tempdic.setObject((allUserListMArray[i] as AnyObject).object(forKey:"image")!, forKey: "image" as NSCopying)
                             tempdic.setObject((allUserListMArray[i] as AnyObject).object(forKey:"timestamp")!, forKey: "timestamp" as NSCopying)
                             tempdic.setObject((allUserListMArray[i] as AnyObject).object(forKey:"id")!, forKey: "id" as NSCopying)
-                            
                             addPlayersArray.add(tempdic)
                         }
                     }
                 }
             }
         }
+        let tempA = (addPlayersArray as! Array<NSMutableDictionary>).removeDuplicates()
+        addPlayersArray.removeAllObjects()
+        addPlayersArray = NSMutableArray()
+        for data in  tempA{
+            addPlayersArray.add(data)
+        }
+
         if(addPlayersArray.count != 0){
             if(!teeArr.isEmpty){
                 let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
@@ -964,4 +960,15 @@ extension String {
     subscript (i: Int) -> Character {
         return self[index(startIndex, offsetBy: i)]
 }
+}
+extension Array where Element: Equatable {
+    mutating func removeDuplicates() {
+        var result = [Element]()
+        for value in self {
+            if !result.contains(value) {
+                result.append(value)
+            }
+        }
+        self = result
+    }
 }

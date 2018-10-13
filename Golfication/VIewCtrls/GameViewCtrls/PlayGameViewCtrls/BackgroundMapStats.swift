@@ -279,7 +279,6 @@ class BackgroundMapStats: NSObject {
     }
     static func removeRepetedElement(curvedArray : [CLLocationCoordinate2D] )->[CLLocationCoordinate2D]{
         var uniqueArray = [CLLocationCoordinate2D]()
-        
         if(!curvedArray.isEmpty){
             var lat = [CLLocationDegrees]()
             var lng = [CLLocationDegrees]()

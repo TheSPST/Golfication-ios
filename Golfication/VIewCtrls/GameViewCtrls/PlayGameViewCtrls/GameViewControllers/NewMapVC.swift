@@ -230,7 +230,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             return false
         }
     }
-    var totalTimer : TimeInterval = 3
+    var totalTimer : TimeInterval = 1
 //    {
 //        let state = UIApplication.shared.applicationState
 //        if state == .background {
@@ -500,27 +500,32 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let place = Place(location: location, reference: reference, name: name, address: address as! String)
         
         self.places.append(place)
-//        for place in self.places{
-//            debugPrint(place)
-//        }
+        for place in self.places{
+            debugPrint(place)
+        }
         DispatchQueue.main.async {
-//            let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "CustomARViewController") as! CustomARViewController
-//            viewCtrl.places = self.places
-//            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            if #available(iOS 11.0, *) {
+                let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "ARPlanViewController") as! ARPlanViewController
+                viewCtrl.places = self.places
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
 
-            let arViewController = ARViewController()
-            arViewController.dataSource = self
-            arViewController.maxDistance = 0
-            arViewController.maxVisibleAnnotations = 30
-            arViewController.maxVerticalLevel = 5
-            arViewController.headingSmoothingFactor = 0.05
+            } else {
+                // Fallback on earlier versions
+            }
 
-            arViewController.trackingManager.userDistanceFilter = 25
-            arViewController.trackingManager.reloadDistanceFilter = 75
-            arViewController.setAnnotations(self.places)
-            arViewController.uiOptions.debugEnabled = false
-            arViewController.uiOptions.closeButtonEnabled = true
-            self.navigationController?.pushViewController(arViewController, animated: true)
+//            let arViewController = ARViewController()
+//            arViewController.dataSource = self
+//            arViewController.maxDistance = 0
+//            arViewController.maxVisibleAnnotations = 30
+//            arViewController.maxVerticalLevel = 5
+//            arViewController.headingSmoothingFactor = 0.05
+//
+//            arViewController.trackingManager.userDistanceFilter = 25
+//            arViewController.trackingManager.reloadDistanceFilter = 75
+//            arViewController.setAnnotations(self.places)
+//            arViewController.uiOptions.debugEnabled = false
+//            arViewController.uiOptions.closeButtonEnabled = true
+//            self.navigationController?.pushViewController(arViewController, animated: true)
         }
     }
     
@@ -1014,9 +1019,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     @objc func appDidEnterForeground(){
-        self.view.makeToast("gathering location please wait........", duration: 3.0, position: .bottom)
+        self.view.makeToast("gathering location please wait........", duration: 2.0, position: .bottom)
         self.mapTimer.invalidate()
-        self.totalTimer = 5
+        self.totalTimer = 1
         self.updateMap(indexToUpdate: self.holeIndex)
     }
     func endBackgroundTask() {
@@ -1604,6 +1609,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 positionsOfDotLine[0]  = positionsOfDotLine[1]
                 positionsOfDotLine[1] = midPoint
                 plotMarkerForCurvedLine(position: markers[0].position,userData: shotCount)
+                
                 if(shotCount>0){
                     positionsOfCurveLines = BackgroundMapStats.removeRepetedElement(curvedArray: positionsOfCurveLines)
                 }
@@ -1830,8 +1836,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
                 let newDict = NSMutableDictionary()
                 newDict.setObject(clubName, forKey: "club" as NSCopying)
+            
                 newDict.setObject(self.positionsOfDotLine[0].latitude, forKey: "lat1" as NSCopying)
                 newDict.setObject(self.positionsOfDotLine[0].longitude, forKey: "lng1" as NSCopying)
+                
                 newDict.setObject(fromHoleOut, forKey: "hole" as NSCopying)
                 newDict.setObject(self.shotCount, forKey: "shot_no" as NSCopying)
                 
@@ -1879,8 +1887,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnTrackShot.setImage(#imageLiteral(resourceName: "track_Shot"), for: .normal)
                 self.btnTrackShot.backgroundColor = UIColor.glfBluegreen
                 self.penaltyShots.append(false)
-                if (positionsOfCurveLines.last!.latitude == self.positionsOfDotLine[0].latitude) && (positionsOfCurveLines.last!.longitude == self.positionsOfDotLine[0].longitude){
-                    self.positionsOfDotLine[0] = GMSGeometryOffset(self.positionsOfCurveLines.last!, 1, self.mapView.camera.bearing)
+                if (positionsOfCurveLines.last!.latitude == self.positionsOfDotLine[0].latitude) || (positionsOfCurveLines.last!.longitude == self.positionsOfDotLine[0].longitude){
+                    let dist = GMSGeometryDistance(positionsOfCurveLines.last!, positionsOfDotLine[0])
+                    let head = GMSGeometryHeading(positionsOfCurveLines.last!, positionsOfDotLine[0])
+                    self.positionsOfDotLine[0] = GMSGeometryOffset(self.positionsOfCurveLines.last!, dist+0.8, head)
                 }
                 if !(BackgroundMapStats.findPositionOfPointInside(position: self.positionsOfDotLine.first!, whichFeature: courseData.numberOfHoles[holeIndex].green)) && isPintMarker{
                     
@@ -4421,7 +4431,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     self.btnStableScore.setTitle("Stableford Score", for: .normal)
                                 }else if(key as! String == "shotTracking"){
                                     if let newDict = value as? NSMutableDictionary{
-                                        clubInTrack = newDict.value(forKey: "club") as! String
+                                        clubInTrack = newDict.value(forKey: "club") as? String
                                         self.positionsOfDotLine[0].latitude = newDict.value(forKey: "lat1") as! CLLocationDegrees
                                         self.positionsOfDotLine[0].longitude = newDict.value(forKey: "lng1") as! CLLocationDegrees
                                         self.isPintMarker = newDict.value(forKey: "hole") as! Bool
@@ -5530,7 +5540,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.progressView.hide(navItem: self.navigationItem)
         if(!isHoleByHole) && isOnCourse{
             enableLocationServices()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
             locationManager.startUpdatingLocation()
             self.mapView.isMyLocationEnabled = true
         }

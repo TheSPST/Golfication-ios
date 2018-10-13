@@ -23,7 +23,6 @@ class RefreshSubscriptionManager: NSObject {
         if isRefreshRequired() {
             // load the data
             receiptValidationUsingSwifty()
-
             defaults.set(Date(), forKey: defaultsKey)
             completion(true)
         } else {

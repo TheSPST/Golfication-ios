@@ -43,6 +43,11 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
             }
             group.notify(queue: .main, execute: {
                 debugPrint(self.handicap)
+                if self.handicap.isEmpty{
+                    for _ in 0..<self.totalPlayers.count{
+                        self.handicap.append(0.0)
+                    }
+                }
                 self.tableViewMultiplayerTee.delegate = self
                 self.tableViewMultiplayerTee.dataSource = self
                 self.tableViewMultiplayerTee.reloadData()

@@ -263,16 +263,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
 
         //        Notification.sendNotification(reciever: "UhEPp4X2cAaPNOKdY6OOsoZ348L2", message: "Amit just finished a round at Qutab Golf Course.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
         
-        //---------------------------- Update Versin details to Firebase --------------------------
-        //https://github.com/dennisweissmann/DeviceKit
-        let versionInfo = NSMutableDictionary()
-        versionInfo.setObject("iOS \(UIDevice.current.systemVersion)", forKey: "osVersion" as NSCopying)
-        versionInfo.setObject("\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!) Build \(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)", forKey: "appVersion" as NSCopying)
-        versionInfo.setObject("\(Device())", forKey: "model" as NSCopying)
-        
-        let versionDetails = ["info":versionInfo]
-        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(versionDetails)
-        //-----------------------------------------------------------------------------------------
         self.feedTableView.isHidden = true
         self.view.layoutIfNeeded()
         // ------------------------ Set User Name & Profile Image ------------------------------
@@ -284,7 +274,17 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             btnProfileImage.sd_setBackgroundImage(with: Auth.auth().currentUser?.photoURL ?? URL(string:""), for: .normal, completed: nil)
         }
         //-------------------------------------------------------------------
+        //---------------------------- Update Versin details to Firebase --------------------------
+        //https://github.com/dennisweissmann/DeviceKit
+        let versionInfo = NSMutableDictionary()
+        versionInfo.setObject("iOS \(UIDevice.current.systemVersion)", forKey: "osVersion" as NSCopying)
+        versionInfo.setObject("\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!) Build \(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)", forKey: "appVersion" as NSCopying)
+        versionInfo.setObject("\(Device())", forKey: "model" as NSCopying)
         
+        let versionDetails = ["info":versionInfo]
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(versionDetails)
+        //-----------------------------------------------------------------------------------------
+
         btnTabsArray = [btnScoreTab, btnSGTab, btnStatsTab]
         viewTabsArray = [viewMyScoreTab, viewSGTab, viewClubTab]
         for i in 0..<btnTabsArray.count{
