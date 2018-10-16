@@ -194,6 +194,5 @@ class EditPreviousGame: NSObject {
         }
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRound"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)
-
     }
 }

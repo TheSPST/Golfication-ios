@@ -34,10 +34,10 @@ class CustomARViewController: UIViewController,CLLocationManagerDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         if ARWorldTrackingConfiguration.isSupported {
             let configuration = ARWorldTrackingConfiguration()
             configuration.planeDetection = .horizontal
+            configuration.worldAlignment = .gravityAndHeading
             self.sceneView.session.run(configuration)
         }
     }
@@ -53,16 +53,13 @@ class CustomARViewController: UIViewController,CLLocationManagerDelegate{
     }
     
     // MARK: - UI Events
-    
-    
-    
     var distanceHeading = [(head:Double,dist:Double)]()
     func calculateOtherCoordinates(t:ARHitTestResult){
         debugPrint(places)
         debugPrint(heading)
         debugPrint(currentLocation)
-        let teePosition = places[0].location!.coordinate
-//
+        let teePosition = currentLocation
+//places[0].location!.coordinate
         
         nodeDetails.removeAll()
         for data in places{
@@ -74,7 +71,7 @@ class CustomARViewController: UIViewController,CLLocationManagerDelegate{
                 addMoreScenes(t: t, text: data.placeName,head:head,distance:distance)
             }
         }
-        let starting = SCNVector3()
+       /* let starting = SCNVector3()
         var ending = SCNVector3()
         for data in nodeDetails{
             if data.name.contains("Bunker"){
@@ -82,7 +79,7 @@ class CustomARViewController: UIViewController,CLLocationManagerDelegate{
                 break
             }
         }
-        self.createLine(startPosition: starting, endPosition: ending)
+        self.createLine(startPosition: starting, endPosition: ending)*/
     }
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         guard sender.state == .ended else { return }
@@ -93,40 +90,50 @@ class CustomARViewController: UIViewController,CLLocationManagerDelegate{
         print(results)
         
         if let match = results.first {
-            let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-            let boxNode = SCNNode()
-            boxNode.geometry = box
-            let t = match.worldTransform
-            boxNode.position = SCNVector3(x: t.columns.3.x, y: t.columns.3.y, z: t.columns.3.z)
-            self.sceneView.scene.rootNode.addChildNode(boxNode)
+//            let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+//            let boxNode = SCNNode()
+//            boxNode.geometry = box
+//            let t = match.worldTransform
+//            boxNode.position = SCNVector3(x: t.columns.3.x, y: t.columns.3.y, z: t.columns.3.z)
+//            self.sceneView.scene.rootNode.addChildNode(boxNode)
             calculateOtherCoordinates(t:match)
         }
     }
     var nodeDetails = [(name:String,vector:SCNVector3)]()
     func addMoreScenes(t:ARHitTestResult,text:String,head:Double,distance:Double){
-        let textScene = SCNText(string: "\(text) \(Int(distance/2))", extrusionDepth: 4)
+        let textScene = SCNText(string: "\(text) \(Int(distance))", extrusionDepth: 4)
+        textScene.alignmentMode = kCAAlignmentCenter
         let textNode = SCNNode(geometry: textScene)
         textNode.geometry = textScene
-        let data = transform(rotationY: Float(head), distance: Int(distance))
-        let dataInto = float4x4(data)
-        textNode.position = SCNVector3(x: dataInto.columns.3.x, y: dataInto.columns.3.y, z: dataInto.columns.3.z)
-        debugPrint(SCNVector3(x: dataInto.columns.3.x, y: dataInto.columns.3.y, z: dataInto.columns.3.z))
-        debugPrint(t)
+        textNode.position = transform(t:t,rotationY: head, distance: distance)
+        debugPrint("Position of : \(text) Head : \(head) , Distance : \(distance), Points : \(textNode.position)")
+        
+//        let data = transform(rotationY: head, distance: distance)
+//        let dataInto = float4x4(data)
+//        textNode.position = SCNVector3(x: dataInto.columns.3.x, y: dataInto.columns.3.y, z: dataInto.columns.3.z)
+//        debugPrint(SCNVector3(x: dataInto.columns.3.x, y: dataInto.columns.3.y, z: dataInto.columns.3.z))
+//        debugPrint(t)
         let anchor = ARAnchor(transform: t.worldTransform)
         self.sceneView.session.add(anchor: anchor)
         self.sceneView.scene.rootNode.addChildNode(textNode)
         nodeDetails.append((name:text,vector:textNode.position))
     }
-    func transform(rotationY: Float, distance: Int) -> SCNMatrix4 {
-        
+    
+    func transform(t:ARHitTestResult,rotationY: Double, distance: Double) -> SCNVector3 {
+        debugPrint("Angle in Radian : \(degreesToRadians(rotationY))")
+        let x = Float(distance*sin(degreesToRadians(rotationY)))
+        let z = Float(-distance*cos(degreesToRadians(rotationY)))
+        let transform = SCNVector3(x:x,y:0,z:z)
+        return transform
+    }
+    
+    func transform(rotationY: Double, distance: Double) -> SCNMatrix4 {
         // Translate first on -z direction
         let translation = SCNMatrix4MakeTranslation(0, 0, Float(-distance))
         // Rotate (yaw) around y axis
-        let rotation = SCNMatrix4MakeRotation(-1 * rotationY, 0, 1, 0)
-        
+        let rotation = SCNMatrix4MakeRotation(-1 * Float(rotationY), 0, 1, 0)
         // Final transformation: TxR
         let transform = SCNMatrix4Mult(translation, rotation)
-        
         return transform
     }
 
@@ -166,8 +173,8 @@ class CustomARViewController: UIViewController,CLLocationManagerDelegate{
     }
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading.trueHeading
-        debugPrint(heading)
-        debugPrint(self.sceneView.scene)
+//        debugPrint(heading)
+//        debugPrint(self.sceneView.scene)
     }
     func addBox(x:Double,y:Double,z:Double) {
         let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)

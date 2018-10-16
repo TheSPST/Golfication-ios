@@ -9,10 +9,9 @@ import UIKit
 import ARKit
 import SceneKit
 import GoogleMaps
-
+import CoreLocation
 struct CollisionTypes : OptionSet {
     let rawValue: Int
-    
     static let bottom  = CollisionTypes(rawValue: 1 << 0)
     static let shape = CollisionTypes(rawValue: 1 << 1)
 }
@@ -20,15 +19,21 @@ struct CollisionTypes : OptionSet {
 @available(iOS 11.0, *)
 class ARPlanViewController: UIViewController {
     @IBOutlet var sceneView: ARSCNView!
+    var locationManager = CLLocationManager()
+    var currentLocation = CLLocationCoordinate2D()
+    var heading = Double()
     var places = [Place]()
     var planes: [String : SCNNode] = [:]
     var bottomNode = SCNNode()
-    
+    var positionsOfCurveLines = [CLLocationCoordinate2D]()
+    var positionOfCurvedPoint = [SCNVector3]()
+    var positionOfCenterPointOfCurve = [SCNVector3]()
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if ARWorldTrackingConfiguration.isSupported {
             let configuration = ARWorldTrackingConfiguration()
             configuration.planeDetection = .horizontal
+            configuration.worldAlignment = .gravityAndHeading
             self.sceneView.session.run(configuration)
         }
     }
@@ -44,19 +49,21 @@ class ARPlanViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.title = "Plane Mapper"
-        
+        locationManager.delegate = self
+        locationManager.startUpdatingHeading()
+        locationManager.startUpdatingLocation()
+
         self.sceneView.antialiasingMode = .multisampling4X
 //        self.sceneView.delegate = self
         self.sceneView.autoenablesDefaultLighting = true
+//        self.sceneView.debugOptions = .showWorldOrigin
     }
     
     private func configureWorldBottom() {
         let bottomPlane = SCNBox(width: 1000, height: 0.005, length: 1000, chamferRadius: 0)
         
         let material = SCNMaterial()
-        material.diffuse.contents = UIColor.glfBluegreen
+        material.diffuse.contents = UIColor.clear
         bottomPlane.materials = [material]
         
         self.bottomNode = SCNNode(geometry: bottomPlane)
@@ -74,28 +81,28 @@ class ARPlanViewController: UIViewController {
     
     var nodeDetails = [(name:String,vector:SCNVector3)]()
     func addMoreScenes(text:String,head:Double,distance:Double){
-        let textScene = SCNText(string: "\(text) \(Int(distance))", extrusionDepth: 2)
+        let textScene = SCNText(string: "\(text) \(Int(distance))", extrusionDepth: 1)
+        textScene.alignmentMode = kCAAlignmentCenter
         let textNode = SCNNode(geometry: textScene)
         textNode.geometry = textScene
-        let data = transform(rotationY: Float(head), distance: Int(distance))
-        let dataInto = float4x4(data)
-        textNode.position = SCNVector3(x: dataInto.columns.3.x, y: 0, z: dataInto.columns.3.z)
+        textNode.position = transform(rotationY: head, distance: distance)
+        debugPrint("Text Node \(text) Heading : \(head) Distance: \(distance) , Position  :\(textNode.position)")
         self.bottomNode.addChildNode(textNode)
         nodeDetails.append((name:text,vector:textNode.position))
+        
     }
-    func transform(rotationY: Float, distance: Int) -> SCNMatrix4 {
-        // Translate first on -z direction
-        let translation = SCNMatrix4MakeTranslation(0, 0, Float(-distance))
-        // Rotate (yaw) around y axis
-        let rotation = SCNMatrix4MakeRotation(-1 * rotationY, 0, 1, 0)
-        // Final transformation: TxR
-        let transform = SCNMatrix4Mult(translation, rotation)
+    func transform(rotationY: Double, distance: Double) -> SCNVector3 {
+        let x = Float(distance*sin(degreesToRadians(rotationY)))
+        let z = Float(distance*cos(degreesToRadians(rotationY)))
+        let transform = SCNVector3(x:x,y:0,z:-z)
         return transform
     }
+    
     var distanceHeading = [(head:Double,dist:Double)]()
     func calculateOtherCoordinates(){
         debugPrint(places)
-        let teePosition = places[0].location!.coordinate
+        let teePosition = currentLocation
+//            places[0].location!.coordinate
         nodeDetails.removeAll()
         for data in places{
             if let location = data.location{
@@ -106,21 +113,57 @@ class ARPlanViewController: UIViewController {
                 addMoreScenes(text: data.placeName,head:head,distance:distance)
             }
         }
-        let starting = SCNVector3()
-        var ending = SCNVector3()
-        for data in nodeDetails{
-            if data.name.contains("Bunker"){
-                ending = data.vector
-                break
-            }
+        for data in self.positionsOfCurveLines{
+            let distance = GMSGeometryDistance(teePosition, data)
+            let head = GMSGeometryHeading(teePosition, data)
+            let offset = GMSGeometryOffset(teePosition, distance/2, head)
+            self.positionOfCurvedPoint.append(transform(rotationY: head, distance: distance))
+            self.positionOfCenterPointOfCurve.append(transform(rotationY: GMSGeometryHeading(teePosition, offset), distance: distance/2))
         }
-        let distance = distanceBetweenPoints2(A: starting, B: ending)
-        let geometry = SCNTorus(ringRadius: CGFloat(distance/2), pipeRadius: 0.1)
-        geometry.materials.first?.diffuse.contents = UIColor.blue
-        let ring = SCNNode(geometry: geometry)
-        self.bottomNode.addChildNode(ring)
-        ring.rotation = SCNVector4Make(0, 1, 0, 90)
-        ring.rotation = SCNVector4Make(1, 0, 0, 90)
+        for i in 0..<self.positionOfCurvedPoint.count-2{
+            let starting = self.positionOfCurvedPoint[i]
+            let ending = self.positionOfCurvedPoint[i+1]
+            let distance = distanceBetweenPoints2(A: starting, B: ending)
+            let path = UIBezierPath()
+            path.move(to: .zero)
+            path.addQuadCurve(to: CGPoint(x: 100, y: 0), controlPoint: CGPoint(x: 25, y: distance*0.3))
+            debugPrint(path)
+            path.addLine(to: CGPoint(x: 99, y: 0))
+            path.addQuadCurve(to: CGPoint(x: 1, y: 0), controlPoint: CGPoint(x: 25, y: (distance*0.3)-2))
+            debugPrint(path)
+            path.close()
+            debugPrint(path)
+            let shape = SCNShape(path: path, extrusionDepth: 0.75)
+            shape.firstMaterial?.diffuse.contents = SKColor.cyan
+            let curveNode = SCNNode(geometry: shape)
+            //https://stackoverflow.com/questions/28190604/scnshape-with-bezier-path
+            curveNode.position = starting
+            curveNode.rotation = SCNVector4(x: ending.x, y: ending.y, z: ending.z, w: 0.0)
+            self.bottomNode.addChildNode(curveNode)
+//            let distance = distanceBetweenPoints2(A: starting, B: ending)
+//            let geometry = SCNTorus(ringRadius: CGFloat(distance/2), pipeRadius: 0.5)
+//            geometry.materials.first?.diffuse.contents = UIColor.blue
+//            let ring = SCNNode(geometry: geometry)
+//            ring.position = positionOfCenterPointOfCurve[i]
+//            self.bottomNode.addChildNode(ring)
+////            ring.rotation = SCNVector4Make(0, 1, 0, 90)
+//            ring.rotation = SCNVector4Make(1, 0, 0, 90)
+        }
+//        let starting = SCNVector3()
+//        var ending = SCNVector3()
+//        for data in nodeDetails{
+//            if data.name.contains("Bunker"){
+//                ending = data.vector
+//                break
+//            }
+//        }
+//        let distance = distanceBetweenPoints2(A: starting, B: ending)
+//        let geometry = SCNTorus(ringRadius: CGFloat(distance/2), pipeRadius: 0.5)
+//        geometry.materials.first?.diffuse.contents = UIColor.blue
+//        let ring = SCNNode(geometry: geometry)
+//        self.bottomNode.addChildNode(ring)
+//        ring.rotation = SCNVector4Make(0, 1, 0, 90)
+//        ring.rotation = SCNVector4Make(1, 0, 0, 90)
         
 //        ring.runAction(SCNAction.rotate(by: 90, around: SCNVector3(x:0,y:0,z:0), duration: 0.0))
 //        let mate = SCNMaterial()
@@ -150,12 +193,24 @@ class ARPlanViewController: UIViewController {
     @IBAction func tapScreen(_ sender: UITapGestureRecognizer) {
         let point = sender.location(in: self.sceneView)
         let results = self.sceneView.hitTest(point, types: [.existingPlaneUsingExtent, .estimatedHorizontalPlane])
-        if let match = results.first {
+        if results.first != nil {
+            debugPrint(results.first)
             configureWorldBottom()
+            
         }
     }
 }
 
+@available(iOS 11.0, *)
+extension ARPlanViewController : CLLocationManagerDelegate{
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        currentLocation = (locations.last)!.coordinate
+        manager.stopUpdatingLocation()
+    }
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        heading = newHeading.trueHeading
+    }
+}
 @available(iOS 11.0, *)
 extension ARPlanViewController : ARSCNViewDelegate {
     func update(planeNode: SCNNode, from planeAnchor: ARPlaneAnchor, hidden: Bool) {

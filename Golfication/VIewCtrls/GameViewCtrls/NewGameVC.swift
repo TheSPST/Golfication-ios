@@ -2161,7 +2161,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         for player in addPlayersArray{
             if let reciever = ((player as AnyObject).object(forKey:"id") as? String){
                 if(reciever != Auth.auth().currentUser?.uid){
-                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") send you request to join the game", type:"7", category: "dont know",matchDataId: matchId, feedKey: "")
+                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") has invited you to a game", type:"7", category: "dont know",matchDataId: matchId, feedKey: "")
                 }
             }
         }
@@ -2361,7 +2361,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             
             if let reciever = ((player as AnyObject).object(forKey:"id") as? String){
                 if(reciever != Auth.auth().currentUser?.uid){
-                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") send you request to join the game", type:"7", category: "dont know",matchDataId: matchId, feedKey: "")
+                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") has invited you to a game", type:"7", category: "dont know",matchDataId: matchId, feedKey: "")
                 }
             }
             

@@ -507,6 +507,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             if #available(iOS 11.0, *) {
                 let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "ARPlanViewController") as! ARPlanViewController
                 viewCtrl.places = self.places
+                viewCtrl.positionsOfCurveLines = self.positionsOfCurveLines
                 self.navigationController?.pushViewController(viewCtrl, animated: true)
 
             } else {
