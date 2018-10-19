@@ -303,6 +303,13 @@
     
     func application(_ application: UIApplication,didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
+        
+        /*let tokenParts = deviceToken.map { data -> String in
+            return String(format: "%02.2hhx", data)
+        }
+        let token = tokenParts.joined()
+        // 2. Print device token to use for PNs payloads
+        debugPrint("Device Token: \(token)")*/
     }
     
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
@@ -590,7 +597,7 @@
             let youItem = UIApplicationShortcutItem(type: "OpenYouTab", localizedTitle: "You", localizedSubtitle: nil, icon: youIcon, userInfo: nil)
             
             let friendsIcon = UIApplicationShortcutIcon(templateImageName: "together_0")
-            let friendsItem = UIApplicationShortcutItem(type: "OpenFriendsTab", localizedTitle: "Friends", localizedSubtitle: nil, icon: friendsIcon, userInfo: nil)
+            let friendsItem = UIApplicationShortcutItem(type: "OpenFriendsTab", localizedTitle: "Together", localizedSubtitle: nil, icon: friendsIcon, userInfo: nil)
             
             let exploreIcon = UIApplicationShortcutIcon(templateImageName: "explore_0")
             let exploreItem = UIApplicationShortcutItem(type: "OpenExploreTab", localizedTitle: "Explore", localizedSubtitle: nil, icon: exploreIcon, userInfo: nil)

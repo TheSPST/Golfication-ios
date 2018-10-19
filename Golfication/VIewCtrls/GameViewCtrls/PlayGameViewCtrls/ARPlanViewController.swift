@@ -120,27 +120,46 @@ class ARPlanViewController: UIViewController {
             self.positionOfCurvedPoint.append(transform(rotationY: head, distance: distance))
             self.positionOfCenterPointOfCurve.append(transform(rotationY: GMSGeometryHeading(teePosition, offset), distance: distance/2))
         }
-        for i in 0..<self.positionOfCurvedPoint.count-2{
+        for i in 0..<self.positionOfCurvedPoint.count-1{
             let starting = self.positionOfCurvedPoint[i]
             let ending = self.positionOfCurvedPoint[i+1]
-            let distance = distanceBetweenPoints2(A: starting, B: ending)
-            let path = UIBezierPath()
-            path.move(to: .zero)
-            path.addQuadCurve(to: CGPoint(x: 100, y: 0), controlPoint: CGPoint(x: 25, y: distance*0.3))
-            debugPrint(path)
-            path.addLine(to: CGPoint(x: 99, y: 0))
-            path.addQuadCurve(to: CGPoint(x: 1, y: 0), controlPoint: CGPoint(x: 25, y: (distance*0.3)-2))
-            debugPrint(path)
-            path.close()
-            debugPrint(path)
-            let shape = SCNShape(path: path, extrusionDepth: 0.75)
-            shape.firstMaterial?.diffuse.contents = SKColor.cyan
-            let curveNode = SCNNode(geometry: shape)
-            //https://stackoverflow.com/questions/28190604/scnshape-with-bezier-path
-            curveNode.position = starting
-            curveNode.rotation = SCNVector4(x: ending.x, y: ending.y, z: ending.z, w: 0.0)
-            self.bottomNode.addChildNode(curveNode)
-//            let distance = distanceBetweenPoints2(A: starting, B: ending)
+            debugPrint(starting)
+            debugPrint(positionOfCenterPointOfCurve[i])
+            debugPrint(ending)
+            let totalPointsInBetween = self.getMultiplePoint(starting: starting, ending: ending)
+            for data in totalPointsInBetween{
+//                let path = UIBezierPath()
+                let sphere = SCNBox(width: 0.5, height: 0.5, length: 1, chamferRadius: 0.5)
+                sphere.firstMaterial?.diffuse.contents = SKColor.cyan
+                let scnNode = SCNNode(geometry: sphere)
+                scnNode.position = data
+                self.bottomNode.addChildNode(scnNode)
+            }
+        }
+        let totalPointsInBetween = self.getMultiplePoint(starting: SCNVector3Make(0, 0, 0), ending:self.positionOfCurvedPoint[0])
+        for data in totalPointsInBetween{
+            let sphere = SCNBox(width: 0.5, height: 0.5, length: 1, chamferRadius: 0.5)
+            sphere.firstMaterial?.diffuse.contents = SKColor.cyan
+            let scnNode = SCNNode(geometry: sphere)
+            scnNode.position = data
+            self.bottomNode.addChildNode(scnNode)
+        }
+
+//            let path = UIBezierPath()
+//            path.move(to: .zero)
+//            path.addQuadCurve(to: CGPoint(x: 100, y: 0), controlPoint: CGPoint(x: 25, y: distance*0.3))
+//            path.addLine(to: CGPoint(x: 99, y: 0))
+//            path.addQuadCurve(to: CGPoint(x: 1, y: 0), controlPoint: CGPoint(x: 25, y: (distance*0.3)-2))
+//            path.close()
+//            let path  = createBazierPath(starting: self.sceneView.projectPoint(starting), ending: self.sceneView.projectPoint(ending))
+//            let shape = SCNShape(path: path, extrusionDepth: 0.75)
+//            shape.firstMaterial?.diffuse.contents = SKColor.cyan
+//            let curveNode = SCNNode(geometry: shape)
+//            //https://stackoverflow.com/questions/28190604/scnshape-with-bezier-path
+//            curveNode.position = positionOfCenterPointOfCurve[i]
+//            curveNode.rotation = SCNVector4(x: starting.x, y: starting.y, z: starting.z, w: 0.0)
+//            self.bottomNode.addChildNode(curveNode)
+
 //            let geometry = SCNTorus(ringRadius: CGFloat(distance/2), pipeRadius: 0.5)
 //            geometry.materials.first?.diffuse.contents = UIColor.blue
 //            let ring = SCNNode(geometry: geometry)
@@ -148,7 +167,7 @@ class ARPlanViewController: UIViewController {
 //            self.bottomNode.addChildNode(ring)
 ////            ring.rotation = SCNVector4Make(0, 1, 0, 90)
 //            ring.rotation = SCNVector4Make(1, 0, 0, 90)
-        }
+//        }
 //        let starting = SCNVector3()
 //        var ending = SCNVector3()
 //        for data in nodeDetails{
@@ -171,6 +190,41 @@ class ARPlanViewController: UIViewController {
 //        let curvedLine = LineNode(v1: starting, v2: ending, material: [mate])
 //        self.bottomNode.addChildNode(curvedLine)
 //        self.createLine(startPosition: starting, endPosition: ending)
+    }
+    
+    func getMultiplePoint(starting:SCNVector3,ending:SCNVector3)->[SCNVector3]{
+        var totalPointsInBetween = self.Bresenham3D(starting: starting, ending: ending)
+        debugPrint(totalPointsInBetween.count)
+        let distance = distanceBetweenPoints2(A: starting, B: ending)
+        let height : Float = Float(distance * 0.3)
+        let yIncres : Float = Float((distance * 0.3)/(distance/2))
+        
+        for i in 0..<totalPointsInBetween.count{
+            if i < totalPointsInBetween.count/2{
+                totalPointsInBetween[i].y = Float(i)*yIncres
+            }else{
+                totalPointsInBetween[i].y = height + Float(((totalPointsInBetween.count/2)-i))*yIncres
+            }
+        }
+        totalPointsInBetween.append(ending)
+        return totalPointsInBetween
+    }
+    func createBazierPath(starting:SCNVector3,ending:SCNVector3)->UIBezierPath{
+        let star = self.sceneView.projectPoint(starting)
+        let end = self.sceneView.projectPoint(ending)
+        let distance = distanceBetweenPoints2(A: starting, B: ending)
+/*        let height = distance*0.3
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x:CGFloat(starting.x),y:CGFloat(starting.y)))
+        path.addQuadCurve(to:CGPoint(x:CGFloat(ending.x),y:CGFloat(ending.y)),controlPoint: CGPoint(x: CGFloat(starting.x) + distance/2, y: CGFloat(height)))
+        path.addLine(to: CGPoint(x:CGFloat(starting.x - 1),y:CGFloat(starting.y)))
+        path.addQuadCurve(to:CGPoint(x:CGFloat(starting.x),y:CGFloat(starting.y)),controlPoint: CGPoint(x: CGFloat(starting.x) + distance/2, y: CGFloat(height)))
+
+        path.close()*/
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: 100))
+        path.addCurve(to: CGPoint(x: distance, y: 100), controlPoint1: CGPoint(x: distance/2, y: -125), controlPoint2: CGPoint(x: distance, y: 100))
+        return path
     }
     private func showHelperAlertIfNeeded() {
         let key = "PlaneAnchorViewController.helperAlert.didShow"
@@ -198,6 +252,88 @@ class ARPlanViewController: UIViewController {
             configureWorldBottom()
             
         }
+    }
+    //https://www.geeksforgeeks.org/bresenhams-algorithm-for-3-d-line-drawing/
+    func Bresenham3D(starting:SCNVector3,ending:SCNVector3)->[SCNVector3]{
+        var x1 = Int(starting.x)
+        var y1 = Int(starting.y)
+        var z1 = Int(starting.z)
+        let x2 = Int(ending.x)
+        let y2 = Int(ending.y)
+        let z2 = Int(ending.z)
+        var listOfPoints = [SCNVector3]()
+        listOfPoints.append(starting)
+        let dx = abs(x2 - x1)
+        let dy = abs(y2 - y1)
+        let dz = abs(z2 - z1)
+        var xs = -1
+        var ys = -1
+        var zs = -1
+        if (x2 > x1){
+            xs = 1
+        }
+        if (y2 > y1){
+            ys = 1
+        }
+        if (z2 > z1){
+            zs = 1
+        }
+        //# Driving axis is X-axis"
+        if (dx >= dy && dx >= dz){
+            var p1 = 2 * dy - dx
+            var p2 = 2 * dz - dx
+            while (x1 != x2){
+                x1 += xs
+                if (p1 >= 0){
+                    y1 += ys
+                    p1 -= 2 * dx
+                }
+                if (p2 >= 0){
+                    z1 += zs
+                    p2 -= 2 * dx
+                    p1 += 2 * dy
+                    p2 += 2 * dz
+                }
+                listOfPoints.append(SCNVector3Make(Float(x1), Float(y1), Float(z1)))
+            }
+        //# Driving axis is Y-axis"
+        }else if (dy >= dx && dy >= dz){
+        var p1 = 2 * dx - dy
+        var p2 = 2 * dz - dy
+            while (y1 != y2){
+                y1 += ys
+                if (p1 >= 0){
+                    x1 += xs
+                    p1 -= 2 * dy
+                }
+                if (p2 >= 0){
+                    z1 += zs
+                    p2 -= 2 * dy
+                    p1 += 2 * dx
+                    p2 += 2 * dz
+                }
+                listOfPoints.append(SCNVector3Make(Float(x1), Float(y1), Float(z1)))
+            }
+        //# Driving axis is Z-axis"
+        }else{
+            var p1 = 2 * dy - dz
+            var p2 = 2 * dx - dz
+            while (z1 != z2){
+                z1 += zs
+                if (p1 >= 0){
+                    y1 += ys
+                    p1 -= 2 * dz
+                }
+                if (p2 >= 0){
+                    x1 += xs
+                    p2 -= 2 * dz
+                    p1 += 2 * dy
+                    p2 += 2 * dx
+                }
+                listOfPoints.append(SCNVector3Make(Float(x1), Float(y1), Float(z1)))
+            }
+        }
+        return listOfPoints
     }
 }
 
@@ -285,29 +421,3 @@ extension ARPlanViewController : SCNPhysicsContactDelegate {
         }
     }
 }
-//@available(iOS 11.0, *)
-//class LineNode: SCNNode{
-//    init(v1: SCNVector3,v2: SCNVector3,material: [SCNMaterial] ){
-//        super.init()
-//        let  height1 = self.distanceBetweenPoints2(A: v1, B: v2) as CGFloat //v1.distance(v2)
-//        position = v1
-//        let ndV2 = SCNNode()
-//        ndV2.position = v2
-//        let ndZAlign = SCNNode()
-//        ndZAlign.eulerAngles.x = Float.pi/2
-//        let cylgeo = SCNBox(width: 0.02, height: height1, length: 0.001, chamferRadius: 0)
-//        cylgeo.materials = material
-//        let ndCylinder = SCNNode(geometry: cylgeo )
-//        ndCylinder.position.y = Float(-height1/2) + 0.001
-//        ndZAlign.addChildNode(ndCylinder)
-//        addChildNode(ndZAlign)
-//        constraints = [SCNLookAtConstraint(target: ndV2)]
-//    }
-//
-//    override init() {
-//        super.init()
-//    }
-//    required init?(coder aDecoder: NSCoder) {
-//        super.init(coder: aDecoder)
-//    }
-//}

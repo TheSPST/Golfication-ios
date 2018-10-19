@@ -841,6 +841,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         mapTimer.invalidate()
+        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidEnterBackground)
     }
     @objc func hideStableFord(_ notification:NSNotification){
         let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
@@ -1112,10 +1113,15 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         assert(backgroundTask != UIBackgroundTaskInvalid)
     }
     @objc func appDidEnterBackground() {
-        if onCourseNotification == 0{
-            self.mapTimer.invalidate()
+        let thePresenter = self.navigationController?.visibleViewController
+        if (thePresenter != nil) && (thePresenter?.isKind(of:RFMapVC.self))! {
+            if onCourseNotification == 0{
+                self.mapTimer.invalidate()
+            }else{
+                self.updateMap(indexToUpdate: self.holeIndex)
+            }
         }else{
-            self.updateMap(indexToUpdate: self.holeIndex)
+            self.mapTimer.invalidate()
         }
     }
     func endBackgroundTask() {
@@ -2400,7 +2406,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             })
         }
     }
-    
+    // Update Map - removing all markers and features from map and reload map with new Features and details.
     func updateMap(indexToUpdate:Int){
         self.suggestedMarker1.map = nil
         self.suggestedMarker2.map = nil
@@ -2417,12 +2423,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.scrlView.isHidden = true
         self.first = false
-
         indexToUpdate = indexToUpdate == -1 ? indexToUpdate+1 : indexToUpdate
         self.isUpdating = false
         btnTopShotRanking.setTitle("", for: .normal)
         btnTopShotRanking.isHidden = true
-        
         markers.removeAll()
         self.lblHoleNumber.text = "\(self.scoring[indexToUpdate].hole)"
         self.lblHoleNumber2.text = "Hole\(self.scoring[indexToUpdate].hole)"
@@ -2462,7 +2466,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 plotSuggestedMarkers(position: positionsOfDotLine)
             }
         }
-
         self.getScoreFromMatchDataFirebase()
         if (btnExpendScore.isHidden){
             UIView.animate(withDuration: 0.3, animations: {
@@ -2477,9 +2480,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             newI += 1
         }
         var counter = 0
-
         if(userLocationForClub != nil) && (self.playerId == Auth.auth().currentUser!.uid){
-            mapTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+            mapTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (timer) in
                 if(self.positionsOfDotLine.count > 2){
                     if self.isBackground{
                         if(counter%60 == 0){
@@ -2488,7 +2490,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     }else{
                         self.locationManager.startUpdatingLocation()
                     }
-
                     let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
                     if (distance < 15000.0){
                         self.positionsOfDotLine.remove(at: 0)
@@ -2510,9 +2511,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                             }
                             self.first = true
                         }
-
                         self.plotLine(positions: self.positionsOfDotLine)
-                        
                         var data : GreenData!
                         if(self.courseData.holeGreenDataArr.isEmpty){
                             data = self.setFronBackCenter(ind: indexToUpdate, currentLocation: self.userLocationForClub!)
@@ -2536,7 +2535,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         if(counter%60 == 0){
                             Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0)
                         }
-                        counter += 5
+                        counter += 2
                     }
                     else{
                         let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)

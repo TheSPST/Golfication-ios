@@ -123,8 +123,8 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
         cardView3.shadowOffsetHeight = Int(0.5)
         cardView3.shadowOpacity = 0.1
 
-        cardView4.shadowOffsetHeight = Int(0.5)
-        cardView4.shadowOpacity = 0.1
+//        cardView4.shadowOffsetHeight = Int(0.5)
+//        cardView4.shadowOpacity = 0.1
         
         viewOneYear.layer.cornerRadius = 25.0
         viewOneMonth.layer.cornerRadius = 25.0

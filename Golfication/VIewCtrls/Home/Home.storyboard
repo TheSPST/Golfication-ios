@@ -6658,7 +6658,7 @@
                                 <rect key="frame" x="0.0" y="178" width="1600" height="330"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mhg-9i-5ti">
-                                        <rect key="frame" x="0.0" y="0.0" width="6370" height="330"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="4780" height="330"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rTy-ql-YDO" customClass="CardView" customModule="Golfication" customModuleProvider="target">
                                                 <rect key="frame" x="10" y="10" width="1580" height="310"/>
@@ -6704,96 +6704,8 @@
                                                     <constraint firstItem="oUm-PL-bHa" firstAttribute="leading" secondItem="rTy-ql-YDO" secondAttribute="leading" constant="10" id="ykU-1r-CWJ"/>
                                                 </constraints>
                                             </view>
-                                            <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pPz-TF-KXe" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="1600" y="10" width="1580" height="310"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Golfication Pro" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G6o-MO-lYW">
-                                                        <rect key="frame" x="10" y="10" width="1560" height="25.5"/>
-                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="21"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="controlPro" translatesAutoresizingMaskIntoConstraints="NO" id="ntO-xL-cDc">
-                                                        <rect key="frame" x="697" y="45.5" width="186" height="185"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="185" id="QCC-6j-b1K"/>
-                                                            <constraint firstAttribute="width" constant="186" id="viZ-Sr-0dp"/>
-                                                        </constraints>
-                                                    </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Club Selection &amp; Control" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EGm-II-XYk">
-                                                        <rect key="frame" x="10" y="240.5" width="1560" height="23"/>
-                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="19"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Know which clubs you need to hit often, and which you'd better leave out." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hGR-8w-EyF">
-                                                        <rect key="frame" x="10" y="263.5" width="1560" height="16"/>
-                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <color key="backgroundColor" red="0.0" green="0.54117647059999996" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="G6o-MO-lYW" secondAttribute="trailing" constant="10" id="2iW-IP-ese"/>
-                                                    <constraint firstItem="ntO-xL-cDc" firstAttribute="centerX" secondItem="pPz-TF-KXe" secondAttribute="centerX" id="5QX-ni-fsG"/>
-                                                    <constraint firstItem="ntO-xL-cDc" firstAttribute="top" secondItem="G6o-MO-lYW" secondAttribute="bottom" constant="10" id="6i7-Z1-rXD"/>
-                                                    <constraint firstItem="G6o-MO-lYW" firstAttribute="top" secondItem="pPz-TF-KXe" secondAttribute="top" constant="10" id="Cq5-2K-2KM"/>
-                                                    <constraint firstAttribute="trailing" secondItem="EGm-II-XYk" secondAttribute="trailing" constant="10" id="IGV-P5-RhL"/>
-                                                    <constraint firstAttribute="trailing" secondItem="hGR-8w-EyF" secondAttribute="trailing" constant="10" id="Ldi-u9-a9R"/>
-                                                    <constraint firstItem="hGR-8w-EyF" firstAttribute="top" secondItem="EGm-II-XYk" secondAttribute="bottom" id="P7R-aa-ric"/>
-                                                    <constraint firstItem="EGm-II-XYk" firstAttribute="top" secondItem="ntO-xL-cDc" secondAttribute="bottom" constant="10" id="XSh-ma-jfU"/>
-                                                    <constraint firstItem="hGR-8w-EyF" firstAttribute="leading" secondItem="pPz-TF-KXe" secondAttribute="leading" constant="10" id="bLs-LX-Oec"/>
-                                                    <constraint firstItem="EGm-II-XYk" firstAttribute="leading" secondItem="pPz-TF-KXe" secondAttribute="leading" constant="10" id="fMr-Gl-2s4"/>
-                                                    <constraint firstItem="G6o-MO-lYW" firstAttribute="leading" secondItem="pPz-TF-KXe" secondAttribute="leading" constant="10" id="wtc-oa-mgk"/>
-                                                </constraints>
-                                            </view>
-                                            <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mn8-MQ-QHl" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="3190" y="10" width="1580" height="310"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Golfication Pro" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7cl-vb-alS">
-                                                        <rect key="frame" x="10" y="10" width="1560" height="25.5"/>
-                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="21"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="device1" translatesAutoresizingMaskIntoConstraints="NO" id="ODG-Zz-q4h">
-                                                        <rect key="frame" x="715" y="45.5" width="150" height="185"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="185" id="0H6-rr-0Wz"/>
-                                                            <constraint firstAttribute="width" constant="150" id="bXG-Rk-UJg"/>
-                                                        </constraints>
-                                                    </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Super Early-Bird Discount" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XgF-qF-0Q2">
-                                                        <rect key="frame" x="10" y="240.5" width="1560" height="23"/>
-                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="19"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get a $100 pre-order discount coupon for Golf's most powerful wearable on launch day" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kSM-JX-0E5">
-                                                        <rect key="frame" x="10" y="263.5" width="1560" height="16"/>
-                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <color key="backgroundColor" red="0.0" green="0.54117647059999996" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstItem="ODG-Zz-q4h" firstAttribute="centerX" secondItem="Mn8-MQ-QHl" secondAttribute="centerX" id="2kb-hj-guZ"/>
-                                                    <constraint firstAttribute="trailing" secondItem="XgF-qF-0Q2" secondAttribute="trailing" constant="10" id="9fM-Ae-CRJ"/>
-                                                    <constraint firstItem="7cl-vb-alS" firstAttribute="top" secondItem="Mn8-MQ-QHl" secondAttribute="top" constant="10" id="AJ6-7U-Qpz"/>
-                                                    <constraint firstItem="7cl-vb-alS" firstAttribute="leading" secondItem="Mn8-MQ-QHl" secondAttribute="leading" constant="10" id="D7m-Eo-Eqb"/>
-                                                    <constraint firstItem="ODG-Zz-q4h" firstAttribute="top" secondItem="7cl-vb-alS" secondAttribute="bottom" constant="10" id="I1m-Qa-Eit"/>
-                                                    <constraint firstItem="kSM-JX-0E5" firstAttribute="leading" secondItem="Mn8-MQ-QHl" secondAttribute="leading" constant="10" id="XYP-Vc-ZKM"/>
-                                                    <constraint firstItem="XgF-qF-0Q2" firstAttribute="leading" secondItem="Mn8-MQ-QHl" secondAttribute="leading" constant="10" id="dUD-Bu-bMo"/>
-                                                    <constraint firstAttribute="trailing" secondItem="kSM-JX-0E5" secondAttribute="trailing" constant="10" id="fFF-08-Snw"/>
-                                                    <constraint firstItem="XgF-qF-0Q2" firstAttribute="top" secondItem="ODG-Zz-q4h" secondAttribute="bottom" constant="10" id="k1d-ae-FEy"/>
-                                                    <constraint firstItem="kSM-JX-0E5" firstAttribute="top" secondItem="XgF-qF-0Q2" secondAttribute="bottom" id="nHx-aA-6e0"/>
-                                                    <constraint firstAttribute="trailing" secondItem="7cl-vb-alS" secondAttribute="trailing" constant="10" id="vIa-0Q-Qod"/>
-                                                </constraints>
-                                            </view>
                                             <view tag="3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1mX-P7-qtg" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="4780" y="10" width="1580" height="310"/>
+                                                <rect key="frame" x="1600" y="10" width="1580" height="310"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Golfication Pro" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n3T-mi-NYk">
                                                         <rect key="frame" x="10" y="10" width="1560" height="25.5"/>
@@ -6836,25 +6748,65 @@
                                                     <constraint firstItem="Xbd-pm-r3Z" firstAttribute="top" secondItem="USn-H8-fIV" secondAttribute="bottom" id="xW9-NV-cqF"/>
                                                 </constraints>
                                             </view>
+                                            <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pPz-TF-KXe" customClass="CardView" customModule="Golfication" customModuleProvider="target">
+                                                <rect key="frame" x="3190" y="10" width="1580" height="310"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Golfication Pro" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G6o-MO-lYW">
+                                                        <rect key="frame" x="10" y="10" width="1560" height="25.5"/>
+                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="21"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Pop_graph" translatesAutoresizingMaskIntoConstraints="NO" id="ntO-xL-cDc">
+                                                        <rect key="frame" x="663" y="45.5" width="254" height="185"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="185" id="QCC-6j-b1K"/>
+                                                            <constraint firstAttribute="width" constant="254" id="viZ-Sr-0dp"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Proximity Trend" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EGm-II-XYk">
+                                                        <rect key="frame" x="10" y="240.5" width="1560" height="23"/>
+                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="19"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get it closer to the hole with the power of data." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hGR-8w-EyF">
+                                                        <rect key="frame" x="10" y="263.5" width="1560" height="16"/>
+                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" red="0.0" green="0.54117647059999996" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="G6o-MO-lYW" secondAttribute="trailing" constant="10" id="2iW-IP-ese"/>
+                                                    <constraint firstItem="ntO-xL-cDc" firstAttribute="centerX" secondItem="pPz-TF-KXe" secondAttribute="centerX" id="5QX-ni-fsG"/>
+                                                    <constraint firstItem="ntO-xL-cDc" firstAttribute="top" secondItem="G6o-MO-lYW" secondAttribute="bottom" constant="10" id="6i7-Z1-rXD"/>
+                                                    <constraint firstItem="G6o-MO-lYW" firstAttribute="top" secondItem="pPz-TF-KXe" secondAttribute="top" constant="10" id="Cq5-2K-2KM"/>
+                                                    <constraint firstAttribute="trailing" secondItem="EGm-II-XYk" secondAttribute="trailing" constant="10" id="IGV-P5-RhL"/>
+                                                    <constraint firstAttribute="trailing" secondItem="hGR-8w-EyF" secondAttribute="trailing" constant="10" id="Ldi-u9-a9R"/>
+                                                    <constraint firstItem="hGR-8w-EyF" firstAttribute="top" secondItem="EGm-II-XYk" secondAttribute="bottom" id="P7R-aa-ric"/>
+                                                    <constraint firstItem="EGm-II-XYk" firstAttribute="top" secondItem="ntO-xL-cDc" secondAttribute="bottom" constant="10" id="XSh-ma-jfU"/>
+                                                    <constraint firstItem="hGR-8w-EyF" firstAttribute="leading" secondItem="pPz-TF-KXe" secondAttribute="leading" constant="10" id="bLs-LX-Oec"/>
+                                                    <constraint firstItem="EGm-II-XYk" firstAttribute="leading" secondItem="pPz-TF-KXe" secondAttribute="leading" constant="10" id="fMr-Gl-2s4"/>
+                                                    <constraint firstItem="G6o-MO-lYW" firstAttribute="leading" secondItem="pPz-TF-KXe" secondAttribute="leading" constant="10" id="wtc-oa-mgk"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="rTy-ql-YDO" firstAttribute="top" secondItem="Mhg-9i-5ti" secondAttribute="top" constant="10" id="1Oo-7n-1yO"/>
-                                            <constraint firstItem="Mn8-MQ-QHl" firstAttribute="width" secondItem="1mX-P7-qtg" secondAttribute="width" id="4yp-S9-IbI"/>
+                                            <constraint firstItem="pPz-TF-KXe" firstAttribute="leading" secondItem="1mX-P7-qtg" secondAttribute="trailing" constant="10" id="7YF-8s-Tjg"/>
                                             <constraint firstAttribute="bottom" secondItem="1mX-P7-qtg" secondAttribute="bottom" constant="10" id="7ka-LW-3Ps"/>
                                             <constraint firstAttribute="bottom" secondItem="rTy-ql-YDO" secondAttribute="bottom" constant="10" id="ACN-9Z-RjP"/>
-                                            <constraint firstAttribute="bottom" secondItem="Mn8-MQ-QHl" secondAttribute="bottom" constant="10" id="Amh-DO-Wce"/>
-                                            <constraint firstItem="Mn8-MQ-QHl" firstAttribute="top" secondItem="Mhg-9i-5ti" secondAttribute="top" constant="10" id="DVT-de-IIT"/>
-                                            <constraint firstItem="1mX-P7-qtg" firstAttribute="leading" secondItem="Mn8-MQ-QHl" secondAttribute="trailing" constant="10" id="EQT-6p-XaY"/>
-                                            <constraint firstItem="rTy-ql-YDO" firstAttribute="width" secondItem="pPz-TF-KXe" secondAttribute="width" id="HAj-FZ-XMW"/>
                                             <constraint firstItem="rTy-ql-YDO" firstAttribute="leading" secondItem="Mhg-9i-5ti" secondAttribute="leading" constant="10" id="IUO-ic-KGb"/>
                                             <constraint firstItem="pPz-TF-KXe" firstAttribute="top" secondItem="Mhg-9i-5ti" secondAttribute="top" constant="10" id="Wxq-sJ-CKr"/>
                                             <constraint firstAttribute="bottom" secondItem="pPz-TF-KXe" secondAttribute="bottom" constant="10" id="hbu-Tn-ek0"/>
+                                            <constraint firstAttribute="trailing" secondItem="pPz-TF-KXe" secondAttribute="trailing" constant="10" id="izR-Mg-my2"/>
                                             <constraint firstItem="1mX-P7-qtg" firstAttribute="top" secondItem="Mhg-9i-5ti" secondAttribute="top" constant="10" id="jn9-Uq-Obk"/>
-                                            <constraint firstAttribute="trailing" secondItem="1mX-P7-qtg" secondAttribute="trailing" constant="10" id="rTc-TA-d27"/>
-                                            <constraint firstItem="Mn8-MQ-QHl" firstAttribute="leading" secondItem="pPz-TF-KXe" secondAttribute="trailing" constant="10" id="sRI-zP-lf7"/>
-                                            <constraint firstItem="pPz-TF-KXe" firstAttribute="width" secondItem="Mn8-MQ-QHl" secondAttribute="width" id="xXL-Vn-teO"/>
-                                            <constraint firstItem="pPz-TF-KXe" firstAttribute="leading" secondItem="rTy-ql-YDO" secondAttribute="trailing" constant="10" id="yds-IJ-fgE"/>
+                                            <constraint firstItem="1mX-P7-qtg" firstAttribute="leading" secondItem="rTy-ql-YDO" secondAttribute="trailing" constant="10" id="lY9-gO-sNL"/>
+                                            <constraint firstItem="pPz-TF-KXe" firstAttribute="width" secondItem="1mX-P7-qtg" secondAttribute="width" id="tfZ-qx-dUd"/>
+                                            <constraint firstItem="1mX-P7-qtg" firstAttribute="width" secondItem="rTy-ql-YDO" secondAttribute="width" id="z93-aa-DZL"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -6883,8 +6835,8 @@
                                     <action selector="closeAction:" destination="6I7-j1-tND" eventType="touchUpInside" id="AVg-RD-31A"/>
                                 </connections>
                             </button>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="4" translatesAutoresizingMaskIntoConstraints="NO" id="Gp0-gT-eBC">
-                                <rect key="frame" x="772.5" y="471" width="55" height="37"/>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="Gp0-gT-eBC">
+                                <rect key="frame" x="780.5" y="471" width="39" height="37"/>
                                 <color key="pageIndicatorTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="currentPageIndicatorTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </pageControl>
@@ -6922,9 +6874,8 @@
                         <outlet property="btnMonthly" destination="oMZ-S9-1cv" id="ePc-fO-zRZ"/>
                         <outlet property="btnYearly" destination="Br5-YJ-qI3" id="bJP-f9-o4s"/>
                         <outlet property="cardView1" destination="rTy-ql-YDO" id="T01-Ez-sZZ"/>
-                        <outlet property="cardView2" destination="pPz-TF-KXe" id="61R-JL-jrP"/>
-                        <outlet property="cardView3" destination="Mn8-MQ-QHl" id="B9X-Lt-oYr"/>
-                        <outlet property="cardView4" destination="1mX-P7-qtg" id="4Kx-9k-eKD"/>
+                        <outlet property="cardView2" destination="1mX-P7-qtg" id="nOl-Yq-hMo"/>
+                        <outlet property="cardView3" destination="pPz-TF-KXe" id="GmB-1e-bbU"/>
                         <outlet property="closeBtn" destination="bOx-qs-2UE" id="xMa-6y-PTd"/>
                         <outlet property="containerView" destination="Mhg-9i-5ti" id="Kpl-ET-noQ"/>
                         <outlet property="lblCongrats" destination="0Bk-gT-3et" id="fx1-VR-2bg"/>
@@ -11129,7 +11080,6 @@
         <image name="chipping" width="208" height="201"/>
         <image name="club" width="93" height="70"/>
         <image name="control" width="194" height="200"/>
-        <image name="controlPro" width="558" height="555"/>
         <image name="dashboard" width="16" height="8"/>
         <image name="device1" width="450" height="603"/>
         <image name="facebook" width="329.14285278320312" height="329.14285278320312"/>

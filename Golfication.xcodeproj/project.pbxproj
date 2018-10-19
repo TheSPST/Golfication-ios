@@ -39,7 +39,6 @@
 		3E380EF11FFCCD6000246865 /* CustomProModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E380EF01FFCCD5F00246865 /* CustomProModeView.swift */; };
 		3E38616520A1846C0097283D /* OneYearMembership.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E38616420A1846C0097283D /* OneYearMembership.swift */; };
 		3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E3BB30D2143F52300321A1D /* RequestSFPopup.xib */; };
-		3E3C639C217215D100CBDC95 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E3C639B217215D100CBDC95 /* GoogleService-Info-live.plist */; };
 		3E3D1204213A6C3F00B2978D /* EditPreviousGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3D1203213A6C3F00B2978D /* EditPreviousGame.swift */; };
 		3E3D1208213D1E1500B2978D /* MapShotPopupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E3D1207213D1E1400B2978D /* MapShotPopupView.xib */; };
 		3E3D120C213D6A3F00B2978D /* MapShotPopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3D120B213D6A3F00B2978D /* MapShotPopupVC.swift */; };
@@ -63,6 +62,7 @@
 		3E7861882111C45200CDD63F /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7861872111C45200CDD63F /* Toast.swift */; };
 		3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E832329201A1ABC0015A5D3 /* Together.storyboard */; };
 		3E89BC9920F62C4B00D47590 /* RFMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E89BC9820F62C4B00D47590 /* RFMapVC.swift */; };
+		3E9F94652179E3F1009428EC /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E9F94642179E3F1009428EC /* GoogleService-Info-demo.plist */; };
 		3EA0E268212AEC19009D7405 /* SwingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA0E267212AEC19009D7405 /* SwingTableViewCell.swift */; };
 		3EA43D032015D80E0077B14A /* ExploreDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43CFE2015D80E0077B14A /* ExploreDetailPageVC.swift */; };
 		3EA43D042015D80E0077B14A /* ExploreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43CFF2015D80E0077B14A /* ExploreVC.swift */; };
@@ -143,6 +143,21 @@
 		4B54A9E520C94B9B004285AF /* BluetoothDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54A9E420C94B9B004285AF /* BluetoothDelegate.swift */; };
 		4B5B265F204540A000BE3940 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5B265D20453F8D00BE3940 /* WebKit.framework */; };
 		4B7CA903208206D900FCFFF5 /* PublicProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7CA902208206D900FCFFF5 /* PublicProfileVC.swift */; };
+		4B7E2A662175C0D900DFC3EB /* LocalizationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E2A5A2175C0D900DFC3EB /* LocalizationHelper.m */; };
+		4B7E2A672175C0D900DFC3EB /* ARGeoCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E2A5D2175C0D900DFC3EB /* ARGeoCoordinate.m */; };
+		4B7E2A682175C0D900DFC3EB /* RadarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E2A602175C0D900DFC3EB /* RadarView.m */; };
+		4B7E2A692175C0D900DFC3EB /* ARObjectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E2A632175C0D900DFC3EB /* ARObjectView.m */; };
+		4B7E2A6A2175C0D900DFC3EB /* ARKitConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E2A642175C0D900DFC3EB /* ARKitConfig.m */; };
+		4B7E2A6B2175C0D900DFC3EB /* ARKitEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E2A652175C0D900DFC3EB /* ARKitEngine.m */; };
+		4B7E2A792175C20B00DFC3EB /* DetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A6E2175C20B00DFC3EB /* DetailView.xib */; };
+		4B7E2A7B2175C20B00DFC3EB /* radar_dot.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A712175C20B00DFC3EB /* radar_dot.png */; };
+		4B7E2A7C2175C20B00DFC3EB /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A722175C20B00DFC3EB /* radar.png */; };
+		4B7E2A7D2175C20B00DFC3EB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A732175C20B00DFC3EB /* Default@2x.png */; };
+		4B7E2A7E2175C20B00DFC3EB /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A742175C20B00DFC3EB /* arrow.png */; };
+		4B7E2A7F2175C20B00DFC3EB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A752175C20B00DFC3EB /* Default-568h@2x.png */; };
+		4B7E2A802175C20B00DFC3EB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A762175C20B00DFC3EB /* Default.png */; };
+		4B7E2A812175C20B00DFC3EB /* box.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A772175C20B00DFC3EB /* box.png */; };
+		4B7E2A842175DDA100DFC3EB /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E2A832175DDA100DFC3EB /* DetailView.swift */; };
 		4B7E5EFC20D118BA001847CC /* BackgroundMapStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E5EFB20D118BA001847CC /* BackgroundMapStats.swift */; };
 		4B7F4AE31FFD10A300191452 /* customPieViewCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F4AE01FFD10A300191452 /* customPieViewCenter.swift */; };
 		4B7F4AE41FFD10A300191452 /* customPieViewRight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F4AE11FFD10A300191452 /* customPieViewRight.swift */; };
@@ -283,7 +298,6 @@
 		3E380EF01FFCCD5F00246865 /* CustomProModeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomProModeView.swift; sourceTree = "<group>"; };
 		3E38616420A1846C0097283D /* OneYearMembership.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneYearMembership.swift; sourceTree = "<group>"; };
 		3E3BB30D2143F52300321A1D /* RequestSFPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RequestSFPopup.xib; sourceTree = "<group>"; };
-		3E3C639B217215D100CBDC95 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3E3D1203213A6C3F00B2978D /* EditPreviousGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPreviousGame.swift; sourceTree = "<group>"; };
 		3E3D1207213D1E1400B2978D /* MapShotPopupView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapShotPopupView.xib; sourceTree = "<group>"; };
 		3E3D120B213D6A3F00B2978D /* MapShotPopupVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapShotPopupVC.swift; sourceTree = "<group>"; };
@@ -309,6 +323,7 @@
 		3E7861872111C45200CDD63F /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		3E832329201A1ABC0015A5D3 /* Together.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Together.storyboard; sourceTree = "<group>"; };
 		3E89BC9820F62C4B00D47590 /* RFMapVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RFMapVC.swift; sourceTree = "<group>"; };
+		3E9F94642179E3F1009428EC /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		3EA0E267212AEC19009D7405 /* SwingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwingTableViewCell.swift; sourceTree = "<group>"; };
 		3EA43CFE2015D80E0077B14A /* ExploreDetailPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreDetailPageVC.swift; sourceTree = "<group>"; };
 		3EA43CFF2015D80E0077B14A /* ExploreVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreVC.swift; sourceTree = "<group>"; };
@@ -389,6 +404,30 @@
 		4B54A9E420C94B9B004285AF /* BluetoothDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDelegate.swift; sourceTree = "<group>"; };
 		4B5B265D20453F8D00BE3940 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		4B7CA902208206D900FCFFF5 /* PublicProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicProfileVC.swift; sourceTree = "<group>"; };
+		4B7E2A552175C0D900DFC3EB /* LocalizationHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizationHelper.h; sourceTree = "<group>"; };
+		4B7E2A562175C0D900DFC3EB /* LocalizationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizationDelegate.h; sourceTree = "<group>"; };
+		4B7E2A572175C0D900DFC3EB /* ARKitConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARKitConfig.h; sourceTree = "<group>"; };
+		4B7E2A582175C0D900DFC3EB /* ARKitEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARKitEngine.h; sourceTree = "<group>"; };
+		4B7E2A592175C0D900DFC3EB /* ARKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARKit.h; sourceTree = "<group>"; };
+		4B7E2A5A2175C0D900DFC3EB /* LocalizationHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalizationHelper.m; sourceTree = "<group>"; };
+		4B7E2A5B2175C0D900DFC3EB /* ARViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARViewDelegate.h; sourceTree = "<group>"; };
+		4B7E2A5D2175C0D900DFC3EB /* ARGeoCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARGeoCoordinate.m; sourceTree = "<group>"; };
+		4B7E2A5E2175C0D900DFC3EB /* ARGeoCoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARGeoCoordinate.h; sourceTree = "<group>"; };
+		4B7E2A602175C0D900DFC3EB /* RadarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadarView.m; sourceTree = "<group>"; };
+		4B7E2A612175C0D900DFC3EB /* ARObjectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARObjectView.h; sourceTree = "<group>"; };
+		4B7E2A622175C0D900DFC3EB /* RadarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadarView.h; sourceTree = "<group>"; };
+		4B7E2A632175C0D900DFC3EB /* ARObjectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARObjectView.m; sourceTree = "<group>"; };
+		4B7E2A642175C0D900DFC3EB /* ARKitConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARKitConfig.m; sourceTree = "<group>"; };
+		4B7E2A652175C0D900DFC3EB /* ARKitEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARKitEngine.m; sourceTree = "<group>"; };
+		4B7E2A6E2175C20B00DFC3EB /* DetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailView.xib; sourceTree = "<group>"; };
+		4B7E2A712175C20B00DFC3EB /* radar_dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radar_dot.png; sourceTree = "<group>"; };
+		4B7E2A722175C20B00DFC3EB /* radar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radar.png; sourceTree = "<group>"; };
+		4B7E2A732175C20B00DFC3EB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		4B7E2A742175C20B00DFC3EB /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
+		4B7E2A752175C20B00DFC3EB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		4B7E2A762175C20B00DFC3EB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		4B7E2A772175C20B00DFC3EB /* box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = box.png; sourceTree = "<group>"; };
+		4B7E2A832175DDA100DFC3EB /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		4B7E5EFB20D118BA001847CC /* BackgroundMapStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundMapStats.swift; sourceTree = "<group>"; };
 		4B7F4AE01FFD10A300191452 /* customPieViewCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = customPieViewCenter.swift; sourceTree = "<group>"; };
 		4B7F4AE11FFD10A300191452 /* customPieViewRight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = customPieViewRight.swift; sourceTree = "<group>"; };
@@ -627,6 +666,7 @@
 		3E40F97A20E604BA00092170 /* GameViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4B7E2A542175C0D900DFC3EB /* ARKit */,
 				3E576468215BDA4500658D78 /* RequestSFPopup.swift */,
 				3E3BB30D2143F52300321A1D /* RequestSFPopup.xib */,
 				3E3D120B213D6A3F00B2978D /* MapShotPopupVC.swift */,
@@ -832,6 +872,77 @@
 				4B1F6BBF2090A29F00312EA7 /* hdar_close.png */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		4B7E2A542175C0D900DFC3EB /* ARKit */ = {
+			isa = PBXGroup;
+			children = (
+				4B7E2A6C2175C20B00DFC3EB /* Resources */,
+				4B7E2A592175C0D900DFC3EB /* ARKit.h */,
+				4B7E2A572175C0D900DFC3EB /* ARKitConfig.h */,
+				4B7E2A642175C0D900DFC3EB /* ARKitConfig.m */,
+				4B7E2A5B2175C0D900DFC3EB /* ARViewDelegate.h */,
+				4B7E2A562175C0D900DFC3EB /* LocalizationDelegate.h */,
+				4B7E2A552175C0D900DFC3EB /* LocalizationHelper.h */,
+				4B7E2A5A2175C0D900DFC3EB /* LocalizationHelper.m */,
+				4B7E2A5C2175C0D900DFC3EB /* Model */,
+				4B7E2A5F2175C0D900DFC3EB /* View */,
+				4B7E2A582175C0D900DFC3EB /* ARKitEngine.h */,
+				4B7E2A652175C0D900DFC3EB /* ARKitEngine.m */,
+			);
+			path = ARKit;
+			sourceTree = "<group>";
+		};
+		4B7E2A5C2175C0D900DFC3EB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4B7E2A5E2175C0D900DFC3EB /* ARGeoCoordinate.h */,
+				4B7E2A5D2175C0D900DFC3EB /* ARGeoCoordinate.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4B7E2A5F2175C0D900DFC3EB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4B7E2A622175C0D900DFC3EB /* RadarView.h */,
+				4B7E2A602175C0D900DFC3EB /* RadarView.m */,
+				4B7E2A612175C0D900DFC3EB /* ARObjectView.h */,
+				4B7E2A632175C0D900DFC3EB /* ARObjectView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4B7E2A6C2175C20B00DFC3EB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4B7E2A832175DDA100DFC3EB /* DetailView.swift */,
+				4B7E2A6D2175C20B00DFC3EB /* Xib */,
+				4B7E2A702175C20B00DFC3EB /* Images */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4B7E2A6D2175C20B00DFC3EB /* Xib */ = {
+			isa = PBXGroup;
+			children = (
+				4B7E2A6E2175C20B00DFC3EB /* DetailView.xib */,
+			);
+			path = Xib;
+			sourceTree = "<group>";
+		};
+		4B7E2A702175C20B00DFC3EB /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				4B7E2A712175C20B00DFC3EB /* radar_dot.png */,
+				4B7E2A722175C20B00DFC3EB /* radar.png */,
+				4B7E2A732175C20B00DFC3EB /* Default@2x.png */,
+				4B7E2A742175C20B00DFC3EB /* arrow.png */,
+				4B7E2A752175C20B00DFC3EB /* Default-568h@2x.png */,
+				4B7E2A762175C20B00DFC3EB /* Default.png */,
+				4B7E2A772175C20B00DFC3EB /* box.png */,
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 		4B7F520E2158DC6E002E328A /* PKCCrop */ = {
@@ -1135,7 +1246,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3E3C639B217215D100CBDC95 /* GoogleService-Info-live.plist */,
+				3E9F94642179E3F1009428EC /* GoogleService-Info-demo.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1213,7 +1324,7 @@
 				TargetAttributes = {
 					0D5D4A361F94D382004621C7 = {
 						CreatedOnToolsVersion = 9.0;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1254,6 +1365,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B7E2A812175C20B00DFC3EB /* box.png in Resources */,
 				4BD5CF83214CE17E00BEBEED /* GoogleService-Info.plist in Resources */,
 				3E3D1208213D1E1500B2978D /* MapShotPopupView.xib in Resources */,
 				4B8C8D311FF674D0001F5D01 /* SF-Pro-Display-Medium.otf in Resources */,
@@ -1265,6 +1377,7 @@
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
+				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
 				3EAE867F2125573F0081857B /* Device.storyboard in Resources */,
 				4B8C8D3D1FF674D0001F5D01 /* SF-Pro-Display-Thin.otf in Resources */,
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
@@ -1276,6 +1389,7 @@
 				4B8C8D3B1FF674D0001F5D01 /* SF-Pro-Display-MediumItalic.otf in Resources */,
 				4B8C8D361FF674D0001F5D01 /* SF-Pro-Display-HeavyItalic.otf in Resources */,
 				3E27BA5C20FF4D7700DC14AB /* Main.storyboard in Resources */,
+				4B7E2A7F2175C20B00DFC3EB /* Default-568h@2x.png in Resources */,
 				3EDC6BBB2109E97A009B6F49 /* ExitGamePopUpView.xib in Resources */,
 				3E4CDC6F211C56B700C2C1C6 /* Assets.xcassets in Resources */,
 				4B8C8D3F1FF674D0001F5D01 /* SF-Pro-Display-ThinItalic.otf in Resources */,
@@ -1288,16 +1402,21 @@
 				4B1F6BE42090A29F00312EA7 /* hdar_close@3x.png in Resources */,
 				4B8C8D391FF674D0001F5D01 /* SF-Pro-Display-Heavy.otf in Resources */,
 				3EA43D052015D80E0077B14A /* Explore.storyboard in Resources */,
+				4B7E2A7D2175C20B00DFC3EB /* Default@2x.png in Resources */,
 				4B1F6BD72090A29F00312EA7 /* Game.storyboard in Resources */,
 				3E035F87215293F000019014 /* OAD.storyboard in Resources */,
+				3E9F94652179E3F1009428EC /* GoogleService-Info-demo.plist in Resources */,
 				3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */,
+				4B7E2A7C2175C20B00DFC3EB /* radar.png in Resources */,
 				4B8C8D401FF674D0001F5D01 /* SF-Pro-Display-BlackItalic.otf in Resources */,
 				4B8C8D331FF674D0001F5D01 /* SF-Pro-Display-Bold.otf in Resources */,
 				4B1F6BC62090A29F00312EA7 /* CustomStyle.json in Resources */,
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
+				4B7E2A792175C20B00DFC3EB /* DetailView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
+				4B7E2A7B2175C20B00DFC3EB /* radar_dot.png in Resources */,
 				4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */,
-				3E3C639C217215D100CBDC95 /* GoogleService-Info-live.plist in Resources */,
+				4B7E2A7E2175C20B00DFC3EB /* arrow.png in Resources */,
 				3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */,
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
@@ -1442,6 +1561,7 @@
 				4B132F5C205A6D1900791656 /* NewUserProfileVC.swift in Sources */,
 				4B1F6BCE2090A29F00312EA7 /* CustomPopUpViewController.swift in Sources */,
 				4B54A9E520C94B9B004285AF /* BluetoothDelegate.swift in Sources */,
+				4B7E2A692175C0D900DFC3EB /* ARObjectView.m in Sources */,
 				3EA43D042015D80E0077B14A /* ExploreVC.swift in Sources */,
 				4BD5CF85214D212500BEBEED /* RefreshSubscriptionManager.swift in Sources */,
 				3E63509720D3A150005BF851 /* BLE.swift in Sources */,
@@ -1501,6 +1621,7 @@
 				4BB26D1F1FF77EDB001E9556 /* OTTViewController.swift in Sources */,
 				4B1F6BE32090A29F00312EA7 /* DebugMapViewController.swift in Sources */,
 				4B1F6BD82090A29F00312EA7 /* SearchLocationVC.swift in Sources */,
+				4B7E2A6B2175C0D900DFC3EB /* ARKitEngine.m in Sources */,
 				4BCC816420AD64F600AD3108 /* ScanProgressView.swift in Sources */,
 				4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */,
 				3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */,
@@ -1519,6 +1640,7 @@
 				3E0D9D3320E676BE00FE02C6 /* BasicScoringVC.swift in Sources */,
 				4BB26D101FF77EDB001E9556 /* AuthParentVC.swift in Sources */,
 				3E03F114207E2FE1001DDC5F /* InviteViewController.swift in Sources */,
+				4B7E2A662175C0D900DFC3EB /* LocalizationHelper.m in Sources */,
 				4B7F521C2158DC6F002E328A /* UIImageView+.swift in Sources */,
 				4BB26D3D1FF77EDB001E9556 /* TogetherFeedViewCell.swift in Sources */,
 				3EAE867D2125573F0081857B /* ScanningVC.swift in Sources */,
@@ -1557,6 +1679,8 @@
 				3E03F107207C9D8B001DDC5F /* EnterFreeProCodeVC.swift in Sources */,
 				3E03F1202080B36A001DDC5F /* SettingVC.swift in Sources */,
 				3EF55F5820E77A2200068C4B /* NewHomeVC.swift in Sources */,
+				4B7E2A682175C0D900DFC3EB /* RadarView.m in Sources */,
+				4B7E2A6A2175C0D900DFC3EB /* ARKitConfig.m in Sources */,
 				4B9578DF20B4409E008B2C61 /* AssignTabsVC.swift in Sources */,
 				4B1F6BCF2090A29F00312EA7 /* ScoreTableViewCell.swift in Sources */,
 				3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */,
@@ -1572,6 +1696,7 @@
 				3E035F84215293F000019014 /* TIOADToadImageReader.m in Sources */,
 				3E380EEF1FFCCD5300246865 /* NotificationVC.swift in Sources */,
 				4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */,
+				4B7E2A672175C0D900DFC3EB /* ARGeoCoordinate.m in Sources */,
 				4B7F52182158DC6F002E328A /* PKCCrop.swift in Sources */,
 				4BB26D121FF77EDB001E9556 /* SignUpVC.swift in Sources */,
 				3E3D120C213D6A3F00B2978D /* MapShotPopupVC.swift in Sources */,
@@ -1598,6 +1723,7 @@
 				4BB26D171FF77EDB001E9556 /* FilterVC.swift in Sources */,
 				4BB26D441FF77EED001E9556 /* FirebaseHandler.swift in Sources */,
 				3EAE867E2125573F0081857B /* PracticePageContainerVC.swift in Sources */,
+				4B7E2A842175DDA100DFC3EB /* DetailView.swift in Sources */,
 				3E70B69A201867590087738D /* IAPHandler.swift in Sources */,
 				4B7F4AE31FFD10A300191452 /* customPieViewCenter.swift in Sources */,
 				4BB26D2A1FF77EDB001E9556 /* SessionViewController.swift in Sources */,
@@ -1758,9 +1884,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -1770,7 +1896,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1783,9 +1909,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -1795,7 +1921,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;

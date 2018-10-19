@@ -117,7 +117,7 @@ class UserMarker:UIView{
         fatalError("init(coder:) has not been implemented")
     }
 }
-class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,ExitGamePopUpDelegate{
+class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,ExitGamePopUpDelegate, ARViewDelegate{
     
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var btnCenter: UIButton!
@@ -439,96 +439,179 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.exitGamePopUpView.hide(navItem: self.navigationItem)
         self.exitWithoutSave()
     }
+    
+    var engine: ARKitEngine!
+    var points: [Any]!
+    var arSelectedIndex: NSInteger!
+    var currentDetailView :DetailView!
+
     // MARK:- btnVRView
     @IBAction func btnVRAction(_ sender: Any) {
-        if !self.places.isEmpty{
-            self.places.removeAll()
-            places = [Place]()
-        }
-        //https://www.raywenderlich.com/146436/augmented-reality-ios-tutorial-location-based-2
+        //https://github.com/calonso/ios-arkit
+        arSelectedIndex = -1
+
         var teeCoord = [CLLocationCoordinate2D]()
         var gbCoord = [CLLocationCoordinate2D]()
         var fbCoord = [CLLocationCoordinate2D]()
+        points = [Any]()
         
         for i in 0..<courseData.numberOfHoles[holeIndex].tee.count{
-            let address = self.matchDataDict.value(forKey: "courseName")
+//            let address = self.matchDataDict.value(forKey: "courseName")
             let holeIndex = (self.holeIndex) % courseData.numberOfHoles.count
-            let name = " Hole \(holeIndex+1) Tee"
+            let name = "Hole \(holeIndex+1) Tee"
             teeCoord.append(BackgroundMapStats.middlePointOfListMarkers(listCoords: courseData.numberOfHoles[holeIndex].tee[i]))
             let flagCoordinates = teeCoord[i]
             let latitude = flagCoordinates.latitude
             let longitude = flagCoordinates.longitude
-            let reference = "CmRRAAAA1ImMeBfqBlsMF9wcVZintvDjhn4lkBeDbqjajyL63tq48YIzS8TJ7kP3JHMVWlwLlaf-NVBrbo3ZmuCBZwY4G1xWDholdXgio3F35eow4nXQAjZkb0ydfmTi5AxPOl0JEhCOwmRWBu46PILZvxewngswGhQRcfpMXW3b2mdsZHkbnOHSrp65Hg"
             let location = CLLocation(latitude: latitude, longitude: longitude)
-            let place = Place(location: location, reference: reference, name: name, address: address as! String)
-            self.places.append(place)
+            
+            let tee = ARGeoCoordinate(location: location)!
+            tee.dataObject = name
+            points.append(tee)
             break
         }
         for i in 0..<courseData.numberOfHoles[holeIndex].gb.count{
-            let name = " Bunker"
-            let address = self.matchDataDict.value(forKey: "courseName")
+            let name = "Bunker"
+//            let address = self.matchDataDict.value(forKey: "courseName")
             gbCoord.append(BackgroundMapStats.middlePointOfListMarkers(listCoords: courseData.numberOfHoles[holeIndex].gb[i]))
             let flagCoordinates = gbCoord[i]
             let latitude = flagCoordinates.latitude
             let longitude = flagCoordinates.longitude
-            let reference = "CmRRAAAA1ImMeBfqBlsMF9wcVZintvDjhn4lkBeDbqjajyL63tq48YIzS8TJ7kP3JHMVWlwLlaf-NVBrbo3ZmuCBZwY4G1xWDholdXgio3F35eow4nXQAjZkb0ydfmTi5AxPOl0JEhCOwmRWBu46PILZvxewngswGhQRcfpMXW3b2mdsZHkbnOHSrp65Hg"
             let location = CLLocation(latitude: latitude, longitude: longitude)
-            let place = Place(location: location, reference: reference, name: name, address: address as! String)
-            self.places.append(place)
+            
+            let gBunker = ARGeoCoordinate(location: location)!
+            gBunker.dataObject = name
+            points.append(gBunker)
         }
         for i in 0..<courseData.numberOfHoles[holeIndex].fb.count{
-            let name = " Bunker"
-            let address = self.matchDataDict.value(forKey: "courseName")
+            let name = "Bunker"
+//            let address = self.matchDataDict.value(forKey: "courseName")
             fbCoord.append(BackgroundMapStats.middlePointOfListMarkers(listCoords: courseData.numberOfHoles[holeIndex].fb[i]))
             let flagCoordinates = fbCoord[i]
             let latitude = flagCoordinates.latitude
             let longitude = flagCoordinates.longitude
-            let reference = "CmRRAAAA1ImMeBfqBlsMF9wcVZintvDjhn4lkBeDbqjajyL63tq48YIzS8TJ7kP3JHMVWlwLlaf-NVBrbo3ZmuCBZwY4G1xWDholdXgio3F35eow4nXQAjZkb0ydfmTi5AxPOl0JEhCOwmRWBu46PILZvxewngswGhQRcfpMXW3b2mdsZHkbnOHSrp65Hg"
             let location = CLLocation(latitude: latitude, longitude: longitude)
-            let place = Place(location: location, reference: reference, name: name, address: address as! String)
-            self.places.append(place)
+            
+            let fBunker = ARGeoCoordinate(location: location)!
+            fBunker.dataObject = name
+            points.append(fBunker)
         }
         
         let flagCoordinates = courseData.centerPointOfTeeNGreen[holeIndex].green
-        let name = " Flag# \(holeIndex+1)"
-        let address = self.matchDataDict.value(forKey: "courseName")
+        let name = "Flag# \(holeIndex+1)"
+//        let address = self.matchDataDict.value(forKey: "courseName")
         let latitude = flagCoordinates.latitude
         let longitude = flagCoordinates.longitude
-        let reference = "CmRRAAAA1ImMeBfqBlsMF9wcVZintvDjhn4lkBeDbqjajyL63tq48YIzS8TJ7kP3JHMVWlwLlaf-NVBrbo3ZmuCBZwY4G1xWDholdXgio3F35eow4nXQAjZkb0ydfmTi5AxPOl0JEhCOwmRWBu46PILZvxewngswGhQRcfpMXW3b2mdsZHkbnOHSrp65Hg"
         
         let location = CLLocation(latitude: latitude, longitude: longitude)
-        let place = Place(location: location, reference: reference, name: name, address: address as! String)
         
-        self.places.append(place)
-        for place in self.places{
-            debugPrint(place)
-        }
-        DispatchQueue.main.async {
-            if #available(iOS 11.0, *) {
-                let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "ARPlanViewController") as! ARPlanViewController
-                viewCtrl.places = self.places
-                viewCtrl.positionsOfCurveLines = self.positionsOfCurveLines
-                self.navigationController?.pushViewController(viewCtrl, animated: true)
+        let flag = ARGeoCoordinate(location: location)!
+        flag.dataObject = name
+        points.append(flag)
 
+            let config = ARKitConfig.defaultConfig(for: self)
+            config?.orientation = self.interfaceOrientation
+            
+            let s :CGSize = UIScreen.main.bounds.size
+            if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+                config?.radarPoint = CGPoint(x:s.width - 50, y:s.height - 50);
             } else {
-                // Fallback on earlier versions
+                config?.radarPoint = CGPoint(x:s.height - 50, y:s.width - 50);
             }
 
-//            let arViewController = ARViewController()
-//            arViewController.dataSource = self
-//            arViewController.maxDistance = 0
-//            arViewController.maxVisibleAnnotations = 30
-//            arViewController.maxVerticalLevel = 5
-//            arViewController.headingSmoothingFactor = 0.05
-//
-//            arViewController.trackingManager.userDistanceFilter = 25
-//            arViewController.trackingManager.reloadDistanceFilter = 75
-//            arViewController.setAnnotations(self.places)
-//            arViewController.uiOptions.debugEnabled = false
-//            arViewController.uiOptions.closeButtonEnabled = true
-//            self.navigationController?.pushViewController(arViewController, animated: true)
+        let closeBtn = UIButton.init(type: .custom)
+        closeBtn.setImage(UIImage(named: "cross"), for: .normal)
+        closeBtn.sizeToFit()
+        closeBtn.addTarget(self, action: #selector(self.closeAr(_:)), for: .touchUpInside)
+
+        closeBtn.center = CGPoint(x:50, y:50)
+            
+            engine = ARKitEngine.init(config: config)
+            engine.addCoordinates(points)
+            engine.settingUnit = distanceFilter
+            engine.addExtraView(closeBtn)
+            engine.startListening()
+        /*
+         if #available(iOS 11.0, *) {
+         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "ARPlanViewController") as! ARPlanViewController
+         viewCtrl.places = self.places
+         viewCtrl.positionsOfCurveLines = self.positionsOfCurveLines
+         self.navigationController?.pushViewController(viewCtrl, animated: true)
+         }*/
+    }
+    
+    @objc func closeAr(_ sender: UIButton) {
+          engine.hide()
+    }
+    
+    func view(for coordinate: ARGeoCoordinate!, floorLooking: Bool) -> ARObjectView! {
+        let text = coordinate.dataObject as! String
+        
+        //coordinate.geoLocation.coordinate.latitude
+        
+        let distance = coordinate.baseDistance
+        debugPrint("mydistance:",distance)
+        
+        var view: ARObjectView? = nil
+        
+        if (floorLooking) {
+            let arrowImg = UIImage(named: "arrow.png")
+
+            let arrowView = UIImageView.init(image: arrowImg)
+            view = ARObjectView.init(frame: arrowView.bounds)
+            view?.addSubview(arrowView)
+            view?.displayed = false
+        } else {
+            let boxView = UIImageView.init(image: UIImage(named: "box.png"))
+            boxView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+
+//            let boxView = UIView.init(frame: CGRect(x:0, y:0, width:200, height:100))
+//            boxView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//            boxView.backgroundColor = UIColor.white
+
+            let lbl = UILabel.init(frame: CGRect(x:4, y:0, width:boxView.frame.size.width - 8, height:boxView.frame.size.height-20))
+            lbl.font = UIFont.systemFont(ofSize: 15.0)
+            lbl.minimumScaleFactor = 2.0
+            lbl.backgroundColor = UIColor.clear
+            lbl.textColor = UIColor.white
+            lbl.textAlignment = .center
+            lbl.numberOfLines = 0
+//            lbl.text = "\(text)" + String(format: "\n%.2f m", distance)
+            lbl.text = text
+            lbl.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleBottomMargin]
+            
+            view = ARObjectView.init(frame: boxView.frame)
+            view?.addSubview(boxView)
+            view?.addSubview(lbl)
+        }
+        view?.sizeToFit()
+        return view
+    }
+    
+    func itemTouched(with index: Int) {
+        /*arSelectedIndex = index
+        let name = engine.dataObject(with: index) as! String
+        currentDetailView = Bundle.main.loadNibNamed("DetailView", owner: self, options: nil)![0] as? DetailView
+
+        currentDetailView.nameLbl.text = name
+        engine.addExtraView(currentDetailView)*/
+    }
+    func didChangeLooking(_ floorLooking: Bool) {
+        if (floorLooking) {
+            if (arSelectedIndex != -1) {
+                currentDetailView.removeFromSuperview()
+                let floorView = engine.floorView(with: arSelectedIndex)
+                floorView?.displayed = true
+            }
+        } else {
+            if (arSelectedIndex != -1) {
+                let floorView = engine.floorView(with: arSelectedIndex)
+                floorView?.displayed = false
+                arSelectedIndex = -1;
+            }
         }
     }
+    // -----------------------------------------------------------------------
     
     @IBAction func btnActionRetry(_ sender: Any) {
         debugPrint("Cancle Pressed")
@@ -1012,18 +1095,28 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     @objc func appDidEnterBackground() {
-        if onCourseNotification == 0{
-            self.mapTimer.invalidate()
+        let thePresenter = self.navigationController?.visibleViewController
+        if (thePresenter != nil) && (thePresenter?.isKind(of:NewMapVC.self))! {
+            if onCourseNotification == 0{
+                self.mapTimer.invalidate()
+            }else{
+                self.totalTimer = 60
+                self.updateMap(indexToUpdate: self.holeIndex)
+            }
         }else{
-            self.totalTimer = 60
-            self.updateMap(indexToUpdate: self.holeIndex)
+            self.mapTimer.invalidate()
         }
     }
     @objc func appDidEnterForeground(){
-        self.view.makeToast("gathering location please wait........", duration: 2.0, position: .bottom)
-        self.mapTimer.invalidate()
-        self.totalTimer = 1
-        self.updateMap(indexToUpdate: self.holeIndex)
+        let thePresenter = self.navigationController?.visibleViewController
+        if (thePresenter != nil) && (thePresenter?.isKind(of:NewMapVC.self))! {
+            self.view.makeToast("gathering location please wait........", duration: 2.0, position: .bottom)
+            self.mapTimer.invalidate()
+            self.totalTimer = 1
+            self.updateMap(indexToUpdate: self.holeIndex)
+        }else{
+            self.mapTimer.invalidate()
+        }
     }
     func endBackgroundTask() {
         print("Background task ended.")
@@ -1044,6 +1137,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(isOnCourse){
             self.mapTimer.invalidate()
         }
+        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidBecomeActive)
+        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidEnterBackground)
+        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationWillEnterForeground)
+
         ref.child("matchData/\(self.currentMatchId)/scoring/\(self.index)/\(self.selectedUserId)").removeAllObservers()
         UIApplication.shared.isIdleTimerDisabled = false
     }
@@ -1111,7 +1208,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             if self.btnStableScore.currentTitle!.contains("Stable"){
                 self.btnStableScore.setTitle("Net Score", for: .normal)
-                self.lblStblScore.text = "\(netScore!)"
+                self.lblStblScore.text = "\(netScore ?? 0)"
             }else if self.btnStableScore.currentTitle!.contains("Net"){
                 self.btnStableScore.setTitle("Stableford Score", for: .normal)
                 self.lblStblScore.text = "\(sbScore!)"
@@ -3692,7 +3789,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnSelectClubs.isHidden = true
                 self.lblEditShotNumber.text = "\(tappedMarker.iconView!.tag+1)"
                 if(isOnCourse){
-                    self.mapTimer.invalidate()
+                    if self.mapTimer.isValid{
+                        self.mapTimer.invalidate()
+                    }
                 }
             }
         }else{
@@ -4296,6 +4395,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     
+    // Update Map - removing all markers and features from map and reload map with new Features and details.
     func updateMap(indexToUpdate:Int){
         var indexToUpdate = indexToUpdate
         mapView.clear()
@@ -4356,8 +4456,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.lblParNumber.text = "par \(self.scoring[indexToUpdate].par)"
         self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
         self.lblTopPar.text = "PAR  \(self.scoring[indexToUpdate].par)"
-        self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: self.scoring[indexToUpdate].hole))"
-        self.lblHCPHeader.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: self.scoring[indexToUpdate].hole))"
+        if(!self.teeTypeArr.isEmpty){
+            self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: self.scoring[indexToUpdate].hole))"
+            self.lblHCPHeader.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: self.scoring[indexToUpdate].hole))"
+        }
         self.btnHole.setTitle("Hole \(self.scoring[indexToUpdate].hole)", for: .normal)
         self.shotViseCurve.removeAll()
         self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
@@ -6553,7 +6655,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnSelectClubs.isHidden = true
                 self.lblEditShotNumber.text = "\(tappedMarker.iconView!.tag+1)"
                 if(isOnCourse){
-                    self.mapTimer.invalidate()
+                    if self.mapTimer.isValid{
+                        self.mapTimer.invalidate()
+                    }
                 }
                 for i in 0..<self.scoring[self.holeIndex].players.count{
                     if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){

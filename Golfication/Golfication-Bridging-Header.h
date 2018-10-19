@@ -10,5 +10,6 @@
 #define Golfication_Bridging_Header_h
 
 #import "TIOAD.h"
+#import "ARKit.h"
 
 #endif /* Golfication_Bridging_Header_h */

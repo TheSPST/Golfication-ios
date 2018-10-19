@@ -692,7 +692,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 matchDataDictionary = matchDataDic
 
             }
-            let startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as! String)!
+            let startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as? String ?? "1")
             let gameTypeIndex = matchDataDictionary.value(forKey: "matchType") as! String == "9 holes" ? 9:18
             self.courseData.startingIndex = startingIndex
             self.courseData.gameTypeIndex = gameTypeIndex

@@ -94,7 +94,7 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         // Golfication Together Setup
         let togetherVC = UIStoryboard(name: "Together", bundle:nil).instantiateViewController(withIdentifier: "TogetherVC") as! TogetherVC
         togetherVC.title = "Together"
-        togetherVC.tabBarItem.title = "Friends"
+        togetherVC.tabBarItem.title = "Together"
         togetherVC.tabBarItem.image = #imageLiteral(resourceName: "together_0")
         // deselect image
         togetherVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "together_1")

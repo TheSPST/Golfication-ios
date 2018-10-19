@@ -11,6 +11,8 @@ import FirebaseAuth
 import Charts
 import Google
 import DeviceKit
+import FirebaseInstanceID
+
 var strokesGainedDict = [NSMutableDictionary]()
 var isUpdateInfo = false
 var isProfileUpdated = false
@@ -259,10 +261,15 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        if (InstanceID.instanceID().token() != nil){
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :InstanceID.instanceID().token()!] as [AnyHashable:String])
+        }
+
         NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)
 
-        //        Notification.sendNotification(reciever: "UhEPp4X2cAaPNOKdY6OOsoZ348L2", message: "Amit just finished a round at Qutab Golf Course.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
-        
+        //grodvLE1bLdGBRNrA97R0DBlrSv2 -Alish
+//        Notification.sendNotification(reciever: "YCUJckKEhXWqbFGtqfRfpiOzBdp2", message: "Amit just finished a round at Qutab.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
+
         self.feedTableView.isHidden = true
         self.view.layoutIfNeeded()
         // ------------------------ Set User Name & Profile Image ------------------------------
