@@ -451,7 +451,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             fairwayHitContainerSV.isHidden = true
         }
         self.updateMap(indexToUpdate: self.holeIndex)
-    
+        btnPlayerStats.isEnabled = true
+        self.view.isUserInteractionEnabled = true
     }
     
     @IBAction func btnActionStableford(_ sender: Any) {
@@ -1049,8 +1050,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     override func viewDidLoad() {
         super.viewDidLoad()
         initalSetup()
+        btnPlayerStats.isEnabled = false
+        self.view.isUserInteractionEnabled = false
         let onCourse = matchDataDic.value(forKeyPath: "onCourse") as! Bool
-        
         self.courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
         if (onCourse){
             locationManager.delegate = self
@@ -1068,7 +1070,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }else{
             matchDataDictionary = matchDataDic
         }
-        self.startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as! String)!
+        self.startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as? String ?? "1") ?? 1
         self.gameTypeIndex = matchDataDictionary.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         self.courseData.startingIndex = self.startingIndex
         self.courseData.gameTypeIndex = self.gameTypeIndex

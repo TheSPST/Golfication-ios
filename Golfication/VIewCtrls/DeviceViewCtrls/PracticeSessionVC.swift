@@ -111,7 +111,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         
     func initTempArr(){
         if self.swingDetails.count != 0{
-            let backSwing = self.swingDetails.value(forKey: "backSwing") as! Double
+            let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as! Double
             let downSwing = self.swingDetails.value(forKey: "downSwing") as! Double
             let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
             let handSpeed = self.swingDetails.value(forKey: "handSpeed") as! Double

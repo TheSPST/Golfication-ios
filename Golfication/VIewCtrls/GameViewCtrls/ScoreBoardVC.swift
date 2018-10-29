@@ -77,6 +77,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     var progressView = SDLoader()
     @IBOutlet weak var btnMenu: UIBarButtonItem!
+    var chkStableford = false
     var isFinalSummary = false
     var isBasic = false
     var buttonsArrayForStrokes = [UIButton]()
@@ -189,10 +190,211 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
                 self.stablefordView.isHidden = self.chkStableford
+                // Do any additional setup after loading the view.
+                self.bView.frame = CGRect(x: 0, y: self.view.frame.height-40, width: self.view.frame.width, height: 40)
+                self.bView.btn.frame = CGRect(x: 0, y: 0, width: self.bView.frame.size.width, height: self.bView.frame.size.height)
+                self.bView.btn.addTarget(self, action: #selector(self.btnContinueAction), for: .touchUpInside)
+                self.stablefordView.setCornerView(color: UIColor.glfWhite.cgColor)
+                NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
+                
+                //        bView.isHidden = true
+                if !self.isContinue{
+                    self.navigationItem.rightBarButtonItem = nil
+                }
+                self.bView.isHidden = !self.isContinue
+                for data in self.playerData{
+                    if let player = data as? NSMutableDictionary{
+                        var teeOfP = String()
+                        if let tee = player.value(forKeyPath: "tee") as? String{
+                            teeOfP = tee
+                        }
+                        var teeColorOfP = String()
+                        if let tee = player.value(forKeyPath: "teeColor") as? String{
+                            teeColorOfP = tee
+                        }
+                        var handicapOfP = Double()
+                        if let hcp = player.value(forKeyPath: "handicap") as? String{
+                            handicapOfP = Double(hcp)!
+                        }
+                        if(teeOfP != ""){
+                            self.teeTypeArr.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
+                        }
+                    }
+                }
+                if !self.teeTypeArr.isEmpty{
+                    self.loadStableFordData()
+                }else{
+                    
+                }
+                
+                let cameraBtn =  UIButton(frame: CGRect(x: self.view.frame.width/2-15, y: self.view.frame.height-40-(30+5), width: 30, height: 30))
+                cameraBtn.setBackgroundImage(UIImage(named:"icon_camera"), for: .normal)
+                cameraBtn.addTarget(self, action: #selector(self.cameraAction), for: .touchUpInside)
+                
+                let bottomLbl = UILabel()
+                bottomLbl.frame = CGRect(x: 50, y: self.view.frame.height-40-(30+30+5), width: self.view.frame.width-100, height: 30)
+                bottomLbl.numberOfLines = 2
+                bottomLbl.textAlignment = .center
+                bottomLbl.textColor = UIColor.darkGray
+                bottomLbl.font = UIFont(name: "SFProDisplay-Regular", size: 11.0)
+                bottomLbl.text = "Enable stableford scores by sending us a photo of the club score card"
+                bottomLbl.backgroundColor = UIColor.clear
+                
+                self.title = "Your Scorecard"
+                self.view.backgroundColor = UIColor(rgb: 0xF8F8F7)
+                //        self.navigationController?.navigationBar.backItem?.title = ""
+                self.automaticallyAdjustsScrollViewInsets = false
+                
+                self.setInitialUI()
+                self.scoringView.layer.cornerRadius = 5
+                
+                let holeDic = NSMutableDictionary()
+                holeDic.setObject(self.scoreData.count, forKey: "Hole" as NSCopying)
+                self.sectionNames.insert(holeDic, at: 0)
+                
+                let tempDic = NSMutableDictionary()
+                tempDic.setObject("parId", forKey: "id" as NSCopying)
+                tempDic.setObject("Par", forKey: "name" as NSCopying)
+                self.sectionNames.insert(tempDic, at: 1)
+                
+                for i in 0..<self.playerData.count{
+                    
+                    self.sectionNames.insert(self.playerData[i], at: i+2)
+                }
+                debugPrint("sectionNames== ",self.sectionNames.count)
+                
+                //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
+                if !self.teeTypeArr.isEmpty{
+                    self.sectionItems = [[],[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                    ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                    ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                    ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                    ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"]]
+                    if mode == 1{
+                        self.sectionItems = [[],[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                        ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                        ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                        ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
+                                        ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"]]
+                    }
+                }
+                else{
+                    self.sectionItems = [[],[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+                                    ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+                                    ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+                                    ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
+                                    ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"]]
+                    if mode == 1{
+                        self.sectionItems = [[],[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                                        ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                                        ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                                        ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
+                                        ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"]]
+                    }
+                    
+                }
+                
+                self.menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+10)), style: .plain)
+                if self.isContinue{
+                    self.menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+75+30+5)), style: .plain)
+                }
+                self.menueTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MenueCell")
+                self.menueTableView.dataSource = self
+                self.menueTableView.delegate = self
+                self.menueTableView.tag = 0
+                self.menueTableView.backgroundColor = UIColor.clear
+                //        menueTableView.separatorStyle = .none
+                self.menueTableView.separatorColor = UIColor(rgb: 0xF0F0EE)
+                self.menueTableView.showsVerticalScrollIndicator = false
+                self.menueTableView!.tableFooterView = UIView()
+                self.view.addSubview(self.menueTableView)
+                
+                self.scrollView =  UIScrollView(frame: CGRect(x: self.menueTableView.frame.origin.x + self.menueTableView.frame.size.width, y: self.menueTableView.frame.origin.y, width: self.view.frame.size.width - self.menueTableView.frame.size.width-2, height: self.menueTableView.frame.size.height))
+                if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
+                    self.scrollView =  UIScrollView(frame: CGRect(x: self.menueTableView.frame.origin.x + self.menueTableView.frame.size.width, y: self.menueTableView.frame.origin.y+24, width: self.view.frame.size.width - self.menueTableView.frame.size.width-2, height: self.menueTableView.frame.size.height-24))
+                }
+                self.scrollView.delegate = self
+                self.scrollView.backgroundColor = UIColor.clear
+                self.scrollView.showsHorizontalScrollIndicator = false
+                self.imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
+                self.imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
+                self.view.addSubview(self.scrollView)
+                if self.isContinue && self.teeTypeArr.isEmpty && !self.chkStableford{
+                    self.view.addSubview(cameraBtn)
+                    self.view.addSubview(bottomLbl)
+                }else if !self.teeTypeArr.isEmpty{
+                    let bottomLbl = UILabel()
+                    bottomLbl.frame = CGRect(x: 16, y: self.view.frame.height-(self.isContinue ? 70.0:30.0), width: self.view.frame.width-32, height: 30)
+                    bottomLbl.textAlignment = .left
+                    bottomLbl.textColor = UIColor.darkGray
+                    bottomLbl.font = UIFont(name: "SFProDisplay-Italic", size: 12.0)
+                    bottomLbl.text = "** Hcp strokes as per USGA rules."
+                    bottomLbl.backgroundColor = UIColor.clear
+                    self.view.addSubview(bottomLbl)
+                }else if self.teeTypeArr.isEmpty && !self.chkStableford{
+                    self.view.addSubview(cameraBtn)
+                    self.view.addSubview(bottomLbl)
+                }
+                if self.teeTypeArr.isEmpty{
+                    self.imgViewRefreshScore.isHidden = true
+                    self.lblStableScore.text = "n/a"
+                }else{
+                    self.imgViewInfo.isHidden = true
+                }
+                self.view.addSubview(self.bView)
+                
+                var tableWidth = CGFloat()
+                
+                for i in 0..<self.scoreData.count{
+                    tableWidth = 10+(self.width+self.padding)*CGFloat(i+2)
+                }
+                
+                self.tblView =  UITableView(frame: CGRect(x: 0, y: 0, width: tableWidth, height: self.scrollView.frame.size.height), style: .plain)
+                self.tblView.register(UITableViewCell.self, forCellReuseIdentifier: "DataCell")
+                self.tblView.dataSource = self
+                self.tblView.delegate = self
+                self.tblView.tag = 1
+                self.tblView.backgroundColor = UIColor.clear
+                self.tblView.separatorColor = UIColor(rgb: 0xF0F0EE)
+                self.tblView.alwaysBounceVertical = false
+                self.tblView.tableFooterView = UIView()
+                self.scrollView.addSubview(self.tblView)
+                
+                self.scrollView.contentSize = CGSize(width: self.tblView.frame.size.width, height: self.tblView.frame.size.height)
+                
+                let imgView = UIImageView()
+                self.expandedSectionHeaderNumber = 2
+                self.tableViewExpandSection(2, imageView: imgView)
+                
+                self.playerId = ((self.sectionNames[1] as AnyObject).value(forKey: "id") as! String)
+                
+                self.scoringSuperView.isHidden = true
+                self.btnDetailScoring.setCorner(color: UIColor.clear.cgColor)
+                self.btnExpendScore.setCorner(color: UIColor.clear.cgColor)
+                self.btnScore.setCornerWithCircleWidthOne(color: UIColor.white.cgColor)
+                self.btnShotRanking.layer.cornerRadius = 10.0
+                
+                let tap = UITapGestureRecognizer(target: self, action:  #selector (self.superViewTouchAction (_:)))
+                self.scoringSuperView.addGestureRecognizer(tap)
+                if self.scoreData.count == 0{
+                    self.menueTableView.isHidden = true
+                    self.scrollView.isHidden = true
+                    bottomLbl.isHidden = true
+                    self.bView.isHidden = true
+                    self.navigationItem.rightBarButtonItem = nil
+                    
+                    let emptyLbl = UILabel()
+                    emptyLbl.frame = CGRect(x: 10, y: self.view.frame.height/2 - 20, width: self.view.frame.width-20, height: 40)
+                    emptyLbl.numberOfLines = 2
+                    emptyLbl.textAlignment = .center
+                    emptyLbl.text = "No Data Found"
+                    emptyLbl.backgroundColor = UIColor.clear
+                    self.view.addSubview(emptyLbl)
+                }
             })
         }
     }
-    var chkStableford = false
+    
     func ifnoStableFord(){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "stablefordCourse") { (snapshot) in
@@ -223,7 +425,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = false
-        statusStableFord()
+//        statusStableFord()
     }
     
     @objc func hideStableFord(_ notification:NSNotification){
@@ -491,196 +693,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.glfBluegreen
-        // Do any additional setup after loading the view.
-        bView.frame = CGRect(x: 0, y: self.view.frame.height-40, width: self.view.frame.width, height: 40)
-        bView.btn.frame = CGRect(x: 0, y: 0, width: bView.frame.size.width, height: bView.frame.size.height)
-        bView.btn.addTarget(self, action: #selector(btnContinueAction), for: .touchUpInside)
-        self.stablefordView.setCornerView(color: UIColor.glfWhite.cgColor)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
-        
-        //        bView.isHidden = true
-        if !isContinue{
-            self.navigationItem.rightBarButtonItem = nil
-        }
-        bView.isHidden = !isContinue
-        for data in playerData{
-            if let player = data as? NSMutableDictionary{
-                var teeOfP = String()
-                if let tee = player.value(forKeyPath: "tee") as? String{
-                    teeOfP = tee
-                }
-                var teeColorOfP = String()
-                if let tee = player.value(forKeyPath: "teeColor") as? String{
-                    teeColorOfP = tee
-                }
-                var handicapOfP = Double()
-                if let hcp = player.value(forKeyPath: "handicap") as? String{
-                    handicapOfP = Double(hcp)!
-                }
-                if(teeOfP != ""){
-                    self.teeTypeArr.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
-                }
-            }
-        }
-        if !teeTypeArr.isEmpty{
-            self.loadStableFordData()
-        }else{
-            
-        }
-        
-        let cameraBtn =  UIButton(frame: CGRect(x: self.view.frame.width/2-15, y: self.view.frame.height-40-(30+5), width: 30, height: 30))
-        cameraBtn.setBackgroundImage(UIImage(named:"icon_camera"), for: .normal)
-        cameraBtn.addTarget(self, action: #selector(cameraAction), for: .touchUpInside)
-
-        let bottomLbl = UILabel()
-        bottomLbl.frame = CGRect(x: 50, y: self.view.frame.height-40-(30+30+5), width: self.view.frame.width-100, height: 30)
-        bottomLbl.numberOfLines = 2
-        bottomLbl.textAlignment = .center
-        bottomLbl.textColor = UIColor.darkGray
-        bottomLbl.font = UIFont(name: "SFProDisplay-Regular", size: 11.0)
-        bottomLbl.text = "Enable stableford scores by sending us a photo of the club score card"
-        bottomLbl.backgroundColor = UIColor.clear
-        
-        self.title = "Your Scorecard"
-        self.view.backgroundColor = UIColor(rgb: 0xF8F8F7)
-        //        self.navigationController?.navigationBar.backItem?.title = ""
-        self.automaticallyAdjustsScrollViewInsets = false
-        
-        self.setInitialUI()
-        self.scoringView.layer.cornerRadius = 5
-        
-        let holeDic = NSMutableDictionary()
-        holeDic.setObject(scoreData.count, forKey: "Hole" as NSCopying)
-        sectionNames.insert(holeDic, at: 0)
-        
-        let tempDic = NSMutableDictionary()
-        tempDic.setObject("parId", forKey: "id" as NSCopying)
-        tempDic.setObject("Par", forKey: "name" as NSCopying)
-        sectionNames.insert(tempDic, at: 1)
-        
-        for i in 0..<playerData.count{
-            
-            sectionNames.insert(playerData[i], at: i+2)
-        }
-        debugPrint("sectionNames== ",sectionNames.count)
-        
-        //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
-        if !teeTypeArr.isEmpty{
-            sectionItems = [[],[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
-                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
-                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
-                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"],
-                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties","HCP", "Stableford", "Net Score"]]
-            if mode == 1{
-                sectionItems = [[],[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
-                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
-                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
-                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"],
-                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties","HCP", "Stableford", "Net Score"]]
-            }
-        }
-        else{
-            sectionItems = [[],[],["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
-                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
-                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
-                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"],
-                            ["Fairway Hit","GIR", "Chip", "Sand Shot", "Putts","Penalties"]]
-            if mode == 1{
-                sectionItems = [[],[],["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
-                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
-                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
-                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"],
-                                ["Driving Distance", "Fairway Hit", "Approach Distance", "GIR", "Chip/Down", "Sand/Down", "Putts","Penalties"]]
-            }
-            
-        }
-        
-        menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+10)), style: .plain)
-        if isContinue{
-            menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+75+30+5)), style: .plain)
-        }
-        menueTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MenueCell")
-        menueTableView.dataSource = self
-        menueTableView.delegate = self
-        menueTableView.tag = 0
-        menueTableView.backgroundColor = UIColor.clear
-        //        menueTableView.separatorStyle = .none
-        menueTableView.separatorColor = UIColor(rgb: 0xF0F0EE)
-        menueTableView.showsVerticalScrollIndicator = false
-        self.menueTableView!.tableFooterView = UIView()
-        view.addSubview(menueTableView)
-        
-        scrollView =  UIScrollView(frame: CGRect(x: menueTableView.frame.origin.x + menueTableView.frame.size.width, y: menueTableView.frame.origin.y, width: view.frame.size.width - menueTableView.frame.size.width-2, height: menueTableView.frame.size.height))
-        if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
-            
-            scrollView =  UIScrollView(frame: CGRect(x: menueTableView.frame.origin.x + menueTableView.frame.size.width, y: menueTableView.frame.origin.y+24, width: view.frame.size.width - menueTableView.frame.size.width-2, height: menueTableView.frame.size.height-24))
-        }
-        scrollView.delegate = self
-        scrollView.backgroundColor = UIColor.clear
-        scrollView.showsHorizontalScrollIndicator = false
-        self.imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
-        self.imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
-        view.addSubview(scrollView)
-        if isContinue{
-            view.addSubview(cameraBtn)
-            view.addSubview(bottomLbl)
-        }
-        if teeTypeArr.isEmpty{
-            self.imgViewRefreshScore.isHidden = true
-            self.lblStableScore.text = "n/a"
-        }else{
-            self.imgViewInfo.isHidden = true
-        }
-        view.addSubview(bView)
-        
-        var tableWidth = CGFloat()
-        for i in 0..<scoreData.count{
-            
-            tableWidth = 10+(width+padding)*CGFloat(i+2)
-        }
-        tblView =  UITableView(frame: CGRect(x: 0, y: 0, width: tableWidth, height: scrollView.frame.size.height), style: .plain)
-        tblView.register(UITableViewCell.self, forCellReuseIdentifier: "DataCell")
-        tblView.dataSource = self
-        tblView.delegate = self
-        tblView.tag = 1
-        tblView.backgroundColor = UIColor.clear
-        tblView.separatorColor = UIColor(rgb: 0xF0F0EE)
-        tblView.alwaysBounceVertical = false
-        tblView.tableFooterView = UIView()
-        scrollView.addSubview(tblView)
-        
-        scrollView.contentSize = CGSize(width: tblView.frame.size.width, height: tblView.frame.size.height)
-        
-        let imgView = UIImageView()
-        self.expandedSectionHeaderNumber = 2
-        tableViewExpandSection(2, imageView: imgView)
-        
-        self.playerId = ((self.sectionNames[1] as AnyObject).value(forKey: "id") as! String)
-        
-        self.scoringSuperView.isHidden = true
-        btnDetailScoring.setCorner(color: UIColor.clear.cgColor)
-        btnExpendScore.setCorner(color: UIColor.clear.cgColor)
-        btnScore.setCornerWithCircleWidthOne(color: UIColor.white.cgColor)
-        btnShotRanking.layer.cornerRadius = 10.0
-        
-        let tap = UITapGestureRecognizer(target: self, action:  #selector (self.superViewTouchAction (_:)))
-        self.scoringSuperView.addGestureRecognizer(tap)
-        if scoreData.count == 0{
-            menueTableView.isHidden = true
-            scrollView.isHidden = true
-            bottomLbl.isHidden = true
-            bView.isHidden = true
-            self.navigationItem.rightBarButtonItem = nil
-            
-            let emptyLbl = UILabel()
-            emptyLbl.frame = CGRect(x: 10, y: self.view.frame.height/2 - 20, width: self.view.frame.width-20, height: 40)
-            emptyLbl.numberOfLines = 2
-            emptyLbl.textAlignment = .center
-            emptyLbl.text = "No Data Found"
-            emptyLbl.backgroundColor = UIColor.clear
-            self.view.addSubview(emptyLbl)
-        }
+        statusStableFord()
     }
     var courseData = CourseData()
     func loadStableFordData(){

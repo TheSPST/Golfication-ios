@@ -37,6 +37,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: Set Outlets
     
+    @IBOutlet weak var stblfordRulesLabel: UILabel!
     @IBOutlet weak var gameTypeStackView: UIStackView!
     @IBOutlet weak var changeCourseView: CardView!
     @IBOutlet weak var lblGolfName: UILabel!
@@ -395,6 +396,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
         self.navigationItem.rightBarButtonItem = barBtnBLE
         self.startingTeeCardView.isHidden = true
+        self.stblfordRulesLabel.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(completeDeviceSetup(_:)), name: NSNotification.Name(rawValue: "setupDevice"), object: nil)
         // End Round
         NotificationCenter.default.addObserver(self, selector: #selector(self.EndRound(_:)), name: NSNotification.Name(rawValue: "EndRound"), object: nil)
@@ -1222,6 +1224,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         if(!teeArr.isEmpty){
             self.startingTeeCardView.isHidden = false
+            self.stblfordRulesLabel.isHidden = false
             self.lblTeeName.text = "\(teeArr[0].name)"
             self.lblTeeType.text = "(\(teeArr[0].type) Tee)"
             self.lblTeeSlope.text = teeArr[0].slope
@@ -1236,6 +1239,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             selectedSlope = 0
             selectedRating = ""
             self.startingTeeCardView.isHidden = true
+            self.stblfordRulesLabel.isHidden = true
         }
     }
     // MARK: selectedGameTypeFromFirebase

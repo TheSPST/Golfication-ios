@@ -295,7 +295,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "SearchLocationTableViewCell", for: indexPath as IndexPath) as! SearchLocationTableViewCell
-        
+        if !searchDataArr.isEmpty{
         cell.lblTitle.text = (searchDataArr[indexPath.row] as AnyObject).value(forKey: "Name") as? String
         cell.lblSubTitle.text = "\((searchDataArr[indexPath.row] as AnyObject).value(forKey: "City") as? String ?? ""),\((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Country") as? String ?? "")"
         
@@ -351,7 +351,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
         rectShape.path = UIBezierPath(roundedRect: cell.leftModeView.bounds, byRoundingCorners: [.bottomLeft , .topLeft], cornerRadii: CGSize(width: 5, height: 5)).cgPath
         cell.leftModeView.layer.backgroundColor = UIColor.green.cgColor
         cell.leftModeView.layer.mask = rectShape
-        
+        }
         return cell
     }
     

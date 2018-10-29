@@ -706,7 +706,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             matchDataDictionary = matchDataDic
         }
         
-        self.startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as! String)!
+        self.startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as? String ?? "1") ?? 1
         self.gameTypeIndex = matchDataDictionary.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         self.courseData.startingIndex = self.startingIndex
         self.courseData.gameTypeIndex = self.gameTypeIndex

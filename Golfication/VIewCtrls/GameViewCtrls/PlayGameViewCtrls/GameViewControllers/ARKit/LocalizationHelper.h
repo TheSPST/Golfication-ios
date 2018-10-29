@@ -30,6 +30,7 @@ typedef enum {
     id<LocalizationDelegate> locDelegate;
     
     CLLocation *lastLocation;
+    CLLocation *previousLocation;
 }
 
 + (LocalizationHelper *) sharedHelper;

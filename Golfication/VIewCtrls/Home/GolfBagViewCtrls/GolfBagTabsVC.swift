@@ -625,7 +625,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         }
                         else{
                             if !(tagNameTempArray.contains(tagName)){
-                                let last2Char = Int(tagName.suffix(3))
+                                let last2Char = Int(tagName.suffix(5))
                                 
                                 let golfBagDict = NSMutableDictionary()
                                 golfBagDict.setObject("Titleiest", forKey: "brand" as NSCopying)

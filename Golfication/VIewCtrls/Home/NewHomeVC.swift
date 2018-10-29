@@ -13,6 +13,7 @@ import Google
 import DeviceKit
 import FirebaseInstanceID
 
+let DEVICEDATA = DeviceData()
 var strokesGainedDict = [NSMutableDictionary]()
 var isUpdateInfo = false
 var isProfileUpdated = false
@@ -261,10 +262,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        DEVICEDATA.getDeviceData()
         if (InstanceID.instanceID().token() != nil){
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :InstanceID.instanceID().token()!] as [AnyHashable:String])
         }
-
         NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)
 
         //grodvLE1bLdGBRNrA97R0DBlrSv2 -Alish

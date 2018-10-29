@@ -280,8 +280,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 
                 if !(tagNameTempArray.contains(tagName)){
                     
-                    let last2Char = Int(tagName.suffix(3))
-//                    let last2Char = Int(tagName.suffix(from: tagName.index(of: "X")!))
+                    let last2Char = Int(tagName.suffix(5))
                     let golfBagDict = NSMutableDictionary()
                     golfBagDict.setObject("Titleiest", forKey: "brand" as NSCopying)
                     golfBagDict.setObject("43", forKey: "clubLength" as NSCopying)

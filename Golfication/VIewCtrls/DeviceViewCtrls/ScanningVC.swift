@@ -34,6 +34,7 @@ class ScanningVC: UIViewController {
     var activeMatchId = String()
     var swingMatchId = String()
     var isPracticeMatch = Bool()
+    var swingDetails = [(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64)]()
     @IBAction func backAction(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
@@ -100,9 +101,24 @@ class ScanningVC: UIViewController {
                                             }
                                         }
                                         self.currentGameId = data.value(forKey: "gameId") as! Int
-                                        let swings = data.value(forKey: "swings") as? NSMutableArray
+                                        if let swings = data.value(forKey: "swings") as? NSMutableArray{
+                                            for swing in swings{
+                                                if let swin = swing as? NSMutableDictionary{
+                                                    let shot = swin.value(forKey: "shotNum") as! Int
+                                                    let bs = swin.value(forKey: "backSwing") as! Double
+                                                    let ds = swin.value(forKey: "downSwing") as! Double
+                                                    let hv = swin.value(forKey: "handSpeed") as! Double
+                                                    let cv = swin.value(forKey: "clubSpeed") as! Double
+                                                    let ba = swin.value(forKey: "backSwingAngle") as! Double
+                                                    let tempo = swin.value(forKey: "tempo") as! Double
+                                                    let club = swin.value(forKey: "club") as! String
+                                                    let time = swin.value(forKey: "timestamp") as! Int64
+                                                    self.swingDetails.append((shotNo: shot, bs: bs, ds: ds, hv: hv, cv: cv, ba: ba, tempo: tempo, club: club, time: time))
+                                                }
+                                            }
+                                        }
                                         if let playType = data.value(forKey: "playType") as? String{
-                                            if(playType != "match") && swings != nil{
+                                            if(playType != "match") && self.swingDetails.count != 0{
                                                 swingMArray.add(data)
                                             }
                                         }
@@ -215,6 +231,7 @@ class ScanningVC: UIViewController {
              if(deviceGolficationX == nil){
                 ble = BLE()
                 ble.startScanning()
+                ble.swingDetails = self.swingDetails
                 self.deviceCircularView.setProgress(value: CGFloat(90), animationDuration: 5.5, completion: {
                     if(deviceGolficationX != nil){
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
@@ -227,7 +244,7 @@ class ScanningVC: UIViewController {
                     }
                 })
              }else{
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
+                ble.sendThirdCommand()
             }
         })
     }

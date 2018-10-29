@@ -89,8 +89,8 @@
                   symbolName = "Golfication.UYLNotificationDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Oct-3.0.6/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
-                  timestampString = "561638108.403085"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-25-Oct-3.0.7/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
+                  timestampString = "562336556.584829"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
@@ -104,8 +104,8 @@
                   symbolName = "Golfication.UYLNotificationDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Oct-3.0.6/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
-                  timestampString = "561638108.405933"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-25-Oct-3.0.7/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
+                  timestampString = "562336556.588796"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
@@ -377,8 +377,8 @@
                   symbolName = "closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Oct-3.0.6/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "561638108.4651"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-25-Oct-3.0.7/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "562336556.647367"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
@@ -392,8 +392,8 @@
                   symbolName = "closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Oct-3.0.6/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "561638108.469372"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-25-Oct-3.0.7/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "562336556.649786"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
@@ -407,8 +407,8 @@
                   symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-19-Oct-3.0.6/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "561638108.473245"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-25-Oct-3.0.7/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "562336556.652187"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "259"
@@ -585,7 +585,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/SearchLocationVC.swift"
-            timestampString = "559751977.162441"
+            timestampString = "562078305.576085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "70"
@@ -616,60 +616,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "560777115.273284"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1423"
-            endingLineNumber = "1423"
-            landmarkName = "peripheral(_:didUpdateValueFor:error:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "560777115.2733819"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1456"
-            endingLineNumber = "1456"
-            landmarkName = "peripheral(_:didUpdateValueFor:error:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "560777115.273441"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1474"
-            endingLineNumber = "1474"
-            landmarkName = "peripheral(_:didUpdateValueFor:error:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/NewGameVC.swift"
-            timestampString = "561630959.6497869"
+            timestampString = "562151439.979678"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1767"
-            endingLineNumber = "1767"
+            startingLineNumber = "1771"
+            endingLineNumber = "1771"
             landmarkName = "playGolfX()"
             landmarkType = "7">
          </BreakpointContent>
@@ -696,92 +648,12 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/RFMapVC.swift"
-            timestampString = "561638107.086659"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "459"
-            endingLineNumber = "459"
-            landmarkName = "btnActionStableford(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/RFMapVC.swift"
-            timestampString = "561638107.086751"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "461"
-            endingLineNumber = "461"
-            landmarkName = "btnActionStableford(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/RFMapVC.swift"
-            timestampString = "561638107.086809"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "510"
-            endingLineNumber = "510"
-            landmarkName = "ifnoStableFord()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/RFMapVC.swift"
-            timestampString = "561638107.0868599"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "513"
-            endingLineNumber = "513"
-            landmarkName = "ifnoStableFord()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "560777115.27362"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "685"
-            endingLineNumber = "685"
-            landmarkName = "centralManagerDidUpdateState(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/NewGameVC.swift"
-            timestampString = "561630959.649946"
+            timestampString = "562151439.980806"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1763"
-            endingLineNumber = "1763"
+            startingLineNumber = "1767"
+            endingLineNumber = "1767"
             landmarkName = "playGolfX()"
             landmarkType = "7">
          </BreakpointContent>
@@ -793,11 +665,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/NewGameVC.swift"
-            timestampString = "561630959.649999"
+            timestampString = "562151439.981205"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
+            startingLineNumber = "567"
+            endingLineNumber = "567"
             landmarkName = "viewWillAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -809,11 +681,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/NewGameVC.swift"
-            timestampString = "561630959.650048"
+            timestampString = "562151439.981618"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "999"
-            endingLineNumber = "999"
+            startingLineNumber = "1001"
+            endingLineNumber = "1001"
             landmarkName = "getUserDataFromFireBase()"
             landmarkType = "7">
          </BreakpointContent>
@@ -825,11 +697,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "561638107.086967"
+            timestampString = "562338153.751637"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2292"
-            endingLineNumber = "2292"
+            startingLineNumber = "2378"
+            endingLineNumber = "2378"
             landmarkName = "btnActionPenaltyShot(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -841,11 +713,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "561638107.088161"
+            timestampString = "562338153.751899"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2484"
-            endingLineNumber = "2484"
+            startingLineNumber = "2570"
+            endingLineNumber = "2570"
             landmarkName = "btnActionDeleteShot(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -857,27 +729,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "561638107.0894099"
+            timestampString = "562338153.7520061"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3361"
-            endingLineNumber = "3361"
-            landmarkName = "updateStateWhileDragging(marker:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "561638107.090628"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2289"
-            endingLineNumber = "2289"
+            startingLineNumber = "2375"
+            endingLineNumber = "2375"
             landmarkName = "btnActionPenaltyShot(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -889,44 +745,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "561638107.091592"
+            timestampString = "562338153.7521189"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "547"
-            endingLineNumber = "547"
-            landmarkName = "view(for:floorLooking:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "561638107.092342"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "815"
-            endingLineNumber = "815"
+            startingLineNumber = "901"
+            endingLineNumber = "901"
             landmarkName = "btnActionPrevHole(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "561638107.093467"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3301"
-            endingLineNumber = "3301"
-            landmarkName = "mapView(_:didBeginDragging:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1016,77 +840,141 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/ARPlanViewController.swift"
-            timestampString = "561307521.210458"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
-            landmarkName = "calculateOtherCoordinates()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/ARPlanViewController.swift"
-            timestampString = "561307528.309976"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "131"
-            endingLineNumber = "131"
-            landmarkName = "calculateOtherCoordinates()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/ARPlanViewController.swift"
-            timestampString = "561307529.672248"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
-            landmarkName = "calculateOtherCoordinates()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/RFMapVC.swift"
-            timestampString = "561638107.094821"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1116"
-            endingLineNumber = "1116"
-            landmarkName = "appDidEnterBackground()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
-            timestampString = "561638107.094924"
+            timestampString = "562338153.752315"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4122"
-            endingLineNumber = "4122"
+            startingLineNumber = "4208"
+            endingLineNumber = "4208"
             landmarkName = "getHCPValue(playerID:holeNo:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
+            timestampString = "562256311.877647"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
+            timestampString = "562256311.878517"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1104"
+            endingLineNumber = "1104"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
+            timestampString = "562256311.879222"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1249"
+            endingLineNumber = "1249"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/DeviceViewCtrls/PracticePageContainerVC.swift"
+            timestampString = "561886516.112574"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "barBtnMenuAction(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/PracticeGameViewCtrl.swift"
+            timestampString = "561886519.659008"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "btnActionFinishMatch(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/PracticeGameViewCtrl.swift"
+            timestampString = "561886523.5326869"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "btnActionRecieveData(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
+            timestampString = "562256311.879935"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "299"
+            endingLineNumber = "299"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/DeviceViewCtrls/ScanningVC.swift"
+            timestampString = "562256311.880513"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
+            landmarkName = "reloadData(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

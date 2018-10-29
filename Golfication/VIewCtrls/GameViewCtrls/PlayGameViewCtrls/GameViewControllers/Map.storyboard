@@ -78,9 +78,9 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Lq5-mC-Se9">
-                                        <rect key="frame" x="201" y="9.5" width="25" height="25"/>
+                                        <rect key="frame" x="168" y="9.5" width="58" height="25"/>
                                         <subviews>
-                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CMF-xu-eea">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CMF-xu-eea">
                                                 <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -95,7 +95,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FHN-4m-OPN">
-                                                <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
+                                                <rect key="frame" x="33" y="0.0" width="25" height="25"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="25" id="KYa-La-L91"/>
@@ -3745,9 +3745,7 @@
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfG-Yg-dP1">
                                                                         <rect key="frame" x="0.0" y="0.0" width="197" height="0.0"/>
                                                                         <connections>
-                                                                            <action selector="btnActionStableford:" destination="gCh-bB-Yak" eventType="touchUpInside" id="9Qr-nw-cdH"/>
                                                                             <action selector="btnActionStableford:" destination="X47-5X-6rK" eventType="touchUpInside" id="eiE-hh-D7b"/>
-                                                                            <action selector="btnActionStblScore:" destination="l6N-0K-2bQ" eventType="touchUpInside" id="KFn-1T-EAp"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>

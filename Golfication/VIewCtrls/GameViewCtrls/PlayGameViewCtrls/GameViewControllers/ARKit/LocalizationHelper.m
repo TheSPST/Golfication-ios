@@ -31,7 +31,7 @@ static LocalizationHelper *sharedHelper;
         locationManager.headingFilter = kCLHeadingFilterNone;
 		locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 		locationManager.distanceFilter = kCLDistanceFilterNone;
-	[locationManager requestAlwaysAuthorization];
+	    [locationManager requestAlwaysAuthorization];
         
         isHeadingInfoAvailable = [CLLocationManager headingAvailable];
         
@@ -88,24 +88,35 @@ static LocalizationHelper *sharedHelper;
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     localizationStatus = kLocalizationEnabled;
     CLLocation *newLocation = [locations lastObject];
-	NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    if (locationAge > 5.0) {
-		//Probably a cached result. Restart
-		[manager stopUpdatingLocation];
-		[manager startUpdatingLocation];
-		return; 	
-	}
     
-	for (id<LocalizationDelegate> delegate in registered) {
-        [delegate locationFound:newLocation];
-    }
-    for (id<LocalizationDelegate> delegate in onceRegistered) {
-        [delegate locationFound:newLocation];
-    }
-    [onceRegistered removeAllObjects];
-    if (![registered count]) {
+    NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
+    if (locationAge > 5.0) {
+        //Probably a cached result. Restart
         [manager stopUpdatingLocation];
-        [manager stopUpdatingHeading];
+        [manager startUpdatingLocation];
+        return;
+    }
+    
+    if  (previousLocation != nil){
+        //case if previous location exists
+        if ([previousLocation distanceFromLocation:newLocation] > 3) {
+            previousLocation = newLocation;
+            
+            for (id<LocalizationDelegate> delegate in registered) {
+                [delegate locationFound:newLocation];
+            }
+            for (id<LocalizationDelegate> delegate in onceRegistered) {
+                [delegate locationFound:newLocation];
+            }
+            [onceRegistered removeAllObjects];
+            if (![registered count]) {
+                [manager stopUpdatingLocation];
+                [manager stopUpdatingHeading];
+            }
+        }
+    }else{
+        //in case previous location doesn't exist
+        previousLocation = newLocation;
     }
 }
 
