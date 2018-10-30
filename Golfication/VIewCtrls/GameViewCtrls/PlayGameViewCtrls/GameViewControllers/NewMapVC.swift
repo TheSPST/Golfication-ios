@@ -6526,7 +6526,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         var sandUpDown : Bool!
         for i in 0..<positionsOfCurveLines.count-1{
             appDistance = GMSGeometryDistance(positionsOfCurveLines[i], courseData.numberOfHoles[holeIndex].green[BackgroundMapStats.nearByPoint(newPoint: positionsOfCurveLines[i], array: courseData.numberOfHoles[holeIndex].green)])*YARD
-            if(appDistance<50){
+            if(appDistance<70){
                 if((positionsOfCurveLines.count-1 == i+2 || positionsOfCurveLines.count-1 == i+1) && callFindPositionInsideFeature(position:positionsOfCurveLines[i]) == "GB" ){
                     sandUpDown = true
                 }
@@ -6592,7 +6592,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         var chipUpDown : Bool!
         for i in 0..<positionsOfCurveLines.count-1{
             appDistance = GMSGeometryDistance(positionsOfCurveLines[i], courseData.numberOfHoles[holeIndex].green[BackgroundMapStats.nearByPoint(newPoint: positionsOfCurveLines[i], array: courseData.numberOfHoles[holeIndex].green)])*YARD
-            if(appDistance<50){
+            if(appDistance<70){
                 if((positionsOfCurveLines.count-1 == i+2 || positionsOfCurveLines.count-1 == i+1) && callFindPositionInsideFeature(position:positionsOfCurveLines[i]) != "GB" ){
                     chipUpDown = true
                 }
@@ -6667,20 +6667,21 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         var fairwayDetails = ""
         var headingAngleOfTeeToGreen = 0.0
         if(holeOutFlag){
-            headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfCurveLines.first!, positionsOfCurveLines.last!)
+//            headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfCurveLines.first!, positionsOfCurveLines.last!)
+            headingAngleOfTeeToGreen = getPointHeading(starting: positionsOfCurveLines.first!, position: position)
         }
         else{
             if(positionsOfDotLine.count != 0){
                 if(positionsOfCurveLines.isEmpty){
-                    headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfDotLine.first!, positionsOfDotLine.last!)
+                    headingAngleOfTeeToGreen = getPointHeading(starting: positionsOfDotLine.first!, position: position)
+//                    headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfDotLine.first!, positionsOfDotLine.last!)
                 }else{
-                    headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfCurveLines.first!, positionsOfDotLine.last!)
+//                    headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfCurveLines.first!, positionsOfDotLine.last!)
+                    headingAngleOfTeeToGreen = getPointHeading(starting: positionsOfCurveLines.first!, position: position)
                 }
             }
-            else{
-                headingAngleOfTeeToGreen = GMSGeometryHeading(positionsOfCurveLines.first!, positionsOfCurveLines[1])
-            }
         }
+        
         var headingAngleOfTeeToFairway = 0.0
         if(positionsOfCurveLines.isEmpty){
             headingAngleOfTeeToFairway = GMSGeometryHeading(positionsOfDotLine.first!, position)
@@ -6696,7 +6697,22 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         return fairwayDetails
     }
-    
+    func getPointHeading(starting:CLLocationCoordinate2D,position:CLLocationCoordinate2D)->Double{
+        var heading = 0.0
+        if !((self.courseData.numberOfHoles[self.holeIndex]).fairway).isEmpty{
+            var nearPoint = [CLLocationCoordinate2D]()
+            var distance = [Double]()
+            for data in ((self.courseData.numberOfHoles[self.holeIndex]).fairway){
+                nearPoint.append(data[(BackgroundMapStats.nearByPoint(newPoint: position, array: data))])
+                distance.append(GMSGeometryDistance(position, nearPoint.last!))
+            }
+            let min = distance.min()!
+            let index = distance.firstIndex(of: min)!
+            let finalNearbyPoint = nearPoint[index]
+            heading = GMSGeometryHeading(starting, finalNearbyPoint)
+        }
+        return heading
+    }
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         debugPrint("Do Nothing")
         debugPrint(coordinate)

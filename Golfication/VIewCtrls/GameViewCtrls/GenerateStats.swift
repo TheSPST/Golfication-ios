@@ -74,12 +74,12 @@
                                 for(key,value) in score{
                                     if(key as! String == "par"){
                                         self.parValue = value as! Int
-                                        
                                         self.allParVal += value as! Int
-                                    }
-                                    if((key as! String) == Auth.auth().currentUser!.uid) && (((value as! NSMutableDictionary).value(forKey: "holeOut")) as! Bool) == true{
+                                    }else if((key as! String) == Auth.auth().currentUser!.uid) && (((value as! NSMutableDictionary).value(forKey: "holeOut")) as! Bool) == true{
                                         self.holeOutTrueParVal +=  score.value(forKey: "par") as! Int
                                         self.holeCountValue = self.holeCountValue + 1
+                                        self.parValue = score.value(forKey: "par") as! Int
+
                                         //self.generateStatsInt += 1
                                         if let shots = (((value as! NSMutableDictionary).value(forKey: "shots")) as? NSArray){
                                             shotsArray = shots
@@ -93,7 +93,7 @@
                                         }
                                         let k = i + 1
                                         if (shotsArray != nil){
-                                            
+                                            debugPrint(self.parValue)
                                             if self.parValue == 3{
                                                 self.threeValue["hole\(k)"] = shotsArray.count
                                             }

@@ -47,9 +47,8 @@ extension RadarChartView{
     }
 }
 extension CombinedChartView{
-    func setBarChartWithLines(dataPoints: [String], values: [Double],legend:[String], chartView :CombinedChartView ,color : UIColor, barWidth:Double) {
+    func setBarChartWithLines(dataPoints: [String], values: [Double],legend:[String], chartView :CombinedChartView ,color : UIColor, barWidth:Double){
         chartView.noDataText = "No data available."
-        
         var yVals1 : [ChartDataEntry] = [ChartDataEntry]()
         var dataEntriesFor18Hole: [ChartDataEntry] = []
         var dataEntriesFor09Hole: [ChartDataEntry] = []
@@ -76,7 +75,7 @@ extension CombinedChartView{
         if(dataEntriesFor18Hole.count>0){
             let entry = LegendEntry()
             entry.formColor = color
-            entry.label = "18 Hole"
+            entry.label = "18 Holes"
             entriesOfLegends.append(entry)
         }
         
@@ -85,7 +84,7 @@ extension CombinedChartView{
         if(dataEntriesFor09Hole.count>0){
             let entry2 = LegendEntry()
             entry2.formColor = UIColor.glfBluegreen
-            entry2.label = "9 Hole"
+            entry2.label = "9 Holes"
             entriesOfLegends.append(entry2)
         }
 
@@ -126,6 +125,92 @@ extension CombinedChartView{
         chartView.data?.setDrawValues(false)
 //        barChartSet.setColor(color)
         lineChartSet.setColor(color)
+        chartView.leftAxis.axisLineColor = UIColor.clear
+        chartView.xAxis.axisLineColor = UIColor.clear
+        chartView.leftAxis.gridColor = UIColor.glfBlack5
+        chartView.xAxis.wordWrapEnabled = false
+        chartView.xAxis.labelCount = 5
+        chartView.isUserInteractionEnabled = false
+    }
+    func setBarChartWithOutLines(dataPoints: [String], values: [Double],legend:[String], chartView :CombinedChartView ,color : UIColor, barWidth:Double) {
+        chartView.noDataText = "No data available."
+        
+        var yVals1 : [ChartDataEntry] = [ChartDataEntry]()
+        var dataEntriesFor18Hole: [ChartDataEntry] = []
+        var dataEntriesFor09Hole: [ChartDataEntry] = []
+        
+        var xAxisLabel:[String] = []
+        
+        for i in 0..<dataPoints.count {
+            if(legend[i] == "18 holes"){
+                let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
+                dataEntriesFor18Hole.append(dataEntry)
+                
+            }
+            else{
+                let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
+                dataEntriesFor09Hole.append(dataEntry)
+                
+            }
+            yVals1.append(ChartDataEntry(x: Double(i), y:values[i] ))
+            xAxisLabel.append(dataPoints[i]) // shubham
+        }
+        let chartDataSet = BarChartDataSet(values: dataEntriesFor18Hole, label: "" )
+        chartDataSet.setColor(color)
+        var entriesOfLegends = [LegendEntry]()
+        if(dataEntriesFor18Hole.count>0){
+            let entry = LegendEntry()
+            entry.formColor = color
+            entry.label = "18 Holes"
+            entriesOfLegends.append(entry)
+        }
+        
+        let chartDataSet2 = BarChartDataSet(values: dataEntriesFor09Hole, label: "")
+        chartDataSet2.setColor(UIColor.glfBluegreen)
+        if(dataEntriesFor09Hole.count>0){
+            let entry2 = LegendEntry()
+            entry2.formColor = UIColor.glfBluegreen
+            entry2.label = "9 Holes"
+            entriesOfLegends.append(entry2)
+        }
+        
+//        let lineChartSet = LineChartDataSet(values: yVals1, label: "")
+        
+        let data: CombinedChartData = CombinedChartData(dataSets: [chartDataSet,chartDataSet2])
+        
+        
+        data.barData = BarChartData(dataSets:[chartDataSet,chartDataSet2])
+//        data.lineData = LineChartData(dataSets:[lineChartSet])
+//        lineChartSet.lineDashLengths = [5.0]
+//        lineChartSet.circleRadius = 1.0
+        data.barData.barWidth = barWidth
+        chartView.data = data
+        chartView.legend.enabled = true
+        chartView.legend.horizontalAlignment = .right
+        chartView.legend.verticalAlignment = .top
+        if(entriesOfLegends.count > 0){
+            chartView.legend.setCustom(entries: entriesOfLegends)
+        }
+        chartView.chartDescription?.text = ""
+        chartView.xAxis.labelPosition = .bottom
+        chartView.xAxis.axisMinimum = -0.5
+        chartView.xAxis.axisMaximum = Double(dataPoints.count) - 0.5
+        chartView.xAxis.labelCount = dataPoints.count
+        //        chartView.xAxis.wordWrapEnabled = true
+        chartView.xAxis.drawGridLinesEnabled = false
+        chartView.rightAxis.enabled = false
+        chartView.leftAxis.enabled = true
+        chartView.leftAxis.labelFont = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)!
+        chartView.leftAxis.labelTextColor = UIColor.glfWarmGrey
+        chartView.xAxis.labelFont = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)!
+        chartView.xAxis.labelTextColor = UIColor.glfWarmGrey
+        chartView.leftAxis.axisMinimum = 0.0
+        chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:dataPoints)
+        //        chartView.xAxis.labelCount = dataPoints.count + 1
+        chartView.leftAxis.labelCount = 3
+        chartView.data?.setDrawValues(false)
+        //        barChartSet.setColor(color)
+//        lineChartSet.setColor(color)
         chartView.leftAxis.axisLineColor = UIColor.clear
         chartView.xAxis.axisLineColor = UIColor.clear
         chartView.leftAxis.gridColor = UIColor.glfBlack5
@@ -562,14 +647,16 @@ extension BarChartView {
         var dataEntries: [ChartDataEntry] = []
         var colors = [UIColor]()
         for i in 0..<dataPoints.count {
-            let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
-            if(values[i] < 0){
-                colors.append(UIColor.white)
+            if !dataPoints[i].contains("Pu"){
+                let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
+                if(values[i] < 0){
+                    colors.append(UIColor.white)
+                }
+                else{
+                    colors.append(color)
+                }
+                dataEntries.append(dataEntry)
             }
-            else{
-                colors.append(color)
-            }
-            dataEntries.append(dataEntry)
         }
         let chartDataSet = BarChartDataSet(values: dataEntries, label: "" )
         let chartData = BarChartData(dataSet: chartDataSet)
@@ -687,11 +774,9 @@ extension BarChartView {
 
         chartData.barWidth = barWidth
         chartView.leftAxis.gridColor = UIColor.glfBlack5
-
         
         //remove coloured box
         chartView.legend.enabled = false
-        
         
         //remove chartDescriptions
         chartView.chartDescription?.text = ""
@@ -709,8 +794,6 @@ extension BarChartView {
         chartView.xAxis.labelTextColor = UIColor.glfWarmGrey
         chartView.xAxis.axisLineColor = UIColor.clear
 
-        
-        
         chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:dataPoints)
         chartView.xAxis.granularity = 1
         
@@ -770,7 +853,7 @@ extension BarChartView {
     func setBarChartWithRange(dataPoints: [String], minimum: [Double],maximum:[Double] ,chartView :BarChartView,color : [UIColor],barWidth:Double) {
         var dataEntries: [ChartDataEntry] = []
         for i in 0..<dataPoints.count {
-            if(maximum[i] != minimum[i]){
+            if(maximum[i] != minimum[i]) && !dataPoints[i].contains("Pu"){
                 let entry1 = BarChartDataEntry(x: Double(i), yValues: [minimum[i],maximum[i]-minimum[i]])
                 dataEntries.append(entry1)
             }
@@ -953,11 +1036,11 @@ extension BarChartView {
         }
         let chartDataSet = BarChartDataSet(values: dataEntriesFor18Hole, label: "" )
         chartDataSet.setColor(UIColor.glfSeafoamBlue)
-        chartDataSet.label = "18 Hole"
+        chartDataSet.label = "18 Holes"
         
         let chartDataSet2 = BarChartDataSet(values: dataEntriesFor09Hole, label: "")
         chartDataSet2.setColor(UIColor.glfWhite)
-        chartDataSet2.label = "9 Hole"
+        chartDataSet2.label = "9 Holes"
 
         let chartData = BarChartData(dataSets: [chartDataSet,chartDataSet2])
         chartView.data = chartData

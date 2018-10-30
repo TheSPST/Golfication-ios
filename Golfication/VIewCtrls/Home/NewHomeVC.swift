@@ -13,6 +13,7 @@ import Google
 import DeviceKit
 import FirebaseInstanceID
 
+var baselineDict: NSDictionary!
 let DEVICEDATA = DeviceData()
 var strokesGainedDict = [NSMutableDictionary]()
 var isUpdateInfo = false
@@ -262,7 +263,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        DEVICEDATA.getDeviceData()
+//        DEVICEDATA.getDeviceData()
         if (InstanceID.instanceID().token() != nil){
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :InstanceID.instanceID().token()!] as [AnyHashable:String])
         }
@@ -335,9 +336,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         viewInvite.isHidden = rndom < 40 ? false : true
         
         self.setInitialUI()
+        
         self.getStrokesGainedFirebaseData()
         self.getGolficationXVersion()
     }
+
+    
     func getGolficationXVersion(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion/version") { (snapshot) in
             let vNumber = snapshot.value as? Int
@@ -781,6 +785,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: getUserDataFromFireBase
     func getUserDataFromFireBase() {
         matchId.removeAll()
+        var hcp = Double()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "") { (snapshot) in
             if(snapshot.childrenCount > 0){
                 var userData = NSDictionary()
@@ -982,6 +987,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 if let handicap = userData["handicap"] as? String{
                     self.profileHandicap = handicap
+                    hcp = Double(handicap)?.rounded() ?? 0
                 }
                 if let gender = userData["gender"] as? String{
                     self.genderData = gender
@@ -1034,6 +1040,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
             }
             DispatchQueue.main.async( execute: {
+                self.getBaseLine(hcp: Int(hcp))
                 self.setMyData()
                 if(self.round_score.count == 0){
                     self.updateCard4(path: "userData/user1/statistics")
@@ -1053,6 +1060,15 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     self.getClubDataFromFirebase(isShow:false)
                 }
             })
+        }
+    }
+    
+    
+    func getBaseLine(hcp:Int){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "baseline/\(hcp)") { (snapshot) in
+            if let baseline = snapshot.value as? NSDictionary{
+                baselineDict = baseline
+            }
         }
     }
     

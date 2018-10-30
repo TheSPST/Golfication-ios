@@ -909,9 +909,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         self.lblFairwayHit.text = "\(fairwayHitInPercentage)%"
         self.lblFairwayLeft.text = "\(fairwayLeftInPercentage)%"
         
-        self.lblOTTLeft.text = "Right Rough \(fairwayLeftInPercentage)%"
+        self.lblOTTRight.text = "Right Rough \(fairwayRightInPercentage)%"
         self.lblOTTCenter.text = "Fairway \(fairwayHitInPercentage)%"
-        self.lblOTTRight.text = "Left Rough \(fairwayRightInPercentage)%"
+        self.lblOTTLeft.text = "Left Rough \(fairwayLeftInPercentage)%"
         
         
         if(fairwayHitInPercentage > 90){

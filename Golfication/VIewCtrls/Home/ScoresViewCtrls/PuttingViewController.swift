@@ -20,8 +20,6 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
 
     @IBOutlet weak var cardViewPuttsPerHole: CardView!
     @IBOutlet weak var lblAvgPuttsPHoleValue: UILabel!
-    @IBOutlet weak var lblAvgPuttsBreakUpValue: UILabel!
-    @IBOutlet weak var lblAvgPuttsVSHandValue: UILabel!
     @IBOutlet weak var barViewPuttsPerHole: BarChartView!
     @IBOutlet weak var pieViewPuttsBreakUp: PieChartView!
     @IBOutlet weak var barViewPuttsVsHandicap: BarChartView!
@@ -54,8 +52,6 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
         putsWithGirAvg.isHidden = true
         lblPutsVsHandicapAvg.isHidden = true
         lblAvgPuttsPHoleValue.isHidden = true
-        lblAvgPuttsBreakUpValue.isHidden = true
-        lblAvgPuttsVSHandValue.isHidden = true
         if(isDemoUser){
             for v in self.puttingStackView.subviews{
                 if v.isKind(of: CardView.self){
@@ -90,8 +86,6 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
         }
         cardViewPuttsPerHole.backgroundColor = UIColor.glfBluegreen
         self.lblAvgPuttsPHoleValue.setCorner(color: UIColor.white.cgColor)
-        self.lblAvgPuttsBreakUpValue.setCorner(color: UIColor.glfBlack50.cgColor)
-        self.lblAvgPuttsVSHandValue.setCorner(color: UIColor.glfBlack50.cgColor)
     }
     
     // MARK: - shareClicked
@@ -123,7 +117,7 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
                 for score in self.scores{
                     var avgPerRound = 0.0
                     var is9Holes : Double = 1
-                    if(score.type == "9 holes"){
+                    if(score.type == "9 holes") || (score.type == "9 hole"){
                         is9Holes = 2
                     }
                     for i in 0..<score.putts.count{
@@ -137,17 +131,24 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
                 dataValuesForBar.append((homeRounds.handicap.value(forKey: "putt1") ?? 34.5) as! Double)
                 let colors = [UIColor.glfWarmGrey,UIColor.glfPaleTeal,UIColor.glfFlatBlue75]
                 self.barViewPuttsVsHandicap.setBarChartPuttsVSHandicap(dataPoints: ["11-15 HCP","Your Stats","16-20 HCP"], values: dataValuesForBar, chartView: self.barViewPuttsVsHandicap,colors: colors, barWidth: 0.4)
+                
+                if baselineDict != nil{
+                    let publicScore  = PublicScore()
+                    let publicScoreStr = publicScore.getPuttsHandicap(avergePutts:avgPuttsRound.reduce(0, +) / Double(avgPuttsRound.count))
+                    
+                    self.lblPutsVsHandicapAvg.isHidden = false
+                    self.lblPutsVsHandicapAvg.attributedText = publicScoreStr
+                }
             })
         }
-        
-        
     }
+    
     func setupPuttsBreakUp(){
 //        print(totalPutts)
         var totalPuttsRoundWise = [0.0,0.0,0.0,0.0,0.0,0.0]
         for score in scores{
             var is9Holes : Double = 1
-            if(score.type == "9 holes"){
+            if(score.type == "9 holes") || (score.type == "9 hole"){
                 is9Holes = 2
             }
             for i in 0..<score.putts.count{
@@ -168,6 +169,17 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
         }
 //        print(puttsAvgPerc)
         pieViewPuttsBreakUp.setChartForPuttingBreak(dataPoints: dataPoints, values: puttsAvgPerc, chartView: pieViewPuttsBreakUp,avgPutts: (avgPutts/Double(scores.count)).rounded(toPlaces: 2))
+        
+        if baselineDict != nil{
+            if !(Int(totalPuttsRoundWise[0]) == 0 && Int(totalPuttsRoundWise[1]) == 0  && Int(totalPuttsRoundWise[2]) == 0  && Int(totalPuttsRoundWise[3]) == 0  && Int(totalPuttsRoundWise[4]) == 0){
+                
+                let publicScore  = PublicScore()
+                let publicScoreStr = publicScore.getPuttsBreakup(zeroPutts:totalPuttsRoundWise[0],  onePutts:totalPuttsRoundWise[1], twoPutts:totalPuttsRoundWise[2], threePutts:totalPuttsRoundWise[3], fourPutts:totalPuttsRoundWise[4])
+                
+                    putsWithGirAvg.isHidden = false
+                    putsWithGirAvg.attributedText = publicScoreStr
+            }
+        }
     }
     func setupPutsPerHole(){
         var roundTimeStamp = [String]()

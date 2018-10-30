@@ -2412,7 +2412,7 @@
                                                         </state>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3KA-UU-Ocv">
-                                                        <rect key="frame" x="157.5" y="0.0" width="95" height="30"/>
+                                                        <rect key="frame" x="157.5" y="0.0" width="53.5" height="30"/>
                                                         <color key="backgroundColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="95" id="rZF-f0-dGW"/>
@@ -2427,7 +2427,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vjk-UG-klx">
-                                                        <rect key="frame" x="260.5" y="0.0" width="27.5" height="30"/>
+                                                        <rect key="frame" x="219" y="0.0" width="69" height="30"/>
                                                         <color key="backgroundColor" red="0.0" green="0.54117647059999996" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="69" id="3Ep-Lk-l3d"/>

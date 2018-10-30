@@ -38,7 +38,6 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
     @IBOutlet weak var FairwaysLiklinessLineChart: LineChartView!
     @IBOutlet weak var driveDistanceScatterChartView: CombinedChartView!
     @IBOutlet weak var barChartFairwaysHitTrend: CombinedChartView!
-    
     @IBOutlet weak var lblProSpreadOffTee: UILabel!
     @IBOutlet weak var lblProDistanceOffTee: UILabel!
 
@@ -88,7 +87,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         lblProSpreadOffTee.layer.masksToBounds = true
         lblProDistanceOffTee.layer.masksToBounds = true
 
-        lblSpreadOffAvg.isHidden = true
+//        lblSpreadOffAvg.isHidden = false
         lblFairwayHitAvg.isHidden = true
         lblFairwaysLiklinessAvg.isHidden = true
         lblDriveDistanceAvg.isHidden = true
@@ -172,7 +171,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
                 }
             }
         }
-        lblAvgSpreadOffTheTeeValue.isHidden = true
+//        lblAvgSpreadOffTheTeeValue.isHidden = true
         lblAvgDrivingAccuracyValue.isHidden = true
         lblAvgDriveDistanceValue.isHidden = true
         lblAvgFairwaysHitTrendValue.isHidden = true
@@ -335,6 +334,18 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             dataArray.append(((groupDict[KeysArray[i]]!)*100)/Double(fairwayArray.count))
         }
         FairwaysLiklinessLineChart.setLineChartWithColor(dataPoints:KeysArray , values: dataArray, chartView: FairwaysLiklinessLineChart,color:UIColor.glfFlatBlue)
+        self.lblFairwaysLiklinessAvg.isHidden = false
+        self.lblAvgFairwayHitValue.isHidden = false
+        self.lblFairwaysLiklinessAvg.text = "Average Fairways Hit Per Round"
+        var total = 0
+        var count = 0
+        for (_,data) in groupDict{
+            if Int(data) > 0{
+                total += Int(data)
+                count += 1
+            }
+        }
+        self.lblAvgFairwayHitValue.text = "\(total/count) of 14"
         
     }
     func updateValue(keys:String){
@@ -350,15 +361,49 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
     func setFairwayHitTrends(){
         var dataPoints = [String]()
         var dataValues = [Double]()
+        var newDataPoint = [Double]()
         var legend = [String]()
+//        var i = 0
         for round in scores{
-            dataPoints.append(round.date)
-            dataValues.append(round.fairwayHit)
+//            if (i<5){
+                dataPoints.append(round.date)
+                dataValues.append(round.fairwayHit)
+                newDataPoint.append(round.type == "18 holes" ? 18.0:9.0)
+//            }
+//            i += 1
             legend.append(round.type)
         }
         if(dataValues.count > 0){
-            barChartFairwaysHitTrend.setBarChartWithLines(dataPoints: dataPoints, values: dataValues,legend:legend,chartView: barChartFairwaysHitTrend, color: UIColor.glfSeafoamBlue, barWidth: 0.2)
+            barChartFairwaysHitTrend.setBarChartWithOutLines(dataPoints: dataPoints, values: dataValues, legend: legend, chartView: barChartFairwaysHitTrend, color: UIColor.glfSeafoamBlue, barWidth: 0.2)
+            
+            if dataValues.count > 2{
+                var attributedText = NSMutableAttributedString()
+                let publicScoring = PublicScore()
+                let data = publicScoring.getFairwaysHitTrendsData(dataValues:dataValues)
+                self.lblFairwayHitAvg.isHidden = false
+                if let text = data.value(forKey: "text") as? NSAttributedString {
+                    attributedText.append(text)
+                }
+                if (attributedText.length > 11){
+                    self.lblFairwayHitAvg.attributedText = attributedText
+                }else{
+                    attributedText = NSMutableAttributedString()
+                    self.lblAvgFairwaysHitTrendValue.isHidden = false
+                    let value = data.value(forKey: "percentFairwayTrend") as! Double
+                    let string = data.value(forKey: "text") as! NSAttributedString
+                    let dict1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfWarmGrey]
+                    attributedText.append(NSAttributedString(string: "Your Accuracy has ", attributes: dict1))
+                    attributedText.append(string)
+                    if let color = data.value(forKey: "color") as? UIColor{
+                        self.lblAvgFairwaysHitTrendValue.textColor = color
+                        self.lblAvgFairwaysHitTrendValue.layer.borderColor = color.cgColor
+                        self.lblAvgFairwaysHitTrendValue.text = "\(value.rounded(toPlaces: 1))"
+                    }
+                    self.lblFairwayHitAvg.attributedText = attributedText
+                }
+            }
         }
+        
     }
     func setDriveDistanceScatterChartView(){
         var teesArray = [NSDictionary]()
@@ -387,12 +432,17 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         for item in holesInAllRounds{
             dataValues.append(item.distance)
         }
-        
-        //        print(dataPoints)
-        //        print(dataValues)
         driveDistanceScatterChartView.setScatterChartWithLineOnlyDriveDistance(valueX:dataPoints, valueY: dataValues,xAxisValue:date ,chartView: driveDistanceScatterChartView, color: UIColor.glfPaleTeal)
         driveDistanceScatterChartView.leftAxis.labelCount = 3
-        
+        self.lblDriveDistanceAvg.isHidden = false
+        self.lblAvgDriveDistanceValue.isHidden = false
+        self.lblDriveDistanceAvg.text = "Average Drive"
+        if !dataValues.isEmpty{
+            let sum = Int(dataValues.reduce(0, +))
+            self.lblAvgDriveDistanceValue.text = "\(Int(sum/dataValues.count)) \(distanceFilter == 1 ? "m":"yd")"
+        }else{
+            self.lblAvgDriveDistanceValue.text = "0 \(distanceFilter == 1 ? "m":"yd")"
+        }
     }
     
     func setSpreadOffTheTeaGraph(){
@@ -418,6 +468,10 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         scattredSpreadOfTheTeeChart.leftAxis.gridColor = UIColor.glfWhite.withAlphaComponent(0.5)
         if(dataYAxis.count != 0){
             scattredSpreadOfTheTeeChart.leftAxis.axisMinimum = dataYAxis.min()! - 5
+            lblSpreadOffAvg.text = "Longest Drive"
+            lblAvgSpreadOffTheTeeValue.text = "\(Int(dataYAxis.max()!)) \(distanceFilter == 1 ? "m":"yd")"
+        }else{
+            lblAvgSpreadOffTheTeeValue.text = "0 \(distanceFilter == 1 ? "m":"yd")"
         }
 
         scattredSpreadOfTheTeeChart.leftAxis.labelCount = 3
@@ -432,6 +486,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         lblRight.text = "Right Rough"
         lblLeft.text = "Left Rough"
         lblCenter.text = "Fairway"
+        
     }
     
     func setDrivingAccuracyChart(){
@@ -457,9 +512,9 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         if(fairwayRight != 0){
             fairwayRightInPercentage = ((fairwayRight)*100)/(totalFairway)
         }
-        self.lblLeft.text = "Right Rough \(fairwayLeftInPercentage)%"
+        self.lblRight.text = "Right Rough \(fairwayRightInPercentage)%"
         self.lblCenter.text = "Fairway \(fairwayHitInPercentage)%"
-        self.lblRight.text = "Left Rough \(fairwayRightInPercentage)%"
+        self.lblLeft.text = "Left Rough \(fairwayLeftInPercentage)%"
         self.lblFairwayRight.text = "\(fairwayRightInPercentage)%"
         self.lblFairwayHit.text = "\(fairwayHitInPercentage)%"
         self.lblFairwayLeft.text = "\(fairwayLeftInPercentage)%"
@@ -476,6 +531,20 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         view1.updateViewWithColor(rect: view1.frame, color: UIColor.glfRosyPink, radius: view1.frame.height*CGFloat(fairwayLeftInPercentage)/100)
         view2.updateViewWithColor(rect: view2.frame, color: UIColor.glfPaleTeal, radius: view2.frame.height*CGFloat(fairwayHitInPercentage)/100)
         view3.updateViewWithColor(rect: view3.frame, color: UIColor.glfRosyPink, radius: view3.frame.height*CGFloat(fairwayRightInPercentage)/100)
+        let publicScoring = PublicScore()
+        let data = publicScoring.getDriveAccuracyData(fairHit:fairwayHitInPercentage)
+        self.lblAccuracyWithDriver.isHidden = false
+        if data.length > 10{
+            self.lblAccuracyWithDriver.attributedText = data
+        }else{
+            let dict1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfWarmGrey]
+            let attributedText = NSMutableAttributedString()
+            attributedText.append(NSAttributedString(string: "You ", attributes: dict1))
+            attributedText.append(data)
+            attributedText.append(NSAttributedString(string: " more fairways than other golfers like you", attributes: dict1))
+            self.lblAccuracyWithDriver.attributedText = attributedText
+        }
+        debugPrint(data.length)
     }
     func setData(){
         for round in scores{

@@ -32,8 +32,6 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     @IBOutlet weak var lblProProximity: UILabel!
 
     @IBOutlet weak var cardViewApproach: CardView!
-    @IBOutlet weak var lblAvgApproachAccuracyValue: UILabel!
-    @IBOutlet weak var lblAvgAccuracyWithGIRValue: UILabel!
     @IBOutlet weak var lblAvgHoleProximityValue: UILabel!
     @IBOutlet weak var lblAvgGIRTrendsValue: UILabel!
     @IBOutlet weak var lblAvgGIRLikelinessValue: UILabel!
@@ -87,8 +85,6 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         lblHoleProximityAvg.isHidden = true
         lblGIRTrendsAvg.isHidden = true
         lblFairwayHitAvg.isHidden = true
-        lblAvgApproachAccuracyValue.isHidden = true
-        lblAvgAccuracyWithGIRValue.isHidden = true
         lblAvgHoleProximityValue.isHidden = true
         lblAvgGIRTrendsValue.isHidden = true
         lblAvgGIRLikelinessValue.isHidden = true
@@ -161,8 +157,6 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         GIRLikelinessLineChart.isUserInteractionEnabled = false
         
         cardViewApproach.backgroundColor = UIColor.glfBluegreen
-        self.lblAvgApproachAccuracyValue.setCorner(color: UIColor.white.cgColor)
-        self.lblAvgAccuracyWithGIRValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgHoleProximityValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgGIRTrendsValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgGIRLikelinessValue.setCorner(color: UIColor.glfBlack50.cgColor)
@@ -228,6 +222,15 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         if(totalSum != 0){
             girCircularChart.setProgress(value: CGFloat(girPercantage), animationDuration: 1.0)
         }
+        
+        if baselineDict != nil{
+            debugPrint("baselineDict==",baselineDict)
+            
+            let publicScore  = PublicScore()
+            let publicScoreStr = publicScore.getApproachGIR(p:girPercantage)
+            lblAccuracyWithDriverAvg.isHidden = false
+            lblAccuracyWithDriverAvg.attributedText = publicScoreStr
+        }
     }
     func setProLockedUI(targetView:UIView?, title: String) {
         
@@ -292,7 +295,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         }
         for score in scores{
             if score.gir != nil{
-                if(score.type == "9 hole"){
+                if(score.type == "9 hole") || (score.type == "9 holes"){
                     fairwayArray.append(2 * score.gir)
                 }
                 else{
@@ -338,6 +341,8 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         var left = Int()
         var hit = Int()
         var color = [UIColor]()
+        var maxValueOfLeftRightLongShort = 0.0
+        var toLeftRightLeftShort = ""
         for score in scores{
             for data in score.approach{
                 for i in 0..<data.count{
@@ -394,6 +399,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                 }
             }
         }
+        
         approchAccuracyScatterChart.setScatterChart(valueX: proximityXPoints, valueY: proximityYPoints, chartView: approchAccuracyScatterChart, color: color)
         approchAccuracyScatterChart.leftAxis.enabled = false
         approchAccuracyScatterChart.leftAxis.axisMaximum = 90
@@ -410,11 +416,28 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
             lblRight.text = "Right \(100*right/sumOfLSRL)%"
             lblLeft.text = "Left \(100*left/sumOfLSRL)%"
             lblHit.text = "Hit \(100*hit/sumOfLSRL)%"
+            
+            if(maxValueOfLeftRightLongShort<Double(100*right/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*right/sumOfLSRL)
+                toLeftRightLeftShort = "to the Right";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*left/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*left/sumOfLSRL);
+                toLeftRightLeftShort = "to the Left";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*long/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*long/sumOfLSRL);
+                toLeftRightLeftShort = "Long";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*short/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*short/sumOfLSRL);
+                toLeftRightLeftShort = "Short";
+            }
+            lblApproachAccuracyAvg.isHidden = false
+            lblApproachAccuracyAvg.text = "You miss " + String(format:"%.01f",maxValueOfLeftRightLongShort) + "% of the Greens " + toLeftRightLeftShort
         }else{
             
         }
-
-        
     }
     func setupGIRTrendBarChart(){
         var girArray = [Double]()
@@ -461,10 +484,8 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         
         holeProximityScatterWithLineView.setScatterChartWithLine(valueX: dataPoints, valueY: distance, xAxisValue: date, chartView: holeProximityScatterWithLineView, color: UIColor.glfGreenBlue)
         holeProximityScatterWithLineView.leftAxis.labelCount = 3
-        
-        
-        
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

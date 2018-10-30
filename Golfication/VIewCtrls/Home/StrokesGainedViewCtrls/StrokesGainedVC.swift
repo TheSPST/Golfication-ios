@@ -525,7 +525,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                                 }
                                 
                             }
-                            let holeout = (valueArray[j] as AnyObject).object(forKey: "holeout")
+                            let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut")
                             if((holeout) != nil){
                                 clubData.holeout = holeout as! Double
                             }
@@ -612,7 +612,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
             dataValues.append(data.clubStrokesGained / Double(data.clubCount))
             print(data)
         }
-        self.strokesGainedPerClubBarChart.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: self.strokesGainedPerClubBarChart, color: UIColor.glfWhite, barWidth: 0.2,valueColor: UIColor.glfWhite.withAlphaComponent(0.5))
+        self.strokesGainedPerClubBarChart.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: self.strokesGainedPerClubBarChart, color: UIColor.glfWhite, barWidth: 0.4,valueColor: UIColor.glfWhite.withAlphaComponent(0.5))
         strokesGainedPerClubBarChart.leftAxis.gridColor = UIColor.glfWhite.withAlphaComponent(0.25)
         strokesGainedPerClubBarChart.leftAxis.labelTextColor  = UIColor.glfWhite.withAlphaComponent(0.5)
         strokesGainedPerClubBarChart.xAxis.labelTextColor = UIColor.glfWhite.withAlphaComponent(0.5)

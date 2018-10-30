@@ -23,9 +23,7 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
     @IBOutlet weak var lblAvgRoundsValue: UILabel!
     @IBOutlet weak var roundCardView: CardView!
     @IBOutlet weak var lblAvgScoreDistributionValue: UILabel!
-    @IBOutlet weak var lblAvgScoringValue: UILabel!
     @IBOutlet weak var lblAvgPerformanceValue: UILabel!
-    @IBOutlet weak var lblAvgParValue: UILabel!
     @IBOutlet weak var lblAvgPenaltiesTrendsValue: UILabel!
     @IBOutlet weak var barViewPenaltiesTrend: BarChartView!
     @IBOutlet weak var barViewParAverages: BarChartView!
@@ -57,7 +55,9 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         self.setViewScoringPieChart()
         self.setViewParAveragesBarChart()
         
+ 
     }
+    
     func setupUI(){
         
         //        lblRoundsAvg.isHidden = true
@@ -66,8 +66,6 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         lblParAvg.isHidden = true
         //        lblPenaltyTrendsAvg.isHidden = true
         //        lblAvgPenaltiesTrendsValue.isHidden = true
-        lblAvgParValue.isHidden = true
-        lblAvgScoringValue.isHidden = true
         //        lblAvgRoundsValue.isHidden = true
         lblAvgPerformanceValue.isHidden = true
         
@@ -114,9 +112,7 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         self.lblAvgScoreDistribution.isHidden = true
         self.lblAvgRoundsValue.setCorner(color: UIColor.white.cgColor)
         self.lblAvgScoreDistributionValue.setCorner(color: UIColor.glfBlack50.cgColor)
-        self.lblAvgScoringValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgPerformanceValue.setCorner(color: UIColor.glfBlack50.cgColor)
-        self.lblAvgParValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgPenaltiesTrendsValue.setCorner(color: UIColor.glfBlack50.cgColor)
     }
     
@@ -184,7 +180,17 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         let dataLable = ["Par3","Par4","Par5"]
         let dataPoints1 = [finalParScore.three,finalParScore.four,finalParScore.five]
         barViewParAverages.setStackedBarChart(dataPoints: dataLable, value1: dataPoints1 as! [Double] , chartView: barViewParAverages,barWidth:0.4)
+        
+        if baselineDict != nil{
+            debugPrint("baselineDict==",baselineDict)
+            
+            let publicScore  = PublicScore()
+            let publicScoreStr = publicScore.getOverviewParAvg(par3s: finalParScore.three, par4s: finalParScore.four, par5s: finalParScore.five)
+            lblParAvg.isHidden = false
+            lblParAvg.attributedText = publicScoreStr
+        }
     }
+    
     func setViewScoringPieChart(){
         var scoringArray = [Scoring]()
         for item in scores{
@@ -218,9 +224,37 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         let dataPoints = [finalScoreInPercentage.doubleBogey,finalScoreInPercentage.bogey,finalScoreInPercentage.par,finalScoreInPercentage.birdie,finalScoreInPercentage.eagle]
         
         pieViewScoring.setChartForScoring(dataPoints: dataLabel, values: dataPoints as! [Double], chartView: pieViewScoring,color:UIColor.glfSeafoamBlue,isValueEnable: true)
-        
-        
+        //publicRankingof user
+        if baselineDict != nil{
+            var absoluteBirdie = 0.0
+            var absolutePar = 0.0
+            var absoluteBogey = 0.0
+            var absoluteDBogey = 0.0
+            
+            if((score.eagle + score.birdie)>0) {
+                absoluteBirdie = ((score.eagle + score.birdie) / totalSum) * 18;
+            }
+            if (score.doubleBogey>0){
+                absoluteDBogey = (score.doubleBogey/totalSum) * 18;
+            }
+            if (score.bogey>0){
+                absoluteBogey = (score.bogey/totalSum) * 18;
+            }
+            if (score.par>0){
+                absolutePar = (score.par/totalSum) * 18;
+            }
+            debugPrint("baselineDict==",baselineDict)
+            
+            
+            let publicScore  = PublicScore()
+           
+            let publicScoreStr = publicScore.getOverviewScoring(absoluteBirdie: absoluteBirdie, absolutePar: absolutePar, absoluteBogey: absoluteBogey, absoluteDBogey: absoluteDBogey)
+            
+            lblScoringAvg.isHidden = false
+            lblScoringAvg.attributedText = publicScoreStr
+        }
     }
+    
     func setPenaltiesTrendBarCharts(){
         
         var xAxisLabelArray = [String]()
@@ -235,7 +269,10 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         if(barDataArray.count > 0){
             avgPenalties = avgPenalties/Double(barDataArray.count)
         }
-        lblAvgPenaltiesTrendsValue.text = "\(Int(avgPenalties))"
+        lblAvgPenaltiesTrendsValue.text = "\(avgPenalties.rounded(toPlaces: 1))"
+        if scores.count < 10{
+            lblPenaltyTrendsAvg.text = "Average from last \(scores.count) rounds"
+        }
         if(barDataArray.count > 0){
             barViewPenaltiesTrend.setBarChart(dataPoints: xAxisLabelArray, values: barDataArray, chartView: barViewPenaltiesTrend,color: UIColor.glfRosyPink, barWidth: 0.2, leftAxisMinimum: 0, labelTextColor: UIColor.glfWarmGrey,unit: "", valueColor: UIColor.glfWarmGrey)
             barViewPenaltiesTrend.leftAxis.axisMinimum = 0
@@ -290,7 +327,7 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         }
         //print(groupDict)
         for i in 0..<scores.count{
-            if(scores[i].type == "9 hole"){
+            if(scores[i].type == "9 hole") || (scores[i].type == "9 holes"){
                 scoreArray.append((scores[i].score)*2)
             }
             else{

@@ -56,6 +56,7 @@
 		3E5EAB041FF7AD2B00F69661 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5EAB031FF7AD2B00F69661 /* AppDelegate.swift */; };
 		3E626A79201C4EB3002D6176 /* NotificationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E626A78201C4EB3002D6176 /* NotificationViewCell.swift */; };
 		3E63509720D3A150005BF851 /* BLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E63509620D3A150005BF851 /* BLE.swift */; };
+		3E638E272187058500DB08B9 /* PublicScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E638E262187058500DB08B9 /* PublicScore.swift */; };
 		3E6ED546209AF7F600472C99 /* GenerateStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6ED545209AF7F500472C99 /* GenerateStats.swift */; };
 		3E70B69A201867590087738D /* IAPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E70B699201867590087738D /* IAPHandler.swift */; };
 		3E70B69C201867820087738D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E70B69B201867730087738D /* StoreKit.framework */; };
@@ -319,6 +320,7 @@
 		3E5EAB031FF7AD2B00F69661 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3E626A78201C4EB3002D6176 /* NotificationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewCell.swift; sourceTree = "<group>"; };
 		3E63509620D3A150005BF851 /* BLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLE.swift; sourceTree = "<group>"; };
+		3E638E262187058500DB08B9 /* PublicScore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublicScore.swift; sourceTree = "<group>"; };
 		3E6ED545209AF7F500472C99 /* GenerateStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenerateStats.swift; sourceTree = "<group>"; };
 		3E70B699201867590087738D /* IAPHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPHandler.swift; sourceTree = "<group>"; };
 		3E70B69B201867730087738D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -1083,6 +1085,7 @@
 		4BB26CD51FF77EDB001E9556 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				3E638E262187058500DB08B9 /* PublicScore.swift */,
 				3E57646A215BDA5400658D78 /* ProfilePhotoDetailVC.swift */,
 				3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */,
 				3EF55F5720E77A2200068C4B /* NewHomeVC.swift */,
@@ -1701,6 +1704,7 @@
 				4BE0DB74206BB9B100AE33E2 /* ShareStatsButton.swift in Sources */,
 				3E035F84215293F000019014 /* TIOADToadImageReader.m in Sources */,
 				3E380EEF1FFCCD5300246865 /* NotificationVC.swift in Sources */,
+				3E638E272187058500DB08B9 /* PublicScore.swift in Sources */,
 				4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */,
 				4B7E2A672175C0D900DFC3EB /* ARGeoCoordinate.m in Sources */,
 				4B7F52182158DC6F002E328A /* PKCCrop.swift in Sources */,
