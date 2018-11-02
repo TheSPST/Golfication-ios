@@ -339,8 +339,34 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         self.getStrokesGainedFirebaseData()
         self.getGolficationXVersion()
+//        self.FindUser()
     }
-
+// Get user details which have Pro membership
+//    func FindUser(){
+//        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
+//            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+//            var userData = NSMutableDictionary()
+//            if(snapshot.value != nil){
+//                userData = snapshot.value as! NSMutableDictionary
+//                for (key,value) in userData{
+//                    if let v = value as? NSMutableDictionary{
+//                        if((v.value(forKey: "iosToken")) != nil) && (v.value(forKey: "proMode") as! Bool) {
+//                            if let pro = v.value(forKey: "proMembership") as? NSMutableDictionary{
+//                                if pro.value(forKey: "productID") as? String == "pro_subscription_trial_monthly" || pro.value(forKey: "productID") as? String == "pro_subscription_trial_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_monthly"{
+//                                    debugPrint("ios Key: \(key)")
+//                                    debugPrint("proMembership",v.value(forKey: "proMembership"))
+//                                }
+//                            }
+//
+//                        }
+//                    }
+//                }
+//            }
+//            DispatchQueue.main.async(execute: {
+//                self.progressView.hide(navItem: self.navigationItem)
+//            })
+//        }
+//    }
     
     func getGolficationXVersion(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion/version") { (snapshot) in
@@ -438,11 +464,49 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.createSmartDataWith(clubDict: clubDict)
         strokesGainedData.removeAll()
         strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
-        
+        var smartCaddieAvg = [(clubName: String,clubTotalDistance: Double,clubStrokesGained: Double,clubDistanceArray:[Double])]()
         for data in self.catagoryWise{
             self.strokesGainedData.append((data,0.0,0.0,0,0.0))
+            
         }
-        
+        for data in self.clubs{
+            smartCaddieAvg.append((data,0.0,0.0,[0.0]))
+        }
+        for i in 0..<self.clubs.count{
+            var distanceArray = [Double]()
+            var value = 0.0
+            var strokesGained = 0.0
+            var index = 0
+            for j in 0..<clubDict.count{
+                if(smartCaddieAvg[i].clubName  == clubDict[j].0){
+                    value = smartCaddieAvg[i].clubTotalDistance
+                    strokesGained = smartCaddieAvg[i].clubStrokesGained
+                    let clubClass = clubDict[j].1 as Club
+                    value += clubClass.distance
+                    distanceArray.append(clubClass.distance)
+                    strokesGained += clubClass.strokesGained
+                    index = i
+                    smartCaddieAvg[index] = (clubDict[j].0,value,strokesGained,distanceArray)
+                }
+            }
+        }
+        var dataPointsClub = [String]()
+        var strokeGainedAvg = [Double]()
+        var clubDistance = [Double]()
+        for i in 0..<smartCaddieAvg.count{
+            if(smartCaddieAvg[i].1 != 0){
+                dataPointsClub.append(smartCaddieAvg[i].clubName)
+                strokeGainedAvg.append((smartCaddieAvg[i].clubStrokesGained)/Double((smartCaddieAvg[i].clubDistanceArray).count))
+                let sum = smartCaddieAvg[i].clubDistanceArray.reduce(0,+)
+                clubDistance.append(sum/Double((smartCaddieAvg[i].clubDistanceArray).count))
+            }
+        }
+        let bestClubIndex = strokeGainedAvg.firstIndex(of: strokeGainedAvg.max()!)!
+        self.lblClubStatAvgDist.text = "\(Int(clubDistance[bestClubIndex].rounded())) \(distanceFilter == 1 ? "meter":"yards")"
+        self.lblClubStatSG.text = "\((strokeGainedAvg[bestClubIndex]).rounded(toPlaces: 2))"
+        self.lblClubStatName.text = dataPointsClub[bestClubIndex]
+
+        // StroesGaned BARGraph
         for i in 0..<clubDict.count{
             let clubClass = clubDict[i].1 as Club
             if(clubClass.type >= 0 && clubClass.type < 4){
@@ -452,16 +516,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 self.strokesGainedData[clubClass.type].clubCount += 1
             }
         }
-        
         // set SG data
-        
         var dataPoints = [String]()
         var dataValues = [Double]()
         for data in self.strokesGainedData{
             dataPoints.append(data.clubType)
-            dataValues.append(data.clubStrokesGained / Double(data.clubCount))
+            dataValues.append((data.clubStrokesGained / Double(totalCaddie)).rounded(toPlaces: 2))
         }
-        
         let demolbl = DemoLabel()
         demolbl.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
         demolbl.center = ((self.SGBarChartView.superview)?.center)!
@@ -469,7 +530,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.SGBarChartView.addSubview(demolbl)
         }
         self.progressView.hide(navItem: self.navigationItem)
-        SGBarChartView.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: SGBarChartView, color: UIColor.glfSeafoamBlue, barWidth: 0.2,valueColor: UIColor.glfWarmGrey.withAlphaComponent(0.5))
+        SGBarChartView.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: SGBarChartView, color: UIColor.glfSeafoamBlue, barWidth: 0.4,valueColor: UIColor.glfWarmGrey.withAlphaComponent(0.5))
         SGBarChartView.leftAxis.gridColor = UIColor.glfWarmGrey.withAlphaComponent(0.25)
         SGBarChartView.leftAxis.labelTextColor  = UIColor.glfWarmGrey.withAlphaComponent(0.5)
         SGBarChartView.xAxis.labelTextColor = UIColor.glfWarmGrey.withAlphaComponent(0.5)
@@ -502,50 +563,44 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             }
         }
     }
-    
+    var totalCaddie = Int()
     func transferDataIntoClasses(myDataArray:[NSDictionary])->[(String,Club)]{
         var clubDict = [(String,Club)]()
+        self.totalCaddie = 0
         for i in 0..<myDataArray.count{
             if let smartCaddieDic = ((myDataArray[i] as AnyObject).object(forKey:"smartCaddie") as? NSDictionary){
                 var clubWiseArray = [Club]()
+                self.totalCaddie += 1
                 for key in self.clubs{
                     let keysArray = smartCaddieDic.value(forKeyPath: "\(key)")
                     if((keysArray) != nil){
                         let valueArray = keysArray as! NSArray
                         for j in 0..<valueArray.count{
                             let clubData = Club()
-                            let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
-                            if((backSwing) != nil){
-                                clubData.backswing = backSwing as! Double
+                            if let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing") as? Double{
+                                clubData.backswing = backSwing
                             }
-                            let distance = (valueArray[j] as AnyObject).object(forKey: "distance")
-                            if((distance) != nil){
-                                clubData.distance = distance as! Double
+                            if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
+                                clubData.distance = distance
                             }
-                            
                             var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
                             if let strk = (valueArray[j] as AnyObject).object(forKey: strkGainedString[skrokesGainedFilter]) as? Double{
                                 strokesGained = strk
                             }
                             clubData.strokesGained = strokesGained
                             
-                            let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
-                            if((swingScore) != nil){
-                                clubData.swingScore = swingScore as! Double
+                            if let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore") as? Double{
+                                clubData.swingScore = swingScore
                             }
-                            let type = (valueArray[j] as AnyObject).object(forKey: "type")
-                            if((type) != nil){
-                                clubData.type = type as! Int
+                            if let type = (valueArray[j] as AnyObject).object(forKey: "type") as? Int{
+                                clubData.type = type
                             }
-                            let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity")
-                            if((proximity) != nil){
-                                clubData.proximity = proximity as! Double
+                            if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
+                                clubData.proximity = proximity
                             }
-                            let holeout = (valueArray[j] as AnyObject).object(forKey: "holeout")
-                            if((holeout) != nil){
-                                clubData.holeout = holeout as! Double
+                            if let holeout = (valueArray[j] as AnyObject).object(forKey: "holeout") as? Double{
+                                clubData.holeout = holeout
                             }
-                            
                             clubWiseArray.append(clubData)
                             clubDict.append((key,clubData))
                         }

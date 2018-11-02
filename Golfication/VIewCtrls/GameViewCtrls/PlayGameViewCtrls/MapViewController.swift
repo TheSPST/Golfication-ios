@@ -787,27 +787,6 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
 //        self.GetProMode()
         
     }
-    func FindUser(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
-            self.progressView.show(atView: self.view, navItem: self.navigationItem)
-            var userData = NSMutableDictionary()
-            if(snapshot.value != nil){
-                userData = snapshot.value as! NSMutableDictionary
-                for (key,value) in userData{
-                    if let v = value as? NSMutableDictionary{
-                        if((v.value(forKey: "iosToken")) != nil) && (v.value(forKey: "proMode") as! Bool) {
-                            debugPrint("ios Key: \(key)")
-//                            debugPrint("proMembership",v.value(forKey: "proMembership"))
-                        }
-                    }
-                }
-            }
-            DispatchQueue.main.async(execute: {
-                self.progressView.hide(navItem: self.navigationItem)
-            })
-        }
-    }
-
 
     @IBAction func btnStatsAction(_ sender: UIButton) {
         if(shotCount>0){

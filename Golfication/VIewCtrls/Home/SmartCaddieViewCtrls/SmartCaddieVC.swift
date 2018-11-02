@@ -34,7 +34,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
     @IBOutlet weak var lblAvgRange: UILabel!
     @IBOutlet weak var lblAvgShortGame: UILabel!
     @IBOutlet weak var lblAvgUsage: UILabel!
-    @IBOutlet weak var lblAvgSG: UILabel!
+//    @IBOutlet weak var lblAvgSG: UILabel!
     @IBOutlet weak var lblAvgControl: UILabel!
     @IBOutlet weak var lblProClubDistance: UILabel!
 
@@ -223,9 +223,17 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         }
     }
     
-    var checkCaddie = false
+    var checkCaddie:Bool{
+        if totalCaddie > 0{
+            return true
+        }else{
+            return false
+        }
+    }
+    var totalCaddie = Int()
     func getSmartDataFromFirebase() {
         //smartCaddie
+        totalCaddie = 0
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "scoring") { (snapshot) in
             var dataDic = NSDictionary()
             if snapshot.childrenCount > 0{
@@ -236,8 +244,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                     let valDic = val as! NSDictionary
                     for (key1, _) in valDic{
                         if (key1 as! String  == "smartCaddie"){
-                            self.checkCaddie = true
-                            break
+                            self.totalCaddie += 1
                         }
                     }
                 }
@@ -480,7 +487,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         var shortClubName = [String]()
         for i in 0..<self.smartCaddieAvg.count{
             if((self.shortClubs.contains(self.smartCaddieAvg[i].clubName)) && (self.smartCaddieAvg[i].1 != 0)){
-                shortClubDataValue.append(self.smartCaddieAvg[i].clubTotalDistance)
+                shortClubDataValue.append(self.smartCaddieAvg[i].clubTotalDistance/Double(self.smartCaddieAvg[i].clubDistanceArray.count))
                 shortClubName.append(self.smartCaddieAvg[i].clubName)
             }
         }
@@ -491,6 +498,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
             formatter.positiveSuffix = " m"
         }
         shortGameBarChartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
+        shortGameBarChartView.leftAxis.axisMaximum = shortClubDataValue.max()! + 10.0
     }
     
     func setAllBarExpectGameBarChart(){
@@ -526,11 +534,51 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         self.clubUsageBarChartView.xAxis.wordWrapEnabled = false
         self.clubUsageBarChartView.leftAxis.labelTextColor = UIColor.clear
         
+        if !dataCount.isEmpty{
+            self.setClubUsagsLbl(dataArr: dataCount, clubArr: dataPoints)
+        }
+        
         self.strokeGainedBarChartView.setBarChartStrokesGained(dataPoints: dataPoints, values: strokeGainedAvg, chartView: self.strokeGainedBarChartView, color: UIColor.glfBluegreen50, barWidth: 0.2,valueColor: UIColor.glfWarmGrey)
         self.controlRadarChartView.setChart(dataPoints: dataPoints, values: dataValues, chartView: self.controlRadarChartView)
         self.clubRangeBarChartView.setBarChartWithRange(dataPoints: dataPoints, minimum: minimum, maximum: maximum, chartView: self.clubRangeBarChartView, color: [UIColor.clear , UIColor.glfBluegreen50], barWidth: 0.2)
         clubRangeBarChartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
+        
+        if !strokeGainedAvg.isEmpty{
+            var absStrokesGained = [Double]()
+            for data in strokeGainedAvg{
+                absStrokesGained.append(abs(data))
+            }
+            let max = absStrokesGained.max()!
+            let index = absStrokesGained.firstIndex(of: max)!
+            let newMax = strokeGainedAvg[index]
+            let club = BackgroundMapStats.getClubName(club: dataPoints[index])
+            let publicScore = PublicScore()
+            self.lblStrokesGainedPerClubAvg.isHidden = false
+            self.lblStrokesGainedPerClubAvg.text = publicScore.getSGPerClubForSmartCaddie(setMaxAbsoluteValueStrokesGained: newMax, club: club)
+        }
+        
 
+    }
+    func setClubUsagsLbl(dataArr:[Double],clubArr:[String]){
+        self.lblClubUsageAvg.isHidden = false
+        self.lblAvgUsage.isHidden = false
+        self.lblClubUsageAvg.text = "Your Most Used Club "
+        var dataArr = dataArr
+        var clubArr = clubArr
+        let max = dataArr.max()!
+        let index = dataArr.firstIndex(of: max)!
+        let val =  clubArr[index]
+        if val == "Pu"{
+            dataArr.remove(at: index)
+            clubArr.remove(at: index)
+            let max = dataArr.max()!
+            let index = dataArr.firstIndex(of: max)!
+            let val =  clubArr[index]
+            self.lblAvgUsage.text = " \(BackgroundMapStats.getClubName(club: val)) "
+        }else{
+            self.lblAvgUsage.text = " \(BackgroundMapStats.getClubName(club: val)) "
+        }
+        self.lblAvgUsage.sizeToFit()
     }
     
     func setInitialUI(){
@@ -543,7 +591,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         lblAvgRange.setCorner(color: UIColor.glfBlack50.cgColor)
         lblAvgShortGame.setCorner(color: UIColor.glfBlack50.cgColor)
         lblAvgUsage.setCorner(color: UIColor.glfBlack50.cgColor)
-        lblAvgSG.setCorner(color: UIColor.glfBlack50.cgColor)
+//        lblAvgSG.setCorner(color: UIColor.glfBlack50.cgColor)
         lblAvgControl.setCorner(color: UIColor.glfBlack50.cgColor)
         
         controlRadarChartView.isUserInteractionEnabled = false
@@ -564,10 +612,8 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
          lblAvgRange.isHidden = true
          lblAvgShortGame.isHidden = true
          lblAvgUsage.isHidden = true
-         lblAvgSG.isHidden = true
+//         lblAvgSG.isHidden = true
          lblAvgControl.isHidden = true
-
-
     }
     
     func setProLockedUI(targetView:UIView?, title: String) {

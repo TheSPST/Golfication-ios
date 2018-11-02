@@ -146,6 +146,7 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
     func setupPuttsBreakUp(){
 //        print(totalPutts)
         var totalPuttsRoundWise = [0.0,0.0,0.0,0.0,0.0,0.0]
+        var totalPuttsRoundWise1 = [0.0,0.0,0.0,0.0,0.0,0.0]
         for score in scores{
             var is9Holes : Double = 1
             if(score.type == "9 holes") || (score.type == "9 hole"){
@@ -154,16 +155,19 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
             for i in 0..<score.putts.count{
                 totalPuttsRoundWise[i] += score.putts[i]*is9Holes
             }
+            for i in 0..<score.putts.count{
+                totalPuttsRoundWise1[i] += score.putts[i]
+            }
         }
 //        print(totalPuttsRoundWise)
-        let sum = totalPuttsRoundWise.reduce(0, +)
+        let sum = totalPuttsRoundWise1.reduce(0, +)
         var dataPoints = [String]()
         var puttsAvgPerc = [Double]()
         var avgPutts = 0.0
         for i in 0..<totalPuttsRoundWise.count{
             if(totalPuttsRoundWise[i] > 0){
                 avgPutts += Double(i)*totalPuttsRoundWise[i]
-                puttsAvgPerc.append(((totalPuttsRoundWise[i]/sum)*100).rounded(toPlaces: 1))
+                puttsAvgPerc.append(((totalPuttsRoundWise1[i]/sum)*100).rounded(toPlaces: 1))
                 dataPoints.append("\(i) Putt")
             }
         }
@@ -174,7 +178,7 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
             if !(Int(totalPuttsRoundWise[0]) == 0 && Int(totalPuttsRoundWise[1]) == 0  && Int(totalPuttsRoundWise[2]) == 0  && Int(totalPuttsRoundWise[3]) == 0  && Int(totalPuttsRoundWise[4]) == 0){
                 
                 let publicScore  = PublicScore()
-                let publicScoreStr = publicScore.getPuttsBreakup(zeroPutts:totalPuttsRoundWise[0],  onePutts:totalPuttsRoundWise[1], twoPutts:totalPuttsRoundWise[2], threePutts:totalPuttsRoundWise[3], fourPutts:totalPuttsRoundWise[4])
+                let publicScoreStr = publicScore.getPuttsBreakup(zeroPutts:totalPuttsRoundWise1[0],  onePutts:totalPuttsRoundWise1[1], twoPutts:totalPuttsRoundWise1[2], threePutts:totalPuttsRoundWise1[3], fourPutts:totalPuttsRoundWise1[4])
                 
                     putsWithGirAvg.isHidden = false
                     putsWithGirAvg.attributedText = publicScoreStr
@@ -193,7 +197,7 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
                 sum += score.putts[i]
             }
             self.totalPutts += sumOfAll
-            if((sumOfAll/sum) != 0){
+            if(sumOfAll != 0){
                 roundWisePuttingSumAvg.append((sumOfAll/sum).rounded(toPlaces: 1))
                 roundTimeStamp.append(score.date)
                 gameTypes.append(score.type)
@@ -203,6 +207,13 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
         barViewPuttsPerHole.leftAxis.axisMinimum = 0.0
         barViewPuttsPerHole.leftAxis.axisMaximum = 8.0
         barViewPuttsPerHole.leftAxis.labelCount = 4
+        
+        if !roundWisePuttingSumAvg.isEmpty{
+            self.lblPuttsPerHoleAvg.isHidden = false
+            self.lblAvgPuttsPHoleValue.isHidden = false
+            self.lblPuttsPerHoleAvg.text = "Average Putts Per Hole"
+            self.lblAvgPuttsPHoleValue.text = "\((roundWisePuttingSumAvg.reduce(0,+)/Double(roundWisePuttingSumAvg.count)).rounded(toPlaces: 1))"
+        }
         
     }
     override func didReceiveMemoryWarning() {

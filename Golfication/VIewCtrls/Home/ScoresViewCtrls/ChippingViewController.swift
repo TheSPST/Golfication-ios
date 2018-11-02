@@ -20,6 +20,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
     @IBOutlet weak var lblChippingProximityAvg: UILabel!
     @IBOutlet weak var lblSandSavesAvg: UILabel!
     @IBOutlet weak var lblSandAccuracyAvg: UILabel!
+    @IBOutlet weak var lblSandProximityAvg: UILabel!
     
     @IBOutlet weak var lblLong: UILabel!
     @IBOutlet weak var lblShort: UILabel!
@@ -39,9 +40,9 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
     @IBOutlet weak var cardViewChippingSandProximity: CardView!
     
     @IBOutlet weak var lblAvgChippAccValue: UILabel!
-    @IBOutlet weak var lblAvgChiUNDValue: UILabel!
+//    @IBOutlet weak var lblAvgChiUNDValue: UILabel!
     @IBOutlet weak var lblAvgChippingProximityValue: UILabel!
-    @IBOutlet weak var lblAvgSandSavesValue: UILabel!
+//    @IBOutlet weak var lblAvgSandSavesValue: UILabel!
     @IBOutlet weak var lblAvgSandAccuracyValue: UILabel!
     @IBOutlet weak var lblAvgSandProximityValue: UILabel!
     
@@ -104,6 +105,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         lblChippingProximityAvg.isHidden = true
         lblSandSavesAvg.isHidden = true
         lblSandAccuracyAvg.isHidden = true
+        lblSandProximityAvg.isHidden = true
         if(isDemoUser){
             for v in self.chippingStackView.subviews{
                 if v.isKind(of: CardView.self){
@@ -177,9 +179,9 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             }
         }
         lblAvgChippAccValue.isHidden = true
-        lblAvgChiUNDValue.isHidden = true
+//        lblAvgChiUNDValue.isHidden = true
         lblAvgChippingProximityValue.isHidden = true
-        lblAvgSandSavesValue.isHidden = true
+//        lblAvgSandSavesValue.isHidden = true
         lblAvgSandAccuracyValue.isHidden = true
         lblAvgSandProximityValue.isHidden = true
         
@@ -196,9 +198,9 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         lblHitSnd.textColor = UIColor.glfBluegreen
         cardViewChippingAccuracy.backgroundColor = UIColor.glfBluegreen
         self.lblAvgChippAccValue.setCorner(color: UIColor.white.cgColor)
-        self.lblAvgChiUNDValue.setCorner(color: UIColor.glfBlack50.cgColor)
+//        self.lblAvgChiUNDValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgChippingProximityValue.setCorner(color: UIColor.glfBlack50.cgColor)
-        self.lblAvgSandSavesValue.setCorner(color: UIColor.glfBlack50.cgColor)
+//        self.lblAvgSandSavesValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgSandAccuracyValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgSandProximityValue.setCorner(color: UIColor.glfBlack50.cgColor)
     }
@@ -298,8 +300,14 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                 }
             }
             dataPoints.append(Double(proximityYPoints.count))
-            for i in 0..<proximityXPoints.count{
-                dataValues.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i]) * 3)
+            if(distanceFilter == 1){
+                for i in 0..<proximityXPoints.count{
+                    dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])))
+                }
+            }else{
+                for i in 0..<proximityXPoints.count{
+                    dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])*3))
+                }
             }
             date.append(score.date)
             sandAttempt.append(Double(score.sandUnD.attempts))
@@ -315,7 +323,14 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             }
         }
         sandProximityScatterWithLine.setScatterChartWithLine(valueX: newDataPoints, valueY: dataValues, xAxisValue: newDate, chartView: sandProximityScatterWithLine, color: UIColor.glfGreenBlue)
-        
+        if !dataValues.isEmpty{
+            self.lblSandProximityAvg.isHidden = false
+            self.lblAvgSandProximityValue.isHidden = false
+            let sum = dataValues.reduce(0,+)
+            self.lblSandProximityAvg.text = "Average Proximity to Hole after Bunker-Shot"
+            let msg = String(format:"%.01f ",(sum/Double(dataValues.count)))
+            self.lblAvgSandProximityValue.text = "\(msg) \(distanceFilter == 1 ? "m" : "ft")"
+        }
         var newSandAttemp = [Double]()
         var newSandAchieved = [Double]()
         var newDateForStacked = [String]()
@@ -326,15 +341,30 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                 newSandAchieved.append(sandAchieved[i])
             }
         }
-        
-        
         sandSaveStackedBarView.setStackedBarChart(dataPoints: newDateForStacked, value1: newSandAttemp , value2: newSandAchieved, chartView:sandSaveStackedBarView,color: [UIColor.glfBluegreen.withAlphaComponent(0.50),UIColor.glfBluegreen], barWidth:0.2)
         sandSaveStackedBarView.leftAxis.axisMinimum = 0.0
-        sandSaveStackedBarView.leftAxis.axisMaximum = 10
+        sandSaveStackedBarView.leftAxis.axisMaximum = newSandAttemp.max()! + 1.0
         sandSaveStackedBarView.leftAxis.labelCount = 5
-
-        
+        if baselineDict != nil{
+            debugPrint("baselineDict==",baselineDict)
+            let publicScore  = PublicScore()
+            let totalAttempt = newSandAttemp.reduce(0,+)
+            let totalAchieved = newSandAchieved.reduce(0,+)
+            let publicScoreStr = publicScore.getSandUND(p:(totalAchieved*100)/totalAttempt)
+            self.lblSandSavesAvg.isHidden = false
+            if publicScoreStr.length > 20{
+                self.lblSandSavesAvg.attributedText = publicScoreStr
+            }else{
+                let dict1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfWarmGrey]
+                let attributedText = NSMutableAttributedString()
+                attributedText.append(NSAttributedString(string: "You make ", attributes: dict1))
+                attributedText.append(publicScoreStr)
+                attributedText.append(NSAttributedString(string: " than other golfers like you", attributes: dict1))
+                self.lblSandSavesAvg.attributedText = attributedText
+            }
+        }
     }
+    
     func setupSandAccuracyScatterChart(){
         var proximityXPoints = [Double]()
         var proximityYPoints = [Double]()
@@ -417,7 +447,8 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         sandAccuracyScatterChart.xAxis.axisMaximum = 150
         sandAccuracyScatterChart.xAxis.axisMinimum = -150
         
-        
+        var maxValueOfLeftRightLongShort = 0.0
+        var toLeftRightLeftShort = ""
         let sumOfLSRL = long+short+right+left+hit
         if(sumOfLSRL != 0){
             lblLongSnd.text = "Long \(100*long/sumOfLSRL)%"
@@ -425,6 +456,28 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             lblRightSnd.text = "Right \(100*right/sumOfLSRL)%"
             lblLeftSnd.text = "Left \(100*left/sumOfLSRL)%"
             lblHitSnd.text = "Hit \(100*hit/sumOfLSRL)%"
+            
+            if(maxValueOfLeftRightLongShort<Double(100*right/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*right/sumOfLSRL)
+                toLeftRightLeftShort = "to the Right";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*left/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*left/sumOfLSRL);
+                toLeftRightLeftShort = "to the Left";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*long/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*long/sumOfLSRL);
+                toLeftRightLeftShort = "Long";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*short/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*short/sumOfLSRL);
+                toLeftRightLeftShort = "Short";
+            }
+            if (maxValueOfLeftRightLongShort != 0.0){
+                self.lblSandAccuracyAvg.isHidden = false
+                self.lblSandAccuracyAvg.text = "You miss " + String(format:"%.01f",maxValueOfLeftRightLongShort) + "% of the Greens " + toLeftRightLeftShort
+            }
+
         }
 
     }
@@ -474,11 +527,20 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                 newDate.append(date[i])
             }
         }
+        
         chippingProximityScatterLineView.setScatterChartWithLine(valueX: newDataPoints, valueY: dataValues, xAxisValue: newDate, chartView: chippingProximityScatterLineView,color: UIColor.glfBluegreen)
         let formatter = NumberFormatter()
         formatter.positiveSuffix = " ft"
         if(distanceFilter == 1){
             formatter.positiveSuffix = " m"
+        }
+        if !dataValues.isEmpty{
+            self.lblChippingProximityAvg.isHidden = false
+            self.lblAvgChippingProximityValue.isHidden = false
+            let sum = dataValues.reduce(0, +)
+            let msg = String(format:"%.01f ",(sum/Double(dataValues.count)))
+            self.lblAvgChippingProximityValue.text = "\(msg) \(distanceFilter == 1 ? "m" : "ft")"
+            self.lblChippingProximityAvg.text = "Average Proximity to Hole after Chipping"
         }
         var newChipAttemp = [Double]()
         var newChipAchieved = [Double]()
@@ -493,9 +555,27 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         chippingProximityScatterLineView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
         chipUpDownBarChartView.setStackedBarChart(dataPoints: newDateForStacked, value1: newChipAttemp, value2: newChipAchieved, chartView:chipUpDownBarChartView,color:[UIColor.glfBluegreen.withAlphaComponent(0.50),UIColor.glfBluegreen], barWidth:0.2)
         chipUpDownBarChartView.leftAxis.axisMinimum = 0.0
-        chipUpDownBarChartView.leftAxis.axisMaximum = 10
+        chipUpDownBarChartView.leftAxis.axisMaximum = newChipAttemp.max()!+1.0
         chipUpDownBarChartView.leftAxis.labelCount = 5
-        
+        if baselineDict != nil{
+            debugPrint("baselineDict==",baselineDict)
+            let publicScore  = PublicScore()
+            let totalAttempt = chipAttempt.reduce(0,+)
+            let totalAchieved = chipAchieved.reduce(0,+)
+            let publicScoreStr = publicScore.getChipUND(p:(totalAchieved*100)/totalAttempt)
+            
+            self.lblChipUpNDownAvg.isHidden = false
+            if publicScoreStr.length > 20{
+                self.lblChipUpNDownAvg.attributedText = publicScoreStr
+            }else{
+                let dict1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfWarmGrey]
+                let attributedText = NSMutableAttributedString()
+                attributedText.append(NSAttributedString(string: "You make ", attributes: dict1))
+                attributedText.append(publicScoreStr)
+                attributedText.append(NSAttributedString(string: " than other golfers like you", attributes: dict1))
+                self.lblChipUpNDownAvg.attributedText = attributedText
+            }
+        }
     }
     
     
@@ -572,6 +652,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                 }
             }
         }
+        
         chippingAccuracyScatterView.setScatterChart(valueX: proximityXPoints, valueY: proximityYPoints, chartView: chippingAccuracyScatterView, color: color)
         chippingAccuracyScatterView.leftAxis.enabled = false
         chippingAccuracyScatterView.xAxis.enabled = false
@@ -580,7 +661,8 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         chippingAccuracyScatterView.xAxis.axisMaximum = 90
         chippingAccuracyScatterView.xAxis.axisMinimum = -90
         
-        
+        var maxValueOfLeftRightLongShort = 0.0
+        var toLeftRightLeftShort = ""
         let sumOfLSRL = long+short+right+left+hit
         if(sumOfLSRL != 0){
             lblLong.text = "Long \(100*long/sumOfLSRL)%"
@@ -588,9 +670,25 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             lblRight.text = "Right \(100*right/sumOfLSRL)%"
             lblLeft.text = "Left \(100*left/sumOfLSRL)%"
             lblHit.text = "Hit \(100*hit/sumOfLSRL)%"
+            if(maxValueOfLeftRightLongShort<Double(100*right/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*right/sumOfLSRL)
+                toLeftRightLeftShort = "to the Right";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*left/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*left/sumOfLSRL);
+                toLeftRightLeftShort = "to the Left";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*long/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*long/sumOfLSRL);
+                toLeftRightLeftShort = "Long";
+            }
+            if(maxValueOfLeftRightLongShort<Double(100*short/sumOfLSRL)){
+                maxValueOfLeftRightLongShort = Double(100*short/sumOfLSRL);
+                toLeftRightLeftShort = "Short";
+            }
+            self.lblChippingAccuracyAvg.isHidden = false
+            self.lblChippingAccuracyAvg.text = "You miss " + String(format:"%.01f",maxValueOfLeftRightLongShort) + "% of the Greens " + toLeftRightLeftShort
         }
-
-        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

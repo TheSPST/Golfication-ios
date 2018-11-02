@@ -842,6 +842,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         mapTimer.invalidate()
+        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationWillEnterForeground)
         NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidEnterBackground)
     }
     @objc func hideStableFord(_ notification:NSNotification){
@@ -1082,11 +1083,34 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-
-
-
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         //         getGolfCourseDataFromFirebase()
     }
+    @objc func appDidEnterForeground(){
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            self.locationManager.requestAlwaysAuthorization()
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+            break
+            
+        case .restricted, .denied:
+            let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+                self.backButtonAction(self.backBtnHeader)
+            }))
+            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+                let url = URL(string: UIApplicationOpenSettingsURLString)!
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            break
+            
+        case .authorizedWhenInUse, .authorizedAlways:
+            // Do Nothing
+            break
+        }
+    }
+
     // --------------------------- End -------------------------------
     @objc func sendNotificationOnCourse(_ notification:NSNotification){
         self.locationManager.startUpdatingLocation()

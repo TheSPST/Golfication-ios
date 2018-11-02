@@ -20,7 +20,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     @IBOutlet weak var lblAccuracyWithDriverAvg: UILabel!
     @IBOutlet weak var lblHoleProximityAvg: UILabel!
     @IBOutlet weak var lblGIRTrendsAvg: UILabel!
-    @IBOutlet weak var lblFairwayHitAvg: UILabel!
+    @IBOutlet weak var lblGIRAvg: UILabel!
     
     @IBOutlet weak var approachAccuracyStackView: UIStackView!
     @IBOutlet weak var lblShort: UILabel!
@@ -40,7 +40,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     @IBOutlet weak var approchAccuracyScatterChart: ScatterChartView!
     @IBOutlet weak var holeProximityScatterWithLineView: CombinedChartView!
     @IBOutlet weak var girCircularChart: UICircularProgressRingView!
-    @IBOutlet weak var GIRTrendBarChart: CombinedChartView!
+    @IBOutlet weak var GIRTrendBarChart: BarChartView!
     @IBOutlet weak var GIRLikelinessLineChart: LineChartView!
     @IBOutlet weak var holeProximityCardView: CardView!
     
@@ -84,7 +84,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         lblAccuracyWithDriverAvg.isHidden = true
         lblHoleProximityAvg.isHidden = true
         lblGIRTrendsAvg.isHidden = true
-        lblFairwayHitAvg.isHidden = true
+        lblGIRAvg.isHidden = true
         lblAvgHoleProximityValue.isHidden = true
         lblAvgGIRTrendsValue.isHidden = true
         lblAvgGIRLikelinessValue.isHidden = true
@@ -225,7 +225,6 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         
         if baselineDict != nil{
             debugPrint("baselineDict==",baselineDict)
-            
             let publicScore  = PublicScore()
             let publicScoreStr = publicScore.getApproachGIR(p:girPercantage)
             lblAccuracyWithDriverAvg.isHidden = false
@@ -288,23 +287,22 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     }
     
     func setupGIRLikelinessLineChart(){
-        var fairwayArray = [Double]()
+        var girArray = [Double]()
+        var avgGIRArray = [Double]()
         let KeysArray = ["None","1-2","3-4","5-6","7-8","9-More"]
         for keys in KeysArray{
             groupDict[keys] = 0
         }
-        for score in scores{
-            if score.gir != nil{
-                if(score.type == "9 hole") || (score.type == "9 holes"){
-                    fairwayArray.append(2 * score.gir)
-                }
-                else{
-                    fairwayArray.append(score.gir)
-                }
-            }
+        var totalGir = [Double]()
+        var gir = [Double]()
+        for score in scores where (score.gir+score.girMiss) != 0{
+            girArray.append(score.gir)
+            gir.append(score.gir)
+            totalGir.append(score.gir+score.girMiss)
+            avgGIRArray.append(((score.gir/(score.gir+score.girMiss))*18).rounded())
         }
         
-        for i in fairwayArray{
+        for i in avgGIRArray{
             if(i<=0){
                 updateValue(keys: "None")
             }
@@ -326,10 +324,21 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         }
         var dataArray = [Double]()
         for i in 0..<KeysArray.count{
-            //            print(i,groupDict)
-            dataArray.append(((groupDict[KeysArray[i]]!)*100)/Double(fairwayArray.count))
+            dataArray.append(((groupDict[KeysArray[i]]!)*100)/Double(avgGIRArray.count))
         }
         GIRLikelinessLineChart.setLineChartWithColor(dataPoints:KeysArray , values: dataArray, chartView: GIRLikelinessLineChart,color:UIColor.glfFlatBlue)
+        
+        if !gir.isEmpty{
+            self.lblGIRAvg.isHidden = false
+            self.lblAvgGIRLikelinessValue.isHidden = false
+            self.lblGIRAvg.text = "Average GIR Per Round"
+            let totalHit = (gir.reduce(0, +))
+            let totalFair = (totalGir.reduce(0, +))
+            let msg = String(format:"%.01f ",((totalHit/totalFair)*18))
+            self.lblAvgGIRLikelinessValue.text = " \(msg) of 18  "
+            self.lblAvgGIRLikelinessValue.sizeToFit()
+        }
+        
     }
     
     func setupApprochAccuracyScatterChart(){
@@ -442,16 +451,49 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     func setupGIRTrendBarChart(){
         var girArray = [Double]()
         var date = [String]()
-        var legend = [String]()
-        for score in scores {
+        var girTotal = [Double]()
+        var girAvg = [Double]()
+        for score in scores where (score.gir+score.girMiss) != 0{
             if(score.gir != nil){
                 girArray.append(score.gir)
                 date.append(score.date)
-                legend.append(score.type)
+                girTotal.append(score.gir+score.girMiss)
+                girAvg.append((score.gir/(score.gir+score.girMiss))*100)
             }
         }
-        GIRTrendBarChart.setBarChartWithLines(dataPoints: date, values: girArray,legend:legend, chartView: GIRTrendBarChart, color: UIColor.glfSeafoamBlue, barWidth: 0.2)
         
+        GIRTrendBarChart.setStackedBarChart(dataPoints: date, value1: girTotal, value2: girArray, chartView: GIRTrendBarChart, color: [UIColor.glfBluegreen.withAlphaComponent(0.50),UIColor.glfBluegreen], barWidth: 0.2)
+        GIRTrendBarChart.leftAxis.axisMinimum = 0.0
+        GIRTrendBarChart.leftAxis.axisMaximum = girTotal.max()!+1
+        GIRTrendBarChart.leftAxis.labelCount = 5
+        if girArray.count > 2{
+            var attributedText = NSMutableAttributedString()
+            let publicScoring = PublicScore()
+            let data = publicScoring.getGIRTrendsData(dataValues:girAvg)
+            self.lblGIRTrendsAvg.isHidden = false
+            if let text = data.value(forKey: "text") as? NSAttributedString {
+                attributedText.append(text)
+            }
+            if (attributedText.length > 11){
+                self.lblGIRTrendsAvg.attributedText = attributedText
+            }else{
+                attributedText = NSMutableAttributedString()
+                self.lblAvgGIRTrendsValue.isHidden = false
+                let value = data.value(forKey: "percentGIRTrend") as! Double
+                let string = data.value(forKey: "text") as! NSAttributedString
+                let dict1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfWarmGrey]
+                attributedText.append(NSAttributedString(string: "Your Accuracy has ", attributes: dict1))
+                attributedText.append(string)
+                if let color = data.value(forKey: "color") as? UIColor{
+                    self.lblAvgGIRTrendsValue.textColor = color
+                    self.lblAvgGIRTrendsValue.layer.borderColor = color.cgColor
+                    let msg = String(format:"%.01f ",value)
+                    self.lblAvgGIRTrendsValue.text = " \(msg)%  "
+                    self.lblAvgGIRTrendsValue.sizeToFit()
+                }
+                self.lblGIRTrendsAvg.attributedText = attributedText
+            }
+        }
     }
     func setupHoleProximityScatterChartView(){
         var date = [String]()
@@ -473,17 +515,29 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                         proximityYPoints.append(data[i].proximityY)
                     }
                 }
-                
-                for i in 0..<proximityXPoints.count{
-                    distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i]))
+                if(distanceFilter == 1){
+                    for i in 0..<proximityXPoints.count{
+                        distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i]))
+                    }
+                }else{
+                    for i in 0..<proximityXPoints.count{
+                        distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])*3)
+                    }
                 }
+                
                 date.append(score.date)
                 dataPoints.append(Double(proximityYPoints.count))
             }
         }
-        
-        holeProximityScatterWithLineView.setScatterChartWithLine(valueX: dataPoints, valueY: distance, xAxisValue: date, chartView: holeProximityScatterWithLineView, color: UIColor.glfGreenBlue)
-        holeProximityScatterWithLineView.leftAxis.labelCount = 3
+        if !dataPoints.isEmpty{
+            holeProximityScatterWithLineView.setScatterChartWithLine(valueX: dataPoints, valueY: distance, xAxisValue: date, chartView: holeProximityScatterWithLineView, color: UIColor.glfGreenBlue)
+            holeProximityScatterWithLineView.leftAxis.labelCount = 3
+            self.lblHoleProximityAvg.isHidden = false
+            self.lblAvgHoleProximityValue.isHidden = false
+            let sum = distance.reduce(0, +)
+            self.lblAvgHoleProximityValue.text = "\(Int(sum/Double(distance.count))) \(distanceFilter == 1 ? "m" : "yd")"
+            self.lblHoleProximityAvg.text = "Average Proximity to Hole after Approach"
+        }
     }
     
     override func didReceiveMemoryWarning() {

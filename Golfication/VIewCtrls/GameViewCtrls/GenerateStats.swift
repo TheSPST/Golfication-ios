@@ -329,18 +329,16 @@
                                                                 newDic1.setValue(approachGreenValue, forKey: "green")
                                                                 self.approachValue.append(newDic1)
                                                             }
-                                                            else if (b<=70 && !((shotsDic.value(forKey: "start") as? String) == "G") && ((shotsDic.value(forKey: "start") as? String) == "GB") ){
-                                                                
+                                                            else if (b<=70 && ((shotsDic.value(forKey: "start") as? String) != "G") && (((shotsDic.value(forKey: "start") as? String) == "GB") || ((shotsDic.value(forKey: "start") as? String) == "FB"))){
                                                                 und = false
                                                                 self.sandUnDAttemptsValue += 1
                                                                 var sandGreenValue = false
-                                                                if (shotsDic.value(forKey: "end") as? String) == "G"{
-                                                                    sandGreenValue = true
-                                                                }
-                                                                if (shotsArray.count <= j+1) {
+                                                                if (shotsArray.count <= j+2) && (shotsDic.value(forKey: "end") as? String) == "G"{
                                                                     und = true
                                                                     self.sandUnDAchievedValue += 1
-                                                                    
+                                                                }
+                                                                if (shotsDic.value(forKey: "end") as? String) != "G"{
+                                                                    sandGreenValue = false
                                                                 }
                                                                 let newDic2 = NSMutableDictionary()
                                                                 newDic2.setValue((shotsDic.value(forKey: "club") as? String)?.trim(), forKey: "club")

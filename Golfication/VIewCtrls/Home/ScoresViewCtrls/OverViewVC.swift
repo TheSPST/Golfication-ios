@@ -270,9 +270,12 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
             avgPenalties = avgPenalties/Double(barDataArray.count)
         }
         lblAvgPenaltiesTrendsValue.text = "\(avgPenalties.rounded(toPlaces: 1))"
-        if scores.count < 10{
-            lblPenaltyTrendsAvg.text = "Average from last \(scores.count) rounds"
+        lblPenaltyTrendsAvg.text = "Average Penalties Per Round "
+        if avgPenalties >= 0.5{
+            lblAvgPenaltiesTrendsValue.layer.borderColor = UIColor.glfDustyRed.cgColor
+            lblAvgPenaltiesTrendsValue.textColor = UIColor.glfDustyRed
         }
+
         if(barDataArray.count > 0){
             barViewPenaltiesTrend.setBarChart(dataPoints: xAxisLabelArray, values: barDataArray, chartView: barViewPenaltiesTrend,color: UIColor.glfRosyPink, barWidth: 0.2, leftAxisMinimum: 0, labelTextColor: UIColor.glfWarmGrey,unit: "", valueColor: UIColor.glfWarmGrey)
             barViewPenaltiesTrend.leftAxis.axisMinimum = 0
@@ -298,19 +301,28 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         for score in scores{
             if(score.score != 0){
                 dataPointsDate.append(score.date)
-                values.append(score.score)
                 gameType.append(score.type)
-                if(score.type == "9 holes"){
+                var sum = 0
+                for data in score.scoring{
+                    sum += data.value
+                }
+                if(score.type == "9 holes") || (score.type == "9 hole"){
                     avgScoreValue += 2*score.score
+                    values.append(score.score)
+                }else if sum == 9 && (score.type != "9 holes"){
+                    avgScoreValue += 2*score.score
+                    values.append(2*score.score)
                 }else{
                     avgScoreValue += score.score
+                    values.append(score.score)
                 }
             }
         }
         if(values.count > 0){
             avgScoreValue = avgScoreValue/Double(values.count)
         }
-        lblAvgRoundsValue.text = "\(Int(avgScoreValue))"
+        lblAvgRoundsValue.text = "\((avgScoreValue).rounded(toPlaces: 1))"
+        lblRoundsAvg.text = "Average Score "
         barViewRounds.setBarChartGameType(dataPoints: dataPointsDate, values: values, gameType: gameType, chartView: barViewRounds, barWidth: 0.2)
         barViewRounds.xAxis.labelTextColor = UIColor.white.withAlphaComponent(0.75)
         barViewRounds.leftAxis.labelTextColor = UIColor.white.withAlphaComponent(0.75)

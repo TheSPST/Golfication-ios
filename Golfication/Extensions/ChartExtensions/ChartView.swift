@@ -132,91 +132,49 @@ extension CombinedChartView{
         chartView.xAxis.labelCount = 5
         chartView.isUserInteractionEnabled = false
     }
-    func setBarChartWithOutLines(dataPoints: [String], values: [Double],legend:[String], chartView :CombinedChartView ,color : UIColor, barWidth:Double) {
-        chartView.noDataText = "No data available."
-        
-        var yVals1 : [ChartDataEntry] = [ChartDataEntry]()
-        var dataEntriesFor18Hole: [ChartDataEntry] = []
-        var dataEntriesFor09Hole: [ChartDataEntry] = []
-        
-        var xAxisLabel:[String] = []
-        
+    func setBarChartWithOutLines(dataPoints: [String], value1: [Double], value2: [Double],  chartView :CombinedChartView,color : [UIColor],barWidth:Double) {
+        var dataEntries: [ChartDataEntry] = []
         for i in 0..<dataPoints.count {
-            if(legend[i] == "18 holes"){
-                let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
-                dataEntriesFor18Hole.append(dataEntry)
-                
+            if !(value1[i] == 0 && value2[i] == 0){
+                let dataEntry = BarChartDataEntry(x: Double(i), y: value1[i])
+                let dataEntry2 = BarChartDataEntry(x:Double(i), y: value2[i])
+                dataEntries.append(dataEntry)
+                dataEntries.append(dataEntry2)
             }
-            else{
-                let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
-                dataEntriesFor09Hole.append(dataEntry)
-                
-            }
-            yVals1.append(ChartDataEntry(x: Double(i), y:values[i] ))
-            xAxisLabel.append(dataPoints[i]) // shubham
         }
-        let chartDataSet = BarChartDataSet(values: dataEntriesFor18Hole, label: "" )
-        chartDataSet.setColor(color)
-        var entriesOfLegends = [LegendEntry]()
-        if(dataEntriesFor18Hole.count>0){
-            let entry = LegendEntry()
-            entry.formColor = color
-            entry.label = "18 Holes"
-            entriesOfLegends.append(entry)
-        }
-        
-        let chartDataSet2 = BarChartDataSet(values: dataEntriesFor09Hole, label: "")
-        chartDataSet2.setColor(UIColor.glfBluegreen)
-        if(dataEntriesFor09Hole.count>0){
-            let entry2 = LegendEntry()
-            entry2.formColor = UIColor.glfBluegreen
-            entry2.label = "9 Holes"
-            entriesOfLegends.append(entry2)
-        }
-        
-//        let lineChartSet = LineChartDataSet(values: yVals1, label: "")
-        
-        let data: CombinedChartData = CombinedChartData(dataSets: [chartDataSet,chartDataSet2])
-        
-        
-        data.barData = BarChartData(dataSets:[chartDataSet,chartDataSet2])
-//        data.lineData = LineChartData(dataSets:[lineChartSet])
-//        lineChartSet.lineDashLengths = [5.0]
-//        lineChartSet.circleRadius = 1.0
-        data.barData.barWidth = barWidth
-        chartView.data = data
-        chartView.legend.enabled = true
-        chartView.legend.horizontalAlignment = .right
-        chartView.legend.verticalAlignment = .top
-        if(entriesOfLegends.count > 0){
-            chartView.legend.setCustom(entries: entriesOfLegends)
-        }
+        let chartDataSet = BarChartDataSet(values: dataEntries, label: "" )
+        let chartData = BarChartData(dataSet: chartDataSet)
+        chartView.data = chartData
+        chartView.xAxis.drawGridLinesEnabled = false
+        chartDataSet.drawValuesEnabled = false
+        chartView.leftAxis.axisMinimum = 0.0
+        chartData.barWidth = barWidth
+        //remove coloured box
+        chartView.legend.enabled = false
+        //remove chartDescriptions
         chartView.chartDescription?.text = ""
         chartView.xAxis.labelPosition = .bottom
-        chartView.xAxis.axisMinimum = -0.5
-        chartView.xAxis.axisMaximum = Double(dataPoints.count) - 0.5
         chartView.xAxis.labelCount = dataPoints.count
-        //        chartView.xAxis.wordWrapEnabled = true
-        chartView.xAxis.drawGridLinesEnabled = false
+        chartView.leftAxis.axisLineColor = UIColor.clear
+        chartView.xAxis.axisLineColor = UIColor.clear
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .none
+        chartDataSet.valueFormatter = DefaultValueFormatter(formatter:formatter)
         chartView.rightAxis.enabled = false
         chartView.leftAxis.enabled = true
         chartView.leftAxis.labelFont = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)!
         chartView.leftAxis.labelTextColor = UIColor.glfWarmGrey
         chartView.xAxis.labelFont = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)!
         chartView.xAxis.labelTextColor = UIColor.glfWarmGrey
-        chartView.leftAxis.axisMinimum = 0.0
         chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values:dataPoints)
-        //        chartView.xAxis.labelCount = dataPoints.count + 1
-        chartView.leftAxis.labelCount = 3
-        chartView.data?.setDrawValues(false)
-        //        barChartSet.setColor(color)
-//        lineChartSet.setColor(color)
-        chartView.leftAxis.axisLineColor = UIColor.clear
-        chartView.xAxis.axisLineColor = UIColor.clear
+        chartView.xAxis.granularity = 1
         chartView.leftAxis.gridColor = UIColor.glfBlack5
+        chartView.data?.setDrawValues(true)
+        chartDataSet.colors = color
         chartView.xAxis.wordWrapEnabled = false
         chartView.xAxis.labelCount = 5
         chartView.isUserInteractionEnabled = false
+        chartView.noDataText = "No data available."
     }
     func setScatterChartWithLine(valueX: [Double], valueY: [Double],xAxisValue:[String], chartView :CombinedChartView ,color : UIColor) {
         
@@ -400,11 +358,10 @@ extension PieChartView {
         chartView.chartDescription?.text = ""
         
         var colors: [UIColor] = []
-        for _ in 0..<dataPoints.count {
+        for i in 0..<dataPoints.count {
             let red = Double(arc4random_uniform(256))
             let green = Double(arc4random_uniform(256))
             let blue = Double(arc4random_uniform(256))
-            
             let color = UIColor(red: CGFloat(red/255), green: CGFloat(green/255), blue: CGFloat(blue/255), alpha: 1)
             colors.append(color)
         }
@@ -478,13 +435,19 @@ extension PieChartView {
         pieChartDataSet.valueFormatter = DefaultValueFormatter(formatter:formatter)
         var colors: [UIColor] = []
         for i in 0..<dataPoints.count {
-            var alpha = CGFloat(values[i]/100)
-            alpha = alpha + 0.25
-            if(alpha > 1){
-                alpha = 1.0
+            if dataPoints[i].contains("2Bs"){
+                colors.append(UIColor.glfRosyPink)
+            }else if dataPoints[i].contains("Bogeys"){
+                colors.append(UIColor.glfRosyPink50)
+            }else{
+                var alpha = CGFloat(values[i]/100)
+                alpha = alpha + 0.25
+                if(alpha > 1){
+                    alpha = 1.0
+                }
+                let colorWithPerc = color.withAlphaComponent(alpha)
+                colors.append(colorWithPerc)
             }
-            let colorWithPerc = color.withAlphaComponent(alpha)
-            colors.append(colorWithPerc)
         }
         pieChartDataSet.colors = colors
         chartView.animate(yAxisDuration: 1.3, easingOption: ChartEasingOption.easeOutBack)
@@ -504,8 +467,6 @@ extension PieChartView {
         let pieChartDataSet = PieChartDataSet(values: dataEntries, label: "")
         pieChartDataSet.xValuePosition = .outsideSlice
         let formatter = NumberFormatter()
-//        formatter.roundingMode = .ceiling
-//        formatter.numberStyle = .none
         formatter.positiveSuffix = "%"
         pieChartDataSet.valueFormatter = DefaultValueFormatter(formatter:formatter)
         let pieChartData = PieChartData(dataSet: pieChartDataSet)
@@ -936,9 +897,7 @@ extension BarChartView {
         chartView.xAxis.labelCount = 5
         chartView.isUserInteractionEnabled = false
         chartView.noDataText = "No data available."
-
-
-    }
+}
     func setStackedBarChart(dataPoints: [String], value1: [Double],chartView :BarChartView,barWidth:Double ) {
         var dataEntriesPositive: [BarChartDataEntry] = []
         var dataEntriesNegetive: [BarChartDataEntry] = []
@@ -1323,12 +1282,10 @@ extension LineChartView {
         formatter.numberStyle = .percent
         formatter.maximumFractionDigits = 1
         formatter.multiplier = 1.0
-        // let chartData = LineChartData(xValues:dataPoints, dataSet: chartDataSet)
         chartView.data = chartData
         chartView.xAxis.wordWrapEnabled = true
         chartView.xAxis.drawGridLinesEnabled = false
-        //        chartDataSet.mode = .cubicBezier
-        let gradientColors = [UIColor(red: CGFloat(58/255), green: CGFloat(125/255), blue: CGFloat(165/255), alpha: 1).cgColor, UIColor.clear.cgColor] as CFArray // Colors of the gradient
+        let gradientColors = [color.cgColor, UIColor.white.cgColor] as CFArray // Colors of the gradient
         let colorLocations:[CGFloat] = [1.0, 0.0] // Positioning of the gradient
         let gradient = CGGradient.init(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradientColors, locations: colorLocations) // Gradient Object
         chartDataSet.fill = Fill.fillWithLinearGradient(gradient!, angle: 90.0) // Set the Gradient
@@ -1345,6 +1302,7 @@ extension LineChartView {
         chartView.xAxis.labelCount = dataPoints.count
         chartDataSet.drawValuesEnabled = false
         chartView.leftAxis.axisMinimum = 0.0
+        chartView.leftAxis.axisMaximum = 100.0
         chartView.rightAxis.enabled = false
         chartView.leftAxis.enabled = true
         chartView.leftAxis.labelFont = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)!

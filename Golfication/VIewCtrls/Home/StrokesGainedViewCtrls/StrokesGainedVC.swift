@@ -39,7 +39,6 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
     @IBOutlet weak var lblFirstPuttProximity: UILabel!
     @IBOutlet weak var strokesGainedPerClubBarChart: BarChartView!
     @IBOutlet weak var lblHoleOutDistance: UILabel!
-    @IBOutlet weak var lblStrokesGainedAvg: UILabel!
     
     @IBOutlet weak var lblProSG: UILabel!
     @IBOutlet weak var lblProOTT: UILabel!
@@ -244,9 +243,16 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         // Dispose of any resources that can be recreated.
     }
     
-    var checkCaddie = false
+    var checkCaddie:Bool{
+        if totalCaddie > 0{
+            return true
+        }else{
+            return false
+        }
+    }
+    var totalCaddie = Int()
     func getStrokesGainedFirebase(){
-        
+        self.totalCaddie = 0
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "scoring") { (snapshot) in
             var dataDic = NSDictionary()
             
@@ -257,8 +263,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                     let valDic = val as! NSDictionary
                     for (key1, _) in valDic{
                         if (key1 as! String  == "smartCaddie"){
-                            self.checkCaddie = true
-                            break
+                            self.totalCaddie += 1
                         }
                     }
                 }
@@ -545,18 +550,20 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         var isHoleOutTrue = false
         if(totalHoleOutDistance.count > 0){
             let sum = totalHoleOutDistance.reduce(0, +)
-            self.lblHoleOutDistance.text = "\((sum/Double(totalHoleOutDistance.count)).rounded(toPlaces: 2)) ft"
+            self.lblHoleOutDistance.text = "\((sum/Double(totalHoleOutDistance.count)).rounded(toPlaces: 1)) ft"
         }
         else{
             self.lblHoleOutDistance.isHidden = true
             self.lblHoleOutDistance.text = "0.0ft"
             isHoleOutTrue = true
         }
-        
         if(totalProximity.count > 0){
             let sum = totalProximity.reduce(0, +)
-            self.lblFirstPuttProximity.text = "\((sum/Double(totalProximity.count)).rounded(toPlaces: 2)) ft"
-            
+            self.lblFirstPuttProximity.text = "\((sum/Double(totalProximity.count)).rounded(toPlaces: 1)) ft"
+            self.lblStrokesGainedPuttingAvg.isHidden = false
+            self.lblPuttingSG.isHidden = false
+            self.lblStrokesGainedPuttingAvg.text = "Proximity to Hole after Approach Putt"
+            self.lblPuttingSG.text = "\((sum/Double(totalProximity.count)).rounded(toPlaces: 1)) ft"
         }
         else{
             self.lblFirstPuttProximity.text = "0.0 ft"
@@ -609,13 +616,18 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         
         for data in self.strokesGainedData{
             dataPoints.append(data.clubType)
-            dataValues.append(data.clubStrokesGained / Double(data.clubCount))
+            dataValues.append((data.clubStrokesGained / Double(totalCaddie)).rounded(toPlaces: 1))
             print(data)
         }
         self.strokesGainedPerClubBarChart.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: self.strokesGainedPerClubBarChart, color: UIColor.glfWhite, barWidth: 0.4,valueColor: UIColor.glfWhite.withAlphaComponent(0.5))
         strokesGainedPerClubBarChart.leftAxis.gridColor = UIColor.glfWhite.withAlphaComponent(0.25)
         strokesGainedPerClubBarChart.leftAxis.labelTextColor  = UIColor.glfWhite.withAlphaComponent(0.5)
         strokesGainedPerClubBarChart.xAxis.labelTextColor = UIColor.glfWhite.withAlphaComponent(0.5)
+        
+            let publicScore  = PublicScore()
+            let publicScoreStr = publicScore.getSGPerClub(gainAvg: dataValues[0], gainAvg1: dataValues[1], gainAvg2: dataValues[2], gainAvg3: dataValues[3])
+            lblStrokesGainedPerClubAvg.isHidden = false
+            lblStrokesGainedPerClubAvg.text = publicScoreStr
     }
     
     func setInitialUI(){
@@ -636,7 +648,6 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         lblStrokesGainedAroundTheGreenAvg.isHidden = true
         lblStrokesGainedPuttingAvg.isHidden = true
         
-        lblStrokesGainedAvg.isHidden = true
         lblPuttingSG.isHidden = true
         lblApprochTheGreenSG.isHidden = true
         lblAroundtheGreenSG.isHidden = true
@@ -644,7 +655,6 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         
         strokeGainedChartView.setGradientColor(topColor: UIColor(red:58.0/255.0, green:124.0/255.0, blue:165.0/255.0, alpha:1.0), bottomColor: UIColor(red:0.0, green:138.0/255.0, blue:100.0/255.0, alpha:1.0))
         
-        self.lblStrokesGainedAvg.setCorner(color: UIColor.white.cgColor)
         self.lblPuttingSG.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblApprochTheGreenSG.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAroundtheGreenSG.setCorner(color: UIColor.glfBlack50.cgColor)

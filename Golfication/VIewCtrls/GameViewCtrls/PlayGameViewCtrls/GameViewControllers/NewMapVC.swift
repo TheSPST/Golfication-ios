@@ -1203,6 +1203,32 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }else{
             self.mapTimer.invalidate()
         }
+        self.checkCurrentLocation()
+    }
+    func checkCurrentLocation(){
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            // Request when-in-use authorization initially
+            self.locationManager.requestAlwaysAuthorization()
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+            break
+            
+        case .restricted, .denied:
+            let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+                self.btnActionBack(self.btnBack)
+            }))
+            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+                let url = URL(string: UIApplicationOpenSettingsURLString)!
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            break
+            
+        case .authorizedWhenInUse, .authorizedAlways:
+            // Do Nothing
+            break
+        }
     }
     func endBackgroundTask() {
         print("Background task ended.")

@@ -193,6 +193,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                     chip.distance = (sand[i] as AnyObject).object(forKey:"distance")as? Double
                     chip.hole = (sand[i] as AnyObject).object(forKey:"hole") as? Int
                     chip.proximityX = (sand[i] as AnyObject).object(forKey:"proximityX") as? Double
+                    chip.proximityY = (sand[i] as AnyObject).object(forKey:"proximityY") as? Double
                     if(distanceFilter == 1){
                         chip.proximityX = chip.proximityX/YARD
                         chip.proximityY = chip.proximityY/YARD
