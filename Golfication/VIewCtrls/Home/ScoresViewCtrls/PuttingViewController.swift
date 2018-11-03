@@ -249,15 +249,15 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
                 var sum = 0.0
                 for data in putsPerRoundHCP{
                     if (i == 0){
-                        self.puttsVS.append((dataP: "\(i) Scratch", dataV: data))
+                        self.puttsVS.append((dataP: "\(i) - \(i) HCP", dataV: data))
                     }else if (i % 5 == 0){
                         sum += data
-                        self.puttsVS.append((dataP: "\(i-4) to \(i)", dataV: sum/5))
+                        self.puttsVS.append((dataP: "\(i-4) - \(i) HCP", dataV: sum/5))
                         sum = 0.0
                     }else if (i > 50){
                         sum += data
                         if i == 54{
-                            self.puttsVS.append((dataP: "\(i-3) to \(i)", dataV: sum/4))
+                            self.puttsVS.append((dataP: "\(i-3) - \(i) HCP", dataV: sum/4))
                         }
                     }else{
                         sum += data
@@ -271,15 +271,15 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
             var sum = 0.0
             for data in putsPerRoundHCP{
                 if (i == 0){
-                    self.puttsVS.append((dataP: "\(i) Scratch", dataV: data))
+                    self.puttsVS.append((dataP: "\(i) - \(i) HCP", dataV: data))
                 }else if (i % 5 == 0){
                     sum += data
-                    self.puttsVS.append((dataP: "\(i-4) to \(i)", dataV: sum/5))
+                    self.puttsVS.append((dataP: "\(i-4) - \(i) HCP", dataV: sum/5))
                     sum = 0.0
                 }else if (i > 50){
                     sum += data
                     if i == 54{
-                        self.puttsVS.append((dataP: "\(i-3) to \(i)", dataV: sum/4))
+                        self.puttsVS.append((dataP: "\(i-3) - \(i) HCP", dataV: sum/4))
                     }
                 }else{
                     sum += data
