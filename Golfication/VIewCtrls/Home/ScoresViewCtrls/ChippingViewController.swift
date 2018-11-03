@@ -335,7 +335,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         var newSandAchieved = [Double]()
         var newDateForStacked = [String]()
         for i in 0..<date.count{
-            if !(sandAttempt[i] == 0 && sandAchieved[i] == 0){
+            if (sandAttempt[i] != 0 || sandAchieved[i] != 0){
                 newDateForStacked.append(date[i])
                 newSandAttemp.append(sandAttempt[i])
                 newSandAchieved.append(sandAchieved[i])
@@ -546,7 +546,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         var newChipAchieved = [Double]()
         var newDateForStacked = [String]()
         for i in 0..<date.count{
-            if !(chipAttempt[i] == 0 && chipAchieved[i] == 0){
+            if (chipAttempt[i] != 0 || chipAchieved[i] != 0){
                 newDateForStacked.append(date[i])
                 newChipAttemp.append(chipAttempt[i])
                 newChipAchieved.append(chipAchieved[i])
@@ -686,8 +686,10 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                 maxValueOfLeftRightLongShort = Double(100*short/sumOfLSRL);
                 toLeftRightLeftShort = "Short";
             }
-            self.lblChippingAccuracyAvg.isHidden = false
-            self.lblChippingAccuracyAvg.text = "You miss " + String(format:"%.01f",maxValueOfLeftRightLongShort) + "% of the Greens " + toLeftRightLeftShort
+            if maxValueOfLeftRightLongShort != 0{
+                self.lblChippingAccuracyAvg.isHidden = false
+                self.lblChippingAccuracyAvg.text = "You miss " + String(format:"%.01f",maxValueOfLeftRightLongShort) + "% of the Greens " + toLeftRightLeftShort
+            }
         }
     }
     override func didReceiveMemoryWarning() {

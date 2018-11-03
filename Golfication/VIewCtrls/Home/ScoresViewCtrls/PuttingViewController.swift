@@ -10,7 +10,7 @@ import UIKit
 import XLPagerTabStrip
 import Charts
 import FirebaseAnalytics
-
+var putsPerRoundHCP = [Double]()
 class PuttingViewController: UIViewController, IndicatorInfoProvider {
     
     @IBOutlet weak var puttingStackView: UIStackView!
@@ -34,11 +34,11 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
     override func viewDidLoad() {
         super.viewDidLoad()
         Analytics.logEvent("my_scores_putting", parameters: [:])
-
+        self.getPuttsVSHandicapDataFromFirebase()
         self.setupUI()
         self.setupPutsPerHole()
         self.setupPuttsBreakUp()
-        self.setupPuttVsHandicap()
+        
         // Do any additional setup after loading the view.
     }
     
@@ -105,14 +105,15 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
     }
     
     func setupPuttVsHandicap(){
+        
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "handicap") { (snapshot) in
-            var dataDic = NSDictionary()
-            if(snapshot.childrenCount > 0){
-                dataDic = (snapshot.value as? NSDictionary)!
+            var hcp : Double!
+            if let handicap = snapshot.value as? String{
+                if handicap != "-"{
+                    hcp = Double(handicap)!
+                }
             }
             DispatchQueue.main.async( execute: {
-                let homeRounds = HomeRounds()
-                homeRounds.handicap = dataDic
                 var avgPuttsRound = [Double]()
                 for score in self.scores{
                     var avgPerRound = 0.0
@@ -125,13 +126,19 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
                     }
                     avgPuttsRound.append(avgPerRound*is9Holes)
                 }
-                var dataValuesForBar = [Double]()
-                dataValuesForBar.append((homeRounds.handicap.value(forKey: "putt0") ?? 31.0) as! Double)
-                dataValuesForBar.append(avgPuttsRound.reduce(0, +) / Double(avgPuttsRound.count))
-                dataValuesForBar.append((homeRounds.handicap.value(forKey: "putt1") ?? 34.5) as! Double)
                 let colors = [UIColor.glfWarmGrey,UIColor.glfPaleTeal,UIColor.glfFlatBlue75]
-                self.barViewPuttsVsHandicap.setBarChartPuttsVSHandicap(dataPoints: ["11-15 HCP","Your Stats","16-20 HCP"], values: dataValuesForBar, chartView: self.barViewPuttsVsHandicap,colors: colors, barWidth: 0.4)
-                
+                if (hcp != nil) && Int(hcp.rounded()) == 0 {
+                    self.barViewPuttsVsHandicap.setBarChartPuttsVSHandicap(dataPoints: [self.puttsVS[0].dataP,"Your Stats",self.puttsVS[1].dataP], values: [(self.puttsVS[0].dataV),(avgPuttsRound.reduce(0, +) / Double(avgPuttsRound.count)),(self.puttsVS[1].dataV)], chartView: self.barViewPuttsVsHandicap,colors: colors, barWidth: 0.4)
+                }else if hcp != nil{
+                    let ind = Int(hcp.rounded()/5)
+                    self.barViewPuttsVsHandicap.setBarChartPuttsVSHandicap(dataPoints: [self.puttsVS[ind].dataP,"Your Stats",self.puttsVS[ind+1].dataP], values: [self.puttsVS[ind].dataV,(avgPuttsRound.reduce(0, +) / Double(avgPuttsRound.count)),self.puttsVS[ind+1].dataV], chartView: self.barViewPuttsVsHandicap,colors: colors, barWidth: 0.4)
+                }else{
+                    var dataValuesForBar = [Double]()
+                    dataValuesForBar.append(31.0)
+                    dataValuesForBar.append(avgPuttsRound.reduce(0, +) / Double(avgPuttsRound.count))
+                    dataValuesForBar.append(34.5)
+                    self.barViewPuttsVsHandicap.setBarChartPuttsVSHandicap(dataPoints: ["11-15 HCP","Your Stats","16-20 HCP"], values: dataValuesForBar, chartView: self.barViewPuttsVsHandicap,colors: colors, barWidth: 0.4)
+                }
                 if baselineDict != nil{
                     let publicScore  = PublicScore()
                     let publicScoreStr = publicScore.getPuttsHandicap(avergePutts:avgPuttsRound.reduce(0, +) / Double(avgPuttsRound.count))
@@ -142,6 +149,7 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
             })
         }
     }
+    
     
     func setupPuttsBreakUp(){
 //        print(totalPutts)
@@ -219,6 +227,67 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    var puttsVS = [(dataP:String,dataV:Double)]()
+    func getPuttsVSHandicapDataFromFirebase(){
+        let group = DispatchGroup()
+        if putsPerRoundHCP.isEmpty{
+            for i in 0..<55{
+                group.enter()
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "baseline/\(i)/puttsPerRound") { (snapshot) in
+                    var puttsPer = Double()
+                    if let puttsPerRound = snapshot.value as? String{
+                        puttsPer = Double(puttsPerRound)!
+                        putsPerRoundHCP.append(puttsPer)
+                        group.leave()
+                    }
+                }
+            }
+            group.notify(queue: .main, execute: {
+                var i = 0
+                var sum = 0.0
+                for data in putsPerRoundHCP{
+                    if (i == 0){
+                        self.puttsVS.append((dataP: "\(i) Scratch", dataV: data))
+                    }else if (i % 5 == 0){
+                        sum += data
+                        self.puttsVS.append((dataP: "\(i-4) to \(i)", dataV: sum/5))
+                        sum = 0.0
+                    }else if (i > 50){
+                        sum += data
+                        if i == 54{
+                            self.puttsVS.append((dataP: "\(i-3) to \(i)", dataV: sum/4))
+                        }
+                    }else{
+                        sum += data
+                    }
+                    i += 1
+                }
+                self.setupPuttVsHandicap()
+            })
+        }else{
+            var i = 0
+            var sum = 0.0
+            for data in putsPerRoundHCP{
+                if (i == 0){
+                    self.puttsVS.append((dataP: "\(i) Scratch", dataV: data))
+                }else if (i % 5 == 0){
+                    sum += data
+                    self.puttsVS.append((dataP: "\(i-4) to \(i)", dataV: sum/5))
+                    sum = 0.0
+                }else if (i > 50){
+                    sum += data
+                    if i == 54{
+                        self.puttsVS.append((dataP: "\(i-3) to \(i)", dataV: sum/4))
+                    }
+                }else{
+                    sum += data
+                }
+                i += 1
+            }
+            self.setupPuttVsHandicap()
+        }
     }
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {

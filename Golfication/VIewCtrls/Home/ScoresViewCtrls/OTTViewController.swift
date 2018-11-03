@@ -211,7 +211,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         view3.frame = CGRect(x: combinedView.frame.size.width-view2.frame.width-8, y: view1.frame.origin.y, width: view2.frame.width, height:view1.frame.height)
         //        view3.backgroundColor = UIColor.black
         rightImg.frame.origin = CGPoint(x: view3.frame.width - #imageLiteral(resourceName: "right").size.width - view3.frame.size.height*0.15, y:view3.frame.height*0.60)
-        lblFairwayRight.frame = CGRect(origin: CGPoint(x: rightImg.frame.origin.x + 15, y:rightImg.frame.origin.y - 10), size: CGSize(width:30,height:20))
+        lblFairwayRight.frame = CGRect(origin: CGPoint(x: rightImg.frame.origin.x + 5, y:rightImg.frame.origin.y - 20), size: CGSize(width:30,height:20))
         view3.addSubview(lblFairwayRight)
         view3.addSubview(rightImg)
         
@@ -386,7 +386,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             barChartFairwaysHitTrend.leftAxis.axisMinimum = 0.0
             barChartFairwaysHitTrend.leftAxis.axisMaximum = newDataPoint.max()!+1
             barChartFairwaysHitTrend.leftAxis.labelCount = 5
-            if dataValues.count > 2{
+            if dataValues.count > 2 && baselineDict != nil{
                 var attributedText = NSMutableAttributedString()
                 let publicScoring = PublicScore()
                 let data = publicScoring.getFairwaysHitTrendsData(dataValues:avgPerc)
@@ -544,20 +544,21 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         view1.updateViewWithColor(rect: view1.frame, color: UIColor.glfRosyPink, radius: view1.frame.height*CGFloat(fairwayLeftInPercentage)/100)
         view2.updateViewWithColor(rect: view2.frame, color: UIColor.glfPaleTeal, radius: view2.frame.height*CGFloat(fairwayHitInPercentage)/100)
         view3.updateViewWithColor(rect: view3.frame, color: UIColor.glfRosyPink, radius: view3.frame.height*CGFloat(fairwayRightInPercentage)/100)
-        let publicScoring = PublicScore()
-        let data = publicScoring.getDriveAccuracyData(fairHit:fairwayHitInPercentage)
-        self.lblAccuracyWithDriver.isHidden = false
-        if data.length > 15{
-            self.lblAccuracyWithDriver.attributedText = data
-        }else{
-            let dict1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfWarmGrey]
-            let attributedText = NSMutableAttributedString()
-            attributedText.append(NSAttributedString(string: "You ", attributes: dict1))
-            attributedText.append(data)
-            attributedText.append(NSAttributedString(string: " more fairways than other golfers like you", attributes: dict1))
-            self.lblAccuracyWithDriver.attributedText = attributedText
+        if baselineDict != nil{
+            let publicScoring = PublicScore()
+            let data = publicScoring.getDriveAccuracyData(fairHit:fairwayHitInPercentage)
+            self.lblAccuracyWithDriver.isHidden = false
+            if data.length > 15{
+                self.lblAccuracyWithDriver.attributedText = data
+            }else{
+                let dict1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfWarmGrey]
+                let attributedText = NSMutableAttributedString()
+                attributedText.append(NSAttributedString(string: "You ", attributes: dict1))
+                attributedText.append(data)
+                attributedText.append(NSAttributedString(string: " more fairways than other golfers like you", attributes: dict1))
+                self.lblAccuracyWithDriver.attributedText = attributedText
+            }
         }
-        debugPrint(data.length)
     }
     func setData(){
         for round in scores{

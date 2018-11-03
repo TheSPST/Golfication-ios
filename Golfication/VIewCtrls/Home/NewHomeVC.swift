@@ -840,7 +840,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: getUserDataFromFireBase
     func getUserDataFromFireBase() {
         matchId.removeAll()
-        var hcp = Double()
+        var hcp : Double!
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "") { (snapshot) in
             if(snapshot.childrenCount > 0){
                 var userData = NSDictionary()
@@ -1042,7 +1042,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 if let handicap = userData["handicap"] as? String{
                     self.profileHandicap = handicap
-                    hcp = Double(handicap)?.rounded() ?? 0
+                    if handicap != "-"{
+                        hcp = Double(handicap)?.rounded() ?? 0
+                    }
                 }
                 if let gender = userData["gender"] as? String{
                     self.genderData = gender
@@ -1095,7 +1097,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
             }
             DispatchQueue.main.async( execute: {
-                self.getBaseLine(hcp: Int(hcp))
+                if hcp != nil{
+                    self.getBaseLine(hcp: Int(hcp))
+                }
                 self.setMyData()
                 if(self.round_score.count == 0){
                     self.updateCard4(path: "userData/user1/statistics")

@@ -30,7 +30,6 @@
 		3E15C1222142B86D002D43AF /* MultiplayerTeeSelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15C1212142B86D002D43AF /* MultiplayerTeeSelectionVC.swift */; };
 		3E15D32E1FFE0800005F4068 /* notificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15D32D1FFE0800005F4068 /* notificationExtension.swift */; };
 		3E15D3301FFE10F8005F4068 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15D32F1FFE10F8005F4068 /* Notification.swift */; };
-		3E1959212189B8AB00A2C95F /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E1959202189B8AB00A2C95F /* GoogleService-Info-live.plist */; };
 		3E27BA5C20FF4D7700DC14AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E27BA5A20FF4D7700DC14AB /* Main.storyboard */; };
 		3E3367F02130052E00AC238F /* HomeFreeProMemberVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */; };
 		3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E3367F12130231F00AC238F /* ScanningGolfX.xib */; };
@@ -81,6 +80,7 @@
 		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
 		3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */ = {isa = PBXBuildFile; fileRef = 3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */; };
+		3ECBDA1A218D807800AAE1E9 /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3ECBDA19218D807800AAE1E9 /* GoogleService-Info-demo.plist */; };
 		3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED2C8792088C08800604F31 /* ProfileVC.swift */; };
 		3EDC552D2009E38F002012E1 /* ProMemberPopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDC552C2009E38F002012E1 /* ProMemberPopUpVC.swift */; };
 		3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */; };
@@ -292,7 +292,6 @@
 		3E15C1212142B86D002D43AF /* MultiplayerTeeSelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerTeeSelectionVC.swift; sourceTree = "<group>"; };
 		3E15D32D1FFE0800005F4068 /* notificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = notificationExtension.swift; sourceTree = "<group>"; };
 		3E15D32F1FFE10F8005F4068 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
-		3E1959202189B8AB00A2C95F /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3E27BA5B20FF4D7700DC14AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeFreeProMemberVC.swift; sourceTree = "<group>"; };
 		3E3367F12130231F00AC238F /* ScanningGolfX.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScanningGolfX.xib; sourceTree = "<group>"; };
@@ -345,6 +344,7 @@
 		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
 		3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json"; sourceTree = "<group>"; };
+		3ECBDA19218D807800AAE1E9 /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		3ED2C8792088C08800604F31 /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		3EDC552C2009E38F002012E1 /* ProMemberPopUpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProMemberPopUpVC.swift; sourceTree = "<group>"; };
 		3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExitGamePopUpView.swift; sourceTree = "<group>"; };
@@ -1253,7 +1253,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3E1959202189B8AB00A2C95F /* GoogleService-Info-live.plist */,
+				3ECBDA19218D807800AAE1E9 /* GoogleService-Info-demo.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1383,7 +1383,6 @@
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
-				3E1959212189B8AB00A2C95F /* GoogleService-Info-live.plist in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
 				3EAE867F2125573F0081857B /* Device.storyboard in Resources */,
@@ -1413,6 +1412,7 @@
 				4B7E2A7D2175C20B00DFC3EB /* Default@2x.png in Resources */,
 				4B1F6BD72090A29F00312EA7 /* Game.storyboard in Resources */,
 				3E035F87215293F000019014 /* OAD.storyboard in Resources */,
+				3ECBDA1A218D807800AAE1E9 /* GoogleService-Info-demo.plist in Resources */,
 				3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */,
 				4B7E2A7C2175C20B00DFC3EB /* radar.png in Resources */,
 				4B8C8D401FF674D0001F5D01 /* SF-Pro-Display-BlackItalic.otf in Resources */,

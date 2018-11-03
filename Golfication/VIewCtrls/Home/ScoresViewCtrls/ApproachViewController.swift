@@ -466,7 +466,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         GIRTrendBarChart.leftAxis.axisMinimum = 0.0
         GIRTrendBarChart.leftAxis.axisMaximum = girTotal.max()!+1
         GIRTrendBarChart.leftAxis.labelCount = 5
-        if girArray.count > 2{
+        if girArray.count > 2 && baselineDict != nil{
             var attributedText = NSMutableAttributedString()
             let publicScoring = PublicScore()
             let data = publicScoring.getGIRTrendsData(dataValues:girAvg)
