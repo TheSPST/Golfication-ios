@@ -491,14 +491,16 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                 shortClubName.append(self.smartCaddieAvg[i].clubName)
             }
         }
-        self.shortGameBarChartView.setBarChart(dataPoints: shortClubName, values: shortClubDataValue, chartView: self.shortGameBarChartView, color: UIColor.glfBluegreen25, barWidth: 0.2, leftAxisMinimum: 0,labelTextColor: UIColor.glfWarmGrey,unit: "", valueColor: UIColor.clear)
-        let formatter = NumberFormatter()
-        formatter.positiveSuffix = " yd"
-        if(Constants.distanceFilter == 1){
-            formatter.positiveSuffix = " m"
+        if !shortClubDataValue.isEmpty{
+            self.shortGameBarChartView.setBarChart(dataPoints: shortClubName, values: shortClubDataValue, chartView: self.shortGameBarChartView, color: UIColor.glfBluegreen25, barWidth: 0.2, leftAxisMinimum: 0,labelTextColor: UIColor.glfWarmGrey,unit: "", valueColor: UIColor.clear)
+            let formatter = NumberFormatter()
+            formatter.positiveSuffix = " yd"
+            if(Constants.distanceFilter == 1){
+                formatter.positiveSuffix = " m"
+            }
+            shortGameBarChartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
+            shortGameBarChartView.leftAxis.axisMaximum = shortClubDataValue.max()! + 10.0
         }
-        shortGameBarChartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
-        shortGameBarChartView.leftAxis.axisMaximum = shortClubDataValue.max()! + 10.0
     }
     
     func setAllBarExpectGameBarChart(){
