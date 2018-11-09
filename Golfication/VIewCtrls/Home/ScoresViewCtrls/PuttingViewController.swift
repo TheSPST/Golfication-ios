@@ -139,7 +139,7 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
                     dataValuesForBar.append(34.5)
                     self.barViewPuttsVsHandicap.setBarChartPuttsVSHandicap(dataPoints: ["11-15 HCP","Your Stats","16-20 HCP"], values: dataValuesForBar, chartView: self.barViewPuttsVsHandicap,colors: colors, barWidth: 0.4)
                 }
-                if baselineDict != nil{
+                if Constants.baselineDict != nil{
                     let publicScore  = PublicScore()
                     let publicScoreStr = publicScore.getPuttsHandicap(avergePutts:avgPuttsRound.reduce(0, +) / Double(avgPuttsRound.count))
                     
@@ -182,7 +182,7 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
 //        print(puttsAvgPerc)
         pieViewPuttsBreakUp.setChartForPuttingBreak(dataPoints: dataPoints, values: puttsAvgPerc, chartView: pieViewPuttsBreakUp,avgPutts: (avgPutts/Double(scores.count)).rounded(toPlaces: 2))
         
-        if baselineDict != nil{
+        if Constants.baselineDict != nil{
             if !(Int(totalPuttsRoundWise[0]) == 0 && Int(totalPuttsRoundWise[1]) == 0  && Int(totalPuttsRoundWise[2]) == 0  && Int(totalPuttsRoundWise[3]) == 0  && Int(totalPuttsRoundWise[4]) == 0){
                 
                 let publicScore  = PublicScore()

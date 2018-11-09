@@ -136,7 +136,7 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                 tempdic.setObject(self.userImage, forKey: "image" as NSCopying)
                 tempdic.setObject(1, forKey: "status" as NSCopying)
                 tempdic.setObject(timestamp!, forKey: "timestamp" as NSCopying)
-                addPlayersArray.add(tempdic)
+                Constants.addPlayersArray.add(tempdic)
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
@@ -913,7 +913,7 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                             }
                             if(keyData == "courseName"){
                                 self.dataArray[i].location = (value as! String)
-                                selectedGolfName = value as! String
+                                Constants.selectedGolfName = value as! String
                             }
                         }
                         self.dataArray[i].isShow = true

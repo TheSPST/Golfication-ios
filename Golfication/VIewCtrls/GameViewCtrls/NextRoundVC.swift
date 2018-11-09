@@ -54,7 +54,7 @@ class NextRoundVC: UIViewController {
     
     @IBAction func btnActionForRequestMapping(_ sender: UIButton) {
         if(Auth.auth().currentUser!.uid.count > 1){
-            ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues([selectedGolfID:Timestamp] as [AnyHashable:Any])
+            ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues([Constants.selectedGolfID:Timestamp] as [AnyHashable:Any])
         }
         //        let alert = UIAlertController(title: "Alert", message: "Thanks for your request. We will notify you when this course is mapped for advanced scoring.", preferredStyle: UIAlertControllerStyle.alert)
         //        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -93,7 +93,7 @@ class NextRoundVC: UIViewController {
                     currentCoord = currentLocation.coordinate
                     
                     let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
-                    let location2 = CLLocation(latitude: Double(selectedLat)!, longitude: Double(selectedLong)!)
+                    let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
                     let distance : CLLocationDistance = location1.distance(from: location2)
                     debugPrint("distance = \(distance) m")
                     
@@ -116,7 +116,7 @@ class NextRoundVC: UIViewController {
     }
     
     @IBAction func skipAction(sender: UIButton) {
-        addPlayersArray = NSMutableArray()
+        Constants.addPlayersArray = NSMutableArray()
         
         popUpContainerView.isHidden = true
         let gameCompleted = StartGameModeObj()
@@ -129,7 +129,7 @@ class NextRoundVC: UIViewController {
         else if selectedTab == 1 && selectedMode == 0{
             // setup rangefinder
             NotificationCenter.default.addObserver(self, selector: #selector(self.rfApiCompleted(_:)), name: NSNotification.Name(rawValue: "RFApiCompleted"), object: nil)
-            gameCompleted.setUpRFMap(golfId: "course_\(selectedGolfID)",onCourse:selectedMode)
+            gameCompleted.setUpRFMap(golfId: "course_\(Constants.selectedGolfID)",onCourse:selectedMode)
         }
         else{
             // setup post game short tracker or ultimate short tracking
@@ -144,7 +144,7 @@ class NextRoundVC: UIViewController {
         
         if(notifScoring.count > 0){
             let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "BasicScoringVC") as! BasicScoringVC
-            viewCtrl.matchDataDict = matchDataDic
+            viewCtrl.matchDataDict = Constants.matchDataDic
             viewCtrl.scoreData = notifScoring
             self.navigationController?.pushViewController(viewCtrl, animated: true)
         }
@@ -161,9 +161,9 @@ class NextRoundVC: UIViewController {
         self.progressView.hide(navItem: self.navigationItem)
         
         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "RFMapVC") as! RFMapVC
-        viewCtrl.matchDataDic = matchDataDic
+        viewCtrl.matchDataDic = Constants.matchDataDic
         viewCtrl.isContinueMatch = false
-        viewCtrl.matchId = matchId
+        viewCtrl.matchId = Constants.matchId
         viewCtrl.courseId = notifGolfId
         self.navigationController?.pushViewController(viewCtrl, animated: true)
         
@@ -176,11 +176,11 @@ class NextRoundVC: UIViewController {
         
         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "NewMapVC") as! NewMapVC
         
-        viewCtrl.matchDataDict = matchDataDic
+        viewCtrl.matchDataDict = Constants.matchDataDic
         viewCtrl.isContinue = false
-        viewCtrl.currentMatchId = matchId
+        viewCtrl.currentMatchId = Constants.matchId
         viewCtrl.scoring = notifScoring
-        viewCtrl.courseId = "course_\(selectedGolfID)"
+        viewCtrl.courseId = "course_\(Constants.selectedGolfID)"
         self.navigationController?.pushViewController(viewCtrl, animated: true)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
@@ -406,12 +406,12 @@ class NextRoundVC: UIViewController {
                 
                 for (key,_) in dataDic{
                     if let keyVal = key as? Int{
-                        if keyVal == Int(selectedGolfID){
+                        if keyVal == Int(Constants.selectedGolfID){
                             self.btnRequestMapping.isHidden = true
                         }
                     }
                     else if let keyVal = key as? String{
-                        if keyVal == selectedGolfID{
+                        if keyVal == Constants.selectedGolfID{
                             self.btnRequestMapping.isHidden = true
                         }
                     }

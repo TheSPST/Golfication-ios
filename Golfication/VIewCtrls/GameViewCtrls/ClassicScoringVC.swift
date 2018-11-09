@@ -54,8 +54,8 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         self.navigationController?.navigationBar.isHidden = true
         self.btnContinue.layer.cornerRadius = 3
         self.lblCourseNameTitle.text = self.matchDataDict.value(forKey: "courseName") as? String
-        if(matchDataDic.object(forKey: "player") != nil){
-            let tempArray = matchDataDic.object(forKey: "player")! as! NSMutableDictionary
+        if(Constants.matchDataDic.object(forKey: "player") != nil){
+            let tempArray = Constants.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
             for (k,v) in tempArray{
                 let dict = v as! NSMutableDictionary
                 dict.addEntries(from: ["id":k])
@@ -126,7 +126,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         }
         
         titleLabel.setTitle("Hole \(currentIndex+1) - Par \(self.scoreData[self.currentIndex].par)", for: .normal)
-        self.getScoreFromMatchDataFirebase(keyId:matchId)
+        self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
     }
     
     
@@ -187,7 +187,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
     
     @objc func btnActionMoreScore(_ sender: UIButton) {
         self.currentPlayerId = playersArray[sender.tag].id
-        self.getScoreFromMatchDataFirebase(keyId:matchId)
+        self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
         let indexPath = IndexPath(row: sender.tag, section: 0)
         guard let cell = tableView.cellForRow(at: indexPath) as? ClassicScoringTableViewCell
             else { return }
@@ -311,7 +311,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         }
         self.btnContinue.isHidden = true
         scoring.setObject(holeArray, forKey: "scoring" as NSCopying)
-        ref.child("matchData/\(matchId)/").updateChildValues(scoring as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/").updateChildValues(scoring as! [AnyHashable : Any])
     }
     @objc func btnActionScoreSelection(_ sender: UIButton) {
         
@@ -325,8 +325,8 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
             self.holeWiseShots.setObject(true, forKey: "holeOut" as NSCopying)
             cell.isExpanded = true
             self.playersArray[indexPath.row].isExpended = true
-            ref.child("matchData/\(matchId)/scoring/\(self.currentIndex)/\(self.playersArray[indexPath.row].id)").updateChildValues(["strokes":value+1] as [AnyHashable : Any])
-            ref.child("matchData/\(matchId)/scoring/\(self.currentIndex)/\(self.playersArray[indexPath.row].id)").updateChildValues(["holeOut":true] as [AnyHashable : Any])
+            ref.child("matchData/\(Constants.matchId)/scoring/\(self.currentIndex)/\(self.playersArray[indexPath.row].id)").updateChildValues(["strokes":value+1] as [AnyHashable : Any])
+            ref.child("matchData/\(Constants.matchId)/scoring/\(self.currentIndex)/\(self.playersArray[indexPath.row].id)").updateChildValues(["holeOut":true] as [AnyHashable : Any])
             
             self.tableView.beginUpdates()
             self.tableView.endUpdates()
@@ -378,10 +378,10 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
     }
     
     @IBAction func btnActionViewScoreCard(_ sender: UIButton) {
-        ref.child("matchData/\(matchId)/scoring/\(self.currentIndex)/\(self.currentPlayerId)").removeAllObservers()
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.currentIndex)/\(self.currentPlayerId)").removeAllObservers()
         let players = NSMutableArray()
-        if(matchDataDic.object(forKey: "player") != nil){
-            let tempArray = matchDataDic.object(forKey: "player")! as! NSMutableDictionary
+        if(Constants.matchDataDic.object(forKey: "player") != nil){
+            let tempArray = Constants.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
             for (k,v) in tempArray{
                 let dict = v as! NSMutableDictionary
                 dict.addEntries(from: ["id":k])
@@ -406,7 +406,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         }
         animator.startAnimation()
         titleLabel.setTitle("Hole \(currentIndex+1) - Par \(self.scoreData[self.currentIndex].par)", for: .normal)
-        self.getScoreFromMatchDataFirebase(keyId:matchId)
+        self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
         //        self.tableView.reloadData()
     }
     @IBAction func btnNextAction(_ sender: UIButton) {
@@ -420,7 +420,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         animator.startAnimation()
         
         titleLabel.setTitle("Hole \(currentIndex+1) - Par \(self.scoreData[self.currentIndex].par)", for: .normal)
-        self.getScoreFromMatchDataFirebase(keyId:matchId)
+        self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
         //        self.tableView.reloadData()
     }
     @IBAction func btnActionFinishRound(_ sender: Any) {
@@ -447,7 +447,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         let emptyAlert = UIAlertController(title: "Restart Round", message: "You Played \(self.holeOutforAppsFlyer[self.playerIndex])/\(scoreData.count) Holes. Are you sure you want to Restart the Round ?", preferredStyle: UIAlertControllerStyle.alert)
         emptyAlert.addAction(UIAlertAction(title: "Restart Round", style: .default, handler: { (action: UIAlertAction!) in
             if(self.playerData.count > 1){
-                self.checkIfMuliplayerJoined(matchID:matchId)
+                self.checkIfMuliplayerJoined(matchID:Constants.matchId)
             }else{
                 self.resetScoreNodeForMe()
             }
@@ -462,7 +462,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
                 if(self.playersArray[j].id == Auth.auth().currentUser?.uid){
                     let playerData = ["holeOut":false]
                     player.setObject(playerData, forKey: self.playersArray[j].id as NSCopying)
-                    ref.child("matchData/\(matchId)/scoring/\(i)/").updateChildValues(player as! [AnyHashable : Any])
+                    ref.child("matchData/\(Constants.matchId)/scoring/\(i)/").updateChildValues(player as! [AnyHashable : Any])
                     self.scoreData[i].players[j].addEntries(from: player as! [AnyHashable : Any])
                     self.holeOutforAppsFlyer[j] = 0
                 }
@@ -473,7 +473,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
     }
     func checkIfMuliplayerJoined(matchID:String){
         var isJoined = false
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchId)/player") { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/player") { (snapshot) in
             var playerDict = NSMutableDictionary()
             self.actvtIndView.isHidden = false
             self.actvtIndView.startAnimating()
@@ -522,20 +522,20 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         
     }
     func exitWithoutSave(){
-        if(matchId.count > 1){
+        if(Constants.matchId.count > 1){
             self.updateFeedNode()
             if(Auth.auth().currentUser!.uid.count > 1){
-                ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
+                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
             }
-            if(matchId.count > 1){
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(matchId)").removeValue()
+            if(Constants.matchId.count > 1){
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(Constants.matchId)").removeValue()
             }
-            matchId.removeAll()
-            isUpdateInfo = true
+            Constants.matchId.removeAll()
+            Constants.isUpdateInfo = true
             self.navigationController?.popToRootViewController(animated: true)
-            addPlayersArray.removeAllObjects()
-            if mode>0{
-                Analytics.logEvent("mode\(mode)_game_discarded", parameters: [:])
+            Constants.addPlayersArray.removeAllObjects()
+            if Constants.mode>0{
+                Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
                 let center = UNUserNotificationCenter.current()
                 center.removeAllPendingNotificationRequests()
             }
@@ -549,7 +549,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         self.actvtIndView.startAnimating()
 
         let generateStats = GenerateStats()
-        generateStats.matchKey = matchId
+        generateStats.matchKey = Constants.matchId
         generateStats.generateStats()
 
     }
@@ -558,23 +558,23 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         self.actvtIndView.isHidden = true
         self.actvtIndView.stopAnimating()
         
-        if(matchId.count > 1){
-            ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(matchId)").removeValue()
+        if(Constants.matchId.count > 1){
+            ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(Constants.matchId)").removeValue()
         }
         self.sendMatchFinishedNotification()
-        if(Auth.auth().currentUser!.uid.count>1) &&  (matchId.count > 1){
-            ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
+        if(Auth.auth().currentUser!.uid.count>1) &&  (Constants.matchId.count > 1){
+            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
         }
-        addPlayersArray = NSMutableArray()
+        Constants.addPlayersArray = NSMutableArray()
         self.updateFeedNode()
-        isUpdateInfo = true
-        if mode>0{
-            Analytics.logEvent("mode\(mode)_game_completed", parameters: [:])
+        Constants.isUpdateInfo = true
+        if Constants.mode>0{
+            Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
             let center = UNUserNotificationCenter.current()
             center.removeAllPendingNotificationRequests()
         }
-        if(matchId.count > 1){
-            self.gotoFeedBackViewController(mID: matchId,mode:mode)
+        if(Constants.matchId.count > 1){
+            self.gotoFeedBackViewController(mID: Constants.matchId,mode:Constants.mode)
         }
     }
     func sendMatchFinishedNotification(){
@@ -589,7 +589,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
             }
             for data in dataDic{
                 group.enter()
-                Notification.sendNotification(reciever: data.key, message: "\(Auth.auth().currentUser?.displayName ?? "guest") just finished a round at \(selectedGolfName).", type: "8", category: "finishedGame", matchDataId: matchId, feedKey:"")
+                Notification.sendNotification(reciever: data.key, message: "\(Auth.auth().currentUser?.displayName ?? "guest") just finished a round at \(Constants.selectedGolfName).", type: "8", category: "finishedGame", matchDataId: Constants.matchId, feedKey:"")
                 group.leave()
             }
             
@@ -604,7 +604,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
         feedDict.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-        feedDict.setObject(matchId, forKey: "matchKey" as NSCopying)
+        feedDict.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
         if(Auth.auth().currentUser?.photoURL != nil){
@@ -625,8 +625,8 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         viewCtrl.onDoneBlock = { result in
             let players = NSMutableArray()
             let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
-            if(matchDataDic.object(forKey: "player") != nil){
-                let tempArray = matchDataDic.object(forKey: "player")! as! NSMutableDictionary
+            if(Constants.matchDataDic.object(forKey: "player") != nil){
+                let tempArray = Constants.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
                 for (k,v) in tempArray{
                     let dict = v as! NSMutableDictionary
                     dict.addEntries(from: ["id":k])
@@ -640,7 +640,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
             viewCtrl.fromGameImprovement = true
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoreData.removeAll()
-            matchId.removeAll()
+            Constants.matchId.removeAll()
             
         }
         self.present(viewCtrl, animated: true, completion: nil)

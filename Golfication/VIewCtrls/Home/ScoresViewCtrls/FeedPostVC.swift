@@ -10,8 +10,6 @@ import UIKit
 import FirebaseAuth
 import FirebaseStorage
 
-var fromStatsPost = false
-
 class FeedPostVC: UIViewController, UITextViewDelegate {
     @IBOutlet weak var txtView: UITextView!
     @IBOutlet weak var usrImgView: UIImageView!
@@ -88,7 +86,7 @@ class FeedPostVC: UIViewController, UITextViewDelegate {
             let urlString = downloadURL.absoluteString
             ref.child("feedData/\(feedId)").updateChildValues(["shareImage":urlString])
             
-            fromStatsPost = true
+            Constants.fromStatsPost = true
 
             FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "friends") { (snapshot) in
                 var dataDic = [String:Bool]()

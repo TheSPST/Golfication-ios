@@ -118,7 +118,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         }
         else{
             
-            if !isProMode {
+            if !Constants.isProMode {
                 
 //                cardViewSpreadOffTee.makeBlurView(targetView: cardViewSpreadOffTee)
                 self.setProLockedUI(targetView: cardViewSpreadOffTee, title: "Spread Off The Tee")
@@ -146,7 +146,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             for v in self.ottStackView.subviews{
                 if v.isKind(of: CardView.self){
                     cardViewMArray.add(v)
-                    if (!isProMode && !((v == cardViewSpreadOffTee) || (v == cardViewDistanceOffTee))){
+                    if (!Constants.isProMode && !((v == cardViewSpreadOffTee) || (v == cardViewDistanceOffTee))){
                         let shareStatsButton = ShareStatsButton()
                         shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                         shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -155,7 +155,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
                         shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                         v.addSubview(shareStatsButton)
                     }
-                    else if isProMode{
+                    else if Constants.isProMode{
                         let shareStatsButton = ShareStatsButton()
                         shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                         shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -386,7 +386,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             barChartFairwaysHitTrend.leftAxis.axisMinimum = 0.0
             barChartFairwaysHitTrend.leftAxis.axisMaximum = newDataPoint.max()!+1
             barChartFairwaysHitTrend.leftAxis.labelCount = 5
-            if dataValues.count > 2 && baselineDict != nil{
+            if dataValues.count > 2 && Constants.baselineDict != nil{
                 var attributedText = NSMutableAttributedString()
                 let publicScoring = PublicScore()
                 let data = publicScoring.getFairwaysHitTrendsData(dataValues:avgPerc)
@@ -450,9 +450,9 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         self.lblDriveDistanceAvg.text = "Average Drive"
         if !dataValues.isEmpty{
             let sum = Int(dataValues.reduce(0, +))
-            self.lblAvgDriveDistanceValue.text = "\(Int(sum/dataValues.count)) \(distanceFilter == 1 ? "m":"yd")"
+            self.lblAvgDriveDistanceValue.text = "\(Int(sum/dataValues.count)) \(Constants.distanceFilter == 1 ? "m":"yd")"
         }else{
-            self.lblAvgDriveDistanceValue.text = "0 \(distanceFilter == 1 ? "m":"yd")"
+            self.lblAvgDriveDistanceValue.text = "0 \(Constants.distanceFilter == 1 ? "m":"yd")"
         }
     }
     
@@ -480,14 +480,14 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         if(dataYAxis.count != 0){
             scattredSpreadOfTheTeeChart.leftAxis.axisMinimum = dataYAxis.min()! - 5
             lblSpreadOffAvg.text = "Longest Drive"
-            lblAvgSpreadOffTheTeeValue.text = "\(Int(dataYAxis.max()!)) \(distanceFilter == 1 ? "m":"yd")"
+            lblAvgSpreadOffTheTeeValue.text = "\(Int(dataYAxis.max()!)) \(Constants.distanceFilter == 1 ? "m":"yd")"
         }else{
-            lblAvgSpreadOffTheTeeValue.text = "0 \(distanceFilter == 1 ? "m":"yd")"
+            lblAvgSpreadOffTheTeeValue.text = "0 \(Constants.distanceFilter == 1 ? "m":"yd")"
         }
 
         scattredSpreadOfTheTeeChart.leftAxis.labelCount = 3
         let formatter = NumberFormatter()
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             formatter.positiveSuffix = " m"
         }else{
             formatter.positiveSuffix = " yd"
@@ -544,7 +544,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         view1.updateViewWithColor(rect: view1.frame, color: UIColor.glfRosyPink, radius: view1.frame.height*CGFloat(fairwayLeftInPercentage)/100)
         view2.updateViewWithColor(rect: view2.frame, color: UIColor.glfPaleTeal, radius: view2.frame.height*CGFloat(fairwayHitInPercentage)/100)
         view3.updateViewWithColor(rect: view3.frame, color: UIColor.glfRosyPink, radius: view3.frame.height*CGFloat(fairwayRightInPercentage)/100)
-        if baselineDict != nil{
+        if Constants.baselineDict != nil{
             let publicScoring = PublicScore()
             let data = publicScoring.getDriveAccuracyData(fairHit:fairwayHitInPercentage)
             self.lblAccuracyWithDriver.isHidden = false
@@ -574,7 +574,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
                     hole.club = (holes[i] as AnyObject).object(forKey:"club") as! String
                     hole.distance = (holes[i] as AnyObject).object(forKey:"distance") as! Double
                     hole.spread = (holes[i] as AnyObject).object(forKey:"spread") as! Double
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         hole.distance = hole.distance/YARD
                     }
                     if let fHit = (holes[i] as AnyObject).object(forKey:"fairway") as? String{

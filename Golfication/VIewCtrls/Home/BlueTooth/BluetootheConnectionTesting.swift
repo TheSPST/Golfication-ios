@@ -80,7 +80,7 @@ class BluetootheConnectionTesting: UIViewController {
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue:"command2Finished"))
     }
     @objc func updateScreen(_ notification: NSNotification){
-        self.lblDeviceName.text = "\(deviceGolficationX.name ?? "No Name")"
+        self.lblDeviceName.text = "\(Constants.deviceGolficationX.name ?? "No Name")"
         self.stackViewHowToConnect.isHidden = true
         self.stackViewChooseDetails.isHidden = false
         self.btnScanForDevice.isHidden = true
@@ -104,7 +104,7 @@ class BluetootheConnectionTesting: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if(deviceGolficationX != nil){
+        if(Constants.deviceGolficationX != nil){
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
         }
     }
@@ -273,7 +273,7 @@ class BluetootheConnectionTesting: UIViewController {
     @IBAction func btnActionSetupTags(_ sender: UIButton) {
         let leftOrRight :UInt8 = UInt8(self.sgmntCtrlOrientation.selectedSegmentIndex + 1)
         let metric :UInt8 = UInt8(self.sgmntCtrlMetric.selectedSegmentIndex + 1)
-        ble.sendFirstCommand(leftOrRight: leftOrRight,metric: metric)
+        Constants.ble.sendFirstCommand(leftOrRight: leftOrRight,metric: metric)
     }
     @objc func responseFirstCommand(_ notification: NSNotification){
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "responseFirstCommand"))
@@ -290,8 +290,8 @@ class BluetootheConnectionTesting: UIViewController {
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     @IBAction func btnActionScanForDevice(_ sender: UIButton) {
-        ble = BLE()
-        ble.startScanning()
+        Constants.ble = BLE()
+        Constants.ble.startScanning()
     }
 }
 

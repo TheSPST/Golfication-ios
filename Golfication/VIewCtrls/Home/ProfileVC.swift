@@ -347,7 +347,7 @@ class ProfileVC: UIViewController {
                 
                 let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(startTime/1000)))
                 var timeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
-                if (productID == "pro_subscription_monthly") || (productID == "pro_subscription_trial_monthly") || (productID == "Free_Membership"){
+                if (productID == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (productID == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (productID == Constants.FREE_MONTHLY_PRODUCT_ID){
                     timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
                 }
                 let expiryDF = DateFormatter()
@@ -366,7 +366,7 @@ class ProfileVC: UIViewController {
                 self.viewUpgradeActive.isHidden = false
                 
                 self.viewTopWhatIsPro.isHidden = true
-                isProfileUpdated = true
+                Constants.isProfileUpdated = true
                 
                 self.whatISProHeightConstraint.constant = 0.0
                 self.view.layoutIfNeeded()
@@ -722,7 +722,7 @@ class ProfileVC: UIViewController {
                             self.viewUpgradeFreeActive.isHidden = true
                             self.viewUpgradeActive.isHidden = false
                             
-                            if dic.value(forKey: "productID") as! String == "Free_Membership_Yearly"{
+                            if dic.value(forKey: "productID") as! String == Constants.PROMO_CODE_YEARLY_PRODUCT_ID{
                                 self.btnActiveIndiegogo.isHidden = true
                                 self.lblNextBilling.isHidden = true
                             }

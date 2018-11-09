@@ -203,7 +203,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                 if isFirst{
                     let ids = friendListDict.allKeys
                     for id in ids{
-                        Notification.sendNotification(reciever: id as! String, message: "\(Auth.auth().currentUser?.displayName ?? "guest") joined Golfication", type: "6", category: "First Login", matchDataId: matchId, feedKey: "")
+                        Notification.sendNotification(reciever: id as! String, message: "\(Auth.auth().currentUser?.displayName ?? "guest") joined Golfication", type: "6", category: "First Login", matchDataId: Constants.matchId, feedKey: "")
                     }
                     
                     let userDataDic = NSMutableDictionary()

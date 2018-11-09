@@ -270,12 +270,12 @@ class ClassicScoringTableViewCell: UITableViewCell{
                 }
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
-        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     @objc func chipShotAction(sender: UIButton!) {
         for btn in buttonsArrayForChipShot{
@@ -287,13 +287,13 @@ class ClassicScoringTableViewCell: UITableViewCell{
                 holeWiseShots.setObject((btn.tag % 10), forKey: "chipCount" as NSCopying)
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         //        self.updateBottomScore(hole: self.index)
-        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     @objc func sandShotAction(sender: UIButton!) {
         for btn in buttonsArrayForSandSide{
@@ -305,13 +305,13 @@ class ClassicScoringTableViewCell: UITableViewCell{
                 holeWiseShots.setObject((btn.tag % 10), forKey: "sandCount" as NSCopying)
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         //        self.updateBottomScore(hole: self.index)
-        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     @objc func penaltyShotAction(sender: UIButton!) {
         for btn in buttonsArrayForPenalty{
@@ -323,13 +323,13 @@ class ClassicScoringTableViewCell: UITableViewCell{
                 holeWiseShots.setObject((btn.tag % 10), forKey: "penaltyCount" as NSCopying)
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         //        self.updateBottomScore(hole: self.index)
-        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     
     @objc func girAction(sender: UIButton!) {
@@ -357,7 +357,7 @@ class ClassicScoringTableViewCell: UITableViewCell{
             holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
             debugPrint(holeWiseShots)
             //            self.updateBottomScore(hole: self.index)
-            ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+            ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
         }
     }
     @objc func puttsAction(sender: UIButton!) {
@@ -370,13 +370,13 @@ class ClassicScoringTableViewCell: UITableViewCell{
                 holeWiseShots.setObject((btn.tag % 10), forKey: "putting" as NSCopying)
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         //        self.updateBottomScore(hole: self.index)
-        ref.child("matchData/\(matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(playerId)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     
     func updateDictionaryWithValues(dict:NSMutableDictionary)->NSMutableDictionary{

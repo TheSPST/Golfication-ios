@@ -9,22 +9,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/AuthViewCtrls/SignUpVC.swift"
-            timestampString = "559060392.130547"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "getUserDataFromFirebase(uid:isFirst:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/StartGameViewCtrls/SelectCourseVC.swift"
             timestampString = "546017847.163697"
             startingColumnNumber = "9223372036854775807"
@@ -89,13 +73,13 @@
                   symbolName = "Golfication.UYLNotificationDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-30-Oct-3.0.7/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
-                  timestampString = "562936712.968987"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-04-Nov-EVE/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
+                  timestampString = "563437207.787513"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
                   endingLineNumber = "68"
-                  offsetFromSymbolStart = "6516">
+                  offsetFromSymbolStart = "7820">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -104,13 +88,13 @@
                   symbolName = "Golfication.UYLNotificationDelegate.userNotificationCenter(_: __C.UNUserNotificationCenter, didReceive: __C.UNNotificationResponse, withCompletionHandler: () -&gt; ()) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-30-Oct-3.0.7/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
-                  timestampString = "562936712.973785"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-04-Nov-EVE/Golfication/VIewCtrls/InitialViewCtrls/UYLNotificationDelegate.swift"
+                  timestampString = "563437207.794196"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
                   endingLineNumber = "68"
-                  offsetFromSymbolStart = "17504">
+                  offsetFromSymbolStart = "21057">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -377,13 +361,13 @@
                   symbolName = "closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-30-Oct-3.0.7/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "562936713.025861"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-04-Nov-EVE/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "563437207.863039"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "1680">
+                  offsetFromSymbolStart = "1919">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -392,13 +376,13 @@
                   symbolName = "closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-30-Oct-3.0.7/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "562936713.028322"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-04-Nov-EVE/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "563437207.8658"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "2372">
+                  offsetFromSymbolStart = "2728">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -407,13 +391,13 @@
                   symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #2 (__C.UIAlertAction) -&gt; () in Golfication.SignInVC.forgotPswdAction(__C.UIButton) -&gt; ()"
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/khelfie/Desktop/Golfication-30-Oct-3.0.7/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
-                  timestampString = "562936713.030785"
+                  urlString = "file:///Users/khelfie/Desktop/Golfication-04-Nov-EVE/Golfication/VIewCtrls/AuthViewCtrls/SignInVC.swift"
+                  timestampString = "563437207.869612"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "259"
                   endingLineNumber = "259"
-                  offsetFromSymbolStart = "56">
+                  offsetFromSymbolStart = "64">
                </Location>
             </Locations>
          </BreakpointContent>

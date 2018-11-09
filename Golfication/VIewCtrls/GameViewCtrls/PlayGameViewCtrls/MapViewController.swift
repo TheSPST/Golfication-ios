@@ -222,8 +222,8 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = self.scoring
         let players = NSMutableArray()
-        if(matchDataDic.object(forKey: "player") != nil){
-            let tempArray = matchDataDic.object(forKey: "player")! as! NSMutableDictionary
+        if(Constants.matchDataDic.object(forKey: "player") != nil){
+            let tempArray = Constants.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
             for (k,v) in tempArray{
                 let dict = v as! NSMutableDictionary
                 dict.addEntries(from: ["id":k])
@@ -300,9 +300,9 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             btnShotsCount.isEnabled = false
             positionsOfDotLine.removeAll()
             updateStateWhileDragging(marker:markersForCurved.last!)
-            if mode>0{
+            if Constants.mode>0{
                 self.holeOutforAppsFlyer[self.playerIndex] += 1
-                Analytics.logEvent("mode\(mode)_holeout\(holeOutforAppsFlyer[self.playerIndex])", parameters: [:])
+                Analytics.logEvent("mode\(Constants.mode)_holeout\(holeOutforAppsFlyer[self.playerIndex])", parameters: [:])
             }
             ref.child("matchData/\(self.currentMatchId)/scoring/\(index)/\(self.selectedUserId)/").updateChildValues(["holeOut":true] as [AnyHashable : Any])
         }
@@ -490,22 +490,22 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
     func exitWithoutSave(){
         self.updateFeedNode()
 
-        if(matchId.count > 1){
+        if(Constants.matchId.count > 1){
             if(Auth.auth().currentUser!.uid.count > 1){
-                ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
+                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
             }
-            if(matchId.count > 1){
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(matchId)").removeValue()
+            if(Constants.matchId.count > 1){
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(Constants.matchId)").removeValue()
             }
-            matchId.removeAll()
-            isUpdateInfo = true
+            Constants.matchId.removeAll()
+            Constants.isUpdateInfo = true
             self.navigationController!.popToRootViewController(animated: true)
-            addPlayersArray.removeAllObjects()
+            Constants.addPlayersArray.removeAllObjects()
             if(self.swingMatchId.count > 0){
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
             }
-            if mode>0{
-                Analytics.logEvent("mode\(mode)_game_discarded", parameters: [:])
+            if Constants.mode>0{
+                Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
                 let center = UNUserNotificationCenter.current()
                 center.removeAllPendingNotificationRequests()
                 //center.removePendingNotificationRequests(withIdentifiers: ["UYLLocalNotification"])
@@ -523,7 +523,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
         }
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         let generateStats = GenerateStats()
-        generateStats.matchKey = matchId
+        generateStats.matchKey = Constants.matchId
         generateStats.generateStats()
     }
     
@@ -531,23 +531,23 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide(navItem: self.navigationItem)
         
-        if(matchId.count > 1){
-            ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(matchId)").removeValue()
+        if(Constants.matchId.count > 1){
+            ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(Constants.matchId)").removeValue()
         }
         self.sendMatchFinishedNotification()
-        if(Auth.auth().currentUser!.uid.count>1) &&  (matchId.count > 1){
-            ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
+        if(Auth.auth().currentUser!.uid.count>1) &&  (Constants.matchId.count > 1){
+            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
         }
-        addPlayersArray = NSMutableArray()
+        Constants.addPlayersArray = NSMutableArray()
         self.updateFeedNode()
-        isUpdateInfo = true
-        if mode>0{
-            Analytics.logEvent("mode\(mode)_game_completed", parameters: [:])
+        Constants.isUpdateInfo = true
+        if Constants.mode>0{
+            Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
             let center = UNUserNotificationCenter.current()
             center.removeAllPendingNotificationRequests()
         }
-        if(matchId.count > 1){
-            self.gotoFeedBackViewController(mID: matchId,mode:mode)
+        if(Constants.matchId.count > 1){
+            self.gotoFeedBackViewController(mID: Constants.matchId,mode:Constants.mode)
         }
     }
     
@@ -562,7 +562,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             }
             for data in dataDic{
                 group.enter()
-                Notification.sendNotification(reciever: data.key, message: "\(Auth.auth().currentUser?.displayName ?? "guest") just finished a round at \(selectedGolfName).", type: "8", category: "finishedGame", matchDataId: self.currentMatchId, feedKey:"")
+                Notification.sendNotification(reciever: data.key, message: "\(Auth.auth().currentUser?.displayName ?? "guest") just finished a round at \(Constants.selectedGolfName).", type: "8", category: "finishedGame", matchDataId: self.currentMatchId, feedKey:"")
                 group.leave()
             }
             
@@ -585,7 +585,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
         feedDict.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-        feedDict.setObject(matchId, forKey: "matchKey" as NSCopying)
+        feedDict.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
         if(Auth.auth().currentUser?.photoURL != nil){
@@ -607,8 +607,8 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
         viewCtrl.onDoneBlock = { result in
             let players = NSMutableArray()
             let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
-            if(matchDataDic.object(forKey: "player") != nil){
-                let tempArray = matchDataDic.object(forKey: "player")! as! NSMutableDictionary
+            if(Constants.matchDataDic.object(forKey: "player") != nil){
+                let tempArray = Constants.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
                 for (k,v) in tempArray{
                     let dict = v as! NSMutableDictionary
                     dict.addEntries(from: ["id":k])
@@ -621,7 +621,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             viewCtrl.justFinishedTheMatch = true
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoring.removeAll()
-            matchId.removeAll()
+            Constants.matchId.removeAll()
             
         }
         self.present(viewCtrl, animated: true, completion: nil)
@@ -923,9 +923,9 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                     self.letsRotateWithZoom(latLng1: positionsOfCurveLines.first!, latLng2: positionsOfCurveLines.last!)
                     updateStateWhileDragging(marker:markersForCurved.last!)
                 }
-                if mode>0{
+                if Constants.mode>0{
                     self.holeOutforAppsFlyer[self.playerIndex] += 1
-                    Analytics.logEvent("mode\(mode)_holeout\(holeOutforAppsFlyer[self.playerIndex])", parameters: [:])
+                    Analytics.logEvent("mode\(Constants.mode)_holeout\(holeOutforAppsFlyer[self.playerIndex])", parameters: [:])
                 }
         }
         suggestedMarker1.map = nil
@@ -1197,7 +1197,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                 ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["mode":"On Course"] as [AnyHashable : Any])
                 var distance = GMSGeometryDistance(self.positionsOfCurveLines.last! ,self.positionsOfDotLine.last!)
                 var suffix = "meter"
-                if(distanceFilter != 1){
+                if(Constants.distanceFilter != 1){
                     distance = distance*YARD
                     suffix = "yard"
 
@@ -1276,7 +1276,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                 
                 var distance = GMSGeometryDistance(self.positionsOfCurveLines.last! ,self.positionsOfDotLine.last!)
                 var suffix = "meter"
-                if(distanceFilter != 1){
+                if(Constants.distanceFilter != 1){
                     distance = distance*YARD
                     suffix = "yard"
                 }
@@ -1617,12 +1617,12 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatch/\(self.currentMatchId)").removeValue()
             if(self.currentMatchId.count > 1){
                 ref.child("matchData/\(self.currentMatchId)").removeValue()
-                matchId = ""
+                Constants.matchId = ""
                 self.shotsFooterView.isUserInteractionEnabled = true
                 self.mapView.settings.scrollGestures = true
             }
             isShowCase = false// Do something for New User
-            addPlayersArray.removeAllObjects()
+            Constants.addPlayersArray.removeAllObjects()
             for controller in self.navigationController!.viewControllers as Array {
                 if controller.isKind(of: NewGameVC.self) {
                     _ =  self.navigationController!.popToViewController(controller, animated: false)
@@ -1790,7 +1790,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             startingHole = Int(self.matchDataDictionary.value(forKey: "startingHole") as! String)!
         }
         NotificationCenter.default.addObserver(self, selector: #selector(self.doAfterResponse(_:)), name: NSNotification.Name(rawValue: "response9"), object: nil)
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getMatchId"), object: matchId)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getMatchId"), object: Constants.matchId)
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.sendNotificationOnCourse(_:)), name: NSNotification.Name(rawValue: "updateLocation"),object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.stopTrackingFromNotification(_:)), name: NSNotification.Name(rawValue: "shotTracking"),object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
@@ -1905,7 +1905,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
         
         self.btnReviewHole.setTitleColor(UIColor.glfWarmGrey, for: .normal)
         if(!isHoleByHole){
-            let onCourse = matchDataDic.value(forKeyPath: "onCourse") as! Bool
+            let onCourse = Constants.matchDataDic.value(forKeyPath: "onCourse") as! Bool
             if !(onCourse){
                 self.btnOnOffCourse.setImage(#imageLiteral(resourceName: "gray_dot"), for: .normal)
                 self.btnGreenDot.setImage(#imageLiteral(resourceName: "gray_dot"), for: .normal)
@@ -1936,7 +1936,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
         self.locationManager.startUpdatingLocation()
         var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
         var suffix = "meter"
-        if(distanceFilter != 1){
+        if(Constants.distanceFilter != 1){
             distance = distance*YARD
             suffix = "yard"
         }
@@ -2206,7 +2206,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                     distanceInYrd = 3 * distanceInYrd
                     suffix = "ft"
                 }
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     distanceInYrd = distance
                     suffix = "m"
                 }
@@ -2340,7 +2340,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                     distanceInYrd = 3 * distanceInYrd
                     suffix = "ft"
                 }
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     distanceInYrd = distance
                     suffix = "m"
                 }
@@ -3151,14 +3151,14 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
 
                 var distanceInYrd = shotDetails[j].distance
                 var suffix = "yd"
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     distanceInYrd = shotDetails[j].distance/YARD
                     suffix = "m"
                 }
                 if(shotDetails[j].swingScore == "G" && shotDetails[j].endingPoint == "G"){
                     distanceInYrd = 3 * distanceInYrd
                     suffix = "ft"
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         distanceInYrd = shotDetails[j].distance/(YARD)
                         suffix = "m"
                     }
@@ -3199,14 +3199,14 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                         remainingDistance = GMSGeometryDistance(self.positionsOfCurveLines[j+1], self.positionsOfCurveLines.last!)
                     }
                     suffix = "yd"
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         remainingDistance = shotDetails[j].distance/YARD
                         suffix = "m"
                     }
                     if(shotDetails[j].swingScore == "G" && shotDetails[j].endingPoint == "G"){
                         remainingDistance = 3 * distanceInYrd
                         suffix = "ft"
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             remainingDistance = shotDetails[j].distance/(YARD)
                             suffix = "m"
                         }
@@ -3637,7 +3637,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                                 let windSpeed = (data.value as AnyObject).value(forKey: "speed") as! Double
                                 let windSpeedWithUnit = windSpeed * 2.23694
                                 self.lblWindSpeed.text = " \(windSpeedWithUnit.rounded(toPlaces: 1)) mph"
-                                if(distanceFilter == 1){
+                                if(Constants.distanceFilter == 1){
                                     self.lblWindSpeed.text = " \((windSpeedWithUnit*1.60934).rounded(toPlaces: 1)) km/h"
                                 }
                                 
@@ -4214,8 +4214,8 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             let score = data as! NSMutableDictionary
             let distance = score.value(forKey: "distance") as? Double
             let club = score.value(forKey: "club") as! String
-            var strokGaind = score.value(forKey: strkGainedString[0]) as? Double
-            if let strk = score.value(forKey: strkGainedString[skrokesGainedFilter]) as? Double{
+            var strokGaind = score.value(forKey: Constants.strkGainedString[0]) as? Double
+            if let strk = score.value(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
                 strokGaind = strk
             }
             let endingPoints = score.value(forKey: "end") as? String
@@ -4282,12 +4282,12 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             self.holeOutStackView.isHidden = true
             
             var suffix = "\(shotsDetails.last!.distance.rounded()) yd"
-            if(distanceFilter == 1){
+            if(Constants.distanceFilter == 1){
                 suffix = "\((shotsDetails.last!.distance/YARD).rounded()) m"
             }
             if((shotsDetails.last!.distance) < 20.0){
                 suffix = "\((shotsDetails.last!.distance * 3).rounded()) ft"
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     suffix = "\((shotsDetails.last!.distance/(YARD*3)).rounded()) m"
                 }
             }
@@ -4426,7 +4426,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                         self.isUserInsideBound = true
                         self.markers[0].position = self.userLocationForClub!
                         var suffix = "meter"
-                        if(distanceFilter != 1){
+                        if(Constants.distanceFilter != 1){
                             distance = distance*YARD
                             suffix = "yard"
                         }
@@ -4710,7 +4710,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                 let score = data as! NSMutableDictionary
                 let distance = score.value(forKey: "distance") as? Double
                 let club = score.value(forKey: "club") as! String
-                let strokGaind = score.value(forKey: strkGainedString[skrokesGainedFilter]) as? Double
+                let strokGaind = score.value(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double
                 let endingPoints = score.value(forKey: "end") as? String
                 let penalty = score.value(forKey: "penalty") as! Bool
                 let startingPoint = score.value(forKey: "start") as? String
@@ -4755,7 +4755,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             if((shot.distance) < 20.0){
                 suffix = "\(Int((shot.distance * 3).rounded())) ft"
             }
-            if(distanceFilter == 1){
+            if(Constants.distanceFilter == 1){
                 suffix = "\((shot.distance/(YARD)).rounded()) m"
             }
             print("ShotIndex  :\(shotIndex)")
@@ -4928,9 +4928,9 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                         let distance = GMSGeometryDistance(startingPoint, endingPoint)*YARD
                         let started = score.value(forKey: "start") as! String
                         let club = score.value(forKey: "club") as! String
-                        var strokGaind = score.value(forKey: strkGainedString[skrokesGainedFilter]) as? Double
+                        var strokGaind = score.value(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double
                         if(strokGaind == nil){
-                            strokGaind = score.value(forKey: strkGainedString[0]) as? Double
+                            strokGaind = score.value(forKey: Constants.strkGainedString[0]) as? Double
                         }
                         let isPenalty = score.value(forKey: "penalty") as! Bool
                         let endingPoints = score.value(forKey: "end") as! String
@@ -5125,14 +5125,14 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             
             var distanceInYrd = data.distance
             var suffix = "yd"
-            if(distanceFilter == 1){
+            if(Constants.distanceFilter == 1){
                 distanceInYrd = data.distance/YARD
                 suffix = "m"
             }
             if(data.startingPoint == "G" && data.endingPoint == "G"){
                 distanceInYrd = 3 * distanceInYrd
                 suffix = "ft"
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     distanceInYrd = data.distance/(YARD)
                     suffix = "m"
                 }
@@ -5333,7 +5333,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             if(BackgroundMapStats.findPositionOfPointInside(position: position.first!, whichFeature:self.numberOfHoles[index].green)){
                 let distance = GMSGeometryDistance(position.first!, position.last!) * YARD * 3
                 markerText = "  \(Int(distance)) ft "
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     let distance = GMSGeometryDistance(position.first!, position.last!)
                     markerText = "  \(Int(distance)) m "
                 }
@@ -5359,7 +5359,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                     
                     markerText1 = "  \(Int(dist1)) yd "
                     markerText = "  \(Int(dist)) yd "
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         markerText = "  \(Int(dist/(YARD))) m "
                         markerText1 = "  \(Int(dist1/(YARD))) m "
                     }
@@ -5402,7 +5402,7 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                 }else{
                     let distance = GMSGeometryDistance(position[0], position.last!) * YARD
                     markerText = " \(Int(distance.rounded())) yd"
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         markerText = " \(Int((distance/YARD).rounded())) m"
                     }
                     if(self.shotCount != 0){
@@ -5763,14 +5763,14 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
     
     func updateMaxMin(){
         self.clubData.removeAll()
-        for data in clubWithMaxMin{
+        for data in Constants.clubWithMaxMin{
             if clubs.contains(data.name){
                 self.clubData.append((name: data.name, max: data.max, min: data.min))
             }
         }
         self.clubData.sort{($0).max > ($1).max}
         for i in 0..<clubData.count-1{
-            if !(clubData[i].min == clubData[i+1].max+1) && (clubData[i].min>clubWithMaxMin[i+1].max+1){
+            if !(clubData[i].min == clubData[i+1].max+1) && (clubData[i].min>Constants.clubWithMaxMin[i+1].max+1){
                 let diff = clubData[i].min - clubData[i+1].max+1
                 clubData[i].max += diff/2
                 clubData[i+1].min -= diff/2
@@ -6048,10 +6048,10 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
                 }
             }
         }
-        for i in 0..<strkGainedString.count{
+        for i in 0..<Constants.strkGainedString.count{
             var strkG = calculateStrokesGained(start:start,end:end,filterIndex:i)
             strkG = strkG - Double(numberOfPenalty)
-            shotDictionary.setObject(strkG, forKey: strkGainedString[i] as NSCopying)
+            shotDictionary.setObject(strkG, forKey: Constants.strkGainedString[i] as NSCopying)
         }
         
         shotDictionary.setObject(coordLeftOrRight(start:positionsOfCurveLines[shot-1],end:positionsOfCurveLines[shot]), forKey: "heading" as NSCopying)
@@ -6144,10 +6144,10 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
             }
         }
 
-        for i in 0..<strkGainedString.count{
+        for i in 0..<Constants.strkGainedString.count{
             var strkG = calculateStrokesGained(start:start,end:end,filterIndex:i)
             strkG = strkG - Double(numberOfPenalty)
-            shotDictionary.setObject(strkG, forKey: strkGainedString[i] as NSCopying)
+            shotDictionary.setObject(strkG, forKey: Constants.strkGainedString[i] as NSCopying)
         }
         shotDictionary.setObject(coordLeftOrRight(start:positionsOfCurveLines[shot-1],end:positionsOfCurveLines[shot]), forKey: "heading" as NSCopying)
         return shotDictionary
@@ -6158,11 +6158,11 @@ class MapViewController: UIViewController,GMSMapViewDelegate,CLLocationManagerDe
         var startGained = Double()
         var endGained = Double()
         
-        if(strokesGainedDict[filterIndex].value(forKey: start) != nil){
-            startGained = strokesGainedDict[filterIndex].value(forKey: start) as! Double
+        if(Constants.strokesGainedDict[filterIndex].value(forKey: start) != nil){
+            startGained = Constants.strokesGainedDict[filterIndex].value(forKey: start) as! Double
         }
-        if(strokesGainedDict[filterIndex].value(forKey: end) != nil){
-            endGained = strokesGainedDict[filterIndex].value(forKey: end) as! Double
+        if(Constants.strokesGainedDict[filterIndex].value(forKey: end) != nil){
+            endGained = Constants.strokesGainedDict[filterIndex].value(forKey: end) as! Double
         }
         
         strkGnd = startGained - endGained - 1
@@ -6495,7 +6495,7 @@ extension MapViewController{
                 if(BackgroundMapStats.findPositionOfPointInside(position: shotPoint1, whichFeature: self.numberOfHoles[index].green)){
                     var end = "G\(Int(floor(newDistance)))"
                     end = end == "G0" ? "G1" : end
-                    self.botStrokesGained = strokesGainedDict[skrokesGainedFilter].value(forKey:end ) as! Double
+                    self.botStrokesGained = Constants.strokesGainedDict[Constants.skrokesGainedFilter].value(forKey:end ) as! Double
                     getPuttsPoints(strkGained: botStrokesGained-botSGPutting, lastCoord: shotPoint1, holeCoord: positionsOfDotLine.last!)
                 }else{
                     var landOnFairwayDict = NSMutableDictionary()
@@ -6653,7 +6653,7 @@ extension MapViewController{
             }else{
                 let newDistance = GMSGeometryDistance(nextPoint, positionsOfDotLine.last!) * YARD * 3
                 let end = "G\(Int(floor(newDistance)))"
-                self.botStrokesGained = strokesGainedDict[skrokesGainedFilter].value(forKey:end ) as! Double
+                self.botStrokesGained = Constants.strokesGainedDict[Constants.skrokesGainedFilter].value(forKey:end ) as! Double
                 getPuttsPoints(strkGained: botStrokesGained-botSGPutting, lastCoord: nextPoint, holeCoord: positionsOfDotLine.last!)
             }
             if(!holeOutFlag){

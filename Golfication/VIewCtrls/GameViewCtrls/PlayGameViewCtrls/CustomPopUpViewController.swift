@@ -8,7 +8,7 @@
 
 import UIKit
 import FirebaseAuth
-var isAdvanced = true
+
 class CustomPopUpViewController: UIViewController {
     
     var players = NSMutableArray()
@@ -33,11 +33,11 @@ class CustomPopUpViewController: UIViewController {
             if(self.btnCheckBox.isSelected){
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gameTypePopUp" :false] as [AnyHashable:Any])
             }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Advanced"), object: isAdvanced)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Advanced"), object: Constants.isAdvanced)
             dismiss(animated: true, completion: nil)
         }
         else{
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MappingRequest"), object: isAdvanced)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MappingRequest"), object: Constants.isAdvanced)
             dismiss(animated: true, completion: nil)
         }
 
@@ -100,13 +100,13 @@ class CustomPopUpViewController: UIViewController {
         
     }
     @objc func tapAdvanced(tap: UITapGestureRecognizer) {
-        isAdvanced = true
+        Constants.isAdvanced = true
         self.changeColor(color: UIColor.glfBluegreen,borderWidth: 1.0, borderColor: UIColor.glfGreenBlue, cornerRadius: 3.0 ,clipsToBounds:false, cardView: self.advancedScoringCardView)
         self.changeColor(color: UIColor.glfBlack75, borderWidth: 1.0, borderColor: UIColor.lightGray, cornerRadius: 3.0 ,clipsToBounds:false, cardView: self.classicScoringCardView)
     }
     
     @objc func tapClassic(tap: UITapGestureRecognizer) {
-        isAdvanced = false
+        Constants.isAdvanced = false
         self.changeColor(color: UIColor.glfBlack75,borderWidth: 1.0, borderColor: UIColor.lightGray, cornerRadius: 3.0 ,clipsToBounds:false, cardView: self.advancedScoringCardView)
         self.changeColor(color: UIColor.glfBluegreen,borderWidth: 1.0, borderColor: UIColor.glfGreenBlue, cornerRadius: 3.0 ,clipsToBounds:false, cardView: self.classicScoringCardView)
     }

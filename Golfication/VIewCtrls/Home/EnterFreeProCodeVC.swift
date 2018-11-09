@@ -154,7 +154,7 @@ class EnterFreeProCodeVC: UIViewController {
                                 membershipDict.setObject(0, forKey: "isMembershipActive" as NSCopying)
                                 membershipDict.setObject(trnStr, forKey: "transactionDate" as NSCopying)
                                 membershipDict.setObject(expiryStr, forKey: "expiryDate" as NSCopying)
-                                membershipDict.setObject("Free_Membership_Yearly", forKey: "productID" as NSCopying)
+                                membershipDict.setObject(Constants.PROMO_CODE_YEARLY_PRODUCT_ID, forKey: "productID" as NSCopying)
                                 membershipDict.setObject(self.beginTimestamp, forKey: "timestamp" as NSCopying)
                                 membershipDict.setObject("ios", forKey: "device" as NSCopying)
 
@@ -169,11 +169,11 @@ class EnterFreeProCodeVC: UIViewController {
 //                                self.lblDaysLeft.text = "You have " + "\(components.day!)" + " days remaining on your Pro Membership"
                                 
 //                              self.viewTopWhatIsPro.isHidden = true
-                                isProfileUpdated = true
+                                Constants.isProfileUpdated = true
                         
                         if let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProfileProMemberPopUPVC") as? ProfileProMemberPopUPVC{
                         viewCtrl.fromUpgrade = true
-                        fromIndiegogo = true
+                        Constants.fromIndiegogo = true
                         viewCtrl.modalPresentationStyle = .overCurrentContext
                         self.present(viewCtrl, animated: true, completion: nil)
                         }

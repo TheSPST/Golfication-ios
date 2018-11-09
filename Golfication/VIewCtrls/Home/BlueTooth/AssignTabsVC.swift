@@ -99,7 +99,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 if club.value(forKey: "tag") as! Bool{
                     let tagNumber = club.value(forKey: "tagNum") as! Int
                     let clubName = club.value(forKey: "clubName") as! String
-                    let clubNumber = allClubs.index(of: clubName)! + 1
+                    let clubNumber = Constants.allClubs.index(of: clubName)! + 1
                     tagClubNumber.append((tag: tagNumber, club: clubNumber,clubName:clubName))
                 }
             }

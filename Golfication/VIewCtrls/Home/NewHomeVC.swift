@@ -13,17 +13,6 @@ import Google
 import DeviceKit
 import FirebaseInstanceID
 
-var baselineDict: NSDictionary!
-let DEVICEDATA = DeviceData()
-var strokesGainedDict = [NSMutableDictionary]()
-var isUpdateInfo = false
-var isProfileUpdated = false
-var strkGainedString = ["strokesGained","strokesGained1","strokesGained2","strokesGained3","strokesGained4"]
-var ble: BLE!
-var clubWithMaxMin = [(name:String,max:Int,min:Int)]()
-var isDevice = Bool()
-var isProMode = Bool()
-var firmwareVersion : Int!
 enum VersionError: Error {
     case invalidResponse, invalidBundleInfo
 }
@@ -373,7 +362,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             let vNumber = snapshot.value as? Int
             DispatchQueue.main.async(execute: {
                 if(vNumber != nil){
-                    firmwareVersion = vNumber
+                    Constants.firmwareVersion = vNumber
                 }
             })
         }
@@ -382,11 +371,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "clubsData") { (snapshot) in
             let clubDataDict = snapshot.value as! [String:NSMutableDictionary]
             DispatchQueue.main.async(execute: {
-                clubWithMaxMin.removeAll()
+                Constants.clubWithMaxMin.removeAll()
                 for (key, value) in clubDataDict{
-                    clubWithMaxMin.append((name: key, max: value.value(forKey: "max") as! Int, min: value.value(forKey: "min") as! Int))
+                    Constants.clubWithMaxMin.append((name: key, max: value.value(forKey: "max") as! Int, min: value.value(forKey: "min") as! Int))
                 }
-                clubWithMaxMin.append((name: "Pu", max: 22, min: 1))
+                Constants.clubWithMaxMin.append((name: "Pu", max: 22, min: 1))
                 self.setSGAndSmartCaddieData(isShow:isShow)
             })
         }
@@ -501,10 +490,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 clubDistance.append(sum/Double((smartCaddieAvg[i].clubDistanceArray).count))
             }
         }
-        let bestClubIndex = strokeGainedAvg.firstIndex(of: strokeGainedAvg.max()!)!
-        self.lblClubStatAvgDist.text = "\(Int(clubDistance[bestClubIndex].rounded())) \(distanceFilter == 1 ? "meter":"yards")"
-        self.lblClubStatSG.text = "\((strokeGainedAvg[bestClubIndex]).rounded(toPlaces: 2))"
-        self.lblClubStatName.text = dataPointsClub[bestClubIndex]
+        if !strokeGainedAvg.isEmpty{
+            let bestClubIndex = strokeGainedAvg.firstIndex(of: strokeGainedAvg.max()!)!
+            self.lblClubStatAvgDist.text = "\(Int(clubDistance[bestClubIndex].rounded())) \(Constants.distanceFilter == 1 ? "meter":"yards")"
+            self.lblClubStatSG.text = "\((strokeGainedAvg[bestClubIndex]).rounded(toPlaces: 2))"
+            self.lblClubStatName.text = dataPointsClub[bestClubIndex]
+        }
 
         // StroesGaned BARGraph
         for i in 0..<clubDict.count{
@@ -556,9 +547,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 let remove:Int = clubWithAllDistance[i].arr.count/10
                 clubWithAllDistance[i].arr.removeFirst(remove)
                 clubWithAllDistance[i].arr.removeLast(remove)
-                for j in 0..<clubWithMaxMin.count where clubWithMaxMin[j].name == clubWithAllDistance[i].club{
-                    clubWithMaxMin[j].max  = Int(clubWithAllDistance[i].arr.max()!)
-                    clubWithMaxMin[j].min  = Int(clubWithAllDistance[i].arr.min()!)
+                for j in 0..<Constants.clubWithMaxMin.count where Constants.clubWithMaxMin[j].name == clubWithAllDistance[i].club{
+                    Constants.clubWithMaxMin[j].max  = Int(clubWithAllDistance[i].arr.max()!)
+                    Constants.clubWithMaxMin[j].min  = Int(clubWithAllDistance[i].arr.min()!)
                 }
             }
         }
@@ -584,7 +575,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                 clubData.distance = distance
                             }
                             var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
-                            if let strk = (valueArray[j] as AnyObject).object(forKey: strkGainedString[skrokesGainedFilter]) as? Double{
+                            if let strk = (valueArray[j] as AnyObject).object(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
                                 strokesGained = strk
                             }
                             clubData.strokesGained = strokesGained
@@ -824,12 +815,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     // MARK: getStrokesGainedFirebaseData
     func getStrokesGainedFirebaseData(){
-        strokesGainedDict.removeAll()
+        Constants.strokesGainedDict.removeAll()
         let group = DispatchGroup()
-        for i in 0..<strkGainedString.count{
+        for i in 0..<Constants.strkGainedString.count{
             group.enter()
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: strkGainedString[i]) { (snapshot) in
-                strokesGainedDict.append(snapshot.value as! NSMutableDictionary)
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: Constants.strkGainedString[i]) { (snapshot) in
+                Constants.strokesGainedDict.append(snapshot.value as! NSMutableDictionary)
                 group.leave()
             }
         }
@@ -839,7 +830,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     // MARK: getUserDataFromFireBase
     func getUserDataFromFireBase() {
-        matchId.removeAll()
+        Constants.matchId.removeAll()
         var hcp : Double!
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "") { (snapshot) in
             if(snapshot.childrenCount > 0){
@@ -847,22 +838,22 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 userData = snapshot.value as! NSDictionary
                 
                 if let unit = userData.object(forKey: "unit") as? Int{
-                    distanceFilter = unit
+                    Constants.distanceFilter = unit
                 }
                 if let notification = userData.object(forKey: "notification") as? Int{
-                    onCourseNotification = notification
+                    Constants.onCourseNotification = notification
                 }
                 if let strokesGained = userData.object(forKey: "strokesGained") as? Int{
-                    skrokesGainedFilter = strokesGained
+                    Constants.skrokesGainedFilter = strokesGained
                 }
                 if let device = userData.object(forKey: "device") as? Bool{
-                    isDevice = device
+                    Constants.isDevice = device
                 }
                 if let trial = userData.value(forKey: "trial") as? Bool{
                     self.isTrial = trial
                 }
                 if let proMode = userData.value(forKey: "proMode") as? Bool{
-                    isProMode = proMode
+                    Constants.isProMode = proMode
                     self.btnUpgrade.isHidden = false
                     
                     if let proMembership = userData.value(forKey: "proMembership") as? NSDictionary{
@@ -889,7 +880,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             
                             var timeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
                             if proMembership.value(forKey: "productID") as? String != nil{
-                                if (proMembership.value(forKey: "productID") as! String == "pro_subscription_monthly") || (proMembership.value(forKey: "productID") as! String == "pro_subscription_trial_monthly") || (proMembership.value(forKey: "productID") as! String == "Free_Membership"){
+                                if (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID){
                                     
                                     timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
 //                                    timeEnd = Calendar.current.date(byAdding: .minute, value: 5, to: timeStart as Date)
@@ -901,13 +892,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                 if components.day == 0 || components.day! < 0{
                             if let device = proMembership.value(forKey: "device") as? String{
                                         
-                                    if (device == "ios") || ((device == "android") && (proMembership.value(forKey: "productID") as! String == "Free_Membership")){
+                                    if (device == "ios") || ((device == "android") && (proMembership.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID)){
                                         
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["trial" :true] as [AnyHashable:Any])
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMembership" :NSNull()] as [AnyHashable:Any])
                                     
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :false] as [AnyHashable:Any])
-                                    isProMode = false
+                                    Constants.isProMode = false
                                     
                                     let subDic = NSMutableDictionary()
                                     subDic.setObject(proMembership.value(forKey: "productID") as! String, forKey: "productID" as NSCopying)
@@ -1013,7 +1004,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 if let activeMatches = userData["activeMatches"] as? [String:Bool]{
                     for data in activeMatches{
                         if(data.value){
-                            matchId = data.key
+                            Constants.matchId = data.key
                         }
                         else if(!data.value){
                             
@@ -1126,14 +1117,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     func getBaseLine(hcp:Int){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "baseline/\(hcp)") { (snapshot) in
             if let baseline = snapshot.value as? NSDictionary{
-                baselineDict = baseline
+                Constants.baselineDict = baseline
             }
         }
     }
     
     func getFeedDataFromFirebase(key: String, group:DispatchGroup){
         
-        if(self.dataArray.count == 0) || isUpdateInfo{
+        if(self.dataArray.count == 0) || Constants.isUpdateInfo{
             
             let feed = Feeds()
             ref.child("feedData/\(key)").observeSingleEvent(of: .value, with: { snapshot in
@@ -1209,7 +1200,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     func setMyData() {
         
-        if !isProMode {
+        if !Constants.isProMode {
             self.setProLockedUI(targetView: self.viewSGTab)
         }
         lblProfileHomeCourse.text = self.profileHomeCourse ?? "-"
@@ -1222,7 +1213,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         if UserDefaults.standard.object(forKey: "isNewUser") as? Bool != nil{
             let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
-            if (newUser && !isProMode){
+            if (newUser && !Constants.isProMode){
                 if (self.profileHomeCourse != nil && self.profileHomeCourse != "") || (mappedStr == "2"){
                     if !isTrial{
                     self.viewBecomePro.isHidden = false
@@ -1231,7 +1222,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
             }
         }
-        if isProMode{
+        if Constants.isProMode{
             self.btnUpgrade.isHidden = true
             self.proLabelProfileStackView.isHidden = true
             self.viewBecomePro.isHidden = true
@@ -1291,7 +1282,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             }
                             if(keyData == "courseName"){
                                 self.dataArray[i].location = (value as! String)
-                                selectedGolfName = value as! String
+                                Constants.selectedGolfName = value as! String
                             }
                         }
                         self.dataArray[i].isShow = true
@@ -1462,15 +1453,15 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     func setData() {
         // ------- check active match ------------------
         var isActiveMatch = false
-        if(matchId.count > 0){
+        if(Constants.matchId.count > 0){
             isActiveMatch = true
         }
         
         if isActiveMatch{
             if(!isShowCase){
-                if(matchId.count > 1){
+                if(Constants.matchId.count > 1){
                     
-                    self.getScoreFromMatchDataFirebase(keyId:matchId)
+                    self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
                     lblGameStatus.text = "Current Round"
                     viewRecentGame.isHidden = false
                     viewPreviousGame.isHidden = true
@@ -1573,7 +1564,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(keyId)/") { (snapshot) in
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
-                matchDataDic = matchDict as! NSMutableDictionary
+                Constants.matchDataDic = matchDict as! NSMutableDictionary
                 var scoreArray = NSArray()
                 var keyData = String()
                 var playersKey = [String]()
@@ -1596,10 +1587,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                         
                     }
                     if(keyData == "lat"){
-                        selectedLat = value as! String
+                        Constants.selectedLat = value as! String
                     }
                     if(keyData == "lng"){
-                        selectedLong = value as! String
+                        Constants.selectedLong = value as! String
                     }
                     if (keyData == "scoring"){
                         scoreArray = (value as! NSArray)
@@ -1698,7 +1689,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
-                matchDataDic = matchDict as! NSMutableDictionary
+                Constants.matchDataDic = matchDict as! NSMutableDictionary
                 var scoreArray = NSArray()
                 var keyData = String()
                 var playersKey = [String]()
@@ -1720,10 +1711,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                         self.selectedHomeGolfName = value as! String
                     }
                     if(keyData == "lat"){
-                        selectedLat = value as! String
+                        Constants.selectedLat = value as! String
                     }
                     if(keyData == "lng"){
-                        selectedLong = value as! String
+                        Constants.selectedLong = value as! String
                     }
                     if (keyData == "scoring"){
                         scoreArray = (value as! NSArray)
@@ -1765,8 +1756,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             DispatchQueue.main.async(execute: {
                 self.players.removeAllObjects()
                 self.players = NSMutableArray()
-                if(matchDataDic.object(forKey: "player") != nil){
-                    let tempArray = matchDataDic.object(forKey: "player")! as! NSMutableDictionary
+                if(Constants.matchDataDic.object(forKey: "player") != nil){
+                    let tempArray = Constants.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
                     for (k,v) in tempArray{
                         if let dict = v as? NSMutableDictionary{
                             dict.addEntries(from: ["id":k])

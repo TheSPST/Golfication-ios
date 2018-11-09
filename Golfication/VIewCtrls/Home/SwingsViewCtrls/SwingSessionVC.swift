@@ -23,7 +23,7 @@ class SwingSessionVC: ButtonBarPagerTabStripViewController {
     }
     
     override func viewDidLoad() {
-        finalFilterDic.removeAllObjects()
+        Constants.finalFilterDic.removeAllObjects()
         
         //        RSTypeArray.removeAll()
         //        PlayTypeArray.removeAll()

@@ -82,17 +82,17 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
         if let img = (self.totalPlayers[indexPath.row] as! NSMutableDictionary).value(forKey: "image") as? String, img.count > 2{
             cell.btnUserImg.sd_setImage(with: URL(string: img), for: .normal, placeholderImage: UIImage(named: "0_you"), completed: nil)
         }
-        cell.lblTeeRating.text = "\(selectedRating)"
-        cell.lblTeeName.text = selectedTee
-        cell.lblTeeSlope.text = "\(selectedSlope)"
-        for i in teeArr{
-            if(i.name == selectedTee){
+        cell.lblTeeRating.text = "\(Constants.selectedRating)"
+        cell.lblTeeName.text = Constants.selectedTee
+        cell.lblTeeSlope.text = "\(Constants.selectedSlope)"
+        for i in Constants.teeArr{
+            if(i.name == Constants.selectedTee){
                 cell.lblTeeType.text = "(\(i.type) Tee)"
             }
         }
         if let userData = self.totalPlayers[indexPath.row] as? NSMutableDictionary{
-            userData.addEntries(from: ["tee" : selectedTee.lowercased()])
-            userData.addEntries(from: ["teeColor" : selectedTeeColor.lowercased()])
+            userData.addEntries(from: ["tee" : Constants.selectedTee.lowercased()])
+            userData.addEntries(from: ["teeColor" : Constants.selectedTeeColor.lowercased()])
             userData.addEntries(from: ["handicap" : String(self.handicap[indexPath.row]) == "0.0" ? "18.0":String(self.handicap[indexPath.row])])
             debugPrint(userData)
         }
@@ -126,7 +126,7 @@ class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableVi
             attributes: [NSAttributedStringKey.foregroundColor: UIColor.glfBluegreen, NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 15.0)!])
         myController.setValue(messageAttributed, forKey: "attributedMessage")
         var i = 0
-        for tee in teeArr{
+        for tee in Constants.teeArr{
             let whiteTee = (UIAlertAction(title: "\(tee.name) (\(tee.type) Tee)", style: UIAlertActionStyle.default, handler: { action in
                 cell.lblTeeName.text = "\(tee.name)"
                 cell.lblTeeType.text = "(\(tee.type) Tee)"

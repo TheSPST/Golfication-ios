@@ -38,8 +38,8 @@ class ShareStatsVC: UIViewController, UIGestureRecognizerDelegate, UIDocumentInt
             
             btnShareFeed.isHidden = false
             
-            if fromStatsPost{
-                fromStatsPost = false
+            if Constants.fromStatsPost{
+                Constants.fromStatsPost = false
                 for v in shareCardView.subviews{
                     if v.isKind(of: ShareStatsButton.self){
                         v.isHidden = false

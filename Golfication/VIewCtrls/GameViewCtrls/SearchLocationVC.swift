@@ -357,20 +357,20 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        selectedGolfID = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Id") as? String)!
-        selectedGolfName = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Name") as? String)!
-        selectedLat = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Latitude") as? String)!
-        selectedLong = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Longitude") as? String)!
+        Constants.selectedGolfID = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Id") as? String)!
+        Constants.selectedGolfName = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Name") as? String)!
+        Constants.selectedLat = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Latitude") as? String)!
+        Constants.selectedLong = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Longitude") as? String)!
         
         if !fromNewGame{
             fromNewGame = false
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["homeCourse":NSNull()])
             let homeCourseDic = NSMutableDictionary()
-            homeCourseDic.setObject(selectedGolfID, forKey: "id" as NSCopying)
-            homeCourseDic.setObject(selectedLat, forKey: "lat" as NSCopying)
-            homeCourseDic.setObject(selectedLong, forKey: "lng" as NSCopying)
-            homeCourseDic.setObject(selectedGolfName, forKey: "name" as NSCopying)
-            if(selectedGolfID == "14513"){
+            homeCourseDic.setObject(Constants.selectedGolfID, forKey: "id" as NSCopying)
+            homeCourseDic.setObject(Constants.selectedLat, forKey: "lat" as NSCopying)
+            homeCourseDic.setObject(Constants.selectedLong, forKey: "lng" as NSCopying)
+            homeCourseDic.setObject(Constants.selectedGolfName, forKey: "name" as NSCopying)
+            if(Constants.selectedGolfID == "14513"){
                 homeCourseDic.setObject("2", forKey: "mapped" as NSCopying)
             }else{
                 homeCourseDic.setObject((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Mapped") as! String, forKey: "mapped" as NSCopying)
@@ -379,9 +379,9 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             let homeCourseDetails = ["homeCourseDetails":homeCourseDic]
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(homeCourseDetails)
             
-            UserDefaults.standard.set(selectedLat, forKey: "HomeLat")
-            UserDefaults.standard.set(selectedLong, forKey: "HomeLng")
-            UserDefaults.standard.set(selectedGolfName, forKey: "HomeCourseName")
+            UserDefaults.standard.set(Constants.selectedLat, forKey: "HomeLat")
+            UserDefaults.standard.set(Constants.selectedLong, forKey: "HomeLng")
+            UserDefaults.standard.set(Constants.selectedGolfName, forKey: "HomeCourseName")
             UserDefaults.standard.synchronize()
         }
         self.navigationController?.popViewController(animated: true)

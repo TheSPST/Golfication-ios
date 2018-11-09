@@ -231,7 +231,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         for data in self.catagoryWise{
             self.strokesGainedData.append((data,0.0,0.0,0,0.0))
         }
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             var meterString = [" 60m "," 40m "," 20m ","20m","40m","60m"]
             var i = 0
             for view in self.lblStackViewYdUnit.arrangedSubviews{
@@ -355,7 +355,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         
         viewMoreStats.isHidden = true
         viewProStatsUnlocked.isHidden = true
-        if let mode = matchDataDic.value(forKey: "scoringMode") as? String{
+        if let mode = Constants.matchDataDic.value(forKey: "scoringMode") as? String{
             if(mode == "classic") || (mode == "rangefinder"){
                 
                 for i in 0..<finalPlayersData.count{
@@ -373,7 +373,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 for i in 0..<finalPlayersData.count{
                     let playerId = (finalPlayersData[i] as AnyObject).value(forKey: "id") as? String
                     if playerId == Auth.auth().currentUser!.uid{
-                        if !isProMode{
+                        if !Constants.isProMode{
                         if let summaryTimer = (finalPlayersData[i] as AnyObject).value(forKey: "summaryTimer") as? Int64{
                             let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(summaryTimer/1000)))
                             let timeEnd = Calendar.current.date(byAdding: .second, value: 3600, to: timeStart as Date)
@@ -532,7 +532,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                         chip.proximityY = (chipping[i] as AnyObject).object(forKey:"proximityY") as? Double
                         chip.und = (chipping[i] as AnyObject).object(forKey:"und") as? Int
                         chip.green = (chipping[i] as AnyObject).object(forKey:"green") as? Bool
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             chip.proximityX = chip.proximityX/YARD
                             chip.proximityY = chip.proximityY/YARD
                             chip.distance = chip.distance/YARD
@@ -558,7 +558,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                             hole.spread = (holes[i] as AnyObject).object(forKey:"spread") as! Double
                         }
 
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             hole.distance = hole.distance/YARD
                         }
                         if let fHit = (holes[i] as AnyObject).object(forKey:"fairway") as? String{
@@ -577,7 +577,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                         chip.proximityY = (chipping[i] as AnyObject).object(forKey:"proximityY") as? Double
                         chip.und = (chipping[i] as AnyObject).object(forKey:"und") as? Int
                         chip.green = (chipping[i] as AnyObject).object(forKey:"green") as? Bool
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             chip.proximityX = chip.proximityX/YARD
                             chip.proximityY = chip.proximityY/YARD
                             chip.distance = chip.distance/YARD
@@ -595,7 +595,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                         chip.proximityY = (chipping[i] as AnyObject).object(forKey:"proximityY") as? Double
                         chip.und = (chipping[i] as AnyObject).object(forKey:"und") as? Int
                         chip.green = (chipping[i] as AnyObject).object(forKey:"green") as? Bool
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             chip.proximityX = chip.proximityX/YARD
                             chip.proximityY = chip.proximityY/YARD
                             chip.distance = chip.distance/YARD
@@ -978,7 +978,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                                 clubData.distance = distance as! Double
                             }
                             var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
-                            if let strk = (valueArray[j] as AnyObject).object(forKey: strkGainedString[skrokesGainedFilter]) as? Double{
+                            if let strk = (valueArray[j] as AnyObject).object(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
                                 strokesGained = strk
                             }
                             clubData.strokesGained = strokesGained
@@ -1098,7 +1098,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             scattredSpreadOfTheTeeChart.leftAxis.labelCount = 3
             let formatter = NumberFormatter()
             formatter.positiveSuffix = " yd"
-            if(distanceFilter == 1){
+            if(Constants.distanceFilter == 1){
                 formatter.positiveSuffix = " m"
             }
             scattredSpreadOfTheTeeChart.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
@@ -1280,7 +1280,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 if(v != self.card1TableView){
                     v.addSubview(shareStatsButton)
                 }
-                if !isProMode {
+                if !Constants.isProMode {
                     
 //                    self.cardForChippingAccuracy1.makeBlurView(targetView: cardForChippingAccuracy1)
                     self.setProLockedUI(targetView: cardForChippingAccuracy1, title: "Chipping Accuracy")
@@ -1537,7 +1537,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         cell.btnViewScore.layer.cornerRadius = 3.0
         cell.btnHoleByHole.layer.cornerRadius = 3.0
         cell.btnHoleByHole.isHidden = false
-        if let mode = matchDataDic.value(forKey: "scoringMode") as? String{
+        if let mode = Constants.matchDataDic.value(forKey: "scoringMode") as? String{
             if(mode == "classic") || (mode == "rangefinder"){
                 cell.btnHoleByHole.isHidden = true
             }
@@ -1657,7 +1657,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     
     @objc func viewHoleByHoleAction(_ sender: UIButton!) {
         if(superClassName! == "NewGameVC") || superClassName! == "MapViewController" || superClassName! == "RFMapVC" || (superClassName! == "NewMapVC"){
-            self.matchDataDict = matchDataDic
+            self.matchDataDict = Constants.matchDataDic
         }
         let playerDict = NSMutableDictionary()
         for data in self.finalPlayerMArray{

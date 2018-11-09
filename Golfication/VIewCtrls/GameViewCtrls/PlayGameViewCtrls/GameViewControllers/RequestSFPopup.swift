@@ -117,8 +117,8 @@ class RequestSFPopup: UIViewController, UIImagePickerControllerDelegate, UINavig
             let courseDetailDic = NSMutableDictionary()
             let courseDic = NSMutableDictionary()
             let courseId = ref!.child("stablefordRequest").childByAutoId().key
-            courseDic.setObject(selectedGolfID, forKey: "courseId" as NSCopying)
-            courseDic.setObject(selectedGolfName, forKey: "courseName" as NSCopying)
+            courseDic.setObject(Constants.selectedGolfID, forKey: "courseId" as NSCopying)
+            courseDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
             courseDic.setObject(urlString, forKey: "image" as NSCopying)
             courseDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
             courseDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
@@ -126,7 +126,7 @@ class RequestSFPopup: UIViewController, UIImagePickerControllerDelegate, UINavig
             courseDetailDic.setObject(courseDic, forKey: courseId as NSCopying)
             ref.child("stablefordRequest").updateChildValues(courseDetailDic as! [AnyHashable : Any])
             
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/stablefordCourse/").updateChildValues([selectedGolfID:Timestamp])
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/stablefordCourse/").updateChildValues([Constants.selectedGolfID:Timestamp])
 //            self.progressView.hide(navItem: self.navigationItem)
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "hideStableFord"),object : nil)
         }

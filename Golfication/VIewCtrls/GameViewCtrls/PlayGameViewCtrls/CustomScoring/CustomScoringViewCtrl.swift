@@ -120,7 +120,7 @@ class CustomScoringViewCtrl: UIViewController {
             holeWiseShots.setObject(true, forKey: "holeOut" as NSCopying)
             holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
             debugPrint(holeWiseShots)
-            ref.child("matchData/\(matchId)/scoring/\(holeNumber!-1)/\(playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+            ref.child("matchData/\(Constants.matchId)/scoring/\(holeNumber!-1)/\(playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             let dataObject = (hole:holeNumber-1,id:playerId,dict:holeWiseShots)
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "newObject"), object: dataObject)
             dismiss(animated: true, completion: nil)

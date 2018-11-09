@@ -112,7 +112,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.btnActionRestartRound(Any.self)
         }))
         var descardRound = "Discard Round"
-        if isEdited{
+        if Constants.isEdited{
             descardRound = "Delete Round"
         }
         let discardOption = (UIAlertAction(title: descardRound, style: UIAlertActionStyle.default, handler: { action in
@@ -213,7 +213,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 if(playersButton[j].id == Auth.auth().currentUser?.uid){
                     let playerData = ["holeOut":false]
                     player.setObject(playerData, forKey: playersButton[j].id as NSCopying)
-                    ref.child("matchData/\(matchId)/scoring/\(i)/").updateChildValues(player as! [AnyHashable : Any])
+                    ref.child("matchData/\(Constants.matchId)/scoring/\(i)/").updateChildValues(player as! [AnyHashable : Any])
                     self.scoreData[i].players[j].addEntries(from: playerData)
                 }
             }
@@ -230,7 +230,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             i += 1
         }
-        if isEdited{
+        if Constants.isEdited{
             self.exitGamePopUpView.btnDiscardText = "Delete Round"
         }
         self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoreData.count) Holes Completed."
@@ -268,20 +268,20 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         return myVal
     }
     func exitWithoutSave(){
-        if(matchId.count > 1){
+        if(Constants.matchId.count > 1){
             self.updateFeedNode()
             if(Auth.auth().currentUser!.uid.count > 1){
-                ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
+                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
             }
-            if(matchId.count > 1){
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(matchId)").removeValue()
+            if(Constants.matchId.count > 1){
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(Constants.matchId)").removeValue()
             }
-            matchId.removeAll()
-            isUpdateInfo = true
+            Constants.matchId.removeAll()
+            Constants.isUpdateInfo = true
             self.navigationController?.popToRootViewController(animated: true)
-            addPlayersArray.removeAllObjects()
-            if mode>0{
-                Analytics.logEvent("mode\(mode)_game_discarded", parameters: [:])
+            Constants.addPlayersArray.removeAllObjects()
+            if Constants.mode>0{
+                Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
                 let center = UNUserNotificationCenter.current()
                 center.removeAllPendingNotificationRequests()
             }
@@ -307,14 +307,14 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 
                 let currentHoleWhilePlaying = NSMutableDictionary()
                 currentHoleWhilePlaying.setObject("\(holIndex+1)", forKey: "currentHole" as NSCopying)
-                ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
                 self.holeIndex = holIndex-1
                 self.nextAction(self.btnNext)
             }))
             emptyAlert.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
                 self.progressView.show()
                 let generateStats = GenerateStats()
-                generateStats.matchKey = matchId
+                generateStats.matchKey = Constants.matchId
                 generateStats.generateStats()
             }))
             self.present(emptyAlert, animated: true, completion: nil)
@@ -322,30 +322,30 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         else{
             self.progressView.show()
             let generateStats = GenerateStats()
-            generateStats.matchKey = matchId
+            generateStats.matchKey = Constants.matchId
             generateStats.generateStats()
         }
     }
     @objc func statsCompleted(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.show()
-        if(matchId.count > 1){
-            ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(matchId)").removeValue()
+        if(Constants.matchId.count > 1){
+            ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(Constants.matchId)").removeValue()
         }
         self.sendMatchFinishedNotification()
-        if(Auth.auth().currentUser!.uid.count>1) &&  (matchId.count > 1){
-            ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
+        if(Auth.auth().currentUser!.uid.count>1) &&  (Constants.matchId.count > 1){
+            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
         }
-        addPlayersArray = NSMutableArray()
+        Constants.addPlayersArray = NSMutableArray()
         self.updateFeedNode()
-        isUpdateInfo = true
-        if mode>0{
-            Analytics.logEvent("mode\(mode)_game_completed", parameters: [:])
+        Constants.isUpdateInfo = true
+        if Constants.mode>0{
+            Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
             let center = UNUserNotificationCenter.current()
             center.removeAllPendingNotificationRequests()
         }
-        if(matchId.count > 1){
-            self.gotoFeedBackViewController(mID: matchId,mode:mode)
+        if(Constants.matchId.count > 1){
+            self.gotoFeedBackViewController(mID: Constants.matchId,mode:Constants.mode)
         }
     }
     func sendMatchFinishedNotification(){
@@ -358,7 +358,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             for data in dataDic{
                 group.enter()
-                Notification.sendNotification(reciever: data.key, message: "\(Auth.auth().currentUser?.displayName ?? "guest") just finished a round at \(selectedGolfName).", type: "8", category: "finishedGame", matchDataId: matchId, feedKey:"")
+                Notification.sendNotification(reciever: data.key, message: "\(Auth.auth().currentUser?.displayName ?? "guest") just finished a round at \(Constants.selectedGolfName).", type: "8", category: "finishedGame", matchDataId: Constants.matchId, feedKey:"")
                 group.leave()
             }
             
@@ -372,7 +372,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
         feedDict.setObject(self.matchDataDict.value(forKey: "timestamp") as Any, forKey: "timestamp" as NSCopying)
-        feedDict.setObject(matchId, forKey: "matchKey" as NSCopying)
+        feedDict.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
         if(Auth.auth().currentUser?.photoURL != nil){
@@ -411,7 +411,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             viewCtrl.fromGameImprovement = true
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoreData.removeAll()
-            matchId.removeAll()
+            Constants.matchId.removeAll()
             
         }
         self.present(viewCtrl, animated: true, completion: nil)
@@ -452,7 +452,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         updateData(indexToUpdate: self.holeIndex)
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
-        ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
         let transition = CATransition()
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromRight
@@ -472,7 +472,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         updateData(indexToUpdate: self.holeIndex)
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
-        ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
         let transition = CATransition()
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromLeft
@@ -547,7 +547,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             if let current = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
                 self.holeIndex = Int(current)!-1
             }else{
-                if let current = matchDataDic.value(forKeyPath: "currentHole") as? String{
+                if let current = Constants.matchDataDic.value(forKeyPath: "currentHole") as? String{
                     self.holeIndex = Int(current.isEmpty ? "1":current)! - 1
                 }
             }
@@ -594,12 +594,12 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         btnBack.setImage(backBtnImage, for: .normal)
         btnBack.tintColor = UIColor.glfWhite
         self.startingIndex = 1
-        if let startingIndex = matchDataDic.value(forKeyPath: "startingHole") as? String{
+        if let startingIndex = Constants.matchDataDic.value(forKeyPath: "startingHole") as? String{
             if startingIndex.count > 2{
                 self.startingIndex = Int(startingIndex)!
             }
         }
-        self.gameTypeIndex = matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+        self.gameTypeIndex = Constants.matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateView(_:)), name: NSNotification.Name(rawValue: "updateView"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
         lblCourseName.text = "\(matchDataDict.value(forKey: "courseName")!)"
@@ -703,7 +703,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         if(isAccept){
             matchDataDictionary = self.matchDataDict
         }else{
-            matchDataDictionary = matchDataDic
+            matchDataDictionary = Constants.matchDataDic
         }
         
         self.startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as? String ?? "1") ?? 1
@@ -792,13 +792,13 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             index += 1
         }
         var slopeIndex = 0
-        for data in teeArr{
+        for data in Constants.teeArr{
             if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()) && (data.name.lowercased() == self.teeTypeArr[index].color.lowercased()){
                 break
             }
             slopeIndex += 1
         }
-        let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
+        let data = (self.teeTypeArr[index].handicap * Double(Constants.teeArr[slopeIndex].slope)!)
         return (Double(data / 113)).rounded()
     }
     func saveNExitPressed(button:UIButton) {
@@ -826,7 +826,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.exitWithoutSave()
     }
     func getScoreFromMatchDataFirebase(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchId)/scoring/\(self.holeIndex)/") { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/") { (snapshot) in
             if  let score = (snapshot.value as? NSDictionary){
                 var playersArray = [NSMutableDictionary]()
                 for(key,value) in score{
@@ -1162,7 +1162,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             if !dataDic.isEmpty{
                 for (key, _) in dataDic{
-                    if key == selectedGolfID{
+                    if key == Constants.selectedGolfID{
                         self.chkStableford = true
                         break
                     }
@@ -1184,7 +1184,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             if !dataDic.isEmpty{
                 for (key, _) in dataDic{
-                    if key == selectedGolfID{
+                    if key == Constants.selectedGolfID{
                         self.chkStableford = true
                         break
                     }
@@ -1382,8 +1382,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         let title = sender.currentTitle
         self.holeWiseShots.setObject(Int(title!)!, forKey: "strokes" as NSCopying)
         self.holeWiseShots.setObject(true, forKey: "holeOut" as NSCopying)
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(["strokes":Int(title!)!] as [AnyHashable : Any])
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(["holeOut":true] as [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(["strokes":Int(title!)!] as [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(["holeOut":true] as [AnyHashable : Any])
         self.setHoleShotDetails(par:self.scoreData[self.holeIndex].par,shots:Int(title!)!)
         self.btnScore.setTitle("\(title!)", for: .normal)
         self.scoreSV.isHidden = true
@@ -1421,9 +1421,9 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         holeWiseShots.setObject(sbPoint, forKey: "stableFordPoints" as NSCopying)
         lblStableFordScore.text = "\(sbPoint)"
         btnStableScore.setTitle("Stableford Score", for: .normal)
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/stableFordPoints").setValue(sbPoint)
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(playerId)/stableFordPoints").setValue(sbPoint)
         holeWiseShots.setObject(netScore, forKey: "netScore" as NSCopying)
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(playerId)/netScore").setValue(netScore)
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(playerId)/netScore").setValue(netScore)
         updateScoreData()
     }
     @objc func fairwayHitAction(sender: UIButton!) {
@@ -1431,7 +1431,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         holeWiseShots.removeObject(forKey: "fairway")
         for btn in buttonsArrayForFairwayHit{
             if(btn.isSelected) && (btn.tag == sender.tag){
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["fairway":NSNull()])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["fairway":NSNull()])
                 for btn in buttonsArrayForFairwayHit{
                     btn.isSelected = false
                     btn.backgroundColor = UIColor.clear
@@ -1469,7 +1469,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 }
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
 
         }
@@ -1477,13 +1477,13 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         debugPrint(holeWiseShots)
         updateScoreData()
 
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     @objc func chipShotAction(sender: UIButton!) {
         holeWiseShots.removeObject(forKey: "chipCount")
         for btn in buttonsArrayForChipShot{
             if(btn.isSelected) && (btn.tag == sender.tag){
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["chipCount":NSNull()])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["chipCount":NSNull()])
                 for btn in buttonsArrayForChipShot{
                     btn.isSelected = false
                     btn.backgroundColor = UIColor.clear
@@ -1501,20 +1501,20 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 holeWiseShots.setObject((btn.tag % 10), forKey: "chipCount" as NSCopying)
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     @objc func sandShotAction(sender: UIButton!) {
         holeWiseShots.removeObject(forKey: "sandCount")
 
         for btn in buttonsArrayForSandSide{
             if(btn.isSelected) && (btn.tag == sender.tag){
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["sandCount":NSNull()])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["sandCount":NSNull()])
                 for btn in buttonsArrayForSandSide{
                     btn.isSelected = false
                     btn.backgroundColor = UIColor.clear
@@ -1532,19 +1532,19 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 holeWiseShots.setObject((btn.tag % 10), forKey: "sandCount" as NSCopying)
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     @objc func penaltyShotAction(sender: UIButton!) {
         holeWiseShots.removeObject(forKey: "penaltyCount")
         for btn in buttonsArrayForPenalty{
             if(btn.isSelected) && (btn.tag == sender.tag){
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["penaltyCount":NSNull()])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["penaltyCount":NSNull()])
                 for btn in buttonsArrayForPenalty{
                     btn.isSelected = false
                     btn.backgroundColor = UIColor.clear
@@ -1562,13 +1562,13 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 holeWiseShots.setObject((btn.tag % 10), forKey: "penaltyCount" as NSCopying)
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     
     @objc func girAction(sender: UIButton!) {
@@ -1576,7 +1576,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         holeWiseShots.removeObject(forKey: "gir")
         for btn in buttonsArrayForGIR{
             if(btn.isSelected) && (btn.tag == sender.tag){
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["gir":NSNull()])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["gir":NSNull()])
                 for btn in buttonsArrayForGIR{
                     btn.isSelected = false
                     btn.backgroundColor = UIColor.clear
@@ -1613,14 +1613,14 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
             debugPrint(holeWiseShots)
             updateScoreData()
-            ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+            ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
         }
     }
     @objc func puttsAction(sender: UIButton!) {
         holeWiseShots.removeObject(forKey: "putting")
         for btn in buttonsArrayForPutts{
             if(btn.isSelected) && (btn.tag == sender.tag){
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["putting":NSNull()])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)/").updateChildValues(["putting":NSNull()])
                 for btn in buttonsArrayForPutts{
                     btn.isSelected = false
                     btn.backgroundColor = UIColor.clear
@@ -1638,13 +1638,13 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 holeWiseShots.setObject((btn.tag % 10), forKey: "putting" as NSCopying)
                 holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
-                ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+                ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
-        ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     func updateDictionaryWithValues(dict:NSMutableDictionary)->NSMutableDictionary{
         let dictnary = dict
@@ -1731,7 +1731,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         scoring.setObject(holeArray, forKey: "scoring" as NSCopying)
         if(!isAccept){
-            ref.child("matchData/\(matchId)/").updateChildValues(scoring as! [AnyHashable : Any])
+            ref.child("matchData/\(Constants.matchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
     }
     private func getHCPValue(playerID:String,holeNo:Int)->Int{

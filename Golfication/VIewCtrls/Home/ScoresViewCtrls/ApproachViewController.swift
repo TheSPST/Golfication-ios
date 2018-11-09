@@ -56,7 +56,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         super.viewDidLoad()
         
         Analytics.logEvent("my_scores_approach", parameters: [:])
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
 
         var meterString = ["90m","60m","30m","30m","60m","90m"]
         var i = 0
@@ -98,7 +98,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                 }
             }
         }else{
-            if !isProMode {
+            if !Constants.isProMode {
                 //cardViewApproach.makeBlurView(targetView: cardViewApproach)
                 self.setProLockedUI(targetView: cardViewApproach, title: "Approach Accuracy")
                 
@@ -125,7 +125,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
             for v in self.approachStackView.subviews{
                 if v.isKind(of: CardView.self){
                     cardViewMArray.add(v)
-                    if (!isProMode && !((v == cardViewApproach) || (v == holeProximityCardView))){
+                    if (!Constants.isProMode && !((v == cardViewApproach) || (v == holeProximityCardView))){
                         let shareStatsButton = ShareStatsButton()
                         shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                         shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -134,7 +134,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                         shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                         v.addSubview(shareStatsButton)
                     }
-                    else if isProMode{
+                    else if Constants.isProMode{
                         let shareStatsButton = ShareStatsButton()
                         shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                         shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -223,8 +223,8 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
             girCircularChart.setProgress(value: CGFloat(girPercantage), animationDuration: 1.0)
         }
         
-        if baselineDict != nil{
-            debugPrint("baselineDict==",baselineDict)
+        if Constants.baselineDict != nil{
+            debugPrint("baselineDict==",Constants.baselineDict)
             let publicScore  = PublicScore()
             let publicScoreStr = publicScore.getApproachGIR(p:girPercantage)
             lblAccuracyWithDriverAvg.isHidden = false
@@ -466,7 +466,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         GIRTrendBarChart.leftAxis.axisMinimum = 0.0
         GIRTrendBarChart.leftAxis.axisMaximum = girTotal.max()!+1
         GIRTrendBarChart.leftAxis.labelCount = 5
-        if girArray.count > 2 && baselineDict != nil{
+        if girArray.count > 2 && Constants.baselineDict != nil{
             var attributedText = NSMutableAttributedString()
             let publicScoring = PublicScore()
             let data = publicScoring.getGIRTrendsData(dataValues:girAvg)
@@ -515,7 +515,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                         proximityYPoints.append(data[i].proximityY)
                     }
                 }
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     for i in 0..<proximityXPoints.count{
                         distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i]))
                     }
@@ -535,7 +535,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
             self.lblHoleProximityAvg.isHidden = false
             self.lblAvgHoleProximityValue.isHidden = false
             let sum = distance.reduce(0, +)
-            self.lblAvgHoleProximityValue.text = "\(Int(sum/Double(distance.count))) \(distanceFilter == 1 ? "m" : "yd")"
+            self.lblAvgHoleProximityValue.text = "\(Int(sum/Double(distance.count))) \(Constants.distanceFilter == 1 ? "m" : "yd")"
             self.lblHoleProximityAvg.text = "Average Proximity to Hole after Approach"
         }
     }

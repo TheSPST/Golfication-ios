@@ -19,14 +19,14 @@ class StartGameModeObj: NSObject{
     
     // MARK: setUpClassicMap
     func setUpClassicMap(onCourse:Int){
-        matchDataDic = NSMutableDictionary()
+        Constants.matchDataDic = NSMutableDictionary()
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
-        if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(selectedTeeColor.lowercased(), forKey: "teeColor" as NSCopying)
-            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
+        if Constants.selectedTee.count > 1{
+            tempdic.setObject(Constants.selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(Constants.selectedTeeColor.lowercased(), forKey: "teeColor" as NSCopying)
+            tempdic.setObject("\(Constants.handicap)", forKey: "handicap" as NSCopying)
         }
 
         var imagUrl =  ""
@@ -36,46 +36,46 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(imagUrl, forKey: "image" as NSCopying)
         tempdic.setObject(2, forKey: "status" as NSCopying)
         tempdic.setObject(-1, forKey: "timestamp" as NSCopying)
-        addPlayersArray.insert(tempdic, at: 0)
+        Constants.addPlayersArray.insert(tempdic, at: 0)
         
-        for i in 1..<addPlayersArray.count{
-            (addPlayersArray[i] as AnyObject).setObject(1, forKey: "status" as NSCopying)
+        for i in 1..<Constants.addPlayersArray.count{
+            (Constants.addPlayersArray[i] as AnyObject).setObject(1, forKey: "status" as NSCopying)
         }
-        debugPrint("addPlayersArray== ",addPlayersArray)
+        debugPrint("addPlayersArray== ",Constants.addPlayersArray)
         if(isShowCase){
             let dJohnSonUser = NSMutableDictionary()
             dJohnSonUser.setObject("D.Johnson" , forKey: "name" as NSCopying)
             dJohnSonUser.setObject( "http://www.golfication.com/assets/DJ%20256PNG.png", forKey: "image" as NSCopying)
             dJohnSonUser.setObject(Timestamp , forKey: "timestamp" as NSCopying)
             dJohnSonUser.setObject( "jpSgWiruZuOnWybYce55YDYGXP62", forKey: "id" as NSCopying)
-            addPlayersArray.add(dJohnSonUser)
+            Constants.addPlayersArray.add(dJohnSonUser)
         }
-        matchDataDic.setObject(selectedGolfID, forKey: "courseId" as NSCopying)
-        matchDataDic.setObject(selectedGolfName, forKey: "courseName" as NSCopying)
-        matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-        matchDataDic.setObject(gameType, forKey: "matchType" as NSCopying)
-        matchDataDic.setObject("classic", forKey: "scoringMode" as NSCopying)
-        matchDataDic.setObject(startingHole, forKey: "startingHole" as NSCopying)
-        matchDataDic.setObject(startingHole, forKey: "currentHole" as NSCopying)
-        matchDataDic.setObject((Auth.auth().currentUser?.uid)!, forKey: "startedBy" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedGolfID, forKey: "courseId" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
+        Constants.matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.gameType, forKey: "matchType" as NSCopying)
+        Constants.matchDataDic.setObject("classic", forKey: "scoringMode" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.startingHole, forKey: "startingHole" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.startingHole, forKey: "currentHole" as NSCopying)
+        Constants.matchDataDic.setObject((Auth.auth().currentUser?.uid)!, forKey: "startedBy" as NSCopying)
         let playerDict = NSMutableDictionary()
-        for data in addPlayersArray{
+        for data in Constants.addPlayersArray{
             let player = data as! NSMutableDictionary
             let id = player.value(forKey: "id")
             playerDict.setObject(player, forKey: id as! NSCopying)
         }
-        matchDataDic.setObject(playerDict, forKey: "player" as NSCopying)
-        matchDataDic.setObject(selectedLat, forKey: "lat" as NSCopying)
-        matchDataDic.setObject(selectedLong, forKey: "lng" as NSCopying)
-        matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
+        Constants.matchDataDic.setObject(playerDict, forKey: "player" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedLat, forKey: "lat" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedLong, forKey: "lng" as NSCopying)
+        Constants.matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
         updateLastCourseDetails(scoringMode:"classic")
-        matchId = ref!.child("matchData").childByAutoId().key
-        self.finalMatchDic.setObject(matchDataDic, forKey: matchId as NSCopying)
-        for player in addPlayersArray{
+        Constants.matchId = ref!.child("matchData").childByAutoId().key
+        self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
+        for player in Constants.addPlayersArray{
             
             if let reciever = ((player as AnyObject).object(forKey:"id") as? String){
                 if(reciever != Auth.auth().currentUser?.uid){
-                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") has invited you to a game", type:"7", category: "dont know",matchDataId: matchId, feedKey: "")
+                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") has invited you to a game", type:"7", category: "dont know",matchDataId: Constants.matchId, feedKey: "")
                 }
             }
             
@@ -84,26 +84,26 @@ class StartGameModeObj: NSObject{
        
         if(!isShowCase){
             for (key,_) in playerDict{
-                if((key as! String) == Auth.auth().currentUser?.uid) && (matchId.count > 1){
-                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([matchId:true] as [AnyHashable:Any])
+                if((key as! String) == Auth.auth().currentUser?.uid) && (Constants.matchId.count > 1){
+                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([Constants.matchId:true] as [AnyHashable:Any])
                 }
-                else if (matchId.count > 1){
-                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([matchId:false] as [AnyHashable:Any])
+                else if (Constants.matchId.count > 1){
+                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([Constants.matchId:false] as [AnyHashable:Any])
                 }
             }
         }
-        if  !(selectedGolfID == "") {
-            let courseId = "course_\(selectedGolfID)"
-            self.getParFromFirebase(courseId: courseId, matchData: matchDataDic)
+        if  !(Constants.selectedGolfID == "") {
+            let courseId = "course_\(Constants.selectedGolfID)"
+            self.getParFromFirebase(courseId: courseId, matchData: Constants.matchDataDic)
         }
         FBSomeEvents.shared.logGameStartedEvent(gameType: 3)
     }
     func updateLastCourseDetails(scoringMode:String){
         let lastCourseDict = NSMutableDictionary()
-        lastCourseDict.setObject(selectedGolfID, forKey: "id" as NSCopying)
-        lastCourseDict.setObject(selectedLat, forKey: "lat" as NSCopying)
-        lastCourseDict.setObject(selectedLong, forKey: "lng" as NSCopying)
-        lastCourseDict.setObject(selectedGolfName, forKey: "name" as NSCopying)
+        lastCourseDict.setObject(Constants.selectedGolfID, forKey: "id" as NSCopying)
+        lastCourseDict.setObject(Constants.selectedLat, forKey: "lat" as NSCopying)
+        lastCourseDict.setObject(Constants.selectedLong, forKey: "lng" as NSCopying)
+        lastCourseDict.setObject(Constants.selectedGolfName, forKey: "name" as NSCopying)
         
         if(scoringMode == "advanced"){
             lastCourseDict.setObject("2", forKey: "mapped" as NSCopying)
@@ -134,7 +134,7 @@ class StartGameModeObj: NSObject{
             }
             DispatchQueue.main.async(execute: {
                 if(self.scoring.count > 0){
-                    mode = 3
+                    Constants.mode = 3
                     Analytics.logEvent("mode3_gameStarted", parameters: [:])
                     Notification.sendLocaNotificatonToUser()
                     
@@ -149,14 +149,14 @@ class StartGameModeObj: NSObject{
     
     // MARK: setUpRFMap
     func setUpRFMap(golfId: String,onCourse:Int){
-        matchDataDic = NSMutableDictionary()
+        Constants.matchDataDic = NSMutableDictionary()
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
-        if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(selectedTeeColor.lowercased(), forKey: "teeColor" as NSCopying)
-            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
+        if Constants.selectedTee.count > 1{
+            tempdic.setObject(Constants.selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(Constants.selectedTeeColor.lowercased(), forKey: "teeColor" as NSCopying)
+            tempdic.setObject("\(Constants.handicap)", forKey: "handicap" as NSCopying)
 
         }
         var imagUrl =  ""
@@ -166,9 +166,9 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(imagUrl, forKey: "image" as NSCopying)
         tempdic.setObject(2, forKey: "status" as NSCopying)
         tempdic.setObject(-1, forKey: "timestamp" as NSCopying)
-        addPlayersArray.insert(tempdic, at: 0)
-        for i in 1..<addPlayersArray.count{
-            (addPlayersArray[i] as AnyObject).setObject(1, forKey: "status" as NSCopying)
+        Constants.addPlayersArray.insert(tempdic, at: 0)
+        for i in 1..<Constants.addPlayersArray.count{
+            (Constants.addPlayersArray[i] as AnyObject).setObject(1, forKey: "status" as NSCopying)
         }
         if(isShowCase){
             let dJohnSonUser = NSMutableDictionary()
@@ -176,33 +176,33 @@ class StartGameModeObj: NSObject{
             dJohnSonUser.setObject( "http://www.golfication.com/assets/DJ%20256PNG.png", forKey: "image" as NSCopying)
             dJohnSonUser.setObject(Timestamp , forKey: "timestamp" as NSCopying)
             dJohnSonUser.setObject( "jpSgWiruZuOnWybYce55YDYGXP62", forKey: "id" as NSCopying)
-            addPlayersArray.add(dJohnSonUser)
+            Constants.addPlayersArray.add(dJohnSonUser)
         }
-        matchDataDic.setObject(selectedGolfID, forKey: "courseId" as NSCopying)
-        matchDataDic.setObject(selectedGolfName, forKey: "courseName" as NSCopying)
-        matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-        matchDataDic.setObject(gameType, forKey: "matchType" as NSCopying)
-        matchDataDic.setObject(startingHole, forKey: "startingHole" as NSCopying)
-        matchDataDic.setObject(startingHole, forKey: "currentHole" as NSCopying)
-        matchDataDic.setObject("rangefinder", forKey: "scoringMode" as NSCopying)
-        matchDataDic.setObject((Auth.auth().currentUser?.uid)!, forKey: "startedBy" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedGolfID, forKey: "courseId" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
+        Constants.matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.gameType, forKey: "matchType" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.startingHole, forKey: "startingHole" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.startingHole, forKey: "currentHole" as NSCopying)
+        Constants.matchDataDic.setObject("rangefinder", forKey: "scoringMode" as NSCopying)
+        Constants.matchDataDic.setObject((Auth.auth().currentUser?.uid)!, forKey: "startedBy" as NSCopying)
         let playerDict = NSMutableDictionary()
-        for data in addPlayersArray{
+        for data in Constants.addPlayersArray{
             let player = data as! NSMutableDictionary
             let id = player.value(forKey: "id")
             playerDict.setObject(player, forKey: id as! NSCopying)
         }
-        matchDataDic.setObject(playerDict, forKey: "player" as NSCopying)
-        matchDataDic.setObject(selectedLat, forKey: "lat" as NSCopying)
-        matchDataDic.setObject(selectedLong, forKey: "lng" as NSCopying)
-        matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
+        Constants.matchDataDic.setObject(playerDict, forKey: "player" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedLat, forKey: "lat" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedLong, forKey: "lng" as NSCopying)
+        Constants.matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
         updateLastCourseDetails(scoringMode:"rangefinder")
-        matchId = ref!.child("matchData").childByAutoId().key
-        self.finalMatchDic.setObject(matchDataDic, forKey: matchId as NSCopying)
-        for player in addPlayersArray{
+        Constants.matchId = ref!.child("matchData").childByAutoId().key
+        self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
+        for player in Constants.addPlayersArray{
             if let reciever = ((player as AnyObject).object(forKey:"id") as? String){
                 if(reciever != Auth.auth().currentUser?.uid){
-                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") has invited you to a game", type:"7", category: "dont know",matchDataId: matchId, feedKey: "")
+                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") has invited you to a game", type:"7", category: "dont know",matchDataId: Constants.matchId, feedKey: "")
                 }
             }
             
@@ -210,17 +210,17 @@ class StartGameModeObj: NSObject{
         ref.child("matchData").updateChildValues(self.finalMatchDic as! [AnyHashable : Any])
         if(!isShowCase){
             for (key,_) in playerDict{
-                if((key as! String) == Auth.auth().currentUser?.uid) && matchId.count > 1{
-                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([matchId:true] as [AnyHashable:Any])
+                if((key as! String) == Auth.auth().currentUser?.uid) && Constants.matchId.count > 1{
+                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([Constants.matchId:true] as [AnyHashable:Any])
                 }
-                else if (matchId.count>1){
-                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([matchId:false] as [AnyHashable:Any])
+                else if (Constants.matchId.count>1){
+                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([Constants.matchId:false] as [AnyHashable:Any])
                 }
             }
         }
-        if  !(selectedGolfID == "") {
+        if  !(Constants.selectedGolfID == "") {
             
-            mode = 2
+            Constants.mode = 2
             Analytics.logEvent("mode2_gameStarted", parameters: [:])
             Notification.sendLocaNotificatonToUser()
             
@@ -233,7 +233,7 @@ class StartGameModeObj: NSObject{
     func showDefaultMap(onCourse:Int){
         
         setUpMapData(scoringMode: "advanced",onCourse:onCourse)
-        mode = 1
+        Constants.mode = 1
         Analytics.logEvent("mode1_gameStarted", parameters: [:])
         Notification.sendLocaNotificatonToUser()
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: self.scoring)
@@ -241,14 +241,14 @@ class StartGameModeObj: NSObject{
     
     func setUpMapData(scoringMode:String,onCourse:Int){
         
-        matchDataDic = NSMutableDictionary()
+        Constants.matchDataDic = NSMutableDictionary()
         let tempdic = NSMutableDictionary()
         tempdic.setObject(Auth.auth().currentUser?.uid ?? "", forKey: "id" as NSCopying)
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
-        if selectedTee.count > 1{
-            tempdic.setObject(selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject(selectedTeeColor.lowercased(), forKey: "teeColor" as NSCopying)
-            tempdic.setObject("\(handicap)", forKey: "handicap" as NSCopying)
+        if Constants.selectedTee.count > 1{
+            tempdic.setObject(Constants.selectedTee.lowercased(), forKey: "tee" as NSCopying)
+            tempdic.setObject(Constants.selectedTeeColor.lowercased(), forKey: "teeColor" as NSCopying)
+            tempdic.setObject("\(Constants.handicap)", forKey: "handicap" as NSCopying)
         }
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
@@ -257,51 +257,51 @@ class StartGameModeObj: NSObject{
         tempdic.setObject(imagUrl, forKey: "image" as NSCopying)
         tempdic.setObject(2, forKey: "status" as NSCopying)
         tempdic.setObject(-1, forKey: "timestamp" as NSCopying)
-        addPlayersArray.insert(tempdic, at: 0)
+        Constants.addPlayersArray.insert(tempdic, at: 0)
         
-        for i in 1..<addPlayersArray.count{
-            (addPlayersArray[i] as AnyObject).setObject(1, forKey: "status" as NSCopying)
+        for i in 1..<Constants.addPlayersArray.count{
+            (Constants.addPlayersArray[i] as AnyObject).setObject(1, forKey: "status" as NSCopying)
         }
-        matchDataDic.setObject(selectedGolfID, forKey: "courseId" as NSCopying)
-        matchDataDic.setObject(selectedGolfName, forKey: "courseName" as NSCopying)
-        matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-        matchDataDic.setObject(gameType, forKey: "matchType" as NSCopying)
-        matchDataDic.setObject(startingHole, forKey: "startingHole" as NSCopying)
-        matchDataDic.setObject(startingHole, forKey: "currentHole" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedGolfID, forKey: "courseId" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
+        Constants.matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.gameType, forKey: "matchType" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.startingHole, forKey: "startingHole" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.startingHole, forKey: "currentHole" as NSCopying)
         if(scoringMode.count > 0){
-            matchDataDic.setObject(scoringMode, forKey: "scoringMode" as NSCopying)
+            Constants.matchDataDic.setObject(scoringMode, forKey: "scoringMode" as NSCopying)
         }
-        matchDataDic.setObject((Auth.auth().currentUser?.uid)!, forKey: "startedBy" as NSCopying)
+        Constants.matchDataDic.setObject((Auth.auth().currentUser?.uid)!, forKey: "startedBy" as NSCopying)
         let playerDict = NSMutableDictionary()
-        for data in addPlayersArray{
+        for data in Constants.addPlayersArray{
             let player = data as! NSMutableDictionary
             let id = player.value(forKey: "id")
             playerDict.setObject(player, forKey: id as! NSCopying)
         }
         
-        matchDataDic.setObject(playerDict, forKey: "player" as NSCopying)
-        matchDataDic.setObject(selectedLat, forKey: "lat" as NSCopying)
-        matchDataDic.setObject(selectedLong, forKey: "lng" as NSCopying)
-        matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
+        Constants.matchDataDic.setObject(playerDict, forKey: "player" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedLat, forKey: "lat" as NSCopying)
+        Constants.matchDataDic.setObject(Constants.selectedLong, forKey: "lng" as NSCopying)
+        Constants.matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
         updateLastCourseDetails(scoringMode:"advanced")
-        matchId = ref!.child("matchData").childByAutoId().key
-        self.finalMatchDic.setObject(matchDataDic, forKey: matchId as NSCopying)
+        Constants.matchId = ref!.child("matchData").childByAutoId().key
+        self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
         
-        for player in addPlayersArray{
+        for player in Constants.addPlayersArray{
             if let reciever = ((player as AnyObject).object(forKey:"id") as? String){
                 if(reciever != Auth.auth().currentUser?.uid){
-                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") has invited you to a game", type:"7", category: "dont know",matchDataId: matchId, feedKey: "")
+                    Notification.sendNotification(reciever: reciever, message: "\(Auth.auth().currentUser?.displayName ?? "Guest1") has invited you to a game", type:"7", category: "dont know",matchDataId: Constants.matchId, feedKey: "")
                 }
             }
         }
         ref.child("matchData").updateChildValues(self.finalMatchDic as! [AnyHashable : Any])
         if(!isShowCase){
             for (key,_) in playerDict{
-                if((key as! String) == Auth.auth().currentUser?.uid) && (matchId.count > 1){
-                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([matchId:true] as [AnyHashable:Any])
+                if((key as! String) == Auth.auth().currentUser?.uid) && (Constants.matchId.count > 1){
+                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([Constants.matchId:true] as [AnyHashable:Any])
                 }
-                else if(matchId.count > 1){
-                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([matchId:false] as [AnyHashable:Any])
+                else if(Constants.matchId.count > 1){
+                    ref.child("userData/\(key as! String)/activeMatches/").updateChildValues([Constants.matchId:false] as [AnyHashable:Any])
                 }
             }
         }

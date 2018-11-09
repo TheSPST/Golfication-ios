@@ -80,11 +80,11 @@
 		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
 		3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */ = {isa = PBXBuildFile; fileRef = 3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */; };
+		3ECE55CB21955DEC006F3A3D /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3ECE55CA21955DEC006F3A3D /* GoogleService-Info-demo.plist */; };
 		3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED2C8792088C08800604F31 /* ProfileVC.swift */; };
 		3EDC552D2009E38F002012E1 /* ProMemberPopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDC552C2009E38F002012E1 /* ProMemberPopUpVC.swift */; };
 		3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */; };
 		3EDC6BBB2109E97A009B6F49 /* ExitGamePopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EDC6BB92109E97A009B6F49 /* ExitGamePopUpView.xib */; };
-		3EDD0570218DCF43000A488A /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3EDD056F218DCF42000A488A /* GoogleService-Info-live.plist */; };
 		3EE21F9A20E2129B009B2C60 /* NextRoundVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE21F9920E2129A009B2C60 /* NextRoundVC.swift */; };
 		3EEC413820E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEC413720E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift */; };
 		3EEC413A20E0D1AF0093D0CC /* OADFirmwareImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEC413920E0D1AF0093D0CC /* OADFirmwareImage.swift */; };
@@ -254,6 +254,7 @@
 		4BD6AABD20A9B0E300F1839C /* GolfBagTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD6AABC20A9B0E300F1839C /* GolfBagTabsVC.swift */; };
 		4BD98B582025DC3900535AF1 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD98B572025DC3900535AF1 /* AdSupport.framework */; };
 		4BD98B5A2025DC4700535AF1 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD98B592025DC4700535AF1 /* iAd.framework */; };
+		4BDE2FA4218ECC0F00065A9B /* GlobalConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDE2FA3218ECC0F00065A9B /* GlobalConstant.swift */; };
 		4BDF242620765B4B0037CE6A /* NewHomeFeedViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BDF242520765B4B0037CE6A /* NewHomeFeedViewCell.swift */; };
 		4BE0DB74206BB9B100AE33E2 /* ShareStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE0DB73206BB9B100AE33E2 /* ShareStatsButton.swift */; };
 		4BE11A6B21353568008E529A /* CustomColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE11A6A21353568008E529A /* CustomColorSlider.swift */; };
@@ -344,11 +345,11 @@
 		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
 		3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json"; sourceTree = "<group>"; };
+		3ECE55CA21955DEC006F3A3D /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		3ED2C8792088C08800604F31 /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		3EDC552C2009E38F002012E1 /* ProMemberPopUpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProMemberPopUpVC.swift; sourceTree = "<group>"; };
 		3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExitGamePopUpView.swift; sourceTree = "<group>"; };
 		3EDC6BB92109E97A009B6F49 /* ExitGamePopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExitGamePopUpView.xib; sourceTree = "<group>"; };
-		3EDD056F218DCF42000A488A /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3EE21F9920E2129A009B2C60 /* NextRoundVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NextRoundVC.swift; sourceTree = "<group>"; };
 		3EEC413720E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDeviceFrameworkViewCtrl.swift; sourceTree = "<group>"; };
 		3EEC413920E0D1AF0093D0CC /* OADFirmwareImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OADFirmwareImage.swift; sourceTree = "<group>"; };
@@ -530,6 +531,7 @@
 		4BD6AABC20A9B0E300F1839C /* GolfBagTabsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolfBagTabsVC.swift; sourceTree = "<group>"; };
 		4BD98B572025DC3900535AF1 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		4BD98B592025DC4700535AF1 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		4BDE2FA3218ECC0F00065A9B /* GlobalConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalConstant.swift; sourceTree = "<group>"; };
 		4BDF242520765B4B0037CE6A /* NewHomeFeedViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHomeFeedViewCell.swift; sourceTree = "<group>"; };
 		4BE0DB73206BB9B100AE33E2 /* ShareStatsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareStatsButton.swift; sourceTree = "<group>"; };
 		4BE11A6A21353568008E529A /* CustomColorSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomColorSlider.swift; sourceTree = "<group>"; };
@@ -619,7 +621,7 @@
 		0DB733001FA078160078F08B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				4BB26CCB1FF77EB5001E9556 /* ChartExtensions */,
+				4BDE2FA3218ECC0F00065A9B /* GlobalConstant.swift */,
 				4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */,
 				4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */,
 				4BF564EE1FD2AA03006BDB0E /* String+Width.swift */,
@@ -628,6 +630,7 @@
 				0D7F3BF51F9E2AD900AE5301 /* Date+String.swift */,
 				0DE6ACF91FBF00D9004A5D9E /* UILabel+Corner.swift */,
 				3E15D32D1FFE0800005F4068 /* notificationExtension.swift */,
+				4BB26CCB1FF77EB5001E9556 /* ChartExtensions */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1253,7 +1256,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3EDD056F218DCF42000A488A /* GoogleService-Info-live.plist */,
+				3ECE55CA21955DEC006F3A3D /* GoogleService-Info-demo.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1383,7 +1386,6 @@
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
-				3EDD0570218DCF43000A488A /* GoogleService-Info-live.plist in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
 				3EAE867F2125573F0081857B /* Device.storyboard in Resources */,
@@ -1413,6 +1415,7 @@
 				4B7E2A7D2175C20B00DFC3EB /* Default@2x.png in Resources */,
 				4B1F6BD72090A29F00312EA7 /* Game.storyboard in Resources */,
 				3E035F87215293F000019014 /* OAD.storyboard in Resources */,
+				3ECE55CB21955DEC006F3A3D /* GoogleService-Info-demo.plist in Resources */,
 				3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */,
 				4B7E2A7C2175C20B00DFC3EB /* radar.png in Resources */,
 				4B8C8D401FF674D0001F5D01 /* SF-Pro-Display-BlackItalic.otf in Resources */,
@@ -1699,6 +1702,7 @@
 				3EEC413E20E1031D0093D0CC /* StartGameModeObj.swift in Sources */,
 				3E03F11A207F593A001DDC5F /* ScrollableStackView.swift in Sources */,
 				4BC879BA20C517EF00A3B2BB /* PracticeGameViewCtrl.swift in Sources */,
+				4BDE2FA4218ECC0F00065A9B /* GlobalConstant.swift in Sources */,
 				3EE21F9A20E2129B009B2C60 /* NextRoundVC.swift in Sources */,
 				4B1F6BC72090A29F00312EA7 /* Bound.swift in Sources */,
 				4BE0DB74206BB9B100AE33E2 /* ShareStatsButton.swift in Sources */,

@@ -30,8 +30,8 @@ class UpdateDeviceFrameworkViewCtrl: UIViewController {
     
     // MARK: - btnAction
     @IBAction func btnActionConnect(_ sender: UIButton) {
-        ble = BLE()
-        ble.startScanning()
+        Constants.ble = BLE()
+        Constants.ble.startScanning()
         lblConnected.text = "Connected"
     }
     

@@ -37,7 +37,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         
         super.viewDidLoad()
         
-        finalFilterDic.removeAllObjects()
+        Constants.finalFilterDic.removeAllObjects()
         buttonBarView.isHidden = true
         self.setupActivityIndicator()
         //self.getScoreDataFromFirebase()
@@ -91,7 +91,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         let group = DispatchGroup()
         
         // Remove Filter Score Data if Exist
-        section5 = [String]()
+        Constants.section5 = [String]()
         //--------------------------------
         
         for i in 0..<dataArray.count {
@@ -99,7 +99,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
             self.myDataArray[i] = dataArray[i]
             // Pass Score Data to filter screen
             let course = ((self.myDataArray[i] as AnyObject).object(forKey:"course") ?? "") as! String
-            section5.append(course)
+            Constants.section5.append(course)
             //--------------------------------
             
             group.leave()
@@ -168,7 +168,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                     chip.hole = (chipping[i] as AnyObject).object(forKey:"hole") as? Int
                     chip.proximityX = (chipping[i] as AnyObject).object(forKey:"proximityX") as? Double
                     chip.proximityY = (chipping[i] as AnyObject).object(forKey:"proximityY") as? Double
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         chip.proximityX = chip.proximityX/YARD
                         chip.proximityY = chip.proximityY/YARD
                         chip.distance = chip.distance/YARD
@@ -194,7 +194,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                     chip.hole = (sand[i] as AnyObject).object(forKey:"hole") as? Int
                     chip.proximityX = (sand[i] as AnyObject).object(forKey:"proximityX") as? Double
                     chip.proximityY = (sand[i] as AnyObject).object(forKey:"proximityY") as? Double
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         chip.proximityX = chip.proximityX/YARD
                         chip.proximityY = chip.proximityY/YARD
                         chip.distance = chip.distance/YARD
@@ -222,7 +222,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                     chip.proximityX = (approach[i] as AnyObject).object(forKey:"proximityX") as! Double
                     chip.proximityY = (approach[i] as AnyObject).object(forKey:"proximityY") as! Double
                     chip.green = (approach[i] as AnyObject).object(forKey:"green") as? Bool
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         chip.proximityX = chip.proximityX/YARD
                         chip.proximityY = chip.proximityY/YARD
                         chip.distance = chip.distance/YARD
@@ -276,8 +276,8 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         let index = self.buttonBarView.selectedIndex
         
         var CSTypeArray = [String]()
-        if(finalFilterDic.count>0){
-            CSTypeArray = finalFilterDic.value(forKey: "CSTypeArray") as! [String]
+        if(Constants.finalFilterDic.count>0){
+            CSTypeArray = Constants.finalFilterDic.value(forKey: "CSTypeArray") as! [String]
         }
         
         if index == 0{
@@ -338,12 +338,12 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         var CSTypeArray: [String] = []
         
         
-        if finalFilterDic.count>0 {
+        if Constants.finalFilterDic.count>0 {
             
-            RSTypeArray = finalFilterDic.value(forKey: "RSTypeArray") as! [String]
-            CSTypeArray = finalFilterDic.value(forKey: "CSTypeArray") as! [String]
-            HoleTypeArray = finalFilterDic.value(forKey: "HoleTypeArray") as! [String]
-            CoursesTypeArray = finalFilterDic.value(forKey: "CoursesTypeArray") as! [String]
+            RSTypeArray = Constants.finalFilterDic.value(forKey: "RSTypeArray") as! [String]
+            CSTypeArray = Constants.finalFilterDic.value(forKey: "CSTypeArray") as! [String]
+            HoleTypeArray = Constants.finalFilterDic.value(forKey: "HoleTypeArray") as! [String]
+            CoursesTypeArray = Constants.finalFilterDic.value(forKey: "CoursesTypeArray") as! [String]
         }
         if RSTypeArray.count>0 || CSTypeArray.count>0 || HoleTypeArray.count>0 || CoursesTypeArray.count>0{
             self.getFilteredValue(roundTimeArr: RSTypeArray, clubTypeArr: CSTypeArray, holeTypeArr: HoleTypeArray, coursesTypeArr: CoursesTypeArray)

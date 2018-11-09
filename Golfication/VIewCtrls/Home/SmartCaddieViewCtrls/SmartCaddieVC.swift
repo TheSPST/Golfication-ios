@@ -58,7 +58,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         self.tabBarController?.tabBar.isHidden = true
         Analytics.logEvent("smart_caddie", parameters: [:])
         self.title = "Smart Caddie"
-        finalFilterDic.removeAllObjects()
+        Constants.finalFilterDic.removeAllObjects()
         self.automaticallyAdjustsScrollViewInsets = false
         self.setInitialUI()
     }
@@ -72,12 +72,12 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         var HoleTypeArray: [String] = []
         var CoursesTypeArray: [String] = []
         
-        if finalFilterDic.count>0 {
+        if Constants.finalFilterDic.count>0 {
             
-            RSTypeArray = finalFilterDic.value(forKey: "RSTypeArray") as! [String]
-            CSTypeArray = finalFilterDic.value(forKey: "CSTypeArray") as! [String]
-            HoleTypeArray = finalFilterDic.value(forKey: "HoleTypeArray") as! [String]
-            CoursesTypeArray = finalFilterDic.value(forKey: "CoursesTypeArray") as! [String]
+            RSTypeArray = Constants.finalFilterDic.value(forKey: "RSTypeArray") as! [String]
+            CSTypeArray = Constants.finalFilterDic.value(forKey: "CSTypeArray") as! [String]
+            HoleTypeArray = Constants.finalFilterDic.value(forKey: "HoleTypeArray") as! [String]
+            CoursesTypeArray = Constants.finalFilterDic.value(forKey: "CoursesTypeArray") as! [String]
         }
         if RSTypeArray.count>0 || CSTypeArray.count>0 || HoleTypeArray.count>0 || CoursesTypeArray.count>0{
             
@@ -248,7 +248,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                         }
                     }
                 }
-                 if !isProMode {
+                 if !Constants.isProMode {
 //                    self.cardViewDistance.makeBlurView(targetView: self.cardViewDistance)
                     self.setProLockedUI(targetView: self.cardViewDistance, title: "Club Distance")
                     
@@ -269,7 +269,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                 for v in self.smartCaddieStackView.subviews{
                     if v.isKind(of: CardView.self){
                         self.cardViewMArray.add(v)
-                        if (!isProMode && !((v == self.cardViewDistance))){
+                        if (!Constants.isProMode && !((v == self.cardViewDistance))){
                             let shareStatsButton = ShareStatsButton()
                             shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                             shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -278,7 +278,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                             shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                             v.addSubview(shareStatsButton)
                         }
-                        else if isProMode{
+                        else if Constants.isProMode{
                             let shareStatsButton = ShareStatsButton()
                             shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                             shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -293,7 +293,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                         viewTag = viewTag+1
                     }
                 }
-                if !isDevice {
+                if !Constants.isDevice {
                     self.cardViewShortGame.makeBlurView(targetView: self.cardViewShortGame)
                     self.setDeviceLockedUI(targetView: self.cardViewShortGame, title: "Short Game")
                     
@@ -334,7 +334,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         let group = DispatchGroup()
         
         // Remove Filter Score Data if Exist
-        section5 = [String]()
+        Constants.section5 = [String]()
         //-----------------------------------
         for i in 0..<dataArray.count {
             group.enter()
@@ -342,7 +342,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
             self.myDataArray[i] = dataArray[i]
             // Pass Score Data to filter screen
             if let course = ((self.myDataArray[i] as AnyObject).object(forKey:"course") as? String){
-                section5.append(course)
+                Constants.section5.append(course)
                 //--------------------------------
             }
             group.leave()
@@ -379,8 +379,8 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
 
     func setDataInUI() {
         var CSTypeArray: [String] = []
-        if finalFilterDic.count>0 {
-            CSTypeArray = finalFilterDic.value(forKey: "CSTypeArray") as! [String]
+        if Constants.finalFilterDic.count>0 {
+            CSTypeArray = Constants.finalFilterDic.value(forKey: "CSTypeArray") as! [String]
         }
         let clubDict = self.transferDataIntoClasses(myDataArray: self.filteredArray)
         //print("clubDict: \(clubDict)")
@@ -454,12 +454,12 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                             }
                             if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
                                 clubData.distance = distance
-                                if(distanceFilter == 1){
+                                if(Constants.distanceFilter == 1){
                                     clubData.distance = distance/YARD
                                 }
                             }
                             var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
-                            if let strk = (valueArray[j] as AnyObject).object(forKey: strkGainedString[skrokesGainedFilter]) as? Double{
+                            if let strk = (valueArray[j] as AnyObject).object(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
                                 strokesGained = strk
                             }
                             clubData.strokesGained = strokesGained
@@ -494,7 +494,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         self.shortGameBarChartView.setBarChart(dataPoints: shortClubName, values: shortClubDataValue, chartView: self.shortGameBarChartView, color: UIColor.glfBluegreen25, barWidth: 0.2, leftAxisMinimum: 0,labelTextColor: UIColor.glfWarmGrey,unit: "", valueColor: UIColor.clear)
         let formatter = NumberFormatter()
         formatter.positiveSuffix = " yd"
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             formatter.positiveSuffix = " m"
         }
         shortGameBarChartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
@@ -524,7 +524,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         
         let formatter = NumberFormatter()
         formatter.positiveSuffix = " yd"
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             formatter.positiveSuffix = " m"
         }
         clubDistanceBarChartView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)

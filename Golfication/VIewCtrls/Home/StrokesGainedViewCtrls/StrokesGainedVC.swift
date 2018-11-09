@@ -71,7 +71,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         self.tabBarController?.tabBar.isHidden = true
         self.title = "Strokes Gained"
         
-        finalFilterDic.removeAllObjects()
+        Constants.finalFilterDic.removeAllObjects()
         self.automaticallyAdjustsScrollViewInsets = false
         self.setupActivityIndicator()
         self.setInitialUI()
@@ -87,12 +87,12 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         var HoleTypeArray: [String] = []
         var CoursesTypeArray: [String] = []
         
-        if finalFilterDic.count>0 {
+        if Constants.finalFilterDic.count>0 {
             
-            RSTypeArray = finalFilterDic.value(forKey: "RSTypeArray") as! [String]
-            CSTypeArray = finalFilterDic.value(forKey: "CSTypeArray") as! [String]
-            HoleTypeArray = finalFilterDic.value(forKey: "HoleTypeArray") as! [String]
-            CoursesTypeArray = finalFilterDic.value(forKey: "CoursesTypeArray") as! [String]
+            RSTypeArray = Constants.finalFilterDic.value(forKey: "RSTypeArray") as! [String]
+            CSTypeArray = Constants.finalFilterDic.value(forKey: "CSTypeArray") as! [String]
+            HoleTypeArray = Constants.finalFilterDic.value(forKey: "HoleTypeArray") as! [String]
+            CoursesTypeArray = Constants.finalFilterDic.value(forKey: "CoursesTypeArray") as! [String]
         }
         if RSTypeArray.count>0 || CSTypeArray.count>0 || HoleTypeArray.count>0 || CoursesTypeArray.count>0{
             
@@ -267,7 +267,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                         }
                     }
                 }
-                if !isProMode {
+                if !Constants.isProMode {
                     
                     //self.strokeGainedChartView.makeBlurView(targetView: self.strokeGainedChartView)
                     self.setProLockedUI(targetView: self.strokeGainedChartView, title: "Strokes Gained Per Club")
@@ -309,7 +309,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                 for v in self.strokesGainedStackView.subviews{
                     if v.isKind(of: CardView.self){
                         self.cardViewMArray.add(v)
-                        if (!isProMode && !((v == self.strokeGainedChartView) || (v == self.offTheTeeCardView) || (v == self.puttingCardView) || (v == self.aroundTheGreenCardView) || (v == self.approchCardView))){
+                        if (!Constants.isProMode && !((v == self.strokeGainedChartView) || (v == self.offTheTeeCardView) || (v == self.puttingCardView) || (v == self.aroundTheGreenCardView) || (v == self.approchCardView))){
                             let shareStatsButton = ShareStatsButton()
                             shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                             shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -318,7 +318,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                             shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                             v.addSubview(shareStatsButton)
                         }
-                        else if isProMode{
+                        else if Constants.isProMode{
                             let shareStatsButton = ShareStatsButton()
                             shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                             shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -353,7 +353,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         
         let group = DispatchGroup()
         // Remove Filter Score Data if Exist
-        section5 = [String]()
+        Constants.section5 = [String]()
         //-----------------------------------
         for i in 0..<dataArray.count {
             group.enter()
@@ -361,7 +361,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
             self.myDataArray[i] = dataArray[i]
             // Pass Score Data to filter screen
             if let course = ((self.myDataArray[i] as AnyObject).object(forKey:"course") as? String){
-                section5.append(course)
+                Constants.section5.append(course)
                 //--------------------------------
             }
             group.leave()
@@ -414,8 +414,8 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
     }
     func setDataInUI() {
         var CSTypeArray: [String] = []
-        if finalFilterDic.count>0 {
-            CSTypeArray = finalFilterDic.value(forKey: "CSTypeArray") as! [String]
+        if Constants.finalFilterDic.count>0 {
+            CSTypeArray = Constants.finalFilterDic.value(forKey: "CSTypeArray") as! [String]
         }
         let clubDict = self.transferDataIntoClasses(myDataArray: self.filteredArray)
         
@@ -505,12 +505,12 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                             }
                             if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
                                 clubData.distance = distance
-                                if(distanceFilter == 1){
+                                if(Constants.distanceFilter == 1){
                                     clubData.distance = distance/YARD
                                 }
                             }
                             var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
-                            if let strk = (valueArray[j] as AnyObject).object(forKey: strkGainedString[skrokesGainedFilter]) as? Double{
+                            if let strk = (valueArray[j] as AnyObject).object(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
                                 strokesGained = strk
                             }
                             clubData.strokesGained = strokesGained
@@ -525,7 +525,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                             }
                             if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
                                 clubData.proximity = proximity
-                                if(distanceFilter == 1){
+                                if(Constants.distanceFilter == 1){
                                     clubData.proximity = proximity/YARD
                                 }
                                 

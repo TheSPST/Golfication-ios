@@ -177,7 +177,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     // MARK: selectedGameTypeFromFirebase
     func checkRangeFinderHoleData(courseId:String) {
-        teeArr.removeAll()
+        Constants.teeArr.removeAll()
         let golfId = "course_\(courseId)"
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)/rangefinder/courseDetails") { (snapshot) in
             var rangeFinArr = [NSMutableDictionary]()
@@ -212,18 +212,18 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             let teeName = data.value(forKey: "teeColor") as! String
             let teeType = data.value(forKey: "tee") as! String
-            teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:ratin, slope:"\(slope)"))
+            Constants.teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:ratin, slope:"\(slope)"))
         }
-        if(!teeArr.isEmpty){
-            selectedSlope = Int(teeArr[0].slope)!
-            selectedRating = teeArr[0].rating
-            selectedTee = teeArr[0].type
-            selectedTeeColor = teeArr[0].name
+        if(!Constants.teeArr.isEmpty){
+            Constants.selectedSlope = Int(Constants.teeArr[0].slope)!
+            Constants.selectedRating = Constants.teeArr[0].rating
+            Constants.selectedTee = Constants.teeArr[0].type
+            Constants.selectedTeeColor = Constants.teeArr[0].name
         }else{
-            selectedTee = ""
-            selectedTeeColor = ""
-            selectedSlope = 113
-            selectedRating = ""
+            Constants.selectedTee = ""
+            Constants.selectedTeeColor = ""
+            Constants.selectedSlope = 113
+            Constants.selectedRating = ""
         }
     }
     let locationManager = CLLocationManager()
@@ -309,7 +309,7 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                             currentCoord = currentLocation.coordinate
                             
                             let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
-                            let location2 = CLLocation(latitude: Double(selectedLat)!, longitude: Double(selectedLong)!)
+                            let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
                             let distance : CLLocationDistance = location1.distance(from: location2)
                             debugPrint("distance = \(distance) m")
                             if(distance <= 15000.0){

@@ -12,8 +12,6 @@ import FirebaseAuth
 import XLPagerTabStrip
 import CoreBluetooth
 
-var syncdArray = NSMutableArray()
-
 class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, IndicatorInfoProvider, BluetoothDelegate {
     
     @IBOutlet weak var pageControl: UIPageControl!
@@ -228,7 +226,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     func getGolfBagData() {
-        syncdArray = NSMutableArray()
+        Constants.syncdArray = NSMutableArray()
         bagMArray = NSMutableArray()
         
         self.editView.isHidden = false
@@ -246,7 +244,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     let dict = golfBagArray[i] as! NSDictionary
                     self.bagMArray.add(dict.value(forKey: "clubName") as! String)
                     if (dict.value(forKey: "tag") as! Bool == true){
-                        syncdArray.add(dict.value(forKey: "clubName") as! String)
+                        Constants.syncdArray.add(dict.value(forKey: "clubName") as! String)
                     }
                 }
                 if (self.bagMArray.contains(self.selectedBagStr)){
@@ -262,9 +260,9 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     self.editView.isHidden = false
                     self.defaultView.isHidden = true
                 }
-                if syncdArray.count>0{
-                    for j in 0..<syncdArray.count{
-                        if self.selectedBagStr == syncdArray[j] as! String{
+                if Constants.syncdArray.count>0{
+                    for j in 0..<Constants.syncdArray.count{
+                        if self.selectedBagStr == Constants.syncdArray[j] as! String{
                             
                             //for k in 0..<self.commanBagArray.count{
                             //if self.selectedBagStr == self.commanBagArray[k] {
@@ -468,13 +466,13 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 golfBagArray = snapshot.value as! NSMutableArray
                 
                 self.tagNameMArray = NSMutableArray()
-                syncdArray = NSMutableArray()
+                Constants.syncdArray = NSMutableArray()
 
                 for i in 0..<golfBagArray.count{
                     let dict = golfBagArray[i] as! NSDictionary
                     if (dict.value(forKey: "tag") as! Bool == true){
                         self.tagNameMArray.add(dict.value(forKey: "tagName") as! String)
-                        syncdArray.add(dict.value(forKey: "clubName") as! String)
+                        Constants.syncdArray.add(dict.value(forKey: "clubName") as! String)
                     }
                 }
                 for i in 0..<golfBagArray.count{
@@ -482,7 +480,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     if (dict.value(forKey: "clubName") as! String == self.selectedBagStr){
                         
 //                        if (dict.value(forKey: "tag") as! Bool == true){
-                        if syncdArray.contains(self.selectedBagStr){
+                        if Constants.syncdArray.contains(self.selectedBagStr){
                             let golfBagDict = NSMutableDictionary()
                             golfBagDict.setObject("Titleiest", forKey: "brand" as NSCopying)
                             golfBagDict.setObject("43", forKey: "clubLength" as NSCopying)
@@ -746,8 +744,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 defaultView.isHidden = false
             }
             
-            for j in 0..<syncdArray.count{
-                if selectedBagStr == syncdArray[j] as! String{
+            for j in 0..<Constants.syncdArray.count{
+                if selectedBagStr == Constants.syncdArray[j] as! String{
                     let indexPath = IndexPath(row: snapToIndex, section: 0)
                     guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
                         else{break}
@@ -760,8 +758,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     return
                 }
             }
-            for j in 0..<syncdArray.count{
-                if !(selectedBagStr == syncdArray[j] as! String){
+            for j in 0..<Constants.syncdArray.count{
+                if !(selectedBagStr == Constants.syncdArray[j] as! String){
                     let indexPath = IndexPath(row: snapToIndex, section: 0)
                     guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
                         else{break}
@@ -805,8 +803,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     defaultView.isHidden = true
                 }
                 
-                for j in 0..<syncdArray.count{
-                    if selectedBagStr == syncdArray[j] as! String{
+                for j in 0..<Constants.syncdArray.count{
+                    if selectedBagStr == Constants.syncdArray[j] as! String{
                         let indexPath = IndexPath(row: indexPath.row, section: 0)
                         guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
                             else{break}
@@ -819,8 +817,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         return
                     }
                 }
-                for j in 0..<syncdArray.count{
-                    if !(selectedBagStr == syncdArray[j] as! String){
+                for j in 0..<Constants.syncdArray.count{
+                    if !(selectedBagStr == Constants.syncdArray[j] as! String){
                         let indexPath = IndexPath(row: indexPath.row, section: 0)
                         guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
                             else{break}

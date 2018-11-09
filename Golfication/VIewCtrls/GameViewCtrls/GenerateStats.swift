@@ -55,7 +55,7 @@
                     
                     if(snapshot.childrenCount > 0 && snapshot.exists()){
                         if  let matchDict = (snapshot.value as? NSDictionary){
-                            matchDataDic = matchDict as! NSMutableDictionary
+                            Constants.matchDataDic = matchDict as! NSMutableDictionary
                             var scoreArray = NSArray()
                             
                             var keyData = String()

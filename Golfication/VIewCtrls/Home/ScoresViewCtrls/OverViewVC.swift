@@ -181,8 +181,8 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         let dataPoints1 = [finalParScore.three,finalParScore.four,finalParScore.five]
         barViewParAverages.setStackedBarChart(dataPoints: dataLable, value1: dataPoints1 as! [Double] , chartView: barViewParAverages,barWidth:0.4)
         
-        if baselineDict != nil{
-            debugPrint("baselineDict==",baselineDict)
+        if Constants.baselineDict != nil{
+            debugPrint("baselineDict==",Constants.baselineDict)
             
             let publicScore  = PublicScore()
             let publicScoreStr = publicScore.getOverviewParAvg(par3s: finalParScore.three, par4s: finalParScore.four, par5s: finalParScore.five)
@@ -225,7 +225,7 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         
         pieViewScoring.setChartForScoring(dataPoints: dataLabel, values: dataPoints as! [Double], chartView: pieViewScoring,color:UIColor.glfSeafoamBlue,isValueEnable: true)
         //publicRankingof user
-        if baselineDict != nil{
+        if Constants.baselineDict != nil{
             var absoluteBirdie = 0.0
             var absolutePar = 0.0
             var absoluteBogey = 0.0
@@ -243,7 +243,7 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
             if (score.par>0){
                 absolutePar = (score.par/totalSum) * 18;
             }
-            debugPrint("baselineDict==",baselineDict)
+            debugPrint("baselineDict==",Constants.baselineDict)
             
             
             let publicScore  = PublicScore()

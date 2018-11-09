@@ -8,10 +8,6 @@
 
 import UIKit
 
-var finalFilterDic = NSMutableDictionary()
-
-var section5 = [String]()
-
 class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout ,UICollectionViewDataSource{
     
     var RSTypeArray = [String]()
@@ -63,26 +59,26 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                 }
             section4 = ["9 holes", "18 holes","All"]
 
-            if  section5.count>0 {
-            section5 = section5.removeDuplicates()
-                if section5.contains("All"){
-                    for i in 0..<section5.count{
-                        if section5[i] == "All"{
-                            section5.remove(at: i)
-                            section5.insert("All", at: section5.count)
+            if  Constants.section5.count>0 {
+            Constants.section5 = Constants.section5.removeDuplicates()
+                if Constants.section5.contains("All"){
+                    for i in 0..<Constants.section5.count{
+                        if Constants.section5[i] == "All"{
+                            Constants.section5.remove(at: i)
+                            Constants.section5.insert("All", at: Constants.section5.count)
                             break
                         }
                     }
                 }
                 else{
-                    section5.insert("All", at: section5.count)
+                    Constants.section5.insert("All", at: Constants.section5.count)
                 }
                 allSections.append(section1 as NSArray)
                 if !(self.fromScorePutting){
                 allSections.append(section3 as NSArray)
                 }
                 allSections.append(section4 as NSArray)
-                allSections.append(section5 as NSArray)
+                allSections.append(Constants.section5 as NSArray)
             }
         }
         
@@ -599,7 +595,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                     CoursesTypeArray = Array(Set(CoursesTypeArray))
                     CoursesTypeArray.append(commanArray[i])
                 }*/
-                finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
+                Constants.finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
                 //print("finalFilterDic \(finalFilterDic)!")
                 
                 cell = collectionView.cellForItem(at: IndexPath(row: i, section: indexPath.section)) as! FilterCollectionViewCell
@@ -688,7 +684,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
             }*/
             if (RSTypeArray.count>0 && commanArray.contains(RSTypeArray[0])) || (PlayTypeArray.count>0 && commanArray.contains(PlayTypeArray[0])) || (CSTypeArray.count>0 && commanArray.contains(CSTypeArray[0])) || (HoleTypeArray.count>0 && commanArray.contains(HoleTypeArray[0])) || (CoursesTypeArray.count>0 && commanArray.contains(CoursesTypeArray[0])){
                 
-                finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
+                Constants.finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
             }
             //print("finalFilterDic \(finalFilterDic)!")
             
@@ -813,7 +809,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                         CoursesTypeArray.append(commanArray[i])
                     }*/
                     
-                    finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
+                    Constants.finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
                     //print("finalFilterDic \(finalFilterDic)!")
                     
                     cell = collectionView.cellForItem(at: IndexPath(row: i, section: indexPath.section)) as! FilterCollectionViewCell
@@ -927,7 +923,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                 CoursesTypeArray = [String]()
             }*/
             
-            finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
+            Constants.finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
             //print("finalFilterDic \(finalFilterDic)!")
             
             for i in 0..<commanArray.count{
@@ -1043,7 +1039,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                         }
                     }
                 }
-                finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
+                Constants.finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
                 //print("finalFilterDic\(finalFilterDic)!")
                 
                 cell = collectionView.cellForItem(at: indexPath) as! FilterCollectionViewCell
@@ -1141,7 +1137,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                     CoursesTypeArray.remove(at: index)
                 }*/
                 
-                finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
+                Constants.finalFilterDic = ["RSTypeArray": RSTypeArray, "PlayTypeArray": PlayTypeArray, "CSTypeArray": CSTypeArray, "HoleTypeArray": HoleTypeArray, "CoursesTypeArray": CoursesTypeArray]
                 //print("finalFilterDic\(finalFilterDic)!")
                 
                 if indexPath.section == 0 {

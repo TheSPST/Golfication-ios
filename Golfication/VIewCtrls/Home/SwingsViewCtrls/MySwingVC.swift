@@ -49,11 +49,11 @@ class MySwingVC: UIViewController, IndicatorInfoProvider {
         var PlayTypeArray: [String] = []
         var CSTypeArray: [String] = []
         
-        if finalFilterDic.count>0 {
+        if Constants.finalFilterDic.count>0 {
             
-            RSTypeArray = finalFilterDic.value(forKey: "RSTypeArray") as! [String]
-            PlayTypeArray = finalFilterDic.value(forKey: "PlayTypeArray") as! [String]
-            CSTypeArray = finalFilterDic.value(forKey: "CSTypeArray") as! [String]
+            RSTypeArray = Constants.finalFilterDic.value(forKey: "RSTypeArray") as! [String]
+            PlayTypeArray = Constants.finalFilterDic.value(forKey: "PlayTypeArray") as! [String]
+            CSTypeArray = Constants.finalFilterDic.value(forKey: "CSTypeArray") as! [String]
         }
         if RSTypeArray.count>0 || PlayTypeArray.count>0 || CSTypeArray.count>0{
             

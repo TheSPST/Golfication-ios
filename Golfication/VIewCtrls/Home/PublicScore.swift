@@ -20,17 +20,17 @@ class PublicScore: NSObject {
         var baselineHandicapBogey = 0.0
         var baselineHandicapDBogey = 0.0
         
-        if baselineDict != nil{
-            if let baselineHandiPar = baselineDict.value(forKey: "par") as? String{
+        if Constants.baselineDict != nil{
+            if let baselineHandiPar = Constants.baselineDict.value(forKey: "par") as? String{
                 baselineHandicapPar = Double(baselineHandiPar) ?? 0.0
             }
-            if let baselineHandiBirdie = baselineDict.value(forKey: "birdie") as? String{
+            if let baselineHandiBirdie = Constants.baselineDict.value(forKey: "birdie") as? String{
                 baselineHandicapBirdie = Double(baselineHandiBirdie) ?? 0.0
             }
-            if let baselineHandiBogey = baselineDict.value(forKey: "bogey") as? String{
+            if let baselineHandiBogey = Constants.baselineDict.value(forKey: "bogey") as? String{
                 baselineHandicapBogey = Double(baselineHandiBogey) ?? 0.0
             }
-            if let baselineHandiDBogey = baselineDict.value(forKey: "dbogey") as? String{
+            if let baselineHandiDBogey = Constants.baselineDict.value(forKey: "dbogey") as? String{
                 baselineHandicapDBogey = Double(baselineHandiDBogey) ?? 0.0
             }
             
@@ -121,15 +121,15 @@ class PublicScore: NSObject {
         var baselineHandicapPar3 = 0.0
         var baselineHandicapPar4 = 0.0
         var baselineHandicapPar5 = 0.0
-        if baselineDict != nil{
+        if Constants.baselineDict != nil{
             
-            if let baselineHandiPar3 = baselineDict.value(forKey: "par3") as? String{
+            if let baselineHandiPar3 = Constants.baselineDict.value(forKey: "par3") as? String{
                 baselineHandicapPar3 = Double(baselineHandiPar3) ?? 0.0
             }
-            if let baselineHandiPar4 = baselineDict.value(forKey: "par4") as? String{
+            if let baselineHandiPar4 = Constants.baselineDict.value(forKey: "par4") as? String{
                 baselineHandicapPar4 = Double(baselineHandiPar4) ?? 0.0
             }
-            if let baselineHandiPar5 = baselineDict.value(forKey: "par5") as? String{
+            if let baselineHandiPar5 = Constants.baselineDict.value(forKey: "par5") as? String{
                 baselineHandicapPar5 = Double(baselineHandiPar5) ?? 0.0
             }
             
@@ -188,11 +188,11 @@ class PublicScore: NSObject {
     func getApproachGIR(p:Double)->NSMutableAttributedString{
         var attributedApproachGIR = NSMutableAttributedString()
         
-        if baselineDict != nil{
+        if Constants.baselineDict != nil{
             
             var girBaseLine = 0.0
             
-            if let baselineGIR = baselineDict.value(forKey: "gir") as? String{
+            if let baselineGIR = Constants.baselineDict.value(forKey: "gir") as? String{
                 girBaseLine = Double(baselineGIR) ?? 0.0
             }
             
@@ -366,9 +366,9 @@ class PublicScore: NSObject {
         
         var attributedPuttsHandicap = NSMutableAttributedString()
         
-        if baselineDict != nil{
+        if Constants.baselineDict != nil{
             var baselinePuttPerRound = 0.0
-            if let puttsPerRound = baselineDict.value(forKey: "puttsPerRound") as? String{
+            if let puttsPerRound = Constants.baselineDict.value(forKey: "puttsPerRound") as? String{
                 baselinePuttPerRound = Double(puttsPerRound) ?? 0.0
             }
             
@@ -400,7 +400,7 @@ class PublicScore: NSObject {
         var attributedText = NSAttributedString()
         let msg = "Your Driving Accuracy is similar to other golfers of your HCP."
         var baselineFHit : Double!
-        if let baselineHit = baselineDict.value(forKey: "fairwayHit") as? String{
+        if let baselineHit = Constants.baselineDict.value(forKey: "fairwayHit") as? String{
             baselineFHit = Double(baselineHit)!
         }
         let absHitValue = abs(baselineFHit - fairHit)
@@ -479,7 +479,7 @@ class PublicScore: NSObject {
         var attributedText = NSAttributedString()
         let msg = "Your Scrambling Performance is similar to other golfers of your HCP."
         var baselineChipUND : Double!
-        if let baselineHit = baselineDict.value(forKey: "chipUpAndDown") as? String{
+        if let baselineHit = Constants.baselineDict.value(forKey: "chipUpAndDown") as? String{
             baselineChipUND = Double(baselineHit)!
         }
         let absHitValue = abs(p-baselineChipUND)
@@ -498,7 +498,7 @@ class PublicScore: NSObject {
         var attributedText = NSAttributedString()
         let msg = "Your Sand-Save Performance is similar to other golfers of your HCP."
         var baselineChipUND : Double!
-        if let baselineHit = baselineDict.value(forKey: "sandUpAndDown") as? String{
+        if let baselineHit = Constants.baselineDict.value(forKey: "sandUpAndDown") as? String{
             baselineChipUND = Double(baselineHit)!
         }
         let absHitValue = abs(p-baselineChipUND)
@@ -519,19 +519,19 @@ class PublicScore: NSObject {
         
         var sGPerClubStr = String()
         var setStrokesGainedString = ""
-        if(skrokesGainedFilter==0){
+        if(Constants.skrokesGainedFilter==0){
             setStrokesGainedString = "PGA Tour"
         }
-        else if(skrokesGainedFilter==1){
+        else if(Constants.skrokesGainedFilter==1){
             setStrokesGainedString = "Men's - Scratch"
         }
-        else if(skrokesGainedFilter==2){
+        else if(Constants.skrokesGainedFilter==2){
             setStrokesGainedString = "Men's - 18 Handicap"
         }
-        else if(skrokesGainedFilter==3){
+        else if(Constants.skrokesGainedFilter==3){
             setStrokesGainedString = "Women's - Scratch"
         }
-        else if(skrokesGainedFilter==4){
+        else if(Constants.skrokesGainedFilter==4){
             setStrokesGainedString = "Women's - 18 Handicap"
         }
         if (gainAvg <= 1 && gainAvg1 <= 1 && gainAvg2 <= 1 && gainAvg3 <= 1) {
@@ -594,19 +594,19 @@ class PublicScore: NSObject {
         var sGPerClubStr = String()
         var setStrokesGainedString = ""
         var setLoseGain = ""
-        if(skrokesGainedFilter==0){
+        if(Constants.skrokesGainedFilter==0){
             setStrokesGainedString = "PGA Tour"
         }
-        else if(skrokesGainedFilter==1){
+        else if(Constants.skrokesGainedFilter==1){
             setStrokesGainedString = "Men's - Scratch"
         }
-        else if(skrokesGainedFilter==2){
+        else if(Constants.skrokesGainedFilter==2){
             setStrokesGainedString = "Men's - 18 Handicap"
         }
-        else if(skrokesGainedFilter==3){
+        else if(Constants.skrokesGainedFilter==3){
             setStrokesGainedString = "Women's - Scratch"
         }
-        else if(skrokesGainedFilter==4){
+        else if(Constants.skrokesGainedFilter==4){
             setStrokesGainedString = "Women's - 18 Handicap"
         }
         if (setMaxAbsoluteValueStrokesGained > 0) {

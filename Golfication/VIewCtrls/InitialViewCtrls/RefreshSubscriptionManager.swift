@@ -42,7 +42,7 @@ class RefreshSubscriptionManager: NSObject {
                     let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(expTimestamp/1000)))
                     self.firTimeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
                     if proData.value(forKey: "productID") as? String != nil{
-                        if (proData.value(forKey: "productID") as! String == "pro_subscription_monthly") || (proData.value(forKey: "productID") as! String == "pro_subscription_trial_monthly") || (proData.value(forKey: "productID") as! String == "Free_Membership"){
+                        if (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID){
                             
                             self.firTimeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
                         }
@@ -69,13 +69,13 @@ class RefreshSubscriptionManager: NSObject {
     }
     
     func receiptValidationUsingSwifty(){
-        let AUTO_RENEW_MONTHLY_PRODUCT_ID = "pro_subscription_monthly"
-        let AUTO_RENEW_YEARLY_PRODUCT_ID = "pro_subscription_yearly"
+//        let AUTO_RENEW_MONTHLY_PRODUCT_ID = "pro_subscription_monthly"
+//        let AUTO_RENEW_YEARLY_PRODUCT_ID = "pro_subscription_yearly"
         
-        let AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID = "pro_subscription_trial_monthly"
-        let AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID = "pro_subscription_trial_yearly"
+//        let AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID = "pro_subscription_trial_monthly"
+//        let AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID = "pro_subscription_trial_yearly"
         
-        let productIDarr = [AUTO_RENEW_MONTHLY_PRODUCT_ID, AUTO_RENEW_YEARLY_PRODUCT_ID, AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID]
+        let productIDarr = [Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID]
         for data in productIDarr{
             SwiftyStoreKit.fetchReceipt(forceRefresh: false) { result in
                 switch result {
@@ -109,7 +109,7 @@ class RefreshSubscriptionManager: NSObject {
                                                 
                                                 ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :false] as [AnyHashable:Any])
                                                 ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMembership" :NSNull()] as [AnyHashable:Any])
-                                                isProMode = false
+                                                Constants.isProMode = false
                                             }
                                             else{
                                                 let formatter = DateFormatter()

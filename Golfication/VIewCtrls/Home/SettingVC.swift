@@ -10,9 +10,6 @@ import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
 
-var distanceFilter = 0
-var skrokesGainedFilter = 0
-var onCourseNotification = 0
 class SettingVC: UITableViewController {
     
     var sectionOne:[Int] = [0, 1]
@@ -59,32 +56,32 @@ class SettingVC: UITableViewController {
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "unit") { (snapshot) in
             if snapshot.exists(){
                 if let index = snapshot.value as? Int{
-                    distanceFilter = index
+                    Constants.distanceFilter = index
                 }
             }
             else{
-                distanceFilter = 0
+                Constants.distanceFilter = 0
             }
             DispatchQueue.main.async( execute: {
                 FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "strokesGained") { (snapshot) in
                     
                     if snapshot.exists(){
                         if let index = snapshot.value as? Int{
-                            skrokesGainedFilter = index
+                            Constants.skrokesGainedFilter = index
                         }
                     }
                     else{
-                        skrokesGainedFilter = 0
+                        Constants.skrokesGainedFilter = 0
                     }
                     DispatchQueue.main.async( execute: {
                         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "notification") { (snapshot) in
                             if snapshot.exists(){
                                 if let index = snapshot.value as? Int{
-                                    onCourseNotification = index
+                                    Constants.onCourseNotification = index
                                 }
                             }
                             else{
-                                onCourseNotification = 0
+                                Constants.onCourseNotification = 0
                             }
                             DispatchQueue.main.async( execute: {
                                 self.progressView.hide()
@@ -122,21 +119,21 @@ class SettingVC: UITableViewController {
             
             if Auth.auth().currentUser != nil{
                 //print("fb display name== ",Auth.auth().currentUser?.displayName ?? "")
-                isDevice = Bool()
-                isProMode = Bool()
-                section5 = [String]()
-                selectedGolfID = ""
-                selectedGolfName = ""
+                Constants.isDevice = Bool()
+                Constants.isProMode = Bool()
+                Constants.section5 = [String]()
+                Constants.selectedGolfID = ""
+                Constants.selectedGolfName = ""
                 //profileGolfName = ""
-                selectedLat = ""
-                selectedLong = ""
-                matchDataDic = NSMutableDictionary()
-                gameType = ""
-                startingHole = ""
-                matchId = ""
-                skrokesGainedFilter = 0
-                distanceFilter = 0
-                onCourseNotification = 0
+                Constants.selectedLat = ""
+                Constants.selectedLong = ""
+                Constants.matchDataDic = NSMutableDictionary()
+                Constants.gameType = ""
+                Constants.startingHole = ""
+                Constants.matchId = ""
+                Constants.skrokesGainedFilter = 0
+                Constants.distanceFilter = 0
+                Constants.onCourseNotification = 0
                 self.signOutCurrentUser()
             }
         }))
@@ -173,7 +170,7 @@ class SettingVC: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath as IndexPath)
         
         if indexPath.section == 0{
-            if distanceFilter == indexPath.row{
+            if Constants.distanceFilter == indexPath.row{
                 cell.isSelected = true
                 cell.tintColor = UIColor.glfGreen
                 cell.accessoryType = cell.isSelected ? .checkmark : .checkmark
@@ -192,7 +189,7 @@ class SettingVC: UITableViewController {
             }
         }
         else if indexPath.section == 1{
-            if skrokesGainedFilter == indexPath.row{
+            if Constants.skrokesGainedFilter == indexPath.row{
                 cell.isSelected = true
                 cell.tintColor = UIColor.glfGreen
                 cell.accessoryType = cell.isSelected ? .checkmark : .checkmark
@@ -212,7 +209,7 @@ class SettingVC: UITableViewController {
             default: break
             }
         }else{
-            if onCourseNotification == indexPath.row{
+            if Constants.onCourseNotification == indexPath.row{
                 cell.isSelected = true
                 cell.tintColor = UIColor.glfGreen
                 cell.accessoryType = cell.isSelected ? .checkmark : .checkmark
@@ -248,8 +245,8 @@ class SettingVC: UITableViewController {
                     }
                 }
             }
-            distanceFilter = indexPath.row
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :distanceFilter] as [AnyHashable:Any])
+            Constants.distanceFilter = indexPath.row
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :Constants.distanceFilter] as [AnyHashable:Any])
         }
         else if indexPath.section == 1{
             if !sectionTwo.isEmpty{
@@ -263,8 +260,8 @@ class SettingVC: UITableViewController {
                     }
                 }
             }
-            skrokesGainedFilter = indexPath.row
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["strokesGained" :skrokesGainedFilter] as [AnyHashable:Any])
+            Constants.skrokesGainedFilter = indexPath.row
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["strokesGained" :Constants.skrokesGainedFilter] as [AnyHashable:Any])
         }else{
             if !sectionThree.isEmpty{
                 for i in 0..<sectionThree.count{
@@ -277,8 +274,8 @@ class SettingVC: UITableViewController {
                     }
                 }
             }
-            onCourseNotification = indexPath.row
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["notification" :onCourseNotification] as [AnyHashable:Any])
+            Constants.onCourseNotification = indexPath.row
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["notification" :Constants.onCourseNotification] as [AnyHashable:Any])
         }
     }
 }

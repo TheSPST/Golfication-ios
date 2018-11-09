@@ -70,7 +70,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
     override func viewDidLoad() {
         super.viewDidLoad()
         Analytics.logEvent("my_scores_chipping", parameters: [:])
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
 
         var meterString = ["15m","10m","5m","5m","10m","15m"]
         var i = 0
@@ -116,7 +116,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             }
         }
         else{
-            if !isProMode {
+            if !Constants.isProMode {
                 //cardViewChippingAccuracy.makeBlurView(targetView: cardViewChippingAccuracy)
                 self.setProLockedUI(targetView: cardViewChippingAccuracy, title: "Chipping Accuracy")
                 
@@ -153,7 +153,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             for v in self.chippingStackView.subviews{
                 if v.isKind(of: CardView.self){
                     cardViewMArray.add(v)
-                    if (!isProMode && !((v == cardViewChippingAccuracy) || (v == cardViewChippingProximity) || (v == cardViewChippingSandAccuracy) || (v == cardViewChippingSandProximity))){
+                    if (!Constants.isProMode && !((v == cardViewChippingAccuracy) || (v == cardViewChippingProximity) || (v == cardViewChippingSandAccuracy) || (v == cardViewChippingSandProximity))){
                         let shareStatsButton = ShareStatsButton()
                         shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                         shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -162,7 +162,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                         shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                         v.addSubview(shareStatsButton)
                     }
-                    else if isProMode{
+                    else if Constants.isProMode{
                         let shareStatsButton = ShareStatsButton()
                         shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                         shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -300,7 +300,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                 }
             }
             dataPoints.append(Double(proximityYPoints.count))
-            if(distanceFilter == 1){
+            if(Constants.distanceFilter == 1){
                 for i in 0..<proximityXPoints.count{
                     dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])))
                 }
@@ -329,7 +329,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             let sum = dataValues.reduce(0,+)
             self.lblSandProximityAvg.text = "Average Proximity to Hole after Bunker-Shot"
             let msg = String(format:"%.01f ",(sum/Double(dataValues.count)))
-            self.lblAvgSandProximityValue.text = "\(msg) \(distanceFilter == 1 ? "m" : "ft")"
+            self.lblAvgSandProximityValue.text = "\(msg) \(Constants.distanceFilter == 1 ? "m" : "ft")"
         }
         var newSandAttemp = [Double]()
         var newSandAchieved = [Double]()
@@ -345,8 +345,8 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         sandSaveStackedBarView.leftAxis.axisMinimum = 0.0
         sandSaveStackedBarView.leftAxis.axisMaximum = newSandAttemp.max()! + 1.0
         sandSaveStackedBarView.leftAxis.labelCount = 5
-        if baselineDict != nil{
-            debugPrint("baselineDict==",baselineDict)
+        if Constants.baselineDict != nil{
+            debugPrint("baselineDict==",Constants.baselineDict)
             let publicScore  = PublicScore()
             let totalAttempt = newSandAttemp.reduce(0,+)
             let totalAchieved = newSandAchieved.reduce(0,+)
@@ -379,7 +379,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                 for i in 0..<data.count{
                     if(clubFilter.count > 0){
                         if(clubFilter.contains(data[i].club)){
-                            if(distanceFilter == 1){
+                            if(Constants.distanceFilter == 1){
                                 proximityXPoints.append(data[i].proximityX)
                                 proximityYPoints.append(data[i].proximityY)
                             }else{
@@ -408,7 +408,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                         }
                     }
                     else{
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             proximityXPoints.append(data[i].proximityX)
                             proximityYPoints.append(data[i].proximityY)
                         }else{
@@ -507,7 +507,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                     }
             }
             for i in 0..<chippingProximityX.count{
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     dataValues.append(sqrt(chippingProximityX[i]*chippingProximityX[i] + chippingProximityY[i]*chippingProximityY[i]))
                 }else{
                     dataValues.append(sqrt(chippingProximityX[i]*chippingProximityX[i] + chippingProximityY[i]*chippingProximityY[i]) * 3)
@@ -531,7 +531,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         chippingProximityScatterLineView.setScatterChartWithLine(valueX: newDataPoints, valueY: dataValues, xAxisValue: newDate, chartView: chippingProximityScatterLineView,color: UIColor.glfBluegreen)
         let formatter = NumberFormatter()
         formatter.positiveSuffix = " ft"
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             formatter.positiveSuffix = " m"
         }
         if !dataValues.isEmpty{
@@ -539,7 +539,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             self.lblAvgChippingProximityValue.isHidden = false
             let sum = dataValues.reduce(0, +)
             let msg = String(format:"%.01f ",(sum/Double(dataValues.count)))
-            self.lblAvgChippingProximityValue.text = "\(msg) \(distanceFilter == 1 ? "m" : "ft")"
+            self.lblAvgChippingProximityValue.text = "\(msg) \(Constants.distanceFilter == 1 ? "m" : "ft")"
             self.lblChippingProximityAvg.text = "Average Proximity to Hole after Chipping"
         }
         var newChipAttemp = [Double]()
@@ -557,8 +557,8 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         chipUpDownBarChartView.leftAxis.axisMinimum = 0.0
         chipUpDownBarChartView.leftAxis.axisMaximum = newChipAttemp.max()!+1.0
         chipUpDownBarChartView.leftAxis.labelCount = 5
-        if baselineDict != nil{
-            debugPrint("baselineDict==",baselineDict)
+        if Constants.baselineDict != nil{
+            debugPrint("baselineDict==",Constants.baselineDict)
             let publicScore  = PublicScore()
             let totalAttempt = chipAttempt.reduce(0,+)
             let totalAchieved = chipAchieved.reduce(0,+)
@@ -593,7 +593,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                 for i in 0..<data.count{
                     if(clubFilter.count > 0){
                         if(clubFilter.contains(data[i].club)){
-                            if(distanceFilter == 1){
+                            if(Constants.distanceFilter == 1){
                                 proximityXPoints.append(data[i].proximityX)
                                 proximityYPoints.append(data[i].proximityY)
                             }else{
@@ -622,7 +622,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                         }
                     }
                     else{
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             proximityXPoints.append(data[i].proximityX)
                             proximityYPoints.append(data[i].proximityY)
                         }else{

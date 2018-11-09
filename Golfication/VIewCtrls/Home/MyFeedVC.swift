@@ -169,7 +169,7 @@ class MyFeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate{
                             }
                             if(keyData == "courseName"){
                                 self.dataArray[i].location = (value as! String)
-                                selectedGolfName = value as! String
+                                Constants.selectedGolfName = value as! String
                             }
                         }
                         self.dataArray[i].isShow = true

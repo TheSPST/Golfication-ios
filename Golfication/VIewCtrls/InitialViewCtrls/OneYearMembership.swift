@@ -33,7 +33,7 @@ class OneYearMembership: NSObject {
                     membershipDict.setObject(0, forKey: "isMembershipActive" as NSCopying)
                     membershipDict.setObject(trnStr, forKey: "transactionDate" as NSCopying)
                     membershipDict.setObject(expiryStr, forKey: "expiryDate" as NSCopying)
-                    membershipDict.setObject("Free_Membership_Yearly", forKey: "productID" as NSCopying)
+                    membershipDict.setObject(Constants.PROMO_CODE_YEARLY_PRODUCT_ID, forKey: "productID" as NSCopying)
                     membershipDict.setObject(self.beginTimestamp, forKey: "timestamp" as NSCopying)
                     membershipDict.setObject("ios", forKey: "device" as NSCopying)
 
@@ -45,7 +45,7 @@ class OneYearMembership: NSObject {
                     UserDefaults.standard.synchronize()
                 
                 let subDic = NSMutableDictionary()
-                subDic.setObject("Free_Membership_Yearly", forKey: "productID" as NSCopying)
+                subDic.setObject(Constants.PROMO_CODE_YEARLY_PRODUCT_ID, forKey: "productID" as NSCopying)
                 subDic.setObject(self.beginTimestamp, forKey: "timestamp" as NSCopying)
                 subDic.setObject("purchase", forKey: "type" as NSCopying)
                 let subKey = ref!.child("\(Auth.auth().currentUser!.uid)").childByAutoId().key
@@ -55,7 +55,7 @@ class OneYearMembership: NSObject {
 
                 if let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProfileProMemberPopUPVC") as? ProfileProMemberPopUPVC{
                     viewCtrl.fromUpgrade = true
-                    fromIndiegogo = true
+                    Constants.fromIndiegogo = true
                     viewCtrl.modalPresentationStyle = .overCurrentContext
                     UIApplication.shared.keyWindow?.rootViewController?.present(viewCtrl, animated: true, completion: nil)
                 }

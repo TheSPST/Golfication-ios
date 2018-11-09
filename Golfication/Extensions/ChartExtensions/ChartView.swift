@@ -213,7 +213,7 @@ extension CombinedChartView{
         }
         let formatter = NumberFormatter()
         formatter.positiveSuffix = " yd"
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             formatter.positiveSuffix = " m"
         }
         let lineChartSet = LineChartDataSet(values: yVals1, label: "")
@@ -294,7 +294,7 @@ extension CombinedChartView{
         }
         let formatter = NumberFormatter()
         formatter.positiveSuffix = " yd"
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             formatter.positiveSuffix = " m"
         }
         let lineChartSet = LineChartDataSet(values: yVals1, label: "")
@@ -1476,7 +1476,7 @@ extension LineChartView {
         chartView.xAxis.labelTextColor = UIColor.glfWarmGrey
         let formatter = NumberFormatter()
         formatter.positiveSuffix = " yd"
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             formatter.positiveSuffix = " m"
         }
         chartView.xAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
@@ -1558,7 +1558,7 @@ extension LineChartView {
         formatter.roundingMode = .ceiling
         formatter.numberStyle = .none
         formatter.positiveSuffix = "ft"
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             formatter.positiveSuffix = " m"
         }
         chartView.xAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)

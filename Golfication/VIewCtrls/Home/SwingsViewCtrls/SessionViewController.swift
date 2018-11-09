@@ -160,9 +160,9 @@ class SessionViewController:  UIViewController, IndicatorInfoProvider, UITableVi
     }
     func setFilteredData(dataArray: NSArray) {
         var playTypeArray:[String] = []
-        if finalFilterDic.count > 0 {
+        if Constants.finalFilterDic.count > 0 {
             var filteredDataArray = Array<Any>()
-            playTypeArray = finalFilterDic.value(forKey: "PlayTypeArray") as! [String]
+            playTypeArray = Constants.finalFilterDic.value(forKey: "PlayTypeArray") as! [String]
             if (playTypeArray.count > 0){
             for playType in playTypeArray{
                 for i in 0..<dataArray.count{

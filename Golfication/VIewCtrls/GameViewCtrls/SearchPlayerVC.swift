@@ -10,9 +10,6 @@ import UIKit
 import FirebaseAuth
 import FirebaseDynamicLinks
 
-var selectedIndex = NSMutableArray()
-var addPlayersArray = NSMutableArray()
-
 class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     @IBAction func backBtnAction(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
@@ -65,34 +62,34 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: Remove Selected Players
     
     @IBAction func continueAction(_ sender: UIButton) {
-        if selectedIndex.count>0{
+        if Constants.selectedIndex.count>0{
             for i in 0..<self.allUserListMArray.count{
                 let timestamp = (allUserListMArray[i] as AnyObject).object(forKey:"timestamp")
                 if !((timestamp as? String) == "" || timestamp == nil){
-                    for j in 0..<selectedIndex.count{
-                        if (selectedIndex[j] as? Int == timestamp as? Int) {
+                    for j in 0..<Constants.selectedIndex.count{
+                        if (Constants.selectedIndex[j] as? Int == timestamp as? Int) {
                             let tempdic = NSMutableDictionary()
                             tempdic.setObject((allUserListMArray[i] as AnyObject).object(forKey:"name")!, forKey: "name" as NSCopying)
                             tempdic.setObject((allUserListMArray[i] as AnyObject).object(forKey:"image")!, forKey: "image" as NSCopying)
                             tempdic.setObject((allUserListMArray[i] as AnyObject).object(forKey:"timestamp")!, forKey: "timestamp" as NSCopying)
                             tempdic.setObject((allUserListMArray[i] as AnyObject).object(forKey:"id")!, forKey: "id" as NSCopying)
-                            addPlayersArray.add(tempdic)
+                            Constants.addPlayersArray.add(tempdic)
                         }
                     }
                 }
             }
         }
-        let tempA = (addPlayersArray as! Array<NSMutableDictionary>).removeDuplicates()
-        addPlayersArray.removeAllObjects()
-        addPlayersArray = NSMutableArray()
+        let tempA = (Constants.addPlayersArray as! Array<NSMutableDictionary>).removeDuplicates()
+        Constants.addPlayersArray.removeAllObjects()
+        Constants.addPlayersArray = NSMutableArray()
         for data in  tempA{
-            addPlayersArray.add(data)
+            Constants.addPlayersArray.add(data)
         }
 
-        if(addPlayersArray.count != 0){
-            if(!teeArr.isEmpty){
+        if(Constants.addPlayersArray.count != 0){
+            if(!Constants.teeArr.isEmpty){
                 let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "MultiplayerTeeSelectionVC") as! MultiplayerTeeSelectionVC
-                viewCtrl.totalPlayers = addPlayersArray
+                viewCtrl.totalPlayers = Constants.addPlayersArray
                 self.navigationController?.push(viewController: viewCtrl)
             }else{
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "callApi"), object: nil)
@@ -118,10 +115,10 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
          // setup rangefinder
          NotificationCenter.default.addObserver(self, selector: #selector(self.rfApiCompleted(_:)), name: NSNotification.Name(rawValue: "RFApiCompleted"), object: nil)
          
-         let golfId = "course_\(selectedGolfID)"
+         let golfId = "course_\(Constants.selectedGolfID)"
          var isBot = false
-         if addPlayersArray.count>0{
-         for data in addPlayersArray{
+         if Constants.addPlayersArray.count>0{
+         for data in Constants.addPlayersArray{
          let player = data as! NSMutableDictionary
          let id = player.value(forKey: "id")
          if id as! String == "jpSgWiruZuOnWybYce55YDYGXP62"{
@@ -151,7 +148,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         if(notifScoring.count > 0){
             let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "BasicScoringVC") as! BasicScoringVC
-            viewCtrl.matchDataDict = matchDataDic
+            viewCtrl.matchDataDict = Constants.matchDataDic
             viewCtrl.scoreData = notifScoring
             self.navigationController?.pushViewController(viewCtrl, animated: true)
         }
@@ -168,9 +165,9 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.progressView.hide(navItem: self.navigationItem)
         
         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "RFMapVC") as! RFMapVC
-        viewCtrl.matchDataDic = matchDataDic
+        viewCtrl.matchDataDic = Constants.matchDataDic
         viewCtrl.isContinueMatch = false
-        viewCtrl.matchId = matchId
+        viewCtrl.matchId = Constants.matchId
         viewCtrl.courseId = notifGolfId
         self.navigationController?.pushViewController(viewCtrl, animated: true)
         
@@ -182,11 +179,11 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.progressView.hide(navItem: self.navigationItem)
         
         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "NewMapVC") as! NewMapVC
-        viewCtrl.matchDataDict = matchDataDic
+        viewCtrl.matchDataDict = Constants.matchDataDic
         viewCtrl.isContinue = false
-        viewCtrl.currentMatchId = matchId
+        viewCtrl.currentMatchId = Constants.matchId
         viewCtrl.scoring = notifScoring
-        viewCtrl.courseId = "course_\(selectedGolfID)"
+        viewCtrl.courseId = "course_\(Constants.selectedGolfID)"
         self.navigationController?.pushViewController(viewCtrl, animated: true)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
@@ -194,7 +191,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     @IBAction func removePlayerAction(_ sender: UIButton) {
         
-        if selectedIndex.count>0 && !(sender.tag == 0){
+        if Constants.selectedIndex.count>0 && !(sender.tag == 0){
             
             let alert = UIAlertController(title: "Alert", message: "Are you sure you want to remove this Player?", preferredStyle: .alert)
             
@@ -207,15 +204,15 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
                 //                print("Ok Alert: \(alert?.title ?? "")")
                 
-                for i in 0..<selectedIndex.count{
+                for i in 0..<Constants.selectedIndex.count{
                     
                     if !(sender.tag == 0){
                         
-                        if sender.tag == selectedIndex[i] as! Int {
-                            for i in 0..<addPlayersArray.count{
-                                if sender.tag == (addPlayersArray[i] as AnyObject).object(forKey:"timestamp") as! Int {
+                        if sender.tag == Constants.selectedIndex[i] as! Int {
+                            for i in 0..<Constants.addPlayersArray.count{
+                                if sender.tag == (Constants.addPlayersArray[i] as AnyObject).object(forKey:"timestamp") as! Int {
                                     
-                                    addPlayersArray.removeObject(at: i)
+                                    Constants.addPlayersArray.removeObject(at: i)
                                     break
                                 }
                             }
@@ -224,9 +221,9 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                             sender.setTitle("", for: .normal)
                             sender.setBackgroundImage(UIImage(named:""), for: .normal)
 
-                            selectedIndex.removeObject(at: i)
+                            Constants.selectedIndex.removeObject(at: i)
                             
-                            self.lblSelectedPlayer.text = "Selected Players (" + String(selectedIndex.count) + ")"
+                            self.lblSelectedPlayer.text = "Selected Players (" + String(Constants.selectedIndex.count) + ")"
                             self.tablePlayer.reloadData()
                         }
                     }
@@ -253,12 +250,12 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                     }
                 }
                 
-                for i in 0..<selectedIndex.count{
+                for i in 0..<Constants.selectedIndex.count{
                     
                     for j in 0..<self.allUserListMArray.count{
                         
                         if let timestamp = (self.allUserListMArray[j] as AnyObject).object(forKey:"timestamp") as? Int{
-                            if (selectedIndex[i] as! Int == timestamp) {
+                            if (Constants.selectedIndex[i] as! Int == timestamp) {
                                 
                                 let imgUrl = URL(string:((self.allUserListMArray[j] as AnyObject).object(forKey:"image") as? String)!)
                                 if imgUrl == nil{
@@ -283,7 +280,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: Add Guest Action
     
     @IBAction func addGuestAction(_ sender: Any) {
-        if selectedIndex.count>3 {
+        if Constants.selectedIndex.count>3 {
             
             let emptyAlert = UIAlertController(title: "Alert", message: "You can choose maximum 4 friends", preferredStyle: UIAlertControllerStyle.alert)
             emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -391,21 +388,21 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.totalFriends = self.friendMArray.count
         
         //selectedIndex.insert(self.Timestamp, at: 0)
-        selectedIndex.insert((self.friendMArray[0] as AnyObject).object(forKey:"timestamp")!, at: 0)
+        Constants.selectedIndex.insert((self.friendMArray[0] as AnyObject).object(forKey:"timestamp")!, at: 0)
         
         let tempdic = NSMutableDictionary()
         tempdic.setObject((self.friendMArray[0] as AnyObject).object(forKey:"name")!, forKey: "name" as NSCopying)
         tempdic.setObject((self.friendMArray[0] as AnyObject).object(forKey:"image")!, forKey: "image" as NSCopying)
         tempdic.setObject((self.friendMArray[0] as AnyObject).object(forKey:"timestamp")!, forKey: "timestamp" as NSCopying)
         tempdic.setObject((self.friendMArray[0] as AnyObject).object(forKey:"id")!, forKey: "id" as NSCopying)
-        addPlayersArray.insert(tempdic, at: 0)
+        Constants.addPlayersArray.insert(tempdic, at: 0)
         
 //        addPlayersArray.insert((self.friendMArray[0] as AnyObject).object(forKey:"timestamp")!, at: 0)
 //        addPlayersArray.insert((self.friendMArray[0] as AnyObject).object(forKey:"name")!, at: 0)
 //        addPlayersArray.insert((self.friendMArray[0] as AnyObject).object(forKey:"image")!, at: 0)
 //        addPlayersArray.insert((self.friendMArray[0] as AnyObject).object(forKey:"id")!, at: 0)
         
-        for i in 0..<selectedIndex.count{
+        for i in 0..<Constants.selectedIndex.count{
             
             if self.selectedBtnArray[i].tag == 0 {
                 
@@ -417,7 +414,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
             }
         }
-        self.lblSelectedPlayer.text = "Selected Players (" + String(selectedIndex.count) + ")"
+        self.lblSelectedPlayer.text = "Selected Players (" + String(Constants.selectedIndex.count) + ")"
         
         self.tablePlayer.reloadData()
     }
@@ -488,14 +485,14 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         selectedBtnArray[4].tag = 0
         self.tablePlayer.allowsMultipleSelection = true
-        for i in 0..<addPlayersArray.count{
-            if let img = (addPlayersArray[i] as AnyObject).object(forKey: "image") as? String{
+        for i in 0..<Constants.addPlayersArray.count{
+            if let img = (Constants.addPlayersArray[i] as AnyObject).object(forKey: "image") as? String{
                 if(img != ""){
                     let imgUrl = URL(string:img)
                     selectedBtnArray[i].sd_setBackgroundImage(with:imgUrl, for: .normal, completed: nil)
                 }
                 else{
-                    let name = (addPlayersArray[i] as AnyObject).object(forKey: "name") as? String
+                    let name = (Constants.addPlayersArray[i] as AnyObject).object(forKey: "name") as? String
                     selectedBtnArray[i].setTitle("\(String(name![0]))", for: .normal)
                 }
             }
@@ -546,10 +543,10 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.totalFriends = self.friendMArray.count
                 
                 // ----- Set Selected Players if any --------
-                if addPlayersArray.count>0{
+                if Constants.addPlayersArray.count>0{
                     
-                    selectedIndex.removeAllObjects()
-                    selectedIndex = NSMutableArray()
+                    Constants.selectedIndex.removeAllObjects()
+                    Constants.selectedIndex = NSMutableArray()
                     
                     for i in 0..<self.selectedBtnArray.count{
                         
@@ -559,21 +556,21 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                         }
                     }
                     
-                    for i in 0..<addPlayersArray.count{
+                    for i in 0..<Constants.addPlayersArray.count{
                         
-                        let timeStamp = (addPlayersArray[i] as AnyObject).object(forKey:"timestamp")!
+                        let timeStamp = (Constants.addPlayersArray[i] as AnyObject).object(forKey:"timestamp")!
                         
                         //                        ((self.selectedBtnArray[i]) as! UIButton).setTitle((addPlayersArray[i] as AnyObject).object(forKey:"name") as? String, for: .normal)
                         
                         self.selectedBtnArray[i].tag = timeStamp as! Int
                         
-                        selectedIndex.add(timeStamp)
+                        Constants.selectedIndex.add(timeStamp)
                     }
-                    self.lblSelectedPlayer.text = "Selected Players (" + String(addPlayersArray.count) + ")"
+                    self.lblSelectedPlayer.text = "Selected Players (" + String(Constants.addPlayersArray.count) + ")"
                 }
                 else{
-                    selectedIndex.removeAllObjects()
-                    selectedIndex = NSMutableArray()
+                    Constants.selectedIndex.removeAllObjects()
+                    Constants.selectedIndex = NSMutableArray()
                 }
                 self.tablePlayer.reloadData()
                 
@@ -694,15 +691,15 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             timestamp = (friendMArray[indexPath.row] as AnyObject).object(forKey:"timestamp")! as! Int64
         }
         
-        for i in 0..<selectedIndex.count{
-            if (selectedIndex[i] as! Int == timestamp) {
+        for i in 0..<Constants.selectedIndex.count{
+            if (Constants.selectedIndex[i] as! Int == timestamp) {
                 cell.isSelected = true
                 cell.tintColor = UIColor.green
                 tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
             }
         }
         
-        if selectedIndex.count == 0 {
+        if Constants.selectedIndex.count == 0 {
             cell.isSelected = false
             cell.tintColor = UIColor.gray
             tableView.deselectRow(at: indexPath, animated: true)
@@ -729,7 +726,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if selectedIndex.count>3 {
+        if Constants.selectedIndex.count>3 {
             
             let emptyAlert = UIAlertController(title: "Alert", message: "You can choose maximum 4 friends", preferredStyle: UIAlertControllerStyle.alert)
             emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -770,7 +767,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 playerId = ((friendMArray[indexPath.row] as AnyObject).object(forKey:"id"))  as? String ?? ""
             }
             
-            selectedIndex.add(timestamp)
+            Constants.selectedIndex.add(timestamp)
             
             let tempdic = NSMutableDictionary()
             tempdic.setObject(name, forKey: "name" as NSCopying)
@@ -778,11 +775,11 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             tempdic.setObject(timestamp, forKey: "timestamp" as NSCopying)
             tempdic.setObject(playerId, forKey: "id" as NSCopying)
             
-            addPlayersArray.add(tempdic)
+            Constants.addPlayersArray.add(tempdic)
             
-            lblSelectedPlayer.text = "Selected Players (" + String(selectedIndex.count) + ")"
+            lblSelectedPlayer.text = "Selected Players (" + String(Constants.selectedIndex.count) + ")"
             
-            for i in 0..<selectedIndex.count{
+            for i in 0..<Constants.selectedIndex.count{
                 
                 if selectedBtnArray[i].tag == 0 {
                     if (isSearching) {
@@ -853,12 +850,12 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
          }
          }*/
         
-        selectedIndex.remove(timestamp)
+        Constants.selectedIndex.remove(timestamp)
         
-        for i in 0..<addPlayersArray.count{
+        for i in 0..<Constants.addPlayersArray.count{
             
-            if timestamp == (addPlayersArray[i] as AnyObject).object(forKey:"timestamp") as! Int{
-                addPlayersArray.removeObject(at: i)
+            if timestamp == (Constants.addPlayersArray[i] as AnyObject).object(forKey:"timestamp") as! Int{
+                Constants.addPlayersArray.removeObject(at: i)
                 break
             }
         }
@@ -874,7 +871,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         
-        for i in 0..<selectedIndex.count{
+        for i in 0..<Constants.selectedIndex.count{
             
             for j in 0..<self.allUserListMArray.count{
                 
@@ -883,7 +880,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 //                print("timestamp",timestamp ?? "")
                 
                 if !((timestamp as? String) == "" || timestamp == nil){
-                    if (selectedIndex[i] as? Int == timestamp as? Int) {
+                    if (Constants.selectedIndex[i] as? Int == timestamp as? Int) {
                         
                         let imgUrl = URL(string:((self.allUserListMArray[j] as AnyObject).object(forKey:"image") as? String)!)
                         if imgUrl == nil{
@@ -901,7 +898,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //------------------------------
         
-        lblSelectedPlayer.text = "Selected Players (" + String(selectedIndex.count) + ")"
+        lblSelectedPlayer.text = "Selected Players (" + String(Constants.selectedIndex.count) + ")"
         
     }
     

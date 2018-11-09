@@ -65,7 +65,7 @@ class Notification: NSObject{
         let content = UNMutableNotificationContent()
         //content.title = "Please complete your Game"
         //content.subtitle = "Notification test"
-        content.body = "Complete your ongoing round at \(selectedGolfName)!"
+        content.body = "Complete your ongoing round at \(Constants.selectedGolfName)!"
         content.badge = 0
         
         content.sound = UNNotificationSound.default()
@@ -129,7 +129,7 @@ class Notification: NSObject{
     // ---------- New Additions by Shubham -------------------------
 
     static func sendGameDetailsNotification(msg:String,title:String,subtitle:String,timer:Double,isStart:Bool,isHole:Bool){
-        if onCourseNotification == 1{
+        if Constants.onCourseNotification == 1{
             let center = UNUserNotificationCenter.current()
             center.removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             center.removeDeliveredNotifications(withIdentifiers: ["my.notification"])
@@ -171,7 +171,7 @@ class Notification: NSObject{
         }
     }
     static func sendRangeFinderNotification(msg:String,title:String,subtitle:String,timer:Double){
-        if onCourseNotification == 1{
+        if Constants.onCourseNotification == 1{
             let center = UNUserNotificationCenter.current()
             center.removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             center.removeDeliveredNotifications(withIdentifiers: ["my.notification"])

@@ -8,8 +8,6 @@
 
 import UIKit
 
-var fromIndiegogo = Bool()
-
 class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
 
     // MARK: – Set Outlets
@@ -62,8 +60,8 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
         else{
             dismiss(animated: true, completion: nil)
         }
-        if fromIndiegogo{
-            fromIndiegogo = false
+        if Constants.fromIndiegogo{
+            Constants.fromIndiegogo = false
 //            self.presentingViewController?.presentingViewController?.dismiss(animated: false, completion: nil)
             let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -94,7 +92,7 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
 
-        if fromIndiegogo{
+        if Constants.fromIndiegogo{
             lblCongrats.text = "Your 1 year pro membership has been activated"
         }
         else{

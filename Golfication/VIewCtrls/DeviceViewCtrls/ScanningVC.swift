@@ -42,8 +42,8 @@ class ScanningVC: UIViewController {
     var progressValue = 0.0
     @IBAction func barBtnBLEAction(_ sender: Any) {
         if (self.barBtnBLE.image == #imageLiteral(resourceName: "golficationBarG")){
-            ble = BLE()
-            ble.startScanning()
+            Constants.ble = BLE()
+            Constants.ble.startScanning()
         }
     }
     override func viewDidLoad() {
@@ -54,7 +54,7 @@ class ScanningVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.reloadData(_:)), name: NSNotification.Name(rawValue: "DeviceConnected"), object: nil)
         setInitialUI()
         
-        if isDevice{
+        if Constants.isDevice{
             viewHaveDevice.isHidden = false
             noDeviceSV.isHidden = true
             startScanningSV.isHidden = false
@@ -228,12 +228,12 @@ class ScanningVC: UIViewController {
         btnNoDevice.isHidden = true
         startSwingingSV.isHidden = true
         DispatchQueue.main.async(execute: {
-             if(deviceGolficationX == nil){
-                ble = BLE()
-                ble.startScanning()
-                ble.swingDetails = self.swingDetails
+             if(Constants.deviceGolficationX == nil){
+                Constants.ble = BLE()
+                Constants.ble.startScanning()
+                Constants.ble.swingDetails = self.swingDetails
                 self.deviceCircularView.setProgress(value: CGFloat(90), animationDuration: 5.5, completion: {
-                    if(deviceGolficationX != nil){
+                    if(Constants.deviceGolficationX != nil){
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
                     }else{
                         self.lblScanStatus.text = "Couldn't find your device"
@@ -244,7 +244,7 @@ class ScanningVC: UIViewController {
                     }
                 })
              }else{
-                ble.sendThirdCommand()
+                Constants.ble.sendThirdCommand()
             }
         })
     }

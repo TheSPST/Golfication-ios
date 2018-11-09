@@ -349,7 +349,7 @@ class CourseData:NSObject{
                         }
                     }
                     var temp = [String]()
-                    for cub in allClubs{
+                    for cub in Constants.allClubs{
                         for clubs in self.clubs{
                             if (clubs == cub){
                                 temp.append(clubs)
@@ -370,12 +370,12 @@ class CourseData:NSObject{
     
     func updateMaxMin(){
         clubData.removeAll()
-        for data in clubWithMaxMin where clubs.contains(data.name){
+        for data in Constants.clubWithMaxMin where clubs.contains(data.name){
             clubData.append((name: data.name, max: data.max, min: data.min))
         }
         clubData.sort{($0).max > ($1).max}
         for i in 0..<clubData.count-1{
-            if !(clubData[i].min == clubData[i+1].max+1) && (clubData[i].min>clubWithMaxMin[i+1].max+1){
+            if !(clubData[i].min == clubData[i+1].max+1) && (clubData[i].min>Constants.clubWithMaxMin[i+1].max+1){
                 let diff = clubData[i].min - clubData[i+1].max+1
                 clubData[i].max += diff/2
                 clubData[i+1].min -= diff/2

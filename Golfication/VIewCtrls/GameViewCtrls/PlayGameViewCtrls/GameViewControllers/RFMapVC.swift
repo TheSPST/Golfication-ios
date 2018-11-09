@@ -146,7 +146,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             i += 1
         }
         
-        if isEdited{
+        if Constants.isEdited{
             self.exitGamePopUpView.btnDiscardText = "Delete Round"
         }
         self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) Holes Completed."
@@ -478,7 +478,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             if !dataDic.isEmpty{
                 for (key, _) in dataDic{
-                    if key == selectedGolfID{
+                    if key == Constants.selectedGolfID{
                         self.chkStableford = true
                         break
                     }
@@ -500,7 +500,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             if !dataDic.isEmpty{
                 for (key, _) in dataDic{
-                    if key == selectedGolfID{
+                    if key == Constants.selectedGolfID{
                         self.chkStableford = true
                         break
                     }
@@ -579,11 +579,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(matchId)").removeValue()
             matchId.removeAll()
-            isUpdateInfo = true
+            Constants.isUpdateInfo = true
             self.navigationController?.popToRootViewController(animated:true)
-            addPlayersArray.removeAllObjects()
-            if mode>0{
-                Analytics.logEvent("mode\(mode)_game_discarded", parameters: [:])
+            Constants.addPlayersArray.removeAllObjects()
+            if Constants.mode>0{
+                Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
                 let center = UNUserNotificationCenter.current()
                 center.removeAllPendingNotificationRequests()
             }
@@ -603,16 +603,16 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         if(Auth.auth().currentUser!.uid.count>1) &&  (matchId.count > 1){
             ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
         }
-        addPlayersArray = NSMutableArray()
+        Constants.addPlayersArray = NSMutableArray()
         self.updateFeedNode()
-        isUpdateInfo = true
-        if mode>0{
-            Analytics.logEvent("mode\(mode)_game_completed", parameters: [:])
+        Constants.isUpdateInfo = true
+        if Constants.mode>0{
+            Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
             let center = UNUserNotificationCenter.current()
             center.removeAllPendingNotificationRequests()
         }
         if(matchId.count > 1){
-            self.gotoFeedBackViewController(mID: matchId,mode:mode)
+            self.gotoFeedBackViewController(mID: matchId,mode:Constants.mode)
         }
     }
     func sendMatchFinishedNotification(){
@@ -625,7 +625,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             for data in dataDic{
                 group.enter()
-                Notification.sendNotification(reciever: data.key, message: "\(Auth.auth().currentUser?.displayName ?? "guest") just finished a round at \(selectedGolfName).", type: "8", category: "finishedGame", matchDataId: self.matchId, feedKey: "")
+                Notification.sendNotification(reciever: data.key, message: "\(Auth.auth().currentUser?.displayName ?? "guest") just finished a round at \(Constants.selectedGolfName).", type: "8", category: "finishedGame", matchDataId: self.matchId, feedKey: "")
                 group.leave()
             }
             
@@ -1061,7 +1061,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             let currentLocation: CLLocation = self.locationManager.location!
             self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
             self.mapView.isMyLocationEnabled = true
-            if onCourseNotification == 1{
+            if Constants.onCourseNotification == 1{
                 self.registerBackgroundTask()
             }
         }
@@ -1116,7 +1116,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         self.locationManager.startUpdatingLocation()
         var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
         var suffix = "meter"
-        if(distanceFilter != 1){
+        if(Constants.distanceFilter != 1){
             distance = distance*YARD
             suffix = "yard"
         }
@@ -1141,7 +1141,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @objc func appDidEnterBackground() {
         let thePresenter = self.navigationController?.visibleViewController
         if (thePresenter != nil) && (thePresenter?.isKind(of:RFMapVC.self))! {
-            if onCourseNotification == 0{
+            if Constants.onCourseNotification == 0{
                 self.mapTimer.invalidate()
             }else{
                 self.updateMap(indexToUpdate: self.holeIndex)
@@ -1716,7 +1716,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         let windSpeedWithUnit = windSpeed * 2.23694
                         self.lblWindSpeed.text = " \(windSpeedWithUnit.rounded(toPlaces: 1)) mph"
                         self.lblWindSpeedForeground.text = "WIND \(windSpeedWithUnit.rounded(toPlaces: 1)) mph"
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             self.lblWindSpeed.text = " \((windSpeedWithUnit*1.60934).rounded(toPlaces: 1)) km/h"
                             self.lblWindSpeedForeground.text = "WIND \((windSpeedWithUnit*1.60934).rounded(toPlaces: 1)) km/h"
                         }
@@ -1829,13 +1829,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             index += 1
         }
         var slopeIndex = 0
-        for data in teeArr{
+        for data in Constants.teeArr{
             if(data.type.lowercased() == self.teeTypeArr[index].tee.lowercased()) && (data.name.lowercased() == self.teeTypeArr[index].color.lowercased()){
                 break
             }
             slopeIndex += 1
         }
-        let data = (self.teeTypeArr[index].handicap * Double(teeArr[slopeIndex].slope)!)
+        let data = (self.teeTypeArr[index].handicap * Double(Constants.teeArr[slopeIndex].slope)!)
         return (Double(data / 113)).rounded()
     }
     func uploadStableFordPints(playerId:String,strokes:Int){
@@ -2548,7 +2548,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         var distanceC = GMSGeometryDistance(data.center,self.userLocationForClub!) * YARD
                         var distanceE = GMSGeometryDistance(data.back,self.userLocationForClub!) * YARD
                         var suffix = "yd"
-                        if(distanceFilter == 1){
+                        if(Constants.distanceFilter == 1){
                             suffix = "m"
                             distanceF = distanceF/YARD
                             distanceC = distanceC/YARD
@@ -2602,7 +2602,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     func getSuggestedClub(distance:Double,isGreen:Bool,shot:Int)->NSMutableAttributedString{
         var clubName = String()
         var distance = distance
-        if(distanceFilter == 1){
+        if(Constants.distanceFilter == 1){
             distance = distance/YARD
         }
         
@@ -2615,13 +2615,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         for clubs in courseData.clubData{
             if(distance >= Double(clubs.min) && distance <= Double(clubs.max)){
                 clubName = clubs.name + " - \(Int(distance.rounded())) Yd"
-                if(distanceFilter == 1){
+                if(Constants.distanceFilter == 1){
                     clubName = clubs.name + " - \(Int(distance.rounded())) m"
                 }
                 
                 if(shot > 1 && clubs.name == "Dr"){
                     clubName = "1i - \(Int(distance.rounded())) Yd"
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         clubName = "1i - \(Int(distance.rounded())) m"
                     }
                 }
@@ -2630,14 +2630,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             else if(distance < 80){
                 if(isGreen){
                     clubName = "Pu - \(Int((distance*3).rounded())) ft"
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         clubName = "Pu - \(Int((distance/3).rounded())) m"
                     }
                     
                 }
                 else{
                     clubName = "Lw - \(Int((distance).rounded())) Yd"
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         clubName = "Lw - \(Int((distance).rounded())) m"
                     }
                 }
@@ -2646,13 +2646,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             else{
                 if(shot > 1){
                     clubName = "1i - \(Int(distance.rounded())) Yd"
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         clubName = "1i - \(Int((distance).rounded())) m"
                     }
                 }
                 else{
                     clubName = "Dr - \(Int(distance.rounded())) Yd"
-                    if(distanceFilter == 1){
+                    if(Constants.distanceFilter == 1){
                         clubName = "Dr - \(Int((distance).rounded())) m"
                     }
                 }
@@ -2724,7 +2724,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             
             markerText1 = "  \(Int(dist1)) yd "
             markerText = "  \(Int(dist == 0 ? 1:dist)) yd "
-            if(distanceFilter == 1){
+            if(Constants.distanceFilter == 1){
                 markerText = "  \(Int((dist < YARD ? YARD:dist)/(YARD))) m "
                 markerText1 = "  \(Int(dist1/(YARD))) m "
             }
