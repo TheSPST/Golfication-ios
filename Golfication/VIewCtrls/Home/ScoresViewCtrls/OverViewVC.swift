@@ -333,7 +333,8 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
     
     func setScoreDistribution(){
         var scoreArray = [Double]()
-        let KeysArray = ["Below-85","86-90","91-95","96-100","101-105","105-Above"]
+        let KeysArray = ["below".localized() + "-85","86-90","91-95","96-100","101-105","105-" + "above".localized()]
+
         for keys in KeysArray{
             groupDict[keys] = 0
         }
@@ -349,7 +350,7 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         
         for i in scoreArray{
             if(i<=85){
-                updateValue(keys: "Below-85")
+                updateValue(keys: "below".localized() + "-85")
             }
             else if(i>85 && i<=90){
                 updateValue(keys: "86-90")
@@ -364,7 +365,7 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
                 updateValue(keys: "101-105")
             }
             else{
-                updateValue(keys: "105-Above")
+                updateValue(keys: "105-" + "above".localized())
             }
         }
         //print("This is Group Dict: ")
@@ -389,7 +390,7 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         }
     }
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "Overview")
+        return IndicatorInfo(title: "Overview".localized())
     }
 }
 

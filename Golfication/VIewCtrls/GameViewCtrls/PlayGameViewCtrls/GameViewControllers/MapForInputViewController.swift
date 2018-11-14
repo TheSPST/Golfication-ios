@@ -17,7 +17,7 @@ class MapForInputViewController: UIViewController,MKMapViewDelegate{
     var newArr = [CLLocationCoordinate2D]()
     var savedPolyArr = [MKPolyline]()
     @IBOutlet weak var btnCancel: UIButton!
-    @IBOutlet weak var btnStartStopScroll: UIButton!
+    @IBOutlet weak var btnStartStopScroll: UILocalizedButton!
     var polyLineArr = [MKPolyline]()
     var arrWithoutDict = [[Double]]()
     override func viewDidLoad() {
@@ -55,7 +55,7 @@ class MapForInputViewController: UIViewController,MKMapViewDelegate{
 
     var counter = 0
     @IBAction func btnActionStartStopScrolling(_ sender: UIButton) {
-        if(btnStartStopScroll.currentTitle! == "Start"){
+        if(btnStartStopScroll.currentTitle! == "Start".localized()){
             self.btnCancel.isHidden = false
             arr.removeAll()
             newArr.removeAll()
@@ -91,7 +91,7 @@ class MapForInputViewController: UIViewController,MKMapViewDelegate{
         savedPolyArr.append(polyline1)
         // add Polyline to map
         self.mapView.add(polyline1)
-        btnStartStopScroll.setTitle("Start", for: .normal)
+        btnStartStopScroll.setTitle("Start".localized(), for: .normal)
     }
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKPolyline && self.btnStartStopScroll.currentTitle! == "Stop"{

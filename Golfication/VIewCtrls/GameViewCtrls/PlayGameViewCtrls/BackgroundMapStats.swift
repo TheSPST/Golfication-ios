@@ -305,7 +305,7 @@ class BackgroundMapStats: NSObject {
             btn.setTitle("Green", for: .normal)
         }else if endingPoint == "F" {
             btn.backgroundColor = UIColor.glfFairway
-            btn.setTitle("Fairway", for: .normal)
+            btn.setTitle("Fairway".localized(), for: .normal)
         }else if endingPoint == "GB" || endingPoint == "FB"{
             btn.setTitle("Bunker", for: .normal)
             btn.backgroundColor = UIColor.glfBunker

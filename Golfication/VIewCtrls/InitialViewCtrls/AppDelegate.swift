@@ -594,13 +594,13 @@
         if Auth.auth().currentUser != nil{
             
             let youIcon = UIApplicationShortcutIcon(templateImageName: "avatar_0")
-            let youItem = UIApplicationShortcutItem(type: "OpenYouTab", localizedTitle: "You", localizedSubtitle: nil, icon: youIcon, userInfo: nil)
+            let youItem = UIApplicationShortcutItem(type: "OpenYouTab", localizedTitle: "You".localized(), localizedSubtitle: nil, icon: youIcon, userInfo: nil)
             
             let friendsIcon = UIApplicationShortcutIcon(templateImageName: "together_0")
-            let friendsItem = UIApplicationShortcutItem(type: "OpenFriendsTab", localizedTitle: "Together", localizedSubtitle: nil, icon: friendsIcon, userInfo: nil)
+            let friendsItem = UIApplicationShortcutItem(type: "OpenFriendsTab", localizedTitle: "Together".localized(), localizedSubtitle: nil, icon: friendsIcon, userInfo: nil)
             
             let exploreIcon = UIApplicationShortcutIcon(templateImageName: "explore_0")
-            let exploreItem = UIApplicationShortcutItem(type: "OpenExploreTab", localizedTitle: "Explore", localizedSubtitle: nil, icon: exploreIcon, userInfo: nil)
+            let exploreItem = UIApplicationShortcutItem(type: "OpenExploreTab", localizedTitle: "Explore".localized(), localizedSubtitle: nil, icon: exploreIcon, userInfo: nil)
             
             let addScoreIcon = UIApplicationShortcutIcon(templateImageName: "addScore")
             let addScoreItem = UIApplicationShortcutItem(type: "OpenAddScoreTab", localizedTitle: "Play Game", localizedSubtitle: nil, icon: addScoreIcon, userInfo: nil)

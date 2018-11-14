@@ -78,9 +78,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     
     @IBOutlet weak var sandAccuracyScatterChart: ScatterChartView!
     @IBOutlet weak var lblLongSnd: UILabel!
-    @IBOutlet weak var lblLeftSnd: UILabel!
-    @IBOutlet weak var lblRightSnd: UILabel!
-    @IBOutlet weak var lblShortSnd: UILabel!
+    @IBOutlet weak var lblLeftSnd: UILocalizedLabel!
+    @IBOutlet weak var lblRightSnd: UILocalizedLabel!
+    @IBOutlet weak var lblShortSnd: UILocalizedLabel!
     @IBOutlet weak var lblHitSnd: UILabel!
     @IBOutlet weak var sandImageView: UIImageView!
     
@@ -123,21 +123,21 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var lblLong: UILabel!
     @IBOutlet weak var lblHit: UILabel!
-    @IBOutlet weak var lblRight: UILabel!
-    @IBOutlet weak var lblLeft: UILabel!
-    @IBOutlet weak var lblShort: UILabel!
+    @IBOutlet weak var lblRight: UILocalizedLabel!
+    @IBOutlet weak var lblLeft: UILocalizedLabel!
+    @IBOutlet weak var lblShort: UILocalizedLabel!
 
     @IBOutlet weak var lblLongChip: UILabel!
     @IBOutlet weak var lblHitChip: UILabel!
-    @IBOutlet weak var lblRightChip: UILabel!
-    @IBOutlet weak var lblLeftChip: UILabel!
-    @IBOutlet weak var lblShortChip: UILabel!
+    @IBOutlet weak var lblRightChip: UILocalizedLabel!
+    @IBOutlet weak var lblLeftChip: UILocalizedLabel!
+    @IBOutlet weak var lblShortChip: UILocalizedLabel!
     
     @IBOutlet weak var lblPremiumLongChip: UILabel!
     @IBOutlet weak var lblPremiumHitChip: UILabel!
-    @IBOutlet weak var lblPremiumRightChip: UILabel!
-    @IBOutlet weak var lblPremiumLeftChip: UILabel!
-    @IBOutlet weak var lblPremiumShortChip: UILabel!
+    @IBOutlet weak var lblPremiumRightChip: UILocalizedLabel!
+    @IBOutlet weak var lblPremiumLeftChip: UILocalizedLabel!
+    @IBOutlet weak var lblPremiumShortChip: UILocalizedLabel!
     
     @IBOutlet weak var card2: CardView!
     @IBOutlet weak var card2LineChart: LineChartView!
@@ -909,10 +909,11 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         self.lblFairwayHit.text = "\(fairwayHitInPercentage)%"
         self.lblFairwayLeft.text = "\(fairwayLeftInPercentage)%"
         
-        self.lblOTTRight.text = "Right Rough \(fairwayRightInPercentage)%"
+        self.lblOTTRight.text = "Right Rough".localized() + " \(fairwayRightInPercentage)%"
+
         self.lblOTTCenter.text = "Fairway \(fairwayHitInPercentage)%"
-        self.lblOTTLeft.text = "Left Rough \(fairwayLeftInPercentage)%"
-        
+        self.lblOTTLeft.text = "Left Rough".localized() + " \(fairwayLeftInPercentage)%"
+
         
         if(fairwayHitInPercentage > 90){
             hitImg.removeFromSuperview()
@@ -1103,9 +1104,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             }
             scattredSpreadOfTheTeeChart.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
             scattredSpreadOfTheTeeChart.xAxis.enabled = false
-            lblOTTRight.text = "Right Rough"
-            lblOTTLeft.text = "Left Rough"
-            lblOTTCenter.text = "Fairway"
+            lblOTTRight.text = "Right Rough".localized()
+            lblOTTLeft.text = "Left Rough".localized()
+            lblOTTCenter.text = "Fairway".localized()
         }else{
             self.cardForOTT.isHidden = true
             if let index = self.scrollArray.index(of: cardForOTT){

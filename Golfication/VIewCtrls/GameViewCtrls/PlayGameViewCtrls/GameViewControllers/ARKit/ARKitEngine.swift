@@ -469,7 +469,6 @@ extension ARKitEngine {
     
     func createCurve(p1:CGPoint,p2:CGPoint){
 
-
         let path = UIBezierPath()
         let cp = CGPoint(x: (p1.x+p2.x)/2, y: ((p1.y+p2.y)/2)-100)
         path.move(to: p1)

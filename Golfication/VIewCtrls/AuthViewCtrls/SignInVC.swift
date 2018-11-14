@@ -27,8 +27,8 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
     @IBOutlet weak var txtFieldEmail: UITextField!
     @IBOutlet weak var txtFieldPswd: UITextField!
 
-    @IBOutlet weak var btnFb: UIButton!
-    @IBOutlet weak var btnSignIn: UIButton!
+    @IBOutlet weak var btnFb: UILocalizedButton!
+    @IBOutlet weak var btnSignIn: UILocalizedButton!
 
     @IBAction func fbLoginAction(_ sender: UIButton) {
         //https://www.appcoda.com/firebase-facebook-login/
@@ -513,7 +513,7 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
     
     // MARK: - IndicatorInfoProvider
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "Login")
+        return IndicatorInfo(title: "LOGIN")
     }
     
 }

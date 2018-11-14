@@ -27,7 +27,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     @IBOutlet weak var defaultView: UIView!
     
     @IBOutlet weak var btnRemove: UIButton!
-    @IBOutlet weak var btnEdit: UIButton!
+    @IBOutlet weak var btnEdit: UILocalizedButton!
     @IBOutlet weak var btnSyncTag: UIButton!
     @IBOutlet weak var btnAddToBag: UIButton!
     

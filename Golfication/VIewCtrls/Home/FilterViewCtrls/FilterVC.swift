@@ -35,6 +35,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Filters".localized()
         
         self.automaticallyAdjustsScrollViewInsets = false
         self.fliterCollectionView.allowsMultipleSelection = true
@@ -1183,7 +1184,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
             else if self.fromSwingPerform{
                 
                 if indexPath.section == 0 {
-                    supplementaryView.sectionHeaderLabel.text = "Number of Rounds / Duration"
+                    supplementaryView.sectionHeaderLabel.text = "Numbers of Rounds/Duration".localized()
                 }
                 else if indexPath.section == 1 {
                     supplementaryView.sectionHeaderLabel.text =  "Play Type"
@@ -1196,18 +1197,18 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                 
                 if self.fromScorePutting{
                     if indexPath.section == 0 {
-                        supplementaryView.sectionHeaderLabel.text = "Number of Rounds / Duration"
+                        supplementaryView.sectionHeaderLabel.text = "Numbers of Rounds/Duration".localized()
                     }
                     else if indexPath.section == 1 {
                         supplementaryView.sectionHeaderLabel.text = "Holes Type"
                     }
                     else if indexPath.section == 2 {
-                        supplementaryView.sectionHeaderLabel.text = "Courses"
+                        supplementaryView.sectionHeaderLabel.text = "Courses".localized()
                     }
                 }
                 else{
                     if indexPath.section == 0 {
-                        supplementaryView.sectionHeaderLabel.text = "Number of Rounds / Duration"
+                        supplementaryView.sectionHeaderLabel.text = "Numbers of Rounds/Duration".localized()
                     }
                     else if indexPath.section == 1 {
                         // put condition on my score: putting
@@ -1217,7 +1218,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                         supplementaryView.sectionHeaderLabel.text = "Holes Type"
                     }
                     else if indexPath.section == 3 {
-                        supplementaryView.sectionHeaderLabel.text = "Courses"
+                        supplementaryView.sectionHeaderLabel.text = "Courses".localized()
                     }
                 }
 

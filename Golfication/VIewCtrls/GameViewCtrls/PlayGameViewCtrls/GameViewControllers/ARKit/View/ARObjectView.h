@@ -11,8 +11,7 @@
 @class ARKitEngine;
 
 @interface ARObjectView : UIView
-
-@property (nonatomic, weak) ARKitEngine *controller;
 @property (nonatomic) BOOL displayed;
+@property (nonatomic, weak) ARKitEngine *controller;
 
 @end

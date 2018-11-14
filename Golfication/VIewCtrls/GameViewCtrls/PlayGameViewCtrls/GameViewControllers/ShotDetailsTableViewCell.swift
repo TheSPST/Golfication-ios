@@ -13,7 +13,7 @@ class ShotDetailsTableViewCell: UITableViewCell {
     @IBOutlet weak var lblShot: UILabel!
     @IBOutlet weak var lblClubName: UILabel!
     @IBOutlet weak var lblDistance: UILabel!
-    @IBOutlet weak var lblLandedOn: UILabel!
+    @IBOutlet weak var lblLandedOn: UILocalizedLabel!
     @IBOutlet weak var lblStrokesGained: UILabel!
     
     override func awakeFromNib() {

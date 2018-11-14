@@ -16,10 +16,10 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
     
     @IBOutlet weak var strokesGainedStackView: UIStackView!
     @IBOutlet weak var lblStrokesGainedPerClubAvg: UILabel!
-    @IBOutlet weak var lblStrokesGainedOffTheTeeAvg: UILabel!
-    @IBOutlet weak var lblStrokesGainedApproachTheGreenAvg: UILabel!
-    @IBOutlet weak var lblStrokesGainedAroundTheGreenAvg: UILabel!
-    @IBOutlet weak var lblStrokesGainedPuttingAvg: UILabel!
+    @IBOutlet weak var lblStrokesGainedOffTheTeeAvg: UILocalizedLabel!
+    @IBOutlet weak var lblStrokesGainedApproachTheGreenAvg: UILocalizedLabel!
+    @IBOutlet weak var lblStrokesGainedAroundTheGreenAvg: UILocalizedLabel!
+    @IBOutlet weak var lblStrokesGainedPuttingAvg: UILocalizedLabel!
     
     @IBOutlet weak var offTheTeeCardView: CardView!
     @IBOutlet weak var puttingCardView: CardView!
@@ -69,7 +69,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabBarController?.tabBar.isHidden = true
-        self.title = "Strokes Gained"
+        self.title = "Strokes Gained".localized()
         
         Constants.finalFilterDic.removeAllObjects()
         self.automaticallyAdjustsScrollViewInsets = false

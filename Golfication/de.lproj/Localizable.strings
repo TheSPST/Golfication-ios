@@ -1,0 +1,2124 @@
+/* 
+  Localizable.strings
+  Golfication
+
+  Created by Rishabh Sood on 09/11/18.
+  Copyright © 2018 Khelfie. All rights reserved.
+ 
+ //https://medium.com/lean-localization/ios-localization-tutorial-938231f9f881
+*/
+
+"English"="German";
+"Golfication: GPS Rangefinder, Stats & Scorecard"="Golfication: GPS Entfernungsmesser, Statistik und Scorekarte";
+
+"Golfication: Golf GPS & Caddie"="Golfication: Golf GPS und Caddy";
+
+"Free Shot Tracker & Scorecard"="Freie Schlagverfolger und Scorekarte";
+
+"GPS Rangefinder, Smart Scorecard, Golf Stats, Shot Tracker and much more"="GPS Entfernungsmesser, Smart Scorekarte, Golf Status, Schlagverfolger und noch viel mehr";
+
+
+
+
+
+"Always hit the best shot you can play, using data."="Jetzt, Machen Sie den Schlag den Sie kennen, nicht den Sie denken Sie machen sollen";
+
+"Golfication is the one-stop Golf App, powered by Artificial Intelligence - this FREE app comes with many useful features like GPS Rangefinder, Live Scoring, Driving & Approach accuracy, Putting Stats, and Strokes Gained Analysis."="Golfication ist die One-Stop-Golf-App, die von KÃ¼nstliche Intelligenz angetrieben wird - diese KOSTENLOSE App enthÃ¤lt viele nÃ¼tzliche Funktionen wie GPS Entfernungsmesser, Live-Scores, Drives & AnnÃ¤herungsgenauigkeit, Puttenstatistik und die Analyse der erworbenen SchlÃ¤ge.";
+
+"FEATURE HIGHLIGHTS:"="EigenschaftensÃ¼berblick
+";
+
+"EASY SCORING"="Leichter Score";
+"Record just Hole-scores, or add Fairway Hits, GIRs and Putts with Golf's most elegantly designed User Interface. Spend minimal time looking at your phone, and maximum time playing Golf!"="Nur den Loch-Score aufzeichnen, oder das Fairwaytreffen, GIRs und Putten hinzufÃ¼gen mit der am eleganten entworfenen BenutzeroberflÃ¤che von Golf. Verbringen Sie minimale Zeit mit Ihrem Handy, und maximale Zeit mit dem Spiel!
+";
+
+"FREE GPS RANGEFINDER"="Freier GPS Entfernungsmesser";
+"Get accurate distances to front, middle & back of green, along your line of sight. Also check out persistent wind speed to plan your shot. Whatâ€™s best? Itâ€™s completely FREE!"="Entlang Ihrer Sichtlinie, bekommen Sie die genaue Entfernungen bis nach vorne, mitte und zurÃ¼ck des GrÃ¼nes. Und weiter was ist beste? Es ist ganz FREI!";
+
+"FREE CLUB RECOMMENDATIONS"="Freie SchlÃ¤gerempfehlungen";
+"Get FREE Club Recommendations based on data from your previous rounds. Our A.I. Caddie makes sure you never hit a wrong club again. Ever."="Bekommen Sie FREIE SchlÃ¤gerempfehlungen gemÃ¤ÃŸ Ihrer Daten von Ihren vorherigen Runden. Unser Caddy (der von KÃ¼nstlichen Intelligenz angetrieben wird) sichert immer dass Sie nie wieder mit dem falschen Schlager schlagen werden.
+";
+
+"ULTIMATE SHOT TRACKING"="Ultimative Schlagverfolgung";
+"Now track every shot using one simple button! Additionally, enjoy our automatic scoring, FREE distances and shot recommendations."="Jetzt verfolgen Sie jeden Schlag mithilfe einer einfachen Taste! Des weiteren, genieÃŸen Sie unseren automatischen Spiel-Score, FREIE Entfernungsmpfehlungen und Schlagempfehlungen.";
+
+"PERFORMANCE STATS"="Leistungsbeurteilung";
+"Stop paying to track driving accuracy, GIRs, putts and sand saves for you and your friends, because these features are FOREVER FREE on Golfication."="HÃ¶ren Sie auf zu zahlen um Ihre (und Ihrer Freunde) Drivengenauigkeit, GIRs, Putten und Sand-saves zu verfolgen, weil diese Eigenschaften auf Golfication IMMER FREIE sind.";
+
+"GAME INSIGHTS"="Spielseinblicke";
+"Now understand your game in a way that hasn't been possible before with ultimate game insights like Club Stats, Strokes Gained, Approach Accuracy, Chipping accuracy, Putts per hole & Accuracy Off-The-Tee, and plan your golf training better with data."="Jetzt verstehen Sie Ihr Spiel in Weisen die vorher unmÃ¶gliche waren, mit ultimativen Spielseinblicken wie Schlagerstatistik, SchlÃ¤ge erworben, AnnÃ¤hrungsgenauigkeit, Chippensgenauigkeit, Putten pro Loch und Genauigkeit ab dem Abschlag. Planen Sie Ihre Golfausbildung mit besseren Daten.";
+
+"FOCUS ON YOUR GOLF"="Fokussieren Sie sich auf Ihr Golf";
+"Now see distances easily on-the-go without even opening the app! And score directly from a notification."="Jetzt kÃ¶nnen Sie die Entfernungen immer leichter ansehen ohne die App zu Ã¶ffnen! Erzielen Sie hÃ¶here Score direkt mithilfe einer Aktualisierung von Ihrer App.";
+
+"FOR GOLF GEEKS"="FÃ¼r die Golfnerds";
+"Golfication provides in-depth analysis using filters like Number of Rounds, Season, Holes Played, Clubs Used and Course Type. We will help you get those very stats that you've always wanted to track. (It's also like your super-personal, awesome Spreadsheet App for Golf.)"="Golfication bietet Ihnen tiefe Analyse durch die Filter wie Rundennummer, Saison, LÃ¶cher gespielt, GolfschlÃ¤ger benutzt. Wir werden Sie helfen diejenige Statistik zu bekommen, die Sie immer zu verfolgen wollten (Die ist genau wie Ihre SuperpersÃ¶nliche Kalkulationstabelle fÃ¼r Golf)Â";
+
+"LIVE SCORING WITH FRIENDS"="Live-Scores mit Ihren Freunden";
+"Golfication provides Live Scoring on all Android & iOS devices, and allows you to keep track your game, as well as your buddies' on a single screen! Get smart post-game analytics and comparisons, to win the weekend's bragging rights!"="Golfication bietet Live-Scores auf allen Android und iOS GerÃ¤ten, und erlaubt Sie Ihr eigenes Spiel zu verfolgen, sowohl die Spiele Ihrer Freunde auf dem selben Bildschirm! Bekommen Sie Smartanalytik fÃ¼r die Nachspielsanalytik und Vergleichungen, und davon konnen Sie durch das ganze Wochenende sich brÃ¼sten!";
+
+"LEADERBOARDS"="Bestenlisten";
+"Play against golfers everywhere, in the World's Grandest competitions for \"Longest Drive\", \"Closest To The Pin\", \"Monster Putt\", and more! Improve faster, when the pressure is on."="Spielen Sie gegen andere Golfspieler Ã¼berall, in den am groÃŸten Wettbewerben der Welt fÃ¼r die \"am weitesten Drive\", \"am nÃ¤chsten Loch\", \"Monsterputt\", und noch viel mehr! Verbessern Sie sich immer schneller indem der Spielsdruck baut sich auf Sie auf";
+
+"LOVE THE APP?"="Lieben Sie die App?";
+"Rate us on the app store! Share your love, and help other golfers discover Golfication - the Ultimate Golf App."="Bewerten Sie uns in dem Appstore! Teilen Sie mit uns Ihre Liebe, und helfen Sie andere Golfspieler Golfication - die ultimative Golfapp zu entdecken.";
+
+"SUPPORT"="Liefern";
+"Have feedback, donâ€™t see your golf course in our database, or have a course correction? We love hearing from you, so email us at holeinone@golfication.com and weâ€™ll get back to you pronto."="Haben Sie Feedback, oder sehen Sie nicht Ihren Golfplatz in unserer Datenbank, oder haben Sie irgendeine Korrektur im Bezug auf irgendeinen Golfplatz? Wir wÃ¼rden gerne von Ihnen hÃ¶ren. Senden Sie uns eine Email an holeinone@golfication.com und werden wir sofortlich Ihnen antworten. ";
+
+"SOCIAL"="Sozial";
+"Web: www.golfication.com"="Web:www.golfication.com";
+"Twitter: @Golfication"="Twitter: @Golfication";
+"Facebook.com/Golfication"="Facebook.com/Golfication";
+"Instagram: @golfication"="Instagram: @golfication";
+
+"So are you prepared for some serious #golfication?"="So haben Sie sich im ernst vorbereitet fÃ¼r #golfication?";
+
+
+
+"Screenshot Text"="Bildschirmfototext";
+"FREE CLUB RECOMMENDATION"="Freie SchlÃ¤gerempfehlung";
+"Real-Time A.I. Powered Caddie"="Echtzeitiger Caddy von KÃ¼nstliche Intelligenz angetrieben";
+
+"GPS RANGEFINDER"="GPS Entfernungsmesser";
+"Accurate Distances and Wind"="Genaue Entfernungen und Wind";
+
+"EASY SCORING"="Leichter Score";
+"Fast and Easy"="Schnell und einfach";
+
+"ULTIMATE SHOT TRACKING"="Ultimative Schlagverfolgung";
+"Track every shot. Automatic Scoring"="Verfolgen Sie jeden Schlag. Automatischer Score";
+
+"PERFORMANCE STATS"="Leistungsstatistik";
+"Fairways, GIRs, Putts, Scrambling and more.."="Fairways, GIR, Putten, Scrambling und mehr";
+
+"GAME INSIGHTS"="Spielseinblicke";
+"Club Accuracy, Strokes Gained and more!"="Schlagergenauigkeit, SchlÃ¤ge erworben und noch viel mehr!";
+
+"FOCUS ON YOUR GOLF"="Fokussieren Sie sich auf Ihr Golf";
+"Easier Scoring on the go"="Leichter Scoring auf Trab";
+
+
+"APP TOUR"="Rundgang der App";
+
+"Next"="Weiter ";
+"Skip"="Ãœberspringen";
+
+"EASY SCORING"="Leichter Score";
+"Record Hole scores, Fairways, GIRs and putts for you and your friends."="Loch-Score, Fairways, GIR und Putten fÃ¼r sich selbst under fÃ¼r Ihre Freunde aufzeichnen";
+"Hole 1"="Loch 1";
+"Par 4"="Par 4";
+"Score"="Bewerten";
+"Select"="AuswÃ¤hlen";
+"More Score"="Weitere Score";
+"Fairway Hit"="Fairwaytreffen";
+"Green in Regulation"="GrÃ¼ns in Regulation";
+"Putts"="Putten";
+"Chip Shots"="ChippenschlÃ¤ge";
+"Green side sand shot"="GrÃ¼nseitiger Sandschlag";
+"Penalties"="Strafen";
+
+"GPS Rangefinder"="GPS Entfernungmesser";
+"Fast and accurate Distances"="Schnelle und genaue Entfernungen";
+"Free club recommendations, and live scoring."="Freie SchlÃ¤gerempfehlungen und Live-Score";
+"Center"="Mitte";
+"Back"="ZurÃ¼ck";
+"Front"="Vorne";
+
+"Ultimate Shot Tracking"="Ultimative Schlagverfolgung";
+"Automatic tracking and stats for every shot."="Automatische Verfolgung und Statistik fÃ¼r jeden Schlag";
+"Ultimate game-improvement mode."="Ultimative Spielsverbesserungsmodus";
+
+"Performance Stats"="Leistungsstatistik";
+"Fairways, GIRs, Putts, Club stats, strokes gained and more."="Fairways, GIR, Putten, Schlagerstatistik, erworbene SchlÃ¤ge und noch viel mehr";
+"Left"="Links";
+"Short"="Kurz";
+"Right"="Rechts";
+"Long"="Lang";
+
+"Start"="Anfang";
+
+"GET STARTED!"="Leg sich los! ";
+"Play with your friends and pro players"="Spielen Sie mit eigenen Freunden und Profispielern";
+
+"SIGN UP"="Anmelden";
+"LOGIN"="Einmelden";
+
+"Name"="Name";
+"E-mail"="E-mail";
+"Password"="Passwort";
+"Confirm Password"="Passwort bestÃ¤tigen";
+"Sign Up"="Anmelden";
+"or"="oder";
+"Connect with Facebook"="durch Facebook sich verbinden";
+
+"Forgot Password"="Passwort vergessen";
+"Resend Verification Email"="BestÃ¤tigungs-E-mail wiedersenden";
+
+
+"App Home Screen"="App Startbildschirm";
+"Hi"="Hallo";
+"Rounds Played"="Runden gespielte";
+"Handicap"="Golfbehinderungen";
+"Choose from 30000+ Golf Courses"="WÃ¤hlen Sie aus 30000+ GolplÃ¤tzen";
+"Play Golf"="Golf spielen";
+"Recent Games"="KÃ¼rzliche Spiele";
+"Continue"="Weitergehen";
+"You"="Sie";
+"Together"="Zusammen";
+"Explore"="Erkunden";
+
+"Previous games"="Vorherige Spiele";
+"Details"="Details";
+
+"Together Section"="Zusammen Teil";
+"Total Score percentile"="Gesamt-scoreprozentsatz";
+"You Scored better than 1.0% of Golfers"="Ihr Score ist besser als 1% der Golfspieler";
+"Driving Distance Rank"="Drivenentfernungsrang";
+"Rounds Played Rank"="Rundenspielrang";
+"Putts Per Hole Rank"="Putten pro Loch - Einlochensrang";
+
+
+
+
+
+"Invite your friends to play"="Laden Sie Ihre Freunde zu spielen ein";
+"Invite 3 friends to the app and get $50 OFF on Golfication X!"="Laden Sie 3 Freunde in die App und bekommen Sie $50 Rabatt auf Golfication X! ";
+"Invite Now"="Jetzt einladen";
+
+"My Scores"="Meine Scores";
+"Strokes Gained"="Erworbene SchlÃ¤ge";
+"Club Stats"="Schlagerstatistik";
+
+"More Stats"="Weitere Statistiken";
+
+"Your Best Club"="Ihr bester Schlager";
+"Strokes Gained"="Erworbene SchlÃ¤ge";
+"Average Distance"="Durchschnittliche Enfernung";
+
+"Indiegogo Banner"="Indiegogo Banner";
+"My Swings"="Meine Schwungen";
+"Club Speed, Tempo, Swing Plane & more..."="Schlagergeschwindigkeit, Tempo, Schwungsebene und noch viel mehr";
+"Pre order Now!"="Jetzt vorbestellen!";
+
+
+"Play Golf Section"="Golfspielen Teil";
+"New Round"="Neue Runde";
+"Choose Course"="Golplatz auswÃ¤hlen";
+"Home Course"="Heimplatz";
+"Nearest Course"="Am nÃ¤chsten Golfplatz";
+"Holes"="LÃ¶cher";
+"18 Holes"="18 LÃ¶cher";
+"9 Holes"="9 LÃ¶cher";
+"Starting Holes"="AnfangslÃ¶cher";
+"Other"="Andere";
+
+"Customize Your Experience"="Ihre Erfahrung anpassen";
+"Play On-Course"="Spiel im Platz";
+"Live scoring, hole distances, GPS based shot tracking and more."="Live-Score, Lochentfernungen, GPS-Schlagverfolgung und mehr";
+
+"Score Previous Round"="Score fÃ¼r vorherige Runde";
+"Record round scores and maintain stats."="Runde-Score und Erhaltungsstatistik aufzeichnen";
+"Next"="Weiter";
+
+"Play-on course mode options"="Modusoptionen auf dem Platz zu spielen";
+"Choose your experience"="WÃ¤hlen Sie Ihre Erfahrung";
+"Classic Scorecard"="Klassike Scorekarte";
+"For Basic Users"="FÃ¼r Grundbenutzer";
+"Fast and easy"="Schnell und einfach";
+"Record hole-scores, fairways, GIRs and putts for you and your friends."="Loch-Scores, Fairways, GIRs und Putten fÃ¼r sich selbst und fÃ¼r Ihre Freunde aufzeichnen";
+
+"Smart Rangefinder"="Smart Entfernungsmesser";
+"Most Popular"="Am beliebtesten";
+"Center"="Mitte";
+"Back Front"="zurÃ¼ck vorne";
+"Fast & accurate distances"="Schnell und genaue Entfernungen";
+"FREE distances and club-recommendations."="FREIE Entfernungen und SchlÃ¤gerempfehlungen";
+"Live Scoring available"="Live-Score verfÃ¼gbar";
+
+"Ultimate Shot-tracking"="Ultimative Schlagverfolgung";
+"For Advanced Users"="FÃ¼r erweiterte Benutzer";
+"Advanced Stats and Analytics"="Erweiterte Statistik und Analytik";
+"Time-intensive, but feature-packed! FREE distances and recommendations. Automatic Scoring enabled"="Zeitintensiv, aber mit Eigenschaften gepackt! FREIE Entfernungen und Empfehlungen. Automatischer Score ermÃ¤chtigt";
+
+"Start Round"="Runde anfangen";
+
+"Additionally, track Scores and Stats of up to 3 friends"="Des weiteren, verfolgen Sie den Score und die Statistik von (bis zu) 3 Freunden";
+"Skip"="Ã¼berspringen";
+
+"Score Previous Round Menu Options"="Score Vorherige Runde Menu Optionen";
+"Post-Game Shot Tracking"="Nachspielsschlagverfolgung";
+"For Advanced Users"="FÃ¼r erweiterte Benutzer";
+"Advanced Stats and Analytics"="Erweiterte Statistik und Analytik";
+"Time Intensive, but feature packed! Plot each shot as it was actually played, to access unbeateable insights into your own game. Take charge!"="Zeitintensiv, aber mit Eigenschaften gepackt! Jeden Schlag zeichnen genau wie gespielt, um unÃ¼bertreffliche Einblicke eigenes Spieles zuzugreifen. Nimm das Spiel in eigene Regie!";
+
+"Classic Scorecard Mode"="Klassike Scorekartenmodus";
+"Your Score"="Ihr Score";
+"Detailed Scoring"="AusfÃ¼hrlicher Score";
+"View Scorecard"="Scorekarte ansehen";
+"Next Hole"="Folgendes Loch";
+"Previous Hole"="Vorheriges Loch";
+
+"Continue Round Screen"="Rundenbildschirm fortzeigen";
+"Playing Hole"="Loch im Gange";
+"End Round"="Runde abschliessen";
+"Players"="Spieler";
+"To Par"="Zum Par";
+"Thru"="Durch ";
+"Strokes"="SchlÃ¤ge";
+"*Atleast 9-holes must be completed to generate round stats."="Sie mÃ¼ssen wenigstens 9 LÃ¶cher abschliessen um die Rundenstatistik zu bekommen";
+"Continue Round"="Runde fortsetzen";
+
+"End Round Button Pop-up Message"="Rundenschluss Taste Popup-Nachricht";
+"Round in progress"="Runde im Gange";
+"holes completed"="LÃ¶cher abgeschlossen";
+"You'll not be able to edit this round anymore. Are you sure want to exit."="Sie werden nicht mehr diese Runde bearbeiten kÃ¶nnen. Sind Sie sicher dass Sie verlassen wollen?";
+"Save & Exit"="Speichern und verlassen";
+"Discard Round"="Runde verwerfen";
+"Cancel"="Absagen";
+
+"Profile"="Profil";
+"Edit"="Bearbeiten";
+"Your Home Course"="Ihre Heimplatz";
+"Change Course"="Platz Ã¤ndern";
+"Your Golf Bag"="Ihre Golftasche";
+"14 Clubs Selected"="14 SchlÃ¤ger ausgewÃ¤hlt";
+"Grip"="Griff";
+"Left Handed"="LinkshÃ¤ndig";
+"Right Handed"="RechtshÃ¤ndig";
+"Handicap"="Handicap";
+"I don't have handicap"="Ich habe kein Handicap";
+"Pro Membership Active"="Profi Mitgliedschaft aktiv";
+"You have 207 days remaining on your Pro Membership"="Sie haben noch 207 Tage mehr auf Ihrer Profi Mitgliedschaft";
+"Invite your friends to play"="Ihre Freunde zu spielen einladen";
+"Invite 3 friends to the app and get $50 OFF on Golfication X!"="3 Freunde in die App einladen und bekommen Sie Golfication X! um $50 weniger";
+"Invite Now"="Jetzt einladen";
+"00:00:00 remaining"="00:00:00 bleibt ";
+"Refer Friends now!"="Jetzt an Freunde verweisen!";
+"Referral"="Verweisung";
+"Invite Friends"="Freunde einladen";
+"Get $50 off"="FÃ¼r $50 weniger bekommen";
+"Upgrade to Pro"="Auf Pro aktualisieren";
+"free for 30 days"="Frei fÃ¼r 30 Tage";
+"Upgrade Now!"="Jetzt aktualisieren!";
+
+"Get your 30 days membership absolutely FREE"="Bekommen Sie Ihre 30 Tagesmitgliedschaft ganz FREI!";
+"What is Pro?"="Was ist Pro?";
+
+"Golfication Pro"="Golfication Pro";
+"Advanced Stats"="Erweiterte Statistik";
+"Distance, range and accuracy for all your clubs"="Entfernung, Strecke und Genauigkeit aller Ihrer SchlÃ¤ger";
+"Long "="Lang";
+"Short"="Kurz";
+"Right"="Rechts";
+"Left"="Links";
+
+"Club Selection & Control"="SchlÃ¤gerauswahl und Kontrolle";
+"Know which club you need to hit often, and which you'd better leave out"="Kennen Sie mit welchem Schlager Sie brauchen oft zu schlagen, und welchen Sie eher auslassen wÃ¼rden";
+
+"Strokes Gained Analysis"="Analytik erwobener SchlÃ¤ge";
+"Break down each selection of your game, to better plan your training sessions."="Teilen Sie jede Auswahl Ihres Spieles ein, um Ihre Ausbildungssitzungen besser zu planen";
+
+"Settings"="Einstellungen";
+"Distance"="Entfernung";
+"Imperial (feet,yards,miles)"="Imperial (FÃ¼ÃŸe, Yard, Meile)";
+"Metric(metres,kilometres)"="Metrisch (Meter, Kilometer)";
+"Strokes Gained"="Erworbene SchlÃ¤ge";
+"PGA Tour"="PGA Tour";
+"Men's-Scratch"="MÃ¤nner - \"Scratch\"";
+"Men's-18Handicap"="MÃ¤nner- 18 Handicap ";
+"Women's-Scratch"="Frauen - \"Scratch\"";
+"Women's-18 Handicap"="Frauen - 18 Handicap";
+
+"Version"="Version";
+"Logout"="Abmelden";
+
+"Are you sure you want to Logout."="Sind Sie sicher dass Sie abzumelden wollen?";
+"Cancel"="Absagen";
+
+"Post Game Shot Tracking Mode Option"="Nachspielsschlagverfolgungsmodus Option";
+"Drag your target marker to get free club recommendations for every shot."="Ziehen Sie Ihren Zielmarker um freie Schalgerempfehlungen zu bekommen";
+"Ok, Got it."="Ok, verstanden";
+
+"This is the club we recommend based on your yardage. Tap to change."="Dieser ist der empfohlener Schlager im Bezug auf Ihre LauflÃ¤nge. Klopfen Sie zu verÃ¤ndern.";
+
+"Tap to record this shot."="Klopfen Sie um diesen Schlag aufzuzeichnen";
+
+"Use the hole-out button to complete this hole and view score."="Benutzen Sie die 'Loch-aus' Taste dieses Loch abzuschlieÃŸen und Ihren Score anzusehen";
+
+"Player Stats"="Spielerstatistik";
+
+
+
+
+"Your Scorecard"="Ihre Scorekarte";
+"Hole"="Loch";
+"Par"="Par";
+"Driving Distance"="Drivenentfernung";
+"Fairway Hit"="Getroffene Fairways";
+"Approach Dist"="AnnÃ¤herungsentfernung";
+"GIR"="GIR";
+"Chip/Down"="Chip/Herab";
+"Sand/Down"="Sand/Herab";
+"Putts"="Putten";
+"Net Score"="Nettoergebnis";
+"Stableford"="Stableford";
+
+"Enable Stableford Scores by sending us a picture of the club scorecard"="Senden Sie uns ein Bild Ihrer SchlÃ¤gerscorekarte um Ihren Stableford Score zu ermÃ¤chtigen ";
+"Continue"="Fortsetzen";
+
+"More Stats"="Weitere Statistik";
+"Overview"="Ãœberblick";
+"Rounds"="Runden";
+"Score Distribution"="Scoreverteilung";
+"below"="unten";
+"above"="oben";
+"Scoring"="Score";
+"Par"="Par";
+"Bogey"="Bogey";
+"Double Bogey"="Doppel Bogey";
+"Birdie"="Birdie";
+"Par"="Par";
+"Par Average"="Par Durchschnittswerte";
+"Penalties Trend"="Strafentrend";
+
+"Off the Tee"="Ab dem Abschlag";
+"Spread of the tee"="Dispersion des Abschlags";
+"Left Rough"="Rau auf der Linken";
+"Right Rough"="Rau auf der Rechten";
+"Short 'Long"="Kurz 'Lang";
+"Typical"="Typisch";
+"Fairway"="Fairway";
+"Drive Accuracy"="Drivengenauigkeit";
+"Drive Distance"="Drivenentfernung";
+"Fairway Hit Trend"="Fairwaytreffenstrend";
+"Fairway Hit Likeliness"="Fairway Treffenswahrscheinlichkeit";
+
+"Approach"="AnnÃ¤herung";
+"Approach Accuracy"="AnnÃ¤herungsgenauigkeit";
+"Hit"="Schlag";
+"Greens in Regulation (GIR)"="GrÃ¼ns in Regulation";
+"Greens with fairway hit"="GrÃ¼ns mit Fairwaytreffen";
+"Greens with fairway miss"="GrÃ¼ns mit FairwayvorbeischÃ¼ssen";
+"Hole Proximity"="LochnÃ¤he";
+"GIR Trend"="GIR Trend";
+"GIR Likeliness"="GIR-Wahrscheinlichkeit";
+
+"Chipping"="Chippen";
+"Chipping Accuracy"="Chippensgenauigkeit";
+"Chip: Up and Down"="Chip: auf und ab";
+"Chip Proximity"="ChippennÃ¤he";
+"Sand: Up and Down"="Sand: auf und ab";
+"Sand Accuracy"="Sandgenauigkeit";
+"Sand Proximity"="SandnÃ¤he";
+
+"Putting"="Putten";
+"Putts Per Hole"="Putten pro Loch";
+"Putts Breakup"="Putteneinteilung";
+"Putts Vs Handicap"="Putten gegen Behinderungen";
+"Filters"="Filter";
+"Numbers of Rounds/Duration"="Rundennummer/Dauer";
+"Rounds"="Rundennummer/Dauer";
+"Days"="Tage";
+"All"="Alle";
+
+"Round Type"="Rundentyp";
+"Holes"="LÃ¶cher";
+"Clubs Used"="SchlÃ¤ger benutzt";
+"Courses"="GolfplÃ¤tze";
+"Apply"="Sich bewerben";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

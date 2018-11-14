@@ -20,8 +20,8 @@ class ExitGamePopUpView: UIView {
     @IBOutlet weak var subView: UIView!
     @IBOutlet weak var btnSaveNExit: UIButton!
     @IBOutlet weak var lblHole: UILabel!
-    @IBOutlet weak var lblStatic: UILabel!
-    @IBOutlet weak var btnDiscard: UIButton!
+    @IBOutlet weak var lblStatic: UILocalizedLabel!
+    @IBOutlet weak var btnDiscard: UILocalizedButton!
     
     var labelText: String? {
         get { return lblHole?.text }
@@ -49,7 +49,7 @@ class ExitGamePopUpView: UIView {
         gradient.frame = btnSaveNExit.frame
         btnSaveNExit.layer.addSublayer(gradient)
         
-        lblStatic.text = "You'll not able to edit this round anymore.\nAre you sure want to exit?"
+        lblStatic.text = "You'll not be able to edit this round anymore. Are you sure want to exit.".localized()
     }
     
     private func commonInit() {

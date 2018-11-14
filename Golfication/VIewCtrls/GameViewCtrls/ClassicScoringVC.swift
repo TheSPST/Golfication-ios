@@ -22,7 +22,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
     @IBOutlet weak var lblCourseNameTitle: UILabel!
     @IBOutlet weak var btnViewScoreCard: UIButton!
     @IBOutlet weak var actvtIndView: UIActivityIndicatorView!
-    @IBOutlet weak var btnContinue: UIButton!
+    @IBOutlet weak var btnContinue: UILocalizedButton!
     
     var holeOutforAppsFlyer = [Int]()
     var holeOut = false
@@ -53,6 +53,8 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         backBtnHeader.tintColor = UIColor.glfWhite
         self.navigationController?.navigationBar.isHidden = true
         self.btnContinue.layer.cornerRadius = 3
+        self.btnContinue.setTitle("  " + "Continue".localized(), for: .normal)
+        
         self.lblCourseNameTitle.text = self.matchDataDict.value(forKey: "courseName") as? String
         if(Constants.matchDataDic.object(forKey: "player") != nil){
             let tempArray = Constants.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
@@ -125,7 +127,8 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
             animator.startAnimation()
         }
         
-        titleLabel.setTitle("Hole \(currentIndex+1) - Par \(self.scoreData[self.currentIndex].par)", for: .normal)
+        titleLabel.setTitle("Hole".localized() + " \(currentIndex+1) - " + "Par".localized() + " \(self.scoreData[self.currentIndex].par)", for: .normal)
+
         self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
     }
     
@@ -157,7 +160,8 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         ActionSheetStringPicker.show(withTitle: "Select Hole", rows: holeArray, initialSelection: self.currentIndex, doneBlock: {
             picker, value, index in
             self.currentIndex = value
-            self.titleLabel.setTitle("Hole \(self.currentIndex+1) - Par \(self.scoreData[self.currentIndex].par)", for: .normal)
+            self.titleLabel.setTitle("Hole".localized() + " \(self.currentIndex+1) - " + "Par".localized() + " \(self.scoreData[self.currentIndex].par)", for: .normal)
+
             self.tableView.reloadData()
             UIView.animate(withDuration: 0.4, animations: {
                 self.titleLabel.imageView?.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
@@ -318,7 +322,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         let indexPath = IndexPath(row: sender.tag, section: 0)
         guard let cell = tableView.cellForRow(at: indexPath) as? ClassicScoringTableViewCell
             else { return }
-        ActionSheetStringPicker.show(withTitle: "Strokes", rows: ["1", "2", "3", "4", "5", "6", "7", "8","9","10","11","12","13","14","15","16","17","18","19","20"], initialSelection: 0, doneBlock: {
+        ActionSheetStringPicker.show(withTitle: "Strokes".localized(), rows: ["1", "2", "3", "4", "5", "6", "7", "8","9","10","11","12","13","14","15","16","17","18","19","20"], initialSelection: 0, doneBlock: {
             picker, value, index in
             cell.btnScoreSelection.setTitle("\(value+1)", for: .normal)
             self.holeWiseShots.setObject(value+1, forKey: "strokes" as NSCopying)
@@ -405,7 +409,8 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
             self.tableView.frame = self.tableView.frame.offsetBy(dx: self.view.frame.width, dy: 0)
         }
         animator.startAnimation()
-        titleLabel.setTitle("Hole \(currentIndex+1) - Par \(self.scoreData[self.currentIndex].par)", for: .normal)
+        titleLabel.setTitle("Hole".localized() + " \(currentIndex+1) - " + "Par".localized() + " \(self.scoreData[self.currentIndex].par)", for: .normal)
+
         self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
         //        self.tableView.reloadData()
     }
@@ -419,7 +424,8 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         }
         animator.startAnimation()
         
-        titleLabel.setTitle("Hole \(currentIndex+1) - Par \(self.scoreData[self.currentIndex].par)", for: .normal)
+        titleLabel.setTitle("Hole".localized() + " \(currentIndex+1) - " + "Par".localized() + " \(self.scoreData[self.currentIndex].par)", for: .normal)
+
         self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
         //        self.tableView.reloadData()
     }

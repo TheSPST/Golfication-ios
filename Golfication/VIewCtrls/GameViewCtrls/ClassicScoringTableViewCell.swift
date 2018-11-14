@@ -21,8 +21,8 @@ class ClassicScoringTableViewCell: UITableViewCell{
     @IBOutlet weak var greenSideSandShotStackView: UIStackView!
     @IBOutlet weak var penalitiesStackView: UIStackView!
     @IBOutlet weak var btnPlayerName: UIButton!
-    @IBOutlet weak var btnScoreSelection: UIButton!
-    @IBOutlet weak var btnMoreStats: UIButton!
+    @IBOutlet weak var btnScoreSelection: UILocalizedButton!
+    @IBOutlet weak var btnMoreStats: UILocalizedButton!
     var index = Int()
     var playerId = String()
     var buttonsArrayForStrokes = [UIButton]()
@@ -236,7 +236,7 @@ class ClassicScoringTableViewCell: UITableViewCell{
             }
         }
         
-        self.btnScoreSelection.setTitle("Select", for: .normal)
+        self.btnScoreSelection.setTitle("Select".localized(), for: .normal)
         if(classicScoring.strokesCount != nil){
             self.btnScoreSelection.setTitle("\(classicScoring.strokesCount!)", for: .normal)
         }

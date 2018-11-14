@@ -28,17 +28,17 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBOutlet weak var btnProfileImage: UIButton!
     @IBOutlet weak var btnProfileBasic: UIButton!
     @IBOutlet weak var btnUpgrade: UIButton!
-    @IBOutlet weak var btnContinue: UIButton!
-    @IBOutlet weak var btnScoreDetail: UIButton!
-    @IBOutlet weak var btnPlayFriends: UIButton!
+    @IBOutlet weak var btnContinue: UILocalizedButton!
+    @IBOutlet weak var btnScoreDetail: UILocalizedButton!
+    @IBOutlet weak var btnPlayFriends: UILocalizedButton!
     @IBOutlet weak var btnPractice: UIButton!
-    @IBOutlet weak var btnScoreTab: UIButton!
-    @IBOutlet weak var btnSGTab: UIButton!
-    @IBOutlet weak var btnStatsTab: UIButton!
+    @IBOutlet weak var btnScoreTab: UILocalizedButton!
+    @IBOutlet weak var btnSGTab: UILocalizedButton!
+    @IBOutlet weak var btnStatsTab: UILocalizedButton!
     @IBOutlet weak var btnGoPRO: UIButton!
-    @IBOutlet weak var btnStartGame: UIButton!
-    @IBOutlet weak var btnPreOrder: UIButton!
-    @IBOutlet weak var btnInvite: UIButton!
+    @IBOutlet weak var btnStartGame: UILocalizedButton!
+    @IBOutlet weak var btnPreOrder: UILocalizedButton!
+    @IBOutlet weak var btnInvite: UILocalizedButton!
     
     @IBOutlet weak var viewScoreStats: UIView!
     @IBOutlet weak var viewMySwing: UIView!
@@ -264,7 +264,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.feedTableView.isHidden = true
         self.view.layoutIfNeeded()
         // ------------------------ Set User Name & Profile Image ------------------------------
-        lblUserName.text = "Hi \(Auth.auth().currentUser?.displayName ?? "Guest")"
+        lblUserName.text = "Hi".localized() + " " + (Auth.auth().currentUser?.displayName ?? "Guest")
         if Auth.auth().currentUser?.photoURL == nil{
             btnProfileImage.setBackgroundImage(UIImage(named:"you"), for: .normal)
         }
@@ -706,7 +706,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - setInitialUI
     func setInitialUI(){
         btnPreOrder.layer.cornerRadius = 3.0
-        btnPreOrder.setTitle("Pre order Now!", for: .normal)
+        btnPreOrder.setTitle("Pre order Now!".localized(), for: .normal)
         //        viewOnCourse.layer.cornerRadius = 3.0
         
         lblAvgRound.setCorner(color: UIColor(rgb:0x939393).cgColor)
@@ -765,6 +765,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         viewPreviousGame.layer.borderColor = UIColor(rgb:0xE6E6E6).cgColor
         viewPreviousGame.layer.cornerRadius = 3.0
         
+        btnPlayFriends.setTitle("  " + "Play Golf".localized(), for: .normal)
         let gradient = CAGradientLayer()
         gradient.frame = btnPlayFriends.bounds
         gradient.colors = [UIColor(rgb: 0x2E6594).cgColor, UIColor(rgb: 0x2C4094).cgColor]

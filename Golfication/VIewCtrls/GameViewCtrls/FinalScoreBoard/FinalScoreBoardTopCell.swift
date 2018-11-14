@@ -13,7 +13,7 @@ class FinalScoreBoardTopCell: UITableViewCell {
     @IBOutlet weak var btnHoleByHole: UIButton!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var topHdrView: UIView!
-    @IBOutlet weak var  btnViewScore: UIButton!
+    @IBOutlet weak var  btnViewScore: UILocalizedButton!
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var lblPlayerName: UILabel!
     @IBOutlet weak var lblPar: UILabel!

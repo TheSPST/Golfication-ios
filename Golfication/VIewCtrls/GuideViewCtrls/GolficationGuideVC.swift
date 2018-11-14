@@ -23,8 +23,8 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
     @IBOutlet weak var lblDexcriptions: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var lblTitle: UILabel!
-    @IBOutlet weak var btnNext: UIButton!
-    @IBOutlet weak var btnSkip: UIButton!
+    @IBOutlet weak var btnNext: UILocalizedButton!
+    @IBOutlet weak var btnSkip: UILocalizedButton!
     
     @IBOutlet weak var  scoringImgTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var  rfImgTopConstraint: NSLayoutConstraint!
@@ -80,10 +80,10 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
             statsImgTopConstraint.constant = 0
         }
         
-        lblScoring.text = "Record Hole scores, Fairways, GIRs and Putts for you and your friends."
-        lblRF.text = "Fast and accurate Distances, Free club recommendations, and live scoring."
-        lblUltimate.text = "Automatic tracking and stats for every shot. Ultimate game-improvement mode."
-        lblStats.text = "Fairways, GIRs, Putts, Club stats, strokes gained and more."
+        lblScoring.text = "Record Hole scores, Fairways, GIRs and putts for you and your friends.".localized()
+        lblRF.text = "Fast and accurate Distances".localized() + "," + " " + "Free club recommendations, and live scoring.".localized()
+        lblUltimate.text = "Automatic tracking and stats for every shot.".localized() + " " + "Ultimate game-improvement mode.".localized()
+        lblStats.text = "Fairways, GIRs, Putts, Club stats, strokes gained and more.".localized()
         
         //https://www.dribba.com/uiscrollview-and-autolayout-with-ios8-and-swift/
         self.navigationController?.navigationBar.isHidden = true
@@ -101,9 +101,9 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
         let x =  CGFloat(self.pageControl.currentPage) * (pageWidth)
          scrollView.setContentOffset(CGPoint(x:x, y:0), animated: false)
         
-        btnNext.setTitle("Next", for: .normal)
+        btnNext.setTitle("Next".localized(), for: .normal)
          if pageControl.currentPage == 3 {
-            btnNext.setTitle("Start", for: .normal)
+            btnNext.setTitle("Start".localized(), for: .normal)
         }
         currentPageIndex = self.pageControl.currentPage
     }
@@ -116,9 +116,9 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
         let x = CGFloat(pageControl.currentPage) * (scrollView.frame.size.width)
         scrollView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle("Next", for: .normal)
+        btnNext.setTitle("Next".localized(), for: .normal)
          if currentPageIndex == 3 {
-            btnNext.setTitle("Start", for: .normal)
+            btnNext.setTitle("Start".localized(), for: .normal)
         }
         if currentPageIndex == 4{
             currentPageIndex = 0

@@ -33,8 +33,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     var count:Int!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.automaticallyAdjustsScrollViewInsets = false
+        UIApplication.shared.isIdleTimerDisabled = true
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white
         settings.style.selectedBarBackgroundColor = UIColor.glfBluegreen
@@ -50,6 +49,8 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         super.viewDidLoad()
         self.title = "Practice Session \(count!)"
         NotificationCenter.default.addObserver(self, selector: #selector(self.showShotsAfterSwing(_:)), name: NSNotification.Name(rawValue: "getSwingInside"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.finishedPopUp(_:)), name: NSNotification.Name(rawValue: "practiceFinished"), object: nil)
+
         self.moveToViewController(at: shotsArray.count-1)
     }
     @IBAction func barBtnBLEAction(_ sender: Any) {
@@ -68,7 +69,11 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         }, cancel: { ActionMultipleStringCancelBlock in return }, origin:sender)
 
     }
-    
+    //MARK: PracticeMatchFinished
+    @objc func finishedPopUp(_ notification:NSNotification){
+        self.backAction(Any.self)
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "practiceFinished"))
+    }
     //MARK: showShotsAfterSwing
     @objc func showShotsAfterSwing(_ notification:NSNotification){
         if let dict = notification.object as? NSMutableDictionary{

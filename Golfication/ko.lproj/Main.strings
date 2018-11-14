@@ -1,0 +1,153 @@
+
+/* Class = "UIButton"; normalTitle = "Next"; ObjectID = "0PW-GX-wnK"; */
+"0PW-GX-wnK.normalTitle" = "Next";
+
+/* Class = "UILabel"; text = "E-mail"; ObjectID = "0tp-1n-Cps"; */
+"0tp-1n-Cps.text" = "E-mail";
+
+/* Class = "UILabel"; text = "Get Started!"; ObjectID = "3A5-JU-LaI"; */
+"3A5-JU-LaI.text" = "Get Started!";
+
+/* Class = "UITextField"; placeholder = "Please enter e-mail"; ObjectID = "3ho-9O-Hww"; */
+"3ho-9O-Hww.placeholder" = "Please enter e-mail";
+
+/* Class = "UILabel"; text = "Courses Near Me"; ObjectID = "4dI-7e-t4C"; */
+"4dI-7e-t4C.text" = "Courses Near Me";
+
+/* Class = "UITextField"; placeholder = "Please enter password"; ObjectID = "5lq-Dy-Gad"; */
+"5lq-Dy-Gad.placeholder" = "Please enter password";
+
+/* Class = "UILabel"; text = "What's your orientation?"; ObjectID = "7DP-LP-xQW"; */
+"7DP-LP-xQW.text" = "What's your orientation?";
+
+/* Class = "UIButton"; normalTitle = "Resend Verification"; ObjectID = "7p2-jt-RCB"; */
+"7p2-jt-RCB.normalTitle" = "Resend Verification";
+
+/* Class = "UILabel"; text = "Help us know you better"; ObjectID = "9kr-Kj-kUX"; */
+"9kr-Kj-kUX.text" = "Help us know you better";
+
+/* Class = "UILabel"; text = "Password"; ObjectID = "9q1-La-ccw"; */
+"9q1-La-ccw.text" = "Password";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "9ux-Ac-d75"; */
+"9ux-Ac-d75.text" = "Name";
+
+/* Class = "UIButton"; normalTitle = "Continue as guest"; ObjectID = "BAx-xw-bbJ"; */
+"BAx-xw-bbJ.normalTitle" = "Continue as guest";
+
+/* Class = "UIButton"; normalTitle = "Skip"; ObjectID = "BrC-H4-hI3"; */
+"BrC-H4-hI3.normalTitle" = "Skip";
+
+/* Class = "UILabel"; text = "What's in your bag?"; ObjectID = "CJh-KT-IxE"; */
+"CJh-KT-IxE.text" = "What's in your bag?";
+
+/* Class = "UILabel"; text = "Easy Scoring"; ObjectID = "Ckw-bn-82f"; */
+"Ckw-bn-82f.text" = "ì‰¬ìš´ ìŠ¤ì½”ì–´ë§";
+
+/* Class = "UIViewController"; title = "GolficationGuideVC"; ObjectID = "CxJ-UR-Qq6"; */
+"CxJ-UR-Qq6.title" = "GolficationGuideVC";
+
+/* Class = "UILabel"; text = "Ultimate Shot Tracking"; ObjectID = "D9k-A1-Bzg"; */
+"D9k-A1-Bzg.text" = "ê¶ê·¹ì ì¸ ìƒ· ì¶”ì";
+
+/* Class = "UILabel"; text = "-"; ObjectID = "DdU-Lr-C5Y"; */
+"DdU-Lr-C5Y.text" = "-";
+
+/* Class = "UIButton"; normalTitle = "Skip"; ObjectID = "Dyj-2l-U9O"; */
+"Dyj-2l-U9O.normalTitle" = "Skip";
+
+/* Class = "UILabel"; text = "Play with your friends and pro players"; ObjectID = "Fj4-yy-fZb"; */
+"Fj4-yy-fZb.text" = "Play with your friends and pro players";
+
+/* Class = "UITextField"; placeholder = "Please enter password"; ObjectID = "GQ7-Bz-LCb"; */
+"GQ7-Bz-LCb.placeholder" = "Please enter password";
+
+/* Class = "UILabel"; text = "Help us know you better"; ObjectID = "Ie6-SO-JHX"; */
+"Ie6-SO-JHX.text" = "Help us know you better";
+
+/* Class = "UILabel"; text = "40+"; ObjectID = "Jjn-ss-blQ"; */
+"Jjn-ss-blQ.text" = "40+";
+
+/* Class = "UILabel"; text = "Choose your Home course"; ObjectID = "KjU-y3-cGx"; */
+"KjU-y3-cGx.text" = "Choose your Home course";
+
+/* Class = "UILabel"; text = "E-mail"; ObjectID = "Md4-p8-2uG"; */
+"Md4-p8-2uG.text" = "E-mail";
+
+/* Class = "UILabel"; text = "Amateur"; ObjectID = "O3j-Bq-ri4"; */
+"O3j-Bq-ri4.text" = "Amateur";
+
+/* Class = "UILabel"; text = "Password"; ObjectID = "PA0-x7-f5r"; */
+"PA0-x7-f5r.text" = "Password";
+
+/* Class = "UILabel"; text = "or"; ObjectID = "QYp-P9-3yR"; */
+"QYp-P9-3yR.text" = "or";
+
+/* Class = "UILabel"; text = "What's your handicap?"; ObjectID = "U3g-CY-bk3"; */
+"U3g-CY-bk3.text" = "What's your handicap?";
+
+/* Class = "UITextField"; placeholder = "Please enter e-mail"; ObjectID = "Vb7-1W-MX2"; */
+"Vb7-1W-MX2.placeholder" = "Please enter e-mail";
+
+/* Class = "UILabel"; text = "-"; ObjectID = "WF7-6G-JlU"; */
+"WF7-6G-JlU.text" = "-";
+
+/* Class = "UIButton"; normalTitle = "Sign Up"; ObjectID = "a3j-4M-bwV"; */
+"a3j-4M-bwV.normalTitle" = "Sign Up";
+
+/* Class = "UIButton"; normalTitle = "Forgot Password?"; ObjectID = "bON-5t-8W8"; */
+"bON-5t-8W8.normalTitle" = "Forgot Password?";
+
+/* Class = "UILabel"; text = "or"; ObjectID = "bWx-XQ-PMx"; */
+"bWx-XQ-PMx.text" = "or";
+
+/* Class = "UITextField"; placeholder = "Please enter name"; ObjectID = "eyg-CU-YfX"; */
+"eyg-CU-YfX.placeholder" = "Please enter name";
+
+/* Class = "UILabel"; text = "Help us know you better"; ObjectID = "g8H-A5-Gj3"; */
+"g8H-A5-Gj3.text" = "Help us know you better";
+
+/* Class = "UIButton"; normalTitle = "Connect with Facebook"; ObjectID = "gIW-hS-HQi"; */
+"gIW-hS-HQi.normalTitle" = "Connect with Facebook";
+
+/* Class = "UITextField"; placeholder = "Seach Course"; ObjectID = "gV2-qo-qi7"; */
+"gV2-qo-qi7.placeholder" = "Seach Course";
+
+/* Class = "UIButton"; normalTitle = "Connect with Facebook"; ObjectID = "jcA-kK-oAs"; */
+"jcA-kK-oAs.normalTitle" = "Connect with Facebook";
+
+/* Class = "UILabel"; text = "Performance Stats"; ObjectID = "juE-Gg-sa1"; */
+"juE-Gg-sa1.text" = "Performance Stats";
+
+/* Class = "UILabel"; text = "GPS Rangefinder"; ObjectID = "l7O-As-Cuc"; */
+"l7O-As-Cuc.text" = "GPS Rangefinder";
+
+/* Class = "UILabel"; text = "Left"; ObjectID = "lpM-PO-lV9"; */
+"lpM-PO-lV9.text" = "Left";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "lsE-S7-bNx"; */
+"lsE-S7-bNx.text" = "0";
+
+/* Class = "UILabel"; text = "No Handicap"; ObjectID = "mni-4z-wIl"; */
+"mni-4z-wIl.text" = "No Handicap";
+
+/* Class = "UIButton"; normalTitle = "Login"; ObjectID = "oH6-kj-Smo"; */
+"oH6-kj-Smo.normalTitle" = "Login";
+
+/* Class = "UILabel"; text = "Right"; ObjectID = "pz5-zN-eRN"; */
+"pz5-zN-eRN.text" = "Right";
+
+/* Class = "UILabel"; text = "Scratch"; ObjectID = "tf3-x8-3K9"; */
+"tf3-x8-3K9.text" = "Scratch";
+
+/* Class = "UILabel"; text = "Confirm Password"; ObjectID = "tiB-oy-OAv"; */
+"tiB-oy-OAv.text" = "Confirm Password";
+
+/* Class = "UITextField"; placeholder = "Please enter confirm password"; ObjectID = "w4L-bo-ZVr"; */
+"w4L-bo-ZVr.placeholder" = "Please enter confirm password";
+
+/* Class = "UILabel"; text = "-"; ObjectID = "wFe-C2-wdw"; */
+"wFe-C2-wdw.text" = "-";
+
+/* Class = "UIButton"; normalTitle = "Next"; ObjectID = "yX7-Je-6gK"; */
+"yX7-Je-6gK.normalTitle" = "Next";

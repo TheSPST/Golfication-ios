@@ -16,7 +16,7 @@ class InviteViewController: UIViewController {
     @IBOutlet weak var btnPlayer3: UIButton!
     @IBOutlet weak var btnGetGoficationX: UIButton!
     @IBOutlet weak var btnWhatIsGolficationX: UIButton!
-    @IBOutlet weak var btnInviteFriends: UIButton!
+    @IBOutlet weak var btnInviteFriends: UILocalizedButton!
     
     @IBOutlet weak var lblPlayer1Name: UILabel!
     @IBOutlet weak var lblPlayer2Name: UILabel!

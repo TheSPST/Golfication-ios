@@ -22,17 +22,17 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
     @IBOutlet weak var lblSandAccuracyAvg: UILabel!
     @IBOutlet weak var lblSandProximityAvg: UILabel!
     
-    @IBOutlet weak var lblLong: UILabel!
-    @IBOutlet weak var lblShort: UILabel!
-    @IBOutlet weak var lblRight: UILabel!
-    @IBOutlet weak var lblLeft: UILabel!
+    @IBOutlet weak var lblLong: UILocalizedLabel!
+    @IBOutlet weak var lblShort: UILocalizedLabel!
+    @IBOutlet weak var lblRight: UILocalizedLabel!
+    @IBOutlet weak var lblLeft: UILocalizedLabel!
     @IBOutlet weak var lblHit: UILabel!
     
-    @IBOutlet weak var lblShortSnd: UILabel!
-    @IBOutlet weak var lblRightSnd: UILabel!
-    @IBOutlet weak var lblLeftSnd: UILabel!
+    @IBOutlet weak var lblShortSnd: UILocalizedLabel!
+    @IBOutlet weak var lblRightSnd: UILocalizedLabel!
+    @IBOutlet weak var lblLeftSnd: UILocalizedLabel!
     @IBOutlet weak var lblHitSnd: UILabel!
-    @IBOutlet weak var lblLongSnd: UILabel!
+    @IBOutlet weak var lblLongSnd: UILocalizedLabel!
     
     @IBOutlet weak var cardViewChippingAccuracy: CardView!
     @IBOutlet weak var cardViewChippingProximity: CardView!
@@ -699,7 +699,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
     
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "Chipping")
+        return IndicatorInfo(title: "Chipping".localized())
     }
     
 }

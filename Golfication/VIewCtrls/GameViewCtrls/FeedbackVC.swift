@@ -29,7 +29,7 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
     @IBOutlet weak var lblStarDetails: UILabel!
     @IBOutlet weak var allWrongBtnSV: UIStackView!
     
-    @IBOutlet weak var btnSkip: UIButton!
+    @IBOutlet weak var btnSkip: UILocalizedButton!
     @IBOutlet weak var skipSubmitStackView: UIStackView!
     var onDoneBlock : ((Bool) -> Void)?
     var originOfMainView : CGPoint!

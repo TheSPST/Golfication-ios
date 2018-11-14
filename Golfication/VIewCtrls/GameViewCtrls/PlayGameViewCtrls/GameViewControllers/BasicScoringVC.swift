@@ -23,11 +23,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var containerView: UIView!
     
     @IBOutlet weak var btnBack: UIButton!
-    @IBOutlet weak var btnDetailScoring: UIButton!
+    @IBOutlet weak var btnDetailScoring: UILocalizedButton!
     @IBOutlet weak var btnExpendScore: UIButton!
     @IBOutlet weak var btnScore: UIButton!
     @IBOutlet weak var btnShotRanking: UIButton!
-    @IBOutlet weak var btnViewScoreCard: UIButton!
+    @IBOutlet weak var btnViewScoreCard: UILocalizedButton!
 
     @IBOutlet weak var scoreSV: UIStackView!
     @IBOutlet weak var detailScoreSV: UIStackView!
@@ -50,17 +50,17 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var greenSideSandShotStackView: UIStackView!
     @IBOutlet weak var penalitiesStackView: UIStackView!
     @IBOutlet weak var lblParNumber: UILabel!
-    @IBOutlet weak var btnDownArraow: UIButton!
+    @IBOutlet weak var btnDownArraow: UILocalizedButton!
     @IBOutlet weak var lblCourseName: UILabel!
     @IBOutlet weak var stackViewStrokes1: UIStackView!
     @IBOutlet weak var stackViewStrokes2: UIStackView!
     @IBOutlet weak var stackViewStrokes3: UIStackView!
     @IBOutlet weak var stackViewStrokes4: UIStackView!
-    @IBOutlet weak var btnPrev: UIButton!
-    @IBOutlet weak var btnNext: UIButton!
+    @IBOutlet weak var btnPrev: UILocalizedButton!
+    @IBOutlet weak var btnNext: UILocalizedButton!
     @IBOutlet weak var btnFinishRound: UIButton!
-    @IBOutlet weak var lblPlayerNameDSV: UILabel!
-    @IBOutlet weak var lblPlayerNameSSV: UILabel!
+    @IBOutlet weak var lblPlayerNameDSV: UILocalizedLabel!
+    @IBOutlet weak var lblPlayerNameSSV: UILocalizedLabel!
     @IBOutlet weak var exitGamePopUpView: ExitGamePopUpView!
     @IBOutlet weak var hcpView: UIView!
     @IBOutlet weak var parView: UIView!
@@ -111,7 +111,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         let restartOption = (UIAlertAction(title: "Restart Round", style: UIAlertActionStyle.default, handler: { action in
             self.btnActionRestartRound(Any.self)
         }))
-        var descardRound = "Discard Round"
+        var descardRound = "Discard Round".localized()
         if Constants.isEdited{
             descardRound = "Delete Round"
         }
@@ -132,7 +132,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         menuStackView.isHidden = true
         var strArr = [String]()
         for hole in self.scoreData{
-            strArr.append("Hole \(hole.hole) - Par - \(hole.par)")
+            strArr.append("Hole".localized() + " \(hole.hole) - " + "Par".localized() + " - \(hole.par)")
         }
         ActionSheetStringPicker.show(withTitle: "Select Hole", rows: strArr, initialSelection: holeIndex, doneBlock: { (picker, value, index) in
             self.holeIndex = value
@@ -233,7 +233,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         if Constants.isEdited{
             self.exitGamePopUpView.btnDiscardText = "Delete Round"
         }
-        self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoreData.count) Holes Completed."
+        self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoreData.count) " + "holes completed".localized()
         self.exitGamePopUpView.isHidden = false
     }
     
@@ -566,6 +566,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         setInitialUI()
+        btnPrev.setTitle("  " + "Previous Hole".localized(), for: .normal)
+        btnNext.setTitle("  " + "Next Hole".localized(), for: .normal)
         imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
         imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
         topView.layer.cornerRadius = topView.frame.height/2
@@ -864,8 +866,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 self.lblPlayerNameDSV.text = "\(data.name)'s Score"
                 self.lblPlayerNameSSV.text = "\(data.name)'s Score"
                 if(data.id == Auth.auth().currentUser!.uid){
-                    self.lblPlayerNameDSV.text = "Your Score"
-                    self.lblPlayerNameSSV.text = "Your Score"
+                    self.lblPlayerNameDSV.text = "Your Score".localized()
+                    self.lblPlayerNameSSV.text = "Your Score".localized()
                 }
                 data.button.layer.borderColor = UIColor.glfWhite.cgColor
             }
@@ -885,12 +887,14 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         
         self.holeWiseShots = NSMutableDictionary()
         self.btnExpendScore.isHidden = false
-        self.btnDownArraow.setTitle("Hole \(scoreData[indexToUpdate].hole)", for: .normal)
+        self.btnDownArraow.setTitle("Hole".localized() + " \(scoreData[indexToUpdate].hole)", for: .normal)
+
         self.lblParNumber.text = "PAR \(self.scoreData[indexToUpdate].par)"
         let hcp = self.getHCPValue(playerID: self.playerId, holeNo: scoreData[indexToUpdate].hole)
         self.lblHCP.text = "HCP \(hcp == 0 ? "-":"\(hcp)")"
-        self.lblHole.text = "Hole \(scoreData[indexToUpdate].hole)"
-        self.lblPar.text = "Par \(self.scoreData[indexToUpdate].par)"
+        self.lblHole.text = "Hole".localized() + " \(scoreData[indexToUpdate].hole)"
+        self.lblPar.text = "Par".localized() + " \(self.scoreData[indexToUpdate].par)"
+
         self.fairwayHitStackView.superview?.isHidden = false
         if(self.scoreData[indexToUpdate].par == 3){
             self.fairwayHitStackView.superview?.isHidden = true
@@ -1136,7 +1140,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }else{
             self.updateHoleWiseShots()
             if self.btnStableScore.currentTitle!.contains("Stable"){
-                self.btnStableScore.setTitle("Net Score", for: .normal)
+                self.btnStableScore.setTitle("Net Score".localized(), for: .normal)
                 self.lblStableFordScore.text = "\(classicScoring.netScore!)"
             }else{
                 self.btnStableScore.setTitle("Stableford Score", for: .normal)

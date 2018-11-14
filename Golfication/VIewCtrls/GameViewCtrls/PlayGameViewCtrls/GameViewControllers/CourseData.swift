@@ -18,7 +18,7 @@ class CourseData:NSObject{
     var clubData = [(name:String,max:Int,min:Int)]()
     var clubs = ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu","more"]
     var holeGreenDataArr = [GreenData]()
-    
+    var golfBagArray = NSMutableArray()
     var startingIndex : Int!
     var gameTypeIndex = 18
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
@@ -314,16 +314,16 @@ class CourseData:NSObject{
     
     
     func getGolfBagData(){
+        golfBagArray.removeAllObjects()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
-            var golfBagArray = NSMutableArray()
             if(snapshot.value != nil){
-                golfBagArray = snapshot.value as! NSMutableArray
+                self.golfBagArray = snapshot.value as! NSMutableArray
             }
             DispatchQueue.main.async(execute: {
-                if golfBagArray.count > 0{
+                if self.golfBagArray.count > 0{
                     self.clubs.removeAll()
-                    for i in 0..<golfBagArray.count{
-                        if let dict = golfBagArray[i] as? NSDictionary{
+                    for i in 0..<self.golfBagArray.count{
+                        if let dict = self.golfBagArray[i] as? NSDictionary{
                             self.clubs.append(dict.value(forKey: "clubName") as! String)
                         }
                         else{
@@ -338,8 +338,8 @@ class CourseData:NSObject{
                                 golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                                 golfBagDict.setObject("", forKey: "tagName" as NSCopying)
                                 golfBagDict.setObject(0, forKey: "tagNum" as NSCopying)
-                                golfBagArray.replaceObject(at: i, with: golfBagDict)
-                                golfBagData = ["golfBag": golfBagArray]
+                                self.golfBagArray.replaceObject(at: i, with: golfBagDict)
+                                golfBagData = ["golfBag": self.golfBagArray]
                                 self.clubs.append(tempArray[i] as! String)
                             }
                             if golfBagData.count>0{
@@ -363,6 +363,7 @@ class CourseData:NSObject{
                 self.clubs.append("Pu")
                 //                self.clubs.append("More")
                 self.clubs = self.clubs.removeDuplicates()
+                self.calculateTagWithClubNumber()
                 self.updateMaxMin()
             })
         }
@@ -386,6 +387,19 @@ class CourseData:NSObject{
         }
         debugPrint("clubs \(clubData)")
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
+    }
+    func calculateTagWithClubNumber(){
+        Constants.tagClubNum.removeAll()
+        for j in 0..<self.golfBagArray.count{
+            if let club = self.golfBagArray[j] as? NSMutableDictionary{
+                if club.value(forKey: "tag") as! Bool{
+                    let tagNumber = club.value(forKey: "tagNum") as! Int
+                    let clubName = club.value(forKey: "clubName") as! String
+                    let clubNumber = Constants.allClubs.index(of: clubName)! + 1
+                    Constants.tagClubNum.append((tag: tagNumber, club: clubNumber,clubName:clubName))
+                }
+            }
+        }
     }
 }
 class clubTableViewCell : UITableViewCell{

@@ -162,6 +162,8 @@ class CustomScoringViewCtrl: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Your Scorecard".localized()
+        
         self.setInitialUI()
         self.updateValue()
         

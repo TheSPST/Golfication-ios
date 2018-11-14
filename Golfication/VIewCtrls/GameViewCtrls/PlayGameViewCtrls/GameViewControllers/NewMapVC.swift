@@ -119,17 +119,22 @@ class UserMarker:UIView{
     }
 }
 
+let YARD:Double = 1.09361
+var Timestamp: Int64 {
+    return Int64(NSDate().timeIntervalSince1970*1000)
+}
+
 class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,ExitGamePopUpDelegate, ARViewDelegate{
     
     @IBOutlet weak var headerView: UIView!
-    @IBOutlet weak var btnCenter: UIButton!
+    @IBOutlet weak var btnCenter: UILocalizedButton!
     @IBOutlet weak var btnPrev: UIButton!
     @IBOutlet weak var btnNext: UIButton!
     @IBOutlet weak var mapView: GMSMapView!
     @IBOutlet weak var btnBack: UIButton!
     @IBOutlet weak var imgViewWind: UIImageView!
     @IBOutlet weak var lblWindSpeed: UILabel!
-    @IBOutlet weak var btnPlayersStats: UIButton!
+    @IBOutlet weak var btnPlayersStats: UILocalizedButton!
     @IBOutlet weak var viewForground: UIView!
     @IBOutlet weak var lblBackDistance: UILabel!
     @IBOutlet weak var lblDistance: UILabel!
@@ -175,8 +180,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var exitGamePopUpView: ExitGamePopUpView!
     // MARK:- playersScore outlets
     @IBOutlet weak var viewHoleStats: UIView!
-    @IBOutlet weak var btnViewScorecard: UIButton!
-    @IBOutlet weak var btnEndRound: UIButton!
+    @IBOutlet weak var btnViewScorecard: UILocalizedButton!
+    @IBOutlet weak var btnEndRound: UILocalizedButton!
     @IBOutlet weak var btnTotalShotsNumber: UIButton!
     @IBOutlet weak var btnShotRanking: UIButton!
     @IBOutlet weak var lblHoleNumber2: UILabel!
@@ -191,7 +196,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var stackViewForGreenShots: UIStackView!
     @IBOutlet weak var btnImgUpDown: UIButton!
     @IBOutlet weak var scoreTableView: UITableView!
-    @IBOutlet weak var btnPlayersStats2: UIButton!
+    @IBOutlet weak var btnPlayersStats2: UILocalizedButton!
     @IBOutlet weak var lblCenterHeader: UILabel!
     @IBOutlet weak var fgBConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
@@ -203,7 +208,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var topHoleParHCPView: UIView!
     @IBOutlet weak var lblTopPar: UILabel!
     @IBOutlet weak var lblTopHCP: UILabel!
-    @IBOutlet weak var btnHole: UIButton!
+    @IBOutlet weak var btnHole: UILocalizedButton!
     @IBOutlet weak var topParView: UIView!
     @IBOutlet weak var topHCPView: UIView!
     
@@ -447,16 +452,18 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var arSelectedIndex: NSInteger!
     var currentDetailView :DetailView!
     var boxViews = [UIView]()
+    
     // MARK:- btnVRView
     @IBAction func btnVRAction(_ sender: Any) {
         //https://github.com/calonso/ios-arkit
         arSelectedIndex = -1
-
+        
         var teeCoord = [CLLocationCoordinate2D]()
         var gbCoord = [CLLocationCoordinate2D]()
         var fbCoord = [CLLocationCoordinate2D]()
         var hzCoord = [CLLocationCoordinate2D]()
         var pointData = [(name:String,location:CLLocation)]()
+        
         points = [Any]()
         var locations = [CLLocationCoordinate2D]()
         for i in 0..<courseData.numberOfHoles[holeIndex].tee.count{
@@ -519,21 +526,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let place = Place(location: location, reference: "reference", name: name, address: "address")
         self.places.append(place)
         pointData.append((name: name, location: location))
-
-        if !holeOutFlag{
-            let location = CLLocation(latitude: self.positionsOfDotLine[1].latitude, longitude: self.positionsOfDotLine[1].longitude)
-            let name = "Position"
-            pointData.append((name: name, location: location))
-            locations.append(positionsOfDotLine[1])
-        }
-        
         
         var alt = 0.0
         locationManager.startUpdatingLocation()
-        var currentLocationNow = CLLocation()
         if let currentLocation: CLLocation = self.locationManager.location{
             alt = currentLocation.altitude
-            currentLocationNow = currentLocation
         }
         var arr = [(name:String,location:CLLocation)]()
         for _ in 0..<places.count{
@@ -555,7 +552,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         let config = ARKitConfig.defaultConfig(for: self)
         config?.orientation = self.interfaceOrientation
-        config?.useAltitude = true
+        //config?.useAltitude = true
         let s :CGSize = UIScreen.main.bounds.size
         if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
             config?.radarPoint = CGPoint(x:s.width - 50, y:s.height - 50);
@@ -567,31 +564,35 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         closeBtn.setImage(UIImage(named: "cross"), for: .normal)
         closeBtn.sizeToFit()
         closeBtn.addTarget(self, action: #selector(self.closeAr(_:)), for: .touchUpInside)
-
+        
         closeBtn.center = CGPoint(x:25, y:25)
-     /*   self.boxViews = [UIView]()
-        if #available(iOS 11.0, *) {
-            engine = ARKitEngine.init(config: config)
-            engine.addCoordinates(points! as NSArray)
-            engine.settingUnit = distanceFilter
-            engine.addExtraView(closeBtn)
-            engine.startListening()
-//            if self.positionsOfCurveLines.count > 1{
-//                engine.plotShotArc(positions: self.positionsOfCurveLines, currentPosition: currentLocationNow)
-//            }
-        } else {
-            self.view.makeToast("for ARView Update your ios 11.0 or heigher.")
-        }
-    */
-         if #available(iOS 11.0, *) {
-            let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "ARPlanViewController") as! ARPlanViewController
-            viewCtrl.places = self.places
-//            viewCtrl.positionsOfCurveLines = self.positionsOfCurveLines
-            if !holeOutFlag{
-                viewCtrl.middlePoint = self.positionsOfDotLine[1]
-            }
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
+        self.boxViews = [UIView]()
+        
+        /*if self.positionsOfCurveLines.count>1{
+         for i in 0..<positionsOfCurveLines.count{
+         let lat = positionsOfCurveLines[i].latitude
+         let long = positionsOfCurveLines[i].longitude
+         
+         let location = CLLocation(latitude: lat, longitude: long)
+         let curvePoints = ARGeoCoordinate(location:location)!
+         curvePoints.dataObject = ""
+         self.points.append(curvePoints)
          }
+         }*/
+        engine = ARKitEngine.init(config: config!)
+        //        engine.numberOfCurve = positionsOfCurveLines.count
+        engine.addCoordinates(points! as NSArray)
+        engine.settingUnit = Constants.distanceFilter
+        engine.addExtraView(closeBtn)
+        engine.startListening()
+        
+        
+        //         if #available(iOS 11.0, *) {
+        //         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "ARPlanViewController") as! ARPlanViewController
+        //         viewCtrl.places = self.places
+        //         viewCtrl.positionsOfCurveLines = self.positionsOfCurveLines
+        //         self.navigationController?.pushViewController(viewCtrl, animated: true)
+        //         }
     }
 
     @objc func closeAr(_ sender: UIButton) {
@@ -599,9 +600,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     
     func view(for coordinate: ARGeoCoordinate!, floorLooking: Bool) -> ARObjectView! {
-        let text = coordinate.dataObject as! String
         
-        //coordinate.geoLocation.coordinate.latitude
+        let text = coordinate.dataObject as! String
         
         let distance = coordinate.baseDistance
         debugPrint("mydistance:",distance)
@@ -610,12 +610,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         if (floorLooking) {
             let arrowImg = UIImage(named: "arrow.png")
-
+            
             let arrowView = UIImageView.init(image: arrowImg)
             view = ARObjectView.init(frame: arrowView.bounds)
             view?.addSubview(arrowView)
             view?.displayed = false
         } else {
+            
             let boxView = UIImageView.init(image: UIImage(named: "open_markerAR"))
             
             let imgViewInner = UIImageView()
@@ -626,7 +627,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 imgViewInner.image = UIImage(named: "hazardAR")
             }else if text.contains("Green"){
                 imgViewInner.image = UIImage(named: "greenAR")
-            }else if text.contains("Position"){
+            }else if text.contains("userShot"){
                 imgViewInner.image = UIImage(named: "user_targetAR")
             }else if text.contains("Tee"){
                 imgViewInner.image = UIImage(named: "teeAR")
@@ -652,6 +653,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     
     func itemTouched(with index: Int) {
+        /*arSelectedIndex = index
+         let name = engine.dataObject(with: index) as! String
+         currentDetailView = Bundle.main.loadNibNamed("DetailView", owner: self, options: nil)![0] as? DetailView
+         
+         currentDetailView.nameLbl.text = name
+         engine.addExtraView(currentDetailView)*/
+        
         debugPrint("index:",index)
         let view = self.boxViews[index]
         var open = true
@@ -749,7 +757,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         lbls.textAlignment = .center
         let newlbl = UILabel(frame:CGRect(x: 0, y: 0, width: tempView.frame.width, height: 30))
-        newlbl.text = "Hole \(self.scoring[self.holeIndex].hole) - Par \(self.scoring[self.holeIndex].par)"
+        newlbl.text = "Hole".localized() + " \(self.scoring[self.holeIndex].hole) - " + "Par".localized() + " \(self.scoring[self.holeIndex].par)"
+
         newlbl.textAlignment = .center
         let youSc = UIImageView(image: lbls.screenshot())
         let title = UIImageView(image: newlbl.screenshot())
@@ -998,7 +1007,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             i += 1
         }
-        self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) Holes Completed."
+        self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) " + "holes completed".localized()
         if Constants.isEdited{
             self.exitGamePopUpView.btnDiscardText = "Delete Round"
         }
@@ -1319,7 +1328,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             }
             if self.btnStableScore.currentTitle!.contains("Stable"){
-                self.btnStableScore.setTitle("Net Score", for: .normal)
+                self.btnStableScore.setTitle("Net Score".localized(), for: .normal)
                 self.lblStblScore.text = "\(netScore ?? 0)"
             }else if self.btnStableScore.currentTitle!.contains("Net"){
                 self.btnStableScore.setTitle("Stableford Score", for: .normal)
@@ -2812,7 +2821,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 tempView.addSubview(lbl)
                 
                 let lbl1 = UILabel(frame:CGRect(x: 0, y: lbl.frame.maxY, width: tempView.frame.width, height: 30))
-                lbl1.text = "Hole \(self.holeIndex+1) - par \(self.scoring[self.holeIndex].par)"
+                lbl1.text = "Hole".localized() + " \(self.holeIndex+1) - " + "Par".localized() + " \(self.scoring[self.holeIndex].par)"
+
                 lbl1.textAlignment = .center
                 lbl1.textColor = UIColor.glfGreen
                 lbl1.font = UIFont(name:"SFProDisplay-Regular", size: 22)!
@@ -3211,7 +3221,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(!isHoleByHole){
             var strArr = [String]()
             for hole in self.scoring{
-                strArr.append("Hole \(hole.hole) - Par - \(hole.par)")
+                strArr.append("Hole".localized() + " \(hole.hole) - " + "Par".localized() + " - \(hole.par)")
             }
             ActionSheetStringPicker.show(withTitle: "Select Hole", rows: strArr, initialSelection: holeIndex, doneBlock: { (picker, value, index) in
                 self.holeIndex = value
@@ -4564,15 +4574,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.penaltyShots.removeAll()
         indexToUpdate = indexToUpdate == -1 ? indexToUpdate+1 : indexToUpdate
         self.lblHoleNumber.text = "\(self.scoring[indexToUpdate].hole)"
-        self.lblHoleNumber2.text = "Hole \(self.scoring[indexToUpdate].hole)"
-        self.lblParNumber.text = "par \(self.scoring[indexToUpdate].par)"
-        self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
+        self.lblHoleNumber2.text = "Hole".localized() + " \(self.scoring[indexToUpdate].hole)"
+        self.lblParNumber.text = "Par".localized() + " \(self.scoring[indexToUpdate].par)"
+        self.lblParNumber2.text = "Par".localized() + " \(self.scoring[indexToUpdate].par)"
         self.lblTopPar.text = "PAR  \(self.scoring[indexToUpdate].par)"
+        
         if(!self.teeTypeArr.isEmpty){
             self.lblTopHCP.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: self.scoring[indexToUpdate].hole))"
             self.lblHCPHeader.text = "HCP \(self.getHCPValue(playerID: self.selectedUserId, holeNo: self.scoring[indexToUpdate].hole))"
         }
-        self.btnHole.setTitle("Hole \(self.scoring[indexToUpdate].hole)", for: .normal)
+        self.btnHole.setTitle("Hole".localized() + " \(self.scoring[indexToUpdate].hole)", for: .normal)
+
         self.shotViseCurve.removeAll()
         self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
         if(self.scoring[indexToUpdate].par == 3){
@@ -5735,7 +5747,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.btnMultiplayer.setImage(btn.currentImage, for: .normal)
                         self.btnMultiplayerLbl.setTitle("  \(name)  ", for: .normal)
                         self.selectedUserId = k as! String
-                        self.lblPlayersName.text = "Your Score"
+                        self.lblPlayersName.text = "Your Score".localized()
                         btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
 //                        if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
 //                            self.swingMatchId = swingKey
@@ -5883,14 +5895,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // MARK :- OFFCourse Tutorials
     func showCaseMiddleMarker(){
         var label2 = UILabel()
-        let showCaseTargetLine = CTShowcaseView(title: "", message: "Drag this marker to the location where your tee-shot ended.",key:nil){ () -> () in
+        let showCaseTargetLine = CTShowcaseView(title: "", message: "Drag your target marker to get free club recommendations for every shot.".localized(),key:nil){ () -> () in
             label2.removeFromSuperview()
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                 self.showCaseClubChange()
             })
         }
-        showCaseTargetLine.continueButton.setTitle("OK, Got it", for: .normal)
+        showCaseTargetLine.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showCaseTargetLine.continueButton.isHidden = false
         let highlighterForTargetLine = showCaseTargetLine.highlighter as! CTStaticGlowHighlighter
         highlighterForTargetLine.highlightColor = UIColor.glfWhite
@@ -5919,12 +5931,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         })
     }
     func showCaseClubChange(){
-        let showCaseSelectClub = CTShowcaseView(title: "", message: "This is the club we recommend based on your yardages. Tap to change.",key:nil){()->() in
+        let showCaseSelectClub = CTShowcaseView(title: "", message: "This is the club we recommend based on your yardage. Tap to change.".localized(),key:nil){()->() in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                 self.showCaseTrackShots()
             })
         }
-        showCaseSelectClub.continueButton.setTitle("OK, Got it", for: .normal)
+        showCaseSelectClub.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showCaseSelectClub.continueButton.isHidden = false
         
         let highlighterCubChange = showCaseSelectClub.highlighter as! CTStaticGlowHighlighter
@@ -5945,8 +5957,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         })
     }
     func showCaseTrackShots(){
-        let showcaseTrackShots = CTShowcaseView(title: "", message: "Tap to record this shot.",key:nil){()->() in}
-        showcaseTrackShots.continueButton.setTitle("OK, Got it", for: .normal)
+        let showcaseTrackShots = CTShowcaseView(title: "", message: "Tap to record this shot.".localized(),key:nil){()->() in}
+        showcaseTrackShots.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showcaseTrackShots.continueButton.isHidden = false
         let highlightTrackShot = showcaseTrackShots.highlighter as! CTStaticGlowHighlighter
         highlightTrackShot.highlightColor = UIColor.glfWhite
@@ -5966,8 +5978,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         })
     }
     func showCaseHoleOutShots(){
-        let showCaseHoleOut = CTShowcaseView(title: "", message: "Use the hole-out button to complete this hole and view score.",key:nil){()->() in}
-        showCaseHoleOut.continueButton.setTitle("OK, Got it", for: .normal)
+        let showCaseHoleOut = CTShowcaseView(title: "", message: "Use the hole-out button to complete this hole and view score.".localized(),key:nil){()->() in}
+        showCaseHoleOut.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showCaseHoleOut.continueButton.isHidden = false
         let highlighterHoleOut = showCaseHoleOut.highlighter as! CTStaticGlowHighlighter
         highlighterHoleOut.highlightColor = UIColor.glfWhite
@@ -5988,7 +6000,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func showCaseShareShots(){
         let showcaseShareShots = CTShowcaseView(title: "", message: "Share your hole and stats with friends on Golfication or social media.",key:nil){()->() in}
-        showcaseShareShots.continueButton.setTitle("OK, Got it", for: .normal)
+        showcaseShareShots.continueButton.setTitle("Ok, Got it.", for: .normal)
         showcaseShareShots.continueButton.isHidden = false
         let highlightShareStats = showcaseShareShots.highlighter as! CTStaticGlowHighlighter
         highlightShareStats.highlightColor = UIColor.glfWhite
@@ -6004,12 +6016,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     // MARK:- ONCourse Tutorial
     func showCaseClubChangeOnCourse(){
-        let showCaseSelectClub = CTShowcaseView(title: "", message: "This is the club we recommend based on your yardages. Tap to change.",key:nil){()->() in
+        let showCaseSelectClub = CTShowcaseView(title: "", message: "This is the club we recommend based on your yardage. Tap to change.".localized(),key:nil){()->() in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                 self.showCaseTrackShotsOnCourse()
             })
         }
-        showCaseSelectClub.continueButton.setTitle("OK, Got it", for: .normal)
+        showCaseSelectClub.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showCaseSelectClub.continueButton.isHidden = false
         let highlighterCubChange = showCaseSelectClub.highlighter as! CTStaticGlowHighlighter
         highlighterCubChange.highlightColor = UIColor.glfWhite
@@ -6030,7 +6042,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func showCaseTrackShotsOnCourse(){
         let showcaseTrackShots = CTShowcaseView(title: "", message: "Tap here to tee-off from your current GPS location.",key:nil){()->() in}
-        showcaseTrackShots.continueButton.setTitle("OK, Got it", for: .normal)
+        showcaseTrackShots.continueButton.setTitle("Ok, Got it.", for: .normal)
         showcaseTrackShots.continueButton.isHidden = false
         let highlightTrackShot = showcaseTrackShots.highlighter as! CTStaticGlowHighlighter
         highlightTrackShot.highlightColor = UIColor.glfWhite
@@ -6052,7 +6064,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func showCaseStopShotsOnCourse(){
         let showcaseTrackShots = CTShowcaseView(title: "", message: "When you reach the location of the ball, tap here to stop tracking this shot.",key:nil){()->() in}
-        showcaseTrackShots.continueButton.setTitle("OK, Got it", for: .normal)
+        showcaseTrackShots.continueButton.setTitle("Ok, Got it.", for: .normal)
         showcaseTrackShots.continueButton.isHidden = false
         let highlightTrackShot = showcaseTrackShots.highlighter as! CTStaticGlowHighlighter
         highlightTrackShot.highlightColor = UIColor.glfWhite
@@ -6072,8 +6084,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         })
     }
     func showCaseHoleOutShotsOnCourse(){
-        let showCaseHoleOut = CTShowcaseView(title: "", message: "Use the hole-out button to complete this hole and view score.",key:nil){()->() in}
-        showCaseHoleOut.continueButton.setTitle("OK, Got it", for: .normal)
+        let showCaseHoleOut = CTShowcaseView(title: "", message: "Use the hole-out button to complete this hole and view score.".localized(),key:nil){()->() in}
+        showCaseHoleOut.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showCaseHoleOut.continueButton.isHidden = false
         let highlighterHoleOut = showCaseHoleOut.highlighter as! CTStaticGlowHighlighter
         highlighterHoleOut.highlightColor = UIColor.glfWhite
@@ -6109,7 +6121,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.btnMultiplayerLbl.setTitle("  \(playersButton[i].name)  ", for: .normal)
                     self.lblPlayersName.text = "\(playersButton[i].name)'s Score"
                     if(selectedUserId == Auth.auth().currentUser!.uid){
-                        self.lblPlayersName.text = "Your Score"
+                        self.lblPlayersName.text = "Your Score".localized()
                     }
                     btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
                 }
@@ -6161,7 +6173,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
                 self.lblPlayersName.text = "\(playersButton[i].name)'s Score"
                 if(playersButton[i].id == Auth.auth().currentUser!.uid){
-                    self.lblPlayersName.text = "Your Score"
+                    self.lblPlayersName.text = "Your Score".localized()
                 }
                 btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
             }
@@ -6982,5 +6994,55 @@ extension NewMapVC: ARDataSource {
         //annotationView.delegate = self
         annotationView.frame = CGRect(x: 0, y: 0, width: 150, height: 50)
         return annotationView
+    }
+}
+
+@IBDesignable
+class StackView: UIStackView {
+    @IBInspectable private var color: UIColor?
+    private var roundedRadius: Int?
+    override var backgroundColor: UIColor? {
+        get { return color }
+        set {
+            color = newValue
+            self.setNeedsLayout()
+        }
+    }
+    
+    public lazy var backgroundLayer: CAShapeLayer = {
+        let layer = CAShapeLayer()
+        self.layer.insertSublayer(layer, at: 0)
+        return layer
+    }()
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        backgroundLayer.path = UIBezierPath(rect: self.bounds).cgPath
+        backgroundLayer.fillColor = self.backgroundColor?.cgColor
+        backgroundLayer.cornerRadius = 5
+    }
+}
+
+extension UIView {
+    func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        self.layer.mask = mask
+    }
+    
+}
+extension CLLocationCoordinate2D : Hashable{
+    public static func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        return fabs(lhs.longitude - rhs.longitude) < Double.ulpOfOne &&  fabs(lhs.latitude - rhs.latitude) < Double.ulpOfOne
+    }
+    public var hashValue: Int {
+        get {
+            return Int(Int(Float(self.latitude)) << 32)|Int(Float(self.longitude))
+        }
+    }
+}
+extension String{
+    func trim() -> String{
+        return self.trimmingCharacters(in: NSCharacterSet.whitespaces)
     }
 }

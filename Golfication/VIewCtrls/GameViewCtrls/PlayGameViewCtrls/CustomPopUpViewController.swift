@@ -21,7 +21,7 @@ class CustomPopUpViewController: UIViewController {
     @IBOutlet weak var advancedScoringCardView: UIView!
     @IBOutlet weak var classicScoringCardView: UIView!
     @IBOutlet weak var btnCheckBox: UIButton!
-    @IBOutlet weak var btnContinue: UIButton!
+    @IBOutlet weak var btnContinue: UILocalizedButton!
     @IBOutlet weak var lblAlwaysChoose: UILabel!
     @IBOutlet weak var btnClose: UIButton!
     @IBAction func btnCloseAction(_ sender: Any) {

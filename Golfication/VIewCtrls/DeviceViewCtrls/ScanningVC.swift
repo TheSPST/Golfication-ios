@@ -44,6 +44,7 @@ class ScanningVC: UIViewController {
         if (self.barBtnBLE.image == #imageLiteral(resourceName: "golficationBarG")){
             Constants.ble = BLE()
             Constants.ble.startScanning()
+            Constants.ble.isPracticeMatch = true
         }
     }
     override func viewDidLoad() {
@@ -101,6 +102,7 @@ class ScanningVC: UIViewController {
                                             }
                                         }
                                         self.currentGameId = data.value(forKey: "gameId") as! Int
+                                        self.swingMatchId = key
                                         if let swings = data.value(forKey: "swings") as? NSMutableArray{
                                             for swing in swings{
                                                 if let swin = swing as? NSMutableDictionary{
@@ -190,6 +192,8 @@ class ScanningVC: UIViewController {
                             viewCtrl.tempArray1 = swingArr
                             self.navigationController?.pushViewController(viewCtrl, animated: true)
                         })
+                    }else{
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "readyToTakeSwing"), object: nil)
                     }
                 })
             }
@@ -230,10 +234,17 @@ class ScanningVC: UIViewController {
         DispatchQueue.main.async(execute: {
              if(Constants.deviceGolficationX == nil){
                 Constants.ble = BLE()
+                Constants.ble.isDeviceSetup = false
                 Constants.ble.startScanning()
-                Constants.ble.swingDetails = self.swingDetails
+                Constants.ble.isPracticeMatch = true
+                Constants.ble.swingMatchId = self.swingMatchId
+                Constants.ble.currentGameId = self.currentGameId
+//                Constants.ble.swingDetails = self.swingDetails
+                debugPrint("swingMatchId:",self.swingMatchId)
+                debugPrint("currentGameId:",self.currentGameId)
+                debugPrint("swingDetails:",self.swingDetails)
                 self.deviceCircularView.setProgress(value: CGFloat(90), animationDuration: 5.5, completion: {
-                    if(Constants.deviceGolficationX != nil){
+                    if(Constants.deviceGolficationX != nil) && !Constants.ble.isContinue{
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
                     }else{
                         self.lblScanStatus.text = "Couldn't find your device"
@@ -244,6 +255,11 @@ class ScanningVC: UIViewController {
                     }
                 })
              }else{
+                Constants.ble.isPracticeMatch = true
+                Constants.ble.isDeviceSetup = false
+                Constants.ble.swingMatchId = self.swingMatchId
+                Constants.ble.currentGameId = self.currentGameId
+                Constants.ble.swingDetails = self.swingDetails
                 Constants.ble.sendThirdCommand()
             }
         })

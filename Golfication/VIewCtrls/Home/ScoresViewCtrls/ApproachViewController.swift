@@ -23,11 +23,11 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     @IBOutlet weak var lblGIRAvg: UILabel!
     
     @IBOutlet weak var approachAccuracyStackView: UIStackView!
-    @IBOutlet weak var lblShort: UILabel!
-    @IBOutlet weak var lblRight: UILabel!
-    @IBOutlet weak var lblLeft: UILabel!
+    @IBOutlet weak var lblShort: UILocalizedLabel!
+    @IBOutlet weak var lblRight: UILocalizedLabel!
+    @IBOutlet weak var lblLeft: UILocalizedLabel!
     @IBOutlet weak var lblHit: UILabel!
-    @IBOutlet weak var lblLong: UILabel!
+    @IBOutlet weak var lblLong: UILocalizedLabel!
     @IBOutlet weak var lblProApproach: UILabel!
     @IBOutlet weak var lblProProximity: UILabel!
 
@@ -546,7 +546,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     }
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "Approach")
+        return IndicatorInfo(title: "Approach".localized())
     }
     func updateValue(keys:String){
         for (key,value) in groupDict{

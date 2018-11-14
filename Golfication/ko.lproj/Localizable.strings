@@ -1,0 +1,2165 @@
+/* 
+  Localizable.strings
+  Golfication
+
+  Created by Rishabh Sood on 09/11/18.
+  Copyright © 2018 Khelfie. All rights reserved.
+ 
+ //https://medium.com/lean-localization/ios-localization-tutorial-938231f9f881
+*/
+
+"English"="Korean";
+"Golfication: GPS Rangefinder, Stats & Scorecard"="Golfication: GPS ê±°ë¦¬ê³„, í†µê³„ì™€ ë“ì  ì¹´ë“œ";
+
+"Golfication: Golf GPS & Caddie"="Golfication: ê³¨í”„ GPS ë° ìºë””";
+
+"Free Shot Tracker & Scorecard"="ë¬´ë£Œ ìƒ· ì¶”ì ìž ë° ë“ì  ì¹´ë“œ";
+
+"GPS Rangefinder, Smart Scorecard, Golf Stats, Shot Tracker and much more"="GPS ê±°ë¦¬ê³„, ë˜‘ë˜‘í•œ ë“ì  ì¹´ë“œ, ê³¨í”„ í†µê³„, ìƒ· ì¶”ì ìž ë° ê·¸ë°–ì— ë§Žì´";
+
+"Always hit the best shot you can play, using data."="í•­ìƒ ìµœì„ ì˜ ìƒ·ì„ ë‚ ë ¸ë‹¤, ìžë£Œë¥¼ ì‚¬ìš©í•˜ê³  ë†€ì´ í•  ìˆ˜ ìžˆìŠµë‹¤";
+
+"Golfication is the one-stop Golf App, powered by Artificial Intelligence - this FREE app comes with many useful features like GPS Rangefinder, Live Scoring, Driving & Approach accuracy, Putting Stats, and Strokes Gained Analysis."="Golficationì€ ì¸ê³µ ì§€ëŠ¥ìœ¼ë¡œ êµ¬ë™ë˜ëŠ” ì›-ìŠ¤í†± ê³¨í”„ ì ìš©ìž…ë‹ˆë‹¤, ì´ ë¬´ë£Œ ì•±ì€ GPS ê±°ë¦¬ê³„, LIVE ìŠ¤ì½”ì–´ë§, ë“œë¼ì´ë¸Œì™€ ì ‘ê·¼ ì •í™•, í¼íŒ… í†µê³„ì™€ ìŠ¤íŠ¸ë¡œí¬ íšë“ ë¶„ì„ê³¼ ê°™ì€ ë§Žì€ ìœ ìš©í•œ ê¸°ëŠ¥ì„ ì œê³µí•©ë‹ˆë‹¤";
+
+"FEATURE HIGHLIGHTS:"="íŠ¹ì§•ì€ ê°•ì¡°";
+
+"EASY SCORING"="ì‰¬ìš´ ìŠ¤ì½”ì–´ë§";
+"Record just Hole-scores, or add Fairway Hits, GIRs and Putts with Golf's most elegantly designed User Interface. Spend minimal time looking at your phone, and maximum time playing Golf!"="ê³¨í”„ìž¥ì—ì„œ ê°€ìž¥ ìš°ì•„í•˜ê²Œ ë””ìžì¸ ëœ ì‚¬ìš©ìž ì¸í„°íŽ˜ì´ìŠ¤ë¥¼ ì‚¬ìš©í•˜ì—¬ í™€ ë“ì ë¥¼ ê¸°ë¡í•˜ê±°ë‚˜ íŽ˜ì–´ì›¨ì´ë¥¼ ì¹˜ëŠ”, GIR ë° í¼íŠ¸ë¥¼ ì¶”ê°€ í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤. íœ´ëŒ€ ì „í™”ë¥¼ ë³´ë©´ì„œ ìµœì†Œí•œì˜ ì‹œê°„ì„ ë³´ë‚´ê³  ê³¨í”„ë¥¼ ìµœëŒ€í•œ ì¦ê¸°ì‹­ì‹œì˜¤!";
+
+"FREE GPS RANGEFINDER"=" ë¬´ë£Œ GPS ê±°ë¦¬ê³„";
+"Get accurate distances to front, middle & back of green, along your line of sight. Also check out persistent wind speed to plan your shot. Whatâ€™s best? Itâ€™s completely FREE!"=" ì •í™•í•œ ê±°ë¦¬ì˜ ì•ž, ê·¸ë¦°ì˜ ì¤‘ë’¤, ë‹¹ì‹ ì˜ ì‹œì„ ì´ í–¥í•˜ëŠ” ë°©í–¥ ì–»ìŠµë‹ˆë‹¤ë‹¤. ëŒ€íšŒ ê³„íšì„ ì„¸ìš°ê¸° ìœ„í•´ì„œëŠ” ê¾¸ì¤€í•˜í’ì†ì„ ë˜ í™•ì¸í•˜ì„¸ìš”.ë­ê°€ ì œì¼ ê´œì°®ìœ¼ì„¸ìš”? ê·¸ê²ƒì€ ì™„ì „ížˆ ë¬´ë£Œ!!";
+
+"FREE CLUB RECOMMENDATIONS"="ë¬´ë£Œ í´ëŸ½ ì¶”ì²œ";
+"Get FREE Club Recommendations based on data from your previous rounds. Our A.I. Caddie makes sure you never hit a wrong club again. Ever."="ë‹¹ì‹  ì´ì „ ë¼ìš´ë“œì˜ ìžë£Œë¥¼ ë°”íƒ•ìœ¼ë¡œ ë¬´ë£Œ í´ëŸ½ ì¶”ì²œ ì–»ì„ ìˆ˜ ìžˆìŠµë‹ˆë‹¤. ìš°ë¦¬ ì¸ê³µ ì§€ëŠ¥ ìºë”” í™•ì‹¤ížˆ ë‹¤ì‹œ ìž˜ëª»ëœ í´ëŸ½ì— ì¹œ ì ì´ ì—†ê²Œ ì ˆëŒ€ë¡œ ê°€ìž…í•˜ë‹¤.";
+
+"ULTIMATE SHOT TRACKING"="ê¶ê·¹ì ì¸ ìƒ· ì¶”ì";
+"Now track every shot using one simple button! Additionally, enjoy our automatic scoring, FREE distances and shot recommendations."="ì´ì œ ëª¨ë“  ìƒ· í•œë²ˆì˜ ê°„ë‹¨í•œ ë²„íŠ¼ì„ ì‚¬ìš©í•´ì„œ ì¶”ì í•˜ì„¸ìš”!! ë˜í•œ ìš°ë¦¬ì˜ ìžë™ ìŠ¤ì½”ë§, ë¬´ë£Œ ê±°ë¦¬ì™€ ì¶”ì²œ ìƒ·ì„ ì¦ê¸°ì„¸ìš”.";
+
+"PERFORMANCE STATS"="ì„±ëŠ¥ í†µê³„";
+"Stop paying to track driving accuracy, GIRs, putts and sand saves for you and your friends, because these features are FOREVER FREE on Golfication."="ìš´ì „ì„ ì¶”ì  ì •í™•ì„± ìœ„í•´ ëˆì„ ì§€ë¶ˆí•˜ì§€ ë§ˆì„¸ìš”. GIRs, í¼íŠ¸, ëª¨ëž˜ë¥¼ ë‹¹ì‹ ì™€ ë‹¹ì‹ ì˜ ì¹œêµ¬ë“¤ì„ ìœ„í•´ ì•„ë¼ì„¸ìš”. ì´ëŸ¬í•œ íŠ¹ì§•ì€ Golficationì— ì˜ì›ížˆ ë¬´ë£Œë¡œ ë°›ê¸° ë•Œë¬¸ìž…ë‹ˆë‹¤. ";
+
+"GAME INSIGHTS"="ê²Œìž„ í†µì°°ë ¥";
+"Now understand your game in a way that hasn't been possible before with ultimate game insights like Club Stats, Strokes Gained, Approach Accuracy, Chipping accuracy, Putts per hole & Accuracy Off-The-Tee, and plan your golf training better with data."="ì´ì „ì—ëŠ” í´ëŸ½ í†µê³„, ìŠ¤íŠ¸ë¡œí¬ ì»¤ì§€, ì ‘ê·¼ ë°©ë²• ì •í™•, ì¹˜í•‘ ì •í™•,ê³¨í”„ì—ì„œ í¼íŠ¸ 1ì¸ë‹¹, off the tee ì •í™•ì„± ê°™ì€ ê¶ê·¹ì ì¸ ê²Œìž„ í†µì°°ë ¥ë“¤ì„ í•´ê²°í•˜ì§€ ëª» ì•ŠëŠ” ë°©ë²•ìœ¼ë¡œ ì´ì œ ë‹¹ì‹ ì˜ ë„ë°• ì´í•´í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤. ê·¸ë¦¬ê³  ì¢‹ì€ ê³¨í”„ í›ˆë ¨ì´ ë°ì´í„°ë¡œ ê³„íšì„ ì„¸ì›Œ ë³´ì„¸ìš”.";
+
+"FOCUS ON YOUR GOLF"="ë‹¹ì‹ ì˜ ê³¨í”„ì— ì§‘ì¤‘";
+"Now see distances easily on-the-go without even opening the app! And score directly from a notification."="ì´ì œ ì‹¬ì§€ì–´ ì•±ì„ ì—´ì§€ ì•Šì€ ì±„ë¡œ ê·¸ì— ê±°ë¦¬ë¥¼ ì‰½ê²Œ ë³´ì„¸ìš”! ê·¸ë¦¬ê³  ì§ì ‘ ì•Œë¦¼ì—ì„œ ìŠ¤ì½”ì–´.";
+
+"FOR GOLF GEEKS"=" ê³¨í”„ Geeks ìœ„í•´";
+"Golfication provides in-depth analysis using filters like Number of Rounds, Season, Holes Played, Clubs Used and Course Type. We will help you get those very stats that you've always wanted to track. (It's also like your super-personal, awesome Spreadsheet App for Golf.)"="Golficationì€ ë¼ìš´ë“œ ìˆ˜, ê³„ì ˆ, í™€ì„ ëŒ, ì‚¬ìš©í•œ í´ëŸ½ì™€ ê³¼ì •ì— ì¢…ë¥˜ ê¸°í”” ë¶„ì„ì„ ìœ„í•´ ìƒì„¸ ì œê³µë©ë‹ˆë‹¤. ìš°ë¦¬ëŠ” ì—¬ëŸ¬ë¶„ì—ê²Œ í•­ìƒ ì¶”ì í•˜ê³  ì›í•¬ë˜ ë°”ë¡œ ì—¬ëŸ¬ë¶„ì€ í•­ìƒ ì¶”ì í•˜ê³  ì‹¶ì—ˆìŠµë‹ˆë‹¤. (ì´ê±° ì—¬ëŸ¬ë¶„ì˜ ê°œì¸ ë©‹ì§„ ìŠ¤í”„ë ˆë“œ ì‹œíŠ¸ ì•±ì²˜ëŸ¼ ê³¨í”„ ìœ„í•œ ê²ƒì´ë‹¤) ";
+
+"LIVE SCORING WITH FRIENDS"="live ìŠ¤ì½”ì–´ë§ ì¹œêµ¬ê³¼ í•¨ê»˜";
+"Golfication provides Live Scoring on all Android & iOS devices, and allows you to keep track your game, as well as your buddies' on a single screen! Get smart post-game analytics and comparisons, to win the weekend's bragging rights!"="Golficationì€ ëª¨ë“  ì•ˆë“œë¡œì´ë“œ ë° ì•„ì´ì˜¤ì—ìŠ¤ ê¸°ê¸°ì—ì„œ ì˜¨ë¼ì¸ ì ìˆ˜ë¥¼ ì œê³µí•˜ë©° í•œ í™”ë©´ì—ì„œ ì¹œêµ¬ë“¤ê³¼ ê²Œìž„ì„ ì¶”ì  í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤. ë˜‘ë˜‘í•œ í•œ ê²Œìž„ í›„ì— ë¶„ì„ ë¹„êµë¥¼ í†µí•´ ì£¼ë§ì˜ ìžëž‘ í• ë§Œí•œ ê¶Œë¦¬ë¥¼ ì–»ìœ¼ì‹­ì‹œì˜¤!";
+
+"LEADERBOARDS"="ìˆœìœ„í‘œ";
+"Play against golfers everywhere, in the World's Grandest competitions for \"Longest Drive\", \"Closest To The Pin\", \"Monster Putt\", and more! Improve faster, when the pressure is on." = "\"ê°€ìž¥ ê¸´ ë“œë¼ì´ë¸Œ\",\" í•€ë ¤ë©´ ê°€ìž¥ ê°€ê¹Œìš´\",\"í¼íŠ¸ì˜ ê´´ë¬¼ \"ë“±ì— ëŒ€í•œ ì„¸ê³„ì˜ ì›…ìž¥í•œ ëŒ€íšŒ,ì–´ë””ë‚˜ ê³¨í”„ì„ ìˆ˜ë“¤ì„ ìƒëŒ€ë¡œ ê²½ê¸°ë¥¼ í•©ì‹œë‹¤. ì••ë ¥ì´ ì¼œì§€ë©´ì„œ ë” ë¹¨ë¦¬ ê°œì„ í•˜ì‹­ì‹œì˜¤.";
+
+"LOVE THE APP?"="ì•±ì„ ì¢‹ì•„í•˜ì„¸ìš”?";
+"Rate us on the app store! Share your love, and help other golfers discover Golfication - the Ultimate Golf App."="ì•± ìŠ¤í† ì–´ì—ì„œ í‰ì ì„ ì£¼ì„¸ìš”! ë‹¹ì‹ ì˜ ì‚¬ëž‘ì„ í•¨ê»˜ ë‚˜ëˆ„ê³  ë‹¤ë¥¸ ê³¨í”„ ì„ ìˆ˜ë“¤ì—ê²Œ Golficationì˜ ê·¹í•œ ê³¨í”„ ì•±ë„ ë°œê²¬í•œ ìœ„í•´ ë„ì™€ ì£¼ì„¸ìš”.";
+
+"SUPPORT"="ì„±ì›";
+"Have feedback, donâ€™t see your golf course in our database, or have a course correction? We love hearing from you, so email us at holeinone@golfication.com and weâ€™ll get back to you pronto."="ë‹¹ì‹  í”¼ë“œë°±ì´ ìžˆê±°ë‚˜ ì½”ìŠ¤ ìˆ˜ì • í•„ìš”ê°€ ìžˆì–´, ì•„ë‹ˆë©´ ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ ê³¨í”„ ì½”ìŠ¤ê°€ ë³´ì´ì§€ ì•Šì„ê¹Œìš”? ìš°ë¦¬ëŠ” ë‹¹ì‹ ë¡œë¶€í„° ì†Œì‹ì„ ë“£ê¸° ë°”ëžë‹ˆë‹¤, ê·¸ëž˜ì„œ holeinone@golfication.comìœ¼ë¡œ ì´ë©”ì¼ì„ ë³´ë‚´ì£¼ì‹­ì‹œì˜¤. ê·¸ëŸ¬ë©´ ë°˜ë“œì‹œ ë˜ë„ë¡ ë¹¨ë¦¬ ë‹µì‹ ì„ ë“œë¦¬ê² ìŠµë‹ˆë‹¤.";
+
+"SOCIAL"="ì‚¬íšŒ";
+"Web: www.golfication.com"="ì›¹: www.golfication.com";
+"Twitter: @Golfication"="íŠ¸ìœ„í„°: @Golfication";
+"Facebook.com/Golfication"="Facebook.com/Golfication";
+"Instagram: @golfication"="Instagram: @golfication";
+
+"So are you prepared for some serious #golfication?"="ê·¸ëž˜ì„œ ì¢€ ë” ì‹¬ê°í•œ #golfication ê²ƒì„ ì¤€ë¹„ë˜ì…¨ì£ ?";
+
+
+
+"Screenshot Text"="ìŠ¤í¬ë¦°ìƒ· í…ìŠ¤íŠ¸";
+"FREE CLUB RECOMMENDATION"="ë¬´ë£Œ í´ëŸ½ ì¶”ì²œ";
+"Real-Time A.I. Powered Caddie"="ì‹¤ì‹œê°„ ì¸ê³µ ì§€ëŠ¥ ì „ë™ì˜ ìºë””";
+
+"GPS RANGEFINDER"="GPS ê±°ë¦¬ê³„";
+"Accurate Distances and Wind"="ì •í™•í•œ ê±°ë¦¬ì™€ ë°”ëžŒ";
+
+"EASY SCORING"="ì‰¬ìš´ ìŠ¤ì½”ì–´ë§";
+"Fast and Easy"="ë¹ ë¥´ê³  ì‰¬ìš´";
+
+"ULTIMATE SHOT TRACKING"="ê¶ê·¹ ìƒ· ì¶”ì ";
+"Track every shot. Automatic Scoring"="ëª¨ë“  ìƒ· ì¶”ì . ìžë™ ìŠ¤ì½”ì–´ë§";
+
+"PERFORMANCE STATS"="ì„±ëŠ¥ í†µê³„";
+"Fairways, GIRs, Putts, Scrambling and more.."="íŽ˜ì–´ì›¨ì´, GIR, í¼íŠ¸, ìŠ¤í¬ëž¨ë¸”ë§ ê·¸ë¦¬ê³  ë” ë§Žì´";
+
+"GAME INSIGHTS"="ê²Œìž„ í†µì°°ë ¥";
+"Club Accuracy, Strokes Gained and more!"="ì •í™•í•œ í´ëŸ½, ìŠ¤íŠ¸ë¡œí¬ ì»¤ì§€ ê·¸ë¦¬ê³  ë” ë§Žì´";
+
+"FOCUS ON YOUR GOLF"="ë‹¹ì‹ ì˜ ê³¨í”„ì— ì§‘ì¤‘";
+"Easier Scoring on the go"="ì‰½ê²Œ ìŠ¤ì½”ì–´ë§";
+
+
+"APP TOUR"="ì•± ì—¬í–‰";
+
+"Next"="ë‹¤ìŒ";
+"Skip"="ë„˜ê¸°";
+
+"EASY SCORING"="ì‰¬ìš´ ìŠ¤ì½”ë§";
+"Record Hole scores, Fairways, GIRs and putts for you and your friends."="ë‹¹ì‹ ê³¼ ë‹¹ì‹ ì˜ ì¹œêµ¬ë“¤ì„ ìœ„í•´ í™€ ì ìˆ˜, íŽ˜ì–´ì›¨ì´, GIR ,í¼íŠ¸ë¥¼ ê¸°ë¡";
+"Hole 1"="í™€ 1";
+"Par 4"="íŒŒ 4";
+"Score"="ìŠ¤ì½”ì–´";
+"Select"="ì„ íƒ";
+"More Score"="ë” ë§Žì€ ë“ì ";
+"Fairway Hit"="íŽ˜ì–´ì›¨ì´ë¥¼ ì¹˜ëŠ”";
+"Green in Regulation"=" ê·œì œë¡œ ê·¸ë¦°";
+"Putts"="í¼íŠ¸";
+"Chip Shots"="ì¹© ìƒ·";
+"Green side sand shot"=" ê·¸ë¦° ìª½ìœ¼ë¡œ ìƒŒë“œ ìƒ· ";
+"Penalties"="íŽ˜ë„í‹°";
+
+"GPS Rangefinder"="GPS ê±°ë¦¬ê³„";
+"Fast and accurate Distances"="ë¹ ë¥´ê³  ì •í™•í•œ ê±°ë¦¬";
+"Free club recommendations, and live scoring."="ë¬´ë£Œ í´ëŸ½ ì¶”ì²œ ë° LIVE ìŠ¤ì½”ì–´ë§";
+"Center"="ì„¼í„°";
+"Back"="ë’¤";
+"Front"="ì•ž";
+
+"Ultimate Shot Tracking"="ê¶ê·¹ ìƒ· ì¶”ì ";
+"Automatic tracking and stats for every shot."=" ëª¨ë“  ìƒ·ì„ ìœ„í•´ ìžë™ ì¶”ì  ë° í†µê³„";
+"Ultimate game-improvement mode."="ê¶ê·¹ ê²Œìž„ ê°œì„  ëª¨ë“œ";
+
+"Performance Stats"="ì„±ëŠ¥ í†µê³„";
+"Fairways, GIRs, Putts, Club stats, strokes gained and more."="íŽ˜ì–´ì›¨ì´, GIR ,í¼íŠ¸, í´ëŸ½ í†µê³„,ìŠ¤íŠ¸ë¡œí¬ ì»¤ì§€ ê·¸ë¦¬ê³  ë” ë§Žì´";
+"Left"="ì™¼ìª½";
+"Short"="ì§§";
+"Right"="ì˜¤ë¥¸ìª½";
+"Long"="ê¸¸";
+
+"Start"="ì‹œìž‘";
+
+"GET STARTED!"="ì‹œìž‘í•˜ì„¸ìš”!";
+"Play with your friends and pro players"="ì¹œêµ¬ë“¤ê³¼ í”„ë¡œ í”Œë ˆì´ì–´ëž‘ ê²Œìž„í•˜ê¸°";
+
+"SIGN UP"="íšŒì›ê°€ìž…";
+"LOGIN"="ë¡œê·¸ì¸";
+
+"Name"="ì´ë¦„ ";
+"E-mail"="ì´ë©”ì¼ ";
+"Password"="ë¹„ë°€ë²ˆí˜¸ ";
+"Confirm Password"="ì•”í˜¸ë¥¼ í™•ì¸";
+"Sign Up"="íšŒì›ê°€ìž…";
+"or"="ì´ë‚˜";
+"Connect with Facebook"="íŽ˜ì´ìŠ¤ë¶ í†µí•´ ì—°ê²°";
+
+"Forgot Password"="ì•”í˜¸ ì°¾ê¸°";
+"Resend Verification Email"=" ë‹¤ì‹œ í™•ì¸ ì´ë©”ì¼ ë³´ë‚´ê¸°";
+
+
+"App Home Screen"="ì•± í™ˆ ìŠ¤í¬ë¦°";
+"Hi"="ì•ˆë…•í•˜ì„¸ìš”";
+"Rounds Played"="ë¼ìš´ë“œ í•˜ê¸°";
+"Handicap"="Handicap";
+"Choose from 30000+ Golf Courses"="30000+ ê³¨í”„ ì½”ìŠ¤ ì¤‘ì—ì„œ ì„ íƒ";
+"Play Golf"="ê³¨í”„ ì¹˜ê¸°";
+"Recent Games"="ìµœê·¼ ê²Œìž„";
+"Continue"="ê³„ì†";
+"You"="ë‹¹ì‹ ";
+"Together"="í•¨ê»˜";
+"Explore"="íƒí—˜";
+
+"Previous games"="ì´ì „ì˜ ê²Œìž„";
+"Details"="ìžì„¸í•˜ê¸°";
+
+"Together Section" = " ë¶€ë¶„ í•¨ê»˜ ";
+"Total Score percentile"="ì´ ì ìˆ˜ ë°±ë¶„ìœ„ìˆ˜";
+"You Scored better than 1.0% of Golfers"="ë‹¹ì‹ ì€ 1.0 %ì˜ ê³¨í¼ë³´ë‹¤ ë†’ì€ ë“ì ì´ ";
+"Driving Distance Rank"="ë“œë¼ì´ë¹™ ê±°ë¦¬ ë“±ê¸‰";
+"Rounds Played Rank"="ë¼ìš´ë“œ í•˜ê¸° ë“±ê¸‰";
+"Putts Per Hole Rank"="í¼íŠ¸ 1ì¸ë‹¹ ë“±ê¸‰";
+
+
+
+
+
+"Invite your friends to play"="ê²Œìž„ì„ í•˜ê¸° ìœ„í•´ ì—¬ëŸ¬ë¶„ì˜ ì¹œêµ¬ë¥¼ ì´ˆëŒ€";
+"Invite 3 friends to the app and get $50 OFF on Golfication X!"="3 ëª…ì´ ì¹œêµ¬ë¥¼ ì•±ì— ì´ˆëŒ€í•˜ê³  Golfication Xì— 50 ë‹¬ëŸ¬ í• ì¸";
+"Invite Now"="ì´ì œ ì´ˆëŒ€";
+
+"My Scores"="ë‚´ ë“ì ";
+"Strokes Gained"="ìŠ¤íŠ¸ë¡œí¬ ì»¤ì§€";
+"Club Stats"="í´ëŸ½ í†µê³„";
+
+"More Stats"="ë˜ í†µê³„";
+
+"Your Best Club"="ë‹¹ì‹  ìµœê³ ì˜ í´ëŸ½";
+"Strokes Gained"="ìŠ¤íŠ¸ë¡œí¬ ì»¤ì§€";
+"Average Distance"="í‰ê·  ê±°ë¦¬";
+
+"Indiegogo Banner"="ì¸ë””ê³ ê³  í”Œëž˜ì¹´ë“œ";
+"My Swings"="ë‚´ ìŠ¤ìœ™";
+"Club Speed, Tempo, Swing Plane & more..."="í´ëŸ½ ì†ë„, í…œí¬, ìŠ¤ìœ™ í”„ë ˆì¸ ë“±";
+"Pre order Now!"="ì§€ê¸ˆ ì„ ì£¼ë¬¸";
+
+
+"Play Golf Section"="ê³¨í”„ ë¶€ë¬¸ ì¹˜ê¸°";
+"New Round"="ìƒˆ ë¼ìš´ë“œ ";
+"Choose Course"="ì„ íƒ ì½”ìŠ¤";
+"Home Course"="í™ˆ ì½”ìŠ¤";
+"Nearest Course"="ê°€ê¹Œìš´ ì½”ìŠ¤";
+"Holes"="í™€";
+"18 Holes"="18 í™€";
+"9 Holes"="9 í™€";
+"Starting Holes"="ì‹œìž‘ í™€";
+"Other"="ê¸°íƒ€";
+
+"Customize Your Experience"="ê²½í—˜ì„ ì‚¬ìš©ìž ì •ì˜í•˜ì‹­ì‹œì˜¤";
+"Play On-Course"="ì½”ìŠ¤ì—ì„œ ì¹˜ê¸°";
+"Live scoring, hole distances, GPS based shot tracking and more."="ë¼ì´ë¸Œ ìŠ¤ì½”ì–´ë§, í™€ ê±°ë¦¬, GPS ë°”íƒ•ìœ¼ë¡œ ìƒ· ì¶”ì  ë° ê¸°íƒ€";
+
+"Score Previous Round"="ì´ì „ ë¼ìš´ë“œ ìŠ¤ì½”ì–´";
+"Record round scores and maintain stats."="ë¼ìš´ë“œ ìŠ¤ì½”ì–´ì™€ ìœ ì§€ ê²½ê³„ ê¸°ë¡í•˜ê¸°";
+"Next"="ë‹¤ìŒ";
+
+"Play-on course mode options"="ì½”ìŠ¤ì—ì„œ ë†€ê¸° ëª¨ë“œ ì˜µì…˜ ";
+"Choose your experience"="ê²½í—˜ì„ ì„ íƒí•˜ê¸° ";
+"Classic Scorecard"="í´ëž˜ì‹ ìŠ¤ì½”ì–´ì¹´ë“œ ";
+"For Basic Users"="ê¸°ë³¸ ì‚¬ìš©ìž ìœ„í•´";
+"Fast and easy"="ë¹ ë¥´ê³  ì‰¬ìš´";
+"Record hole-scores, fairways, GIRs and putts for you and your friends."="ë‹¹ì‹ ê³¼ ë‹¹ì‹ ì˜ ì¹œêµ¬ë“¤ì„ ìœ„í•´ í™€ ìŠ¤ì½”ì–´, íŽ˜ì–´ì›¨ì´, GIR ,í¼íŠ¸ë¥¼ ê¸°ë¡";
+
+"Smart Rangefinder"="ë˜‘ë˜‘í•œ ê±°ë¦¬ê³„";
+"Most Popular"="ê°€ìž¥ ì¸ê¸°";
+"Center"="ì„¼í„°";
+"Back Front"="ë’¤ì•ž";
+"Fast & accurate distances"="ë¹ ë¥´ê³  ì •í™•í•œ ê±°ë¦¬";
+"FREE distances and club-recommendations."="ë¬´ë£Œ ê±°ë¦¬ ë° í´ëŸ½ ì¶”ì²œ";
+"Live Scoring available"="ë¼ì´ë¸Œ ìŠ¤ì½”ë§ ì‚¬ìš©í•  ìˆ˜";
+
+"Ultimate Shot-tracking"="ê¶ê·¹ì ì¸ ìƒ· ì¶”ì ";
+"For Advanced Users"="ê³ ê¸‰ ì‚¬ìš©ìž ìœ„í•´";
+"Advanced Stats and Analytics"="ê³ ê¸‰ í†µê³„ ë° ë¶„ì„";
+"Time-intensive, but feature-packed! FREE distances and recommendations. Automatic Scoring enabled"="ì‹œê°„ ì§‘ì•½ì ì¸ í•˜ì§€ë§Œ í¬ìž¥ ëœ ê¸°ëŠ¥! ë¬´ë£Œ ê±°ë¦¬ ë° ì¶”ì²œ. ìžë™ ìŠ¤ì½”ì–´ë§ ë¶€ì—¬ ì‚¬ìš©";
+
+"Start Round"="ë¼ìš´ë“œë¥¼ ì‹œìž‘í•˜ê¸°";
+
+"Additionally, track Scores and Stats of up to 3 friends"="ì¶”ê°€ë¡œ ìµœëŒ€ 3 ëª…ì˜ ì¹œêµ¬ë“¤ì˜ ìŠ¤ì½”ì–´ ë° í†µê³„ë¥¼ ì¶”ì ";
+"Skip"="ë„˜ê¸°";
+
+"Score Previous Round Menu Options"="ìŠ¤ì½”ì–´ ì´ì „ ë¼ìš´ë“œ ë©”ë‰´ ì˜µì…˜";
+"Post-Game Shot Tracking"="í¬ìŠ¤íŠ¸ ê²Œìž„ ìƒ· ì¶”ì ";
+"For Advanced Users"="ê³ ê¸‰ ì‚¬ìš©ìž ìœ„í•´";
+"Advanced Stats and Analytics"="ê³ ê¸‰ í†µê³„ ë° ë¶„ì„";
+"Time Intensive, but feature packed! Plot each shot as it was actually played, to access unbeateable insights into your own game. Take charge!"="ì‹œê°„ ì§‘ì•½ì ì¸ í•˜ì§€ë§Œ í¬ìž¥ ëœ ê¸°ëŠ¥! ê° ìž¥ë©´ì„ ì‹¤ì œë¡œ í”Œë ˆì´ í•  ë•Œ í”Œë¡¯í•˜ì—¬ ìžì‹ ì˜ ê²Œìž„ì— ëŒ€í•œ íƒì›”í•œ í†µì°°ë ¥ì— ì•¡ì„¸ìŠ¤í•˜ì‹­ì‹œì˜¤. ì±…ìž„ì„ ì§€ê¸°!";
+
+"Classic Scorecard Mode"="í´ëž˜ì‹ ìŠ¤ì½”ì–´ ì¹´ë“œ ëª¨ë“œ";
+"Your Score"="ë‹¹ì‹ ì˜ ìŠ¤ì½”ì–´";
+"Detailed Scoring"="ìƒì„¸í•˜ê²Œ ìŠ¤ì½”ì–´";
+"View Scorecard"="ìŠ¤ì½”ì–´ ì¹´ë“œë³´ê¸°
+";
+"Next Hole"="ë‹¤ìŒ í™€";
+"Previous Hole"="ì´ì „ í™€";
+
+"Continue Round Screen"="ë¼ìš´ë“œ ìŠ¤í¬ë¦° ê³„ì†í•˜ê¸°";
+"Playing Hole"="í™€ ì¹˜ê¸°";
+"End Round"="ë§ˆì§€ë§‰ ë¼ìš´ë“œ";
+"Players"="ì„ ìˆ˜";
+"To Par"="íŒŒë¡œ";
+"Thru"="í†µí•´ ";
+"Strokes"="ìŠ¤íŠ¸ë¡œí¬";
+"*Atleast 9-holes must be completed to generate round stats."="*ë¼ìš´ë“œ í†µê³„ë¥¼ ìƒì„±í•˜ë ¤ë©´ ìµœì†Œ 9 ê°œì˜ í™€ì„ ì™„ë£Œí•´ì•¼í•©ë‹ˆë‹¤.";
+"Continue Round"="ë¼ìš´ë“œ ê³„ì†í•˜ê¸°";
+
+"End Round Button Pop-up Message"="ë¼ìš´ë“œ ë²„íŠ¼ íŒì—… ë©”ì‹œì§€";
+"Round in progress"="ë¼ìš´ë“œ ì§„í–‰ ì¤‘";
+"holes completed"="ì™„ë£Œëœ í™€";
+"You'll not be able to edit this round anymore. Are you sure want to exit."="ì´ ë¼ìš´ë“œë¥¼ ë” ì´ìƒ ìˆ˜ì •í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤. ì¢…ë£Œ í•˜ì‹œê² ìŠµë‹ˆê¹Œ?";
+"Save & Exit"="ì €ìž¥í•˜ê³  ë‚˜ê°€ê¸°";
+"Discard Round" = "ë¼ìš´ë“œ ë²„ë¦¬ê¸°";
+"Cancel"="ì·¨ì†Œ";
+
+"Profile"="ìœ¤ê³½";
+"Edit"="êµì •";
+"Your Home Course"="ë‹¹ì‹ ì˜ í™ˆ ì½”ìŠ¤";
+"Change Course"="ë³€ê²½ ì½”ìŠ¤";
+"Your Golf Bag"="ê³¨í”„ ê°€ë°©";
+"14 Clubs Selected"="14 ê°œì˜ í´ëŸ½ì´ ì„ íƒëœ";
+"Grip"="ì†ìž¡ì´";
+"Left Handed"="ì™¼ì†ìž¡ì´";
+"Right Handed"="ì˜¤ë¥¸ ì†ìž¡ì´";
+"Handicap"="í•¸ë””ìº¡";
+"I don't have handicap"="ë‚˜ëŠ” í•¸ë””ìº¡ì´ ì—†ë‹¤";
+"Pro Membership Active"="í”„ë¡œ í™œë°œí•œ íšŒì› ";
+"You have 207 days remaining on your Pro Membership"="ê·€í•˜ëŠ” ê·€í•˜ì˜ í”„ë¡œ íšŒì› ìžê²©ì— 207 ì¼ ë‚¨ê¸°";
+"Invite your friends to play"="ê²Œìž„ì„ í•˜ê¸° ìœ„í•´ ì—¬ëŸ¬ë¶„ì˜ ì¹œêµ¬ë¥¼ ì´ˆëŒ€";
+"Invite 3 friends to the app and get $50 OFF on Golfication X!"="3 ëª…ì´ ì¹œêµ¬ë¥¼ ì•±ì— ì´ˆëŒ€í•˜ê³  Golfication Xì— 50 ë‹¬ëŸ¬ í• ì¸";
+"Invite Now"="ì´ì œ ì´ˆëŒ€";
+"00:00:00 remaining"="00:00:00 ë‚¨ìŒ";
+"Refer Friends now!"="ì§€ê¸ˆ ì¹œêµ¬ë¥¼ ì¶”ì²œ!";
+"Referral"="ì¶”ì²œ";
+"Invite Friends"="ì¹œêµ¬ë¥¼ ì´ˆëŒ€";
+"Get $50 off"="50 ë‹¬ëŸ¬ í• ì¸";
+"Upgrade to Pro"="í”„ë¡œë¡œ ì—…ê·¸ë ˆì´ë“œ";
+"free for 30 days"="30 ì¼ê°„ ë¬´ë£Œ";
+"Upgrade Now!"="ì§€ê¸ˆ ì—…ê·¸ë ˆì´ë“œí•˜ì‹­ì‹œì˜¤!";
+
+"Get your 30 days membership absolutely FREE"="30 ì¼ê°„ ë¬´ë£Œ íšŒì› ê°€ìž…";
+"What is Pro?"="í”„ë¡œê°€ ë¬´ì—‡ìž…ë‹ˆê¹Œ?";
+
+"Golfication Pro"="Golfication í”„ë¡œ";
+"Advanced Stats"="ê³ ê¸‰ í†µê³„";
+"Distance, range and accuracy for all your clubs"="ëª¨ë“  í´ëŸ½ì˜ ê±°ë¦¬, ê±°ë¦¬ ë° ì •í™•ë„";
+"Long "="ê¸¸";
+"Short"="ì§§ì€ ";
+"Right"="ì˜¤ë¥¸ìª½ ";
+"Left"="ì™¼ìª½ ";
+
+"Club Selection & Control"="í´ëŸ½ ì„ íƒ ë° ê´€ë¦¬";
+"Know which club you need to hit often, and which you'd better leave out"="ì–´ëŠ í´ëŸ½ì„ ìžì£¼ ë°©ë¬¸í•´ì•¼í•˜ëŠ”ì§€ ì•Œ ìˆ˜ ìžˆìœ¼ë©° ì¢‹ê³ , ë‚¨ê²¨ ë‘ëŠ” ê²ƒì´ ";
+
+"Strokes Gained Analysis"="ìŠ¤íŠ¸ë¡œí¬ ë¶„ì„ ì»¤ì§€";
+"Break down each selection of your game, to better plan your training sessions."="í›ˆë ¨ ì„¸ì…˜ì„ë³´ë‹¤ ìž˜ ê³„íší•˜ê¸° ìœ„í•´ ê²Œìž„ì˜ ê° ì„ íƒì„ ë‚˜ëˆ„ì‹­ì‹œì˜¤.";
+
+"Settings"="ì„¤ì •";
+"Distance"="ê±°ë¦¬";
+"Imperial (feet,yards,miles)"="ì œêµ­ (í”¼íŠ¸, ì•¼ë“œ, ë§ˆì¼)";
+"Metric(metres,kilometres)"="ë¯¸í„°ë²• (ë¯¸í„°, í‚¬ë¡œë¯¸í„°)";
+"Strokes Gained"="ìŠ¤íŠ¸ë¡œí¬ íšë“";
+"PGA Tour"="PGA ì—¬í–‰";
+"Men's-Scratch"="ë‚¨ìž - ìŠ¤í¬ëž˜ì¹˜";
+"Men's-18Handicap"="ë‚¨ìž - 18 í•¸ë””ìº¡";
+"Women's-Scratch"="ì—¬ìž - ìŠ¤í¬ëž˜ì¹˜";
+"Women's-18 Handicap"="ì—¬ìž - 18 í•¸ë””ìº¡";
+
+"Version"="ë²„ì „";
+"Logout"="ë¡œê·¸ ì•„ì›ƒ";
+
+"Are you sure you want to Logout."="ë¡œê·¸ ì•„ì›ƒ í•˜ì‹œê² ìŠµë‹ˆê¹Œ?";
+"Cancel"="ì·¨ì†Œ";
+
+"Post Game Shot Tracking Mode Option"="í¬ìŠ¤íŠ¸ ê²Œìž„ ìƒ· ì¶”ì  ëª¨ë“œ ì˜µì…˜";
+"Drag your target marker to get free club recommendations for every shot."=" ëª¨ë“  ìƒ·ì„ ìœ„í•´ ìƒ·ì— ëŒ€í•œ ë¬´ë£Œ í´ëŸ½ ì¶”ì²œëŠ” ë°›ê¸° ìœ„í•´ì„œ ëª©í‘œ ë§ˆí¬ë¥¼ ëŒì´ì„¸ìš” ";
+"Ok, Got it."="ë„¤, ì•Œê² ìŠµë‹ˆë‹¤";
+
+"This is the club we recommend based on your yardage. Tap to change."="ë§ˆë‹¹ ìˆ˜ì— ë”°ë¼ ì´ê²ƒì€ í´ëŸ½ ì¶”ì²œí•˜ê¸°. ë³€ê²½ ìœ„í•´ íƒ­í•˜ê¸°.";
+
+"Tap to record this shot."=" ìŠ¬ë¡¯ì„ ê¸°ë¡ ìœ„í•´ íƒ­í•˜ê¸°";
+
+"Use the hole-out button to complete this hole and view score."="í™€-ì•„ì›ƒ ë‹¨ì¶”ë¥¼ ì‚¬ìš©í•˜ì—¬ì´ í™€ì„ ì™„ì„±í•˜ê³  ë“ì ì„ ë´…ê¸°";
+
+"Player Stats"="ì„ ìˆ˜ë“¤ì˜ í†µê³„ ";
+
+
+
+
+"Your Scorecard"="ë‹¹ì‹ ì˜ ìŠ¤ì½”ì–´ì¹´ë“œ";
+"Hole"="í™€";
+"Par"="íŒŒ";
+"Driving Distance"="ë“œë¼ì´ë¹™ ê±°ë¦¬";
+"Fairway Hit"="íŽ˜ì–´ì›¨ì´ë¥¼ ì¹˜ëŠ”";
+"Approach Dist"="ì ‘ê·¼ ê±°ë¦¬";
+"GIR"="GIR";
+"Chip/Down"="ì¹© / ì•„ëž˜";
+"Sand/Down"="ìƒŒë“œ/ì•„ëž˜";
+"Putts"="í¼íŠ¸";
+"Net Score"="ì´ ë“ì ";
+"Stableford"="ìŠ¤í…Œì´ë¸”í¬ë“œ";
+
+"Enable Stableford Scores by sending us a picture of the club scorecard"="í´ëŸ½ ìŠ¤ì½”ì–´ ì¹´ë“œì˜ ê·¸ë¦¼ì„ ë³´ë‚´ì„œ ìŠ¤í…Œì´ë¸”í¬ë“œ ìŠ¤ì½”ì–´ë¥¼ ì‚¬ìš©í•˜ê¸° ì„¤ì •í•˜ì‹­ì‹œì˜¤.";
+"Continue"="ê³„ì†";
+
+"More Stats"="ë” ë§Žì€ í†µê³„";
+"Overview"="ê°œê´€";
+"Rounds"="ë¼ìš´ë“œ";
+"Score Distribution"="ì ìˆ˜ ë¶„í¬";
+"below"="ì´í•˜";
+"above"="ìœ„ì—";
+"Scoring"="ìŠ¤ì½”ì–´ë§ ";
+"Par"="íŒŒ";
+"Bogey"="ë³´ê¸°";
+"Double Bogey"="ë‘ ë³´ê¸°";
+"Birdie"="ë²„ë””";
+"Par"="íŒŒ";
+"Par Average"="íŒŒ í‰ê·  ";
+"Penalties Trend"="íŽ˜ë„í‹° ì‹œí€€ìŠ¤";
+
+"Off the Tee"="Off the tee";
+"Spread of the tee"="teeì˜ ë¶„ì‚°";
+"Left Rough"="ì™¼ìª½ì˜ ê±°ì¹œ";
+"Right Rough"="ì˜¤ë¥¸ìª½ì˜ ê±°ì¹œ";
+"Short 'Long"="ì§§ì€ 'ê¸´";
+"Typical"="ì „í˜•ì ì¸";
+"Fairway"="íŽ˜ì–´ì›¨ì´";
+"Drive Accuracy"="ë“œë¼ì´ë¸Œì˜ ì •í™•ì„±";
+"Drive Distance"="ë“œë¼ì´ë¸Œ ê±°ë¦¬";
+"Fairway Hit Trend"="ìœ í–‰ íŽ˜ì–´ì›¨ì´ë¥¼ ì¹˜ëŠ”";
+"Fairway Hit Likeliness"=" ê³µì‚° íŽ˜ì–´ì›¨ì´ë¥¼ ì¹˜ëŠ”";
+
+"Approach"="ì ‘ê·¼";
+"Approach Accuracy"="ì •í™•ê²Œ ì ‘ê·¼";
+"Hit"="ì¹˜ê¸°";
+"Greens in Regulation (GIR)"="ê·¸ë¦° ê·œì •ë¥ (GIR)";
+"Greens with fairway hit"="íŽ˜ì–´ì›¨ì´ ížˆíŠ¸ê°€ìžˆëŠ” GIR";
+"Greens with fairway miss"="íŽ˜ì–´ì›¨ì´ ë¯¸ìŠ¤ê°€ìžˆëŠ” GIR";
+"Hole Proximity"="ê·¼ì ‘ ê±°ë¦¬";
+"GIR Trend"="GIR ì‹œí€€ìŠ¤";
+"GIR Likeliness"="GIRì˜ í™•ë¥ ";
+
+"Chipping"="ì¹˜í•‘";
+"Chipping Accuracy"="ì¹˜í•‘ì˜ ì •í™•ì„±";
+"Chip: Up and Down"="ì¹© : ìœ„ì•„ëž˜";
+"Chip Proximity"="ê·¼ì ‘ ì¹©";
+"Sand: Up and Down"="ìƒŒë“œ: ìœ„ì•„ëž˜";
+"Sand Accuracy"="ëª¨ëž˜ì˜ ì •í™•ì„±";
+"Sand Proximity"="ëª¨ëž˜ - ê·¼ì ‘ì„±";
+
+"Putting"="í¼íŒ…";
+"Putts Per Hole"="í™€ ë‹¹ í¼íŠ¸";
+"Putts Breakup"="í¼íŒ… - ë¶„ë¥˜";
+"Putts Vs Handicap"="í¼íŠ¸ Vs í•¸ë””ìº¡";
+"Filters"="í•„í„°";
+"Numbers of Rounds/Duration"="ë¼ìš´ë“œ ìˆ˜/ ê¸°ê°„";
+"Rounds"="ë¼ìš´ë“œ ";
+"Days"="ì¼";
+"All"="ë‹¤";
+
+"Round Type"="ë¼ìš´ë“œì˜ ì¢…ë¥˜";
+"Holes"="í™€";
+"Clubs Used"="ì‚¬ìš©ì¤‘ì¸ í´ëŸ½";
+"Courses"="ì½”ìŠ¤";
+"Apply"="ì‹ ì²­í•˜ê¸° ";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

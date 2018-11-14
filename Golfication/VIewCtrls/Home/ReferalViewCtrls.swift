@@ -22,19 +22,19 @@ class ReferalViewCtrls: UIViewController {
     @IBOutlet weak var referalUserImg3: UIImageView!
     @IBOutlet weak var deviceImg: UIImageView!
     
-    @IBOutlet weak var btnInvite1: UIButton!
-    @IBOutlet weak var btnInvite2: UIButton!
-    @IBOutlet weak var btnInvite3: UIButton!
+    @IBOutlet weak var btnInvite1: UILocalizedButton!
+    @IBOutlet weak var btnInvite2: UILocalizedButton!
+    @IBOutlet weak var btnInvite3: UILocalizedButton!
     
-    @IBOutlet weak var lblPlayer1Name: UILabel!
-    @IBOutlet weak var lblPlayer2Name: UILabel!
-    @IBOutlet weak var lblPlayer3Name: UILabel!
+    @IBOutlet weak var lblPlayer1Name: UILocalizedLabel!
+    @IBOutlet weak var lblPlayer2Name: UILocalizedLabel!
+    @IBOutlet weak var lblPlayer3Name: UILocalizedLabel!
     
     @IBOutlet weak var overlappingView1: UIView!
     @IBOutlet weak var overlappingView2: UIView!
     @IBOutlet weak var overlappingView3: UIView!
 
-    @IBOutlet weak var btnGet20PerDiscount: UIButton!
+    @IBOutlet weak var btnGet20PerDiscount: UILocalizedButton!
     var indiegogoProURL : String!
     var countdownTimer: Timer!
     var newTimer : Int64!
@@ -158,8 +158,8 @@ class ReferalViewCtrls: UIViewController {
                         }else{
                             self.referalUserImg1.image = #imageLiteral(resourceName: "Rgreen")
                         }
-                        self.btnInvite1.isHidden = true
-                        attText.append(NSAttributedString(string: " Referral 1;", attributes: dict2))
+                        self.btnInvite1.isHidden = true//" Referral 1;"
+                        attText.append(NSAttributedString(string: " " + "Referral".localized() + " 1;" , attributes: dict2))
                         if let name = dataDict.value(forKey: "name") as? String{
                             let spString = name.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
                             if(spString.count > 1){
@@ -177,7 +177,7 @@ class ReferalViewCtrls: UIViewController {
                             self.referalUserImg2.image = #imageLiteral(resourceName: "Rgreen")
                         }
                         self.btnInvite2.isHidden = true
-                        attText.append(NSAttributedString(string: " Referral 2;", attributes: dict2))
+                        attText.append(NSAttributedString(string: " " + "Referral".localized() + " 2;" , attributes: dict2))
                         if let name = dataDict.value(forKey: "name") as? String{
                             let spString = name.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
                             if(spString.count > 1){
@@ -195,7 +195,7 @@ class ReferalViewCtrls: UIViewController {
                             self.referalUserImg3.image = #imageLiteral(resourceName: "Rgreen")
                         }
                         self.btnInvite3.isHidden = true
-                        attText.append(NSAttributedString(string: " Referral 3;", attributes: dict2))
+                        attText.append(NSAttributedString(string: " " + "Referral".localized() + " 3;" , attributes: dict2))
                         if let name = dataDict.value(forKey: "name") as? String{
                             let spString = name.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
                             if(spString.count > 1){
@@ -248,6 +248,13 @@ class ReferalViewCtrls: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        //  + Invite friends
+        btnInvite1.setTitle("  " + "+ " + "Invite Friends".localized(), for: .normal)
+        btnInvite2.setTitle("  " + "+ " + "Invite Friends".localized(), for: .normal)
+        btnInvite3.setTitle("  " + "+ " + "Invite Friends".localized(), for: .normal)
+
+        btnGet20PerDiscount.setTitle("  " + "Get $50 off".localized(), for: .normal)
+    
         self.initialSetup()
         self.checkHowManySuccessFullReferal()
         // Do any additional setup after loading the view.

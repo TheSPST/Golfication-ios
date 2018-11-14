@@ -1,0 +1,471 @@
+/* 
+  Localizable.strings
+  Golfication
+
+  Created by Rishabh Sood on 09/11/18.
+  Copyright © 2018 Khelfie. All rights reserved.
+ 
+ //https://medium.com/lean-localization/ios-localization-tutorial-938231f9f881
+*/
+
+"English"="English";
+
+"Golfication: GPS Rangefinder, Stats & Scorecard"="Golfication: GPS Rangefinder, Stats & Scorecard";
+
+"Golfication: Golf GPS & Caddie"="Golfication: Golf GPS & Caddie";
+
+"Free Shot Tracker & Scorecard"="Free Shot Tracker & Scorecard";
+
+"GPS Rangefinder, Smart Scorecard, Golf Stats, Shot Tracker and much more"="GPS Rangefinder, Smart Scorecard, Golf Stats, Shot Tracker and much more";
+
+"Always hit the best shot you can play, using data."="Always hit the best shot you can play, using data.";
+
+"Golfication is the one-stop Golf App, powered by Artificial Intelligence - this FREE app comes with many useful features like GPS Rangefinder, Live Scoring, Driving & Approach accuracy, Putting Stats, and Strokes Gained Analysis."="Golfication is the one-stop Golf App, powered by Artificial Intelligence - this FREE app comes with many useful features like GPS Rangefinder, Live Scoring, Driving & Approach accuracy, Putting Stats, and Strokes Gained Analysis.";
+
+"FEATURE HIGHLIGHTS:"="FEATURE HIGHLIGHTS:";
+
+"EASY SCORING"="EASY SCORING";
+
+"Record just Hole-scores, or add Fairway Hits, GIRs and Putts with Golf's most elegantly designed User Interface. Spend minimal time looking at your phone, and maximum time playing Golf!"="Record just Hole-scores, or add Fairway Hits, GIRs and Putts with Golf's most elegantly designed User Interface. Spend minimal time looking at your phone, and maximum time playing Golf!";
+
+"FREE GPS RANGEFINDER"="FREE GPS RANGEFINDER";
+
+"Get accurate distances to front, middle & back of green, along your line of sight. Also check out persistent wind speed to plan your shot. Whatâ€™s best? Itâ€™s completely FREE!"="Get accurate distances to front, middle & back of green, along your line of sight. Also check out persistent wind speed to plan your shot. Whatâ€™s best? Itâ€™s completely FREE!";
+
+"FREE CLUB RECOMMENDATIONS"="FREE CLUB RECOMMENDATIONS";
+
+"Get FREE Club Recommendations based on data from your previous rounds. Our A.I. Caddie makes sure you never hit a wrong club again. Ever."="Get FREE Club Recommendations based on data from your previous rounds. Our A.I. Caddie makes sure you never hit a wrong club again. Ever.";
+
+"ULTIMATE SHOT TRACKING"="ULTIMATE SHOT TRACKING";
+
+"Now track every shot using one simple button! Additionally, enjoy our automatic scoring, FREE distances and shot recommendations."="Now track every shot using one simple button! Additionally, enjoy our automatic scoring, FREE distances and shot recommendations.";
+
+"PERFORMANCE STATS"="PERFORMANCE STATS";
+
+"Stop paying to track driving accuracy, GIRs, putts and sand saves for you and your friends, because these features are FOREVER FREE on Golfication."="Stop paying to track driving accuracy, GIRs, putts and sand saves for you and your friends, because these features are FOREVER FREE on Golfication.";
+
+"GAME INSIGHTS"="GAME INSIGHTS";
+
+"Now understand your game in a way that hasn't been possible before with ultimate game insights like Club Stats, Strokes Gained, Approach Accuracy, Chipping accuracy, Putts per hole & Accuracy Off-The-Tee, and plan your golf training better with data."="Now understand your game in a way that hasn't been possible before with ultimate game insights like Club Stats, Strokes Gained, Approach Accuracy, Chipping accuracy, Putts per hole & Accuracy Off-The-Tee, and plan your golf training better with data.";
+
+"FOCUS ON YOUR GOLF"="FOCUS ON YOUR GOLF";
+
+"Now see distances easily on-the-go without even opening the app! And score directly from a notification."="Now see distances easily on-the-go without even opening the app! And score directly from a notification.";
+
+"FOR GOLF GEEKS"="FOR GOLF GEEKS";
+
+"Golfication provides in-depth analysis using filters like Number of Rounds, Season, Holes Played, Clubs Used and Course Type. We will help you get those very stats that you've always wanted to track. (It's also like your super-personal, awesome Spreadsheet App for Golf.)"="Golfication provides in-depth analysis using filters like Number of Rounds, Season, Holes Played, Clubs Used and Course Type. We will help you get those very stats that you've always wanted to track. (It's also like your super-personal, awesome Spreadsheet App for Golf.)";
+
+"LIVE SCORING WITH FRIENDS"="LIVE SCORING WITH FRIENDS";
+
+"Golfication provides Live Scoring on all Android & iOS devices, and allows you to keep track your game, as well as your buddies' on a single screen! Get smart post-game analytics and comparisons, to win the weekend's bragging rights!"="Golfication provides Live Scoring on all Android & iOS devices, and allows you to keep track your game, as well as your buddies' on a single screen! Get smart post-game analytics and comparisons, to win the weekend's bragging rights!";
+
+"LEADERBOARDS"="LEADERBOARDS";
+
+"Play against golfers everywhere, in the World's Grandest competitions for \"Longest Drive\", \"Closest To The Pin\", \"Monster Putt\", and more! Improve faster, when the pressure is on."="Play against golfers everywhere, in the World's Grandest competitions for \"Longest Drive\", \"Closest To The Pin\", \"Monster Putt\", and more! Improve faster, when the pressure is on.";
+
+"LOVE THE APP?"="LOVE THE APP?";
+
+"Rate us on the app store! Share your love, and help other golfers discover Golfication - the Ultimate Golf App."="Rate us on the app store! Share your love, and help other golfers discover Golfication - the Ultimate Golf App.";
+
+"SUPPORT"="SUPPORT";
+
+"Have feedback, donâ€™t see your golf course in our database, or have a course correction? We love hearing from you, so email us at holeinone@golfication.com and weâ€™ll get back to you pronto."="Have feedback, donâ€™t see your golf course in our database, or have a course correction? We love hearing from you, so email us at holeinone@golfication.com and weâ€™ll get back to you pronto.";
+
+"SOCIAL"="SOCIAL";
+
+"Web: www.golfication.com"="Web: www.golfication.com";
+"Twitter: @Golfication"="Twitter: @Golfication";
+"Facebook.com/Golfication"="Facebook.com/Golfication";
+"Instagram: @golfication"="Instagram: @golfication";
+
+"So are you prepared for some serious #golfication?"="So are you prepared for some serious #golfication?";
+
+"Screenshot Text"="Screenshot Text";
+
+"FREE CLUB RECOMMENDATION"="FREE CLUB RECOMMENDATION";
+
+"Real-Time A.I. Powered Caddie"="Real-Time A.I. Powered Caddie";
+
+"GPS RANGEFINDER"="GPS RANGEFINDER";
+
+"Accurate Distances and Wind"="Accurate Distances and Wind";
+
+"EASY SCORING"="EASY SCORING";
+
+"Fast and Easy"="Fast and Easy";
+
+"ULTIMATE SHOT TRACKING"="ULTIMATE SHOT TRACKING";
+
+"Track every shot. Automatic Scoring"="Track every shot. Automatic Scoring";
+
+"PERFORMANCE STATS"="PERFORMANCE STATS";
+
+"Fairways, GIRs, Putts, Scrambling and more.."="Fairways, GIRs, Putts, Scrambling and more..";
+
+"GAME INSIGHTS"="GAME INSIGHTS";
+
+"Club Accuracy, Strokes Gained and more!"="Club Accuracy, Strokes Gained and more!";
+
+"FOCUS ON YOUR GOLF"="FOCUS ON YOUR GOLF";
+
+"Easier Scoring on the go"="Easier Scoring on the go";
+
+
+// MARK: - APP TOUR
+/************************************** APP TOUR ******************************************/
+
+"APP TOUR"="APP TOUR";
+
+"Next"="Next";//1-Done
+
+"Skip"="Skip";//2-Done
+
+"EASY SCORING"="EASY SCORING";//3-Done
+
+"Record Hole scores, Fairways, GIRs and putts for you and your friends."="Record Hole scores, Fairways, GIRs and putts for you and your friends.";//4-Done
+
+"Hole 1"="Hole 1";//5
+
+"Par 4"="Par 4";//6
+
+"Score"="Score";//7-Done
+
+"Select"="Select";//8-Done
+
+"More Score"="More Score";//9-Done
+
+"Fairway Hit"="Fairway Hit";//10-Done
+
+"Green in Regulation"="Green in Regulation";//11-Done
+
+"Putts"="Putts";//12-Done
+
+"Chip Shots"="Chip Shots";//13-Done
+
+"Green side sand shot"="Green side sand shot";//14-Done
+
+"Penalties"="Penalties";//15-Done
+
+"GPS Rangefinder"="GPS Rangefinder";//16-Done
+
+"Fast and accurate Distances"="Fast and accurate Distances";//17-Done
+"Free club recommendations, and live scoring."="Free club recommendations, and live scoring.";//18-Done
+"Center"="Center";//19-Done
+"Back"="Back";//20-Done
+"Front"="Front";//21-Done
+
+"Ultimate Shot Tracking"="Ultimate Shot Tracking";//22-Done
+"Automatic tracking and stats for every shot."="Automatic tracking and stats for every shot.";//23-Done
+"Ultimate game-improvement mode."="Ultimate game-improvement mode.";//24-Done
+
+"Performance Stats"="Performance Stats";//25-Done
+"Fairways, GIRs, Putts, Club stats, strokes gained and more."="Fairways, GIRs, Putts, Club stats, strokes gained and more.";//26-Done
+"Left"="Left";//27-Done
+"Short"="Short";//28-Done
+"Right"="Right";//29-Done
+"Long"="Long";//30-Done
+
+"Start"="Start";//31-Done
+
+"GET STARTED!"="GET STARTED!";//32-Done
+"Play with your friends and pro players"="Play with your friends and pro players";//33-Done
+
+"SIGN UP"="SIGN UP";//34-Done
+"LOGIN"="LOGIN";//35-Done
+
+"Name"="Name";//36-Done
+"E-mail"="E-mail";//37-Done
+"Password"="Password";//38-Done
+"Confirm Password"="Confirm Password";//39-Done
+"Sign Up"="Sign Up";//40-Done
+"or"="or";//41-Done
+"Connect with Facebook"="Connect with Facebook";//42-Done
+
+"Forgot Password"="Forgot Password";//43-Done
+"Resend Verification Email"="Resend Verification Email";//44-Done
+
+// MARK: - App Home Screen
+"App Home Screen"="App Home Screen";
+
+"Hi"="Hi";//45-Done
+"Rounds Played"="Rounds Played";//46-Done
+"Handicap"="Handicap";//47-Done
+"Choose from 30000+ Golf Courses"="Choose from 30000+ Golf Courses";//48-Done
+"Play Golf"="Play Golf";//49-Done
+"Recent Games"="Recent Games";//50-Not Matched
+"Continue"="Continue";//51-Done
+"You"="You";//52-Done
+"Together"="Together";//53-Done
+"Explore"="Explore";//54-Done
+
+"Previous games"="Previous games";//55-Not Matched
+"Details"="Details";//56-Done
+
+// MARK: - Together Section
+"Together Section"="Together Section";
+
+"Total Score percentile"="Total Score percentile";//57-Done
+"You Scored better than 1.0% of Golfers"="You Scored better than 1.0% of Golfers";//58-Have to break
+"Driving Distance Rank"="Driving Distance Rank";//59-Done
+"Rounds Played Rank"="Rounds Played Rank";//60-Done
+"Putts Per Hole Rank"="Putts Per Hole Rank";//61-Done
+
+"Invite your friends to play"="Invite your friends to play";//62-Done
+"Invite 3 friends to the app and get $50 OFF on Golfication X!"="Invite 3 friends to the app and get $50 OFF on Golfication X!";//63-Done
+"Invite Now"="Invite Now";//64-Done
+
+"My Scores"="My Scores";//65-Done
+"Strokes Gained"="Strokes Gained";//66-Done //Remaining in SettingVC
+"Club Stats"="Club Stats";//67-Done
+
+"More Stats"="More Stats";//68-Done
+
+"Your Best Club"="Your Best Club";//69-Done
+"Strokes Gained"="Strokes Gained";//70-Done
+"Average Distance"="Average Distance";//71-Not Matched
+
+"Indiegogo Banner"="Indiegogo Banner";
+"My Swings"="My Swings";//72-Done
+"Club Speed, Tempo, Swing Plane & more..."="Club Speed, Tempo, Swing Plane & more...";//73-Done
+"Pre order Now!"="Pre order Now!";//74-Done
+
+
+// MARK: - Play Golf Section
+"Play Golf Section"="Play Golf Section";
+
+"New Round"="New Round";//75-Done
+"Choose Course"="Choose Course";//76-Done
+"Home Course"="Home Course";//77-Done
+"Nearest Course"="Nearest Course";//78-Done
+"Holes"="Holes";//79-Done
+"18 Holes"="18 Holes";//80-will do later
+"9 Holes"="9 Holes";//81-will do later
+"Starting Holes"="Starting Holes";//82-Not Matched
+"Other"="Other";//83-Done
+
+"Customize Your Experience"="Customize Your Experience";//84-Done
+"Play On-Course"="Play On-Course";//85-Done
+"Live scoring, hole distances, GPS based shot tracking and more."="Live scoring, hole distances, GPS based shot tracking and more.";//86-Done
+
+"Score Previous Round"="Score Previous Round";//87-Done
+"Record round scores and maintain stats."="Record round scores and maintain stats.";//88-Done//Not Matched(maintain-maintenance)
+"Next"="Next";//89-Done
+
+"Play-on course mode options"="Play-on course mode options";//90-Not Matched
+"Choose your experience"="Choose your experience";//91-Done
+"Classic Scorecard"="Classic Scorecard";//92-Done
+"For Basic Users"="For Basic Users";//93-Done
+"Fast and easy"="Fast and easy";//94-Done
+"Record hole-scores, fairways, GIRs and putts for you and your friends."="Record hole-scores, fairways, GIRs and putts for you and your friends.";//95-Done
+
+"Smart Rangefinder"="Smart Rangefinder";//96-Done
+"Most Popular"="Most Popular";//97-Done
+"Center"="Center";//98-Done
+"Back Front"="Back Front";//99-Not Matched
+"Fast & accurate distances"="Fast & accurate distances";//100-Done
+"FREE distances and club-recommendations."="FREE distances and club-recommendations.";//101-Done
+"Live Scoring available"="Live Scoring available";//102-Done
+
+"Ultimate Shot-tracking"="Ultimate Shot-tracking";//103-Done
+"For Advanced Users"="For Advanced Users";//104-Done
+"Advanced Stats and Analytics"="Advanced Stats and Analytics";//105-Done
+"Time-intensive, but feature-packed! FREE distances and recommendations. Automatic Scoring enabled"="Time-intensive, but feature-packed! FREE distances and recommendations. Automatic Scoring enabled";//106-Done
+
+"Start Round"="Start Round";//107-Not Matched
+
+"Additionally, track Scores and Stats of up to 3 friends"="Additionally, track Scores and Stats of up to 3 friends";//108-Done
+"Skip"="Skip";//109-Done
+
+// MARK: - Score Previous Round Menu Options
+"Score Previous Round Menu Options"="Score Previous Round Menu Options";
+
+"Post-Game Shot Tracking"="Post-Game Shot Tracking";//110-Done
+"For Advanced Users"="For Advanced Users";//111-Done
+"Advanced Stats and Analytics"="Advanced Stats and Analytics";//112-Done
+"Time Intensive, but feature packed! Plot each shot as it was actually played, to access unbeateable insights into your own game. Take charge!"="Time Intensive, but feature packed! Plot each shot as it was actually played, to access unbeateable insights into your own game. Take charge!";//113-Done
+
+// MARK: - Classic Scorecard Mode
+"Classic Scorecard Mode"="Classic Scorecard Mode";
+
+"Your Score"="Your Score";//114-Done
+"Detailed Scoring"="Detailed Scoring";//115-Done
+"View Scorecard"="View Scorecard";//116-Done
+"Next Hole"="Next Hole";//117-Done
+"Previous Hole"="Previous Hole";//118-Done
+
+// MARK: - Continue Round Screen
+"Continue Round Screen"="Continue Round Screen";
+
+"Playing Hole"="Playing Hole";//119-Done
+"End Round"="End Round";//120-Done
+"Players"="Players";//121-Done
+"To Par"="To Par";//122-Done
+"Thru"="Thru";//123-Done
+"Strokes"="Strokes";//124-Done
+"*Atleast 9-holes must be completed to generate round stats."="*Atleast 9-holes must be completed to generate round stats.";//125-Done
+"Continue Round"="Continue Round";//126-Done
+
+// MARK: - End Round Button Pop-up Message
+"End Round Button Pop-up Message"="End Round Button Pop-up Message";
+
+"Round in progress"="Round in progress";//127-Done
+"holes completed"="holes completed";//128-Done
+"You'll not be able to edit this round anymore. Are you sure want to exit."="You'll not be able to edit this round anymore. Are you sure want to exit.";//129-Done
+"Save & Exit"="Save & Exit";//130-Not Matched
+"Discard Round"="Discard Round";//131-Done // left in somewhere in alert
+"Cancel"="Cancel";//132-will do later
+
+"Profile"="Profile";//133-Done
+"Edit"="Edit";//134-Done
+"Your Home Course"="Your Home Course";//135-Done
+"Change Course"="Change Course";//136-Done
+"Your Golf Bag"="Your Golf Bag";//137-Done
+"14 Clubs Selected"="14 Clubs Selected";//138-Not Matched
+"Grip"="Grip";//139-Done
+"Left Handed"="Left Handed";//140-will do later
+"Right Handed"="Right Handed";//141-will do later
+"Handicap"="Handicap";//142-Done
+"I don't have handicap"="I don't have handicap";//143-Not Matched
+"Pro Membership Active"="Pro Membership Active";//144-Done
+"You have 207 days remaining on your Pro Membership"="You have 207 days remaining on your Pro Membership";//145-Have to break
+"Invite your friends to play"="Invite your friends to play";//146-Done
+"Invite 3 friends to the app and get $50 OFF on Golfication X!"="Invite 3 friends to the app and get $50 OFF on Golfication X!";//147-Done
+"Invite Now"="Invite Now";//148-Done
+"00:00:00 remaining"="00:00:00 remaining";//149-Not Matched
+"Refer Friends now!"="Refer Friends now!";//150-Done
+"Referral"="Referral";//151-Done
+"Invite Friends"="Invite Friends";//152-Done
+"Get $50 off"="Get $50 off";//153-Done
+"Upgrade to Pro"="Upgrade to Pro";//154-Done
+"free for 30 days"="FREE for 30 Days";//155-Done
+"Upgrade Now!"="Upgrade Now!";//156-Done
+
+"Get your 30 days membership absolutely FREE"="Get your 30 days membership absolutely FREE";//157-Done
+"What is Pro?"="What is Pro?";//158-Done
+
+"Golfication Pro"="Golfication Pro";//159-Done
+"Advanced Stats"="Advanced Stats";//160-Done
+"Distance, range and accuracy for all your clubs"="Distance, range and accuracy for all your clubs";//161-Done
+"Long "="Long ";//162-Not Matched
+
+"Club Selection & Control"="Club Selection & Control";//163-Done
+"Know which club you need to hit often, and which you'd better leave out"="Know which club you need to hit often, and which you'd better leave out";//164-Done
+
+"Strokes Gained Analysis"="Strokes Gained Analysis";//165-Done
+"Break down each selection of your game, to better plan your training sessions."="Break down each selection of your game, to better plan your training sessions.";//166-Done
+
+"Settings"="Settings";//167-Done
+"Distance"="Distance";//168-Done //remaining in SettingVC
+"Imperial (feet,yards,miles)"="Imperial (feet,yards,miles)";//169-Done
+"Metric(metres,kilometres)"="Metric(metres,kilometres)";//170-Done
+"PGA Tour"="PGA Tour";//171-Done
+"Men's-Scratch"="Men's-Scratch";//172-Done
+"Men's-18Handicap"="Men's-18 Handicap";//173-Done
+"Women's-Scratch"="Women's-Scratch";//174-Done
+"Women's-18 Handicap"="Women's-18 Handicap";//175-Done
+
+"Version"="Version";//176-Done
+"Logout"="Logout";//177-Done
+
+"Are you sure you want to Logout."="Are you sure you want to Logout?";//178-Done
+
+// MARK: - Post Game Shot Tracking Mode Option
+"Post Game Shot Tracking Mode Option"="Post Game Shot Tracking Mode Option";
+
+"Drag your target marker to get free club recommendations for every shot."="Drag your target marker to get free club recommendations for every shot.";//179-Done
+"Ok, Got it."="Ok, Got it.";//180-Done
+
+"This is the club we recommend based on your yardage. Tap to change."="This is the club we recommend based on your yardage. Tap to change.";//181-Done
+
+"Tap to record this shot."="Tap to record this shot.";//182-Done
+
+"Use the hole-out button to complete this hole and view score."="Use the hole-out button to complete this hole and view score.";//183-Done
+
+"Player Stats"="Player Stats";//184-Done
+
+"Your Scorecard"="Your Scorecard";//185-Done
+"Hole"="Hole";//186-Done
+"Par"="Par";//187-Done
+"Driving Distance"="Driving Distance";//188-Done
+"Fairway Hit"="Fairway Hit";//189-Done
+"Approach Dist"="Approach Distance";//190-Done
+"GIR"="GIR";//191-Done
+"Chip/Down"="Chip/Down";//192-Done
+"Sand/Down"="Sand/Down";//193-Done
+"Putts"="Putts";//194-Done
+"Net Score"="Net Score";//195-Done
+"Stableford"="Stableford";//196-Done
+
+"Enable Stableford Scores by sending us a picture of the club scorecard"="Enable Stableford Scores by sending us a picture of the club scorecard";//197-Done
+
+"Continue"="Continue";//198-Done
+
+"More Stats"="More Stats";//199-Done
+"Overview"="Overview";//200-Done
+"Rounds"="Rounds";//201-Done
+"Score Distribution"="Score Distribution";//202-Done
+"below"="below";//203-Done
+"above"="above";//204-Done
+"Scoring"="Scoring";//205-Done
+"Par"="Par";//206-Done
+"Bogey"="Bogey";//207-will do later
+"Double Bogey"="Double Bogey";//208-will do later
+"Birdie"="Birdie";//209-will do later
+"Par"="Par";//210-Done
+"Par Average"="Par Average";//211-Done
+"Penalties Trend"="Penalties Trend";//212-Done
+
+"Off the Tee"="Off the Tee";//213-will do later
+"Spread of the tee"="Spread of the tee";//214-Done
+"Left Rough"="Left Rough";//215-Done
+"Right Rough"="Right Rough";//216-Done
+"Short 'Long"="Short 'Long";//217-Not Matched
+"Typical"="Typical";//218-Done
+"Fairway"="Fairway";//219-Done
+"Drive Accuracy"="Drive Accuracy";//220-Not Matched
+"Drive Distance"="Drive Distance";//221-Done
+"Fairway Hit Trend"="Fairway Hit Trend";//222-Done
+"Fairway Hit Likeliness"="Fairway Hit Likeliness";//223-Done
+
+"Approach"="Approach";//224-will do later
+"Approach Accuracy"="Approach Accuracy";//225-Done
+"Hit"="Hit";//226-will do later
+"Greens in Regulation (GIR)"="Greens in Regulation (GIR)";//227-Done
+"Greens with fairway hit"="Greens with fairway hit";//228-Done
+"Greens with fairway miss"="Greens with fairway miss";//229-Done
+"Hole Proximity"="Hole Proximity";//230-Done
+"GIR Trend"="GIR Trend";//231-Done
+"GIR Likeliness"="GIR Likeliness";//232-Done
+
+"Chipping"="Chipping";//233-Done
+"Chipping Accuracy"="Chipping Accuracy";//234-will do later
+"Chip: Up and Down"="Chip: Up and Down";//235-will do later
+"Chip Proximity"="Chip Proximity";//236-Done
+"Sand: Up and Down"="Sand: Up and Down";//237-will do later
+"Sand Accuracy"="Sand Accuracy";//238-Done // Except pro locked ui
+"Sand Proximity"="Sand Proximity";//239-Done // Except pro locked ui
+
+"Putting"="Putting";//240-will do later
+"Putts Per Hole"="Putts Per Hole";//241-Done
+"Putts Breakup"="Putts Breakup";//242-Not Matched
+"Putts Vs Handicap"="Putts Vs Handicap";//243-Done
+"Filters"="Filters";//244-Done
+"Numbers of Rounds/Duration"="Numbers of Rounds/Duration";//245-Done
+"Rounds"="Rounds";//246-Done
+"Days"="Days";//247-will do later
+"All"="All";//248-will do later
+
+"Round Type"="Round Type";//249-Not Matched
+"Holes"="Holes";//250-Done
+"Clubs Used"="Clubs Used";//251-Done
+"Courses"="Courses";//252-Done
+"Apply"="Apply";//253-Not Matched
+
+
+// MARK: - Missing
+//In tutorial
+
+//"When you reach the location of the ball, tap here to stop tracking this shot."
+//"Tap here to tee-off from your current GPS location."
+//"Share your hole and stats with friends on Golfication or social media."

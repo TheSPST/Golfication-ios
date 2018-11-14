@@ -72,7 +72,7 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.startMatch(_:)), name: NSNotification.Name(rawValue: "startMatch"), object: nil)
         self.tabBarController?.tabBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
-        let btn = UIBarButtonItem(title: "Continue", style: .done, target: self, action: #selector(self.btnContinueAction))
+        let btn = UIBarButtonItem(title: "Continue".localized(), style: .done, target: self, action: #selector(self.btnContinueAction))
         self.navigationItem.setRightBarButtonItems([btn], animated: true)
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white

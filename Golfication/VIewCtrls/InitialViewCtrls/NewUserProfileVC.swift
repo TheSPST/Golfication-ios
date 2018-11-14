@@ -16,11 +16,11 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     let progressView = SDLoader()
 
     @IBOutlet weak var lblHandicap: UILabel!
-    @IBOutlet weak var lblHandiLeft: UILabel!
-    @IBOutlet weak var lblHandiRight: UILabel!
+    @IBOutlet weak var lblHandiLeft: UILocalizedLabel!
+    @IBOutlet weak var lblHandiRight: UILocalizedLabel!
     
     @IBOutlet weak var btnCheckbox: UIButton!
-    @IBOutlet weak var btnNext: UIButton!
+    @IBOutlet weak var btnNext: UILocalizedButton!
     @IBOutlet weak var btnHandiLeft: UIButton!
     @IBOutlet weak var btnHandiRight: UIButton!
     @IBOutlet weak var btnSearch: UIButton!
@@ -74,7 +74,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             let x =  CGFloat(self.pageControl.currentPage) * (pageWidth)
             scrollView.setContentOffset(CGPoint(x:x, y:0), animated: false)
             
-            btnNext.setTitle("Next", for: .normal)
+            btnNext.setTitle("Next".localized(), for: .normal)
             if pageControl.currentPage == 2 {
                 btnNext.setTitle("Done", for: .normal)
             }
@@ -628,7 +628,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let x = CGFloat(pageControl.currentPage) * (newProfileScrlView.frame.size.width)
         newProfileScrlView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle("Next", for: .normal)
+        btnNext.setTitle("Next".localized(), for: .normal)
         if currentPageIndex == 2 {
             btnNext.setTitle("Done", for: .normal)
         }
@@ -649,7 +649,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let x = CGFloat(pageControl.currentPage) * (newProfileScrlView.frame.size.width)
         newProfileScrlView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle("Next", for: .normal)
+        btnNext.setTitle("Next".localized(), for: .normal)
         if currentPageIndex == 2 {
             btnNext.setTitle("Done", for: .normal)
         }

@@ -16,7 +16,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     // MARK: Set Outlets
     var invitationUrl : URL!
-    @IBOutlet weak var btnContinue: UIButton!
+    @IBOutlet weak var btnContinue: UILocalizedButton!
     @IBOutlet weak var btnAddGuest: UIButton!
     @IBOutlet weak var tablePlayer: UITableView!
     
@@ -305,7 +305,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                     self.present(emptyAlert, animated: true, completion: nil)
                 }
                 else{
-                    let text = "Hi \(textField?.text! ?? ""), \(Auth.auth().currentUser?.displayName ?? "") wants you to try Golfication."
+                    let text = "Hi".localized() + " " + "\(textField?.text! ?? ""), \(Auth.auth().currentUser?.displayName ?? "") wants you to try Golfication."
 //                    var link = NSURL(string: "https://itunes.apple.com/in/app/golfication-scorecard-stats-and-golf-social/id1216612467?mt=8")
                     guard let uid = Auth.auth().currentUser?.uid else { return }
                     let link = URL(string: "https://p5h99.app.goo.gl/mVFa?invitedby=\(uid)//\(userId)")

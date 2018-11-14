@@ -78,10 +78,11 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         // Do any additional setup after loading the view.
         self.delegate = self
         //Golfication Me Setup
+        
         let meVC = UIStoryboard(name: "Home", bundle:nil).instantiateViewController(withIdentifier: "NewHomeVC") as! NewHomeVC
         meVC.title = "Golfication"
         meVC.tabBarItem.image = #imageLiteral(resourceName: "avatar_0")
-        meVC.tabBarItem.title = "You"
+        meVC.tabBarItem.title = "You".localized()
         // deselect image
         meVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "avatar_1")
         // select image
@@ -93,8 +94,8 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         
         // Golfication Together Setup
         let togetherVC = UIStoryboard(name: "Together", bundle:nil).instantiateViewController(withIdentifier: "TogetherVC") as! TogetherVC
-        togetherVC.title = "Together"
-        togetherVC.tabBarItem.title = "Together"
+        togetherVC.title = "Together".localized()
+        togetherVC.tabBarItem.title = "Together".localized()
         togetherVC.tabBarItem.image = #imageLiteral(resourceName: "together_0")
         // deselect image
         togetherVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "together_1")
@@ -104,8 +105,8 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
 //        togetherNavCtrl.navigationBar.tintColor = UIColor.glfGreenBlue
 
         let exloreVC = UIStoryboard(name: "Explore", bundle:nil).instantiateViewController(withIdentifier: "ExploreVC") as! ExploreVC
-        exloreVC.title = "Explore"
-        exloreVC.tabBarItem.title = "Explore"
+        exloreVC.title = "Explore".localized()
+        exloreVC.tabBarItem.title = "Explore".localized()
         exloreVC.tabBarItem.image = #imageLiteral(resourceName: "explore_0")
         // deselect image
         exloreVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "explore_1")

@@ -30,6 +30,7 @@
 		3E15C1222142B86D002D43AF /* MultiplayerTeeSelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15C1212142B86D002D43AF /* MultiplayerTeeSelectionVC.swift */; };
 		3E15D32E1FFE0800005F4068 /* notificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15D32D1FFE0800005F4068 /* notificationExtension.swift */; };
 		3E15D3301FFE10F8005F4068 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15D32F1FFE10F8005F4068 /* Notification.swift */; };
+		3E16F6322195696B00E7F2CE /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E16F6312195696B00E7F2CE /* GoogleService-Info-live.plist */; };
 		3E27BA5C20FF4D7700DC14AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E27BA5A20FF4D7700DC14AB /* Main.storyboard */; };
 		3E3367F02130052E00AC238F /* HomeFreeProMemberVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */; };
 		3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E3367F12130231F00AC238F /* ScanningGolfX.xib */; };
@@ -80,7 +81,6 @@
 		3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */; };
 		3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */; };
 		3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */ = {isa = PBXBuildFile; fileRef = 3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */; };
-		3ECE55CB21955DEC006F3A3D /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3ECE55CA21955DEC006F3A3D /* GoogleService-Info-demo.plist */; };
 		3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED2C8792088C08800604F31 /* ProfileVC.swift */; };
 		3EDC552D2009E38F002012E1 /* ProMemberPopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDC552C2009E38F002012E1 /* ProMemberPopUpVC.swift */; };
 		3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */; };
@@ -104,8 +104,8 @@
 		4B077D1720AC550000AFC9FC /* GolfBagCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B077D1620AC550000AFC9FC /* GolfBagCollectionCell.swift */; };
 		4B0788F920A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */; };
 		4B132F5C205A6D1900791656 /* NewUserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B132F5B205A6D1900791656 /* NewUserProfileVC.swift */; };
+		4B17C4722195BCF7004CA13C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B17C4702195BCF7004CA13C /* Localizable.strings */; };
 		4B1F6BC32090A29F00312EA7 /* FeedbackVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B932090A29F00312EA7 /* FeedbackVC.swift */; };
-		4B1F6BC52090A29F00312EA7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B962090A29F00312EA7 /* MapViewController.swift */; };
 		4B1F6BC62090A29F00312EA7 /* CustomStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 4B1F6B972090A29F00312EA7 /* CustomStyle.json */; };
 		4B1F6BC72090A29F00312EA7 /* Bound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B982090A29F00312EA7 /* Bound.swift */; };
 		4B1F6BC92090A29F00312EA7 /* ShareMapScoreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B9A2090A29F00312EA7 /* ShareMapScoreVC.swift */; };
@@ -197,6 +197,7 @@
 		4B9578DF20B4409E008B2C61 /* AssignTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9578DC20B4409E008B2C61 /* AssignTabsVC.swift */; };
 		4B9578E020B4409E008B2C61 /* BluetootheConnectionTesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9578DD20B4409E008B2C61 /* BluetootheConnectionTesting.swift */; };
 		4B9D0A5B2069155800CE5D9F /* Reach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9D0A5A2069155800CE5D9F /* Reach.swift */; };
+		4B9E7BD52196D889008B6181 /* UILocalizedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */; };
 		4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */; };
 		4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */; };
 		4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA64E452000A54400C8C03F /* Chatlogo.swift */; };
@@ -293,6 +294,7 @@
 		3E15C1212142B86D002D43AF /* MultiplayerTeeSelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerTeeSelectionVC.swift; sourceTree = "<group>"; };
 		3E15D32D1FFE0800005F4068 /* notificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = notificationExtension.swift; sourceTree = "<group>"; };
 		3E15D32F1FFE10F8005F4068 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		3E16F6312195696B00E7F2CE /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3E27BA5B20FF4D7700DC14AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeFreeProMemberVC.swift; sourceTree = "<group>"; };
 		3E3367F12130231F00AC238F /* ScanningGolfX.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScanningGolfX.xib; sourceTree = "<group>"; };
@@ -345,7 +347,6 @@
 		3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GameImprovementPopup.xib; sourceTree = "<group>"; };
 		3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferalViewCtrls.swift; sourceTree = "<group>"; };
 		3EC2B2722011C50200E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json"; sourceTree = "<group>"; };
-		3ECE55CA21955DEC006F3A3D /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		3ED2C8792088C08800604F31 /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		3EDC552C2009E38F002012E1 /* ProMemberPopUpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProMemberPopUpVC.swift; sourceTree = "<group>"; };
 		3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExitGamePopUpView.swift; sourceTree = "<group>"; };
@@ -369,8 +370,11 @@
 		4B077D1620AC550000AFC9FC /* GolfBagCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolfBagCollectionCell.swift; sourceTree = "<group>"; };
 		4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationTableViewCell.swift; sourceTree = "<group>"; };
 		4B132F5B205A6D1900791656 /* NewUserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserProfileVC.swift; sourceTree = "<group>"; };
+		4B17C4662195B9A5004CA13C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		4B17C4712195BCF7004CA13C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B17C4772195BE43004CA13C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B17C4782195BF4C004CA13C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4B1F6B932090A29F00312EA7 /* FeedbackVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackVC.swift; sourceTree = "<group>"; };
-		4B1F6B962090A29F00312EA7 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		4B1F6B972090A29F00312EA7 /* CustomStyle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CustomStyle.json; sourceTree = "<group>"; };
 		4B1F6B982090A29F00312EA7 /* Bound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bound.swift; sourceTree = "<group>"; };
 		4B1F6B9A2090A29F00312EA7 /* ShareMapScoreVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareMapScoreVC.swift; sourceTree = "<group>"; };
@@ -470,6 +474,13 @@
 		4B9578DC20B4409E008B2C61 /* AssignTabsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssignTabsVC.swift; sourceTree = "<group>"; };
 		4B9578DD20B4409E008B2C61 /* BluetootheConnectionTesting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetootheConnectionTesting.swift; sourceTree = "<group>"; };
 		4B9D0A5A2069155800CE5D9F /* Reach.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reach.swift; sourceTree = "<group>"; };
+		4B9E7BC52196BD85008B6181 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		4B9E7BC72196BD86008B6181 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B9E7BC82196BFD8008B6181 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		4B9E7BCA2196BFD9008B6181 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B9E7BCB2196C014008B6181 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		4B9E7BCD2196C015008B6181 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILocalizedLabel.swift; sourceTree = "<group>"; };
 		4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigation+CustomAnimation.swift"; sourceTree = "<group>"; };
 		4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array + RemoveDuplicate.swift"; sourceTree = "<group>"; };
 		4BA64E452000A54400C8C03F /* Chatlogo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chatlogo.swift; sourceTree = "<group>"; };
@@ -593,6 +604,8 @@
 				0D5D4A431F94D382004621C7 /* LaunchScreen.storyboard */,
 				3E27BA5A20FF4D7700DC14AB /* Main.storyboard */,
 				4BB26D4B1FF780A4001E9556 /* Info.plist */,
+				4B17C4702195BCF7004CA13C /* Localizable.strings */,
+				4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */,
 			);
 			path = Golfication;
 			sourceTree = "<group>";
@@ -796,7 +809,6 @@
 				3E3367F12130231F00AC238F /* ScanningGolfX.xib */,
 				3E40F97A20E604BA00092170 /* GameViewControllers */,
 				4B7E5EFB20D118BA001847CC /* BackgroundMapStats.swift */,
-				4B1F6B962090A29F00312EA7 /* MapViewController.swift */,
 				4B1F6B972090A29F00312EA7 /* CustomStyle.json */,
 				4B1F6B982090A29F00312EA7 /* Bound.swift */,
 				4B1F6B9A2090A29F00312EA7 /* ShareMapScoreVC.swift */,
@@ -1256,7 +1268,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3ECE55CA21955DEC006F3A3D /* GoogleService-Info-demo.plist */,
+				3E16F6312195696B00E7F2CE /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1359,6 +1371,10 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
+				de,
+				ko,
+				es,
 			);
 			mainGroup = 0D5D4A2E1F94D382004621C7;
 			productRefGroup = 0D5D4A381F94D382004621C7 /* Products */;
@@ -1386,10 +1402,12 @@
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
+				3E16F6322195696B00E7F2CE /* GoogleService-Info-live.plist in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
 				3EAE867F2125573F0081857B /* Device.storyboard in Resources */,
 				4B8C8D3D1FF674D0001F5D01 /* SF-Pro-Display-Thin.otf in Resources */,
+				4B17C4722195BCF7004CA13C /* Localizable.strings in Resources */,
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
@@ -1415,7 +1433,6 @@
 				4B7E2A7D2175C20B00DFC3EB /* Default@2x.png in Resources */,
 				4B1F6BD72090A29F00312EA7 /* Game.storyboard in Resources */,
 				3E035F87215293F000019014 /* OAD.storyboard in Resources */,
-				3ECE55CB21955DEC006F3A3D /* GoogleService-Info-demo.plist in Resources */,
 				3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */,
 				4B7E2A7C2175C20B00DFC3EB /* radar.png in Resources */,
 				4B8C8D401FF674D0001F5D01 /* SF-Pro-Display-BlackItalic.otf in Resources */,
@@ -1583,6 +1600,7 @@
 				4BB26D301FF77EDB001E9556 /* CustomTabBarCtrl.swift in Sources */,
 				4BB26D231FF77EDB001E9556 /* Scores.swift in Sources */,
 				4B04C4CD20C03930000D2C23 /* AntiClockwiseAnimation.swift in Sources */,
+				4B9E7BD52196D889008B6181 /* UILocalizedLabel.swift in Sources */,
 				4B4ED1A820BD453E00D9C6DC /* SessionVC.swift in Sources */,
 				4B1F6BCD2090A29F00312EA7 /* CustomScoringViewCtrl.swift in Sources */,
 				4BB26D191FF77EDB001E9556 /* HomeVCModel.swift in Sources */,
@@ -1682,7 +1700,6 @@
 				3E15C1202142B834002D43AF /* MultiplayerTeeSelectionTableViewCell.swift in Sources */,
 				4BB26D201FF77EDB001E9556 /* OverViewVC.swift in Sources */,
 				3E15C1222142B86D002D43AF /* MultiplayerTeeSelectionVC.swift in Sources */,
-				4B1F6BC52090A29F00312EA7 /* MapViewController.swift in Sources */,
 				3E380EEA1FFBB58000246865 /* customPieView.swift in Sources */,
 				4B7F4AE41FFD10A300191452 /* customPieViewRight.swift in Sources */,
 				4BB26D181FF77EDB001E9556 /* Feeds.swift in Sources */,
@@ -1766,6 +1783,10 @@
 			isa = PBXVariantGroup;
 			children = (
 				0D5D4A441F94D382004621C7 /* Base */,
+				4B17C4662195B9A5004CA13C /* fr */,
+				4B9E7BC52196BD85008B6181 /* de */,
+				4B9E7BC82196BFD8008B6181 /* ko */,
+				4B9E7BCB2196C014008B6181 /* es */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -1778,6 +1799,19 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
+		4B17C4702195BCF7004CA13C /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B17C4712195BCF7004CA13C /* Base */,
+				4B17C4772195BE43004CA13C /* fr */,
+				4B17C4782195BF4C004CA13C /* en */,
+				4B9E7BC72196BD86008B6181 /* de */,
+				4B9E7BCA2196BFD9008B6181 /* ko */,
+				4B9E7BCD2196C015008B6181 /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1785,6 +1819,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1844,6 +1879,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

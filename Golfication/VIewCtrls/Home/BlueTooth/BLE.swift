@@ -71,8 +71,10 @@ class BLE: NSObject {
     var totalNumberOfClubSend : UInt8!
     var clubData = [(name:String,max:Int,min:Int)]()
     var tempFor7th = Int()
-    var previousGameId = Int()
     var peripheralDevicesIn5Sec = NSMutableDictionary()
+    var isSetupScreen = false
+    var isContinue = false
+    var gameIDArr : [UInt8]!
     var isProperConnected:Bool!{
         var isTrue = false
         if(Constants.deviceGolficationX != nil) && self.service_Read != nil && self.service_Write != nil{
@@ -82,6 +84,7 @@ class BLE: NSObject {
     }
     
     func startScanning(){
+        self.isContinue = false
         if(locationManager.location == nil){
             locationManager.requestAlwaysAuthorization()
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -109,8 +112,6 @@ class BLE: NSObject {
             self.isFirst = false
             if(isPractice){
                 self.isPracticeMatch = true
-                self.swingMatchId = Constants.DEVICEDATA.swingMatchId == nil ? "":Constants.DEVICEDATA.swingMatchId
-                self.previousGameId = Constants.DEVICEDATA.currentGameId == nil ? 0:Constants.DEVICEDATA.currentGameId
                 if(self.swingMatchId.count == 0){
                     self.startMatch(isPractice: isPractice)
                 }else{
@@ -209,6 +210,7 @@ class BLE: NSObject {
     var timeOut = 0
     func sendFirstCommand(leftOrRight:UInt8,metric:UInt8){
         timeOut = 0
+//        debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
         if(Constants.charctersticsGlobalForWrite != nil){
             invalidateAllTimers()
             self.randomGenerator()
@@ -243,16 +245,12 @@ class BLE: NSObject {
             self.activeMatchId = myDict
         }
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "getMatchId"))
-        
     }
-    private func sendNinthCommand(){
-        
+    private func sendNinthCommand(par:[UInt8]){
         self.randomGenerator()
-        var newByteArray = toByteArray(self.currentGameId)
         self.invalidateAllTimers()
-        newByteArray.removeLast(4)
         var param : [UInt8] = [9,counter]
-        for i in newByteArray{
+        for i in par{
             param.append(i)
         }
         var writeData = Data()
@@ -296,7 +294,6 @@ class BLE: NSObject {
             DispatchQueue.main.async {
                 UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
             }
-            
         }
     }
     @objc private func sendSecondCommand(_ notification: NSNotification){
@@ -405,8 +402,8 @@ class BLE: NSObject {
         }else{
             DispatchQueue.main.async {
                 UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
-            }        }
-        
+            }
+        }
     }
     private func sendFourthCommand(param:[UInt8]?){
         if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3{
@@ -431,7 +428,21 @@ class BLE: NSObject {
     }
     
     private func sendsixthCommand1(){
-        let param : [UInt8] = [6,200+UInt8(centerPointOfTeeNGreen.count)]
+        self.clubsArr.removeAll()
+        for data in Constants.tagClubNum{
+            self.clubsArr.append(data.clubName)
+        }
+        updateMaxMin()
+        var param : [UInt8] = [6,200+UInt8(centerPointOfTeeNGreen.count)]
+        for i in 0..<centerPointOfTeeNGreen.count where i%2 == 0{
+            param.append(UInt8((centerPointOfTeeNGreen[i].par*10)+(centerPointOfTeeNGreen.count == i+1 ? 0:centerPointOfTeeNGreen[i+1].par)))
+        }
+        if param.count < 13{
+            for _ in 0..<(12 - param.count){
+                param.append(0)
+            }
+        }
+        param.append(UInt8(Int(Constants.startingHole)!))
         self.invalidateAllTimers()
         let writeData =  Data(bytes: param)
         Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
@@ -442,9 +453,6 @@ class BLE: NSObject {
         })
     }
     private func sendSixthCommand2(value: UInt8){
-        //        let lat = Float("64.830673")
-        //        let lng = Float("-147.576172")
-        
         let latG = Float(centerPointOfTeeNGreen[Int(value-1)].green.latitude)
         let lngG = Float(centerPointOfTeeNGreen[Int(value-1)].green.longitude)
         
@@ -477,8 +485,6 @@ class BLE: NSObject {
         for byte in dataArrG1{
             param.append(byte)
         }
-        param.append(UInt8(centerPointOfTeeNGreen[Int(value-1)].par))
-        
         debugPrint("param For value\(value) :--->  \(param)")
         let writeData =  Data(bytes: param)
         self.invalidateAllTimers()
@@ -494,6 +500,7 @@ class BLE: NSObject {
             var newByteArray = toByteArray(self.currentGameId)
             if let gameId = notification.object as? String{
                 if(gameId == "Finish"){
+                    newByteArray = self.gameIDArr
                     isFinished = true
                 }
             }
@@ -503,7 +510,9 @@ class BLE: NSObject {
             }
             
             if(isPracticeMatch){
-                self.swingDetails.append((shotNo: 0, bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0,ba:0.0,tempo:0.0,club:"",time:0))
+                if self.swingDetails.last?.shotNo != 0{
+                    self.swingDetails.append((shotNo: 0, bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0,ba:0.0,tempo:0.0,club:"",time:0))
+                }
                 self.randomGenerator()
                 debugPrint(self.currentGameId)
                 self.invalidateAllTimers()
@@ -730,32 +739,6 @@ extension BLE: CBCentralManagerDelegate {
         let name = advertisementData["kCBAdvDataLocalName"] as? String
         if (peripheral.name == "Golfication X") || (name == "Golfication X") /*|| (peripheral.name == "CC2650 SensorTag") || (peripheral.name == "PeripheralObserver") || (peripheral.name == "SBP OAD off-chip")*/{
             peripheralDevicesIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
-            //            deviceGolficationX = peripheral
-            //            peripheral.delegate = self
-            //            self.centralManager.stopScan()
-            //            self.centralManager.connect(peripheral)
-        }
-    }
-    func updateGameScreen(){
-        if(self.swingMatchId.count > 1){
-            let gameAlert = UIAlertController(title: "Ongoing Match", message: "You can discard the ongoing game or continue.", preferredStyle: UIAlertControllerStyle.alert)
-            gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-                self.swingMatchId = ""
-                self.randomGenerator()
-                var newByteArray = self.toByteArray(self.currentGameId)
-                self.sendFourthCommand(param: [4,self.counter,newByteArray[0],newByteArray[1],newByteArray[2],newByteArray[3]])
-            }))
-            gameAlert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action: UIAlertAction!) in
-                if(self.isPracticeMatch){
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "Practice Match")
-                }else{
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
-                }
-            }))
-            UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-        }else{
-            //            self.startMatch()
         }
     }
     func endAllActiveSessions(){
@@ -789,30 +772,6 @@ extension BLE: CBCentralManagerDelegate {
         }else{
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
         }
-        
-        //        let gameAlert = UIAlertController(title: "Start Game", message: "Choose which type of game you want to play.", preferredStyle: UIAlertControllerStyle.alert)
-        //        gameAlert.addAction(UIAlertAction(title: "Practice Round", style: .default, handler: { (action: UIAlertAction!) in
-        //            self.isPracticeMatch = true
-        //            DispatchQueue.main.async(execute: {
-        //                self.swingMatchId = ref!.child("swingSession").childByAutoId().key
-        //                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
-        //                let matchDataDic = NSMutableDictionary()
-        //                matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
-        //                matchDataDic.setObject("practice", forKey: "playType" as NSCopying)
-        //                matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-        //                matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
-        //                ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
-        //
-        //            })
-        //            self.sendFifthCommand()
-        //        }))
-        //        gameAlert.addAction(UIAlertAction(title: "New Match", style: .default, handler: { (action: UIAlertAction!) in
-        //            DispatchQueue.main.async(execute: {
-        //                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
-        //            })
-        //        }))
-        //
-        //        UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
     }
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write])
@@ -874,6 +833,7 @@ extension BLE: CBPeripheralDelegate {
             if(characteristic.uuid == golficationXCharacteristicCBUUIDWrite){
                 self.charctersticsWrite = characteristic
                 Constants.charctersticsGlobalForWrite = characteristic
+                debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
                 self.sendEleventhCommand()
             }else if (characteristic.uuid == golficationXCharacteristicCBUUIDRead){
                 self.charctersticsRead = characteristic
@@ -968,18 +928,23 @@ extension BLE: CBPeripheralDelegate {
                             let dict = NSMutableDictionary()
                             dict.addEntries(from: ["id" : self.swingMatchId])
                             dict.addEntries(from: ["gameId":self.currentGameId])
-                            if !self.isFirst{
+//                            if !self.isFirst{
+                            if !self.isFinished{
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwing"), object: dict)
-                                self.isFirst = true
-                            }else{
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwingInside"), object: dict)
                             }
+
+//                                self.isFirst = true
+//                            }else{
+//                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwingInside"), object: dict)
+//                            }
                         })
                     }else{
                         let dict = NSMutableDictionary()
                         dict.addEntries(from: ["id" : self.swingMatchId])
                         dict.addEntries(from: ["gameId":self.currentGameId])
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwing"), object: dict)
+                        if !self.isFinished{
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwing"), object: dict)
+                        }
                     }
                 })
             }
@@ -1115,6 +1080,7 @@ extension BLE: CBPeripheralDelegate {
         
         ref.child("swingSessions/\(self.swingMatchId)/swings/\(data.shotNo-1)/").updateChildValues(swingDict as! [AnyHashable : Any])
     }
+    
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
         case golficationXCharacteristicCBUUIDRead:
@@ -1146,8 +1112,10 @@ extension BLE: CBPeripheralDelegate {
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":self.leftOrRight == 1 ? "Left":"Right"])
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit":self.metric == 1 ? 1:0])
-                        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
+                        DispatchQueue.main.async(execute: {
+                            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
+                        })
                         //                        self.startMatch()
                     }else{
                         if(totalTagInFirstPackate == 0){
@@ -1158,7 +1126,7 @@ extension BLE: CBPeripheralDelegate {
                     }
                 }else if dataArray[0] == UInt8(2) && (dataArray[1] == UInt8(self.totalClub)){
                     timerForWriteCommand22.invalidate()
-                    debugPrint("RecviedResult 2.2   ----  \(self.totalClub)")
+                    debugPrint("RecviedResult 2.2   ----  \(self.totalClub!)")
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":self.leftOrRight == 1 ? "Left":"Right"])
@@ -1170,51 +1138,70 @@ extension BLE: CBPeripheralDelegate {
                     self.invalidateAllTimers()
                     debugPrint("gameID Response from Third Command  : \(responseInIntFirst4)")
                     debugPrint("gameID Response from Third Command  : \(byteArrayToInt(value: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]]))")
+                    self.gameIDArr = [dataArray[2],dataArray[3],dataArray[4],dataArray[5]]
                     if (responseInIntFirst4 == 1){
                         if(self.isPracticeMatch){
-                            self.sendFifthCommand()
+                            self.startMatch(isPractice: true)
                         }else{
                             self.sendsixthCommand1()
                         }
                     }else{
-                        if(!self.isPracticeMatch){
-                            let gameAlert = UIAlertController(title: "Ongoing Match", message: "You want to discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
-                            gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-                                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-                                self.swingMatchId = ""
-                                self.randomGenerator()
-                                self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-                            }))
-                            gameAlert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action: UIAlertAction!) in
-                                self.invalidateAllTimers()
-                                debugPrint(self.swingMatchId)
-                                DispatchQueue.main.async(execute: {
+                        DispatchQueue.main.async(execute: {
+                            if(!self.isPracticeMatch) && self.currentGameId/100 == responseInIntFirst4/100{
+//                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "You want to discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
+//                                gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
+//                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+//                                    self.swingMatchId = ""
+//                                    self.randomGenerator()
+//                                    self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+//                                }))
+//                                gameAlert.addAction(UIAlertAction(title: "Continue".localized(), style: .default, handler: { (action: UIAlertAction!) in
+                                    self.invalidateAllTimers()
+                                    debugPrint(self.swingMatchId)
                                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
-                                })
-                            }))
-                            UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-                        }else{
-                            let gameAlert = UIAlertController(title: "Ongoing Match", message: "You want to discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
-                            gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-                                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+//                                }))
+//                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                            }else if self.currentGameId/100 == responseInIntFirst4/100{
+//                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "You want to discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
+//                                gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
+//                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+//                                    self.swingMatchId = ""
+//                                    self.randomGenerator()
+//                                    self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+//                                    var timer = Timer()
+//                                    timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (t) in
+//                                        self.startMatch(isPractice: true)
+//                                        timer.invalidate()
+//                                    })
+//                                }))
+//                                gameAlert.addAction(UIAlertAction(title: "Continue".localized(), style: .default, handler: { (action: UIAlertAction!) in
+                                    self.invalidateAllTimers()
+                                    debugPrint(self.swingMatchId)
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+//                                }))
+//                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                            }else{
+/*                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "You want to discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
+                                gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
+                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+                                    self.swingMatchId = ""
+                                    self.randomGenerator()
+                                    self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+                                }))
+                                gameAlert.addAction(UIAlertAction(title: "Continue".localized(), style: .default, handler: { (action: UIAlertAction!) in
+                                    self.invalidateAllTimers()
+                                    debugPrint(self.swingMatchId)
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
+                                }))
+                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                            */
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
                                 self.swingMatchId = ""
                                 self.randomGenerator()
                                 self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-                                var timer = Timer()
-                                timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (t) in
-                                    self.startMatch(isPractice: true)
-                                    timer.invalidate()
-                                })
-                            }))
-                            gameAlert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action: UIAlertAction!) in
-                                self.invalidateAllTimers()
-                                debugPrint(self.swingMatchId)
-                                DispatchQueue.main.async(execute: {
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-                                })
-                            }))
-                            UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-                        }
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+                            }
+                        })
                     }
                 }else if(dataArray[0] == UInt8(4)){
                     self.invalidateAllTimers()
@@ -1235,9 +1222,7 @@ extension BLE: CBPeripheralDelegate {
                             self.sendSeventhCommand(param: param, index: 0)
                             tempFor7th = 51
                         }
-                        
                     }
-                    
                 }else if (dataArray[0] == UInt8(7)){
                     self.timerForWriteCommand7.invalidate()
                     if(Int(dataArray[1]) == clubData.count){
@@ -1282,6 +1267,7 @@ extension BLE: CBPeripheralDelegate {
                         })
                     }
                 }else if (dataArray[0] == UInt8(81)) && (currentCommandData[1] == dataArray[1]){
+                    self.isContinue = true
                     self.timerForWriteCommand8.invalidate()
                     if(isPracticeMatch){
                         memccpy(&backSwing, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
@@ -1326,6 +1312,7 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[swingDetails.count-1].time = Timestamp
                     }
                 }else if (dataArray[0] == UInt8(82)) && (currentCommandData[1] == dataArray[1]){
+                    self.isContinue = true
                     if(isPracticeMatch){
                         memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
                         memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
@@ -1333,7 +1320,7 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[shotNo-1].ba = Double(backAngle)
                         swingDetails[shotNo-1].shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])
                         shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])+1
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                     }else{
                         
                         memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
@@ -1350,30 +1337,34 @@ extension BLE: CBPeripheralDelegate {
                             holeWithSwing[holeWithSwing.count-1].holeOut = true
                             self.updateHoleOutShot(nextData: holeWithSwing.last!)
                             debugPrint("HoleWithSwing",holeWithSwing)
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                         }else{
                             self.updateSingleShot(nextData: holeWithSwing.last!)
                             debugPrint("HoleWithSwing",holeWithSwing)
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                         }
                     }
                 }else if(dataArray[0] == UInt8(80)){
                     self.timerForWriteCommand8.invalidate()
-                    if(isPracticeMatch){
+                    self.isContinue = true
+                    if(isPracticeMatch) {
                         self.uploadSwingScore()
-                        
                     }else{
                         if(holeWithSwing.count > 0){
-                            //                            self.uploadShotsToMatchData()
+                            self.uploadShotsToMatchData()
                         }
                     }
                     if(self.isFinished){
-                        self.sendNinthCommand()
+                        self.sendNinthCommand(par: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                     }
+                    
                     
                 }else if(dataArray[0] == UInt8(9)){
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-                    self.timerForWriteCommand9.invalidate()
+                    self.invalidateAllTimers()
+                    DispatchQueue.main.async(execute: {
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
+                    })
                 }else if(dataArray[0] == UInt8(91)){
                     if swingDetails.last == nil{
                         swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0))
@@ -1469,20 +1460,24 @@ extension BLE: CBPeripheralDelegate {
                     //                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":false])
                     self.invalidateAllTimers()
                 }else if (dataArray[0] == UInt8(11)){
-                    let version = byteArrayToInt32(value: [dataArray[1],dataArray[2]])
-                    self.invalidateAllTimers()
-                    if(version < Constants.firmwareVersion){
-                        let gameAlert = UIAlertController(title: "Firmware Update", message: "New version \(version) found for GolficationX", preferredStyle: UIAlertControllerStyle.alert)
-                        gameAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
-                            debugPrint("Cancel")
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-                        }))
-                        gameAlert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (action: UIAlertAction!) in
-                            debugPrint("Updating")
-                            //                            self.sendTwelthCommand()
-                        }))
-                        UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-                    }
+                    DispatchQueue.main.async(execute: {
+                        let version = self.byteArrayToInt32(value: [dataArray[1],dataArray[2]])
+                        self.invalidateAllTimers()
+                        if(version < Constants.firmwareVersion){
+                            let gameAlert = UIAlertController(title: "Firmware Update", message: "New version \(version) found for GolficationX", preferredStyle: UIAlertControllerStyle.alert)
+                            gameAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+                                debugPrint("Cancel")
+                                
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+                                
+                            }))
+                            gameAlert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (action: UIAlertAction!) in
+                                debugPrint("Updating")
+                                //                            self.sendTwelthCommand()
+                            }))
+                            UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                        }
+                    })
                 }
             }
             break
@@ -1537,18 +1532,21 @@ extension BLE: CBPeripheralDelegate {
         }
     }
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        self.invalidateAllTimers()
-        self.timerForWriteCommand11.invalidate()
-        self.alertShowing(msg: "GolficationX disconnected Please connect again")
-        //        centralManager.connect(deviceGolficationX!, options: nil)
-        Constants.deviceGolficationX = nil
-        charctersticsWrite = nil
-        charctersticsRead = nil
-        Constants.charctersticsGlobalForWrite = nil
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
-        if(self.isPracticeMatch){
-            Constants.deviceGolficationX = peripheral
-            self.centralManager.connect(peripheral, options: nil)
+        DispatchQueue.main.async {
+            debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
+            self.invalidateAllTimers()
+            self.timerForWriteCommand11.invalidate()
+            self.alertShowing(msg: "GolficationX disconnected Please connect again")
+            //        centralManager.connect(deviceGolficationX!, options: nil)
+            Constants.deviceGolficationX = nil
+            self.charctersticsWrite = nil
+            self.charctersticsRead = nil
+            Constants.charctersticsGlobalForWrite = nil
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
+            if(self.isPracticeMatch){
+                Constants.deviceGolficationX = peripheral
+                self.centralManager.connect(peripheral, options: nil)
+            }
         }
     }
     

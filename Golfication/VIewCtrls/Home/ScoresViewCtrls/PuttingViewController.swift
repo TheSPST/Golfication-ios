@@ -291,6 +291,6 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
     }
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "Putting")
+        return IndicatorInfo(title: "Putting".localized())
     }
 }

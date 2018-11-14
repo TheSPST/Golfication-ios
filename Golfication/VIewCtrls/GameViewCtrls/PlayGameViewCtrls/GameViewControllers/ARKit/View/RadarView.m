@@ -55,6 +55,31 @@
 		
 		[dotsView addSubview:point];
 	}
+    
+    //https://github.com/calonso/ios-arkit/issues/4
+    /*for (int count = 0; count<points.count; count++){
+        ARGeoCoordinate *coord = points[count];
+        
+        double coordAzimuth = coord.azimuth - centerAzimuth;
+        if (coordAzimuth < 0.0) {
+            coordAzimuth = 2 * M_PI + coordAzimuth;
+        }
+        CGPoint pt;
+        
+        pt.x = dotsView.center.x + cos(coordAzimuth) * coord.radialDistance * self.frame.size.width / (2 * farthest);
+        pt.y = dotsView.center.y + sin(coordAzimuth) * coord.radialDistance * self.frame.size.height / (2 * farthest);
+
+        
+        UIImageView *point;
+        if (points.count != dotsView.subviews.count) {
+            point = [[UIImageView alloc] initWithImage:dot];
+            point.center = pt;
+            [dotsView addSubview:point];
+        }
+        else {
+            point = [dotsView.subviews objectAtIndex:count];
+        }
+    }*/
 }
 
 @end

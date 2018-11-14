@@ -20,31 +20,31 @@ class ProfileVC: UIViewController {
     
     // MARK: - Set Outlets
     @IBOutlet weak var lblTryPremium: UILabel!
-    @IBOutlet weak var lblHomeCorseTitle: UILabel!
+    @IBOutlet weak var lblHomeCorseTitle: UILocalizedLabel!
     @IBOutlet weak var lblHomeCourseName: UILabel!
-    @IBOutlet weak var lblGolfBagTitle: UILabel!
+    @IBOutlet weak var lblGolfBagTitle: UILocalizedLabel!
     @IBOutlet weak var lblClub: UILabel!
-    @IBOutlet weak var lblGrip: UILabel!
-    @IBOutlet weak var lblHandicap: UILabel!
+    @IBOutlet weak var lblGrip: UILocalizedLabel!
+    @IBOutlet weak var lblHandicap: UILocalizedLabel!
     @IBOutlet weak var lblMinimumValue: UILabel!
     @IBOutlet weak var lblMaxValue: UILabel!
     @IBOutlet weak var lblInactivePrice: UILabel!
     @IBOutlet weak var lblDaysLeft: UILabel!
-    @IBOutlet weak var lblDaysLeftTitle: UILabel!
+    @IBOutlet weak var lblDaysLeftTitle: UILocalizedLabel!
     @IBOutlet weak var lblNextBilling: UILabel!
     @IBOutlet weak var lblLastBilling: UILabel!
 
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderHandicapNumber: UISlider!
 
-    @IBOutlet weak var btnUpdradeNow: UIButton!
+    @IBOutlet weak var btnUpdradeNow: UILocalizedButton!
     @IBOutlet weak var btnUserImg: UIButton!
     @IBOutlet weak var btnUserName: UIButton!
     @IBOutlet weak var btnCheckbox: UIButton!
     @IBOutlet weak var btnInactiveIndiegogo: UIButton!
     @IBOutlet weak var btnFreeActiveIndiegogo: UIButton!
     @IBOutlet weak var btnActiveIndiegogo: UIButton!
-    @IBOutlet weak var btnInviteNow: UIButton!
+    @IBOutlet weak var btnInviteNow: UILocalizedButton!
 
     @IBOutlet weak var handSelection: UISegmentedControl!
     @IBOutlet weak var genderSgmtCtrl: UISegmentedControl!
@@ -496,7 +496,7 @@ class ProfileVC: UIViewController {
         
         let alert = UIAlertController(title: "Please enter name", message: "", preferredStyle: .alert)
         alert.addTextField { (textField) in
-            textField.placeholder = "Name"
+            textField.placeholder = "Name".localized()
             textField.text = ""
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { [weak alert] (_) in
@@ -608,6 +608,8 @@ class ProfileVC: UIViewController {
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Profile".localized()
+        
         self.viewTopWhatIsPro.isHidden = true
         whatISProHeightConstraint.constant = 0.0
         self.view.layoutIfNeeded()
@@ -674,7 +676,7 @@ class ProfileVC: UIViewController {
                     self.viewTopWhatIsPro.isHidden = false
                     self.whatISProHeightConstraint.constant = 57.0
 
-                    self.lblInactivePrice.text = "FREE for 30 Days"
+                    self.lblInactivePrice.text = "free for 30 days".localized()
                     if (userData.value(forKey: "trial") as? Bool) != nil{
                         self.lblInactivePrice.text = "Your Pro Membership has been expired"
                         self.viewTopWhatIsPro.isHidden = true
@@ -981,7 +983,7 @@ class ProfileVC: UIViewController {
     
     // MARK: setupInitialUI
     func setupInitialUI(){
-        self.lblTryPremium.text = "Get your 30 days membership absolutely FREE."
+        self.lblTryPremium.text = "Get your 30 days membership absolutely FREE".localized()
         self.btnUserImg.setCornerWithCircle(color: UIColor.glfBluegreen.cgColor)
         self.btnUserImg.sd_setBackgroundImage(with: Auth.auth().currentUser?.photoURL ?? URL(string:""), for: .normal, completed: nil)
         if Auth.auth().currentUser?.photoURL == nil{

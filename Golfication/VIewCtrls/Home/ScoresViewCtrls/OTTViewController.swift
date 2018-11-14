@@ -304,7 +304,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         var fairwayArray = [Double]()
         var totalFairway = [Double]()
         var avgFairway = [Double]()
-        let KeysArray = ["Below-5","6","7","8","9","10-Above"]
+        let KeysArray = ["below".localized() + "-5","6","7","8","9","10-" + "above".localized()]
         for keys in KeysArray{
             groupDict[keys] = 0
         }
@@ -316,7 +316,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         }
         for i in avgFairway{
             if(i<=5){
-                updateValue(keys: "Below-5")
+                updateValue(keys: "below".localized() + "-5")
             }
             else if(i>5 && i<=6){
                 updateValue(keys: "6")
@@ -331,7 +331,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
                 updateValue(keys: "9")
             }
             else{
-                updateValue(keys: "10-Above")
+                updateValue(keys: "10-" + "above".localized())
             }
         }
         var dataArray = [Double]()
@@ -494,9 +494,9 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         }
         scattredSpreadOfTheTeeChart.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
         scattredSpreadOfTheTeeChart.xAxis.enabled = false
-        lblRight.text = "Right Rough"
-        lblLeft.text = "Left Rough"
-        lblCenter.text = "Fairway"
+        lblRight.text = "Right Rough".localized()
+        lblLeft.text = "Left Rough".localized()
+        lblCenter.text = "Fairway".localized()
         
     }
     
@@ -523,9 +523,11 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         if(fairwayRight != 0){
             fairwayRightInPercentage = Double((fairwayRight)*100)/(totalFairway)
         }
-        self.lblRight.text = "Right Rough \(String(format:"%.01f ",fairwayRightInPercentage))%"
+        self.lblRight.text = "Right Rough".localized() + " \(String(format:"%.01f ",fairwayRightInPercentage))%"
+
         self.lblCenter.text = "Fairway \(String(format:"%.01f ",fairwayHitInPercentage))%"
-        self.lblLeft.text = "Left Rough \(String(format:"%.01f ",fairwayLeftInPercentage))%"
+        self.lblLeft.text = "Left Rough".localized() + " \(String(format:"%.01f ",fairwayLeftInPercentage))%"
+
         self.lblFairwayRight.text = " \(String(format:"%.01f ",fairwayRightInPercentage))% "
         self.lblFairwayHit.text = " \(String(format:"%.01f ",fairwayHitInPercentage))% "
         self.lblFairwayLeft.text = " \(String(format:"%.01f ",fairwayLeftInPercentage))% "

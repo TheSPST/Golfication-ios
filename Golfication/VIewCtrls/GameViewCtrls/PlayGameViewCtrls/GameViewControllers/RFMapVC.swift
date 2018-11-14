@@ -51,7 +51,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var stackViewStrokes2: UIStackView!
     @IBOutlet weak var stackViewStrokes3: UIStackView!
     @IBOutlet weak var stackViewStrokes4: UIStackView!
-    @IBOutlet weak var btnContinue: UIButton!
     @IBOutlet weak var btnEditShots: UIButton!
     @IBOutlet weak var lblPlayerNameDSV: UILabel!
     @IBOutlet weak var lblPlayerNameSSV: UILabel!
@@ -60,7 +59,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var imgViewWindForeground: UIImageView!
     @IBOutlet weak var lblWindSpeedForeground: UILabel!
     @IBOutlet weak var lblEditShotNumber: UILabel!
-    @IBOutlet weak var btnCenter: UIButton!
+    @IBOutlet weak var btnCenter: UILocalizedButton!
     
     @IBOutlet weak var exitGamePopUpView: ExitGamePopUpView!
     @IBOutlet weak var lblFrontDist: UILabel!
@@ -82,7 +81,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var lblTopPar: UILabel!
     @IBOutlet weak var topHCPView: UIView!
     @IBOutlet weak var lblTopHCP: UILabel!
-    @IBOutlet weak var btnTopHoleNo: UIButton!
+    @IBOutlet weak var btnTopHoleNo: UILocalizedButton!
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
     var buttonsArrayForGIR = [UIButton]()
@@ -125,7 +124,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         
         var strArr = [String]()
         for hole in self.scoring{    
-            strArr.append("Hole \(hole.hole) - Par - \(hole.par)")
+            strArr.append("Hole".localized() + " \(hole.hole) - " + "Par".localized() + " - \(hole.par)")
+
         }
         ActionSheetStringPicker.show(withTitle: "Select Hole", rows: strArr, initialSelection: holeIndex, doneBlock: { (picker, value, index) in
             self.holeIndex = value
@@ -149,7 +149,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         if Constants.isEdited{
             self.exitGamePopUpView.btnDiscardText = "Delete Round"
         }
-        self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) Holes Completed."
+        self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) " + "holes completed".localized()
         self.exitGamePopUpView.isHidden = false
     }
     
@@ -362,8 +362,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     self.lblPlayerNameSSV.text = "\(name)'s Score"
                     
                     if(k as! String == Auth.auth().currentUser!.uid){
-                        self.lblPlayerNameDSV.text = "Your Score"
-                        self.lblPlayerNameSSV.text = "Your Score"
+                        self.lblPlayerNameDSV.text = "Your Score".localized()
+                        self.lblPlayerNameSSV.text = "Your Score".localized()
                     }
                     i += 1
                     playersButton.append((button:btn, isSelected: false, id: k as! String,name:name))
@@ -461,7 +461,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }else{
             self.updateHoleWiseShots()
             if self.btnStablefordScore.currentTitle!.contains("Stable"){
-                self.btnStablefordScore.setTitle("Net Score", for: .normal)
+                self.btnStablefordScore.setTitle("Net Score".localized(), for: .normal)
                 self.lblStblScore.text = "\(classicScoring.netScore!)"
             }else{
                 self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
@@ -563,8 +563,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     @IBAction func btnActionDiscardRound(_ sender: Any) {
         stackViewMenu.isHidden = true
-        let emptyAlert = UIAlertController(title: "Discard Round", message: "You Played \(self.holeOutforAppsFlyer[self.playerIndex])/\(scoring.count) Holes. Are you sure you want to Discard the Round ?", preferredStyle: UIAlertControllerStyle.alert)
-        emptyAlert.addAction(UIAlertAction(title: "Discard Round", style: .default, handler: { (action: UIAlertAction!) in
+        let emptyAlert = UIAlertController(title: "Discard Round".localized(), message: "You Played \(self.holeOutforAppsFlyer[self.playerIndex])/\(scoring.count) Holes. Are you sure you want to Discard the Round ?", preferredStyle: UIAlertControllerStyle.alert)
+        emptyAlert.addAction(UIAlertAction(title: "Discard Round".localized(), style: .default, handler: { (action: UIAlertAction!) in
             self.exitWithoutSave()
         }))
         emptyAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
@@ -987,7 +987,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
         }
     }
-    @IBOutlet weak var btnDetailScoring: UIButton!
+    @IBOutlet weak var btnDetailScoring: UILocalizedButton!
     @IBOutlet weak var btnNext: UIButton!
     @IBOutlet weak var btnPrev: UIButton!
     @IBOutlet weak var btnNextScrl: UIButton!
@@ -996,9 +996,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var btnTopShotRanking: UIButton!
     @IBOutlet weak var btnShotRanking: UIButton!
     @IBOutlet weak var btnScore: UIButton!
-    @IBOutlet weak var btnViewScoreCard: UIButton!
-    @IBOutlet weak var btnEndRound: UIButton!
-    @IBOutlet weak var btnPlayerStats: UIButton!
+    @IBOutlet weak var btnViewScoreCard: UILocalizedButton!
+    @IBOutlet weak var btnEndRound: UILocalizedButton!
+    @IBOutlet weak var btnPlayerStats: UILocalizedButton!
     @IBOutlet weak var scoreSV: UIStackView!
     @IBOutlet weak var scoreSV2: UIStackView!
     @IBOutlet weak var detailScoreSV: UIStackView!
@@ -1010,7 +1010,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var scrlHConstraint: NSLayoutConstraint!
     @IBOutlet weak var lblHoleNumber: UILabel!
     @IBOutlet weak var lblParNumber: UILabel!
-    @IBOutlet weak var btnPlayerStats2: UIButton!
+    @IBOutlet weak var btnPlayerStats2: UILocalizedButton!
     @IBOutlet weak var btnMoveToMapGround: UIButton!
     @IBOutlet weak var lblHoleNumber2: UILabel!
     @IBOutlet weak var lblParNumber2: UILabel!
@@ -1276,7 +1276,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             buttonsArrayForStrokes.append(btn as! UIButton)
         }
     }
-    func initalSetup(){
+    func initalSetup(){        
         lblEditShotNumber.layer.cornerRadius = lblEditShotNumber.frame.size.height/2
         lblEditShotNumber.layer.masksToBounds = true
         
@@ -2455,10 +2455,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         btnTopShotRanking.isHidden = true
         markers.removeAll()
         self.lblHoleNumber.text = "\(self.scoring[indexToUpdate].hole)"
-        self.lblHoleNumber2.text = "Hole\(self.scoring[indexToUpdate].hole)"
-        self.lblParNumber.text = "par \(self.scoring[indexToUpdate].par)"
-        self.lblParNumber2.text = "par \(self.scoring[indexToUpdate].par)"
-        
+        self.lblHoleNumber2.text = "Hole".localized() + "\(self.scoring[indexToUpdate].hole)"
+
+        self.lblParNumber.text = "Par".localized() + " \(self.scoring[indexToUpdate].par)"
+
+        self.lblParNumber2.text = "Par".localized() + " \(self.scoring[indexToUpdate].par)"
+
         self.lblTopPar.text = "PAR \(self.scoring[indexToUpdate].par)"
         let hcp = self.getHCPValue(playerID: self.playerId, holeNo: self.scoring[indexToUpdate].hole)
         self.lblTopHCP.text = "HCP \(hcp == 0 ? "-":"\(hcp)")"
@@ -2834,8 +2836,8 @@ extension RFMapVC{
         }
         for i in 0..<playersButton.count{
             if(playersButton[i].isSelected){
-                self.lblPlayerNameDSV.text = "Your Score"
-                self.lblPlayerNameSSV.text = "Your Score"
+                self.lblPlayerNameDSV.text = "Your Score".localized()
+                self.lblPlayerNameSSV.text = "Your Score".localized()
                 if(playersButton[i].id != Auth.auth().currentUser!.uid){
                     self.lblPlayerNameDSV.text = "\(playersButton[i].name)'s Score"
                     self.lblPlayerNameSSV.text = "\(playersButton[i].name)'s Score"

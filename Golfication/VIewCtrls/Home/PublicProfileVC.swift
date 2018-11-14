@@ -737,7 +737,7 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func setData()  {
-        let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You scored better then \(self.percentile)% of Golfers"
+        let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You scored better than \(self.percentile)% of Golfers"
         self.lblAvrgFromLastRounds.text = stringData
         self.swingsRankValue.text = String(self.drivingRankStr)
         self.roundPlayedRankValue.text = "-"

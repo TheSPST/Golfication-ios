@@ -22,7 +22,9 @@ class SettingVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        self.title = "Settings"
+        self.title = "Settings".localized()
+        self.navigationItem.rightBarButtonItem?.title = "Logout".localized()
+        
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
 
         self.tableView.delegate = nil
@@ -40,7 +42,7 @@ class SettingVC: UITableViewController {
             if(snapshot.childrenCount > 0){
                 if let dic = snapshot.value as? NSDictionary{
                     if let appVersion = dic["appVersion"] as? String{
-                        self.versionLbl.text = "Version \(appVersion.dropLast(8))"
+                        self.versionLbl.text = "Version".localized() + " " + "\(appVersion.dropLast(8))"
                     }
                 }
             }
@@ -106,9 +108,9 @@ class SettingVC: UITableViewController {
     
     // MARK: btnLogoutAction
     @IBAction func btnLogoutAction(_ sender: Any) {
-        let alert = UIAlertController(title: "Alert", message: "Are you sure you want to Logout?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Alert", message: "Are you sure you want to Logout.".localized(), preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { [weak alert] (_) in
+        alert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { [weak alert] (_) in
             // Do Nothing
             debugPrint("Cancel Alert: \(alert?.title ?? "")")
             
@@ -182,8 +184,8 @@ class SettingVC: UITableViewController {
                 cell.accessoryType = cell.isSelected ? .none : .none
             }
             switch indexPath.row{
-            case 0: cell.textLabel?.text = "Imperial(feet, yards, miles)"
-            case 1: cell.textLabel?.text = "Metric(meters, kilometers)"
+            case 0: cell.textLabel?.text = "Imperial (feet,yards,miles)".localized()
+            case 1: cell.textLabel?.text = "Metric(metres,kilometres)".localized()
             
             default: break
             }
@@ -201,11 +203,11 @@ class SettingVC: UITableViewController {
                 cell.accessoryType = cell.isSelected ? .none : .none
             }
             switch indexPath.row{
-            case 0: cell.textLabel?.text = "PGA Tour"
-            case 1: cell.textLabel?.text = "Men's - Scratch"
-            case 2: cell.textLabel?.text = "Men's - 18 Handicap"
-            case 3: cell.textLabel?.text = "Women's - Scratch"
-            case 4: cell.textLabel?.text = "Women's - 18 Handicap"
+            case 0: cell.textLabel?.text = "PGA Tour".localized()
+            case 1: cell.textLabel?.text = "Men's-Scratch".localized()
+            case 2: cell.textLabel?.text = "Men's-18Handicap".localized()
+            case 3: cell.textLabel?.text = "Women's-Scratch".localized()
+            case 4: cell.textLabel?.text = "Women's-18 Handicap".localized()
             default: break
             }
         }else{

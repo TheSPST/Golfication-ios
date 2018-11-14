@@ -11,13 +11,13 @@ import UIKit
 class MultiplayerTeeSelectionVC: UIViewController ,UITableViewDelegate,UITableViewDataSource{
 
     @IBOutlet weak var tableViewMultiplayerTee: UITableView!
-    @IBOutlet weak var btnStart: UIButton!
+    @IBOutlet weak var btnStart: UILocalizedButton!
     var totalPlayers = NSMutableArray()
     var handicap = [Double]()
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchHandicapOfAllUser()
-        self.title = "Player Stats"
+        self.title = "Player Stats".localized()
         // Do any additional setup after loading the view.
     }
     func fetchHandicapOfAllUser(){

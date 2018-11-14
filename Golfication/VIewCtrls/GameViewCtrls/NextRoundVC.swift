@@ -29,7 +29,7 @@ class NextRoundVC: UIViewController {
     @IBOutlet weak var lblBottomSubTitle: UILabel!
     @IBOutlet weak var imageVIew: UIImageView!
     @IBOutlet weak var popUpContainerView: UIView!
-    @IBOutlet weak var btnStart: UIButton!
+    @IBOutlet weak var btnStart: UILocalizedButton!
     @IBOutlet weak var popUpView: UIView!
     @IBOutlet weak var overlappingView: UIView!
     @IBOutlet weak var lblOverlapping: UILabel!
@@ -204,11 +204,11 @@ class NextRoundVC: UIViewController {
         prevRfBottomView.backgroundColor = UIColor.glfBluegreen
         prevShotBottomView.backgroundColor = UIColor.glfBluegreen
         
-        let classicTitle = NSAttributedString(string: "Classic Scorecard",attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
+        let classicTitle = NSAttributedString(string: "Classic Scorecard".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
         btnPrevClassic.setAttributedTitle(classicTitle, for: .normal)
-        let rfTitle = NSAttributedString(string: "Smart Rangefinder",attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
+        let rfTitle = NSAttributedString(string: "Smart Rangefinder".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
         btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
-        let ultimateTitle = NSAttributedString(string: "Ultimate Shot-Tracking",attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
+        let ultimateTitle = NSAttributedString(string: "Ultimate Shot-tracking".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
         btnPrevShotTrack.setAttributedTitle(ultimateTitle, for: .normal)
         
         btnPrevClassic.setImage(#imageLiteral(resourceName: "classic_active"), for: .normal)
@@ -221,12 +221,11 @@ class NextRoundVC: UIViewController {
             btnPrevRf.setImage(#imageLiteral(resourceName: "post_inactive"), for: .normal)
         }
         
-        lblTopTitle.text = "Classic Scorecard"
-        lblTopSubTitle.text = "(For Basic Users)"
-        lblBottomTitle.text = "Fast and easy"
-        lblBottomSubTitle.text = "Record hole-scores, fairways, GIRs and\nputts for you and your friends."
+        lblTopTitle.text = "Classic Scorecard".localized()
+        lblTopSubTitle.text = "(" + "For Basic Users".localized() + ")"
+        lblBottomTitle.text = "Fast and easy".localized()
+        lblBottomSubTitle.text = "Record hole-scores, fairways, GIRs and putts for you and your friends.".localized()
         imageVIew.image = #imageLiteral(resourceName: "classic_score")
-        
         
         self.btnStart.isEnabled = true
         self.btnStart.backgroundColor = UIColor.glfBluegreen
@@ -247,21 +246,21 @@ class NextRoundVC: UIViewController {
         btnPrevRf.setTitleColor(UIColor(rgb: 0x0E220D), for: .normal)
         btnPrevShotTrack.setTitleColor(UIColor.darkGray, for: .normal)
         
-        let classicTitle = NSAttributedString(string: "Classic Scorecard",attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
+        let classicTitle = NSAttributedString(string: "Classic Scorecard".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
         btnPrevClassic.setAttributedTitle(classicTitle, for: .normal)
-        let rfTitle = NSAttributedString(string: "Smart Rangefinder",attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
+        let rfTitle = NSAttributedString(string: "Smart Rangefinder".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
         btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
-        let ultimateTitle = NSAttributedString(string: "Ultimate Shot-Tracking",attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
+        let ultimateTitle = NSAttributedString(string: "Ultimate Shot-tracking".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
         btnPrevShotTrack.setAttributedTitle(ultimateTitle, for: .normal)
         
         btnPrevClassic.setImage(#imageLiteral(resourceName: "classic_inactive"), for: .normal)
         btnPrevRf.setImage(#imageLiteral(resourceName: "rf_active"), for: .normal)
         btnPrevShotTrack.setImage(#imageLiteral(resourceName: "ultimate_inactive"), for: .normal)
         
-        lblTopTitle.text = "Smart Rangefinder"
-        lblTopSubTitle.text = "(Most Popular)"
-        lblBottomTitle.text = "Fast and accurate distances."
-        lblBottomSubTitle.text = "Free distances and club-recommendations.\nLive scoring availabe."
+        lblTopTitle.text = "Smart Rangefinder".localized()
+        lblTopSubTitle.text = "(" + "Most Popular".localized() + ")"
+        lblBottomTitle.text = "Fast and accurate Distances".localized()
+        lblBottomSubTitle.text = "FREE distances and club-recommendations.".localized() + " \n" + "Live Scoring available".localized()
         imageVIew.image = #imageLiteral(resourceName: "range_finder")
         
         if selectedMode == 1{
@@ -269,10 +268,11 @@ class NextRoundVC: UIViewController {
             btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
             btnPrevRf.setImage(#imageLiteral(resourceName: "post_active"), for: .normal)
             
-            lblTopTitle.text = "Post-Game Shot-Tracking"
-            lblTopSubTitle.text = "(For Advanced Users)"
-            lblBottomTitle.text = "Advanced Stats and Analytics"
-            lblBottomSubTitle.text = "Time-intensive, but feature-packed! Plot each shot as it was actually played, to access unbeatable insights."
+            lblTopTitle.text = "Post-Game Shot Tracking".localized()
+            lblTopSubTitle.text = "(" + "For Advanced Users".localized() + ")"
+            lblBottomTitle.text = "Advanced Stats and Analytics".localized()
+            lblBottomSubTitle.text = "Time Intensive, but feature packed! Plot each shot as it was actually played, to access unbeateable insights into your own game. Take charge!".localized()
+    
             imageVIew.image = #imageLiteral(resourceName: "post_shot")
             if(self.scoringMode != "Advanced(GPS)"){
                 self.btnStart.isEnabled = false
@@ -336,27 +336,28 @@ class NextRoundVC: UIViewController {
         btnPrevRf.setTitleColor(UIColor.darkGray, for: .normal)
         btnPrevShotTrack.setTitleColor(UIColor(rgb: 0x0E220D), for: .normal)
         
-        let classicTitle = NSAttributedString(string: "Classic Scorecard",attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
+        let classicTitle = NSAttributedString(string: "Classic Scorecard".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
         btnPrevClassic.setAttributedTitle(classicTitle, for: .normal)
-        let rfTitle = NSAttributedString(string: "Smart Rangefinder",attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
+        let rfTitle = NSAttributedString(string: "Smart Rangefinder".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
         btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
-        let ultimateTitle = NSAttributedString(string: "Ultimate Shot-Tracking",attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
+        let ultimateTitle = NSAttributedString(string: "Ultimate Shot-tracking".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
         btnPrevShotTrack.setAttributedTitle(ultimateTitle, for: .normal)
         
         btnPrevClassic.setImage(#imageLiteral(resourceName: "classic_inactive"), for: .normal)
         btnPrevRf.setImage(#imageLiteral(resourceName: "rf_inactive"), for: .normal)
         btnPrevShotTrack.setImage(#imageLiteral(resourceName: "ultimate_active"), for: .normal)
         
-        lblTopTitle.text = "Ultimate Shot-Tracking"
-        lblTopSubTitle.text = "(For Advanced Users)"
-        lblBottomTitle.text = "Advanced Stats and Analytics"
-        lblBottomSubTitle.text = "Time-intensive, but feature-packed! Free distances and recommendations. Automatic Scoring enabled."
+        lblTopTitle.text = "Ultimate Shot-tracking".localized()
+        lblTopSubTitle.text = "(" + "For Advanced Users".localized() + ")"
+        lblBottomTitle.text = "Advanced Stats and Analytics".localized()
+        lblBottomSubTitle.text = "Time-intensive, but feature-packed! FREE distances and recommendations. Automatic Scoring enabled".localized()
+    
         imageVIew.image = #imageLiteral(resourceName: "ultimate_shot")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.title = "New Round".localized()
         //        overlappingView.makeBlurView(targetView: overlappingView)
         btnRequestMapping.setCorner(color: UIColor.clear.cgColor)
         

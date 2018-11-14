@@ -382,7 +382,7 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func setData()  {
         
-        let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You scored better then \(self.percentile)% of Golfers"
+        let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You scored better than \(self.percentile)% of Golfers"
         self.lblAvrgFromLastRounds.text = stringData
         self.swingsRankValue.text = String(self.drivingRankStr)
         self.roundPlayerRankValue.text = "-"
@@ -742,7 +742,7 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
 //            if indexPath.section == 0 {
 //                let cell = tableView.dequeueReusableCell(withIdentifier: "TogetherTopVIewCell", for: indexPath as IndexPath) as! TogetherTopVIewCell
 //
-//                let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You scored better then \(self.percentile)% of Golfers"
+//                let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You scored better than \(self.percentile)% of Golfers"
 //                cell.lblAvrgFromLastRounds.text = stringData
 //                cell.swingsRankValue.text = String(self.drivingRankStr)
 //                cell.roundPlayerRankValue.text = "-"
