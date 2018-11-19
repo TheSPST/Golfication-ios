@@ -12,6 +12,7 @@ extension NSDate
     func toString( dateFormat format  : String ) -> String
     {
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en")
         dateFormatter.dateFormat = format
         return dateFormatter.string(from: self as Date)
     }

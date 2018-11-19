@@ -174,6 +174,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         let unixTimestamp = ((array[indexPath.row] as AnyObject).value(forKey:"timestamp") as! Double)/1000
         let date = Date(timeIntervalSince1970: unixTimestamp)
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en")
         dateFormatter.dateFormat = "MMM d, yyyy"
         let strDate = dateFormatter.string(from: date)
 

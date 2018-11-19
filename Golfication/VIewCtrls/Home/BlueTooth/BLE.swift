@@ -10,6 +10,7 @@ import UIKit
 import CoreBluetooth
 import FirebaseAuth
 import GoogleMaps
+import AVFoundation
 
 class BLE: NSObject {
     var locationManager = CLLocationManager()
@@ -58,6 +59,9 @@ class BLE: NSObject {
     var shotCount = Int()
     let golficationXServiceCBUUID_Write = CBUUID(string: "0000BABE-0000-1000-8000-00805F9B34FB")
     let golficationXCharacteristicCBUUIDWrite = CBUUID(string: "0000BEEF-0000-1000-8000-00805F9B34FB")
+    
+    let golficationXCharacteristicCBUUIDOAD = CBUUID(string: TI_OAD_SERVICE)
+
     var totalHoleNumber = Int()
     var isPracticeMatch = false
     var currentGameId = Int()
@@ -74,6 +78,7 @@ class BLE: NSObject {
     var peripheralDevicesIn5Sec = NSMutableDictionary()
     var isSetupScreen = false
     var isContinue = false
+    var player: AVAudioPlayer?
     var gameIDArr : [UInt8]!
     var isProperConnected:Bool!{
         var isTrue = false
@@ -82,7 +87,8 @@ class BLE: NSObject {
         }
         return isTrue
     }
-    
+    var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
+
     func startScanning(){
         self.isContinue = false
         if(locationManager.location == nil){
@@ -651,6 +657,23 @@ class BLE: NSObject {
             self.currentCommandData = param
         })
     }
+    func playSound() {
+        guard let url = Bundle.main.url(forResource: "swing_beep", withExtension: "mp3") else { return }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            /* The following line is required for the player to work on iOS 11. Change the file type accordingly*/
+            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+            /* iOS 10 and earlier require the following line:
+             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileTypeMPEGLayer3) */
+            guard let player = player else { return }
+            player.play()
+            
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 extension BLE: CBCentralManagerDelegate {
@@ -737,7 +760,7 @@ extension BLE: CBCentralManagerDelegate {
         //        dict.setValue(RSSI, forKey: "rssi")
         
         let name = advertisementData["kCBAdvDataLocalName"] as? String
-        if (peripheral.name == "Golfication X") || (name == "Golfication X") /*|| (peripheral.name == "CC2650 SensorTag") || (peripheral.name == "PeripheralObserver") || (peripheral.name == "SBP OAD off-chip")*/{
+        if (peripheral.name == "Golfication X") || (name == "Golfication X") || (peripheral.name == "Holfication X") || (name == "Holfication X") /*|| (peripheral.name == "CC2650 SensorTag") || (peripheral.name == "PeripheralObserver") || (peripheral.name == "SBP OAD off-chip")*/{
             peripheralDevicesIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
         }
     }
@@ -774,14 +797,14 @@ extension BLE: CBCentralManagerDelegate {
         }
     }
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write])
+        Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD])
         DispatchQueue.main.async(execute: {
             var i = 0
             self.timerForService = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                 if(self.service_Read == nil) && (self.service_Write == nil){
                     i += 1
                     debugPrint("loop0")
-                    Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write])
+                    Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD])
                     if(i > 3){
                         self.alertShowing(msg: "Scanning Time out try again")
                         self.timerForService.invalidate()
@@ -815,6 +838,10 @@ extension BLE: CBPeripheralDelegate {
                     service_Write = service
                     debugPrint("Write UUID  :\(service_Write!.uuid)")
                     Constants.deviceGolficationX.discoverCharacteristics(nil, for: service_Write)
+                }
+                if(service.uuid == golficationXCharacteristicCBUUIDOAD){
+                    debugPrint("Write UUID  :\(service.uuid)")
+                    Constants.deviceGolficationX.discoverCharacteristics(nil, for: service)
                 }
             }
             if(service_Write != nil) && (service_Read != nil){
@@ -1158,7 +1185,7 @@ extension BLE: CBPeripheralDelegate {
 //                                gameAlert.addAction(UIAlertAction(title: "Continue".localized(), style: .default, handler: { (action: UIAlertAction!) in
                                     self.invalidateAllTimers()
                                     debugPrint(self.swingMatchId)
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
 //                                }))
 //                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
                             }else if self.currentGameId/100 == responseInIntFirst4/100{
@@ -1253,6 +1280,7 @@ extension BLE: CBPeripheralDelegate {
                             matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
                             ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
                             if(!self.isPracticeMatch){
+                                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
                                 let gameAlert = UIAlertController(title: "Device GPS", message: "Which GPS you want to use?", preferredStyle: UIAlertControllerStyle.alert)
                                 gameAlert.addAction(UIAlertAction(title: "Phone GPS", style: .default, handler: { (action: UIAlertAction!) in
                                     ref.child("matchData/\(self.activeMatchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"phone"])
@@ -1282,7 +1310,7 @@ extension BLE: CBPeripheralDelegate {
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
                             clubIndex = (Int(dataArray[14]))-1
                         }
-                        swingDetails[shotNo-1].club = Constants.allClubs[clubIndex]
+                        swingDetails[shotNo-1].club = self.allClubs[clubIndex]
                     }else{
                         if(self.holeWithSwing.count == 0){
                             self.holeWithSwing.append((hole: 1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
@@ -1304,7 +1332,7 @@ extension BLE: CBPeripheralDelegate {
                         if(dataArray[14] != 0){
                             clubNumber = Int(dataArray[14]-1)
                         }
-                        holeWithSwing[holeWithSwing.count-1].club = Constants.allClubs[clubNumber]
+                        holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubNumber]
                         swingDetails[swingDetails.count-1].bs = Double(backSwing)
                         swingDetails[swingDetails.count-1].ds = Double(downSwing)
                         swingDetails[swingDetails.count-1].hv = Double(handVelocity)
@@ -1375,6 +1403,7 @@ extension BLE: CBPeripheralDelegate {
                         holeWithSwing.append((hole: 0, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
                     }
                     if(isPracticeMatch){
+                        self.playSound()
                         memccpy(&backSwing, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
                         memccpy(&downSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&handVelocity, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
@@ -1385,7 +1414,7 @@ extension BLE: CBPeripheralDelegate {
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
                             clubIndex = (Int(dataArray[14]))-1
                         }
-                        swingDetails[shotNo-1].club = Constants.allClubs[clubIndex]
+                        swingDetails[shotNo-1].club = self.allClubs[clubIndex]
                         swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
                         swingDetails[shotNo-1].time = Timestamp
                         debugPrint(swingDetails)
@@ -1395,7 +1424,7 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
                         let clubNumber = 0
                         //                                                let clubNumber = Int(dataArray[14]-1)
-                        holeWithSwing[holeWithSwing.count-1].club = Constants.allClubs[clubNumber]
+                        holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubNumber]
                         if(Int(dataArray[15]) == 0){
                             holeWithSwing[holeWithSwing.count-1].holeOut = true
                         }else{
@@ -1467,15 +1496,30 @@ extension BLE: CBPeripheralDelegate {
                             let gameAlert = UIAlertController(title: "Firmware Update", message: "New version \(version) found for GolficationX", preferredStyle: UIAlertControllerStyle.alert)
                             gameAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
                                 debugPrint("Cancel")
-                                
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-                                
                             }))
                             gameAlert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (action: UIAlertAction!) in
                                 debugPrint("Updating")
-                                //                            self.sendTwelthCommand()
+                                let newByteArr = self.toByteArray(Constants.firmwareVersion)
+                                let param = [12,newByteArr[0],newByteArr[1]]
+                                self.currentCommandData = param
+                                Constants.deviceGolficationX.writeValue(Data(bytes: param), for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
                             }))
                             UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                        }
+                    })
+                }else if (dataArray[0] == UInt8(12)){
+                    DispatchQueue.main.async(execute: {
+                        if let wd = UIApplication.shared.delegate?.window {
+                            let vc = wd!.rootViewController
+                            if(vc is UITabBarController){
+                                if let viewC = (vc as! UITabBarController).selectedViewController as? UINavigationController{
+                                    let storyboard = UIStoryboard(name: "OAD", bundle: nil)
+                                    let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
+                                    viewC.topViewController?.navigationController?.push(viewController: viewCtrl)
+                                    
+                                }
+                            }
                         }
                     })
                 }

@@ -554,7 +554,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         let tempDic = NSMutableDictionary()
         tempDic.setObject("parId", forKey: "id" as NSCopying)
-        tempDic.setObject("Par", forKey: "name" as NSCopying)
+        tempDic.setObject("Par".localized(), forKey: "name" as NSCopying)
         self.sectionNames.insert(tempDic, at: 1)
         
         for i in 0..<self.playerData.count{
@@ -565,11 +565,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
         if !self.teeTypeArr.isEmpty{
-            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()]]
+            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()]]
             if Constants.mode == 1{
                 self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
@@ -579,11 +579,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
         }
         else{
-            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip", "Sand Shot", "Putts".localized(),"Penalties".localized()]]
+            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()]]
             if Constants.mode == 1{
                 self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
@@ -1528,7 +1528,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let holeLbl = UILabel()
                 holeLbl.frame = CGRect(x: usrImageView.frame.origin.x, y: 9, width: 80, height: 15)
                 holeLbl.textColor = UIColor.white
-                holeLbl.text = "Hole"
+                holeLbl.text = "Hole".localized()
                 holeLbl.font = UIFont(name: "SFProDisplay-Medium", size: 17.0)
                 header.addSubview(holeLbl)
             }

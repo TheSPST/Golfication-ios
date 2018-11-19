@@ -113,7 +113,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var profileScoring: Int?
     
     var strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
-    let catagoryWise = ["Off The Tee","Approach","Around The Green","Putting"]
+    let catagoryWise = ["Off the Tee","Approach","Around The Green","Putting"]
     let clubs = ["Dr","3w","1i","1h","2h","3h","2i","4w","4h","3i","5w","5h","4i","7w","6h","5i","7h","6i","7i","8i","9i","Pw","Gw","Sw","Lw","Pu"]
     var clubData = ["Dr":"Driver","w":"Wood","h":"Hybrid","i":"Iron","Pw":"Pitching Wedge","Gw":"Gap Wedge","Sw":"Sand Wedge","Lw":"Lob Wedge","Pu":"Putter"]
     var cardViewMArray = NSMutableArray()
@@ -150,10 +150,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // \
     @IBAction func notifiAction(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "OAD", bundle: nil)
-//        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
-//        TIOADViewController
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
+        let storyboard = UIStoryboard(name: "OAD", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
@@ -511,7 +510,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         var dataPoints = [String]()
         var dataValues = [Double]()
         for data in self.strokesGainedData{
-            dataPoints.append(data.clubType)
+            dataPoints.append(data.clubType.localized())
             dataValues.append((data.clubStrokesGained / Double(totalCaddie)).rounded(toPlaces: 2))
         }
         let demolbl = DemoLabel()
@@ -645,13 +644,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - mySwingAction
     @objc func mySwingAction(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        /*let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
         viewCtrl.linkStr = "https://www.indiegogo.com/projects/golfication-x-ai-powered-golf-super-wearable/x/17803765#/"
         viewCtrl.fromIndiegogo = false
         viewCtrl.fromNotification = false
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
-//        getSwingData()
+        self.navigationController?.pushViewController(viewCtrl, animated: true)*/
+        getSwingData()
     }
     
     func getSwingData() {
@@ -706,7 +705,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - setInitialUI
     func setInitialUI(){
         btnPreOrder.layer.cornerRadius = 3.0
-        btnPreOrder.setTitle("Pre order Now!".localized(), for: .normal)
+        btnPreOrder.setTitle(" " + "Pre order Now!".localized() + " ", for: .normal)
         //        viewOnCourse.layer.cornerRadius = 3.0
         
         lblAvgRound.setCorner(color: UIColor(rgb:0x939393).cgColor)
@@ -741,6 +740,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         btnProfileBasic.layer.cornerRadius = 3.0
         btnUpgrade.layer.cornerRadius = 3.0
         
+        btnContinue.setTitle(" " + "Continue".localized() + " ", for: .normal)
         btnContinue.layer.borderWidth = 1.0
         btnContinue.layer.borderColor = UIColor.glfBluegreen.cgColor
         btnContinue.layer.cornerRadius = 3.0
@@ -749,6 +749,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         btnScoreDetail.layer.borderColor = UIColor.glfBluegreen.cgColor
         btnScoreDetail.layer.cornerRadius = 3.0
         
+        btnStartGame.setTitle(" " + "Start".localized() + " ", for: .normal)
         btnStartGame.layer.borderWidth = 1.0
         btnStartGame.layer.borderColor = UIColor.glfBluegreen.cgColor
         btnStartGame.layer.cornerRadius = 3.0
@@ -777,6 +778,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         btnPractice.layer.cornerRadius = 3.0
         btnPractice.layer.masksToBounds = true
+        
+        btnInvite.setTitle(" " + "Invite Now".localized() + " ", for: .normal)
         
         btnInvite.layer.cornerRadius = 3.0
     }
@@ -1767,7 +1770,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                     self.progressView.hide(navItem: self.navigationItem)
                     self.btnContinue.isEnabled = true
-                    self.lblContinueGolfName.text = self.selectedHomeGolfName + " - \(self.holeType)" + " holes"
+                    self.lblContinueGolfName.text = self.selectedHomeGolfName + " - \(self.holeType) " + "Holes".localized()
                 }
             })
         }

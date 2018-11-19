@@ -638,6 +638,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             btnOneHole.setTitleColor(UIColor.white, for: .normal)
         }
         
+        btnEnd.setTitle(" " + "End Round".localized() + " ", for: .normal)
         btnEnd.setCorner(color: UIColor(rgb: 0x7094B3).cgColor)
         
         btnRequestMapping.setCorner(color: UIColor.clear.cgColor)
@@ -2429,12 +2430,12 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let header = UIView()
         header.backgroundColor = UIColor.white
         let lblPlayer = UILabel()
-        lblPlayer.frame = CGRect(x: 0, y: 0, width: 60, height: 25)
+        lblPlayer.frame = CGRect(x: 0, y: 0, width: 90, height: 25)
         lblPlayer.text = "Players".localized()
         lblPlayer.textColor = UIColor.black
         lblPlayer.backgroundColor = UIColor.clear
         lblPlayer.textAlignment = NSTextAlignment.left
-        lblPlayer.font = UIFont.systemFont(ofSize: 15.0)
+        lblPlayer.font = UIFont.systemFont(ofSize: 11.0)
         header.addSubview(lblPlayer)
         
         let lblStroke = UILabel()
@@ -2443,7 +2444,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblStroke.textColor = UIColor.black
         lblStroke.backgroundColor = UIColor.clear
         lblStroke.textAlignment = NSTextAlignment.right
-        lblStroke.font = UIFont.systemFont(ofSize: 15.0)
+        lblStroke.font = UIFont.systemFont(ofSize: 11.0)
         header.addSubview(lblStroke)
         
         let lblThru = UILabel()
@@ -2452,7 +2453,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblThru.textColor = UIColor.black
         lblThru.backgroundColor = UIColor.clear
         lblThru.textAlignment = NSTextAlignment.right
-        lblThru.font = UIFont.systemFont(ofSize: 15.0)
+        lblThru.font = UIFont.systemFont(ofSize: 11.0)
         header.addSubview(lblThru)
         
         let lblToPar = UILabel()
@@ -2461,7 +2462,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblToPar.textColor = UIColor.black
         lblToPar.backgroundColor = UIColor.clear
         lblToPar.textAlignment = NSTextAlignment.right
-        lblToPar.font = UIFont.systemFont(ofSize: 15.0)
+        lblToPar.font = UIFont.systemFont(ofSize: 11.0)
         header.addSubview(lblToPar)
         
         return header

@@ -995,11 +995,11 @@ extension BarChartView {
         }
         let chartDataSet = BarChartDataSet(values: dataEntriesFor18Hole, label: "" )
         chartDataSet.setColor(UIColor.glfSeafoamBlue)
-        chartDataSet.label = "18 Holes"
+        chartDataSet.label = "18 Holes".localized()
         
         let chartDataSet2 = BarChartDataSet(values: dataEntriesFor09Hole, label: "")
         chartDataSet2.setColor(UIColor.glfWhite)
-        chartDataSet2.label = "9 Holes"
+        chartDataSet2.label = "9 Holes".localized()
 
         let chartData = BarChartData(dataSets: [chartDataSet,chartDataSet2])
         chartView.data = chartData

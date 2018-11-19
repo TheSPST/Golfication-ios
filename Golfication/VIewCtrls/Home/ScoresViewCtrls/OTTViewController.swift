@@ -121,10 +121,10 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             if !Constants.isProMode {
                 
 //                cardViewSpreadOffTee.makeBlurView(targetView: cardViewSpreadOffTee)
-                self.setProLockedUI(targetView: cardViewSpreadOffTee, title: "Spread Off The Tee")
+                self.setProLockedUI(targetView: cardViewSpreadOffTee, title: "Spread of the tee".localized())
                 
 //                cardViewDistanceOffTee.makeBlurView(targetView: cardViewDistanceOffTee)
-                self.setProLockedUI(targetView: cardViewDistanceOffTee, title: "Drive Distance")
+                self.setProLockedUI(targetView: cardViewDistanceOffTee, title: "Drive Distance".localized())
                 
                 lblProSpreadOffTee.isHidden = true
                 lblProDistanceOffTee.isHidden = true
@@ -623,7 +623,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         }
     }
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "Off The Tee")
+        return IndicatorInfo(title: "Off the Tee".localized())
     }
 }
 

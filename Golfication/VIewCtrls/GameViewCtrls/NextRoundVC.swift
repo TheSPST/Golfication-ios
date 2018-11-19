@@ -36,7 +36,8 @@ class NextRoundVC: UIViewController {
     
     @IBOutlet weak var popUpSubView: CardView!
     
-    
+    @IBOutlet weak var btnSkip: UIButton!
+
     let progressView = SDLoader()
     
     var selectedMode = 0
@@ -216,7 +217,7 @@ class NextRoundVC: UIViewController {
         btnPrevShotTrack.setImage(#imageLiteral(resourceName: "ultimate_inactive"), for: .normal)
         
         if selectedMode == 1{
-            let rfTitle = NSAttributedString(string: "Post-Game Shot-Tracker",attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
+            let rfTitle = NSAttributedString(string: "Post-Game Shot Tracking".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
             btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
             btnPrevRf.setImage(#imageLiteral(resourceName: "post_inactive"), for: .normal)
         }
@@ -264,7 +265,7 @@ class NextRoundVC: UIViewController {
         imageVIew.image = #imageLiteral(resourceName: "range_finder")
         
         if selectedMode == 1{
-            let rfTitle = NSAttributedString(string: "Post-Game Shot-Tracker",attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
+            let rfTitle = NSAttributedString(string: "Post-Game Shot Tracking".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
             btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
             btnPrevRf.setImage(#imageLiteral(resourceName: "post_active"), for: .normal)
             
@@ -358,6 +359,7 @@ class NextRoundVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "New Round".localized()
+        btnSkip.setTitle(" " + "Skip".localized() + " ", for: .normal)
         //        overlappingView.makeBlurView(targetView: overlappingView)
         btnRequestMapping.setCorner(color: UIColor.clear.cgColor)
         
@@ -366,7 +368,7 @@ class NextRoundVC: UIViewController {
             prevShotBottomView.isHidden = true
             btnPrevShotTrack.isHidden = true
             
-            let rfTitle = NSAttributedString(string: "Post-Game Shot-Tracker",attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
+            let rfTitle = NSAttributedString(string: "Post-Game Shot Tracking".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
             btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
             btnPrevRf.setImage(#imageLiteral(resourceName: "post_inactive"), for: .normal)
             

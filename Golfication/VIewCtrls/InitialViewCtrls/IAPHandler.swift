@@ -125,15 +125,6 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
                     // --------- Send Data to Firebase -----------
                     if(Auth.auth().currentUser!.uid.count > 1){
                         
-                        /*
-                         let calendar = NSCalendar.current
-                         let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(beginTimestamp)))
-                         let timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-                         let formatter = DateFormatter()
-                         formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
-                         let expiryStr = formatter.string(from: timeEnd!)*/
-                        
-//                        let dateNow = Date()
                         let dateNow = NSDate(timeIntervalSince1970: (TimeInterval(beginTimestamp/1000)))
 
                         var date = Date()
@@ -145,11 +136,15 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
                             date = calendar.date(byAdding: .month, value: 12, to: dateNow as Date)!
                         }
                         let formatter = DateFormatter()
+                        formatter.locale = Locale(identifier: "en")
                         formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
+
                         let expiryStr = formatter.string(from: date)
                         
                         let formatter2 = DateFormatter()
+                        formatter2.locale = Locale(identifier: "en")
                         formatter2.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
                         let myString2 = formatter2.string(from: (transaction.transactionDate)!!)
                         let yourDate2 = formatter2.date(from: myString2)
                         formatter2.dateFormat = "dd-MMM-yyyy  HH:mm:ss"

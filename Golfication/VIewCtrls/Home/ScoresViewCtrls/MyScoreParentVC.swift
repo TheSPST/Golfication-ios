@@ -37,6 +37,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         
         super.viewDidLoad()
         
+        self.title = "My Scores".localized()
         Constants.finalFilterDic.removeAllObjects()
         buttonBarView.isHidden = true
         self.setupActivityIndicator()

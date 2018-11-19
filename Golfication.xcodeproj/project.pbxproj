@@ -86,8 +86,6 @@
 		3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */; };
 		3EDC6BBB2109E97A009B6F49 /* ExitGamePopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EDC6BB92109E97A009B6F49 /* ExitGamePopUpView.xib */; };
 		3EE21F9A20E2129B009B2C60 /* NextRoundVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE21F9920E2129A009B2C60 /* NextRoundVC.swift */; };
-		3EEC413820E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEC413720E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift */; };
-		3EEC413A20E0D1AF0093D0CC /* OADFirmwareImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEC413920E0D1AF0093D0CC /* OADFirmwareImage.swift */; };
 		3EEC413E20E1031D0093D0CC /* StartGameModeObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEC413D20E1031D0093D0CC /* StartGameModeObj.swift */; };
 		3EF2A0A4200A2AF700089E9F /* DemoFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF2A0A3200A2AF700089E9F /* DemoFooterView.swift */; };
 		3EF459B7217F44570018AE37 /* ARKitEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF459B6217F44570018AE37 /* ARKitEngine.swift */; };
@@ -352,8 +350,6 @@
 		3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExitGamePopUpView.swift; sourceTree = "<group>"; };
 		3EDC6BB92109E97A009B6F49 /* ExitGamePopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExitGamePopUpView.xib; sourceTree = "<group>"; };
 		3EE21F9920E2129A009B2C60 /* NextRoundVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NextRoundVC.swift; sourceTree = "<group>"; };
-		3EEC413720E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDeviceFrameworkViewCtrl.swift; sourceTree = "<group>"; };
-		3EEC413920E0D1AF0093D0CC /* OADFirmwareImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OADFirmwareImage.swift; sourceTree = "<group>"; };
 		3EEC413D20E1031D0093D0CC /* StartGameModeObj.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartGameModeObj.swift; sourceTree = "<group>"; };
 		3EF2A0A3200A2AF700089E9F /* DemoFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoFooterView.swift; sourceTree = "<group>"; };
 		3EF459B6217F44570018AE37 /* ARKitEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARKitEngine.swift; sourceTree = "<group>"; };
@@ -748,8 +744,6 @@
 			isa = PBXGroup;
 			children = (
 				3E035F78215293F000019014 /* TI_OAD */,
-				3EEC413920E0D1AF0093D0CC /* OADFirmwareImage.swift */,
-				3EEC413720E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift */,
 			);
 			path = DeviceFramework;
 			sourceTree = "<group>";
@@ -1653,7 +1647,6 @@
 				4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */,
 				3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */,
 				3EB5D2F9215F78CD007C55E3 /* GolficationXFirmware.swift in Sources */,
-				3EEC413820E0D15E0093D0CC /* UpdateDeviceFrameworkViewCtrl.swift in Sources */,
 				4BB26D451FF77EED001E9556 /* ServerHandler.swift in Sources */,
 				3E57646B215BDA5400658D78 /* ProfilePhotoDetailVC.swift in Sources */,
 				3E15D32E1FFE0800005F4068 /* notificationExtension.swift in Sources */,
@@ -1746,7 +1739,6 @@
 				4B7F52192158DC6F002E328A /* PKCCropViewController.swift in Sources */,
 				4B00679A1F9E151D0060E6BB /* CardView.swift in Sources */,
 				3E035F88215293F000019014 /* TIOADDeviceTableViewCell.swift in Sources */,
-				3EEC413A20E0D1AF0093D0CC /* OADFirmwareImage.swift in Sources */,
 				4B7E5EFC20D118BA001847CC /* BackgroundMapStats.swift in Sources */,
 				4BB26CC91FF77E2B001E9556 /* TPKeyboardAvoidingTableView.m in Sources */,
 				4BB26D251FF77EDB001E9556 /* StrokesGainedVC.swift in Sources */,
@@ -1942,7 +1934,7 @@
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Golfication/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1968,7 +1960,7 @@
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Golfication/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";

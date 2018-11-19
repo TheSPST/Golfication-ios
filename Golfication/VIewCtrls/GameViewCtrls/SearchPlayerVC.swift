@@ -291,7 +291,7 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             let userId = ref!.child("friends").childByAutoId().key
 
             alert.addTextField { (textField) in
-                textField.placeholder = "Name"
+                textField.placeholder = "Name".localized()
                 textField.text = ""
             }
             

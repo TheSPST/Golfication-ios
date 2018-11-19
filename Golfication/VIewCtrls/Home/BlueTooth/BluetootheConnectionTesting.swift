@@ -34,7 +34,7 @@ class BluetootheConnectionTesting: UIViewController {
     @IBOutlet weak var handiRightView: UIView!
     @IBOutlet weak var btnDeviceAfterConnected: UIButton!
     @IBOutlet weak var lblToDiffer: UILabel!
-    @IBOutlet weak var barBtnBLE: UIBarButtonItem!
+    
     
     var isFinishGame = false
     var isDeviceSetup = false
@@ -57,7 +57,7 @@ class BluetootheConnectionTesting: UIViewController {
     var isPracticeMatch = false
     var currentGameId = Int()
     var totalAssigned = Int()
-    
+    var barBtnBLE = UIBarButtonItem()
     var golfXPopupView: UIView!
     var btnRetry: UIButton!
     var btnNoDevice: UIButton!
@@ -74,9 +74,9 @@ class BluetootheConnectionTesting: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.setupFinished(_:)), name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.responseFirstCommand(_:)), name: NSNotification.Name(rawValue: "responseFirstCommand"), object: nil)
+            barBtnBLE = UIBarButtonItem(image: #imageLiteral(resourceName: "golficationBarG"), style: .plain, target: self, action: #selector(self.btnActionConnectBL(_:)))
         if Constants.isDevice{
             self.navigationItem.rightBarButtonItem = barBtnBLE
-            barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
             checkDeviceStatus()
         }
         else{
@@ -103,7 +103,7 @@ class BluetootheConnectionTesting: UIViewController {
         self.golfXPopupView.removeFromSuperview()
         showPopUp()
     }
-    @IBAction func btnActionConnectBL(_ sender: Any) {
+    @objc func btnActionConnectBL(_ sender: UIBarButtonItem) {
         Constants.ble  = BLE()
         Constants.ble.startScanning()
         showPopUp()
@@ -209,7 +209,9 @@ class BluetootheConnectionTesting: UIViewController {
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         self.navigationItem.rightBarButtonItem?.isEnabled = true
 //        self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-        self.golfXPopupView.removeFromSuperview()
+        if golfXPopupView != nil{
+            self.golfXPopupView.removeFromSuperview()
+        }
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
         Constants.ble.stopScanning()
         self.view.makeToast("Device is connected.")

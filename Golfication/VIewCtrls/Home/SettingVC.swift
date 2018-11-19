@@ -167,6 +167,18 @@ class SettingVC: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0{
+            return "Distance".localized()
+        }
+        else if section == 1{
+            return "Strokes Gained".localized()
+        }
+        else{
+            return "Rangefinder Distance Notification"
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath as IndexPath)
@@ -204,10 +216,10 @@ class SettingVC: UITableViewController {
             }
             switch indexPath.row{
             case 0: cell.textLabel?.text = "PGA Tour".localized()
-            case 1: cell.textLabel?.text = "Men's-Scratch".localized()
-            case 2: cell.textLabel?.text = "Men's-18Handicap".localized()
-            case 3: cell.textLabel?.text = "Women's-Scratch".localized()
-            case 4: cell.textLabel?.text = "Women's-18 Handicap".localized()
+            case 1: cell.textLabel?.text = "Men's - Scratch".localized()
+            case 2: cell.textLabel?.text = "Men's - 18 Handicap".localized()
+            case 3: cell.textLabel?.text = "Women's - Scratch".localized()
+            case 4: cell.textLabel?.text = "Women's - 18 Handicap".localized()
             default: break
             }
         }else{

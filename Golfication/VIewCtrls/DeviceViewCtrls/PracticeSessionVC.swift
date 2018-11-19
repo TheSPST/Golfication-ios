@@ -56,7 +56,15 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     @IBOutlet weak var lbl4TempoB: UILabel!
     @IBOutlet weak var lbl5BackSwingB: UILabel!
     @IBOutlet weak var lbl6HandSpeedB: UILabel!
-
+    @IBOutlet weak var lblbackSwing: UILabel!
+    @IBOutlet weak var lbldownSwing: UILabel!
+    
+    @IBOutlet weak var lblClubName: UILabel!
+    @IBOutlet weak var lblClubName1: UILabel!
+    @IBOutlet weak var lblClubName2: UILabel!
+    @IBOutlet weak var lblClubName3: UILabel!
+    @IBOutlet weak var lblClubName4: UILabel!
+    
     
     
     var shotBtnViews = [UIView]()
@@ -82,10 +90,9 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         super.viewDidLoad()
         self.shotBtnViews = [view1SwingScore,view2Clubhead,view3ClubPlane,view4Tempo,view5BackSwing,view6HandSpeed]
         self.shotTopViews = [view1SwingV,view2ClubheadV,view3ClubPlaneV,view4TempoV,view5BackSwingV,view6HandSpeedV]
-        self.shotLbl = [lbl1SwingV,lbl2ClubheadV,lbl3ClubPlaneV,lbl4TempoV,lbl5BackSwingV,lbl6HandSpeedV]
-        self.shotLblB = [lbl1SwingB,lbl2ClubheadB,lbl3ClubPlaneB,lbl4TempoB,lbl5BackSwingB,lbl6HandSpeedB]
-
-
+        self.shotLbl = [lbl1SwingV,lbl2ClubheadV,lbl3ClubPlaneV,lbl4TempoV,lbl5BackSwingV,lbl6HandSpeedV,lbldownSwing,lblbackSwing]
+        self.shotLblB = [lbl1SwingB,lbl2ClubheadB,lbl3ClubPlaneB,lbl4TempoB,lbl5BackSwingB,lbl6HandSpeedB,lbldownSwing,lblbackSwing]
+        
         initTempArr()
         btnTapped(tagVal:0)
         for i in 0..<self.tempArray.count{
@@ -107,23 +114,38 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         customColorSlider.actionBlock={slider,newvalue in
             debugPrint("newvalue== ",newvalue)
         }
+        lblClubName.textColor = UIColor.glfGreenBlue
+        lblClubName1.textColor = UIColor.glfGreenBlue
+        lblClubName2.textColor = UIColor.glfGreenBlue
+        lblClubName3.textColor = UIColor.glfGreenBlue
+        lblClubName4.textColor = UIColor.glfGreenBlue
+        
     }
         
     func initTempArr(){
         if self.swingDetails.count != 0{
-            let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as! Double
+            let backSwingAngle = self.swingDetails.value(forKey: "backSwingAngle") as! Double
+            let backSwing = self.swingDetails.value(forKey: "backSwing") as! Double
             let downSwing = self.swingDetails.value(forKey: "downSwing") as! Double
             let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
             let handSpeed = self.swingDetails.value(forKey: "handSpeed") as! Double
             let tempo = self.swingDetails.value(forKey: "tempo") as! Double
             let swingScore = self.swingDetails.value(forKey: "swingScore") as! Int
             self.club = self.swingDetails.value(forKey: "club") as! String
+            self.club = BackgroundMapStats.getClubName(club: self.club).uppercased()
             tempArray.append("\(Int(swingScore))")
             tempArray.append("\(Int(clubSpeed))")
             tempArray.append("+\(Int(5))%")
             tempArray.append("\(tempo.rounded(toPlaces: 1)) : 1")
-            tempArray.append("\(Int(backSwing))")
+            tempArray.append("\(Int(backSwingAngle))")
             tempArray.append("\(Int(handSpeed))")
+            tempArray.append("\(downSwing.rounded(toPlaces: 2))")
+            tempArray.append("\(backSwing.rounded(toPlaces: 2))")
+            lblClubName.text = self.club
+            lblClubName1.text = self.club
+            lblClubName2.text = self.club
+            lblClubName3.text = self.club
+            lblClubName4.text = self.club
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -204,86 +226,4 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             }
         }
     }
-    /*func btnTapped(tagVal:Int) {
-        for sub in self.scrollContainerView.subviews{
-            if(sub.isKind(of: UIView.self)) && !(sub.isKind(of: UIStackView.self)){
-                sub.isHidden = true
-                if sub.tag == tagVal{
-                    sub.isHidden = false
-                }
-            }
-            for sv in sub.subviews{
-                if (sv.isKind(of: UIStackView.self)){
-                    for label in sv.subviews{
-                        if (label.isKind(of: UILabel.self)) && label.tag >= 111{
-                            for i in 0..<tempArray.count{
-                                if label.tag == i + 111{
-                                 (label as? UILabel)?.text = tempArray[i]
-                                }
-                            }
-                        }
-                    }
-                }
-                if (sv.isKind(of: LineChartView.self)){
-                    (sv as? LineChartView)?.setLineChartHandSpeed(dataPoints:["test1", "test2", "test3", "test4"] , values: [10, 50, 19, 100], chartView: (sv as? LineChartView)!,color:UIColor.glfFlatBlue)
-                }
-            }
-        }
-        for sub in self.btnContainerSV1.subviews{
-            if (sub.isKind(of: UIView.self)){
-                sub.layer.cornerRadius = 3.0
-                sub.layer.borderWidth = 1.0
-                sub.layer.borderColor = UIColor(rgb: 0xDBE7EE).cgColor
-                
-                if sub.tag == tagVal{
-                    sub.layer.cornerRadius = 3.0
-                    sub.layer.borderWidth = 1.0
-                    sub.layer.borderColor = UIColor.glfFlatBlue.cgColor
-                }
-            }
-            for label in sub.subviews{
-                if (label.isKind(of: UILabel.self)) && label.tag > 500{
-                    (label as? UILabel)?.textColor = UIColor.lightGray
-                    if label.tag == tagVal + 555{
-                        (label as? UILabel)?.textColor = UIColor.glfFlatBlue
-                    }
-                }
-                else if (label.isKind(of: UILabel.self)) && label.tag >= 0{
-                    for i in 0..<tempArray.count{
-                        if i == label.tag{
-                            (label as? UILabel)?.text = tempArray[i]
-                        }
-                    }
-                }
-            }
-        }
-        for sub in self.btnContainerSV2.subviews{
-            if (sub.isKind(of: UIView.self)){
-                sub.layer.cornerRadius = 3.0
-                sub.layer.borderWidth = 1.0
-                sub.layer.borderColor = UIColor(rgb: 0xDBE7EE).cgColor
-                
-                if sub.tag == tagVal{
-                    sub.layer.cornerRadius = 3.0
-                    sub.layer.borderWidth = 1.0
-                    sub.layer.borderColor = UIColor.glfFlatBlue.cgColor
-                }
-            }
-            for label in sub.subviews{
-                if (label.isKind(of: UILabel.self)) && label.tag > 500{
-                    (label as? UILabel)?.textColor = UIColor.lightGray
-                    if label.tag == tagVal + 555{
-                        (label as? UILabel)?.textColor = UIColor.glfFlatBlue
-                    }
-                }
-                else if (label.isKind(of: UILabel.self)) && label.tag >= 0{
-                    for i in 0..<tempArray.count{
-                        if i == label.tag{
-                            (label as? UILabel)?.text = tempArray[i]
-                        }
-                    }
-                }
-            }
-        }
-    }*/
 }

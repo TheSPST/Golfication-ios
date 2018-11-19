@@ -12,7 +12,7 @@ import FirebaseAuth
 import UICircularProgressRing
 import Firebase
 class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableViewDataSource,CustomProModeDelegate{
-    let catagoryWise = ["Off The Tee","Approach","Around The Green","Putting"]
+    let catagoryWise = ["Off the Tee","Approach","Around The Green","Putting"]
     let clubs = ["Dr","3w","1i","1h","2h","3h","2i","4w","4h","3i","5w","5h","4i","7w","6h","5i","7h","6i","7i","8i","9i","Pw","Gw","Sw","Lw","Pu"]
     var strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
     var parWiseValues = ParWise()
@@ -73,7 +73,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     
     @IBOutlet weak var scattredSpreadOfTheTeeChart: ScatterChartView!
     @IBOutlet weak var lblOTTLeft: UILabel!
-    @IBOutlet weak var lblOTTCenter: UILabel!
+    @IBOutlet weak var lblOTTCenter: UILocalizedLabel!
     @IBOutlet weak var lblOTTRight: UILabel!
     
     @IBOutlet weak var sandAccuracyScatterChart: ScatterChartView!
@@ -684,11 +684,11 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             approchAccuracyScatterChart.xAxis.enabled = false
             approchAccuracyScatterChart.xAxis.axisMaximum = 90
             approchAccuracyScatterChart.xAxis.axisMinimum = -90
-            lblLong.text = "Long \(100*long/sumOfLSRL)%"
-            lblShort.text = "Short \(100*short/sumOfLSRL)%"
-            lblRight.text = "Right \(100*right/sumOfLSRL)%"
-            lblLeft.text = "Left \(100*left/sumOfLSRL)%"
-            lblHit.text = "Hit \(100*hit/sumOfLSRL)%"
+            lblLong.text = "Long".localized() + " \(100*long/sumOfLSRL)%"
+            lblShort.text = "Short".localized() + " \(100*short/sumOfLSRL)%"
+            lblRight.text = "Right".localized() + " \(100*right/sumOfLSRL)%"
+            lblLeft.text = "Left".localized() + " \(100*left/sumOfLSRL)%"
+            lblHit.text = "Hit".localized() + " \(100*hit/sumOfLSRL)%"
         }else{
             self.cardForApproachAccuracy2.isHidden = true
             if let index = self.scrollArray.index(of: cardForApproachAccuracy2){
@@ -818,17 +818,17 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             chippingAccuracyPremimumScatterView.xAxis.axisMaximum = 90
             chippingAccuracyPremimumScatterView.xAxis.axisMinimum = -90
 
-            lblLongChip.text = "Long \(100*long/sumOfLSRL)%"
-            lblShortChip.text = "Short \(100*short/sumOfLSRL)%"
-            lblRightChip.text = "Right \(100*right/sumOfLSRL)%"
-            lblLeftChip.text = "Left \(100*left/sumOfLSRL)%"
-            lblHitChip.text = "Hit \(100*hit/sumOfLSRL)%"
+            lblLongChip.text = "Long".localized() + " \(100*long/sumOfLSRL)%"
+            lblShortChip.text = "Short".localized() + " \(100*short/sumOfLSRL)%"
+            lblRightChip.text = "Right".localized() + " \(100*right/sumOfLSRL)%"
+            lblLeftChip.text = "Left".localized() + " \(100*left/sumOfLSRL)%"
+            lblHitChip.text = "Hit".localized() + " \(100*hit/sumOfLSRL)%"
             
-            lblPremiumLongChip.text = "Long \(100*long/sumOfLSRL)%"
-            lblPremiumShortChip.text = "Short \(100*short/sumOfLSRL)%"
-            lblPremiumRightChip.text = "Right \(100*right/sumOfLSRL)%"
-            lblPremiumLeftChip.text = "Left \(100*left/sumOfLSRL)%"
-            lblPremiumHitChip.text = "Hit \(100*hit/sumOfLSRL)%"
+            lblPremiumLongChip.text = "Long".localized() + " \(100*long/sumOfLSRL)%"
+            lblPremiumShortChip.text = "Short".localized() + " \(100*short/sumOfLSRL)%"
+            lblPremiumRightChip.text = "Right".localized() + " \(100*right/sumOfLSRL)%"
+            lblPremiumLeftChip.text = "Left".localized() + " \(100*left/sumOfLSRL)%"
+            lblPremiumHitChip.text = "Hit".localized() + " \(100*hit/sumOfLSRL)%"
 
         }else{
             self.cardForChippingAccuracy1.isHidden = true
@@ -911,7 +911,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         
         self.lblOTTRight.text = "Right Rough".localized() + " \(fairwayRightInPercentage)%"
 
-        self.lblOTTCenter.text = "Fairway \(fairwayHitInPercentage)%"
+        self.lblOTTCenter.text = "Fairway".localized() + " \(fairwayHitInPercentage)%"
         self.lblOTTLeft.text = "Left Rough".localized() + " \(fairwayLeftInPercentage)%"
 
         
@@ -934,7 +934,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         
     }
     func setViewParAveragesBarChart(){
-        let dataLable = ["Par3","Par4","Par5"]
+        let dataLable = ["Par".localized() + "3","Par".localized() + "4","Par".localized() + "5"]
+
         let dataPoints1 = [self.parWiseValues.three,self.parWiseValues.four,self.parWiseValues.five]
         barChartForParAverage.setStackedBarChart(dataPoints: dataLable, value1: dataPoints1 as! [Double] , chartView: barChartForParAverage,barWidth:0.4)
         if(self.parWiseValues.three == 0.0){
@@ -950,7 +951,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         finalScoreInPercentage.birdie = (allScoring[0].birdie*100)/totalSum
         finalScoreInPercentage.eagle = (allScoring[0].eagle*100)/totalSum
         print(finalScoreInPercentage)
-        let dataLabel = ["2Bs","Bogeys","Pars","Birdies","Eagles"]
+        let dataLabel = ["2" + "Bogey".localized(),"Bogey".localized(),"Par".localized(),"Birdie".localized(),"Eagles"]
         let dataPoints = [finalScoreInPercentage.doubleBogey,finalScoreInPercentage.bogey,finalScoreInPercentage.par,finalScoreInPercentage.birdie,finalScoreInPercentage.eagle]
         pieChartForScring.setChartForScoring(dataPoints: dataLabel, values: dataPoints as! [Double], chartView: pieChartForScring,color:UIColor.glfSeafoamBlue,isValueEnable: true)
         if(totalSum == 0){
@@ -1046,7 +1047,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         var dataValues = [Double]()
         for data in self.strokesGainedData{
             if(data.clubCount != 0){
-                dataPoints.append(data.clubType)
+                dataPoints.append(data.clubType.localized())
                 dataValues.append(data.clubStrokesGained)
             }
         }
@@ -1107,6 +1108,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             lblOTTRight.text = "Right Rough".localized()
             lblOTTLeft.text = "Left Rough".localized()
             lblOTTCenter.text = "Fairway".localized()
+        
         }else{
             self.cardForOTT.isHidden = true
             if let index = self.scrollArray.index(of: cardForOTT){
@@ -1158,11 +1160,11 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             sandAccuracyScatterChart.leftAxis.axisMinimum = -90
             sandAccuracyScatterChart.xAxis.axisMaximum = 150
             sandAccuracyScatterChart.xAxis.axisMinimum = -150
-            lblLongSnd.text = "Long \(100*long/sumOfLSRL)%"
-            lblShortSnd.text = "Short \(100*short/sumOfLSRL)%"
-            lblRightSnd.text = "Right \(100*right/sumOfLSRL)%"
-            lblLeftSnd.text = "Left \(100*left/sumOfLSRL)%"
-            lblHitSnd.text = "Hit \(100*hit/sumOfLSRL)%"
+            lblLongSnd.text = "Long".localized() + " \(100*long/sumOfLSRL)%"
+            lblShortSnd.text = "Short".localized() + " \(100*short/sumOfLSRL)%"
+            lblRightSnd.text = "Right".localized() + " \(100*right/sumOfLSRL)%"
+            lblLeftSnd.text = "Left".localized() + " \(100*left/sumOfLSRL)%"
+            lblHitSnd.text = "Hit".localized() + " \(100*hit/sumOfLSRL)%"
         }else{
             self.cardForSandAccuracy.isHidden = true
             if let index = self.scrollArray.index(of: cardForSandAccuracy){
@@ -1535,6 +1537,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FinalScoreBoardTopCell") as! FinalScoreBoardTopCell
+        cell.btnViewScore.setTitle(" " + "Your Scorecard".localized() + " ", for: .normal)
         cell.btnViewScore.layer.cornerRadius = 3.0
         cell.btnHoleByHole.layer.cornerRadius = 3.0
         cell.btnHoleByHole.isHidden = false

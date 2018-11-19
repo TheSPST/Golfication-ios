@@ -76,18 +76,18 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="paT-Me-2Yi">
                                         <rect key="frame" x="0.0" y="0.0" width="290" height="508"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="wff-5F-ijf">
-                                                <rect key="frame" x="82" y="23" width="126" height="122.5"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="wff-5F-ijf">
+                                                <rect key="frame" x="75.5" y="23" width="139.5" height="122.5"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" image="GetStarted" translatesAutoresizingMaskIntoConstraints="NO" id="bXk-H3-wxa">
-                                                        <rect key="frame" x="0.0" y="0.0" width="126" height="90"/>
+                                                        <rect key="frame" x="6.5" y="0.0" width="126" height="90"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="126" id="H3C-Uo-pBk"/>
                                                             <constraint firstAttribute="height" constant="90" id="y3o-yN-2wz"/>
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GET STARTED!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3A5-JU-LaI" customClass="UILocalizedLabel" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="97" width="126" height="25.5"/>
+                                                        <rect key="frame" x="0.0" y="97" width="139.5" height="25.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Semibold" family="SF Pro Display" pointSize="21"/>
                                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.74776327054794522" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -95,7 +95,7 @@
                                                 </subviews>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Play with your friends and pro players" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fj4-yy-fZb" customClass="UILocalizedLabel" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="14" y="153.5" width="262.5" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="153.5" width="290" height="20.5"/>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.74618471746575343" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -119,6 +119,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstItem="Fj4-yy-fZb" firstAttribute="leading" secondItem="paT-Me-2Yi" secondAttribute="leading" id="6kB-Rf-2W3"/>
                                             <constraint firstItem="rPg-RN-s4h" firstAttribute="leading" secondItem="paT-Me-2Yi" secondAttribute="leading" constant="26" id="7yz-YU-i9n"/>
                                             <constraint firstItem="wff-5F-ijf" firstAttribute="centerX" secondItem="paT-Me-2Yi" secondAttribute="centerX" id="G2h-x4-lcX"/>
                                             <constraint firstItem="rPg-RN-s4h" firstAttribute="centerX" secondItem="Fj4-yy-fZb" secondAttribute="centerX" id="IOs-K7-Kw3"/>
@@ -130,6 +131,7 @@
                                             <constraint firstItem="Bdn-zs-Tls" firstAttribute="leading" secondItem="paT-Me-2Yi" secondAttribute="leading" id="iru-iV-Xgx"/>
                                             <constraint firstItem="Fj4-yy-fZb" firstAttribute="top" secondItem="wff-5F-ijf" secondAttribute="bottom" constant="8" id="iuE-Pu-gOK"/>
                                             <constraint firstItem="rPg-RN-s4h" firstAttribute="centerX" secondItem="paT-Me-2Yi" secondAttribute="centerX" id="o24-9Z-OtR"/>
+                                            <constraint firstAttribute="trailing" secondItem="Fj4-yy-fZb" secondAttribute="trailing" id="wPY-Fd-DHM"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -391,9 +393,9 @@
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" secureTextEntry="YES"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bON-5t-8W8" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="38" y="159" width="78" height="24"/>
+                                                <rect key="frame" x="38" y="159" width="73" height="24"/>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="10"/>
-                                                <state key="normal" title="Forgot Password?">
+                                                <state key="normal" title="Forgot Password">
                                                     <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="0.74835188360000005" colorSpace="calibratedRGB"/>
                                                 </state>
                                                 <connections>
@@ -1295,11 +1297,8 @@
                                         <rect key="frame" x="10" y="47" width="300" height="30"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dyj-2l-U9O" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="56" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="56" id="THi-T2-sDZ"/>
-                                                </constraints>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="15"/>
                                                 <state key="normal" title="Skip">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1309,11 +1308,8 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0PW-GX-wnK" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="230" y="0.0" width="70" height="30"/>
+                                                <rect key="frame" x="269" y="0.0" width="31" height="30"/>
                                                 <color key="backgroundColor" red="0.96470588239999999" green="0.72549019609999998" blue="0.2156862745" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="70" id="Lho-Ak-IKJ"/>
-                                                </constraints>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="15"/>
                                                 <state key="normal" title="Next">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1350,6 +1346,7 @@
                         <outlet property="btnHandiRight" destination="cB0-da-RzC" id="gso-VX-Mfv"/>
                         <outlet property="btnNext" destination="0PW-GX-wnK" id="RXU-vg-qoR"/>
                         <outlet property="btnSearch" destination="hdu-Pd-IEZ" id="mbr-WA-4oI"/>
+                        <outlet property="btnSkip" destination="Dyj-2l-U9O" id="QBd-5X-0qx"/>
                         <outlet property="courseTblView" destination="yLZ-oc-eXu" id="NNe-SH-6U0"/>
                         <outlet property="golfBagTblView" destination="wiX-yU-i9c" id="M8p-7o-Kqw"/>
                         <outlet property="golfTblHConstraint" destination="1fu-vd-fuq" id="LYA-mR-c8s"/>

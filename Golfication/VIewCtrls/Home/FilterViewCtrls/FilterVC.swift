@@ -41,38 +41,38 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
         self.fliterCollectionView.allowsMultipleSelection = true
         
         if self.fromSwingSession{
-            section2 = ["Practice", "Regular", "Tournament", "All"]
+            section2 = ["Practice", "Regular", "Tournament", "All".localized()]
             allSections.append(section2 as NSArray)
         }
         else if self.fromSwingPerform{
-            section1 = ["10 Rounds", "20 Rounds", "50 Rounds", "30 Days", "90 Days", "180 Days", "All"]
-            section2 = ["Practice", "Regular", "Tournament", "All"]
-            section3 = ["Dr", "3w", "5w", "Hy", "3i", "4i","5i", "6i","7i","8i","9i", "Pw","Sw","Pu","All"]
+            section1 = ["10 " + "Rounds".localized(), "20 " + "Rounds".localized(), "50 " + "Rounds".localized(), "30 " + "Days".localized(), "90 " + "Days".localized(), "180 " + "Days".localized(), "All".localized()]
+            section2 = ["Practice", "Regular", "Tournament", "All".localized()]
+            section3 = ["Dr", "3w", "5w", "Hy", "3i", "4i","5i", "6i","7i","8i","9i", "Pw","Sw","Pu","All".localized()]
             
             allSections.append(section1 as NSArray)
             allSections.append(section2 as NSArray)
             allSections.append(section3 as NSArray)
         }
         else{
-            section1 = ["10 Rounds", "20 Rounds", "50 Rounds", "30 Days", "90 Days", "180 Days", "All"]
+            section1 = ["10 " + "Rounds".localized(), "20 " + "Rounds".localized(), "50 " + "Rounds".localized(), "30 " + "Days".localized(), "90 " + "Days".localized(), "180 " + "Days".localized(), "All".localized()]
             if !(self.fromScorePutting){
-                section3 = ["Dr", "3w", "5w", "Hy", "3i", "4i","5i", "6i","7i","8i","9i", "Pw","Sw","Pu","All"]
+                section3 = ["Dr", "3w", "5w", "Hy", "3i", "4i","5i", "6i","7i","8i","9i", "Pw","Sw","Pu","All".localized()]
                 }
-            section4 = ["9 holes", "18 holes","All"]
+            section4 = ["9 Holes".localized(), "18 Holes".localized(),"All".localized()]
 
             if  Constants.section5.count>0 {
             Constants.section5 = Constants.section5.removeDuplicates()
-                if Constants.section5.contains("All"){
+                if Constants.section5.contains("All".localized().localized()){
                     for i in 0..<Constants.section5.count{
-                        if Constants.section5[i] == "All"{
+                        if Constants.section5[i] == "All".localized(){
                             Constants.section5.remove(at: i)
-                            Constants.section5.insert("All", at: Constants.section5.count)
+                            Constants.section5.insert("All".localized(), at: Constants.section5.count)
                             break
                         }
                     }
                 }
                 else{
-                    Constants.section5.insert("All", at: Constants.section5.count)
+                    Constants.section5.insert("All".localized(), at: Constants.section5.count)
                 }
                 allSections.append(section1 as NSArray)
                 if !(self.fromScorePutting){
@@ -511,7 +511,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
         
         // -------------------- For all Selection ----------------------------
         
-        if commanArray[indexPath.item] == "All"{
+        if commanArray[indexPath.item] == "All".localized(){
             
             for i in 0..<commanArray.count{
                 
@@ -721,16 +721,16 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
             
             //---------- For secend last index selected, make all -----------
             
-            /*if ((indexPath.section==0) && (RSTypeArray.count == commanArray.count-1) && !(RSTypeArray.contains("All"))) ||
-                ((indexPath.section==1) && (PlayTypeArray.count == commanArray.count-1) && !(PlayTypeArray.contains("All"))) ||
-                ((indexPath.section==2) && (CSTypeArray.count == commanArray.count-1) && !(CSTypeArray.contains("All"))) ||
-                ((indexPath.section==3) && (HoleTypeArray.count == commanArray.count-1) && !(HoleTypeArray.contains("All"))) ||
-                ((indexPath.section==4) && (CoursesTypeArray.count == commanArray.count-1) && !(CoursesTypeArray.contains("All"))){*/
-            if ((RSTypeArray.count == commanArray.count-1) && !(RSTypeArray.contains("All"))) ||
-                ((PlayTypeArray.count == commanArray.count-1) && !(PlayTypeArray.contains("All"))) ||
-                ((CSTypeArray.count == commanArray.count-1) && !(CSTypeArray.contains("All"))) ||
-                ((HoleTypeArray.count == commanArray.count-1) && !(HoleTypeArray.contains("All"))) ||
-                ((CoursesTypeArray.count == commanArray.count-1) && !(CoursesTypeArray.contains("All"))){
+            /*if ((indexPath.section==0) && (RSTypeArray.count == commanArray.count-1) && !(RSTypeArray.contains("All".localized()))) ||
+                ((indexPath.section==1) && (PlayTypeArray.count == commanArray.count-1) && !(PlayTypeArray.contains("All".localized()))) ||
+                ((indexPath.section==2) && (CSTypeArray.count == commanArray.count-1) && !(CSTypeArray.contains("All".localized()))) ||
+                ((indexPath.section==3) && (HoleTypeArray.count == commanArray.count-1) && !(HoleTypeArray.contains("All".localized()))) ||
+                ((indexPath.section==4) && (CoursesTypeArray.count == commanArray.count-1) && !(CoursesTypeArray.contains("All".localized()))){*/
+            if ((RSTypeArray.count == commanArray.count-1) && !(RSTypeArray.contains("All".localized()))) ||
+                ((PlayTypeArray.count == commanArray.count-1) && !(PlayTypeArray.contains("All".localized()))) ||
+                ((CSTypeArray.count == commanArray.count-1) && !(CSTypeArray.contains("All".localized()))) ||
+                ((HoleTypeArray.count == commanArray.count-1) && !(HoleTypeArray.contains("All".localized()))) ||
+                ((CoursesTypeArray.count == commanArray.count-1) && !(CoursesTypeArray.contains("All".localized()))){
                 
                 for i in 0..<commanArray.count{
                     
@@ -847,7 +847,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
         let array = allSections[indexPath.section]
         commanArray = array as! [String]
         
-        if commanArray[indexPath.item] == "All"{
+        if commanArray[indexPath.item] == "All".localized(){
             if self.fromSwingSession{
                  if indexPath.section == 0{
                     PlayTypeArray.removeAll()
@@ -1054,87 +1054,87 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
             
             //------- if all index selected, on single tap ~ make "All button" deslected -------
             
-            if  (RSTypeArray.count>0 && (RSTypeArray.contains("All"))) || (PlayTypeArray.count>0 && (PlayTypeArray.contains("All"))) || (CSTypeArray.count>0 && (CSTypeArray.contains("All"))) || (HoleTypeArray.count>0 && (HoleTypeArray.contains("All"))) || (CoursesTypeArray.count>0 && (CoursesTypeArray.contains("All"))){
+            if  (RSTypeArray.count>0 && (RSTypeArray.contains("All".localized()))) || (PlayTypeArray.count>0 && (PlayTypeArray.contains("All".localized()))) || (CSTypeArray.count>0 && (CSTypeArray.contains("All".localized()))) || (HoleTypeArray.count>0 && (HoleTypeArray.contains("All".localized()))) || (CoursesTypeArray.count>0 && (CoursesTypeArray.contains("All".localized()))){
                 
                 var index: Int = 0
                 
                 if self.fromSwingSession{
-                    if indexPath.section == 0 && PlayTypeArray.count>0 && (PlayTypeArray.contains("All")){
-                        index = PlayTypeArray.index(of: "All")!
+                    if indexPath.section == 0 && PlayTypeArray.count>0 && (PlayTypeArray.contains("All".localized())){
+                        index = PlayTypeArray.index(of: "All".localized())!
                         PlayTypeArray.remove(at: index)
                     }
                 }
                 else if self.fromSwingPerform{
-                    if indexPath.section == 0 && RSTypeArray.count>0 && (RSTypeArray.contains("All")){
-                        //index = RSTypeArray.index(of: "All")!
+                    if indexPath.section == 0 && RSTypeArray.count>0 && (RSTypeArray.contains("All".localized())){
+                        //index = RSTypeArray.index(of: "All".localized())!
                         RSTypeArray.removeAll()
                         RSTypeArray = [String]()
                     }
-                    else if indexPath.section == 1 && PlayTypeArray.count>0 && (PlayTypeArray.contains("All")){
-                        index = PlayTypeArray.index(of: "All")!
+                    else if indexPath.section == 1 && PlayTypeArray.count>0 && (PlayTypeArray.contains("All".localized())){
+                        index = PlayTypeArray.index(of: "All".localized())!
                         PlayTypeArray.remove(at: index)
                     }
-                    else if indexPath.section == 2 && CSTypeArray.count>0 && (CSTypeArray.contains("All")){
-                        index = CSTypeArray.index(of: "All")!
+                    else if indexPath.section == 2 && CSTypeArray.count>0 && (CSTypeArray.contains("All".localized())){
+                        index = CSTypeArray.index(of: "All".localized())!
                         CSTypeArray.remove(at: index)
                     }
                 }
                 else
                 {
                     if self.fromScorePutting{
-                        if indexPath.section == 0 && RSTypeArray.count>0 && (RSTypeArray.contains("All")){
-                            //index = RSTypeArray.index(of: "All")!
+                        if indexPath.section == 0 && RSTypeArray.count>0 && (RSTypeArray.contains("All".localized())){
+                            //index = RSTypeArray.index(of: "All".localized())!
                             RSTypeArray.removeAll()
                             RSTypeArray = [String]()
                         }
-                        else if indexPath.section == 1 && HoleTypeArray.count>0 && (HoleTypeArray.contains("All")){
-                            index = HoleTypeArray.index(of: "All")!
+                        else if indexPath.section == 1 && HoleTypeArray.count>0 && (HoleTypeArray.contains("All".localized())){
+                            index = HoleTypeArray.index(of: "All".localized())!
                             HoleTypeArray.remove(at: index)
                         }
-                        else if indexPath.section == 2 && CoursesTypeArray.count>0 && (CoursesTypeArray.contains("All")){
-                            index = CoursesTypeArray.index(of: "All")!
+                        else if indexPath.section == 2 && CoursesTypeArray.count>0 && (CoursesTypeArray.contains("All".localized())){
+                            index = CoursesTypeArray.index(of: "All".localized())!
                             CoursesTypeArray.remove(at: index)
                         }
                     }
                     else{
-                        if indexPath.section == 0 && RSTypeArray.count>0 && (RSTypeArray.contains("All")){
-                            //index = RSTypeArray.index(of: "All")!
+                        if indexPath.section == 0 && RSTypeArray.count>0 && (RSTypeArray.contains("All".localized())){
+                            //index = RSTypeArray.index(of: "All".localized())!
                             RSTypeArray.removeAll()
                             RSTypeArray = [String]()
                         }
-                        else if indexPath.section == 1 && CSTypeArray.count>0 && (CSTypeArray.contains("All")){
-                            index = CSTypeArray.index(of: "All")!
+                        else if indexPath.section == 1 && CSTypeArray.count>0 && (CSTypeArray.contains("All".localized())){
+                            index = CSTypeArray.index(of: "All".localized())!
                             CSTypeArray.remove(at: index)
                         }
-                        else if indexPath.section == 2 && HoleTypeArray.count>0 && (HoleTypeArray.contains("All")){
-                            index = HoleTypeArray.index(of: "All")!
+                        else if indexPath.section == 2 && HoleTypeArray.count>0 && (HoleTypeArray.contains("All".localized())){
+                            index = HoleTypeArray.index(of: "All".localized())!
                             HoleTypeArray.remove(at: index)
                         }
-                        else if indexPath.section == 3 && CoursesTypeArray.count>0 && (CoursesTypeArray.contains("All")){
-                            index = CoursesTypeArray.index(of: "All")!
+                        else if indexPath.section == 3 && CoursesTypeArray.count>0 && (CoursesTypeArray.contains("All".localized())){
+                            index = CoursesTypeArray.index(of: "All".localized())!
                             CoursesTypeArray.remove(at: index)
                         }
                     }
                 }
-                /*if indexPath.section == 0 && RSTypeArray.count>0 && (RSTypeArray.contains("All")){
-                    //index = RSTypeArray.index(of: "All")!
+                /*if indexPath.section == 0 && RSTypeArray.count>0 && (RSTypeArray.contains("All".localized())){
+                    //index = RSTypeArray.index(of: "All".localized())!
                     RSTypeArray.removeAll()
                     RSTypeArray = [String]()
                 }
-                else if indexPath.section == 1 && PlayTypeArray.count>0 && (PlayTypeArray.contains("All")){
-                    index = PlayTypeArray.index(of: "All")!
+                else if indexPath.section == 1 && PlayTypeArray.count>0 && (PlayTypeArray.contains("All".localized())){
+                    index = PlayTypeArray.index(of: "All".localized())!
                     PlayTypeArray.remove(at: index)
                 }
-                else if indexPath.section == 2 && CSTypeArray.count>0 && (CSTypeArray.contains("All")){
-                    index = CSTypeArray.index(of: "All")!
+                else if indexPath.section == 2 && CSTypeArray.count>0 && (CSTypeArray.contains("All".localized())){
+                    index = CSTypeArray.index(of: "All".localized())!
                     CSTypeArray.remove(at: index)
                 }
-                else if indexPath.section == 3 && HoleTypeArray.count>0 && (HoleTypeArray.contains("All")){
-                    index = HoleTypeArray.index(of: "All")!
+                else if indexPath.section == 3 && HoleTypeArray.count>0 && (HoleTypeArray.contains("All".localized())){
+                    index = HoleTypeArray.index(of: "All".localized())!
                     HoleTypeArray.remove(at: index)
                 }
-                else if indexPath.section == 4 && CoursesTypeArray.count>0 && (CoursesTypeArray.contains("All")){
-                    index = CoursesTypeArray.index(of: "All")!
+                else if indexPath.section == 4 && CoursesTypeArray.count>0 && (CoursesTypeArray.contains("All".localized())){
+                    index = CoursesTypeArray.index(of: "All".localized())!
                     CoursesTypeArray.remove(at: index)
                 }*/
                 
@@ -1152,7 +1152,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                     }
                 }
                 else{
-                let endIndex = commanArray.index(of: "All")!
+                let endIndex = commanArray.index(of: "All".localized())!
 
                 cell = collectionView.cellForItem(at: IndexPath(row: endIndex, section: indexPath.section)) as! FilterCollectionViewCell
                     cell.filterButton.backgroundColor = UIColor.glfWhite

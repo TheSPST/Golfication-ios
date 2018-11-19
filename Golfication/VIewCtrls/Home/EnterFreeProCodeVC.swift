@@ -146,7 +146,9 @@ class EnterFreeProCodeVC: UIViewController {
                                 let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(self.beginTimestamp/1000)))
                                 let timeEnd = Calendar.current.date(byAdding: .month, value: 12, to: timeStart as Date)
                                 let formatter = DateFormatter()
+                                formatter.locale = Locale(identifier: "en")
                                 formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
+
                                 let expiryStr = formatter.string(from: timeEnd!)
                                 let trnStr = formatter.string(from: timeStart as Date)
                                 

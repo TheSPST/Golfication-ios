@@ -1333,49 +1333,49 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         var color = UIColor()
         if (shots > par) {
             if (shots - par > 1) {
-                holeFinishStatus = " \(shots-par) Bogey"
+                holeFinishStatus = " \(shots-par) "+"Bogey".localized()
                 color = UIColor.glfRosyPink
             } else {
-                holeFinishStatus = " Bogey"
+                holeFinishStatus = " "+"Bogey".localized()
                 color = UIColor.glfRosyPink
             }
         } else if (shots < par) {
             if (par == 3) {
                 if (par - shots == 1) {
-                    holeFinishStatus = "  Birdie  "
+                    holeFinishStatus = "  "+"Birdie".localized()+"  "
                     color = UIColor.glfFlatBlue
                 } else if (par - shots == 2) {
-                    holeFinishStatus = " Hole In One "
+                    holeFinishStatus = " "+"Hole In One".localized()+" "
                     color = UIColor.glfFlatBlue
                 }
             } else if (par == 4) {
                 if (par - shots == 1) {
-                    holeFinishStatus = "  Birdie  "
+                    holeFinishStatus = "  "+"Birdie".localized()+"  "
                     color = UIColor.glfFlatBlue
                 } else if (par - shots == 2) {
-                    holeFinishStatus = "  Eagle  "
+                    holeFinishStatus = "  "+"Eagle".localized()+"  "
                     color = UIColor.glfFlatBlue
                 } else if (par - shots == 3) {
-                    holeFinishStatus = " Hole In One "
+                    holeFinishStatus = " "+"Hole In One".localized()+" "
                     color = UIColor.glfFlatBlue
                 }
             } else if (par == 5) {
                 if (par - shots == 1) {
-                    holeFinishStatus = "  Birdie  "
+                    holeFinishStatus = "  "+"Birdie".localized()+"  "
                     color = UIColor.glfFlatBlue
                 } else if (par - shots == 2) {
-                    holeFinishStatus = "  Eagle  "
+                    holeFinishStatus = "  "+"Eagle".localized()+"  "
                     color = UIColor.glfFlatBlue
                 } else if (par - shots == 3) {
-                    holeFinishStatus = "  Albatross  "
+                    holeFinishStatus = "  "+"Albatross".localized()+"  "
                     color = UIColor.glfFlatBlue
                 } else if (par - shots == 4) {
-                    holeFinishStatus = " Hole In One "
+                    holeFinishStatus = " "+"Hole In One".localized()+" "
                     color = UIColor.glfFlatBlue
                 }
             }
         } else if (shots == par) {
-            holeFinishStatus = "  Par  "
+            holeFinishStatus = "  "+"Par".localized()+"  "
             color = UIColor.glfFlatBlue
         }        
         btnShotRanking.setTitle(holeFinishStatus, for: .normal)

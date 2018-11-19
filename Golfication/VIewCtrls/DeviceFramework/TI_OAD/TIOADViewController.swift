@@ -34,7 +34,7 @@ class TIOADViewController: UIViewController{
     @IBOutlet weak var TIOADActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var TIOADStartScanButton: UIButton!
     
-    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad_merged.bin?alt=media&token=867a96d2-3b58-43e0-bb4d-a7428da056e9"
+    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad_merged.bin?alt=media&token=b0e0063a-1557-4ae8-81ad-6a16449c7c68"
     let fileName = "Khelfie_project2_FlashROM_oad_merged.bin"
     
     //let urlStr1 = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad1_merged.bin?alt=media&token=31ee2200-82e3-4214-8c44-e335f91b2488"
@@ -47,7 +47,7 @@ class TIOADViewController: UIViewController{
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
         
-        man = CBCentralManager(delegate: self, queue: nil)
+//        man = CBCentralManager(delegate: self, queue: nil)
 
         self.TIOADActivityIndicator.startAnimating()
         self.TIOADProgress.isHidden = true
@@ -71,17 +71,31 @@ class TIOADViewController: UIViewController{
                     self.TIOADActivityIndicator.stopAnimating()
                     self.TIOADProgress.isHidden = false
                     self.TIOADStartScanButton.isEnabled = true
+                    
                 }
             }
         }
     }
     
     @IBAction func TIOADStartScanButtonTouched(_ sender: Any) {
-        if (!deviceSelected) {
-            self.deviceList = NSMutableArray()
-            deviceSelected = false
-            self.TIOADDevicesFoundTableView.reloadData()
-            man = CBCentralManager(delegate: self, queue: nil)
+        if (!deviceSelected!) {
+            for s:CBService in Constants.deviceGolficationX.services! where s.uuid.uuidString == TI_OAD_SERVICE{
+                    debugPrint("Start OAD, we are ready",s)
+                DispatchQueue.main.async {
+                    self.client = TIOADClient(peripheral: Constants.deviceGolficationX, andImageData: self.oadImage, andDelegate: self)
+                    self.TIOADMTUSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
+                    self.TIOADBlockSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse)-4)"
+                    self.deviceSelected = true
+                }
+            }
+            
+//            perip = Constants.deviceGolficationX
+//            perip.delegate = self
+//            perip.discoverServices([CBUUID(string: TI_OAD_SERVICE)])
+//            self.deviceList = NSMutableArray()
+//            deviceSelected = false
+//            self.TIOADDevicesFoundTableView.reloadData()
+//            man = CBCentralManager(delegate: self, queue: nil)
         }
         else {
             client.startOAD()
@@ -91,83 +105,83 @@ class TIOADViewController: UIViewController{
     }
 }
 
-extension TIOADViewController : CBCentralManagerDelegate{
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        
-        if (central.state == .poweredOn) {
-            central.scanForPeripherals(withServices: nil, options: nil)
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
-        if (RSSI.intValue > -80) {
-            var found = false
-            for  ii in 0..<self.deviceList.count {
-                let cell = self.deviceList[ii] as! TIOADDeviceTableViewCell
-                if (cell.p.identifier == peripheral.identifier) {
-                    found = true
-                }
-            }
-            if (!found) {
-                let nib = Bundle.main.loadNibNamed("TIOADDeviceTableViewCell", owner: self, options: nil)! as NSArray
-
-                let cell = nib.object(at: 0) as! TIOADDeviceTableViewCell
-                cell.p = peripheral
-                cell.deviceNameLabel.text = peripheral.name
-                cell.deviceUUIDLabel.text = peripheral.identifier.uuidString
-                self.deviceList.add(cell)
-                self.TIOADDevicesFoundTableView.reloadData()
-            }
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        
-        perip = peripheral
-        perip.delegate = self
-        peripheral.discoverServices([CBUUID(string: TI_OAD_SERVICE)])
-//        [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:TI_OAD_SERVICE], nil]];
-
-    }
-//    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+//extension TIOADViewController : CBCentralManagerDelegate{
+//    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+//
+//        if (central.state == .poweredOn) {
+//            central.scanForPeripherals(withServices: nil, options: nil)
+//        }
+//    }
+//
+//    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+//
+//        if (RSSI.intValue > -80) {
+//            var found = false
+//            for  ii in 0..<self.deviceList.count {
+//                let cell = self.deviceList[ii] as! TIOADDeviceTableViewCell
+//                if (cell.p.identifier == peripheral.identifier) {
+//                    found = true
+//                }
+//            }
+//            if (!found) {
+//                let nib = Bundle.main.loadNibNamed("TIOADDeviceTableViewCell", owner: self, options: nil)! as NSArray
+//
+//                let cell = nib.object(at: 0) as! TIOADDeviceTableViewCell
+//                cell.p = peripheral
+//                cell.deviceNameLabel.text = peripheral.name
+//                cell.deviceUUIDLabel.text = peripheral.identifier.uuidString
+//                self.deviceList.add(cell)
+//                self.TIOADDevicesFoundTableView.reloadData()
+//            }
+//        }
+//    }
+//
+//    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+//
+//        perip = peripheral
+//        perip.delegate = self
+//        peripheral.discoverServices([CBUUID(string: TI_OAD_SERVICE)])
+////        [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:TI_OAD_SERVICE], nil]];
 //
 //    }
-}
+////    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+////
+////    }
+//}
 
-extension TIOADViewController : CBPeripheralDelegate{
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        for s:CBService in peripheral.services!{
-            peripheral.discoverCharacteristics(nil, for: s)
-        }
-//        for (CBService *s in peripheral.services) {
-//            [peripheral discoverCharacteristics:nil forService:s];
+//extension TIOADViewController : CBPeripheralDelegate{
+//    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+//        for s:CBService in peripheral.services!{
+//            peripheral.discoverCharacteristics(nil, for: s)
 //        }
-
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        
-        if (service.uuid.uuidString == TI_OAD_SERVICE) {
-            debugPrint("Start OAD, we are ready")
-            
-            client = TIOADClient(peripheral: peripheral, andImageData: oadImage, andDelegate: self)
-            
-            self.TIOADMTUSize.text = "\(peripheral.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
-            self.TIOADBlockSize.text = "\(peripheral.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse)-4)"
-        }
-    }
-    /*func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        
-    }
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-     
-    }*/
-}
+////        for (CBService *s in peripheral.services) {
+////            [peripheral discoverCharacteristics:nil forService:s];
+////        }
+//
+//    }
+//
+//    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+//
+//        if (service.uuid.uuidString == TI_OAD_SERVICE) {
+//            debugPrint("Start OAD, we are ready")
+//
+//            client = TIOADClient(peripheral: peripheral, andImageData: oadImage, andDelegate: self)
+//
+//            self.TIOADMTUSize.text = "\(peripheral.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
+//            self.TIOADBlockSize.text = "\(peripheral.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse)-4)"
+//        }
+//    }
+//    /*func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+//
+//    }
+//    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+//
+//    }*/
+//}
 
 extension TIOADViewController: TIOADClientProgressDelegate{
     func client(_ client: TIOADClient!, oadProgressUpdated progress: TIOADClientProgressValues_t) {
-        
+        DispatchQueue.main.async {
         debugPrint("Progress update: ")
         debugPrint("Block \(progress.currentBlock) of  \(progress.totalBlocks)")
         debugPrint("Byte \(progress.currentByte) og  \(progress.totalBytes)")
@@ -183,12 +197,13 @@ extension TIOADViewController: TIOADClientProgressDelegate{
         self.TIOADCurrentByte.text = "\(progress.currentByte)"
 
         self.TIOADProgress.progress = Float(progress.currentByte)/Float(progress.totalBytes)
+        }
     }
     
     func client(_ client: TIOADClient!, oadProcessStateChanged state: TIOADClientState_t, error: Error!) {
         debugPrint("State changed :",Int(Float(state.rawValue)))
         debugPrint("Error: ",error);
-        
+        DispatchQueue.main.async {
         if ((state == tiOADClientGetDeviceTypeResponseRecieved) && error == nil) {
             self.TIOADStartScanButton.isEnabled = true
             self.TIOADChipID.text = client.getChipId()
@@ -201,6 +216,8 @@ extension TIOADViewController: TIOADClientProgressDelegate{
             let action = UIAlertAction(title: "ok", style: UIAlertAction.Style.default, handler: nil)
             alertVC.addAction(action)
           self.present(alertVC, animated: true, completion: nil)
+            }
+            
         }
     }
 }

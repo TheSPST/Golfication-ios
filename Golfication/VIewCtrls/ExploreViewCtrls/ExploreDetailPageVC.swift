@@ -110,7 +110,7 @@ class ExploreDetailPageVC:  UIViewController, UIScrollViewDelegate {
             circularView?.isHidden = false
             
             let label1 = testView.viewWithTag(50000) as! UILabel
-            label1.text = ((((self.finalDataArray[i] as AnyObject).object(forKey:"param1")) as? String) ?? "")
+            label1.text = ((((self.finalDataArray[i] as AnyObject).object(forKey:"param1")) as? String) ?? "").localized()
             
             let label2 = testView.viewWithTag(60000) as! UILabel
             label2.text = ((((self.finalDataArray[i] as AnyObject).object(forKey:"param2")) as? String) ?? "")

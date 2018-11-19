@@ -447,6 +447,7 @@ class MySwingVC: UIViewController, IndicatorInfoProvider {
 internal extension Date {
     init(_ s: String) {
         let df = DateFormatter()
+        df.locale = Locale(identifier: "en")
         df.dateFormat = "MM-d-yyyy"
         guard let date = df.date(from: s) else {
             fatalError("Invalid date string.")

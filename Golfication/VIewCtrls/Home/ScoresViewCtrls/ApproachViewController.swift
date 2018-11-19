@@ -100,10 +100,10 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         }else{
             if !Constants.isProMode {
                 //cardViewApproach.makeBlurView(targetView: cardViewApproach)
-                self.setProLockedUI(targetView: cardViewApproach, title: "Approach Accuracy")
+                self.setProLockedUI(targetView: cardViewApproach, title: "Approach Accuracy".localized())
                 
                 //holeProximityCardView.makeBlurView(targetView: holeProximityCardView)
-                self.setProLockedUI(targetView: holeProximityCardView, title: "Hole Proximity")
+                self.setProLockedUI(targetView: holeProximityCardView, title: "Hole Proximity".localized())
                 
                 lblProApproach.isHidden = true
                 lblProProximity.isHidden = true

@@ -114,7 +114,6 @@
         let center = UNUserNotificationCenter.current()
         center.delegate = notificationDelegate
         // ------------------------------------------------------------
-        //pendingTransactions()
         
         //----------------- Check Internet Connection ---------------------------------
         NotificationCenter.default.addObserver(self, selector: #selector(self.networkStatusChanged(_:)), name: NSNotification.Name(rawValue: ReachabilityStatusChangedNotification), object: nil)
@@ -211,81 +210,6 @@
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.window?.rootViewController?.present(alert, animated: true, completion: nil)
 //            self.window?.makeToast("No internet connection..", duration: 1.0, position: .bottom)
-        }
-    }
-    
-    func pendingTransactions() {
-        var isPurchased : Purchase!
-        SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
-            for purchase in purchases {
-                switch purchase.transaction.transactionState {
-                case .purchased, .restored:
-                    if purchase.needsFinishTransaction {
-                        // Deliver content from server, then:
-                        isPurchased = purchase
-                        SwiftyStoreKit.finishTransaction(purchase.transaction)
-                    }
-                // Unlock content
-                case .failed, .purchasing, .deferred:
-                    break // do nothing
-                }
-            }
-        }
-        
-        if(isPurchased != nil){
-            let appleValidator = AppleReceiptValidator(service: .production, sharedSecret: sharedSecret)
-            SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
-                switch result {
-                case .success(let receipt):
-                    let productId = isPurchased.productId
-                    // Verify the purchase of a Subscription
-                    let purchaseResult = SwiftyStoreKit.verifySubscription(
-                        type: .autoRenewable, // or .nonRenewing (see below)
-                        productId: productId,
-                        inReceipt: receipt)
-                    
-                    switch purchaseResult {
-                    case .purchased(let expiryDate, let receiptItems):
-                        debugPrint("Product is valid until \(expiryDate)\(receiptItems)")
-                        if(Auth.auth().currentUser!.uid.count > 1){
-                            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :true] as [AnyHashable:Any])
-                            
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                            let myString = formatter.string(from: expiryDate)
-                            let yourDate = formatter.date(from: myString)
-                            formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
-                            let myStringafd = formatter.string(from: yourDate!)
-                            
-                            let formatter2 = DateFormatter()
-                            formatter2.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                            let myString2 = formatter2.string(from: isPurchased.transaction.transactionDate!)
-                            let yourDate2 = formatter2.date(from: myString2)
-                            formatter2.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
-                            let myStringafd1 = formatter2.string(from: yourDate2!)
-                            
-                            let membershipDict = NSMutableDictionary()
-                            membershipDict.setObject(1, forKey: "isMembershipActive" as NSCopying)
-                            membershipDict.setObject(Int(NSDate().timeIntervalSince1970), forKey: "timestamp" as NSCopying)
-                            membershipDict.setObject(myStringafd, forKey: "expiryDate" as NSCopying)
-                            membershipDict.setObject(myStringafd1, forKey: "transactionDate" as NSCopying)
-                            membershipDict.setObject(isPurchased.transaction.transactionIdentifier!, forKey: "transactionId" as NSCopying)
-                            membershipDict.setObject("ios", forKey: "device" as NSCopying)
-
-                            let proMembership = ["proMembership":membershipDict]
-                            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(proMembership)
-                        }
-                        
-                    case .expired(let expiryDate, let receiptItems):
-                        debugPrint("Product is expired since \(expiryDate)\(receiptItems)")
-                    case .notPurchased:
-                        debugPrint("This product has never been purchased")
-                    }
-                    
-                case .error(let error):
-                    debugPrint("Receipt verification failed: \(error)")
-                }
-            }
         }
     }
     
@@ -545,9 +469,11 @@
         
         if let savedTodayDate = UserDefaults.standard.object(forKey: "Today_Date") as? String{
             let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "en")
             dateFormatter.dateFormat = "dd-MMM-yyyy"
             let tomorrow = Date()
             let tomorrowDF = DateFormatter()
+            tomorrowDF.locale = Locale(identifier: "en")
             tomorrowDF.dateFormat = "dd-MMM-yyyy"
             let tomorrowDateStr = tomorrowDF.string(from: tomorrow)
             
@@ -558,6 +484,7 @@
             Notification.sendLocaNotificatonNearByGolf()
             let timeNow = Date()
             let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en")
             formatter.dateFormat = "dd-MMM-yyyy"
             let currentDateStr = formatter.string(from: timeNow as Date)
             UserDefaults.standard.set(currentDateStr, forKey: "Today_Date")
@@ -574,6 +501,7 @@
             
             let timeNow = Date()
             let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en")
             formatter.dateFormat = "dd-MMM-yyyy"
             let currentDateStr = formatter.string(from: timeNow as Date)
             UserDefaults.standard.set(currentDateStr, forKey: "Today_Date")
@@ -603,7 +531,7 @@
             let exploreItem = UIApplicationShortcutItem(type: "OpenExploreTab", localizedTitle: "Explore".localized(), localizedSubtitle: nil, icon: exploreIcon, userInfo: nil)
             
             let addScoreIcon = UIApplicationShortcutIcon(templateImageName: "addScore")
-            let addScoreItem = UIApplicationShortcutItem(type: "OpenAddScoreTab", localizedTitle: "Play Game", localizedSubtitle: nil, icon: addScoreIcon, userInfo: nil)
+            let addScoreItem = UIApplicationShortcutItem(type: "OpenAddScoreTab", localizedTitle: "Play Game".localized(), localizedSubtitle: nil, icon: addScoreIcon, userInfo: nil)
             
             UIApplication.shared.shortcutItems = [youItem, friendsItem, exploreItem, addScoreItem]
         }

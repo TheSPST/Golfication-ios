@@ -118,16 +118,16 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         else{
             if !Constants.isProMode {
                 //cardViewChippingAccuracy.makeBlurView(targetView: cardViewChippingAccuracy)
-                self.setProLockedUI(targetView: cardViewChippingAccuracy, title: "Chipping Accuracy")
+                self.setProLockedUI(targetView: cardViewChippingAccuracy, title: "Chipping Accuracy".localized())
                 
                 //cardViewChippingProximity.makeBlurView(targetView: cardViewChippingProximity)
-                self.setProLockedUI(targetView: cardViewChippingProximity, title: "Chipping Proximity")
+                self.setProLockedUI(targetView: cardViewChippingProximity, title: "Chip Proximity".localized())
                 
                 //cardViewChippingSandAccuracy.makeBlurView(targetView: cardViewChippingSandAccuracy)
-                self.setProLockedUI(targetView: cardViewChippingSandAccuracy, title: "Sand Accuracy")
+                self.setProLockedUI(targetView: cardViewChippingSandAccuracy, title: "Sand Accuracy".localized())
                 
                 //cardViewChippingSandProximity.makeBlurView(targetView: cardViewChippingSandProximity)
-                self.setProLockedUI(targetView: cardViewChippingSandProximity, title: "Sand Proximity")
+                self.setProLockedUI(targetView: cardViewChippingSandProximity, title: "Sand Proximity".localized())
                 
                 lblProChipAccu.isHidden = true
                 lblProChipProx.isHidden = true

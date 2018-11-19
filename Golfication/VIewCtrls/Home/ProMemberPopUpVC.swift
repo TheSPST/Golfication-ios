@@ -149,7 +149,7 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Upgrade to Pro Membership"
+        self.title = "Upgrade to Pro".localized()
         // ----------------- Event Tracking ---------------------------------
         
         Analytics.logEvent("premium_popup", parameters: [:])

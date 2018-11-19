@@ -53,7 +53,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
     var totalProximity = [Double]()//2
     var totalHoleOutDistance = [Double]()//3
     
-    let catagoryWise = ["Off The Tee","Approach","Around The Green","Putting"]
+    let catagoryWise = ["Off the Tee","Approach","Around The Green","Putting"]
     let clubs = ["Dr","3w","1i","1h","2h","3h","2i","4w","4h","3i","5w","5h","4i","7w","6h","5i","7h","6i","7i","8i","9i","Pw","Gw","Sw","Lw","Pu"]
     
     var myDataArray = NSMutableArray()
@@ -273,10 +273,10 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                     self.setProLockedUI(targetView: self.strokeGainedChartView, title: "Strokes Gained Per Club")
                     
                     //self.offTheTeeCardView.makeBlurView(targetView: self.offTheTeeCardView)
-                    self.setProLockedUI(targetView: self.offTheTeeCardView, title: "Off The Tee")
+                    self.setProLockedUI(targetView: self.offTheTeeCardView, title: "Off the Tee".localized())
                     
                     //self.puttingCardView.makeBlurView(targetView: self.puttingCardView)
-                    self.setProLockedUI(targetView: self.puttingCardView, title: "Putting")
+                    self.setProLockedUI(targetView: self.puttingCardView, title: "Putting".localized())
                     
                     //self.aroundTheGreenCardView.makeBlurView(targetView: self.aroundTheGreenCardView)
                     self.setProLockedUI(targetView: self.aroundTheGreenCardView, title: "Around The Green ")
@@ -615,7 +615,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         var dataValues = [Double]()
         
         for data in self.strokesGainedData{
-            dataPoints.append(data.clubType)
+            dataPoints.append(data.clubType.localized())
             dataValues.append((data.clubStrokesGained / Double(totalCaddie)).rounded(toPlaces: 1))
             print(data)
         }

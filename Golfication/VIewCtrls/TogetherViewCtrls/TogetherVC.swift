@@ -382,7 +382,12 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func setData()  {
         
-        let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You scored better than \(self.percentile)% of Golfers"
+        let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You Scored better than".localized() + " \(self.percentile)% " + "of Golfers".localized()
+        
+        /*"You Scored better than" = "Vous avez marqué mieux que"
+         "of Golfers" = "de golfeurs"
+         */
+        
         self.lblAvrgFromLastRounds.text = stringData
         self.swingsRankValue.text = String(self.drivingRankStr)
         self.roundPlayerRankValue.text = "-"

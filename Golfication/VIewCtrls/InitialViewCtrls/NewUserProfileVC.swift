@@ -24,7 +24,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var btnHandiLeft: UIButton!
     @IBOutlet weak var btnHandiRight: UIButton!
     @IBOutlet weak var btnSearch: UIButton!
-    
+    @IBOutlet weak var btnSkip: UILocalizedButton!
+
     @IBOutlet weak var searchContainerView: UIView!
     @IBOutlet weak var searchContainerSV: UIView!
     @IBOutlet weak var nearMeContainerView: UIView!
@@ -74,7 +75,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             let x =  CGFloat(self.pageControl.currentPage) * (pageWidth)
             scrollView.setContentOffset(CGPoint(x:x, y:0), animated: false)
             
-            btnNext.setTitle("Next".localized(), for: .normal)
+            btnNext.setTitle(" " + "Next".localized() + " ", for: .normal)
             if pageControl.currentPage == 2 {
                 btnNext.setTitle("Done", for: .normal)
             }
@@ -121,6 +122,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        btnSkip.setTitle(" " + "Skip".localized() + " ", for: .normal)
+        btnNext.setTitle(" " + "Next".localized() + " ", for: .normal)
+
         btnNext.layer.cornerRadius = 15.0
         self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
         self.btnCheckbox.tintColor = UIColor.clear
@@ -628,7 +633,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let x = CGFloat(pageControl.currentPage) * (newProfileScrlView.frame.size.width)
         newProfileScrlView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle("Next".localized(), for: .normal)
+        btnNext.setTitle(" " + "Next".localized() + " ", for: .normal)
         if currentPageIndex == 2 {
             btnNext.setTitle("Done", for: .normal)
         }
@@ -649,7 +654,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let x = CGFloat(pageControl.currentPage) * (newProfileScrlView.frame.size.width)
         newProfileScrlView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle("Next".localized(), for: .normal)
+        btnNext.setTitle(" " + "Next".localized() + " ", for: .normal)
         if currentPageIndex == 2 {
             btnNext.setTitle("Done", for: .normal)
         }

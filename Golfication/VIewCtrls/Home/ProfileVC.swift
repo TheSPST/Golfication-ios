@@ -41,7 +41,6 @@ class ProfileVC: UIViewController {
     @IBOutlet weak var btnUserImg: UIButton!
     @IBOutlet weak var btnUserName: UIButton!
     @IBOutlet weak var btnCheckbox: UIButton!
-    @IBOutlet weak var btnInactiveIndiegogo: UIButton!
     @IBOutlet weak var btnFreeActiveIndiegogo: UIButton!
     @IBOutlet weak var btnActiveIndiegogo: UIButton!
     @IBOutlet weak var btnInviteNow: UILocalizedButton!
@@ -66,6 +65,7 @@ class ProfileVC: UIViewController {
     @IBOutlet weak var golfBagContainerView: UIView!
     @IBOutlet weak var golfBagHConstraint: NSLayoutConstraint!
 
+    @IBOutlet weak var btnWhatIsPro:UIButton!
     // MARK: - Initialize Variables
     let imagePicker = UIImagePickerController()
 //    var clubs = ["Dr","3w","4w","5w","7w","1h","2h","3h","4h","5h","6h","7h","1i","2i","3i","4i","5i","6i","7i","8i","9i", "Pw","Gw","Sw","Lw","Pu"]
@@ -159,42 +159,6 @@ class ProfileVC: UIViewController {
 //            let navCtrl = UINavigationController(rootViewController: viewCtrl)
 //            navCtrl.modalPresentationStyle = .overCurrentContext
             self.present(viewCtrl, animated: false, completion: nil)
-            
-            /*viewUpgradeInactive.isHidden = true
-            viewUpgradeFreeActive.isHidden = false
-            viewUpgradeActive.isHidden = true
-            
-            let timeNow = NSDate()
-            let calendar = NSCalendar.current
-            let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(beginTimestamp)))
-            let timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
-            let expiryStr = formatter.string(from: timeEnd!)
-            let trnStr = formatter.string(from: timeStart as Date)
-            
-            let membershipDict = NSMutableDictionary()
-            membershipDict.setObject(0, forKey: "isMembershipActive" as NSCopying)
-            membershipDict.setObject(trnStr, forKey: "transactionDate" as NSCopying)
-            membershipDict.setObject(expiryStr, forKey: "expiryDate" as NSCopying)
-            membershipDict.setObject("Free_Membership", forKey: "productID" as NSCopying)
-            membershipDict.setObject(beginTimestamp, forKey: "timestamp" as NSCopying)
-            
-            let proMembership = ["proMembership":membershipDict]
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(proMembership)
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :true] as [AnyHashable:Any])
-            
-            UserDefaults.standard.set(false, forKey: "isNewUser")
-            UserDefaults.standard.synchronize()
-            //lblDaysLeft.text = "You have 29 days remaining on your Pro Membership"
-            let components = calendar.dateComponents([.day], from: timeNow as Date, to: timeEnd!)
-            self.lblDaysLeft.text = "You have " + "\(components.day!)" + " days remaining on your Pro Membership"
-            
-            self.viewTopWhatIsPro.isHidden = true
-            isProfileUpdated = true
-            
-            whatISProHeightConstraint.constant = 0.0
-            self.view.layoutIfNeeded()*/
         }
     }
     
@@ -265,117 +229,9 @@ class ProfileVC: UIViewController {
         }
         if(valid){
             
-//            checkTrialPreriod()
             let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
             self.navigationController?.pushViewController(viewCtrl, animated: true)
-
-            /*let timeNow = NSDate()
-            let calendar = NSCalendar.current
-            let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(beginTimestamp/1000)))
-            let timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
-            let expiryStr = formatter.string(from: timeEnd!)
-            let trnStr = formatter.string(from: timeStart as Date)
-
-            let membershipDict = NSMutableDictionary()
-            membershipDict.setObject(0, forKey: "isMembershipActive" as NSCopying)
-            membershipDict.setObject(trnStr, forKey: "transactionDate" as NSCopying)
-            membershipDict.setObject(expiryStr, forKey: "expiryDate" as NSCopying)
-            membershipDict.setObject("Free_Membership", forKey: "productID" as NSCopying)
-            membershipDict.setObject(beginTimestamp, forKey: "timestamp" as NSCopying)
-
-            let proMembership = ["proMembership":membershipDict]
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(proMembership)
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :true] as [AnyHashable:Any])
-            
-            let subDic = NSMutableDictionary()
-            subDic.setObject("Free_Membership", forKey: "productID" as NSCopying)
-            subDic.setObject(beginTimestamp, forKey: "timestamp" as NSCopying)
-            subDic.setObject("purchase", forKey: "type" as NSCopying)
-            let subKey = ref!.child("\(Auth.auth().currentUser!.uid)").childByAutoId().key
-            let subscriptionDict = NSMutableDictionary()
-            subscriptionDict.setObject(subDic, forKey: subKey as NSCopying)
-            ref.child("subscriptions/\(Auth.auth().currentUser!.uid)/").updateChildValues(subscriptionDict as! [AnyHashable : Any])*/
-
         }
-    }
-    
-    func checkTrialPreriod(){
-        
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        var trial = false
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "trial") { (snapshot) in
-            if(snapshot.value != nil){
-                trial = snapshot.value as! Bool
-            }
-            else{
-                trial = false
-            }
-            DispatchQueue.main.async( execute: {
-                self.progressView.hide(navItem: self.navigationItem)
-
-                let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProfileProMemberPopUPVC") as! ProfileProMemberPopUPVC
-                viewCtrl.fromUpgrade = true
-                viewCtrl.isTrial = trial
-                viewCtrl.modalPresentationStyle = .overCurrentContext
-                self.present(viewCtrl, animated: true, completion: nil)
-                
-                NotificationCenter.default.addObserver(self, selector: #selector(self.free30DaysProActivated(_:)), name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)
-            })
-        }
-    }
-    @objc func free30DaysProActivated(_ notification: NSNotification) {
-        
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)
-        
-        var productID = String()
-        var startTime = Int()
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "proMembership") { (snapshot) in
-            if(snapshot.childrenCount > 0){
-                let dataDic = snapshot.value as! NSDictionary
-                if let prodID = dataDic.value(forKey: "productID") as? String{
-                    productID = prodID
-                }
-                if let timestamp = dataDic.value(forKey: "timestamp") as? Int{
-                    startTime = timestamp
-                }
-            }
-            DispatchQueue.main.async( execute: {
-                self.progressView.hide(navItem: self.navigationItem)
-                
-                let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(startTime/1000)))
-                var timeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
-                if (productID == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (productID == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (productID == Constants.FREE_MONTHLY_PRODUCT_ID){
-                    timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-                }
-                let expiryDF = DateFormatter()
-                expiryDF.dateFormat = "dd-MMM-yyyy HH:mm:ss"
-                let expDateStr = expiryDF.string(from: timeEnd!)
-                self.lblNextBilling.text = "Next Billing " + " \(expDateStr)"
-                
-                let df = DateFormatter()
-                df.dateFormat = "dd-MMM-yyyy HH:mm:ss"
-                df.dateFormat = "dd-MMM-yyyy"
-                let myDateStr = df.string(from: timeStart as Date)
-                self.lblLastBilling.text = "Member since " + " \(myDateStr)"
-                
-                self.viewUpgradeInactive.isHidden = true
-                self.viewUpgradeFreeActive.isHidden = true
-                self.viewUpgradeActive.isHidden = false
-                
-                self.viewTopWhatIsPro.isHidden = true
-                Constants.isProfileUpdated = true
-                
-                self.whatISProHeightConstraint.constant = 0.0
-                self.view.layoutIfNeeded()
-            })
-        }
-    }
-    
-    var beginTimestamp: Int {
-        return Int(NSDate().timeIntervalSince1970) * 1000
     }
     
     // MARK: backAction
@@ -574,7 +430,7 @@ class ProfileVC: UIViewController {
     
     // MARK: sliderChangedAction
     @IBAction func sliderChangedAction(_ sender: Any) {
-        self.lblHandicap.text = "Handicap \((self.slider.value*10).rounded()/10)"//(value as! NSString).floatValue
+        self.lblHandicap.text = "Handicap".localized() + " \((self.slider.value*10).rounded()/10)"//(value as! NSString).floatValue
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.slider.value*10).rounded()/10)"] as [AnyHashable:Any])
     }
     
@@ -614,9 +470,14 @@ class ProfileVC: UIViewController {
         whatISProHeightConstraint.constant = 0.0
         self.view.layoutIfNeeded()
         
+        btnUpdradeNow.setTitle(" " + "Upgrade Now!".localized() + " ", for: .normal)
+        btnWhatIsPro.setTitle(" " + "What is Pro?".localized() + " ", for: .normal)
+        
         btnUpdradeNow.layer.cornerRadius = 3.0
         viewYearlyBtn.layer.cornerRadius = 3.0
         btnInviteNow.layer.cornerRadius = 3.0
+        
+        btnInviteNow.setTitle(" " + "Invite Now".localized() + " ", for: .normal)
         
         viewProMembership.isHidden = true
         viewUpgradeInactive.isHidden = true
@@ -625,10 +486,8 @@ class ProfileVC: UIViewController {
         
         let buttonTitleStr = NSMutableAttributedString(string: "Have Indiegogo promo code?", attributes:attrs)
         attributedString.append(buttonTitleStr)
-        btnInactiveIndiegogo.setAttributedTitle(attributedString, for: .normal)
         btnFreeActiveIndiegogo.setAttributedTitle(attributedString, for: .normal)
         btnActiveIndiegogo.setAttributedTitle(attributedString, for: .normal)
-        btnInactiveIndiegogo.isHidden = true
         btnFreeActiveIndiegogo.isHidden = true
         
         imagePicker.delegate=self
@@ -703,7 +562,7 @@ class ProfileVC: UIViewController {
                         }
 
                         self.sliderHandicapNumber.value = (value as! NSString).floatValue
-                        self.lblHandicap.text = "Handicap \(self.sliderHandicapNumber.value)"
+                        self.lblHandicap.text = "Handicap".localized() + " \(self.sliderHandicapNumber.value)"
                     }
                     else if(keys == "gender"){
                         self.genderCardView.isHidden = true
@@ -731,28 +590,39 @@ class ProfileVC: UIViewController {
                             
                             let timeNow = NSDate()
                             let formatter = DateFormatter()
-                                formatter.dateFormat = "dd-MMM-yyyy HH:mm:ss"
+                            formatter.locale = Locale(identifier: "en")
+                            formatter.dateFormat = "dd-MMM-yyyy HH:mm:ss"
                             let currentDateStr = formatter.string(from: timeNow as Date)
                             let currentDate = formatter.date(from: currentDateStr)
                             
                             let expiryDF = DateFormatter()
-                                expiryDF.dateFormat = "dd-MMM-yyyy HH:mm:ss"
+                            expiryDF.locale = Locale(identifier: "en")
+                            expiryDF.dateFormat = "dd-MMM-yyyy HH:mm:ss"
+
                             let expDate = expiryDF.date(from: dic.value(forKey: "expiryDate") as! String)
                             //let expDateStr = formatter.string(from: expDate!)
 
                             if (dic.value(forKey: "expiryDate") != nil){
-                                self.lblNextBilling.text = "Next Billing " + " \((dic.value(forKey: "expiryDate")!))"
+                                let locale = NSLocale.current.identifier
+                                expiryDF.locale = Locale(identifier: locale)
+                                let myDateStr = expiryDF.string(from: expDate!)
+
+                                self.lblNextBilling.text = "Next Billing " + myDateStr
                             }
                             if (dic.value(forKey: "transactionDate") != nil){
                                 let df = DateFormatter()
-                                    df.dateFormat = "dd-MMM-yyyy HH:mm:ss"
+                                df.locale = Locale(identifier: "en")
+                                df.dateFormat = "dd-MMM-yyyy HH:mm:ss"
                                 let myDate = df.date(from: dic.value(forKey: "transactionDate") as! String)
-                                    df.dateFormat = "dd-MMM-yyyy"
+                                df.dateFormat = "dd-MMM-yyyy"
+                                
+                                let locale = NSLocale.current.identifier
+                                df.locale = Locale(identifier: locale)
                                 let myDateStr = df.string(from: myDate!)
 
                                 self.lblLastBilling.text = "Member since " + " \(myDateStr)"
                             }
-                            
+                        
                             switch currentDate?.compare(expDate!) {
                             case .orderedAscending?     :   debugPrint("currentDate is earlier than expDate")
                                 
@@ -884,6 +754,7 @@ class ProfileVC: UIViewController {
             })
         }
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.progressView.hide()

@@ -238,6 +238,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     var totalTimer : TimeInterval = 1
+    var isGolfX : Bool{
+        if Constants.ble == nil{
+            return false
+        }else{
+            return !Constants.ble.isPracticeMatch
+        }
+    }
 //    {
 //        let state = UIApplication.shared.applicationState
 //        if state == .background {
@@ -989,7 +996,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     
     @IBAction func btnActionEditLandedOn(_ sender: UIButton) {
-        ActionSheetStringPicker.show(withTitle: "Landed On", rows: ["Fairway","Green","Bunker","Rough","Water Hazard"], initialSelection: sender.tag, doneBlock: { (picker, value, index) in
+        ActionSheetStringPicker.show(withTitle: "Landed On", rows: ["Fairway".localized(),"Green".localized(),"Bunker".localized(),"Rough".localized(),"Water Hazard".localized()], initialSelection: sender.tag, doneBlock: { (picker, value, index) in
             sender.setTitle("\(index!)", for: .normal)
             self.btnTrackShot.backgroundColor = UIColor.glfBluegreen
             self.setColorLandedOn(index:index as! String)
@@ -1416,9 +1423,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if (notification.object as? Bool) != nil{
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(self.selectedUserId)") { (snapshot) in
                 let playerDict = NSMutableDictionary()
+                var wantToDrag = false
                 if let dict = snapshot.value as? NSMutableDictionary{
                     playerDict.setObject(dict, forKey: self.selectedUserId as NSCopying)
                     self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
+                    if let shots = dict.value(forKey: "shots") as? NSArray{
+                        wantToDrag = shots.count > 1 ? true:false
+                    }
                     if(self.holeOutFlag){
                         self.uploadPutting(playerId: self.selectedUserId)
                     }
@@ -1426,12 +1437,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 DispatchQueue.main.async(execute: {
                     self.uploadTotalStrokesGained(playerId: self.selectedUserId)
                     self.updateMap(indexToUpdate: self.holeIndex)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                        for markers in self.markersForCurved{
-                            self.isDraggingMarker = true
-                            self.updateStateWhileDragging(marker:markers)
-                        }
-                    })
+                    if wantToDrag{
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
+                            for markers in self.markersForCurved{
+                                self.isDraggingMarker = true
+                                self.updateStateWhileDragging(marker:markers)
+                            }
+                        })
+                    }
                 })
             }
         }
@@ -1763,13 +1776,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func setColorLandedOn(index:String){
-        if index == "Green"{
+        if index == "Green".localized(){
             self.btnLandedOnDropDown.backgroundColor = UIColor.glfGreen
-        }else if index == "Fairway" {
+        }else if index == "Fairway".localized() {
             self.btnLandedOnDropDown.backgroundColor = UIColor.glfFairway
-        }else if index == "Bunker"{
+        }else if index == "Bunker".localized(){
             self.btnLandedOnDropDown.backgroundColor = UIColor.glfBunker
-        }else if index == "Water Hazard"{
+        }else if index == "Water Hazard".localized(){
             self.btnLandedOnDropDown.backgroundColor = UIColor.glfBlueyGreen
         }else{
             self.btnLandedOnDropDown.backgroundColor = UIColor.glfRough
@@ -5749,13 +5762,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.selectedUserId = k as! String
                         self.lblPlayersName.text = "Your Score".localized()
                         btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
-//                        if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
-//                            self.swingMatchId = swingKey
-//                            if(swingKey != ""){
-//                                self.getGameId(swingKey:self.swingMatchId)
-//                            }
-//
-//                        }
+                        if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
+                            self.swingMatchId = swingKey
+                            if(swingKey != ""){
+                                self.getGameId(swingKey:self.swingMatchId)
+                            }
+                        }
                     }else{
                         playersButton.append((button:btn, isSelected: false, id: k as! String,name:name))
                     }
@@ -5811,9 +5823,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             for i in 0..<self.scoring.count{
                 centerPointOfTeeNGreen.append((tee: courseData.centerPointOfTeeNGreen[i].tee, fairway: courseData.centerPointOfTeeNGreen[i].fairway, green: courseData.centerPointOfTeeNGreen[i].green, par: self.scoring[i].par))
             }
+            Constants.ble.isPracticeMatch = false
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreen)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-//                self.getActiveRound()
+                self.getActiveRound()
             })
         }
     }
@@ -5829,12 +5842,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.swingMatchId = data.key
                     }
                 }
-//                if(!self.isContinue){
-//                    ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
-//                }
-//                else{
-//                    self.getGameId(swingKey:self.swingMatchId)
-//                }
+                if(!self.isContinue){
+                    ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                }
+                else{
+                    self.getGameId(swingKey:self.swingMatchId)
+                }
             })
         }
     }
@@ -5843,6 +5856,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             var gameid = 0
             if (snapshot.value != nil) {
                 gameid = snapshot.value as! Int
+                Constants.ble.currentGameId = gameid
             }
             DispatchQueue.main.async(execute: {
                 if(self.isContinue){
@@ -5999,8 +6013,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         })
     }
     func showCaseShareShots(){
-        let showcaseShareShots = CTShowcaseView(title: "", message: "Share your hole and stats with friends on Golfication or social media.",key:nil){()->() in}
-        showcaseShareShots.continueButton.setTitle("Ok, Got it.", for: .normal)
+        let showcaseShareShots = CTShowcaseView(title: "", message: "Share your hole and stats with friends on Golfication or social media.".localized(),key:nil){()->() in}
+        showcaseShareShots.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showcaseShareShots.continueButton.isHidden = false
         let highlightShareStats = showcaseShareShots.highlighter as! CTStaticGlowHighlighter
         highlightShareStats.highlightColor = UIColor.glfWhite
@@ -6041,8 +6055,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         })
     }
     func showCaseTrackShotsOnCourse(){
-        let showcaseTrackShots = CTShowcaseView(title: "", message: "Tap here to tee-off from your current GPS location.",key:nil){()->() in}
-        showcaseTrackShots.continueButton.setTitle("Ok, Got it.", for: .normal)
+        let showcaseTrackShots = CTShowcaseView(title: "", message: "Tap here to tee-off from your current GPS location.".localized(),key:nil){()->() in}
+        showcaseTrackShots.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showcaseTrackShots.continueButton.isHidden = false
         let highlightTrackShot = showcaseTrackShots.highlighter as! CTStaticGlowHighlighter
         highlightTrackShot.highlightColor = UIColor.glfWhite
@@ -6063,8 +6077,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         })
     }
     func showCaseStopShotsOnCourse(){
-        let showcaseTrackShots = CTShowcaseView(title: "", message: "When you reach the location of the ball, tap here to stop tracking this shot.",key:nil){()->() in}
-        showcaseTrackShots.continueButton.setTitle("Ok, Got it.", for: .normal)
+        let showcaseTrackShots = CTShowcaseView(title: "", message: "When you reach the location of the ball, tap here to stop tracking this shot.".localized(),key:nil){()->() in}
+        showcaseTrackShots.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
         showcaseTrackShots.continueButton.isHidden = false
         let highlightTrackShot = showcaseTrackShots.highlighter as! CTStaticGlowHighlighter
         highlightTrackShot.highlightColor = UIColor.glfWhite
@@ -6933,7 +6947,7 @@ extension NewMapVC : UITableViewDelegate,UITableViewDataSource{
             if (self.penaltyShots[indexPath.row]){
                 cell.initDesign(shot: "\(indexPath.row + 1)", club: "  ", distance: "   ", landedOn: "Penalty",color:UIColor.glfDustyRed ,sg: "    ")
             }else{
-                cell.initDesign(shot: "\(indexPath.row + 1)", club: "\(self.shotsDetails[indexPath.row].club)", distance: "\(Int(self.shotsDetails[indexPath.row].distance / (Constants.distanceFilter == 1 ? YARD:1))) \(suffix)", landedOn: endingPointWithColor.0,color:endingPointWithColor.1 ,sg: "\(prefix)\(self.shotsDetails[indexPath.row].strokesGained.rounded(toPlaces: 2))")
+                cell.initDesign(shot: "\(indexPath.row + 1)", club: "\(self.shotsDetails[indexPath.row].club)", distance: "\(Int(self.shotsDetails[indexPath.row].distance / (Constants.distanceFilter == 1 ? YARD:1))) \(suffix)", landedOn: endingPointWithColor.0.localized(),color:endingPointWithColor.1 ,sg: "\(prefix)\(self.shotsDetails[indexPath.row].strokesGained.rounded(toPlaces: 2))")
             }
         }
         self.btnTotalShotsNumber.isHidden = !holeOutFlag

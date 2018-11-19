@@ -113,12 +113,16 @@ class RefreshSubscriptionManager: NSObject {
                                             }
                                             else{
                                                 let formatter = DateFormatter()
+                                                formatter.locale = Locale(identifier: "en")
                                                 formatter.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
+
                                                 let expiryStr = formatter.string(from: expiryDate)
                                                 debugPrint("expiryStr",expiryStr)
                                                 
                                                 let pf = DateFormatter()
+                                                pf.locale = Locale(identifier: "en")
                                                 pf.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
+
                                                 let purchaseStr = pf.string(from: items.first!.purchaseDate)
                                                 debugPrint("purchaseStr",purchaseStr)
                                                 

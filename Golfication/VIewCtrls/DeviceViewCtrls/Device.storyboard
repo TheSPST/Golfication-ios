@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -426,7 +427,7 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="vgL-Ge-n8m">
-                                                                        <rect key="frame" x="13" y="20" width="65" height="15"/>
+                                                                        <rect key="frame" x="22" y="20" width="47" height="15"/>
                                                                         <subviews>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDw-wc-4fK">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
@@ -436,17 +437,14 @@
                                                                                 </constraints>
                                                                                 <state key="normal" backgroundImage="golfBag"/>
                                                                             </button>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CIf-ic-rI9">
-                                                                                <rect key="frame" x="17" y="0.0" width="48" height="15"/>
-                                                                                <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="13"/>
-                                                                                <state key="normal" title="DRIVER">
-                                                                                    <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                                </state>
-                                                                            </button>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Driver" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aI2-uC-TYU">
+                                                                                <rect key="frame" x="17" y="0.0" width="30" height="15"/>
+                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
+                                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                            </label>
                                                                         </subviews>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="65" id="ZBc-OU-C50"/>
-                                                                        </constraints>
                                                                     </stackView>
                                                                 </subviews>
                                                             </stackView>
@@ -484,7 +482,7 @@
                                                         </constraints>
                                                     </view>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="HEr-W4-dCA">
-                                                        <rect key="frame" x="245" y="10" width="65" height="15"/>
+                                                        <rect key="frame" x="263" y="10" width="47" height="15"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hvl-vf-tLV">
                                                                 <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
@@ -494,17 +492,14 @@
                                                                 </constraints>
                                                                 <state key="normal" backgroundImage="golfBag"/>
                                                             </button>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bcQ-Z2-aWN">
-                                                                <rect key="frame" x="17" y="0.0" width="48" height="15"/>
-                                                                <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="13"/>
-                                                                <state key="normal" title="DRIVER">
-                                                                    <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </state>
-                                                            </button>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Driver" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4S-Qo-DY7">
+                                                                <rect key="frame" x="17" y="0.0" width="30" height="15"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
                                                         </subviews>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="65" id="UbJ-vq-jKt"/>
-                                                        </constraints>
                                                     </stackView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CLUBHEAD SPEED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XZ3-TL-jTV">
                                                         <rect key="frame" x="98.5" y="180" width="123" height="20"/>
@@ -558,7 +553,7 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="MfB-zb-dWg">
-                                                                        <rect key="frame" x="10" y="20" width="65" height="15"/>
+                                                                        <rect key="frame" x="19" y="20" width="47" height="15"/>
                                                                         <subviews>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TT6-aH-yFX">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
@@ -568,17 +563,14 @@
                                                                                 </constraints>
                                                                                 <state key="normal" backgroundImage="golfBag"/>
                                                                             </button>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dHa-1y-6Zv">
-                                                                                <rect key="frame" x="17" y="0.0" width="48" height="15"/>
-                                                                                <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="13"/>
-                                                                                <state key="normal" title="DRIVER">
-                                                                                    <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                                </state>
-                                                                            </button>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Driver" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nis-ld-o50">
+                                                                                <rect key="frame" x="17" y="0.0" width="30" height="15"/>
+                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
+                                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                            </label>
                                                                         </subviews>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="65" id="55h-MH-i0v"/>
-                                                                        </constraints>
                                                                     </stackView>
                                                                 </subviews>
                                                             </stackView>
@@ -804,7 +796,7 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="o3L-bR-wK8">
-                                                                        <rect key="frame" x="8.5" y="20" width="65" height="15"/>
+                                                                        <rect key="frame" x="17.5" y="20" width="47" height="15"/>
                                                                         <subviews>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G8e-xl-wIV">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
@@ -814,17 +806,14 @@
                                                                                 </constraints>
                                                                                 <state key="normal" backgroundImage="golfBag"/>
                                                                             </button>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="72v-y9-jL0">
-                                                                                <rect key="frame" x="17" y="0.0" width="48" height="15"/>
-                                                                                <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="13"/>
-                                                                                <state key="normal" title="DRIVER">
-                                                                                    <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                                </state>
-                                                                            </button>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Driver" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NWd-Sp-X09">
+                                                                                <rect key="frame" x="17" y="0.0" width="30" height="15"/>
+                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
+                                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                            </label>
                                                                         </subviews>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="65" id="kY0-b3-bqY"/>
-                                                                        </constraints>
                                                                     </stackView>
                                                                 </subviews>
                                                             </stackView>
@@ -882,52 +871,41 @@
                                                             <constraint firstAttribute="bottom" secondItem="RJm-1G-Bkd" secondAttribute="bottom" constant="30" id="saM-58-XIm"/>
                                                         </constraints>
                                                     </view>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dms-6N-U6e">
-                                                        <rect key="frame" x="20" y="180" width="280" height="15"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HAND SPEED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QQ9-D0-cme">
+                                                        <rect key="frame" x="20" y="180" width="88.5" height="18"/>
+                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="c7w-UL-3cN">
+                                                        <rect key="frame" x="247" y="180" width="53" height="15"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HAND SPEED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QQ9-D0-cme">
-                                                                <rect key="frame" x="0.0" y="0.0" width="215" height="15"/>
-                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1PR-sr-2mW">
+                                                                <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="15" id="heA-Cq-l7G"/>
+                                                                    <constraint firstAttribute="height" constant="15" id="ow2-bf-2yu"/>
+                                                                </constraints>
+                                                                <state key="normal" backgroundImage="golfBag"/>
+                                                            </button>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Driver" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YqS-Xd-oPh">
+                                                                <rect key="frame" x="23" y="0.0" width="30" height="15"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="c7w-UL-3cN">
-                                                                <rect key="frame" x="215" y="0.0" width="65" height="15"/>
-                                                                <subviews>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1PR-sr-2mW">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="15" id="lrh-6a-cXT"/>
-                                                                            <constraint firstAttribute="height" constant="15" id="wkh-pB-xd6"/>
-                                                                        </constraints>
-                                                                        <state key="normal" backgroundImage="golfBag"/>
-                                                                    </button>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kgV-f7-ojC">
-                                                                        <rect key="frame" x="17" y="0.0" width="48" height="15"/>
-                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="13"/>
-                                                                        <state key="normal" title="DRIVER">
-                                                                            <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                        </state>
-                                                                    </button>
-                                                                </subviews>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" constant="65" id="Toz-Af-0WJ"/>
-                                                                </constraints>
-                                                            </stackView>
                                                         </subviews>
-                                                        <constraints>
-                                                            <constraint firstItem="QQ9-D0-cme" firstAttribute="leading" secondItem="Dms-6N-U6e" secondAttribute="leading" id="Cgy-Rw-iin"/>
-                                                            <constraint firstAttribute="trailing" secondItem="c7w-UL-3cN" secondAttribute="trailing" id="tV9-dn-AFm"/>
-                                                        </constraints>
                                                     </stackView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstItem="xzD-eR-PP2" firstAttribute="leading" secondItem="zac-Dw-Gtc" secondAttribute="leading" constant="10" id="0Bq-vk-eez"/>
+                                                    <constraint firstAttribute="trailing" secondItem="c7w-UL-3cN" secondAttribute="trailing" constant="20" id="4Se-u0-LHW"/>
+                                                    <constraint firstItem="QQ9-D0-cme" firstAttribute="top" secondItem="xzD-eR-PP2" secondAttribute="bottom" constant="20" id="FMc-fM-VrF"/>
                                                     <constraint firstItem="xzD-eR-PP2" firstAttribute="top" secondItem="zac-Dw-Gtc" secondAttribute="top" constant="10" id="NGg-4Y-Lal"/>
-                                                    <constraint firstItem="Dms-6N-U6e" firstAttribute="top" secondItem="xzD-eR-PP2" secondAttribute="bottom" constant="20" id="Puc-8x-FAE"/>
-                                                    <constraint firstAttribute="trailing" secondItem="Dms-6N-U6e" secondAttribute="trailing" constant="20" id="bi8-KW-8WW"/>
+                                                    <constraint firstItem="QQ9-D0-cme" firstAttribute="leading" secondItem="zac-Dw-Gtc" secondAttribute="leading" constant="20" id="aPR-ld-pFT"/>
                                                     <constraint firstAttribute="trailing" secondItem="xzD-eR-PP2" secondAttribute="trailing" constant="10" id="nH7-un-Jaw"/>
-                                                    <constraint firstItem="Dms-6N-U6e" firstAttribute="leading" secondItem="zac-Dw-Gtc" secondAttribute="leading" constant="20" id="nRr-eH-AJB"/>
+                                                    <constraint firstItem="c7w-UL-3cN" firstAttribute="top" secondItem="xzD-eR-PP2" secondAttribute="bottom" constant="20" id="wJz-jJ-Zvu"/>
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="h2S-wY-hxG">
@@ -1288,6 +1266,13 @@
                         <outlet property="lbl5BackSwingV" destination="Xat-5L-sbk" id="4lb-iF-v6u"/>
                         <outlet property="lbl6HandSpeedB" destination="lhb-sV-DmH" id="LJx-76-1mg"/>
                         <outlet property="lbl6HandSpeedV" destination="RJm-1G-Bkd" id="LGP-ca-6dU"/>
+                        <outlet property="lblClubName" destination="aI2-uC-TYU" id="M34-9h-qWW"/>
+                        <outlet property="lblClubName1" destination="d4S-Qo-DY7" id="BLE-an-NVu"/>
+                        <outlet property="lblClubName2" destination="nis-ld-o50" id="nHt-9g-0VF"/>
+                        <outlet property="lblClubName3" destination="NWd-Sp-X09" id="5Wh-ZA-Nm1"/>
+                        <outlet property="lblClubName4" destination="YqS-Xd-oPh" id="Snk-XA-cNU"/>
+                        <outlet property="lblbackSwing" destination="Nov-WA-13C" id="P8j-81-tBY"/>
+                        <outlet property="lbldownSwing" destination="GWv-OQ-H4V" id="Bo8-cH-jRK"/>
                         <outlet property="scrollContainerView" destination="Dml-6N-yxc" id="WhE-5g-c2S"/>
                         <outlet property="scrollView" destination="dar-6g-4hy" id="p0T-da-jaI"/>
                         <outlet property="startSwingingSV" destination="ZLC-ZX-fuL" id="kGJ-KU-oZf"/>
@@ -1361,25 +1346,25 @@
                                                             </constraints>
                                                         </view>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="A3d-f4-rPH">
-                                                            <rect key="frame" x="73" y="14.5" width="39.5" height="37"/>
+                                                            <rect key="frame" x="73" y="14" width="38" height="38"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1E4-en-oT8">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="39.5" height="19"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="38" height="19.5"/>
                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ZdK-08-dzt">
-                                                                    <rect key="frame" x="0.0" y="23" width="39.5" height="14"/>
+                                                                    <rect key="frame" x="0.0" y="23.5" width="38" height="14.5"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nsy-Ag-a7Y">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="39.5" height="14"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="38" height="14.5"/>
                                                                             <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="12"/>
                                                                             <color key="textColor" red="0.18039215689999999" green="0.62352941179999999" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ojt-fX-gjO">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="14"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="14.5"/>
                                                                             <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="12"/>
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
@@ -1389,7 +1374,7 @@
                                                             </subviews>
                                                         </stackView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rr8-Aq-5bf">
-                                                            <rect key="frame" x="274.5" y="26" width="29.5" height="14"/>
+                                                            <rect key="frame" x="275.5" y="25.5" width="28.5" height="14.5"/>
                                                             <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="12"/>
                                                             <color key="textColor" red="0.18039215689999999" green="0.62352941179999999" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>

@@ -63,7 +63,7 @@ public class ARKitEngine: NSObject, UIAccelerometerDelegate {
     private var loadingView: UIView!
     private var lineNode: SCNNode!
     
-    var sceneView: ARSCNView!
+    //var sceneView: ARSCNView!
 
     init(config conf: ARKitConfig) {
     super.init()

@@ -16,7 +16,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    @IBOutlet weak var lblTagName: UILabel!
+    @IBOutlet weak var lblTagName: UILocalizedLabel!
     @IBOutlet weak var scanProgressView: ScanProgressView!
     let progressView = SDLoader()
     @IBOutlet weak var btnSyncTag: UIButton!
@@ -32,12 +32,13 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     var golfBagWageArray = [String]()
     var golfBagPuttArray = [String]()
     var commanBagArray = [String]()
-    
+    var tagsIn5Sec = NSMutableDictionary()
     var golfBagStr = String()
     var indexOfCellBeforeDragging = 0
     var sharedInstance: BluetoothSync!
     var timer = Timer()
-    
+    var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
+
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: golfBagStr)
     }
@@ -99,14 +100,11 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 if club.value(forKey: "tag") as! Bool{
                     let tagNumber = club.value(forKey: "tagNum") as! Int
                     let clubName = club.value(forKey: "clubName") as! String
-                    let clubNumber = Constants.allClubs.index(of: clubName)! + 1
+                    let clubNumber = self.allClubs.index(of: clubName)! + 1
                     tagClubNumber.append((tag: tagNumber, club: clubNumber,clubName:clubName))
                 }
             }
         }
-        //        for i in 0..<allClubs.count{
-        //
-        //        }
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -163,12 +161,23 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         self.sharedInstance.delegate = nil
         self.scanProgressView.hide(navItem: self.navigationItem)
         
-        let alertVC = UIAlertController(title: "Alert", message: "Please try again.", preferredStyle: UIAlertControllerStyle.alert)
-        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-            self.dismiss(animated: true, completion: nil)
-        })
-        alertVC.addAction(action)
-        self.present(alertVC, animated: true, completion: nil)
+        let data = self.tagsIn5Sec.allKeys as! [String]
+        let ordered = data.sorted()
+        if !ordered.isEmpty{
+            if let name = (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral).name{
+                self.syncTag(tagName: name, peripheral: (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
+            }else{
+                let alertVC = UIAlertController(title: "Alert", message: "Please try again.", preferredStyle: UIAlertControllerStyle.alert)
+                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+                    self.dismiss(animated: true, completion: nil)
+                })
+                alertVC.addAction(action)
+                self.present(alertVC, animated: true, completion: nil)
+            }
+        }else{
+                self.view.makeToast("No tag found, Please try again")
+        }
+
     }
     
     @IBAction func syncTagAction(_ sender: UIButton) {
@@ -295,7 +304,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
                     self.scanProgressView.hide(navItem: self.navigationItem)
-
+                    self.lblTagName.text = tagName
                     self.btnSyncTag.backgroundColor = UIColor.glfWarmGrey
                     self.btnSyncTag.setTitle("Desync Tags", for: .normal)
 //                    lblTagName.text = tagName
@@ -372,11 +381,13 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         if let newPeriName = advertisementData["kCBAdvDataLocalName"] as? String{
             if newPeriName.contains("SGX") ||  newPeriName.contains("GGX") || newPeriName.contains("LGX"){
-                self.syncTag(tagName: newPeriName, peripheral: peripheral)
+                tagsIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
+//                self.syncTag(tagName: newPeriName, peripheral: peripheral)
             }
         }else if let periName = peripheral.name{
             if periName.contains("SGX") ||  periName.contains("GGX") || periName.contains("LGX"){
-                self.syncTag(tagName: periName, peripheral: peripheral)
+//                self.syncTag(tagName: periName, peripheral: peripheral)
+                tagsIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
             }
         }
 
