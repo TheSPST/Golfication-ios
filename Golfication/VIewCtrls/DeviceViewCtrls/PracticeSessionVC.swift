@@ -28,6 +28,8 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     
     @IBOutlet weak var swingScoreCircularView: UICircularProgressRingView!
     @IBOutlet weak var backSwingCircularView: UICircularProgressRingView!
+    @IBOutlet weak var backSwingCircularView2: UICircularProgressRingView!
+
     // SixButtons
     @IBOutlet weak var view1SwingScore: UIView!
     @IBOutlet weak var view2Clubhead: UIView!
@@ -128,6 +130,10 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         self.backSwingCircularView.outerCapStyle = .square
         self.backSwingCircularView.fontColor = UIColor.clear
 
+        self.backSwingCircularView2.innerCapStyle = .square
+        self.backSwingCircularView2.outerCapStyle = .square
+        self.backSwingCircularView2.fontColor = UIColor.clear
+
         customColorSlider.defaultValue = 0.5
         customColorSlider.isEnabled = false
         customColorSlider.actionBlock={slider,newvalue in
@@ -172,30 +178,35 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             
             DispatchQueue.main.async(execute: {
                 var benchmark_Key = String()
-
+                
                 if self.gender == "male"{
-                 if self.handicap == "-"{
-                 benchmark_Key = "M6";
-                 }else if self.handicap >= "0" && self.handicap < "6"{
-                 benchmark_Key = "M0";
-                 }else if self.handicap >= "6" && self.handicap < "20"{
-                 benchmark_Key = "M6";
-                 }else{
-                 benchmark_Key = "M20";
-                 }
-                 }else{
-                 if self.handicap == "-"{
-                 benchmark_Key = "F6";
-                 }else if self.handicap >= "0" && self.handicap < "6"{
-                 benchmark_Key = "F0";
-                 }else if self.handicap >= "6" && self.handicap < "20"{
-                 benchmark_Key = "F6";
-                 }else{
-                 benchmark_Key = "F20";
-                 }
-                 }
+                    if self.handicap == "-"{
+                        benchmark_Key = "M6";
+                    }else if self.handicap >= "0" && self.handicap < "6"{
+                        benchmark_Key = "M0";
+                    }else if self.handicap >= "6" && self.handicap < "20"{
+                        benchmark_Key = "M6";
+                    }else{
+                        benchmark_Key = "M20";
+                    }
+                }else{
+                    if self.handicap == "-"{
+                        benchmark_Key = "F6";
+                    }else if self.handicap >= "0" && self.handicap < "6"{
+                        benchmark_Key = "F0";
+                    }else if self.handicap >= "6" && self.handicap < "20"{
+                        benchmark_Key = "F6";
+                    }else{
+                        benchmark_Key = "F20";
+                    }
+                }
                 if let club = self.swingDetails.value(forKey: "club") as? String{
-                    self.getBenchmarkData(benchMark: benchmark_Key, clubName:club)
+                    if club != "Pu"{
+                        self.getBenchmarkData(benchMark: benchmark_Key, clubName:club)
+                    }
+                    else{
+                        self.progressView.hide(navItem: self.navigationItem)
+                    }
                 }
                 else{
                     self.progressView.hide(navItem: self.navigationItem)
@@ -394,6 +405,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                 else if tagVal == 4{
                     DispatchQueue.main.async(execute: {
                         self.backSwingCircularView.setProgress(value: CGFloat(50), animationDuration: 1)
+                        self.backSwingCircularView2.setProgress(value: CGFloat(75), animationDuration: 2)
                     })
                 }
                 else if tagVal == 5{

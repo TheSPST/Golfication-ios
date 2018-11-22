@@ -216,6 +216,12 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         }
         viewCtrl.shotsArray = shotsAr
         viewCtrl.tempArray1 = swingArr
+        if indexPath.section == 0{
+            viewCtrl.title = "Practice Session \(indexPath.row+1)"
+        }
+        else{
+            viewCtrl.title = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
+        }
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
@@ -230,6 +236,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         let headerView = sender.view!
         let section    = headerView.tag
         let eImageView = headerView.viewWithTag(kHeaderSectionTag + section) as? UIImageView
+        
         if (self.expandedSectionHeaderNumber == -1) {
             self.expandedSectionHeaderNumber = section
             tableViewExpandSection(section, imageView: eImageView!)
@@ -239,8 +246,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                 tableViewCollapeSection(section, imageView: eImageView!)
             }
             else {
-                let cImageView = self.view.viewWithTag(kHeaderSectionTag + self.expandedSectionHeaderNumber) as? UIImageView
-                tableViewCollapeSection(self.expandedSectionHeaderNumber, imageView: cImageView!)
+                tableViewCollapeSection(self.expandedSectionHeaderNumber, imageView: eImageView!)
                 tableViewExpandSection(section, imageView: eImageView!)
             }
         }

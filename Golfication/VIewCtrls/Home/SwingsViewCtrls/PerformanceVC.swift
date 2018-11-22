@@ -31,13 +31,12 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
     @IBOutlet weak var clubHeadSpeedView: UIView!
 
     @IBOutlet weak var backSwingUserImg: UIImageView!
-    @IBOutlet weak var backSwingClub: UIImageView!
-    @IBOutlet weak var trailing: NSLayoutConstraint!
-    @IBOutlet weak var top: NSLayoutConstraint!
+//    @IBOutlet weak var backSwingClub: UIImageView!
     var backSwingAngleAvg = 0.0
-    @IBOutlet weak var swingAngleCircular: UICircularProgressRingView!
-    @IBOutlet weak var swingAngleCircularRed: UICircularProgressRingView!
-    
+    @IBOutlet weak var swingAngleCircular_Red: UICircularProgressRingView!
+    @IBOutlet weak var swingAngleCircular_Blue: UICircularProgressRingView!
+    var backSwingClub : UIImageView!
+
 
     var performanceMArray = NSMutableArray()
     var swingArray = NSMutableArray()
@@ -45,27 +44,25 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         avgSwingCircularVw.fontColor = UIColor.clear
         self.avgSwingCircularVw.innerCapStyle = .square
         self.avgSwingCircularVw.outerCapStyle = .square
         
         customColorSlider.minimumValue = 0
         customColorSlider.maximumValue = 6
-        
+        clubArray = [String]()
         for i in 0..<performanceMArray.count{
             let dataDic = performanceMArray[i] as! NSDictionary
             let tempSwingArray = dataDic.value(forKey: "swings") as! NSMutableArray
-            clubArray = [String]()
             for j in 0..<tempSwingArray.count{
                 let dic = tempSwingArray[j] as! NSDictionary
                 
                 clubArray.append(dic.value(forKey: "club") as! String)
-                clubArray = Array(Set(clubArray))
                 swingArray.add(dic)
             }
         }
-        
+        clubArray = Array(Set(clubArray))
+
         let tempArray = ["Dr", "3w", "1i", "1h", "2h", "3h", "2i", "4w", "4h", "3i", "5w", "5h", "4i", "7w", "6h", "5i", "7h", "6i", "7i", "8i", "9i", "Pw", "Gw", "Sw", "Lw", "Pu"]
         var tempArray2 = [String]()
         for j in 0..<tempArray.count{
@@ -272,7 +269,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         var vH2Sum = 0.0
         var vH3Sum = 0.0
         var handSpeedSum = 0.0
-        
+        var backSwingAngleSum = 0.0
         var clubNameSwingArray = [String]()
         for i in 0..<swingArray.count{
             let dataDic = swingArray[i] as! NSDictionary
@@ -289,7 +286,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
                     let tempo = (dataDic.value(forKey: "tempo") as! Double)
                     let backSwing = (dataDic.value(forKey: "backSwing") as! Double)
                     let downSwing = (dataDic.value(forKey: "downSwing") as! Double)
-                    
+                    let backS = (dataDic.value(forKey: "backSwingAngle") as! Double)
                     let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
                     
                     let vH1 = (dataDic.value(forKey: "VH1") as! Double)
@@ -307,6 +304,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
                     avgBackSwing += backSwing
                     avgDwnSwing += downSwing
                     swingScoreSum += swingScore
+                    backSwingAngleSum += backS
                 }
             }
         }
@@ -318,7 +316,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
                     let tempo = (dataDic.value(forKey: "tempo") as! Double)
                     let backSwing = (dataDic.value(forKey: "backSwing") as! Double)
                     let downSwing = (dataDic.value(forKey: "downSwing") as! Double)
-                    
+                    let backS = (dataDic.value(forKey: "backSwingAngle") as! Double)
                     let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
                     
                     let vH1 = (dataDic.value(forKey: "VH1") as! Double)
@@ -336,6 +334,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
                     avgBackSwing += backSwing
                     avgDwnSwing += downSwing
                     swingScoreSum += swingScore
+                    backSwingAngleSum += backS
             }
         }
         
@@ -344,12 +343,12 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         let avgVh3 = (vH3Sum/(Double(numOfItems)))
         
         let avgHandSpeed = (handSpeedSum/(Double(numOfItems)))
-        lblHandSpeed.text = "\(Int(avgHandSpeed))"
+        lblHandSpeed.text = "\((avgHandSpeed).rounded(toPlaces: 2))"
         
         let finalAvgSwingTempo = (avgSwingTempo/(Double(numOfItems)))
         self.lblBackSwingTempo.text = String(format: "%.01f", finalAvgSwingTempo)
         self.lblDownSwingTempo.text = "1"
-        
+        self.backSwingAngleAvg = (backSwingAngleSum/Double(numOfItems))
         if(finalAvgSwingTempo>=3.7 || finalAvgSwingTempo<=2.3){
            self.lblBackSwingTempo.textColor = UIColor.red
             self.lblDownSwingTempo.textColor = UIColor.red
@@ -385,25 +384,89 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         
         debugPrint("ChartValues== ","avgVh1: \(avgVh1)","avgVh2: \(avgVh2)","avgVh3: \(avgVh3)")
         headSpeedLineChart.setLineChartHandSpeed(dataPoints:["", "", "", "", "", "" ,"" ,"" ,"" ,"","",""] , values: [0.2, 0.5, 1.0, 2.2,avgVh1,1.7,2.5,avgVh2,4.9,avgVh3,10.6,5.0], chartView: headSpeedLineChart,color:UIColor.glfFlatBlue)
-        
         setBackSwingAngleDesign()
     }
     
     func setBackSwingAngleDesign(){
-        self.backSwingAngleAvg = 150
-        swingAngleCircular.shouldShowValueText = false
-        swingAngleCircularRed.shouldShowValueText = false
-        swingAngleCircular.outerRingColor = UIColor.clear
-        
-        //        swingAngleCircular.setProgress(value: CGFloat(self.backSwingAngleAvg), animationDuration: 2)
-        
-        if self.backSwingAngleAvg > 0 && self.backSwingAngleAvg < 100{
-            self.backSwingUserImg.image = UIImage(named: "backswing_image_0_100")
-        }else if self.backSwingAngleAvg > 100 && self.backSwingAngleAvg < 200{
-            self.backSwingUserImg.image = UIImage(named: "backswing_image_100_200")
-        }else if self.backSwingAngleAvg > 200 && self.backSwingAngleAvg < 290{
-            self.backSwingUserImg.image = UIImage(named: "backswing_image_190_290")
+        swingAngleCircular_Red.shouldShowValueText = false
+        swingAngleCircular_Blue.shouldShowValueText = false
+        debugPrint("backSwingAngleAvg",backSwingAngleAvg)
+        self.backSwingClub = UIImageView.init(image: UIImage(named: "club_horizontal"))
+        backSwingClub.tag = 23
+
+        for view in self.swingAngleCircular_Red.subviews where view is UIImageView{
+            if view.tag == 23 {
+                view.removeFromSuperview()
+            }
         }
+        var setBackSwingProgress = self.backSwingAngleAvg*75/270;
+        if(self.backSwingAngleAvg>270){
+            setBackSwingProgress = self.backSwingAngleAvg*80/270;
+        }
+        let swing = Double(setBackSwingProgress * 62 / 100)
+        DispatchQueue.main.async {
+//            self.swingAngleCircular_Red.setProgress(value:0,animationDuration:0.001)
+//            self.swingAngleCircular_Blue.setProgress(value:0, animationDuration:0.001)
+            if(swing>=46){
+                self.swingAngleCircular_Red.setProgress(value:(CGFloat(46 + (Int(swing)-46)/2)), animationDuration:2)
+                self.swingAngleCircular_Blue.setProgress(value: 46, animationDuration: 1)
+            }else{
+                self.swingAngleCircular_Red.setProgress(value:46,animationDuration:2)
+                self.swingAngleCircular_Blue.setProgress(value:CGFloat(swing), animationDuration:1)
+            }
+        }
+        let newSwing = ceil(self.backSwingAngleAvg/10)*10
+        if self.backSwingAngleAvg >= 0 && self.backSwingAngleAvg < 100{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_0_100")
+            backSwingClub.frame.origin.y = self.backSwingUserImg.frame.maxY*0.485
+            backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width*0.9
+            backSwingClub.layoutIfNeeded()
+            self.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(-90)) / 180.0 * CGFloat(Double.pi))
+            UIView.animate(withDuration: 1) {
+                self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(self.backSwingAngleAvg-90)) / 180.0 * CGFloat(Double.pi))
+            }
+        }else if self.backSwingAngleAvg >= 100 && self.backSwingAngleAvg < 200{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_100_200")
+            backSwingClub.frame.origin.y = self.backSwingUserImg.frame.maxY*0.285
+            backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width
+            backSwingClub.layoutIfNeeded()
+            self.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            UIView.animate(withDuration: 1) {
+                self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
+            }
+        }else if self.backSwingAngleAvg >= 200 && self.backSwingAngleAvg < 350{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_190_290")
+            backSwingClub.frame.origin.y = self.backSwingUserImg.frame.minY-backSwingClub.frame.height*0.5
+            backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width*0.8
+            backSwingClub.layoutIfNeeded()
+            self.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            UIView.animate(withDuration: 1) {
+                self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
+            }
+        }
+        self.swingAngleCircular_Red.addSubview(backSwingClub)
+        swingAngleCircular_Red.addSubview(backSwingUserImg)
+
+//        backSwingUserImg.bringSubview(toFront: backSwingClub)
+    }
+    func setAnchorPoint(anchorPoint: CGPoint, view: UIView) {
+        var newPoint = CGPoint(x:view.bounds.size.width * anchorPoint.x, y:view.bounds.size.height * anchorPoint.y)
+        var oldPoint = CGPoint(x:view.bounds.size.width * view.layer.anchorPoint.x, y:view.bounds.size.height * view.layer.anchorPoint.y)
+        
+        newPoint = newPoint.applying(view.transform)
+        oldPoint = oldPoint.applying(view.transform)
+        
+        var position : CGPoint = view.layer.position
+        
+        position.x -= oldPoint.x
+        position.x += newPoint.x;
+        
+        position.y -= oldPoint.y;
+        position.y += newPoint.y;
+        
+        view.layer.position = position;
+        view.layer.anchorPoint = anchorPoint;
     }
     
     func setGolfBagUI(tag: Int) {
@@ -490,7 +553,10 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
     // MARK: clubButtonClick
     @objc func clubButtonClick(_ sender: UIButton!) {
         let tagVal = sender.tag
-        
+        DispatchQueue.main.async {
+            self.swingAngleCircular_Red.setProgress(value:0,animationDuration:0.001)
+            self.swingAngleCircular_Blue.setProgress(value:0, animationDuration:0.001)
+        }
         setGolfBagUI(tag: tagVal)
         setPerformanceData(tag: tagVal)
         

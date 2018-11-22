@@ -35,7 +35,6 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             }
 
         }
-
     }
     var swingKey = String()
     var tempArray1 = NSArray()
@@ -67,10 +66,6 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         settings.style.buttonBarItemsShouldFillAvailableWidth = true
         settings.style.buttonBarLeftContentInset = 0
         settings.style.buttonBarRightContentInset = 0
-
-//        let index = self.buttonBarView.selectedIndex
-        self.title = "Practice Session \(count!)"
-
     }
     @IBAction func barBtnBLEAction(_ sender: Any) {
     }
