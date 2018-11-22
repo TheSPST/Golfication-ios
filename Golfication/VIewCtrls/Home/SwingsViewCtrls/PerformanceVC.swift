@@ -15,17 +15,29 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
     @IBOutlet weak var golfBagScrlView: UIScrollView!
     @IBOutlet weak var clubHeadScrlView: UIScrollView!
     
-    @IBOutlet weak var lblSwingTempo: UILabel!
+    @IBOutlet weak var lblBackSwingTempo: UILabel!
+    @IBOutlet weak var lblDownSwingTempo: UILabel!
+
     @IBOutlet weak var lblBackSwing: UILabel!
     @IBOutlet weak var lblDwnSwing: UILabel!
     @IBOutlet weak var lblSwingScore: UILabel!
     @IBOutlet weak var lblHandSpeed: UILabel!
-    
+    @IBOutlet weak var lblTempoColon: UILabel!
+
     @IBOutlet weak var customColorSlider: CustomColorSlider!
     @IBOutlet weak var headSpeedLineChart: LineChartView!
     @IBOutlet weak var avgSwingCircularVw: UICircularProgressRingView!
 
     @IBOutlet weak var clubHeadSpeedView: UIView!
+
+    @IBOutlet weak var backSwingUserImg: UIImageView!
+    @IBOutlet weak var backSwingClub: UIImageView!
+    @IBOutlet weak var trailing: NSLayoutConstraint!
+    @IBOutlet weak var top: NSLayoutConstraint!
+    var backSwingAngleAvg = 0.0
+    @IBOutlet weak var swingAngleCircular: UICircularProgressRingView!
+    @IBOutlet weak var swingAngleCircularRed: UICircularProgressRingView!
+    
 
     var performanceMArray = NSMutableArray()
     var swingArray = NSMutableArray()
@@ -335,13 +347,29 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         lblHandSpeed.text = "\(Int(avgHandSpeed))"
         
         let finalAvgSwingTempo = (avgSwingTempo/(Double(numOfItems)))
-        self.lblSwingTempo.text = String(format: "%.01f", finalAvgSwingTempo) + ":" + "1"
+        self.lblBackSwingTempo.text = String(format: "%.01f", finalAvgSwingTempo)
+        self.lblDownSwingTempo.text = "1"
         
-        let finalAvgBackSwing = (avgBackSwing/(Double(numOfItems))) * 1000
-        self.lblBackSwing.text = "\(Int(finalAvgBackSwing))MS"
+        if(finalAvgSwingTempo>=3.7 || finalAvgSwingTempo<=2.3){
+           self.lblBackSwingTempo.textColor = UIColor.red
+            self.lblDownSwingTempo.textColor = UIColor.red
+            lblTempoColon.textColor = UIColor.red
+            
+        }else if(finalAvgSwingTempo>=2.7 || finalAvgSwingTempo<=3.3){
+            self.lblBackSwingTempo.textColor = UIColor.green
+            self.lblDownSwingTempo.textColor = UIColor.green
+            lblTempoColon.textColor = UIColor.green
+        }else{
+            self.lblBackSwingTempo.textColor = UIColor.yellow
+            self.lblDownSwingTempo.textColor = UIColor.yellow
+            lblTempoColon.textColor = UIColor.yellow
+        }
         
-        let finalAvgDwnSwing = (avgDwnSwing/(Double(numOfItems))) * 1000
-        self.lblDwnSwing.text = "\(Int(finalAvgDwnSwing))MS"
+        let finalAvgBackSwing = (avgBackSwing/(Double(numOfItems)))
+        self.lblBackSwing.text = String(format: "%.03f sec", finalAvgBackSwing)
+        
+        let finalAvgDwnSwing = (avgDwnSwing/(Double(numOfItems)))
+        self.lblDwnSwing.text = String(format: "%.03f sec", finalAvgDwnSwing)
         
         let avgSwing = swingScoreSum/Double(numOfItems)
         lblSwingScore.text = "\(Int(avgSwing))"
@@ -357,6 +385,25 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         
         debugPrint("ChartValues== ","avgVh1: \(avgVh1)","avgVh2: \(avgVh2)","avgVh3: \(avgVh3)")
         headSpeedLineChart.setLineChartHandSpeed(dataPoints:["", "", "", "", "", "" ,"" ,"" ,"" ,"","",""] , values: [0.2, 0.5, 1.0, 2.2,avgVh1,1.7,2.5,avgVh2,4.9,avgVh3,10.6,5.0], chartView: headSpeedLineChart,color:UIColor.glfFlatBlue)
+        
+        setBackSwingAngleDesign()
+    }
+    
+    func setBackSwingAngleDesign(){
+        self.backSwingAngleAvg = 150
+        swingAngleCircular.shouldShowValueText = false
+        swingAngleCircularRed.shouldShowValueText = false
+        swingAngleCircular.outerRingColor = UIColor.clear
+        
+        //        swingAngleCircular.setProgress(value: CGFloat(self.backSwingAngleAvg), animationDuration: 2)
+        
+        if self.backSwingAngleAvg > 0 && self.backSwingAngleAvg < 100{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_0_100")
+        }else if self.backSwingAngleAvg > 100 && self.backSwingAngleAvg < 200{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_100_200")
+        }else if self.backSwingAngleAvg > 200 && self.backSwingAngleAvg < 290{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_190_290")
+        }
     }
     
     func setGolfBagUI(tag: Int) {

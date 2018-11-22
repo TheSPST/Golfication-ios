@@ -21,9 +21,19 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     
     @IBAction func backAction(_ sender: Any) {
         if(swingDetailsView.isHidden){
-            self.navigationController?.popToRootViewController(animated: true)
+            if superClassName == "SwingSessionVC"{
+                    swingDetailsView.isHidden = false
+//                self.navigationController?.popViewController(animated: true)
+            }else{
+                self.navigationController?.popToRootViewController(animated: true)
+            }
         }else{
-           swingDetailsView.isHidden = true
+            if superClassName == "SwingSessionVC"{
+                self.navigationController?.popViewController(animated: true)
+            }else{
+                swingDetailsView.isHidden = true
+            }
+
         }
 
     }
@@ -31,9 +41,22 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     var tempArray1 = NSArray()
     var isFirst = false
     var count:Int!
+    var superClassName : String!
     override func viewDidLoad() {
         super.viewDidLoad()
-        UIApplication.shared.isIdleTimerDisabled = true
+        superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
+        if superClassName == "SwingSessionVC"{
+            self.swingDetailsView.isHidden = false
+            self.navigationItem.rightBarButtonItems = nil
+            
+        }else{
+            UIApplication.shared.isIdleTimerDisabled = true
+            self.swingDetailsView.isHidden = true
+            NotificationCenter.default.addObserver(self, selector: #selector(self.showShotsAfterSwing(_:)), name: NSNotification.Name(rawValue: "getSwingInside"), object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(self.finishedPopUp(_:)), name: NSNotification.Name(rawValue: "practiceFinished"), object: nil)
+            self.moveToViewController(at: shotsArray.count-1)
+        }
+
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white
         settings.style.selectedBarBackgroundColor = UIColor.glfBluegreen
@@ -44,14 +67,10 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         settings.style.buttonBarItemsShouldFillAvailableWidth = true
         settings.style.buttonBarLeftContentInset = 0
         settings.style.buttonBarRightContentInset = 0
-        self.swingDetailsView.isHidden = true
-//        let index = self.buttonBarView.selectedIndex
-        super.viewDidLoad()
-        self.title = "Practice Session \(count!)"
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showShotsAfterSwing(_:)), name: NSNotification.Name(rawValue: "getSwingInside"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.finishedPopUp(_:)), name: NSNotification.Name(rawValue: "practiceFinished"), object: nil)
 
-        self.moveToViewController(at: shotsArray.count-1)
+//        let index = self.buttonBarView.selectedIndex
+        self.title = "Practice Session \(count!)"
+
     }
     @IBAction func barBtnBLEAction(_ sender: Any) {
     }
@@ -112,17 +131,36 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         }
     }
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
+        superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
         if !isFirst{
             isFirst = true
             shotsArray.append("Shot \(shotsArray.count+1)")
+            if superClassName == "SwingSessionVC"{
+                shotsArray.removeLast()
+            }
+        }
+        
+        let myArray = NSMutableArray()
+        myArray.addObjects(from: shotsArray)
+        var finalArray = NSMutableArray()
+        finalArray = myArray.mutableCopy() as! NSMutableArray
+        for i in 0..<tempArray1.count{
+            let swingDetails = tempArray1[i] as! NSMutableDictionary
+            if let club = swingDetails.value(forKey: "club") as? String{
+                if club == "Pu"{
+                    finalArray.removeObject(at: i)
+                    break
+                }
+            }
         }
         var array = [UIViewController]()
-        for i in 0..<shotsArray.count{
+        for i in 0..<finalArray.count{
             let storyboard = UIStoryboard(name: "Device", bundle: nil)
             let viewCtrl = storyboard.instantiateViewController(withIdentifier: "PracticeSessionVC") as! PracticeSessionVC
-            viewCtrl.shotNumStr = shotsArray[i]
-            viewCtrl.shotsArray = shotsArray
+            viewCtrl.shotNumStr = finalArray[i] as! String
+            viewCtrl.shotsArray = finalArray as! [String]
             viewCtrl.count = self.count
+            viewCtrl.superClassName = superClassName
             if(i < tempArray1.count){
                 viewCtrl.swingDetails = tempArray1[i] as! NSMutableDictionary
             }
@@ -130,6 +168,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         }
         return array
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "swingTableViewCell", for: indexPath) as! SwingTableViewCell
         if let swingDetails = tempArray1[indexPath.item] as? NSMutableDictionary{
@@ -149,13 +188,24 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.moveToViewController(at: indexPath.item)
-        self.swingDetailsView.isHidden = true
+        if let swingDetails = tempArray1[indexPath.item] as? NSMutableDictionary{
+            if let club = swingDetails.value(forKey: "club") as? String{
+                if club != "Pu"{
+                    self.moveToViewController(at: indexPath.item)
+                    self.swingDetailsView.isHidden = true
+                }
+            }
+        }
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return CGFloat(66.0)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return shotsArray.count-1
+        if superClassName != "SwingSessionVC"{
+            return shotsArray.count-1
+        }else{
+            return shotsArray.count
+        }
     }
 }

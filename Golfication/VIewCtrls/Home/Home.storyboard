@@ -5885,7 +5885,7 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="980"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U2j-WI-k7v">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="999.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1137.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BBA-EU-2LQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="57"/>
@@ -5973,7 +5973,7 @@
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="bFq-E2-mxE">
-                                                <rect key="frame" x="10" y="167" width="394" height="812.5"/>
+                                                <rect key="frame" x="10" y="167" width="394" height="950.5"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rWt-PO-Kho" customClass="CardView" customModule="Golfication" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="394" height="89"/>
@@ -6226,8 +6226,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-YD-Vey">
-                                                        <rect key="frame" x="0.0" y="609" width="394" height="128"/>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zWw-YD-Vey">
+                                                        <rect key="frame" x="0.0" y="614" width="394" height="128"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="device1" translatesAutoresizingMaskIntoConstraints="NO" id="Ch6-HH-uoy">
                                                                 <rect key="frame" x="8" y="8" width="126" height="112"/>
@@ -6290,7 +6290,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vys-1b-H8R" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="614" width="394" height="99"/>
+                                                        <rect key="frame" x="0.0" y="752" width="394" height="99"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pvn-71-CDB">
                                                                 <rect key="frame" x="5" y="5" width="384" height="89"/>
@@ -6464,7 +6464,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VXc-Vu-xo1" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="723" width="394" height="89.5"/>
+                                                        <rect key="frame" x="0.0" y="861" width="394" height="89.5"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="referal_BG" translatesAutoresizingMaskIntoConstraints="NO" id="oTA-QS-iLl">
                                                                 <rect key="frame" x="-4" y="-2" width="402" height="95.5"/>
@@ -6853,7 +6853,7 @@
                                                                 <rect key="frame" x="0.0" y="26" width="364" height="44"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vGZ-5u-fus" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="364" height="44"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="174.5" height="44"/>
                                                                         <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="44" id="pMf-VU-9Xz"/>
@@ -6868,8 +6868,8 @@
                                                                             <action selector="playFriendsAction:" destination="WFi-Lt-UiN" eventType="touchUpInside" id="kdL-D7-kTV"/>
                                                                         </connections>
                                                                     </button>
-                                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivD-Ha-lfz">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivD-Ha-lfz">
+                                                                        <rect key="frame" x="189.5" y="0.0" width="174.5" height="44"/>
                                                                         <color key="backgroundColor" red="0.22352941179999999" green="0.56470588239999997" blue="0.41568627450000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="44" id="YlE-KE-YQ7"/>

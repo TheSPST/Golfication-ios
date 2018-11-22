@@ -32,7 +32,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             let dataDic = sessionMArray[i] as! NSDictionary
             
             let swingArray = dataDic.value(forKey: "swings") as! NSMutableArray
-
+            var avgSwingScore = 0.0
             if dataDic.value(forKey: "playType") as! String == "practice"{
                 var clubArray = [String]()
                 for j in 0..<swingArray.count{
@@ -43,7 +43,12 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                 let practiceDic = NSMutableDictionary()
                 practiceDic.setValue(dataDic.value(forKey: "timestamp"), forKey: "timestamp")
                 practiceDic.setValue(swingArray.count, forKey: "swing")
+                for data in swingArray{
+                    avgSwingScore += (data as! NSMutableDictionary).value(forKey: "swingScore") as! Double
+                }
+                practiceDic.setValue(avgSwingScore/Double(swingArray.count), forKey: "swingScoreAvg")
                 practiceDic.setValue(clubArray.count, forKey: "club")
+                practiceDic.setValue(swingArray, forKey: "swingArray")
 
                 practiceMArray.add(practiceDic)
             }
@@ -53,13 +58,15 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                     let dic = swingArray[j] as! NSDictionary
                     clubArray.append(dic.value(forKey: "club") as! String)
                     clubArray = Array(Set(clubArray))
+                    avgSwingScore += dic.value(forKey: "swingScore") as! Double
                 }
                 let matchDic = NSMutableDictionary()
+                matchDic.setValue(avgSwingScore/Double(swingArray.count), forKey: "swingScoreAvg")
                 matchDic.setValue(dataDic.value(forKey: "timestamp"), forKey: "timestamp")
                 matchDic.setValue(swingArray.count, forKey: "swing")
                 matchDic.setValue(clubArray.count, forKey: "club")
                 matchDic.setValue(dataDic.value(forKey: "courseName"), forKey: "courseName")
-
+                matchDic.setValue(swingArray, forKey: "swingArray")
                 matchMArray.add(matchDic)
             }
         }
@@ -180,7 +187,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
 
         cell.lblDate.text = strDate
         cell.lblSwingClub.text = "\((array[indexPath.row] as AnyObject).value(forKey:"swing") as! Int)" + " Swing(s), " + "\((array[indexPath.row] as AnyObject).value(forKey:"club") as! Int)" + " Club(s)"
-        
+        cell.lblAvg.text = String(Int((array[indexPath.row] as AnyObject).value(forKey:"swingScoreAvg") as! Double))
         if indexPath.section == 0{
             var incr = array.count
             incr = incr - indexPath.row
@@ -197,8 +204,24 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "PracticePageContainerVC") as! PracticePageContainerVC
+//        viewCtrl.swingKey = swingKey
+        let array = self.sectionItems[indexPath.section] as! NSArray
+        var shotsAr = [String]()
+        let swingArr = (array[indexPath.row] as AnyObject).value(forKey:"swingArray") as! NSArray
+        viewCtrl.count = swingArr.count
+        for i in 0..<swingArr.count{
+            shotsAr.append("Shot \(i+1)")
+        }
+        viewCtrl.shotsArray = shotsAr
+        viewCtrl.tempArray1 = swingArr
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
     // MARK: - Expand / Collapse Methods

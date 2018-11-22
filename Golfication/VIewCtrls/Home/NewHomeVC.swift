@@ -666,12 +666,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     for (key, value) in dataDic{
                         group.enter()
                         
-                        if value == false{
+                        if !value{
                             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
                                 if(snapshot.value != nil){
                                     if let data = snapshot.value as? NSDictionary{
-                                        if data.value(forKey: "swings") != nil{
-                                        swingMArray.add(data)
+                                        if let _ = data.value(forKey: "swings") as? NSMutableArray{
+                                            swingMArray.add(data)
                                         }
                                     }
                                 }

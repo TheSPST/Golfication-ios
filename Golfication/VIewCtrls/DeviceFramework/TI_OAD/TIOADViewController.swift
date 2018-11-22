@@ -34,7 +34,7 @@ class TIOADViewController: UIViewController{
     @IBOutlet weak var TIOADActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var TIOADStartScanButton: UIButton!
     
-    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad_merged.bin?alt=media&token=b0e0063a-1557-4ae8-81ad-6a16449c7c68"
+    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad_merged.bin?alt=media&token=649d7402-9327-4738-bdff-95393f0c91bb"
     let fileName = "Khelfie_project2_FlashROM_oad_merged.bin"
     
     //let urlStr1 = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad1_merged.bin?alt=media&token=31ee2200-82e3-4214-8c44-e335f91b2488"

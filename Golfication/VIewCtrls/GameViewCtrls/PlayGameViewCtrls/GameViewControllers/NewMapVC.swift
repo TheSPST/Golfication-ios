@@ -2974,9 +2974,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(index < shotViseCurve.count){
             if(shotViseCurve[index].markerPosition.userData as! Int) != 0{
                 shotViseCurve[index].markerPosition.map = mapView
-//                if(self.swingMatchId.count > 0){
-//                    shotViseCurve[index].swingPosition.map = mapView
-//                }
+                if(self.swingMatchId.count > 0){
+                    shotViseCurve[index].swingPosition.map = mapView
+                }
             }else{
                 if let view = shotViseCurve[index].markerPosition.iconView as? ShotMarker{
                     let newIndex = stackViewForGreenShots.subviews.count
