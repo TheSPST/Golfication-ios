@@ -27,9 +27,11 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     @IBOutlet weak var swingProgressView: UIProgressView!
     
     @IBOutlet weak var swingScoreCircularView: UICircularProgressRingView!
-    @IBOutlet weak var backSwingCircularView: UICircularProgressRingView!
-    @IBOutlet weak var backSwingCircularView2: UICircularProgressRingView!
+    @IBOutlet weak var swingAngleCircular_Blue: UICircularProgressRingView!
+    @IBOutlet weak var swingAngleCircular_Red: UICircularProgressRingView!
 
+    @IBOutlet weak var lblBackSwingTitle: UILabel!
+    @IBOutlet weak var backSwingUserImg: UIImageView!
     // SixButtons
     @IBOutlet weak var view1SwingScore: UIView!
     @IBOutlet weak var view2Clubhead: UIView!
@@ -74,7 +76,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     @IBOutlet weak var btnBackSwingClubImage: UIButton!
     @IBOutlet weak var btnHandSpeedClubImage: UIButton!
     let progressView = SDLoader()
-
+    var backSwingClub : UIImageView!
     
     var shotBtnViews = [UIView]()
     var shotTopViews = [UIView]()
@@ -126,13 +128,13 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         self.swingScoreCircularView.outerCapStyle = .square
         self.swingScoreCircularView.fontColor = UIColor.clear
         
-        self.backSwingCircularView.innerCapStyle = .square
-        self.backSwingCircularView.outerCapStyle = .square
-        self.backSwingCircularView.fontColor = UIColor.clear
+        self.swingAngleCircular_Blue.innerCapStyle = .square
+        self.swingAngleCircular_Blue.outerCapStyle = .square
+        self.swingAngleCircular_Blue.fontColor = UIColor.clear
 
-        self.backSwingCircularView2.innerCapStyle = .square
-        self.backSwingCircularView2.outerCapStyle = .square
-        self.backSwingCircularView2.fontColor = UIColor.clear
+        self.swingAngleCircular_Red.innerCapStyle = .square
+        self.swingAngleCircular_Red.outerCapStyle = .square
+        self.swingAngleCircular_Red.fontColor = UIColor.clear
 
         customColorSlider.defaultValue = 0.5
         customColorSlider.isEnabled = false
@@ -245,6 +247,16 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                 }else{
                     self.lbl4TempoB.textColor = UIColor.yellow
                 }
+                if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
+                    if(Int(backSwing)>=260 && Int(backSwing)<=280){
+                        self.lbl5BackSwingB.textColor = UIColor.green
+                    }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
+                        self.lbl5BackSwingB.textColor = UIColor.yellow
+                    }else{
+                        self.lbl5BackSwingB.textColor = UIColor.red
+                    }
+                }
+                
             })
         }
     }
@@ -314,110 +326,178 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             lblBottomClubSpeedKPH.textColor = UIColor(rgb: 0x87A39A)
             lblBottomClubSpeedCHS.textColor = UIColor(rgb: 0x87A39A)
             lblSwingTempo.textColor = UIColor(rgb: 0x87A39A)
+            lblBackSwingTitle.textColor = UIColor(rgb: 0x87A39A)
 
-        for i in 0..<self.shotBtnViews.count{
-            shotBtnViews[i].layer.cornerRadius = 3.0
-            shotBtnViews[i].layer.borderWidth = 1.0
-            shotBtnViews[i].layer.borderColor = UIColor(rgb: 0xDBE7EE).cgColor
-            if shotBtnViews[i].tag == tagVal{
-                shotBtnViews[i].layer.borderColor = UIColor.glfFlatBlue.cgColor
+            for i in 0..<self.shotBtnViews.count{
+                shotBtnViews[i].layer.cornerRadius = 3.0
+                shotBtnViews[i].layer.borderWidth = 1.0
+                shotBtnViews[i].layer.borderColor = UIColor(rgb: 0xDBE7EE).cgColor
+                if shotBtnViews[i].tag == tagVal{
+                    shotBtnViews[i].layer.borderColor = UIColor.glfFlatBlue.cgColor
+                }
             }
-        }
-        for i in 0..<shotTopViews.count{
-            shotTopViews[i].isHidden = true
-            if shotTopViews[i].tag == tagVal{
-                shotTopViews[i].isHidden = false
-                if tagVal == 0{
-                    DispatchQueue.main.async(execute: {
-                        self.swingScoreCircularView.setProgress(value: CGFloat(83), animationDuration: 1)
-                    })
-                }
-                else if tagVal == 1{
-                    let avgVh1 = 55.5
-                    let avgVh2 = 10.2
-                    let avgVh3 = 30.7
-                    clubSpeedLineChart.setLineChartHandSpeed(dataPoints:["", "", "", "", "", "" ,"" ,"" ,"" ,"","",""] , values: [0.2, 0.5, 1.0, 2.2,avgVh1,1.7,2.5,avgVh2,4.9,avgVh3,10.6,5.0], chartView: clubSpeedLineChart,color:UIColor.glfFlatBlue)
-                    clubSpeedLineChart.leftAxis.axisLineColor = UIColor.white
-                    clubSpeedLineChart.xAxis.axisLineColor = UIColor.white
-                    
-                    //---------------- Set Color -------------
-                    let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
-                    let clubSpeedTemp:Double = Double(self.benchMarkVal)!
-                    if(clubSpeedTemp*0.9<clubSpeed){
-                        lblBottomClubSpeedKPH.textColor = UIColor.green
-                        lblBottomClubSpeedCHS.textColor = UIColor.green
-
-                        shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
-                        self.lbl2ClubheadV.textColor = UIColor.green
-                        self.lbl2ClubheadB.textColor = UIColor.green
-                        
-                    }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
-                        lblBottomClubSpeedKPH.textColor = UIColor.yellow
-                        lblBottomClubSpeedCHS.textColor = UIColor.yellow
-
-                        shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
-                        self.lbl2ClubheadV.textColor = UIColor.yellow
-                        self.lbl2ClubheadB.textColor = UIColor.yellow
-                        
-                    }else if(clubSpeedTemp*0.8>clubSpeed){
-                        lblBottomClubSpeedKPH.textColor = UIColor.red
-                        lblBottomClubSpeedCHS.textColor = UIColor.red
-
-                        shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
-                        self.lbl2ClubheadV.textColor = UIColor.red
-                        self.lbl2ClubheadB.textColor = UIColor.red
+            for i in 0..<shotTopViews.count{
+                shotTopViews[i].isHidden = true
+                if shotTopViews[i].tag == tagVal{
+                    shotTopViews[i].isHidden = false
+                    if tagVal == 0{
+                        DispatchQueue.main.async(execute: {
+                            self.swingScoreCircularView.setProgress(value: CGFloat(83), animationDuration: 1)
+                        })
                     }
-                }
-                else if tagVal == 3{
-                    /*DispatchQueue.main.async(execute: {
-                        self.customColorSlider.setValue(CGFloat(3.5), animated: true)
-                    })
-                    customColorSlider.actionBlock = {slider,newvalue in
-                        debugPrint("newValue== ",newvalue)
-                    }*/
-                    
-                    let tempo = self.swingDetails.value(forKey: "tempo") as! Double
-
-                    if(tempo>=3.7 || tempo<=2.3){
-                        lbl4TempoB.textColor = UIColor.red
-                        lbl4TempoV.textColor = UIColor.red
-                        lbl4Tempo1V.textColor = UIColor.red
-                        lblTempoColon.textColor = UIColor.red
-                        shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
-                        lblSwingTempo.textColor = UIColor.red
+                    else if tagVal == 1{
+                        let avgVh1 = 55.5
+                        let avgVh2 = 10.2
+                        let avgVh3 = 30.7
+                        clubSpeedLineChart.setLineChartHandSpeed(dataPoints:["", "", "", "", "", "" ,"" ,"" ,"" ,"","",""] , values: [0.2, 0.5, 1.0, 2.2,avgVh1,1.7,2.5,avgVh2,4.9,avgVh3,10.6,5.0], chartView: clubSpeedLineChart,color:UIColor.glfFlatBlue)
+                        clubSpeedLineChart.leftAxis.axisLineColor = UIColor.white
+                        clubSpeedLineChart.xAxis.axisLineColor = UIColor.white
                         
-                    }else if(tempo>=2.7 || tempo<=3.3){
-                        lbl4TempoB.textColor = UIColor.green
-                        lbl4TempoV.textColor = UIColor.green
-                        lbl4Tempo1V.textColor = UIColor.green
-                        lblTempoColon.textColor = UIColor.green
-                        shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
-                        lblSwingTempo.textColor = UIColor.green
-                    }else{
-                        lbl4TempoB.textColor = UIColor.yellow
-                        lbl4TempoV.textColor = UIColor.yellow
-                        lbl4Tempo1V.textColor = UIColor.yellow
-                        lblTempoColon.textColor = UIColor.yellow
-                        shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
-                        lblSwingTempo.textColor = UIColor.yellow
+                        //---------------- Set Color -------------
+                        let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
+                        let clubSpeedTemp:Double = Double(self.benchMarkVal)!
+                        if(clubSpeedTemp*0.9<clubSpeed){
+                            lblBottomClubSpeedKPH.textColor = UIColor.green
+                            lblBottomClubSpeedCHS.textColor = UIColor.green
+                            
+                            shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
+                            self.lbl2ClubheadV.textColor = UIColor.green
+                            self.lbl2ClubheadB.textColor = UIColor.green
+                            
+                        }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
+                            lblBottomClubSpeedKPH.textColor = UIColor.yellow
+                            lblBottomClubSpeedCHS.textColor = UIColor.yellow
+                            
+                            shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
+                            self.lbl2ClubheadV.textColor = UIColor.yellow
+                            self.lbl2ClubheadB.textColor = UIColor.yellow
+                            
+                        }else if(clubSpeedTemp*0.8>clubSpeed){
+                            lblBottomClubSpeedKPH.textColor = UIColor.red
+                            lblBottomClubSpeedCHS.textColor = UIColor.red
+                            
+                            shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
+                            self.lbl2ClubheadV.textColor = UIColor.red
+                            self.lbl2ClubheadB.textColor = UIColor.red
+                        }
                     }
-                }
-                else if tagVal == 4{
-                    DispatchQueue.main.async(execute: {
-                        self.backSwingCircularView.setProgress(value: CGFloat(50), animationDuration: 1)
-                        self.backSwingCircularView2.setProgress(value: CGFloat(75), animationDuration: 2)
-                    })
-                }
-                else if tagVal == 5{
-                    let avgVh1 = 10.5
-                    let avgVh2 = 55.2
-                    let avgVh3 = 70.7
-                    headSpeedLineChart.setLineChartHandSpeed(dataPoints:["", "", "", "", "", "" ,"" ,"" ,"" ,"","",""] , values: [0.2, 0.5, 1.0, 2.2,avgVh1,1.7,2.5,avgVh2,4.9,avgVh3,10.6,5.0], chartView: headSpeedLineChart,color:UIColor.glfFlatBlue)
-                    headSpeedLineChart.leftAxis.axisLineColor = UIColor.white
-                    headSpeedLineChart.xAxis.axisLineColor = UIColor.white
+                    else if tagVal == 3{
+                        let tempo = self.swingDetails.value(forKey: "tempo") as! Double
+                        
+                        if(tempo>=3.7 || tempo<=2.3){
+                            lbl4TempoB.textColor = UIColor.red
+                            lbl4TempoV.textColor = UIColor.red
+                            lbl4Tempo1V.textColor = UIColor.red
+                            lblTempoColon.textColor = UIColor.red
+                            shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
+                            lblSwingTempo.textColor = UIColor.red
+                            
+                        }else if(tempo>=2.7 || tempo<=3.3){
+                            lbl4TempoB.textColor = UIColor.green
+                            lbl4TempoV.textColor = UIColor.green
+                            lbl4Tempo1V.textColor = UIColor.green
+                            lblTempoColon.textColor = UIColor.green
+                            shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
+                            lblSwingTempo.textColor = UIColor.green
+                        }else{
+                            lbl4TempoB.textColor = UIColor.yellow
+                            lbl4TempoV.textColor = UIColor.yellow
+                            lbl4Tempo1V.textColor = UIColor.yellow
+                            lblTempoColon.textColor = UIColor.yellow
+                            shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
+                            lblSwingTempo.textColor = UIColor.yellow
+                        }
+                    }
+                    else if tagVal == 4{
+                        if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
+                                if(Int(backSwing)>=260 && Int(backSwing)<=280){
+                                   lbl5BackSwingB.textColor = UIColor.green
+                                    lblBackSwingTitle.textColor = UIColor.green
+                                    shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
+                                }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
+                                    lbl5BackSwingB.textColor = UIColor.yellow
+                                    lblBackSwingTitle.textColor = UIColor.yellow
+                                    shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
+                                }else{
+                                    lbl5BackSwingB.textColor = UIColor.red
+                                    lblBackSwingTitle.textColor = UIColor.red
+                                    shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
+                                }
+                            self.setBackSwingAngleDesign(backSwingAngle: backSwing)
+                        }
+                    }
+                    else if tagVal == 5{
+                        let avgVh1 = 10.5
+                        let avgVh2 = 55.2
+                        let avgVh3 = 70.7
+                        headSpeedLineChart.setLineChartHandSpeed(dataPoints:["", "", "", "", "", "" ,"" ,"" ,"" ,"","",""] , values: [0.2, 0.5, 1.0, 2.2,avgVh1,1.7,2.5,avgVh2,4.9,avgVh3,10.6,5.0], chartView: headSpeedLineChart,color:UIColor.glfFlatBlue)
+                        headSpeedLineChart.leftAxis.axisLineColor = UIColor.white
+                        headSpeedLineChart.xAxis.axisLineColor = UIColor.white
+                    }
                 }
             }
         }
     }
+    func setBackSwingAngleDesign(backSwingAngle:Double){
+        swingAngleCircular_Red.shouldShowValueText = false
+        swingAngleCircular_Blue.shouldShowValueText = false
+        self.backSwingClub = UIImageView.init(image: UIImage(named: "club_horizontal"))
+        backSwingClub.tag = 23
+        debugPrint(backSwingAngle)
+        for view in self.swingAngleCircular_Red.subviews where view is UIImageView{
+            if view.tag == 23 {
+                view.removeFromSuperview()
+            }
+        }
+        var setBackSwingProgress = backSwingAngle*75/270;
+        if(backSwingAngle>270){
+            setBackSwingProgress = backSwingAngle*80/270;
+        }
+        let swing = Double(setBackSwingProgress * 62 / 100)
+        DispatchQueue.main.async {
+            self.swingAngleCircular_Red.setProgress(value:0, animationDuration:0)
+            self.swingAngleCircular_Blue.setProgress(value:0, animationDuration:0)
+            if(swing>=46){
+                self.swingAngleCircular_Red.setProgress(value:(CGFloat(46 + (Int(swing)-46)/2)), animationDuration:2)
+                self.swingAngleCircular_Blue.setProgress(value: 46, animationDuration: 1)
+            }else{
+                self.swingAngleCircular_Red.setProgress(value:46,animationDuration:2)
+                self.swingAngleCircular_Blue.setProgress(value:CGFloat(swing), animationDuration:1)
+            }
+        }
+        let newSwing = ceil(backSwingAngle/10)*10
+        if backSwingAngle >= 0 && backSwingAngle < 100{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_0_100")
+            backSwingClub.frame.origin.y = self.backSwingUserImg.frame.maxY*0.485
+            backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width*0.9
+            backSwingClub.layoutIfNeeded()
+            BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(-90)) / 180.0 * CGFloat(Double.pi))
+            UIView.animate(withDuration: 1) {
+                self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(backSwingAngle-90)) / 180.0 * CGFloat(Double.pi))
+            }
+        }else if backSwingAngle >= 100 && backSwingAngle < 200{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_100_200")
+            backSwingClub.frame.origin.y = self.backSwingUserImg.frame.maxY*0.285
+            backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width
+            backSwingClub.layoutIfNeeded()
+            BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            UIView.animate(withDuration: 1) {
+                self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
+            }
+        }else if backSwingAngle >= 200 && backSwingAngle < 350{
+            self.backSwingUserImg.image = UIImage(named: "backswing_image_190_290")
+            backSwingClub.frame.origin.y = self.backSwingUserImg.frame.minY-backSwingClub.frame.height*0.5
+            backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width*0.8
+            backSwingClub.layoutIfNeeded()
+            BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            UIView.animate(withDuration: 1) {
+                self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
+            }
+        }
+        self.swingAngleCircular_Red.addSubview(backSwingClub)
+        swingAngleCircular_Red.addSubview(backSwingUserImg)
+        
+        //        backSwingUserImg.bringSubview(toFront: backSwingClub)
     }
 }

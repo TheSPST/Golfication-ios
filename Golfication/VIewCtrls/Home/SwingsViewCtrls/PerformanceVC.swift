@@ -63,7 +63,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         }
         clubArray = Array(Set(clubArray))
 
-        let tempArray = ["Dr", "3w", "1i", "1h", "2h", "3h", "2i", "4w", "4h", "3i", "5w", "5h", "4i", "7w", "6h", "5i", "7h", "6i", "7i", "8i", "9i", "Pw", "Gw", "Sw", "Lw", "Pu"]
+        let tempArray = ["Dr", "3w", "1i", "1h", "2h", "3h", "2i", "4w", "4h", "3i", "5w", "5h", "4i", "7w", "6h", "5i", "7h", "6i", "7i", "8i", "9i", "Pw", "Gw", "Sw", "Lw"]
         var tempArray2 = [String]()
         for j in 0..<tempArray.count{
             if clubArray.contains(tempArray[j]){
@@ -405,8 +405,6 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         }
         let swing = Double(setBackSwingProgress * 62 / 100)
         DispatchQueue.main.async {
-//            self.swingAngleCircular_Red.setProgress(value:0,animationDuration:0.001)
-//            self.swingAngleCircular_Blue.setProgress(value:0, animationDuration:0.001)
             if(swing>=46){
                 self.swingAngleCircular_Red.setProgress(value:(CGFloat(46 + (Int(swing)-46)/2)), animationDuration:2)
                 self.swingAngleCircular_Blue.setProgress(value: 46, animationDuration: 1)
@@ -421,7 +419,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             backSwingClub.frame.origin.y = self.backSwingUserImg.frame.maxY*0.485
             backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width*0.9
             backSwingClub.layoutIfNeeded()
-            self.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
             backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(-90)) / 180.0 * CGFloat(Double.pi))
             UIView.animate(withDuration: 1) {
                 self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(self.backSwingAngleAvg-90)) / 180.0 * CGFloat(Double.pi))
@@ -431,7 +429,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             backSwingClub.frame.origin.y = self.backSwingUserImg.frame.maxY*0.285
             backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width
             backSwingClub.layoutIfNeeded()
-            self.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
             UIView.animate(withDuration: 1) {
                 self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
             }
@@ -440,7 +438,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             backSwingClub.frame.origin.y = self.backSwingUserImg.frame.minY-backSwingClub.frame.height*0.5
             backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width*0.8
             backSwingClub.layoutIfNeeded()
-            self.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
+            BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
             UIView.animate(withDuration: 1) {
                 self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
             }
@@ -450,25 +448,6 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
 
 //        backSwingUserImg.bringSubview(toFront: backSwingClub)
     }
-    func setAnchorPoint(anchorPoint: CGPoint, view: UIView) {
-        var newPoint = CGPoint(x:view.bounds.size.width * anchorPoint.x, y:view.bounds.size.height * anchorPoint.y)
-        var oldPoint = CGPoint(x:view.bounds.size.width * view.layer.anchorPoint.x, y:view.bounds.size.height * view.layer.anchorPoint.y)
-        
-        newPoint = newPoint.applying(view.transform)
-        oldPoint = oldPoint.applying(view.transform)
-        
-        var position : CGPoint = view.layer.position
-        
-        position.x -= oldPoint.x
-        position.x += newPoint.x;
-        
-        position.y -= oldPoint.y;
-        position.y += newPoint.y;
-        
-        view.layer.position = position;
-        view.layer.anchorPoint = anchorPoint;
-    }
-    
     func setGolfBagUI(tag: Int) {
         for subV in golfBagScrlView.subviews{
             subV.removeFromSuperview()
@@ -539,7 +518,8 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             }
             else{
                 titleLbl.text =  clubName
-//                btns.setBackgroundImage(#imageLiteral(resourceName: "TempBag"), for: .normal)
+                btns.setImage(#imageLiteral(resourceName: "golfBag"), for: .normal)
+                btns.backgroundColor = UIColor.glfWhite
             }
             golfBagContainerView.addSubview(titleLbl)
             

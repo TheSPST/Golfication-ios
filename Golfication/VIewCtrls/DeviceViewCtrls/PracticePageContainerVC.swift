@@ -42,7 +42,19 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     var count:Int!
     var superClassName : String!
     override func viewDidLoad() {
+        settings.style.buttonBarBackgroundColor = .white
+        settings.style.buttonBarItemBackgroundColor = .white
+        settings.style.selectedBarBackgroundColor = UIColor.glfBluegreen
+        settings.style.buttonBarItemFont = UIFont(name: "SFProDisplay-Medium", size: 14.0)!
+        settings.style.selectedBarHeight = 2.0
+        settings.style.buttonBarMinimumLineSpacing = 0
+        settings.style.buttonBarItemTitleColor = .black
+        settings.style.buttonBarItemsShouldFillAvailableWidth = true
+        settings.style.buttonBarLeftContentInset = 0
+        settings.style.buttonBarRightContentInset = 0
+
         super.viewDidLoad()
+        
         superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
         if superClassName == "SwingSessionVC"{
             self.swingDetailsView.isHidden = false
@@ -55,17 +67,6 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             NotificationCenter.default.addObserver(self, selector: #selector(self.finishedPopUp(_:)), name: NSNotification.Name(rawValue: "practiceFinished"), object: nil)
             self.moveToViewController(at: shotsArray.count-1)
         }
-
-        settings.style.buttonBarBackgroundColor = .white
-        settings.style.buttonBarItemBackgroundColor = .white
-        settings.style.selectedBarBackgroundColor = UIColor.glfBluegreen
-        settings.style.buttonBarItemFont = UIFont(name: "SFProDisplay-Medium", size: 14.0)!
-        settings.style.selectedBarHeight = 2.0
-        settings.style.buttonBarMinimumLineSpacing = 0
-        settings.style.buttonBarItemTitleColor = .black
-        settings.style.buttonBarItemsShouldFillAvailableWidth = true
-        settings.style.buttonBarLeftContentInset = 0
-        settings.style.buttonBarRightContentInset = 0
     }
     @IBAction func barBtnBLEAction(_ sender: Any) {
     }
@@ -175,7 +176,13 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
                 cell.clubImageView.image = #imageLiteral(resourceName: "club")
             }
             if let time = swingDetails.value(forKey: "timestamp") as? Int64{
-                cell.lblTimeStamp.text = "\(time)"
+                let date = Date(timeIntervalSince1970: TimeInterval(time/1000))
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en")
+                dateFormatter.dateFormat = "MMM d, yyyy"
+                let strDate = dateFormatter.string(from: date)
+
+                cell.lblTimeStamp.text = "\(strDate)"
             }else{
                 cell.lblTimeStamp.text = "No Time Available"
             }

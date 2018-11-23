@@ -136,7 +136,7 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="nn2-ew-9J3">
-                                        <rect key="frame" x="16" y="50" width="288" height="236"/>
+                                        <rect key="frame" x="16" y="50" width="288" height="271.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start Swinging" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nle-tu-zoQ">
                                                 <rect key="frame" x="90.5" y="0.0" width="107" height="20.5"/>
@@ -145,7 +145,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qkM-B3-JzV">
-                                                <rect key="frame" x="16" y="50.5" width="256" height="185.5"/>
+                                                <rect key="frame" x="16" y="50.5" width="256" height="173"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TempStartSwing" translatesAutoresizingMaskIntoConstraints="NO" id="K3Y-yA-YTp">
                                                         <rect key="frame" x="68" y="0.0" width="120" height="150"/>
@@ -161,18 +161,18 @@
                                                         </constraints>
                                                         <color key="progressTintColor" red="0.22352941179999999" green="0.56470588239999997" blue="0.41568627450000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     </progressView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting for swing..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ka1-9T-uEl">
-                                                        <rect key="frame" x="69" y="181" width="118.5" height="4.5"/>
-                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
-                                                        <color key="textColor" red="0.52941176469999995" green="0.63921568630000003" blue="0.60392156860000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="1fD-La-cst" secondAttribute="trailing" constant="8" id="7xV-eT-hCY"/>
                                                     <constraint firstItem="1fD-La-cst" firstAttribute="leading" secondItem="qkM-B3-JzV" secondAttribute="leading" constant="8" id="yh4-p5-9Cj"/>
                                                 </constraints>
                                             </stackView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting for swing..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ka1-9T-uEl">
+                                                <rect key="frame" x="85" y="253.5" width="118.5" height="18"/>
+                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
+                                                <color key="textColor" red="0.52941176469999995" green="0.63921568630000003" blue="0.60392156860000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="qkM-B3-JzV" firstAttribute="leading" secondItem="nn2-ew-9J3" secondAttribute="leading" constant="16" id="LPa-n2-YsG"/>
@@ -365,7 +365,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a8I-NV-IFq" userLabel="SwingScore">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="293"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="333"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="-50" translatesAutoresizingMaskIntoConstraints="NO" id="VgM-Jo-FOU">
                                                         <rect key="frame" x="0.0" y="10" width="320" height="185"/>
@@ -460,7 +460,7 @@
                                                 </constraints>
                                             </view>
                                             <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mFa-MN-Rvb" userLabel="ClubSpeed">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="293"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="333"/>
                                                 <subviews>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NDu-i1-j2m" customClass="LineChartView" customModule="Charts">
                                                         <rect key="frame" x="10" y="10" width="300" height="150"/>
@@ -542,7 +542,7 @@
                                                 </constraints>
                                             </view>
                                             <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UiA-ce-jbv" userLabel="Club Plane">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="293"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="333"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="0OO-hW-rha">
                                                         <rect key="frame" x="20" y="0.0" width="280" height="195"/>
@@ -606,7 +606,7 @@
                                                 </constraints>
                                             </view>
                                             <view tag="3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xKw-5Z-x7G" userLabel="SwingTempo">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="293"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="333"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="Zv0-V9-0iU">
                                                         <rect key="frame" x="0.0" y="25" width="320" height="201"/>
@@ -758,7 +758,7 @@
                                                 </constraints>
                                             </view>
                                             <view tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zac-Dw-Gtc" userLabel="Hand Speed">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="293"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="333"/>
                                                 <subviews>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzD-eR-PP2" customClass="LineChartView" customModule="Charts">
                                                         <rect key="frame" x="10" y="10" width="300" height="150"/>
@@ -825,14 +825,21 @@
                                                 </constraints>
                                             </view>
                                             <view tag="4" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Lm-FY-TiW" userLabel="Back Swing">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="293"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="333"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hze-Hc-XPP" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
-                                                        <rect key="frame" x="60" y="20" width="200" height="200"/>
+                                                        <rect key="frame" x="55" y="32" width="210" height="210"/>
+                                                        <subviews>
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="backswing_image_0_100" translatesAutoresizingMaskIntoConstraints="NO" id="jao-VJ-rVn">
+                                                                <rect key="frame" x="57" y="26" width="96" height="176"/>
+                                                            </imageView>
+                                                        </subviews>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="200" id="aHf-fh-mYT"/>
-                                                            <constraint firstAttribute="height" constant="200" id="lDK-Uv-SLU"/>
+                                                            <constraint firstAttribute="bottom" secondItem="jao-VJ-rVn" secondAttribute="bottom" constant="8" id="6wm-pr-onj"/>
+                                                            <constraint firstItem="jao-VJ-rVn" firstAttribute="centerX" secondItem="hze-Hc-XPP" secondAttribute="centerX" id="CGk-pS-4x5"/>
+                                                            <constraint firstAttribute="width" constant="210" id="aHf-fh-mYT"/>
+                                                            <constraint firstAttribute="height" constant="210" id="lDK-Uv-SLU"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="color" keyPath="outerRingColor">
@@ -848,7 +855,7 @@
                                                                 <real key="value" value="145"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="endAngle">
-                                                                <real key="value" value="395"/>
+                                                                <real key="value" value="485"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="fullCircle" value="NO"/>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="outerRingWidth">
@@ -860,11 +867,11 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bKX-tD-KrJ" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
-                                                        <rect key="frame" x="60" y="20" width="200" height="200"/>
+                                                        <rect key="frame" x="55" y="32" width="210" height="210"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="200" id="bRm-jt-zAJ"/>
-                                                            <constraint firstAttribute="height" constant="200" id="qEj-VK-kQc"/>
+                                                            <constraint firstAttribute="width" constant="210" id="bRm-jt-zAJ"/>
+                                                            <constraint firstAttribute="height" constant="210" id="qEj-VK-kQc"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="color" keyPath="outerRingColor">
@@ -880,7 +887,7 @@
                                                                 <real key="value" value="145"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="endAngle">
-                                                                <real key="value" value="395"/>
+                                                                <real key="value" value="485"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="fullCircle" value="NO"/>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="outerRingWidth">
@@ -891,17 +898,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="backswing_image_0_100" translatesAutoresizingMaskIntoConstraints="NO" id="jao-VJ-rVn">
-                                                        <rect key="frame" x="112" y="40" width="96" height="140"/>
-                                                    </imageView>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="club_horizontal" translatesAutoresizingMaskIntoConstraints="NO" id="eLl-nD-BtR">
-                                                        <rect key="frame" x="10" y="80.5" width="107" height="29"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="29" id="hyE-dq-iol"/>
-                                                        </constraints>
-                                                    </imageView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Goj-cv-jJV">
-                                                        <rect key="frame" x="119" y="240" width="82.5" height="35"/>
+                                                        <rect key="frame" x="119" y="258" width="82.5" height="35"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BACK SWING" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OXa-xK-YW2">
                                                                 <rect key="frame" x="0.0" y="0.0" width="82.5" height="20"/>
@@ -934,7 +932,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xat-5L-sbk">
-                                                        <rect key="frame" x="110" y="258" width="100" height="100"/>
+                                                        <rect key="frame" x="110" y="277" width="100" height="100"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="100" id="cWD-O5-Vzy"/>
@@ -947,24 +945,19 @@
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstItem="eLl-nD-BtR" firstAttribute="centerY" secondItem="jao-VJ-rVn" secondAttribute="centerY" constant="-15" id="099-OI-AJk"/>
-                                                    <constraint firstItem="jao-VJ-rVn" firstAttribute="centerX" secondItem="4Lm-FY-TiW" secondAttribute="centerX" id="3Fl-jj-oiV"/>
                                                     <constraint firstItem="Xat-5L-sbk" firstAttribute="centerX" secondItem="4Lm-FY-TiW" secondAttribute="centerX" id="3ca-vr-dch"/>
-                                                    <constraint firstItem="Goj-cv-jJV" firstAttribute="top" secondItem="bKX-tD-KrJ" secondAttribute="bottom" constant="20" id="ERE-TF-uwe"/>
+                                                    <constraint firstItem="Goj-cv-jJV" firstAttribute="top" secondItem="bKX-tD-KrJ" secondAttribute="bottom" constant="16" id="ERE-TF-uwe"/>
                                                     <constraint firstItem="Goj-cv-jJV" firstAttribute="centerX" secondItem="4Lm-FY-TiW" secondAttribute="centerX" id="Itp-ny-nbl"/>
                                                     <constraint firstItem="hze-Hc-XPP" firstAttribute="centerX" secondItem="4Lm-FY-TiW" secondAttribute="centerX" id="QcE-Dh-9lv"/>
-                                                    <constraint firstItem="jao-VJ-rVn" firstAttribute="height" secondItem="bKX-tD-KrJ" secondAttribute="height" constant="-60" id="ajR-ry-7qy"/>
                                                     <constraint firstItem="bKX-tD-KrJ" firstAttribute="centerX" secondItem="4Lm-FY-TiW" secondAttribute="centerX" id="lfe-1X-bc9"/>
                                                     <constraint firstItem="hze-Hc-XPP" firstAttribute="bottom" secondItem="bKX-tD-KrJ" secondAttribute="bottom" id="oRd-zY-NPh"/>
-                                                    <constraint firstItem="Xat-5L-sbk" firstAttribute="top" secondItem="Goj-cv-jJV" secondAttribute="bottom" constant="-17" id="qLz-SK-0Re"/>
-                                                    <constraint firstItem="jao-VJ-rVn" firstAttribute="leading" secondItem="eLl-nD-BtR" secondAttribute="trailing" constant="-5" id="sRH-tB-rnO"/>
-                                                    <constraint firstItem="bKX-tD-KrJ" firstAttribute="top" secondItem="4Lm-FY-TiW" secondAttribute="top" constant="20" id="t5W-Tf-ffL"/>
+                                                    <constraint firstItem="Xat-5L-sbk" firstAttribute="top" secondItem="Goj-cv-jJV" secondAttribute="bottom" constant="-16" id="qLz-SK-0Re"/>
+                                                    <constraint firstItem="bKX-tD-KrJ" firstAttribute="top" secondItem="4Lm-FY-TiW" secondAttribute="top" constant="32" id="t5W-Tf-ffL"/>
                                                     <constraint firstItem="hze-Hc-XPP" firstAttribute="top" secondItem="bKX-tD-KrJ" secondAttribute="top" id="uJC-sj-WDZ"/>
-                                                    <constraint firstItem="jao-VJ-rVn" firstAttribute="top" secondItem="bKX-tD-KrJ" secondAttribute="top" constant="20" id="zWE-Cw-DU6"/>
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="h2S-wY-hxG">
-                                                <rect key="frame" x="2.5" y="293" width="315" height="245"/>
+                                                <rect key="frame" x="2.5" y="333" width="315" height="205"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="bY9-Uz-a2g">
                                                         <rect key="frame" x="0.0" y="0.0" width="315" height="205"/>
@@ -1208,8 +1201,8 @@
                                                             </stackView>
                                                         </subviews>
                                                     </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="-5" translatesAutoresizingMaskIntoConstraints="NO" id="c6O-98-ltZ">
-                                                        <rect key="frame" x="131" y="225" width="53" height="20"/>
+                                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="-5" translatesAutoresizingMaskIntoConstraints="NO" id="c6O-98-ltZ">
+                                                        <rect key="frame" x="131" y="0.0" width="53" height="20"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h2l-e6-fhV">
                                                                 <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -1302,8 +1295,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="backSwingCircularView" destination="bKX-tD-KrJ" id="TAn-hE-6Fz"/>
-                        <outlet property="backSwingCircularView2" destination="hze-Hc-XPP" id="68E-gW-N4X"/>
+                        <outlet property="backSwingUserImg" destination="jao-VJ-rVn" id="F3k-C2-1QF"/>
                         <outlet property="btnBackSwingClubImage" destination="G8e-xl-wIV" id="Qps-VO-aFw"/>
                         <outlet property="btnClubPlaneClubImage" destination="TT6-aH-yFX" id="xDf-fK-WfZ"/>
                         <outlet property="btnClubSpeedClubImage" destination="Hvl-vf-tLV" id="MAX-PT-y7Z"/>
@@ -1327,6 +1319,7 @@
                         <outlet property="lbl5BackSwingV" destination="Xat-5L-sbk" id="4lb-iF-v6u"/>
                         <outlet property="lbl6HandSpeedB" destination="lhb-sV-DmH" id="LJx-76-1mg"/>
                         <outlet property="lbl6HandSpeedV" destination="RJm-1G-Bkd" id="LGP-ca-6dU"/>
+                        <outlet property="lblBackSwingTitle" destination="IXj-L2-vUC" id="dkB-C5-RcZ"/>
                         <outlet property="lblBottomClubSpeedCHS" destination="D9u-ui-yJZ" id="dUq-eL-pHS"/>
                         <outlet property="lblBottomClubSpeedKPH" destination="OcI-Gc-YvP" id="caf-L7-F9e"/>
                         <outlet property="lblClubName" destination="aI2-uC-TYU" id="M34-9h-qWW"/>
@@ -1341,6 +1334,8 @@
                         <outlet property="scrollContainerView" destination="Dml-6N-yxc" id="WhE-5g-c2S"/>
                         <outlet property="scrollView" destination="dar-6g-4hy" id="p0T-da-jaI"/>
                         <outlet property="startSwingingSV" destination="ZLC-ZX-fuL" id="kGJ-KU-oZf"/>
+                        <outlet property="swingAngleCircular_Blue" destination="bKX-tD-KrJ" id="TAn-hE-6Fz"/>
+                        <outlet property="swingAngleCircular_Red" destination="hze-Hc-XPP" id="68E-gW-N4X"/>
                         <outlet property="swingProgressView" destination="yWt-R7-5Yi" id="lE5-ez-b5c"/>
                         <outlet property="swingScoreCircularView" destination="rBB-bw-Hdc" id="cZP-AE-GMC"/>
                         <outlet property="view1SwingScore" destination="ZhU-am-7zu" id="Owh-W5-HL5"/>
@@ -1540,7 +1535,6 @@
         <image name="TempStartSwing" width="114" height="152"/>
         <image name="backArrow" width="15" height="28"/>
         <image name="backswing_image_0_100" width="96" height="176"/>
-        <image name="club_horizontal" width="107" height="14.5"/>
         <image name="device1" width="450" height="603"/>
         <image name="golfBag" width="51.200000762939453" height="51.200000762939453"/>
         <image name="golficationBar" width="25" height="25"/>

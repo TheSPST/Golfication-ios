@@ -256,7 +256,7 @@
                                                                 <real key="value" value="145"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="endAngle">
-                                                                <real key="value" value="475"/>
+                                                                <real key="value" value="485"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="fullCircle" value="NO"/>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="outerRingWidth">
@@ -284,7 +284,7 @@
                                                                 <real key="value" value="145"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="endAngle">
-                                                                <real key="value" value="475"/>
+                                                                <real key="value" value="485"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="fullCircle" value="NO"/>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="outerRingWidth">

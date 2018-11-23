@@ -1224,7 +1224,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     func checkCurrentLocation(){
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
-            // Request when-in-use authorization initially
             self.locationManager.requestAlwaysAuthorization()
             self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
             break
@@ -1437,6 +1436,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 DispatchQueue.main.async(execute: {
                     self.uploadTotalStrokesGained(playerId: self.selectedUserId)
                     self.updateMap(indexToUpdate: self.holeIndex)
+                    self.getSwingData(swingKey: self.swingMatchId)
                     if wantToDrag{
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
                             for markers in self.markersForCurved{
@@ -5843,7 +5843,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                 }
                 if(!self.isContinue){
+                    self.btnClubs.isHidden = true
+                    self.btnTrackShot.isHidden = true
+                    self.lblShotNumber.isHidden = true
                     ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                    ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["courseName":(self.matchDataDict.value(forKey: "courseName") as! String)])
                 }
                 else{
                     self.getGameId(swingKey:self.swingMatchId)
@@ -5881,6 +5885,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         let downSwing = swing.value(forKey: "downSwing") as! Double
                         let clubSpeed = swing.value(forKey: "clubSpeed") as! Double
                         let handSpeed = swing.value(forKey: "handSpeed") as! Double
+                        let backSwingAngle = swing.value(forKey: "backSwingAngle") as! Double
                         let tempo = swing.value(forKey: "tempo") as! Double
                         let swingScore = swing.value(forKey: "swingScore") as! Int
                         let club = swing.value(forKey: "club") as! String
@@ -5900,7 +5905,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         if(holeNum == self.holeIndex+1){
                             self.swingData.append(tempArr)
                         }
-
                     }
                 }
             })
@@ -6820,14 +6824,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                 }
             }else if(tappedMarker.userData as! String == "Swing"){
-                    var index = 0
+                var index = 0
                     for i in 0..<self.shotViseCurve.count{
                         index = i
                         if(self.shotViseCurve[i].swingPosition.position == tappedMarker.position){
                             break
                         }
                     }
-                    
                     let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "MapShotPopupVC") as! MapShotPopupVC
                     viewCtrl.modalPresentationStyle = .overCurrentContext
                     viewCtrl.testStr = "Shubham"

@@ -41,6 +41,7 @@ class BLE: NSObject {
     var centerPointOfTeeNGreen = [(tee:CLLocationCoordinate2D ,fairway:CLLocationCoordinate2D, green:CLLocationCoordinate2D,par:Int)]()
     var isFinished = false
     var shotNo = 1
+    var holeNo = 0
     var backSwing : Float = 0.0
     var downSwing : Float = 0.0
     var handVelocity :Float = 0.0
@@ -1123,7 +1124,7 @@ extension BLE: CBPeripheralDelegate {
                 
                 let responseInIntFirst4 = byteArrayToInt(value: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                 let responseInIntSecond4 = byteArrayToInt(value: [dataArray[3],dataArray[4],dataArray[5],dataArray[6]])
-                var hole = 0
+                
                 debugPrint("\(totalTagInFirstPackate)")
                 if  dataArray[0] == UInt8(1) && (dataArray[0] == currentCommandData[0]) && (dataArray[1] == currentCommandData[1]){
                     timerForWriteCommand1.invalidate()
@@ -1175,58 +1176,26 @@ extension BLE: CBPeripheralDelegate {
                     }else{
                         DispatchQueue.main.async(execute: {
                             if(!self.isPracticeMatch) && self.currentGameId/100 == responseInIntFirst4/100{
-//                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "You want to discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
-//                                gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-//                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-//                                    self.swingMatchId = ""
-//                                    self.randomGenerator()
-//                                    self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-//                                }))
-//                                gameAlert.addAction(UIAlertAction(title: "Continue".localized(), style: .default, handler: { (action: UIAlertAction!) in
                                     self.invalidateAllTimers()
                                     debugPrint(self.swingMatchId)
                                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-//                                }))
-//                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
                             }else if self.currentGameId/100 == responseInIntFirst4/100{
-//                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "You want to discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
-//                                gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-//                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-//                                    self.swingMatchId = ""
-//                                    self.randomGenerator()
-//                                    self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-//                                    var timer = Timer()
-//                                    timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (t) in
-//                                        self.startMatch(isPractice: true)
-//                                        timer.invalidate()
-//                                    })
-//                                }))
-//                                gameAlert.addAction(UIAlertAction(title: "Continue".localized(), style: .default, handler: { (action: UIAlertAction!) in
                                     self.invalidateAllTimers()
                                     debugPrint(self.swingMatchId)
                                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-//                                }))
-//                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
                             }else{
-/*                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "You want to discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
+                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
                                 gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
                                     self.swingMatchId = ""
                                     self.randomGenerator()
                                     self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                                 }))
-                                gameAlert.addAction(UIAlertAction(title: "Continue".localized(), style: .default, handler: { (action: UIAlertAction!) in
-                                    self.invalidateAllTimers()
-                                    debugPrint(self.swingMatchId)
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
+                                gameAlert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { (action: UIAlertAction!) in
+                                    debugPrint("Game Discard cancel Press")
                                 }))
                                 UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-                            */
-                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-                                self.swingMatchId = ""
-                                self.randomGenerator()
-                                self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             }
                         })
                     }
@@ -1322,7 +1291,7 @@ extension BLE: CBPeripheralDelegate {
                             self.holeWithSwing.append((hole: 1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
                             self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, ba:0.0, tempo: 0.0, club: "",time:0))
                         }
-                        hole = Int(dataArray[16])
+                        holeNo = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[15])
                         memccpy(&backSwing, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
@@ -1360,7 +1329,7 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[swingDetails.count-1].ba = Double(backAngle)
                         holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
                         holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
-                        self.updateSingleSwing(data:swingDetails.last!,hole:hole)
+                        self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
                         if(holeWithSwing[holeWithSwing.count-1].shotNo == 0){
                             holeWithSwing[holeWithSwing.count-1].holeOut = true
                             self.updateHoleOutShot(nextData: holeWithSwing.last!)
@@ -1419,6 +1388,7 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[shotNo-1].time = Timestamp
                         debugPrint(swingDetails)
                     }else{
+                        holeNo = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[15])
                         swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
@@ -1469,7 +1439,7 @@ extension BLE: CBPeripheralDelegate {
                             holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
                             holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
                         }
-                        self.updateSingleSwing(data:swingDetails.last!,hole:hole)
+                        self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
                         debugPrint(self.swingDetails)
                         debugPrint(self.holeWithSwing)
                         if(holeWithSwing.last!.shotNo != 0){
