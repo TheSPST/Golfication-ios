@@ -211,10 +211,13 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
                 let clubSpeedTemp:Double = Double(benchMarkVal)!
                 if(clubSpeedTemp*0.9<clubSpeed){
                     self.shotTopLbls[1].textColor = UIColor.green
+                    self.scoreTopLbls[1].textColor = UIColor.green
                 }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
                     self.shotTopLbls[1].textColor = UIColor.yellow
+                    self.scoreTopLbls[1].textColor = UIColor.yellow
                 }else if(clubSpeedTemp*0.8>clubSpeed){
                     self.shotTopLbls[1].textColor = UIColor.red
+                    self.scoreTopLbls[1].textColor = UIColor.red
                 }
                 let scoreValT =  self.shotsDetails[self.pageIndex][3] as! String
                 let tempo = Double(scoreValT)!
@@ -232,10 +235,13 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
                 let backSwing = Double(scoreValBA)!
                 if(Int(backSwing)>=260 && Int(backSwing)<=280){
                     self.shotTopLbls[4].textColor = UIColor.green
+                    self.scoreTopLbls[4].textColor = UIColor.green
                 }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
                     self.shotTopLbls[4].textColor = UIColor.yellow
+                    self.scoreTopLbls[4].textColor = UIColor.yellow
                 }else{
                     self.shotTopLbls[4].textColor = UIColor.red
+                    self.scoreTopLbls[4].textColor = UIColor.red
                 }
             })
         }
