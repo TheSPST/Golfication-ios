@@ -9,6 +9,7 @@
 
 import UIKit
 import XLPagerTabStrip
+import FirebaseAuth
 
 class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, IndicatorInfoProvider {
     @IBOutlet weak var sessionTableView: UITableView!
@@ -21,6 +22,10 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
     var sectionNames: Array<Any> = []
     
     var sessionMArray = NSMutableArray()
+    let progressView = SDLoader()
+
+    var parVal = Int()
+    var strokesGainedVal = Double()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,11 +59,17 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             }
             else{
                 var clubArray = [String]()
+                var holeShot = [(key:String,hole:Int,shot:Int)]()
                 for j in 0..<swingArray.count{
                     let dic = swingArray[j] as! NSDictionary
                     clubArray.append(dic.value(forKey: "club") as! String)
                     clubArray = Array(Set(clubArray))
                     avgSwingScore += dic.value(forKey: "swingScore") as! Double
+                    if let key = dataDic.value(forKey: "matchKey") as? String{
+                        let holeNum = dic.value(forKey: "holeNum") as! Int
+                        let shotNum = dic.value(forKey: "shotNum") as! Int
+                        holeShot.append((key:key,hole: holeNum-1, shot: shotNum-1))
+                    }
                 }
                 let matchDic = NSMutableDictionary()
                 matchDic.setValue(avgSwingScore/Double(swingArray.count), forKey: "swingScoreAvg")
@@ -67,19 +78,16 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                 matchDic.setValue(clubArray.count, forKey: "club")
                 matchDic.setValue(dataDic.value(forKey: "courseName"), forKey: "courseName")
                 matchDic.setValue(swingArray, forKey: "swingArray")
+                matchDic.setValue(dataDic.value(forKey: "matchKey"), forKey: "matchKey")
+                matchDic.setValue(holeShot, forKey: "holeShot")
                 matchMArray.add(matchDic)
             }
         }
-        // Do any additional setup after loading the view.
         
         if practiceMArray.count>0 && matchMArray.count>0{
             sectionNames = ["Practise Session(\(practiceMArray.count))", "Rounds Played(\(matchMArray.count))"]
             sectionItems = [practiceMArray, matchMArray]
             debugPrint("sectionItems == ",sectionItems)
-            
-//                self.expandedSectionHeaderNumber = 0
-//                let imgView = UIImageView()
-//                tableViewExpandSection(0, imageView: imgView)
         }
         else if practiceMArray.count == 0 && matchMArray.count == 0{
             sectionNames = []
@@ -98,7 +106,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         self.sessionTableView.delegate = self
         self.sessionTableView.dataSource = self
         self.sessionTableView.reloadData()
-    }
+        }
     
     // MARK: - Tableview Methods
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -217,9 +225,12 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         viewCtrl.shotsArray = shotsAr
         viewCtrl.tempArray1 = swingArr
         if indexPath.section == 0{
+            viewCtrl.fromRoundsPlayed = false
             viewCtrl.title = "Practice Session \(indexPath.row+1)"
         }
         else{
+            viewCtrl.fromRoundsPlayed = true
+            viewCtrl.holeShot = (array[indexPath.row] as AnyObject).value(forKey:"holeShot") as! [(key:String,hole:Int,shot:Int)]
             viewCtrl.title = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
         }
         self.navigationController?.pushViewController(viewCtrl, animated: true)

@@ -670,6 +670,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
                                 if(snapshot.value != nil){
                                     if let data = snapshot.value as? NSDictionary{
+                                        debugPrint(data.value(forKey: "matchKey"))
                                         if let _ = data.value(forKey: "swings") as? NSMutableArray{
                                             swingMArray.add(data)
                                         }
@@ -1113,10 +1114,35 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }else{
                     self.getClubDataFromFirebase(isShow:false)
                 }
+                self.getBenchmarkKey()
             })
         }
     }
-    
+    func getBenchmarkKey(){
+        var benchmark_Key = String()
+        if self.genderData == "male"{
+            if self.profileHandicap == "-"{
+                benchmark_Key = "M6";
+            }else if self.profileHandicap! >= "0" && self.profileHandicap! < "6"{
+                benchmark_Key = "M0";
+            }else if self.profileHandicap! >= "6" && self.profileHandicap! < "20"{
+                benchmark_Key = "M6";
+            }else{
+                benchmark_Key = "M20";
+            }
+        }else{
+            if self.profileHandicap == "-"{
+                benchmark_Key = "F6";
+            }else if self.profileHandicap! >= "0" && self.profileHandicap! < "6"{
+                benchmark_Key = "F0";
+            }else if self.profileHandicap! >= "6" && self.profileHandicap! < "20"{
+                benchmark_Key = "F6";
+            }else{
+                benchmark_Key = "F20";
+            }
+        }
+        Constants.benchmark_Key = benchmark_Key
+    }
     
     func getBaseLine(hcp:Int){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "baseline/\(hcp)") { (snapshot) in

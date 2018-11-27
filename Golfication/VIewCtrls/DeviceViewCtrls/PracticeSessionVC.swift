@@ -163,57 +163,10 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     }
     
     func getUserData(){
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "") { (snapshot) in
-            if(snapshot.childrenCount > 0){
-                var userData = NSDictionary()
-                userData = snapshot.value as! NSDictionary
-
-                if let gender = userData.object(forKey: "gender") as? String{
-                    self.gender = gender
-                }
-                if let handicap = userData.object(forKey: "handicap") as? String{
-                    self.handicap = handicap
-                }
+        if let club = self.swingDetails.value(forKey: "club") as? String{
+            if club != "Pu" && !Constants.benchmark_Key.isEmpty{
+                self.getBenchmarkData(benchMark: Constants.benchmark_Key, clubName:club)
             }
-            
-            DispatchQueue.main.async(execute: {
-                var benchmark_Key = String()
-                
-                if self.gender == "male"{
-                    if self.handicap == "-"{
-                        benchmark_Key = "M6";
-                    }else if self.handicap >= "0" && self.handicap < "6"{
-                        benchmark_Key = "M0";
-                    }else if self.handicap >= "6" && self.handicap < "20"{
-                        benchmark_Key = "M6";
-                    }else{
-                        benchmark_Key = "M20";
-                    }
-                }else{
-                    if self.handicap == "-"{
-                        benchmark_Key = "F6";
-                    }else if self.handicap >= "0" && self.handicap < "6"{
-                        benchmark_Key = "F0";
-                    }else if self.handicap >= "6" && self.handicap < "20"{
-                        benchmark_Key = "F6";
-                    }else{
-                        benchmark_Key = "F20";
-                    }
-                }
-                if let club = self.swingDetails.value(forKey: "club") as? String{
-                    if club != "Pu"{
-                        self.getBenchmarkData(benchMark: benchmark_Key, clubName:club)
-                    }
-                    else{
-                        self.progressView.hide(navItem: self.navigationItem)
-                    }
-                }
-                else{
-                    self.progressView.hide(navItem: self.navigationItem)
-                }
-            })
         }
     }
     
@@ -263,7 +216,10 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     
     func initTempArr(){
         if self.swingDetails.count != 0{
-            let backSwingAngle = self.swingDetails.value(forKey: "backSwingAngle") as! Double
+            var backSwingAngle = 0.0
+            if let bckAngle = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
+                backSwingAngle = bckAngle
+            }
             let backSwing = (self.swingDetails.value(forKey: "backSwing") as! Double)
             let downSwing = (self.swingDetails.value(forKey: "downSwing") as! Double)
             let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double

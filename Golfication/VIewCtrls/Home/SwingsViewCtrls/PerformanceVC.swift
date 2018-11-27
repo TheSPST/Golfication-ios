@@ -286,19 +286,22 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
                     let tempo = (dataDic.value(forKey: "tempo") as! Double)
                     let backSwing = (dataDic.value(forKey: "backSwing") as! Double)
                     let downSwing = (dataDic.value(forKey: "downSwing") as! Double)
-                    let backS = (dataDic.value(forKey: "backSwingAngle") as! Double)
+                    var backS = 0.0
+                    if let ba = dataDic.value(forKey: "backSwingAngle") as? Double{
+                        backS = ba
+                    }
                     let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
                     
-                    let vH1 = (dataDic.value(forKey: "VH1") as! Double)
-                    let vH2 = (dataDic.value(forKey: "VH2") as! Double)
-                    let vH3 = (dataDic.value(forKey: "VH3") as! Double)
+//                    let vH1 = (dataDic.value(forKey: "VH1") as! Double)
+//                    let vH2 = (dataDic.value(forKey: "VH2") as! Double)
+//                    let vH3 = (dataDic.value(forKey: "VH3") as! Double)
                     let handSpeed = (dataDic.value(forKey: "handSpeed") as! Double)
                     
                     handSpeedSum += handSpeed
                     
-                    vH1Sum += vH1
-                    vH2Sum += vH2
-                    vH3Sum += vH3
+//                    vH1Sum += vH1
+//                    vH2Sum += vH2
+//                    vH3Sum += vH3
                     
                     avgSwingTempo += tempo
                     avgBackSwing += backSwing
@@ -316,20 +319,24 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
                     let tempo = (dataDic.value(forKey: "tempo") as! Double)
                     let backSwing = (dataDic.value(forKey: "backSwing") as! Double)
                     let downSwing = (dataDic.value(forKey: "downSwing") as! Double)
-                    let backS = (dataDic.value(forKey: "backSwingAngle") as! Double)
+                    var backS = 0.0
+                    if let back = dataDic.value(forKey: "backSwingAngle") as? Double{
+                        backS = back
+                    }
+                
                     let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
                     
-                    let vH1 = (dataDic.value(forKey: "VH1") as! Double)
-                    let vH2 = (dataDic.value(forKey: "VH2") as! Double)
-                    let vH3 = (dataDic.value(forKey: "VH3") as! Double)
+//                    let vH1 = (dataDic.value(forKey: "VH1") as! Double)
+//                    let vH2 = (dataDic.value(forKey: "VH2") as! Double)
+//                    let vH3 = (dataDic.value(forKey: "VH3") as! Double)
                     let handSpeed = (dataDic.value(forKey: "handSpeed") as! Double)
                     
                     handSpeedSum += handSpeed
                     
-                    vH1Sum += vH1
-                    vH2Sum += vH2
-                    vH3Sum += vH3
-                    
+//                    vH1Sum += vH1
+//                    vH2Sum += vH2
+//                    vH3Sum += vH3
+                
                     avgSwingTempo += tempo
                     avgBackSwing += backSwing
                     avgDwnSwing += downSwing
@@ -338,52 +345,64 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             }
         }
         
-        let avgVh1 = (vH1Sum/(Double(numOfItems)))
-        let avgVh2 = (vH2Sum/(Double(numOfItems)))
-        let avgVh3 = (vH3Sum/(Double(numOfItems)))
-        
-        let avgHandSpeed = (handSpeedSum/(Double(numOfItems)))
-        lblHandSpeed.text = "\((avgHandSpeed).rounded(toPlaces: 2))"
-        
-        let finalAvgSwingTempo = (avgSwingTempo/(Double(numOfItems)))
-        self.lblBackSwingTempo.text = String(format: "%.01f", finalAvgSwingTempo)
-        self.lblDownSwingTempo.text = "1"
-        self.backSwingAngleAvg = (backSwingAngleSum/Double(numOfItems))
-        if(finalAvgSwingTempo>=3.7 || finalAvgSwingTempo<=2.3){
-           self.lblBackSwingTempo.textColor = UIColor.red
-            self.lblDownSwingTempo.textColor = UIColor.red
-            lblTempoColon.textColor = UIColor.red
+//        let avgVh1 = (vH1Sum/(Double(numOfItems)))
+//        let avgVh2 = (vH2Sum/(Double(numOfItems)))
+//        let avgVh3 = (vH3Sum/(Double(numOfItems)))
+        if numOfItems > 0{
+            let avgHandSpeed = (handSpeedSum/(Double(numOfItems)))
+            lblHandSpeed.text = "\((avgHandSpeed).rounded(toPlaces: 2))"
             
-        }else if(finalAvgSwingTempo>=2.7 || finalAvgSwingTempo<=3.3){
-            self.lblBackSwingTempo.textColor = UIColor.green
-            self.lblDownSwingTempo.textColor = UIColor.green
-            lblTempoColon.textColor = UIColor.green
+            let finalAvgSwingTempo = (avgSwingTempo/(Double(numOfItems)))
+            self.lblBackSwingTempo.text = String(format: "%.01f", finalAvgSwingTempo)
+            self.lblDownSwingTempo.text = "1"
+            self.backSwingAngleAvg = (backSwingAngleSum/Double(numOfItems))
+            if(finalAvgSwingTempo>=3.7 || finalAvgSwingTempo<=2.3){
+                self.lblBackSwingTempo.textColor = UIColor.red
+                self.lblDownSwingTempo.textColor = UIColor.red
+                lblTempoColon.textColor = UIColor.red
+                
+            }else if(finalAvgSwingTempo>=2.7 || finalAvgSwingTempo<=3.3){
+                self.lblBackSwingTempo.textColor = UIColor.green
+                self.lblDownSwingTempo.textColor = UIColor.green
+                lblTempoColon.textColor = UIColor.green
+            }else{
+                self.lblBackSwingTempo.textColor = UIColor.yellow
+                self.lblDownSwingTempo.textColor = UIColor.yellow
+                lblTempoColon.textColor = UIColor.yellow
+            }
+            let finalAvgBackSwing = (avgBackSwing/(Double(numOfItems)))
+            self.lblBackSwing.text = String(format: "%.03f sec", finalAvgBackSwing)
+            
+            let finalAvgDwnSwing = (avgDwnSwing/(Double(numOfItems)))
+            self.lblDwnSwing.text = String(format: "%.03f sec", finalAvgDwnSwing)
+
         }else{
-            self.lblBackSwingTempo.textColor = UIColor.yellow
-            self.lblDownSwingTempo.textColor = UIColor.yellow
-            lblTempoColon.textColor = UIColor.yellow
+            lblHandSpeed.text = "-"
+            self.lblBackSwingTempo.text = "-"
+            self.lblBackSwing.text = "-"
+            self.lblDwnSwing.text = "-"
         }
         
-        let finalAvgBackSwing = (avgBackSwing/(Double(numOfItems)))
-        self.lblBackSwing.text = String(format: "%.03f sec", finalAvgBackSwing)
-        
-        let finalAvgDwnSwing = (avgDwnSwing/(Double(numOfItems)))
-        self.lblDwnSwing.text = String(format: "%.03f sec", finalAvgDwnSwing)
-        
-        let avgSwing = swingScoreSum/Double(numOfItems)
-        lblSwingScore.text = "\(Int(avgSwing))"
         DispatchQueue.main.async(execute: {
-            self.avgSwingCircularVw.setProgress(value: CGFloat(Int(avgSwing)), animationDuration: 1)
-            self.customColorSlider.setValue(CGFloat(finalAvgSwingTempo), animated: true)
+            if numOfItems > 0{
+                let avgSwing = swingScoreSum/Double(numOfItems)
+                self.lblSwingScore.text = "\(Int(avgSwing))"
+                self.avgSwingCircularVw.setProgress(value: CGFloat(Int(avgSwing)), animationDuration: 1)
+            }else{
+                self.lblSwingScore.text = "-"
+                self.avgSwingCircularVw.setProgress(value: CGFloat(0), animationDuration: 1)
+            }
+            
+//            self.customColorSlider.setValue(CGFloat(finalAvgSwingTempo), animated: true)
         })
         
-        customColorSlider.isEnabled = false
-        customColorSlider.actionBlock = {slider,newvalue in
-            debugPrint("newValue== ",newvalue)
-        }
+//        customColorSlider.isEnabled = false
+//        customColorSlider.actionBlock = {slider,newvalue in
+//            debugPrint("newValue== ",newvalue)
+//        }
         
-        debugPrint("ChartValues== ","avgVh1: \(avgVh1)","avgVh2: \(avgVh2)","avgVh3: \(avgVh3)")
-        headSpeedLineChart.setLineChartHandSpeed(dataPoints:["", "", "", "", "", "" ,"" ,"" ,"" ,"","",""] , values: [0.2, 0.5, 1.0, 2.2,avgVh1,1.7,2.5,avgVh2,4.9,avgVh3,10.6,5.0], chartView: headSpeedLineChart,color:UIColor.glfFlatBlue)
+//        debugPrint("ChartValues== ","avgVh1: \(avgVh1)","avgVh2: \(avgVh2)","avgVh3: \(avgVh3)")
+//        headSpeedLineChart.setLineChartHandSpeed(dataPoints:["", "", "", "", "", "" ,"" ,"" ,"" ,"","",""] , values: [0.2, 0.5, 1.0, 2.2,avgVh1,1.7,2.5,avgVh2,4.9,avgVh3,10.6,5.0], chartView: headSpeedLineChart,color:UIColor.glfFlatBlue)
         setBackSwingAngleDesign()
     }
     

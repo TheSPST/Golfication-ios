@@ -960,11 +960,6 @@ extension BLE: CBPeripheralDelegate {
                             if !self.isFinished{
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwing"), object: dict)
                             }
-
-//                                self.isFirst = true
-//                            }else{
-//                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwingInside"), object: dict)
-//                            }
                         })
                     }else{
                         let dict = NSMutableDictionary()
@@ -1294,6 +1289,9 @@ extension BLE: CBPeripheralDelegate {
                         holeNo = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[15])
+                        if Int(dataArray[15]) == 0{
+                            holeWithSwing[holeWithSwing.count-1].holeOut = true
+                        }
                         memccpy(&backSwing, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
                         memccpy(&downSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&handVelocity, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
@@ -1302,6 +1300,8 @@ extension BLE: CBPeripheralDelegate {
                             clubNumber = Int(dataArray[14]-1)
                         }
                         holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubNumber]
+                        swingDetails[swingDetails.count-1].club = self.allClubs[clubNumber]
+                        swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
                         swingDetails[swingDetails.count-1].bs = Double(backSwing)
                         swingDetails[swingDetails.count-1].ds = Double(downSwing)
                         swingDetails[swingDetails.count-1].hv = Double(handVelocity)
@@ -1330,8 +1330,7 @@ extension BLE: CBPeripheralDelegate {
                         holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
                         holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
                         self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
-                        if(holeWithSwing[holeWithSwing.count-1].shotNo == 0){
-                            holeWithSwing[holeWithSwing.count-1].holeOut = true
+                        if (holeWithSwing[holeWithSwing.count-1].holeOut){
                             self.updateHoleOutShot(nextData: holeWithSwing.last!)
                             debugPrint("HoleWithSwing",holeWithSwing)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)

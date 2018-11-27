@@ -72,7 +72,8 @@ struct Constants{
 
     // MARK: FeedPostVC
     static var fromStatsPost = false
-
+    //MARK: SwingsSessions
+    static var benchmark_Key = String()
     // MARK: FilterVC
     static var finalFilterDic = NSMutableDictionary()
     static var section5 = [String]()

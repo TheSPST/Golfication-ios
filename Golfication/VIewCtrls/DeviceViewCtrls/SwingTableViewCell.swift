@@ -7,23 +7,18 @@
 //
 
 import UIKit
-import UICircularProgressRing
-
 class SwingTableViewCell: UITableViewCell {
 
     @IBOutlet weak var lblTimeStamp: UILabel!
     @IBOutlet weak var lblSubtitle2: UILabel!
     @IBOutlet weak var lblSubtitle: UILabel!
-    @IBOutlet weak var clubImageView: UIImageView!
     @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var lblScore: UILabel!
     
-    @IBOutlet weak var swingProgressView: UICircularProgressRingView!
     override func awakeFromNib() {
         super.awakeFromNib()
-        swingProgressView.isHidden = true
-        
-        
         // Initialization code
+        lblScore.setCircle(frame:lblScore.frame)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

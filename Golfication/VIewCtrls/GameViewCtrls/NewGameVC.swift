@@ -166,8 +166,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var isDeviceSetup = false
     // MARK: golfXAction
     @objc func golfXAction() {
-        Constants.ble  = BLE()
-        Constants.ble.startScanning()
+        if Constants.isDevice{
+            Constants.ble.startScanning()
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(self.bluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
     }
     @objc func bluetoothStatus(_ notification: NSNotification) {
@@ -274,8 +275,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
 }
     
     @objc func retryAction(_ sender: UIButton) {
-        Constants.ble = BLE()
-        Constants.ble.startScanning()
+        if Constants.isDevice{
+            Constants.ble.startScanning()
+        }
+
         NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
     }
     
@@ -519,9 +522,12 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     // MARK: viewWillAppear
-    override func viewWillAppear(_ animated: Bool)
-    {
+    override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(true)
+        if Constants.isDevice{
+            Constants.ble = BLE()
+            Constants.ble.isPracticeMatch = false
+        }
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true
@@ -1431,6 +1437,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 if let teeColor = (v as! NSMutableDictionary).value(forKey: "teeColor") as? String{
                                     Constants.selectedTeeColor = teeColor
                                 }
+                                if let swingKey = (v as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                                    Constants.ble.swingMatchId = swingKey
+                                }
                             }
                         }
                     }
@@ -1528,14 +1537,45 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     self.lblContinueGolfName.text = Constants.selectedGolfName
                     //self.lblContinueHoleNum.text = "Playing Hole " + startingHole
                 }
-                if self.isContinueClicked{
-                    self.isContinueClicked = false
-                    self.redirectToGameModeScreen()
+                if !Constants.ble.swingMatchId.isEmpty{
+                    self.checkSwingKey()
+                }else{
+                    if self.isContinueClicked{
+                        self.isContinueClicked = false
+                        self.redirectToGameModeScreen()
+                    }
+                }
+
+            })
+        }
+    }
+    func checkSwingKey(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession/\(Constants.ble.swingMatchId)/") { (snapshot) in
+            var isSwing = false
+            if let bool = snapshot.value as? Bool{
+                isSwing = bool
+            }
+            DispatchQueue.main.async(execute: {
+                if isSwing{
+                    FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(Constants.ble.swingMatchId)/") { (snapshot) in
+                        var swingData = NSMutableDictionary()
+                        if let dict = snapshot.value as? NSMutableDictionary{
+                            swingData = dict
+                        }
+                        DispatchQueue.main.async(execute: {
+                            if let gameID = swingData.value(forKey: "gameId") as? Int{
+                                Constants.ble.currentGameId = gameID
+                            }
+                            if self.isContinueClicked{
+                                self.isContinueClicked = false
+                                self.redirectToGameModeScreen()
+                            }
+                        })
+                    }
                 }
             })
         }
     }
-    
     func redirectToGameModeScreen() {
         self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
 
@@ -1935,8 +1975,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "EndRound"), object: nil)
     }
     @IBAction func btnActionConnectDevice(_ sender: Any) {
-        Constants.ble = BLE()
-        Constants.ble.startScanning()
+        if Constants.isDevice{
+            Constants.ble.startScanning()
+        }
     }
     
     // MARK: showDefaultMap

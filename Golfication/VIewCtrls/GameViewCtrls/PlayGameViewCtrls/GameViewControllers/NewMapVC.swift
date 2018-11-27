@@ -5848,6 +5848,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.lblShotNumber.isHidden = true
                     ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
                     ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["courseName":(self.matchDataDict.value(forKey: "courseName") as! String)])
+                    ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["matchKey":"\(self.currentMatchId)"])
                 }
                 else{
                     self.getGameId(swingKey:self.swingMatchId)
@@ -5864,7 +5865,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             DispatchQueue.main.async(execute: {
                 if(self.isContinue){
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: gameid)
                     self.getSwingData(swingKey: swingKey)
                 }
             })
@@ -5881,29 +5881,33 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     for swing in swingShotArr{
                         let swing = swing as! NSMutableDictionary
                         var tempArr = [Any]()
+                        var backSwingAngle = 0.0
+                        if let bckAngle = swing.value(forKey: "backSwingAngle") as? Double{
+                            backSwingAngle = bckAngle
+                        }
                         let backSwing = swing.value(forKey: "backSwing") as! Double
                         let downSwing = swing.value(forKey: "downSwing") as! Double
                         let clubSpeed = swing.value(forKey: "clubSpeed") as! Double
                         let handSpeed = swing.value(forKey: "handSpeed") as! Double
-                        let backSwingAngle = swing.value(forKey: "backSwingAngle") as! Double
                         let tempo = swing.value(forKey: "tempo") as! Double
                         let swingScore = swing.value(forKey: "swingScore") as! Int
                         let club = swing.value(forKey: "club") as! String
-                        
                         let VCArr : [Int] = [(swing.value(forKey: "VC1") as! Int),(swing.value(forKey: "VC2") as! Int),(swing.value(forKey: "VC3") as! Int),Int(clubSpeed)]
                         let VHArr : [Int] = [(swing.value(forKey: "VH1") as! Int),(swing.value(forKey: "VH2") as! Int),(swing.value(forKey: "VH3") as! Int),Int(handSpeed)]
-                        
-                        tempArr.append("\(Int(swingScore))")
-                        tempArr.append(VCArr)
-                        tempArr.append("+\(Int(5))%")
-                        tempArr.append("\(tempo.rounded(toPlaces: 1)) : 1")
-                        tempArr.append("\(backSwing)")
-                        tempArr.append(VHArr)
-                        tempArr.append(club)
-                        tempArr.append("\(downSwing)")
-                        let holeNum = swing.value(forKey: "holeNum") as! Int
-                        if(holeNum == self.holeIndex+1){
-                            self.swingData.append(tempArr)
+                        if club != "Pu"{
+                            tempArr.append("\(Int(swingScore))")
+                            tempArr.append(VCArr)
+                            tempArr.append("-")
+                            tempArr.append("\(tempo.rounded(toPlaces: 1))")
+                            tempArr.append("\(backSwingAngle)")
+                            tempArr.append(VHArr)
+                            tempArr.append(club)
+                            tempArr.append("\(backSwing)")
+                            tempArr.append("\(downSwing)")
+                            let holeNum = swing.value(forKey: "holeNum") as! Int
+                            if(holeNum == self.holeIndex+1){
+                                self.swingData.append(tempArr)
+                            }
                         }
                     }
                 }
