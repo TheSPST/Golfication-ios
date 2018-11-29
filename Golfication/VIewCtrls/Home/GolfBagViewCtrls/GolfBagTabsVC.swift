@@ -183,6 +183,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         
         if golfBagStr == "Drivers"{
             commanBagArray = golfBagDriverArray
+            btnTempRemoveBag.isEnabled = false
         }
         else if golfBagStr == "Woods"{
             commanBagArray = golfBagWoodArray
@@ -198,6 +199,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         }
         else if golfBagStr == "Putter"{
             commanBagArray = golfBagPuttArray
+            btnTempRemoveBag.isEnabled = false
         }
         selectedBagStr = commanBagArray[pageControl.currentPage]
         pageControl.numberOfPages = commanBagArray.count
@@ -438,7 +440,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     golfBagDict.setObject("2.3", forKey: "loftAngle" as NSCopying)
                     golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                     golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                    golfBagDict.setObject(0, forKey: "tagNum" as NSCopying)
+                    golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
                     
                     golfBagArray.insert(golfBagDict, at: 0)
                     let golfBagData = ["golfBag": golfBagArray]
@@ -488,7 +490,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                             golfBagDict.setObject("2.3", forKey: "loftAngle" as NSCopying)
                             golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                             golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                            golfBagDict.setObject(0, forKey: "tagNum" as NSCopying)
+                            golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
                             
                             golfBagArray.replaceObject(at: i, with: golfBagDict)
                             let golfBagData = ["golfBag": golfBagArray]
@@ -597,7 +599,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                             golfBagDict.setObject("2.3", forKey: "loftAngle" as NSCopying)
                             golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                             golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                            golfBagDict.setObject(0, forKey: "tagNum" as NSCopying)
+                            golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
                             
                             golfBagArray.replaceObject(at: i, with: golfBagDict)
                             let golfBagData = ["golfBag": golfBagArray]

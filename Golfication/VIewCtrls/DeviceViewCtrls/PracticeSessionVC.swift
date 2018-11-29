@@ -182,31 +182,31 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                 let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
                 let clubSpeedTemp:Double = Double(self.benchMarkVal)!
                  if(clubSpeedTemp*0.9<clubSpeed){
-                    self.lbl2ClubheadB.textColor = UIColor.green
+                    self.lbl2ClubheadB.textColor = UIColor.glfGreenish
 
                  }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
-                    self.lbl2ClubheadB.textColor = UIColor.yellow
+                    self.lbl2ClubheadB.textColor = UIColor.glfYellow
 
                  }else if(clubSpeedTemp*0.8>clubSpeed){
-                    self.lbl2ClubheadB.textColor = UIColor.red
+                    self.lbl2ClubheadB.textColor = UIColor.glfRed
                  }
                 
                 let tempo = self.swingDetails.value(forKey: "tempo") as! Double
                 if(tempo>=3.7 || tempo<=2.3){
-                    self.lbl4TempoB.textColor = UIColor.red
+                    self.lbl4TempoB.textColor = UIColor.glfRed
                     
                 }else if(tempo>=2.7 || tempo<=3.3){
-                    self.lbl4TempoB.textColor = UIColor.green
+                    self.lbl4TempoB.textColor = UIColor.glfGreenish
                 }else{
-                    self.lbl4TempoB.textColor = UIColor.yellow
+                    self.lbl4TempoB.textColor = UIColor.glfYellow
                 }
                 if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
                     if(Int(backSwing)>=260 && Int(backSwing)<=280){
-                        self.lbl5BackSwingB.textColor = UIColor.green
+                        self.lbl5BackSwingB.textColor = UIColor.glfGreenish
                     }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
-                        self.lbl5BackSwingB.textColor = UIColor.yellow
+                        self.lbl5BackSwingB.textColor = UIColor.glfYellow
                     }else{
-                        self.lbl5BackSwingB.textColor = UIColor.red
+                        self.lbl5BackSwingB.textColor = UIColor.glfRed
                     }
                 }
                 
@@ -313,71 +313,71 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                         let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
                         let clubSpeedTemp:Double = Double(self.benchMarkVal)!
                         if(clubSpeedTemp*0.9<clubSpeed){
-                            lblBottomClubSpeedKPH.textColor = UIColor.green
-                            lblBottomClubSpeedCHS.textColor = UIColor.green
+                            lblBottomClubSpeedKPH.textColor = UIColor.glfGreenish
+                            lblBottomClubSpeedCHS.textColor = UIColor.glfGreenish
                             
-                            shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
-                            self.lbl2ClubheadV.textColor = UIColor.green
-                            self.lbl2ClubheadB.textColor = UIColor.green
+                            shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                            self.lbl2ClubheadV.textColor = UIColor.glfGreenish
+                            self.lbl2ClubheadB.textColor = UIColor.glfGreenish
                             
                         }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
-                            lblBottomClubSpeedKPH.textColor = UIColor.yellow
-                            lblBottomClubSpeedCHS.textColor = UIColor.yellow
+                            lblBottomClubSpeedKPH.textColor = UIColor.glfYellow
+                            lblBottomClubSpeedCHS.textColor = UIColor.glfYellow
                             
-                            shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
-                            self.lbl2ClubheadV.textColor = UIColor.yellow
-                            self.lbl2ClubheadB.textColor = UIColor.yellow
+                            shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                            self.lbl2ClubheadV.textColor = UIColor.glfYellow
+                            self.lbl2ClubheadB.textColor = UIColor.glfYellow
                             
                         }else if(clubSpeedTemp*0.8>clubSpeed){
-                            lblBottomClubSpeedKPH.textColor = UIColor.red
-                            lblBottomClubSpeedCHS.textColor = UIColor.red
+                            lblBottomClubSpeedKPH.textColor = UIColor.glfRed
+                            lblBottomClubSpeedCHS.textColor = UIColor.glfRed
                             
-                            shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
-                            self.lbl2ClubheadV.textColor = UIColor.red
-                            self.lbl2ClubheadB.textColor = UIColor.red
+                            shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                            self.lbl2ClubheadV.textColor = UIColor.glfRed
+                            self.lbl2ClubheadB.textColor = UIColor.glfRed
                         }
                     }
                     else if tagVal == 3{
                         let tempo = self.swingDetails.value(forKey: "tempo") as! Double
                         
                         if(tempo>=3.7 || tempo<=2.3){
-                            lbl4TempoB.textColor = UIColor.red
-                            lbl4TempoV.textColor = UIColor.red
-                            lbl4Tempo1V.textColor = UIColor.red
-                            lblTempoColon.textColor = UIColor.red
-                            shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
-                            lblSwingTempo.textColor = UIColor.red
+                            lbl4TempoB.textColor = UIColor.glfRed
+                            lbl4TempoV.textColor = UIColor.glfRed
+                            lbl4Tempo1V.textColor = UIColor.glfRed
+                            lblTempoColon.textColor = UIColor.glfRed
+                            shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                            lblSwingTempo.textColor = UIColor.glfRed
                             
                         }else if(tempo>=2.7 || tempo<=3.3){
-                            lbl4TempoB.textColor = UIColor.green
-                            lbl4TempoV.textColor = UIColor.green
-                            lbl4Tempo1V.textColor = UIColor.green
-                            lblTempoColon.textColor = UIColor.green
-                            shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
-                            lblSwingTempo.textColor = UIColor.green
+                            lbl4TempoB.textColor = UIColor.glfGreenish
+                            lbl4TempoV.textColor = UIColor.glfGreenish
+                            lbl4Tempo1V.textColor = UIColor.glfGreenish
+                            lblTempoColon.textColor = UIColor.glfGreenish
+                            shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                            lblSwingTempo.textColor = UIColor.glfGreenish
                         }else{
-                            lbl4TempoB.textColor = UIColor.yellow
-                            lbl4TempoV.textColor = UIColor.yellow
-                            lbl4Tempo1V.textColor = UIColor.yellow
-                            lblTempoColon.textColor = UIColor.yellow
-                            shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
-                            lblSwingTempo.textColor = UIColor.yellow
+                            lbl4TempoB.textColor = UIColor.glfYellow
+                            lbl4TempoV.textColor = UIColor.glfYellow
+                            lbl4Tempo1V.textColor = UIColor.glfYellow
+                            lblTempoColon.textColor = UIColor.glfYellow
+                            shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                            lblSwingTempo.textColor = UIColor.glfYellow
                         }
                     }
                     else if tagVal == 4{
                         if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
                                 if(Int(backSwing)>=260 && Int(backSwing)<=280){
-                                   lbl5BackSwingB.textColor = UIColor.green
-                                    lblBackSwingTitle.textColor = UIColor.green
-                                    shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
+                                   lbl5BackSwingB.textColor = UIColor.glfGreenish
+                                    lblBackSwingTitle.textColor = UIColor.glfGreenish
+                                    shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
                                 }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
-                                    lbl5BackSwingB.textColor = UIColor.yellow
-                                    lblBackSwingTitle.textColor = UIColor.yellow
-                                    shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
+                                    lbl5BackSwingB.textColor = UIColor.glfYellow
+                                    lblBackSwingTitle.textColor = UIColor.glfYellow
+                                    shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
                                 }else{
-                                    lbl5BackSwingB.textColor = UIColor.red
-                                    lblBackSwingTitle.textColor = UIColor.red
-                                    shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
+                                    lbl5BackSwingB.textColor = UIColor.glfRed
+                                    lblBackSwingTitle.textColor = UIColor.glfRed
+                                    shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
                                 }
                             self.setBackSwingAngleDesign(backSwingAngle: backSwing)
                         }

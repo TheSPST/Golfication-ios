@@ -16,7 +16,7 @@ import FirebaseAnalytics
 import UserNotifications
 import CTShowcase
 import GLKit
-
+import UICircularProgressRing
 private enum State {
     case closed
     case open
@@ -228,6 +228,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var stablefordSubView: UIView!
     @IBOutlet weak var lblHCPHeader: UILabel!
     
+    @IBOutlet weak var btnGolficationX: UIButton!
     
     var isBackground : Bool{
         let state = UIApplication.shared.applicationState
@@ -245,14 +246,124 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             return !Constants.ble.isPracticeMatch
         }
     }
-//    {
-//        let state = UIApplication.shared.applicationState
-//        if state == .background {
-//            return 60.0
-//        }else{
-//            return 5.0
-//        }
-//    }
+    var golfXPopupView: UIView!
+    var btnRetry: UIButton!
+    var btnNoDevice: UIButton!
+    var lblScanStatus: UILabel!
+    var deviceCircularView: UICircularProgressRingView!
+    var isDeviceSetup = false
+    // MARK: golfXAction
+    @objc func golfXAction() {
+        if Constants.isDevice{
+            Constants.ble.startScanning()
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(self.bluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+    }
+    @objc func bluetoothStatus(_ notification: NSNotification) {
+        let notifBleStatus = notification.object as! String
+        if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
+            if(Constants.deviceGolficationX == nil){
+                
+                DispatchQueue.main.async(execute: {
+                    self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBarG"), for: .normal)
+                    self.navigationItem.rightBarButtonItem?.isEnabled = false
+                    
+                    self.golfXPopupView = Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView
+                    self.golfXPopupView.frame = self.view.bounds
+                    self.view.addSubview(self.golfXPopupView)
+                    self.setGofXUISetup()
+                })
+            }
+            else{
+                DispatchQueue.main.async(execute: {
+                    self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBar"), for: .normal)
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                    self.view.makeToast("Device is already connected.")
+                    Constants.ble.stopScanning()
+                })
+            }
+        }
+        else{
+            Constants.ble.stopScanning()
+        }
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+    }
+    func setGofXUISetup(){
+        btnNoDevice = (golfXPopupView.viewWithTag(111) as! UIButton)
+        btnNoDevice.layer.cornerRadius = btnNoDevice.frame.size.height/2
+        
+        btnRetry = (golfXPopupView.viewWithTag(222) as! UIButton)
+        btnRetry.addTarget(self, action: #selector(self.retryAction(_:)), for: .touchUpInside)
+        btnRetry.layer.cornerRadius = 3.0
+        
+        let btnCancel = golfXPopupView.viewWithTag(333) as! UIButton
+        btnCancel.addTarget(self, action: #selector(self.cancelGolfXAction(_:)), for: .touchUpInside)
+        
+        deviceCircularView = (golfXPopupView.viewWithTag(444) as! UICircularProgressRingView)
+        self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
+        
+        lblScanStatus = (golfXPopupView.viewWithTag(555) as! UILabel)
+        
+        self.setInitialDeviceData()
+    }
+    @objc func retryAction(_ sender: UIButton) {
+        if Constants.isDevice{
+            Constants.ble.startScanning()
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+    }
+    
+    @objc func chkBluetoothStatus(_ notification: NSNotification) {
+        let notifBleStatus = notification.object as! String
+        if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
+            self.setInitialDeviceData()
+        }
+        else{
+            self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG") ,for: .normal)
+            Constants.ble.stopScanning()
+        }
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+    }
+    
+    @objc func cancelGolfXAction(_ sender: UIButton!) {
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        golfXPopupView.removeFromSuperview()
+    }
+    func setInitialDeviceData(){
+        DispatchQueue.main.async {
+            self.lblScanStatus.text = "Scanning for Golfication X..."
+            self.btnRetry.isHidden = true
+            self.btnNoDevice.isHidden = true
+        }
+        DispatchQueue.main.async(execute: {
+            self.deviceCircularView.setProgress(value: CGFloat(50), animationDuration: 1)
+            
+            self.deviceCircularView.setProgress(value: CGFloat(100), animationDuration: 5, completion: {
+                if(Constants.deviceGolficationX == nil){
+                    self.navigationItem.rightBarButtonItem?.isEnabled = false
+                    self.lblScanStatus.text = "Couldn't find your device"
+                    self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
+                    self.btnRetry.isHidden = false
+                    self.btnNoDevice.isHidden = false
+                    self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
+                    Constants.ble.stopScanning()
+                }
+                else{
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                    self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
+                    //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
+                    self.golfXPopupView.removeFromSuperview()
+                    self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBar"),for: .normal)
+                    Constants.ble.stopScanning()
+                    self.view.makeToast("Device is connected.")
+                }
+            })
+        })
+    }
+    @IBAction func btnActionGolficationX(_ sender: Any) {
+    }
+
     // MARK:- All PanGesture Related Local Variables
     var panGesture  = UIPanGestureRecognizer()
     var btnPanGesture  = UIPanGestureRecognizer()
@@ -354,7 +465,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var swingData = [[Any]]()
     var startingIndex = Int()
     var gameTypeIndex = Int()
-
+    var isDeviceConnected = false
     
     @IBOutlet weak var greenStackViewHeight: NSLayoutConstraint!
     // Mark :- GetTableContentHeight
@@ -1020,21 +1131,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         self.exitGamePopUpView.isHidden = false
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
-        //        if(self.holeOutforAppsFlyer[playerIndex] != self.scoring.count){
-        //            let emptyAlert = UIAlertController(title: "Finish Round", message: "You Played \(self.holeOutforAppsFlyer[self.playerIndex])/\(scoring.count) Holes. Are you sure you want to finish the Round ?", preferredStyle: UIAlertControllerStyle.alert)
-        //            emptyAlert.addAction(UIAlertAction(title: "Finish Round", style: .default, handler: { (action: UIAlertAction!) in
-        //                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
-        //                if(self.holeOutforAppsFlyer[self.playerIndex] > 8){
-        //                    self.saveAndviewScore()
-        //                }else{
-        //                    self.exitWithoutSave()
-        //                }
-        //            }))
-        //            emptyAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
-        //            self.present(emptyAlert, animated: true, completion: nil)
-        //        }else{
-        //            self.saveAndviewScore()
-        //        }
     }
     func exitWithoutSave(){
         self.updateFeedNode()
@@ -1276,6 +1372,16 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         UIApplication.shared.isIdleTimerDisabled = true
         if let onCourse = self.matchDataDict.value(forKeyPath: "onCourse") as? Bool{
             self.isOnCourse = onCourse
+            if Constants.deviceGolficationX != nil && isDeviceConnected{
+                self.btnGolficationX.isHidden = false
+                self.btnGolficationX.isUserInteractionEnabled = false
+            }else if isDeviceConnected{
+                if Constants.deviceGolficationX == nil{
+                    self.btnGolficationX.setImage(UIImage(named: "golficationBarG"), for: .normal)
+                    self.btnGolficationX.isUserInteractionEnabled = true
+                }
+            }
+        
         }
         // register background task
         if(isOnCourse){
@@ -4533,6 +4639,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // Update Map - removing all markers and features from map and reload map with new Features and details.
     func updateMap(indexToUpdate:Int){
         var indexToUpdate = indexToUpdate
+        if courseData.centerPointOfTeeNGreen.count-1 < indexToUpdate{
+            let c = courseData.centerPointOfTeeNGreen.count
+            indexToUpdate = indexToUpdate%c
+        }
+
+
         mapView.clear()
         self.stableFordView.isHidden = true
         self.allMarkers.removeAll()
@@ -4550,7 +4662,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnAddPenaltyLbl.isHidden = true
         self.btnPenaltyShot.isHidden = true
         self.isTracking = false
-        
         for coord in courseData.numberOfHoles[holeIndex].green{
             self.pathOfGreen.add(coord)
         }
@@ -4654,6 +4765,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         if(activePlay.isSelected && activePlay.id == key as! String){
                             let shots = value as! NSDictionary
                             var shotsArray = NSArray()
+                            var isSwing = false
                             for(key,value)in shots{
                                 if(key as! String == "shots"){
                                     shotsArray = value as! NSArray
@@ -4681,18 +4793,23 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                         self.btnPenaltyShot.isHidden = isPintMarker
                                         self.btnAddPenaltyLbl.isHidden = isPintMarker
                                     }
+                                }else if(key as! String == "swing"){
+                                    isSwing = true
                                 }
                             }
-                            if(self.swingMatchId.count != 0) {
+                            if isSwing || (self.swingMatchId.count != 0){
                                 for i in 0..<shotsArray.count {
                                     let shotLatLng = shotsArray[i] as! NSDictionary
                                     playerShotsArray.append(shotLatLng as! NSMutableDictionary)
                                     self.penaltyShots.append(shotLatLng.value(forKey: "penalty") as! Bool)
                                     positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat1") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng1") as! CLLocationDegrees))
+                                    self.isTracking = true
                                     if(holeOutFlag) && i == shotsArray.count-1{
                                         if(shotLatLng.value(forKey: "lat2") != nil){
+                                              self.isTracking = false
                                             positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat2") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng2") as! CLLocationDegrees))
                                         }else{
+                                            self.isTracking = false
                                             positionsOfCurveLines.append(self.positionsOfDotLine.last!)
                                         }
                                     }
@@ -4709,10 +4826,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                         positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat1") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng1") as! CLLocationDegrees))
                                     }
                                 }
-//                                if(shotsArray.count == 1) && self.isOnCourse{
-//                                    self.isTracking = true
-//
-//                                }
                             }
                         }
                     }
@@ -4901,28 +5014,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if(userLocationForClub != nil) && (self.selectedUserId == Auth.auth().currentUser!.uid){
                     mapTimer = Timer.scheduledTimer(withTimeInterval:self.totalTimer, repeats: true, block: { (timer) in
                         if(self.positionsOfDotLine.count > 2){
-//                            if(self.isBackground){
-//                                if(counter%60 == 0){
-                                debugPrint(self.totalTimer)
-                                self.locationManager.startUpdatingLocation()
-                                    if self.locationManager.location == nil{
-                                        self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
-                                    }
-                                    
-                                    if let currentLocation: CLLocation = self.locationManager.location{
-                                        self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
-                                    }
-//                                }
-//                            }else{
-//                                self.locationManager.startUpdatingLocation()
-//                                if self.locationManager.location == nil{
-//                                    self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
-//                                }
-//
-//                                if let currentLocation: CLLocation = self.locationManager.location{
-//                                    self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
-//                                }
-//                            }
+                            debugPrint(self.totalTimer)
+                            self.locationManager.startUpdatingLocation()
+                            if self.locationManager.location == nil{
+                                self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
+                            }
+                            
+                            if let currentLocation: CLLocation = self.locationManager.location{
+                                self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+                            }
                             let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
                             if (distance < 15000.0){
                                 self.positionsOfDotLine.remove(at: 0)
@@ -5067,14 +5167,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     self.markers.last?.icon = #imageLiteral(resourceName: "holeflag")
                                     self.markers.last?.groundAnchor = CGPoint(x:0,y:1)
                                 }
-//                                debugPrint("positionofcurvedLine:\(self.positionsOfCurveLines)")
-//                                debugPrint("count:\(self.positionsOfCurveLines.count)")
                             }else{
                                 let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                                 self.present(alert, animated: true, completion: nil)
                                 self.mapTimer.invalidate()
                                 self.isUserInsideBound = false
+                            }
+                            if !self.swingMatchId.isEmpty{
+                                self.hideWhenDeviceConnected()
                             }
                         }
                     })
@@ -5122,7 +5223,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             self.updateMapWithColors()
         }
-
+        if !self.swingMatchId.isEmpty{
+            self.hideWhenDeviceConnected()
+        }
     }
     func plotDashedLine(positions:[CLLocationCoordinate2D]){
         let path = GMSMutablePath()
@@ -5802,7 +5905,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             currentHole = Int(inde)!
         }
         for i in 0..<self.scoring.count{
-            if(self.scoring[i].hole == currentHole){
+            if(self.scoring[i].hole == currentHole){if(!self.isHoleByHole){
+                self.startingIndex = Int(self.matchDataDict.value(forKeyPath: "startingHole") as? String ?? "1") ?? 1
+                self.gameTypeIndex = self.matchDataDict.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+                self.courseData.startingIndex = self.startingIndex
+                self.courseData.gameTypeIndex = self.gameTypeIndex
+            }else{
+                self.courseData.startingIndex = Int(self.matchDataDict.value(forKeyPath: "startingHole") as? String ?? "1") ?? 1
+                self.courseData.gameTypeIndex = self.matchDataDict.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+                }
                 self.holeIndex = i
                 break
             }
@@ -5821,8 +5932,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(!isHoleByHole) && !isContinue{
             var centerPointOfTeeNGreen = [(tee:CLLocationCoordinate2D,fairway:CLLocationCoordinate2D,green:CLLocationCoordinate2D,par:Int)]()
             for i in 0..<self.scoring.count{
+                if courseData.centerPointOfTeeNGreen.count > i{
                 centerPointOfTeeNGreen.append((tee: courseData.centerPointOfTeeNGreen[i].tee, fairway: courseData.centerPointOfTeeNGreen[i].fairway, green: courseData.centerPointOfTeeNGreen[i].green, par: self.scoring[i].par))
+                }else{
+                    let c = courseData.centerPointOfTeeNGreen.count
+                centerPointOfTeeNGreen.append((tee: courseData.centerPointOfTeeNGreen[i%c].tee, fairway: courseData.centerPointOfTeeNGreen[i%c].fairway, green: courseData.centerPointOfTeeNGreen[i%c].green, par: self.scoring[i].par))
+                }
+
             }
+            debugPrint(Constants.ble)
             Constants.ble.isPracticeMatch = false
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreen)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
@@ -5843,9 +5961,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                 }
                 if(!self.isContinue){
-                    self.btnClubs.isHidden = true
-                    self.btnTrackShot.isHidden = true
-                    self.lblShotNumber.isHidden = true
+                    self.hideWhenDeviceConnected()
                     ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
                     ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["courseName":(self.matchDataDict.value(forKey: "courseName") as! String)])
                     ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["matchKey":"\(self.currentMatchId)"])
@@ -5855,6 +5971,19 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             })
         }
+    }
+    func hideWhenDeviceConnected(){
+        self.btnClubs.isHidden = true
+        self.btnTrackShot.isHidden = true
+        self.lblShotNumber.isHidden = true
+        self.btnSelectClubs.isHidden = true
+        self.btnClubs.isHidden = true
+        self.btnHoleoutLbl.isHidden = true
+        self.btnHoleOut.isHidden = true
+        self.lblEditShotNumber.isHidden = true
+        self.btnShareShot.isHidden = true
+        self.btnClose.isHidden = true
+        self.btnCloseLbl.isHidden = true
     }
     func getGameId(swingKey:String){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(swingKey)/gameId") { (snapshot) in
@@ -5878,6 +6007,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             DispatchQueue.main.async(execute: {
                 if let swingShotArr = swingDa.value(forKey: "swings") as? NSArray{
+                    self.swingData.removeAll()
                     for swing in swingShotArr{
                         let swing = swing as! NSMutableDictionary
                         var tempArr = [Any]()
@@ -5901,7 +6031,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             tempArr.append("\(tempo.rounded(toPlaces: 1))")
                             tempArr.append("\(backSwingAngle)")
                             tempArr.append(VHArr)
-                            tempArr.append(club)
+                            if club == ""{
+                                tempArr.append("Dr")
+                            }else{
+                                tempArr.append(club)
+                            }
+
                             tempArr.append("\(backSwing)")
                             tempArr.append("\(downSwing)")
                             let holeNum = swing.value(forKey: "holeNum") as! Int

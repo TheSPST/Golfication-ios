@@ -32,10 +32,9 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
     var testStr = String()
     var backSwingLbl : UILabel!
     var downSwingLbl : UILabel!
-    
     var shotsDetails = [[Any]]()
     var pageIndex = 0
-
+    var benchMarkVal = String()
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
         let currentPage = round(scrollView.contentOffset.x / scrollView.frame.size.width)
         pageIndex = Int(currentPage)
@@ -136,7 +135,7 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
 
         let scoreVal4 =  self.shotsDetails[self.pageIndex][3] as! String
         let shotBtnLbl4 = mapShotPopupView.viewWithTag(43) as! UILabel
-        shotBtnLbl4.text = scoreVal4
+        shotBtnLbl4.text = "\(scoreVal4)"
         
         let scoreVal5 =  self.shotsDetails[self.pageIndex][4] as! String
         let shotBtnLbl5 = mapShotPopupView.viewWithTag(44) as! UILabel
@@ -160,33 +159,36 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
         downSwingLbl = (mapShotPopupView.viewWithTag(2222) as! UILabel)
         lblClubHead = (mapShotPopupView.viewWithTag(-1) as! UILabel)
         lblHandSpee = (mapShotPopupView.viewWithTag(-2) as! UILabel)
+        
+        let clubBtn1 = (mapShotPopupView.viewWithTag(-3) as! UIButton)
+        let clubBtn2 = (mapShotPopupView.viewWithTag(-4) as! UIButton)
+        let clubBtn3 = (mapShotPopupView.viewWithTag(-5) as! UIButton)
+        let clubBtn4 = (mapShotPopupView.viewWithTag(-6) as! UIButton)
+        var club = self.shotsDetails[self.pageIndex][6] as! String
+        club = BackgroundMapStats.getClubName(club: club).uppercased()
+        clubBtn1.setTitle(club, for: .normal)
+        clubBtn2.setTitle(club, for: .normal)
+        clubBtn3.setTitle(club, for: .normal)
+        clubBtn4.setTitle(club, for: .normal)
+        
         if Constants.distanceFilter == 1{
             lblClubHead.text = "KPH"
             lblHandSpee.text = "KPH"
         }
         swingScoreCircularView = (mapShotPopupView.viewWithTag(110) as! UICircularProgressRingView)
         swingScoreCircularView.fontColor = UIColor.clear
-        self.swingScoreCircularView.innerCapStyle = .square
-        self.swingScoreCircularView.outerCapStyle = .square
-
-//        clubSpeedLineChart = mapShotPopupView.viewWithTag(120) as! LineChartView
-//
-//        customColorSlider = mapShotPopupView.viewWithTag(130) as! CustomColorSlider
-//        customColorSlider.minimumValue = 0
-//        customColorSlider.maximumValue = 6
-//        customColorSlider.isEnabled = false
-
+        swingScoreCircularView.innerCapStyle = .square
+        swingScoreCircularView.outerCapStyle = .square
+        
         swingAngleCircular_Red = (mapShotPopupView.viewWithTag(140) as! UICircularProgressRingView)
         swingAngleCircular_Red.fontColor = UIColor.clear
+        swingAngleCircular_Red.innerCapStyle = .square
         
         swingAngleCircular_Blue = (mapShotPopupView.viewWithTag(4003) as! UICircularProgressRingView)
         swingAngleCircular_Blue.fontColor = UIColor.clear
-        self.swingAngleCircular_Red.innerCapStyle = .square
-        self.swingAngleCircular_Red.outerCapStyle = .square
+        swingAngleCircular_Blue.innerCapStyle = .square
         
         backSwingUserImg = (mapShotPopupView.viewWithTag(4002) as! UIImageView)
-
-//        headSpeedLineChart = mapShotPopupView.viewWithTag(150) as! LineChartView
         
         shotScrollView.addSubview(mapShotPopupView)
     }
@@ -203,45 +205,45 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
     func getBenchmarkData(benchMark:String, clubName:String){
         
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "benchmarks/" + benchMark + "/" + clubName) { (snapshot) in
-            let benchMarkVal = snapshot.value as! String
+            self.benchMarkVal = snapshot.value as! String
             
             DispatchQueue.main.async(execute: {
                 let scoreVal =  self.shotsDetails[self.pageIndex][1] as! [Int]
                 let clubSpeed = Double(scoreVal[3])
-                let clubSpeedTemp:Double = Double(benchMarkVal)!
+                let clubSpeedTemp:Double = Double(self.benchMarkVal)!
                 if(clubSpeedTemp*0.9<clubSpeed){
-                    self.shotTopLbls[1].textColor = UIColor.green
-                    self.scoreTopLbls[1].textColor = UIColor.green
+                    self.shotTopLbls[1].textColor = UIColor.glfGreenish
+                    self.scoreTopLbls[1].textColor = UIColor.glfGreenish
                 }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
-                    self.shotTopLbls[1].textColor = UIColor.yellow
-                    self.scoreTopLbls[1].textColor = UIColor.yellow
+                    self.shotTopLbls[1].textColor = UIColor.glfYellow
+                    self.scoreTopLbls[1].textColor = UIColor.glfYellow
                 }else if(clubSpeedTemp*0.8>clubSpeed){
-                    self.shotTopLbls[1].textColor = UIColor.red
-                    self.scoreTopLbls[1].textColor = UIColor.red
+                    self.shotTopLbls[1].textColor = UIColor.glfRed
+                    self.scoreTopLbls[1].textColor = UIColor.glfRed
                 }
                 let scoreValT =  self.shotsDetails[self.pageIndex][3] as! String
                 let tempo = Double(scoreValT)!
                 if(tempo>=3.7 || tempo<=2.3){
-                    self.shotTopLbls[3].textColor = UIColor.red
-                    self.scoreTopLbls[3].textColor = UIColor.red
+                    self.shotTopLbls[3].textColor = UIColor.glfRed
+                    self.scoreTopLbls[3].textColor = UIColor.glfRed
                 }else if(tempo>=2.7 || tempo<=3.3){
-                    self.shotTopLbls[3].textColor = UIColor.green
-                    self.scoreTopLbls[3].textColor = UIColor.green
+                    self.shotTopLbls[3].textColor = UIColor.glfGreenish
+                    self.scoreTopLbls[3].textColor = UIColor.glfGreenish
                 }else{
-                    self.shotTopLbls[3].textColor = UIColor.yellow
-                    self.scoreTopLbls[3].textColor = UIColor.yellow
+                    self.shotTopLbls[3].textColor = UIColor.glfYellow
+                    self.scoreTopLbls[3].textColor = UIColor.glfYellow
                 }
                 let scoreValBA = self.shotsDetails[self.pageIndex][4] as! String
                 let backSwing = Double(scoreValBA)!
                 if(Int(backSwing)>=260 && Int(backSwing)<=280){
-                    self.shotTopLbls[4].textColor = UIColor.green
-                    self.scoreTopLbls[4].textColor = UIColor.green
+                    self.shotTopLbls[4].textColor = UIColor.glfGreenish
+                    self.scoreTopLbls[4].textColor = UIColor.glfGreenish
                 }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
-                    self.shotTopLbls[4].textColor = UIColor.yellow
-                    self.scoreTopLbls[4].textColor = UIColor.yellow
+                    self.shotTopLbls[4].textColor = UIColor.glfYellow
+                    self.scoreTopLbls[4].textColor = UIColor.glfYellow
                 }else{
-                    self.shotTopLbls[4].textColor = UIColor.red
-                    self.scoreTopLbls[4].textColor = UIColor.red
+                    self.shotTopLbls[4].textColor = UIColor.glfRed
+                    self.scoreTopLbls[4].textColor = UIColor.glfRed
                 }
             })
         }
@@ -273,7 +275,28 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
                         })
                     }
                     else if tagVal+99 == 120{
-
+                        let scoreVal =  self.shotsDetails[self.pageIndex][1] as! [Int]
+                        let clubSpeed = Double(scoreVal[3])
+                        let clubSpeedTemp:Double = Double(self.benchMarkVal)!
+                        if(clubSpeedTemp*0.9<clubSpeed){
+                            self.shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                            self.shotTopLbls[i].textColor = UIColor.glfGreenish
+                            self.scoreTopLbls[i].textColor = UIColor.glfGreenish
+                            self.shotLbls[i].textColor = UIColor.glfGreenish
+                            self.lblClubHead.textColor = UIColor.glfGreenish
+                        }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
+                            self.shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                            self.shotTopLbls[i].textColor = UIColor.glfYellow
+                            self.scoreTopLbls[i].textColor = UIColor.glfYellow
+                            self.shotLbls[i].textColor = UIColor.glfYellow
+                            self.lblClubHead.textColor = UIColor.glfYellow
+                        }else if(clubSpeedTemp*0.8>clubSpeed){
+                            self.shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                            self.shotTopLbls[i].textColor = UIColor.glfRed
+                            self.scoreTopLbls[i].textColor = UIColor.glfRed
+                            self.shotLbls[i].textColor = UIColor.glfRed
+                            self.lblClubHead.textColor = UIColor.glfRed
+                        }
                     }else if tagVal+107 == 130{
                         DispatchQueue.main.async(execute: {
                             
@@ -289,31 +312,45 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
                             let tempo = Double(scoreVal)!
                             
                             if(tempo>=3.7 || tempo<=2.3){
-                                self.shotBtnViews[i].layer.borderColor = UIColor.red.cgColor
-                                self.scoreTopLbls[i].textColor = UIColor.red
-                                self.shotTopLbls[i].textColor = UIColor.red
-                                self.shotLbls[i].textColor = UIColor.red
+                                self.shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                                self.scoreTopLbls[i].textColor = UIColor.glfRed
+                                self.shotTopLbls[i].textColor = UIColor.glfRed
+                                self.shotLbls[i].textColor = UIColor.glfRed
                             }else if(tempo>=2.7 || tempo<=3.3){
-                                self.shotBtnViews[i].layer.borderColor = UIColor.green.cgColor
-                                self.scoreTopLbls[i].textColor = UIColor.green
-                                self.shotTopLbls[i].textColor = UIColor.green
-                                self.shotLbls[i].textColor = UIColor.green
+                                self.shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                                self.scoreTopLbls[i].textColor = UIColor.glfGreenish
+                                self.shotTopLbls[i].textColor = UIColor.glfGreenish
+                                self.shotLbls[i].textColor = UIColor.glfGreenish
                             }else{
-                                self.shotBtnViews[i].layer.borderColor = UIColor.yellow.cgColor
-                                self.scoreTopLbls[i].textColor = UIColor.yellow
-                                self.shotTopLbls[i].textColor = UIColor.yellow
-                                self.shotLbls[i].textColor = UIColor.yellow
+                                self.shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                                self.scoreTopLbls[i].textColor = UIColor.glfYellow
+                                self.shotTopLbls[i].textColor = UIColor.glfYellow
+                                self.shotLbls[i].textColor = UIColor.glfYellow
                             }
                             
                         })
                     }
                     else if tagVal+116 == 140{
                         DispatchQueue.main.async(execute: {
-                            if let scoreVal =  self.shotsDetails[self.pageIndex][4] as? String{
-                                self.setBackSwingAngleDesign(backSwingAngle:Double(scoreVal)!)
+                            let scoreVal =  self.shotsDetails[self.pageIndex][4] as! String
+                            let backSwing = Double(scoreVal)!
+                            if(Int(backSwing)>=260 && Int(backSwing)<=280){
+                                self.shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                                self.scoreTopLbls[i].textColor = UIColor.glfGreenish
+                                self.shotTopLbls[i].textColor = UIColor.glfGreenish
+                                self.shotLbls[i].textColor = UIColor.glfGreenish
+                            }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
+                                self.shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                                self.scoreTopLbls[i].textColor = UIColor.glfYellow
+                                self.shotTopLbls[i].textColor = UIColor.glfYellow
+                                self.shotLbls[i].textColor = UIColor.glfYellow
                             }else{
-                                self.setBackSwingAngleDesign(backSwingAngle:Double(0))
+                                self.shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                                self.scoreTopLbls[i].textColor = UIColor.glfRed
+                                self.shotTopLbls[i].textColor = UIColor.glfRed
+                                self.shotLbls[i].textColor = UIColor.glfRed
                             }
+                            self.setBackSwingAngleDesign(backSwingAngle:backSwing)
                         })
                     }
                     else if tagVal+125 == 150{
@@ -336,7 +373,7 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
             }
             else if tagVal+180 == 203{
                 let scoreVal =  self.shotsDetails[self.pageIndex][3] as! String
-                shotTopLbls[3].text = scoreVal
+                shotTopLbls[3].text = "\(scoreVal) : 1"
             }
             else if tagVal+180 == 204{
                 let scoreVal =  self.shotsDetails[self.pageIndex][4] as! String
@@ -352,12 +389,7 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
     func setBackSwingAngleDesign(backSwingAngle:Double){
         swingAngleCircular_Red.shouldShowValueText = false
         swingAngleCircular_Blue.shouldShowValueText = false
-        
         self.backSwingClub = UIImageView.init(image: UIImage(named: "club_horizontal"))
-        self.backSwingUserImg = UIImageView.init(image: UIImage(named: "backswing_image_0_100"))
-//        self.backSwingUserImg.center = self.swingAngleCircular_Red.center
-//        self.swingAngleCircular_Red.addSubview(self.backSwingUserImg)
-        
         backSwingClub.tag = 23
         for view in self.swingAngleCircular_Red.subviews where view is UIImageView{
             if view.tag == 23 {
@@ -411,7 +443,6 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
             }
         }
         self.swingAngleCircular_Red.addSubview(backSwingClub)
-        swingAngleCircular_Red.addSubview(backSwingUserImg)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

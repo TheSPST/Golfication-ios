@@ -524,8 +524,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(true)
-        if Constants.isDevice{
+        if Constants.isDevice && Constants.deviceGolficationX == nil{
             Constants.ble = BLE()
+            Constants.ble.setupObserver()
             Constants.ble.isPracticeMatch = false
         }
         self.navigationController?.navigationBar.isHidden = false
@@ -752,36 +753,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         btnMoreInfo.isHidden = true
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "MappingRequest"), object: nil)
     }
-    
-    // MARK: - viewAllFeedAction
-    /*@objc func selectScoringAction(_ sender:UIButton){
-        if isAdvanced{
-            self.scoringTypeSgmtCtrl.selectedSegmentIndex = 1
-        }
-        else{
-            self.scoringTypeSgmtCtrl.selectedSegmentIndex = 0
-        }
-        self.scoringModeChanged(self.scoringTypeSgmtCtrl)
-    }*/
-    
-    /*// MARK: scoringModeChanged
-    @IBAction func scoringModeChanged(_ sender: UISegmentedControl) {
-        switch scoringTypeSgmtCtrl.selectedSegmentIndex {
-        case 0:
-            gameMode = "classic"
-            if scoringMode == "rangeFinder"{
-                scoringMode = "rangeFinder"
-            }
-            else{
-                scoringMode = "classic"
-            }
-        case 1:
-            gameMode = "Advanced(GPS)"
-            scoringMode = "Advanced(GPS)"
-        default:
-            break;
-        }
-    }*/
     
     // MARK: gameTypeChanged
     @IBAction func gameTypeChanged(_ sender: UISegmentedControl) {
@@ -1494,7 +1465,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     let score = scoreArray[i] as! NSDictionary
                     for(key,value) in score{
                         if(key as! String == "par"){
-                            par = value as! Int
+                            par = (value as! Int)
                         }
                         for playerId in playersKey{
                             if(key as! String)==playerId{
@@ -1746,8 +1717,24 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @IBAction func startContinueAction(_ sender: Any) {
         // Amit's Changes
         if btnStartContinue.titleLabel?.text == "Continue Round".localized(){
-            isContinueClicked = true
-            setActiveMatchUI()
+            var swingK = String()
+            for data in self.players{
+                if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                    if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                        swingK = swingKey
+                        break
+                    }
+                }
+            }
+            if swingK.isEmpty{
+                isContinueClicked = true
+                setActiveMatchUI()
+            }else if !swingK.isEmpty && Constants.deviceGolficationX != nil{
+                isContinueClicked = true
+                setActiveMatchUI()
+            }else{
+                view.makeToast("Please Connect Device first...")
+            }
         }
         else if btnStartContinue.titleLabel?.text == "Start".localized(){
              playGolfX()
@@ -1833,8 +1820,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             popUpContainerView.isHidden = true
         }
     }
-    
     @objc func defaultMapApiCompleted(_ notification: NSNotification) {
+        var isDeviceConnected = false
+        if Constants.deviceGolficationX != nil{
+            isDeviceConnected = true
+        }
         let notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
         self.progressView.hide(navItem: self.navigationItem)
         
@@ -1845,6 +1835,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         viewCtrl.currentMatchId = Constants.matchId
         viewCtrl.scoring = notifScoring
         viewCtrl.courseId = "course_\(Constants.selectedGolfID)"
+        viewCtrl.isDeviceConnected = isDeviceConnected
         self.navigationController?.pushViewController(viewCtrl, animated: true)
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
@@ -2172,9 +2163,15 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(Constants.matchId)").removeValue()
             }
             Constants.matchId.removeAll()
-            if let swingKey = self.players.value(forKey: "swingKey") as? String{
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
+            for data in self.players{
+                if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                    if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
+                        break
+                    }
+                }
             }
+
             Constants.isUpdateInfo = true
             self.navigationController?.popViewController(animated: true)
             Constants.addPlayersArray.removeAllObjects()

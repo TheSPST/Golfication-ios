@@ -45,7 +45,7 @@ class BluetootheConnectionTesting: UIViewController {
     var golfBag = [String]()
     var golfBagArr = NSMutableArray()
     var counter : UInt8 = 0
-    var tagClubNumber = [(tag:Int ,club:Int)]()
+    var tagClubNumber = [(tag:String ,club:Int)]()
     var activeMatchId = String()
     let progressView = SDLoader()
     var golfBagDriverArray = ["Dr"]

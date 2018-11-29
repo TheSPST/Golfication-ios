@@ -100,18 +100,22 @@ class BLE: NSObject {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
         }else{
             let centralQueue = DispatchQueue(label: "bg_golficationX", attributes: [])
-            centralManager = CBCentralManager(delegate: self, queue: centralQueue)
+            self.centralManager = CBCentralManager(delegate: self, queue: centralQueue)
         }
-        
+        self.setupObserver()
+    }
+
+    public func setupObserver(){
         NotificationCenter.default.addObserver(self, selector: #selector(sendSecondCommand(_:)), name: NSNotification.Name(rawValue: "command2"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendEightCommand(_:)), name: NSNotification.Name(rawValue: "command8"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(getMatchId(_:)), name: NSNotification.Name(rawValue: "getMatchId"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendThirdCommandFromMap(_:)), name: NSNotification.Name(rawValue: "command3"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startMatchCalling(_:)), name: NSNotification.Name(rawValue: "startMatchCalling"), object: nil)
     }
-    
     func stopScanning(){
-        self.centralManager.stopScan()
+        if centralManager != nil{
+            self.centralManager.stopScan()
+        }
     }
     
     @objc func startMatchCalling(_ notification: NSNotification){
@@ -264,7 +268,7 @@ class BLE: NSObject {
         self.currentCommandData = param
         writeData =  Data(bytes:param)
         Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
-        timerForWriteCommand9 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+        timerForWriteCommand9 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
             var paramData = param
             self.randomGenerator()
             paramData[1] = self.counter
@@ -280,9 +284,6 @@ class BLE: NSObject {
         }
         self.sendThirdCommand()
     }
-    //    @objc private func sendEleventhCommmandNotif(_ notification: NSNotification){
-    //        self.sendEleventhCommand()
-    //    }
     private func sendEleventhCommand(){
         self.invalidateAllTimers()
         if(Constants.charctersticsGlobalForWrite != nil){
@@ -291,7 +292,7 @@ class BLE: NSObject {
             self.currentCommandData = param
             writeData =  Data(bytes:param)
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
-            self.timerForWriteCommand11 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+            self.timerForWriteCommand11 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                 let param : [UInt8] = [11]
                 writeData =  Data(bytes:param)
                 Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
@@ -321,7 +322,7 @@ class BLE: NSObject {
                 Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
                 timeOut += 1
                 currentCommandData = paramData
-                timerForWriteCommand21 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+                timerForWriteCommand21 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                     self.randomGenerator()
                     paramData[1] = self.counter
                     self.currentCommandData = paramData
@@ -373,7 +374,7 @@ class BLE: NSObject {
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
             timeOut += 1
             currentCommandData = paramData
-            timerForWriteCommand21 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+            timerForWriteCommand21 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                 self.randomGenerator()
                 paramData[1] = self.counter
                 self.currentCommandData = paramData
@@ -398,7 +399,7 @@ class BLE: NSObject {
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
             timeOut += 1
             self.currentCommandData = param
-            timerForWriteCommand3 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+            timerForWriteCommand3 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                 self.randomGenerator()
                 param[1] = self.counter
                 self.currentCommandData = param
@@ -418,7 +419,7 @@ class BLE: NSObject {
             self.currentCommandData = param!
             writeData =  Data(bytes:param!)
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
-            timerForWriteCommand4 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+            timerForWriteCommand4 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                 var paramData = param!
                 self.randomGenerator()
                 paramData[1] = self.counter
@@ -431,7 +432,6 @@ class BLE: NSObject {
                 UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
             }
         }
-        
     }
     
     private func sendsixthCommand1(){
@@ -442,6 +442,7 @@ class BLE: NSObject {
         updateMaxMin()
         var param : [UInt8] = [6,200+UInt8(centerPointOfTeeNGreen.count)]
         for i in 0..<centerPointOfTeeNGreen.count where i%2 == 0{
+            debugPrint(i)
             param.append(UInt8((centerPointOfTeeNGreen[i].par*10)+(centerPointOfTeeNGreen.count == i+1 ? 0:centerPointOfTeeNGreen[i+1].par)))
         }
         if param.count < 13{
@@ -454,7 +455,7 @@ class BLE: NSObject {
         let writeData =  Data(bytes: param)
         Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
         self.currentCommandData = param
-        timerForWriteCommand61 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+        timerForWriteCommand61 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
             self.currentCommandData = param
         })
@@ -497,7 +498,7 @@ class BLE: NSObject {
         self.invalidateAllTimers()
         Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
         self.currentCommandData = param
-        timerForWriteCommand62 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+        timerForWriteCommand62 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
             self.currentCommandData = param
         })
@@ -543,7 +544,7 @@ class BLE: NSObject {
                 
                 Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
                 self.currentCommandData = param
-                timerForWriteCommand8 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+                timerForWriteCommand8 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                     self.randomGenerator()
                     param[1] = self.counter
                     let writeData =  Data(bytes: param)
@@ -558,7 +559,6 @@ class BLE: NSObject {
                     self.holeWithSwing.removeAll()
                 }
                 var newByteArray = toByteArray(self.currentGameId)
-                self.invalidateAllTimers()
                 newByteArray.removeLast(4)
                 var param : [UInt8] = [8,counter]
                 for i in newByteArray{
@@ -584,7 +584,7 @@ class BLE: NSObject {
                 }
                 debugPrint("Param : \(param)")
                 let writeData =  Data(bytes: param)
-                
+                self.invalidateAllTimers()
                 Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
                 self.currentCommandData = param
                 timerForWriteCommand8 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
@@ -621,7 +621,7 @@ class BLE: NSObject {
             let writeData =  Data(bytes: param)
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
             self.currentCommandData = param
-            timerForWriteCommand5 = Timer.scheduledTimer(withTimeInterval: 8, repeats: true, block: { (timer) in
+            timerForWriteCommand5 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                 self.randomGenerator()
                 param[1] = self.counter
                 let writeData =  Data(bytes: param)
@@ -653,7 +653,7 @@ class BLE: NSObject {
         let writeData =  Data(bytes: param)
         Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
         self.currentCommandData = param
-        timerForWriteCommand7 = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (timer) in
+        timerForWriteCommand7 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
             self.currentCommandData = param
         })
@@ -978,6 +978,7 @@ extension BLE: CBPeripheralDelegate {
         //        var holeWithSwing = [(hole:Int,shotNo:Int,club:String,lat:Double,lng:Double,holeOut:Bool)]()
         DispatchQueue.main.async(execute: {
             var shotArr = [NSMutableDictionary]()
+            let group = DispatchGroup()
             for i in 0..<self.holeWithSwing.count-1{
                 let data = self.holeWithSwing[i]
                 let nextData = self.holeWithSwing[i+1]
@@ -1004,15 +1005,22 @@ extension BLE: CBPeripheralDelegate {
                         }
                         shotArr.append(shotDict)
                         shotArr = shotArr.removeDuplicates()
+                        
                         if(i+1 == self.holeWithSwing.count-1){
-                            ref.child("matchData/\(self.activeMatchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shotArr])
-                            ref.child("matchData/\(self.activeMatchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
-                            
+                            group.enter()
+                            ref.child("matchData/\(self.activeMatchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shotArr], withCompletionBlock: { (error, ref) in
+                                ref.child("matchData/\(self.activeMatchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true], withCompletionBlock: { (error, ref) in
+                                    group.leave()
+                                })
+                            })
                             shotArr.removeAll()
                         }
                     }
                 }else{
-                    ref.child("matchData/\(self.activeMatchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shotArr])
+                    group.enter()
+                    ref.child("matchData/\(self.activeMatchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shotArr], withCompletionBlock: { (error, ref) in
+                        group.leave()
+                    })
                     shotArr.removeAll()
                     if(nextData.shotNo != 0){
                         let shotDict = NSMutableDictionary()
@@ -1023,11 +1031,20 @@ extension BLE: CBPeripheralDelegate {
                         
                         shotDict.setValue(nextData.holeOut, forKey: "holeOut")
                         shotArr.append(shotDict)
-                        
                     }
                 }
-                debugPrint(shotArr)
             }
+            group.notify(queue: .main, execute: {
+                if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
+                    var holeNm = 1
+                    if self.holeWithSwing.last?.hole != scoring.count{
+                        holeNm = self.holeWithSwing.last!.hole
+                        self.holeWithSwing.removeAll()
+                        self.holeWithSwing.append((hole: holeNm+1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+                    }
+                }
+            })
         })
     }
     func updateSingleShot(nextData:(hole:Int,shotNo:Int,club:String,lat:Double,lng:Double,holeOut:Bool)){
@@ -1050,28 +1067,8 @@ extension BLE: CBPeripheralDelegate {
         
     }
     func updateHoleOutShot(nextData:(hole:Int,shotNo:Int,club:String,lat:Double,lng:Double,holeOut:Bool)){
-        let data = holeWithSwing[self.holeWithSwing.count-2]
-        let shotDict = NSMutableDictionary()
-        shotDict.setValue(data.club, forKey: "club")
-        shotDict.setValue(data.lat, forKey: "lat1")
-        shotDict.setValue(data.lng, forKey: "lng1")
-        shotDict.setValue(nextData.lat, forKey: "lat2")
-        shotDict.setValue(nextData.lng, forKey: "lng2")
-        shotDict.setValue(false, forKey: "penalty")
-        shotDict.setValue(true, forKey: "isSwing")
-        shotDict.setValue(nextData.holeOut, forKey: "holeOut")
-        let currentLocation: CLLocation = self.locationManager.location!
-        let lat1 = currentLocation.coordinate.latitude
-        let lng1 = currentLocation.coordinate.longitude
-        let dict = NSMutableDictionary()
-        dict.setValue(lat1, forKey: "lat1")
-        dict.setValue(lng1, forKey: "lng1")
-        shotDict.setValue(dict, forKey: "phoneLocation")
-        
-        ref.child("matchData/\(self.activeMatchId)/scoring/\(nextData.hole-1)/\(Auth.auth().currentUser!.uid)/shots/\(data.shotNo-1)").updateChildValues(shotDict as! [AnyHashable : Any])
         ref.child("matchData/\(self.activeMatchId)/scoring/\(nextData.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: true)
-        
     }
     func updateSingleSwing(data:(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64),hole:Int){
         let swingDict = NSMutableDictionary()
@@ -1169,16 +1166,16 @@ extension BLE: CBPeripheralDelegate {
                             self.sendsixthCommand1()
                         }
                     }else{
-                        DispatchQueue.main.async(execute: {
-                            if(!self.isPracticeMatch) && self.currentGameId/100 == responseInIntFirst4/100{
-                                    self.invalidateAllTimers()
-                                    debugPrint(self.swingMatchId)
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-                            }else if self.currentGameId/100 == responseInIntFirst4/100{
-                                    self.invalidateAllTimers()
-                                    debugPrint(self.swingMatchId)
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-                            }else{
+                        if(!self.isPracticeMatch) && self.currentGameId/100 == responseInIntFirst4/100{
+                            self.invalidateAllTimers()
+                            debugPrint(self.swingMatchId)
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+                        }else if self.currentGameId/100 == responseInIntFirst4/100{
+                            self.invalidateAllTimers()
+                            debugPrint(self.swingMatchId)
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+                        }else{
+                            DispatchQueue.main.async(execute: {
                                 let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
                                 gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
@@ -1191,8 +1188,8 @@ extension BLE: CBPeripheralDelegate {
                                     debugPrint("Game Discard cancel Press")
                                 }))
                                 UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-                            }
-                        })
+                            })
+                        }
                     }
                 }else if(dataArray[0] == UInt8(4)){
                     self.invalidateAllTimers()
@@ -1228,6 +1225,8 @@ extension BLE: CBPeripheralDelegate {
                     self.timerForWriteCommand5.invalidate()
                     self.currentGameId = responseInIntSecond4
                     if(dataArray[2] == UInt8(2)){
+                        self.shotNo = 1
+                        self.isFinished = false
                         DispatchQueue.main.async(execute: {
                             UIApplication.shared.keyWindow?.makeToast("Ready to take swing...")
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "readyToTakeSwing"), object: nil)
@@ -1329,12 +1328,12 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[swingDetails.count-1].ba = Double(backAngle)
                         holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
                         holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
-                        self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
                         if (holeWithSwing[holeWithSwing.count-1].holeOut){
                             self.updateHoleOutShot(nextData: holeWithSwing.last!)
                             debugPrint("HoleWithSwing",holeWithSwing)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                         }else{
+                            self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
                             self.updateSingleShot(nextData: holeWithSwing.last!)
                             debugPrint("HoleWithSwing",holeWithSwing)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
@@ -1353,14 +1352,19 @@ extension BLE: CBPeripheralDelegate {
                     if(self.isFinished){
                         self.sendNinthCommand(par: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                     }
-                    
-                    
                 }else if(dataArray[0] == UInt8(9)){
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
                     self.invalidateAllTimers()
-                    DispatchQueue.main.async(execute: {
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
-                    })
+                    if self.isPracticeMatch{
+                        DispatchQueue.main.async(execute: {
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
+                        })
+                    }else{
+                        DispatchQueue.main.async(execute: {
+//                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
+                        })
+                    }
+
                 }else if(dataArray[0] == UInt8(91)){
                     if swingDetails.last == nil{
                         swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0))
@@ -1391,9 +1395,12 @@ extension BLE: CBPeripheralDelegate {
                         holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[15])
                         swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
-                        let clubNumber = 0
-                        //                                                let clubNumber = Int(dataArray[14]-1)
+                        var clubNumber = 0
+                        if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
+                            clubNumber = (Int(dataArray[14]))-1
+                        }
                         holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubNumber]
+                        swingDetails[swingDetails.count-1].club = self.allClubs[clubNumber]
                         if(Int(dataArray[15]) == 0){
                             holeWithSwing[holeWithSwing.count-1].holeOut = true
                         }else{
@@ -1438,13 +1445,15 @@ extension BLE: CBPeripheralDelegate {
                             holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
                             holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
                         }
-                        self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
+                        
                         debugPrint(self.swingDetails)
                         debugPrint(self.holeWithSwing)
                         if(holeWithSwing.last!.shotNo != 0){
+                            self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
                             self.updateSingleShot(nextData: holeWithSwing.last!)
                             self.swingDetails.removeAll()
                         }else if(holeWithSwing.last!.shotNo == 0){
+                            
                             self.updateHoleOutShot(nextData: holeWithSwing.last!)
                         }
                     }
@@ -1548,7 +1557,6 @@ extension BLE: CBPeripheralDelegate {
         DispatchQueue.main.async {
             debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
             self.invalidateAllTimers()
-            self.timerForWriteCommand11.invalidate()
             self.alertShowing(msg: "GolficationX disconnected Please connect again")
             //        centralManager.connect(deviceGolficationX!, options: nil)
             Constants.deviceGolficationX = nil

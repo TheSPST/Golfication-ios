@@ -25,7 +25,6 @@ class PracticeGameViewCtrl: UIViewController {
     
     @IBAction func btnActionRecieveData(_ sender: UIButton) {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
-//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command8"))
    }
     
     override func viewDidLoad() {

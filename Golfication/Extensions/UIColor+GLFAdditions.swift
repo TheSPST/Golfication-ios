@@ -169,6 +169,15 @@ extension UIColor {
     @nonobjc class var glfGreenBlueTwo: UIColor {
         return UIColor(red: 0.0, green: 193.0 / 255.0, blue: 140.0 / 255.0, alpha: 1.0)
     }
+    @nonobjc class var glfYellow: UIColor {
+        return UIColor(red: 247.0 / 255.0, green: 212.0 / 255.0, blue: 5.0 / 255.0, alpha: 1.0)
+    }
+    @nonobjc class var glfRed: UIColor {
+        return UIColor(red: 255.0 / 255.0, green: 55.0 / 255.0, blue: 55.0 / 255.0, alpha: 1.0)
+    }
+    @nonobjc class var glfGreenish: UIColor {
+        return UIColor(red: 19.0 / 255.0, green: 195.0 / 255.0, blue: 140.0 / 255.0, alpha: 1.0)
+    }
 
 }
 

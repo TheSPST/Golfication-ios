@@ -272,7 +272,12 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     @objc func btnContinueAction(){
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "continueAction"), object: nil)
+        let superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
+        if  superClassName == "newGameVC"{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "continueAction"), object: nil)
+        }else{
+            self.backBtnAction(Any.self)
+        }
     }
     
     @IBAction func detailScoreAction(_ sender: UIButton) {

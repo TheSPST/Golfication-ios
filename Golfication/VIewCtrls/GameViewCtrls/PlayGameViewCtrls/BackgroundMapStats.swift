@@ -288,9 +288,14 @@ class BackgroundMapStats: NSObject {
             }
             lat = lat.removeDuplicates()
             lng = lng.removeDuplicates()
-            for i in 0..<lng.count{
-                uniqueArray.append(CLLocationCoordinate2D(latitude: lat[i], longitude: lng[i]))
+            if lng.count == lat.count{
+                for i in 0..<lng.count{
+                    uniqueArray.append(CLLocationCoordinate2D(latitude: lat[i], longitude: lng[i]))
+                }
+            }else{
+                uniqueArray = curvedArray
             }
+
         }
         return uniqueArray
     }

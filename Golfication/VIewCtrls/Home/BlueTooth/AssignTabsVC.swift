@@ -38,7 +38,8 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     var sharedInstance: BluetoothSync!
     var timer = Timer()
     var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
-
+    var golfBagArray = NSMutableArray()
+    
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: golfBagStr)
     }
@@ -82,26 +83,96 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         selectedBagStr = commanBagArray[pageControl.currentPage]
         pageControl.numberOfPages = commanBagArray.count
         collectionViewFlowLayout.minimumLineSpacing = 0
-        let isSync = clubs.value(forKey: selectedBagStr) as! Bool
-        updateSyncBtnWithout(isSync:isSync)
         
+        if let isSync = clubs.value(forKey: selectedBagStr) as? Bool{
+        updateSyncBtnWithout(isSync:isSync)
+        }
         if commanBagArray.count == 1{
             pageControl.isHidden = true
         }
         else{
             pageControl.isHidden = false
         }
-        
+        setUpData()
     }
+    
+    func setUpData(){
+        
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+            self.progressView.hide(navItem: self.navigationItem)
+            
+            if(snapshot.value != nil){
+                self.golfBagArray = NSMutableArray()
+                self.golfBagArray = snapshot.value as! NSMutableArray
+                self.setUpTagData()
+            }
+        }
+    }
+    func setUpTagData(){
+        if self.golfBagArray.count > 0{
+            for i in 0..<self.golfBagArray.count{
+                if let dict = self.golfBagArray[i] as? NSDictionary{
+                    if let tag = dict.value(forKey: "tag") as? Bool{
+                        self.lblTagName.text = "No tags assigned"
+                        self.btnSyncTag.backgroundColor = UIColor.glfBluegreen
+                        self.btnSyncTag.setTitle("Sync Tags", for: .normal)
+
+                        for j in 0..<self.commanBagArray.count{
+                            if self.selectedBagStr == self.commanBagArray[j] {
+                                
+                                let indexPath = IndexPath(row: j, section: 0)
+                                guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
+                                    else{return}
+                                cell.golfImage.layer.borderWidth = 0.0
+                                cell.golfImage.layer.borderColor = UIColor.clear.cgColor
+                                cell.golfImage.layer.cornerRadius = cell.golfImage.frame.size.height/2
+                            }
+                        }
+                        if tag == true{
+                            if let tagName = dict.value(forKey: "tagName") as? String{
+                                if self.selectedBagStr == dict.value(forKey: "clubName") as? String{
+                                    self.lblTagName.text = tagName
+                                    
+                                    self.btnSyncTag.backgroundColor = UIColor.glfWarmGrey
+                                    self.btnSyncTag.setTitle("Desync Tags", for: .normal)
+
+                                    for j in 0..<self.commanBagArray.count{
+                                        if self.selectedBagStr == self.commanBagArray[j] {
+                                            
+                                            let indexPath = IndexPath(row: j, section: 0)
+                                            guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
+                                                else{return}
+                                            cell.golfImage.layer.borderWidth = 2.0
+                                            cell.golfImage.layer.borderColor = UIColor.glfBluegreen75.cgColor
+                                            cell.golfImage.layer.cornerRadius = cell.golfImage.frame.size.height/2
+                                        }
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func calculateTagWithClubNumber(){
         tagClubNumber.removeAll()
         for j in 0..<self.golfBagArr.count{
             if let club = self.golfBagArr[j] as? NSMutableDictionary{
                 if club.value(forKey: "tag") as! Bool{
-                    let tagNumber = club.value(forKey: "tagNum") as! Int
+                    let tagNumber = club.value(forKey: "tagNum") as! String
+                    var num = 0
+                    if tagNumber.contains("a") || tagNumber.contains("A") || tagNumber.contains("b") || tagNumber.contains("B") || tagNumber.contains("c") || tagNumber.contains("C") || tagNumber.contains("d") || tagNumber.contains("D") || tagNumber.contains("e") || tagNumber.contains("E") || tagNumber.contains("f") || tagNumber.contains("F"){
+                        num = Int(tagNumber, radix: 16)!
+                    }else{
+                        num = Int(tagNumber)!
+                    }
                     let clubName = club.value(forKey: "clubName") as! String
                     let clubNumber = self.allClubs.index(of: clubName)! + 1
-                    tagClubNumber.append((tag: tagNumber, club: clubNumber,clubName:clubName))
+                    tagClubNumber.append((tag: num, club: clubNumber,clubName:clubName))
                 }
             }
         }
@@ -134,6 +205,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             }
         }
         if(isSync){
+            self.tagsIn5Sec.removeAllObjects()
             sharedInstance = BluetoothSync.getInstance()
             sharedInstance.delegate = self
             sharedInstance.initCBCentralManager()
@@ -143,14 +215,18 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         }else{
             self.btnSyncTag.backgroundColor = UIColor.glfBluegreen
             self.btnSyncTag.setTitle("Sync Tags", for: .normal)
+            self.lblTagName.text = "No tags assigned"
+
             if(club != nil){
                 clubs.setValue(true, forKey: club!)
                 bagDict.setValue(false, forKey: "tag")
                 bagDict.setValue("", forKey: "tagName")
-                bagDict.setValue(0, forKey: "tagNum")
+                bagDict.setValue("", forKey: "tagNum")
                 golfBagArr[index] = bagDict
-                let newDict = ["golfBag":golfBagArr]
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(newDict as [AnyHashable : Any])
+                
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag":golfBagArr]) { (error, ref) in
+                    self.setUpData()
+                }
             }
         }
     }
@@ -163,6 +239,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         let data = self.tagsIn5Sec.allKeys as! [String]
         let ordered = data.sorted()
+        debugPrint(self.tagsIn5Sec)
         if !ordered.isEmpty{
             if let name = (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral).name{
                 self.syncTag(tagName: name, peripheral: (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
@@ -177,7 +254,6 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         }else{
                 self.view.makeToast("No tag found, Please try again")
         }
-
     }
     
     @IBAction func syncTagAction(_ sender: UIButton) {
@@ -237,8 +313,10 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             let snapToIndex = indexOfCellBeforeDragging + (hasEnoughVelocityToSlideToTheNextCell ? 1 : -1)
             pageControl.currentPage = snapToIndex
             selectedBagStr = commanBagArray[snapToIndex]
-            let isSync = clubs.value(forKey: selectedBagStr) as! Bool
+            if let isSync = clubs.value(forKey: selectedBagStr) as? Bool{
             updateSyncBtnWithout(isSync:isSync)
+            }
+            setUpTagData()
             
             let toValue = collectionViewFlowLayout.itemSize.width * CGFloat(snapToIndex)
             
@@ -255,8 +333,11 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             if indexPath.row >= 0 && commanBagArray.count > indexPath.row{
                 pageControl.currentPage = indexPath.row
                 selectedBagStr = commanBagArray[indexPath.row]
-                let isSync = clubs.value(forKey: selectedBagStr) as! Bool
+                if let isSync = clubs.value(forKey: selectedBagStr) as? Bool{
                 updateSyncBtnWithout(isSync:isSync)
+                }
+                setUpTagData()
+                
                 collectionView.collectionViewLayout.collectionView!.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             }
         }
@@ -275,71 +356,103 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     // MARK: syncTag
     func syncTag(tagName: String, peripheral: CBPeripheral) {
-        let tagNameTempArray = NSMutableArray()
+
+        let tagNumTempArray = NSMutableArray()
+        var tagNameTempArray = [Int]()
+
         for i in 0..<golfBagArr.count{
             let dict = golfBagArr[i] as! NSDictionary
             if (dict.value(forKey: "tag") as! Bool == true){
-                tagNameTempArray.add(dict.value(forKey: "tagName") as! String)
+                tagNumTempArray.add(dict.value(forKey: "tagNum") as! String)
+                let tagName = (dict.value(forKey: "tagName") as! String)
+                let dropFirst4 = String(tagName.dropFirst(4))
+                tagNameTempArray.append(Int(dropFirst4)!)
+            }
+        }
+        tagNameTempArray = tagNameTempArray.sorted()
+        var tagNameInt = 0
+        if tagNameTempArray.count == 0{
+            tagNameInt = tagNameInt + 1
+        }
+        else{
+        for i in 0..<tagNameTempArray.count{
+            let tag = tagNameTempArray[i]
+            if tag == i + 1{
+               tagNameInt = tag + 1
+               
+            }
+            else{
+               tagNameInt = i + 1
+                break
+            }
+        }
+    }
+        if tagNumTempArray.count < 14{
+            let dropFirst3 = String(tagName.dropFirst(3))
+            
+            if !(tagNumTempArray.contains(dropFirst3)){
+                
+                for i in 0..<self.golfBagArr.count{
+                    let dict = self.golfBagArr[i] as! NSDictionary
+                    if (dict.value(forKey: "clubName") as! String == self.selectedBagStr){
+                        
+                        let golfBagDict = NSMutableDictionary()
+                        golfBagDict.setObject("", forKey: "brand" as NSCopying)
+                        golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
+                        golfBagDict.setObject(self.selectedBagStr, forKey: "clubName" as NSCopying)
+                        golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
+                        golfBagDict.setObject(true, forKey: "tag" as NSCopying)
+                        golfBagDict.setObject("Tag \(tagNameInt)", forKey: "tagName" as NSCopying)
+                        golfBagDict.setObject(dropFirst3, forKey: "tagNum" as NSCopying)
+                        
+                        self.golfBagArr.replaceObject(at: i, with: golfBagDict)
+                        
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag": self.golfBagArr], withCompletionBlock: { (error, ref) in
+                            self.setSyncData(tagName: "Tag \(tagNameInt)", peripheral: peripheral)
+                            return
+                        })
+                    }
+                }
+            }
+            else{
+                let alertVC = UIAlertController(title: "Alert", message: "Tag is already used, Please try again.", preferredStyle: UIAlertControllerStyle.alert)
+                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+                    self.dismiss(animated: true, completion: nil)
+                })
+                alertVC.addAction(action)
+                self.present(alertVC, animated: true, completion: nil)
+                
+                self.scanProgressView.hide(navItem: self.navigationItem)
+                self.sharedInstance.stopScanPeripheral()
+                self.sharedInstance.delegate = nil
+            }
+        }else{
+            view.makeToast("You can not sync more than 14 Tags.")
+        }
+    }
+    
+    func setSyncData(tagName: String, peripheral: CBPeripheral){
+        self.scanProgressView.hide(navItem: self.navigationItem)
+        self.lblTagName.text = tagName
+        self.btnSyncTag.backgroundColor = UIColor.glfWarmGrey
+        self.btnSyncTag.setTitle("Desync Tags", for: .normal)
+        
+        for j in 0..<self.commanBagArray.count{
+            if self.selectedBagStr == self.commanBagArray[j] {
+                
+                let indexPath = IndexPath(row: j, section: 0)
+                guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
+                    else{return}
+                cell.golfImage.layer.borderWidth = 2.0
+                cell.golfImage.layer.borderColor = UIColor.glfBluegreen75.cgColor
+                cell.golfImage.layer.cornerRadius = cell.golfImage.frame.size.height/2
             }
         }
         
-        for i in 0..<golfBagArr.count{
-            let dict = golfBagArr[i] as! NSDictionary
-            if (dict.value(forKey: "clubName") as! String == self.selectedBagStr){
-                
-                if !(tagNameTempArray.contains(tagName)){
-                    
-                    let last2Char = Int(tagName.suffix(5))
-                    let golfBagDict = NSMutableDictionary()
-                    golfBagDict.setObject("Titleiest", forKey: "brand" as NSCopying)
-                    golfBagDict.setObject("43", forKey: "clubLength" as NSCopying)
-                    golfBagDict.setObject(self.selectedBagStr, forKey: "clubName" as NSCopying)
-                    golfBagDict.setObject("2.3", forKey: "loftAngle" as NSCopying)
-                    golfBagDict.setObject(true, forKey: "tag" as NSCopying)
-                    golfBagDict.setObject(tagName, forKey: "tagName" as NSCopying)
-                    golfBagDict.setObject(last2Char!, forKey: "tagNum" as NSCopying)
-                    
-                    golfBagArr.replaceObject(at: i, with: golfBagDict)
-                    let golfBagData = ["golfBag": golfBagArr]
-                    
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
-                    self.scanProgressView.hide(navItem: self.navigationItem)
-                    self.lblTagName.text = tagName
-                    self.btnSyncTag.backgroundColor = UIColor.glfWarmGrey
-                    self.btnSyncTag.setTitle("Desync Tags", for: .normal)
-//                    lblTagName.text = tagName
-                    
-                    for j in 0..<self.commanBagArray.count{
-                        if self.selectedBagStr == self.commanBagArray[j] {
-                            
-                            let indexPath = IndexPath(row: j, section: 0)
-                            guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
-                                else{return}
-                            cell.golfImage.layer.borderWidth = 2.0
-                            cell.golfImage.layer.borderColor = UIColor.glfBluegreen75.cgColor
-                            cell.golfImage.layer.cornerRadius = cell.golfImage.frame.size.height/2
-                        }
-                    }
-                    
-                    self.sharedInstance.connectedPeripheral = peripheral
-                    self.sharedInstance.stopScanPeripheral()
-
-                    //self.sharedInstance.connectPeripheral(peripheral)
-                }else{
-                    let alertVC = UIAlertController(title: "Alert", message: "Tag is already used, Please try again.", preferredStyle: UIAlertControllerStyle.alert)
-                    let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-                        self.dismiss(animated: true, completion: nil)
-                    })
-                    alertVC.addAction(action)
-                    self.present(alertVC, animated: true, completion: nil)
-                    
-                    self.scanProgressView.hide(navItem: self.navigationItem)
-                    self.sharedInstance.stopScanPeripheral()
-                    self.sharedInstance.delegate = nil
-                }
-                return
-            }
-        }
+        self.sharedInstance.connectedPeripheral = peripheral
+        self.sharedInstance.stopScanPeripheral()
+        //self.sharedInstance.connectPeripheral(peripheral)
+        self.setUpData()
     }
     
     // MARK: Bluetooth Delegates

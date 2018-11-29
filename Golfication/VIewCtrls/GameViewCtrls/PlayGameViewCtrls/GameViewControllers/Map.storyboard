@@ -107,6 +107,20 @@
                                                     <action selector="btnActionMV:" destination="gCh-bB-Yak" eventType="touchUpInside" id="8Wx-uq-YJN"/>
                                                 </connections>
                                             </button>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qkh-dN-0u1">
+                                                <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="25" id="aFp-dt-NsM"/>
+                                                    <constraint firstAttribute="height" constant="25" id="vEn-U7-5za"/>
+                                                </constraints>
+                                                <state key="normal" image="golficationBar">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="btnActionGolficationX:" destination="gCh-bB-Yak" eventType="touchUpInside" id="nTB-Fs-muP"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -1269,6 +1283,7 @@
                         <outlet property="btnDeleteLbl" destination="s5I-WT-cCG" id="PeZ-Y1-229"/>
                         <outlet property="btnDeleteShot" destination="FOr-FB-46t" id="84g-z3-ZT9"/>
                         <outlet property="btnEndRound" destination="3WZ-dl-FGF" id="Xbn-NL-mcE"/>
+                        <outlet property="btnGolficationX" destination="Qkh-dN-0u1" id="0ei-bc-cqt"/>
                         <outlet property="btnHole" destination="z8l-x0-aaI" id="EJi-7r-kaY"/>
                         <outlet property="btnHoleOut" destination="6X5-dC-vQC" id="rIi-8L-0UI"/>
                         <outlet property="btnHoleoutLbl" destination="dCF-AO-Xwk" id="GdS-FA-VFM"/>
@@ -4732,6 +4747,7 @@ AAAAAAAAAAAAAAAAACNVA
         <image name="finish" width="28" height="44"/>
         <image name="gir_false" width="20" height="20"/>
         <image name="golfBag" width="51.200000762939453" height="51.200000762939453"/>
+        <image name="golficationBar" width="25" height="25"/>
         <image name="green_arrow" width="22" height="14"/>
         <image name="hit" width="25.600000381469727" height="25.600000381469727"/>
         <image name="hole_out" width="30" height="36"/>

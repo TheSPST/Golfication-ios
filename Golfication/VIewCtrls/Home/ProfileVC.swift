@@ -690,7 +690,7 @@ class ProfileVC: UIViewController {
                                         golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
                                         golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                                         golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                                        golfBagDict.setObject(0, forKey: "tagNum" as NSCopying)
+                                        golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
 
                                         golfBagArray.replaceObject(at: i, with: golfBagDict)
                                         golfBagData = ["golfBag": golfBagArray]
@@ -720,7 +720,7 @@ class ProfileVC: UIViewController {
                         golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
                         golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                         golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                        golfBagDict.setObject(0, forKey: "tagNum" as NSCopying)
+                        golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
 
                         tempArray.insert(golfBagDict, at: i)
                         golfBagData = ["golfBag": tempArray]

@@ -42,7 +42,8 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
             array.append(viewCtrl)
         }
         return array
-    }
+}
+    
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = false

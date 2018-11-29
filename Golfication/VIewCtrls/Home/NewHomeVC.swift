@@ -1078,7 +1078,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                 golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
                                 golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                                 golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                                golfBagDict.setObject(0, forKey: "tagNum" as NSCopying)
+                                golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
                                 
                                 golfBag.replaceObject(at: i, with: golfBagDict)
                                 golfBagData = ["golfBag": golfBag]

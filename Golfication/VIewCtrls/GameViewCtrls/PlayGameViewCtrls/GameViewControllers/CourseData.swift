@@ -261,7 +261,9 @@ class CourseData:NSObject{
                             }
                         }
                         if !self.centerPointOfTeeNGreen.isEmpty{
-                            newTemp.append(self.centerPointOfTeeNGreen[newIndex])
+                            if newIndex < self.centerPointOfTeeNGreen.count{
+                                newTemp.append(self.centerPointOfTeeNGreen[newIndex])
+                            }
                         }
                         if(!self.holeGreenDataArr.isEmpty){
                             tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
@@ -337,7 +339,7 @@ class CourseData:NSObject{
                                 golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
                                 golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                                 golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                                golfBagDict.setObject(0, forKey: "tagNum" as NSCopying)
+                                golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
                                 self.golfBagArray.replaceObject(at: i, with: golfBagDict)
                                 golfBagData = ["golfBag": self.golfBagArray]
                                 self.clubs.append(tempArray[i] as! String)
@@ -393,10 +395,16 @@ class CourseData:NSObject{
         for j in 0..<self.golfBagArray.count{
             if let club = self.golfBagArray[j] as? NSMutableDictionary{
                 if club.value(forKey: "tag") as! Bool{
-                    let tagNumber = club.value(forKey: "tagNum") as! Int
+                    let tagNumber = club.value(forKey: "tagNum") as! String
+                    var num = 0
+                    if tagNumber.contains("a") || tagNumber.contains("A") || tagNumber.contains("b") || tagNumber.contains("B") || tagNumber.contains("c") || tagNumber.contains("C") || tagNumber.contains("d") || tagNumber.contains("D") || tagNumber.contains("e") || tagNumber.contains("E") || tagNumber.contains("f") || tagNumber.contains("F"){
+                        num = Int(tagNumber, radix: 16)!
+                    }else{
+                        num = Int(tagNumber)!
+                    }
                     let clubName = club.value(forKey: "clubName") as! String
                     let clubNumber = Constants.allClubs.index(of: clubName)! + 1
-                    Constants.tagClubNum.append((tag: tagNumber, club: clubNumber,clubName:clubName))
+                    Constants.tagClubNum.append((tag: num, club: clubNumber,clubName:clubName))
                 }
             }
         }
