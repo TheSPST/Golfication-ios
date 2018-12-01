@@ -24,7 +24,7 @@ class CourseData:NSObject{
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     func getGolfCourseDataFromFirebase(courseId:String){
 //        courseId = "course_9999999"
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:"course_9999999") { (snapshot) in
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
             var rangeFinderHoles = NSArray()
@@ -392,6 +392,8 @@ class CourseData:NSObject{
     }
     func calculateTagWithClubNumber(){
         Constants.tagClubNum.removeAll()
+        let allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
+
         for j in 0..<self.golfBagArray.count{
             if let club = self.golfBagArray[j] as? NSMutableDictionary{
                 if club.value(forKey: "tag") as! Bool{
@@ -403,7 +405,7 @@ class CourseData:NSObject{
                         num = Int(tagNumber)!
                     }
                     let clubName = club.value(forKey: "clubName") as! String
-                    let clubNumber = Constants.allClubs.index(of: clubName)! + 1
+                    let clubNumber = allClubs.index(of: clubName)! + 1
                     Constants.tagClubNum.append((tag: num, club: clubNumber,clubName:clubName))
                 }
             }

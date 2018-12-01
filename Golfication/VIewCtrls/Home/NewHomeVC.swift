@@ -1065,6 +1065,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                         if let dict = golfBag[i] as? NSDictionary{
                             debugPrint("dict ==", dict)
                             self.clubInsideGolfClub.append(dict.value(forKey: "clubName") as! String)
+                            if dict.value(forKey: "tagNum") != nil{
+                                if let tagNum = dict.value(forKey: "tagNum") as? Int{
+                                    if tagNum == 0{
+                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["tagNum":""])
+                                    }
+                                }
+                            }
                         }
                         else{
                             let tempArray = golfBag

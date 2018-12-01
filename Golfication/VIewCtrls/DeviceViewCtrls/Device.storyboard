@@ -1323,6 +1323,7 @@
                         <outlet property="lblBackSwingTitle" destination="IXj-L2-vUC" id="dkB-C5-RcZ"/>
                         <outlet property="lblBottomClubSpeedCHS" destination="D9u-ui-yJZ" id="dUq-eL-pHS"/>
                         <outlet property="lblBottomClubSpeedKPH" destination="OcI-Gc-YvP" id="caf-L7-F9e"/>
+                        <outlet property="lblBottomHandSpeedKPH" destination="MaA-Nh-fQV" id="lbr-A1-qlC"/>
                         <outlet property="lblClubName" destination="aI2-uC-TYU" id="M34-9h-qWW"/>
                         <outlet property="lblClubName1" destination="d4S-Qo-DY7" id="BLE-an-NVu"/>
                         <outlet property="lblClubName2" destination="nis-ld-o50" id="nHt-9g-0VF"/>

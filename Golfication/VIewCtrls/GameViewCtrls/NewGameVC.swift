@@ -526,7 +526,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         super.viewWillAppear(true)
         if Constants.isDevice && Constants.deviceGolficationX == nil{
             Constants.ble = BLE()
-            Constants.ble.setupObserver()
             Constants.ble.isPracticeMatch = false
         }
         self.navigationController?.navigationBar.isHidden = false
@@ -2167,6 +2166,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                     if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
+                        if Constants.deviceGolficationX != nil{
+                            Constants.ble.swingMatchId = ""
+                        }
                         break
                     }
                 }
@@ -2226,8 +2228,13 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
     func generateStatsData(){
-        if let swingKey = self.players.value(forKey: "swingKey") as? String{
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
+        for data in self.players{
+            if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
+                    break
+                }
+            }
         }
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         let generateStats = GenerateStats()

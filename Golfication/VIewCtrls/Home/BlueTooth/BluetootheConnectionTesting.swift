@@ -66,6 +66,8 @@ class BluetootheConnectionTesting: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        Constants.ble = BLE()
+        Constants.ble.isSetupScreen = true
         btnSetupTags.setCorner(color: UIColor.clear.cgColor)
         btnScanForDevice.setCorner(color: UIColor.clear.cgColor)
         btnDevice.setCircle(frame: self.btnDevice.frame)
@@ -98,20 +100,20 @@ class BluetootheConnectionTesting: UIViewController {
 //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
     }
     @objc func retryAction(_ sender: UIButton) {
-        Constants.ble = BLE()
+        
         Constants.ble.startScanning()
         self.golfXPopupView.removeFromSuperview()
         showPopUp()
     }
     @objc func btnActionConnectBL(_ sender: UIBarButtonItem) {
-        Constants.ble  = BLE()
         Constants.ble.startScanning()
         showPopUp()
     }
     @IBAction func btnActionScanForDevice(_ sender: UIButton) {
-        Constants.ble = BLE()
         Constants.ble.startScanning()
         showPopUp()
+//        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "responseFirstCommand"),object:nil)
+
     }
     func showPopUp(){
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")

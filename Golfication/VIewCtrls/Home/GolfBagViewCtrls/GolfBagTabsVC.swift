@@ -34,7 +34,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     @IBOutlet weak var btnTempAddBag: UIButton!
     @IBOutlet weak var btnTempRemoveBag: UIButton!
 
-    @IBOutlet weak var scanProgressView: ScanProgressView!
+//    @IBOutlet weak var scanProgressView: ScanProgressView!
     @IBOutlet weak var syncStackView: UIStackView!
     let progressView = SDLoader()
     
@@ -119,9 +119,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         
         debugPrint("peripheral.name== ", peripheral.name ?? "")
         debugPrint("RSSI== ", RSSI)
-        self.scanProgressView.show(navItem: self.navigationItem)
-        self.scanProgressView.progressView.setProgress(10, animated: true)
-//        progressBar.setProgress(percentage / 100.0, animated: false)
+//        self.scanProgressView.show(navItem: self.navigationItem)
+//        self.scanProgressView.progressView.setProgress(10, animated: true)
          let periName = peripheral.name ?? ""
         if (periName.contains("GX")){
             if !(tagNameMArray.contains(periName)){
@@ -130,7 +129,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 dic.setValue(peripheral, forKey: "Peripheral")
 
                 tagNameArray.add(dic)
-                self.scanProgressView.progressView.setProgress(30, animated: true)
+//                self.scanProgressView.progressView.setProgress(30, animated: true)
 //                self.syncTag(tagName: periName, peripheral: peripheral)
             }
         }
@@ -166,7 +165,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         else {
             debugPrint("No service Found")
         }
-        self.scanProgressView.hide(navItem: self.navigationItem)
+//        self.scanProgressView.hide(navItem: self.navigationItem)
         sharedInstance.delegate = nil
     }
     
@@ -431,6 +430,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 }
             }
             DispatchQueue.main.async(execute: {
+                if golfBagArray.count<14{
                 if !(tempBagArray.contains(self.selectedBagStr)){
                     
                     let golfBagDict = NSMutableDictionary()
@@ -450,6 +450,19 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     //self.syncStackView.isHidden = false //commented by Amit
                     self.btnSyncTag.backgroundColor = UIColor.glfBluegreen75
                     self.btnSyncTag.setTitle("Sync Tags", for: .normal)
+                }
+            }
+                else{
+                    self.editView.isHidden = false
+                    self.defaultView.isHidden = true
+
+                    let alertVC = UIAlertController(title: "Alert", message: "You can not add more than 14 clubs.", preferredStyle: UIAlertControllerStyle.alert)
+                    let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+                        self.dismiss(animated: true, completion: nil)
+                    })
+                    alertVC.addAction(action)
+                    self.present(alertVC, animated: true, completion: nil)
+
                 }
             })
         }
@@ -519,7 +532,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                             self.sharedInstance.delegate = self
                             self.sharedInstance.initCBCentralManager()
                             
-                            self.scanProgressView.progressView.setProgress(0, animated: false)
+//                            self.scanProgressView.progressView.setProgress(0, animated: false)
 
                             self.timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
                             break
@@ -536,8 +549,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         self.sharedInstance.delegate = nil
         
         if tagNameArray.count == 0{
-        self.scanProgressView.hide(navItem: self.navigationItem)
-        self.scanProgressView.progressView.setProgress(0, animated: false)
+//        self.scanProgressView.hide(navItem: self.navigationItem)
+//        self.scanProgressView.progressView.setProgress(0, animated: false)
 
         let alertVC = UIAlertController(title: "Alert", message: "Please try again.", preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
@@ -557,8 +570,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         }
         else{
             // Show List
-            self.scanProgressView.hide(navItem: self.navigationItem)
-            self.scanProgressView.progressView.setProgress(0, animated: false)
+//            self.scanProgressView.hide(navItem: self.navigationItem)
+//            self.scanProgressView.progressView.setProgress(0, animated: false)
 
             tableContainerView.isHidden = false
             tagTableView.delegate = self
@@ -570,7 +583,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     func syncTag(tagName: String, peripheral: CBPeripheral) {
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
             
-            self.scanProgressView.progressView.setProgress(50, animated: true)
+//            self.scanProgressView.progressView.setProgress(50, animated: true)
 
             var golfBagArray = NSMutableArray()
             self.editView.isHidden = true
@@ -659,8 +672,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                                 self.sharedInstance.connectedPeripheral = peripheral
                                 self.sharedInstance.stopScanPeripheral()
                                 //self.sharedInstance.connectPeripheral(peripheral)
-                                self.scanProgressView.progressView.setProgress(100, animated: true)
-                                self.scanProgressView.hide(navItem: self.navigationItem)
+//                                self.scanProgressView.progressView.setProgress(100, animated: true)
+//                                self.scanProgressView.hide(navItem: self.navigationItem)
                             }
                             else{
                                 let alertVC = UIAlertController(title: "Alert", message: "Tag is already used, Please try again.", preferredStyle: UIAlertControllerStyle.alert)
@@ -670,7 +683,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                                 alertVC.addAction(action)
                                 self.present(alertVC, animated: true, completion: nil)
                                 
-                                self.scanProgressView.hide(navItem: self.navigationItem)
+//                                self.scanProgressView.hide(navItem: self.navigationItem)
                                 self.sharedInstance.stopScanPeripheral()
                                 self.sharedInstance.delegate = nil
                             }
@@ -873,7 +886,7 @@ extension GolfBagTabsVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableContainerView.isHidden = true
         
-        self.scanProgressView.show(navItem: self.navigationItem)
+//        self.scanProgressView.show(navItem: self.navigationItem)
         
         let dic = tagNameArray[indexPath.row] as! NSDictionary
         let periName = dic.value(forKey: "PeripheralName") as! String

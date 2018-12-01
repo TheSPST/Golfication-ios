@@ -244,7 +244,6 @@
 		4BB7C428208DB584006CCAFF /* MyFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB7C427208DB584006CCAFF /* MyFeedVC.swift */; };
 		4BBEA024206E2F7A00EA2783 /* FeedPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */; };
 		4BC879BA20C517EF00A3B2BB /* PracticeGameViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */; };
-		4BCC816420AD64F600AD3108 /* ScanProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC816320AD64F600AD3108 /* ScanProgressView.swift */; };
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
 		4BCFF6D820453CBC00FCB10D /* MySwingWebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */; };
 		4BD5CF83214CE17E00BEBEED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */; };
@@ -258,6 +257,7 @@
 		4BE0DB74206BB9B100AE33E2 /* ShareStatsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE0DB73206BB9B100AE33E2 /* ShareStatsButton.swift */; };
 		4BE11A6B21353568008E529A /* CustomColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE11A6A21353568008E529A /* CustomColorSlider.swift */; };
 		4BE1E2C5206CC74B00A32845 /* ShareStatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */; };
+		4BE4196921B29A6100C49AB6 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE4196821B29A6100C49AB6 /* CircularProgress.swift */; };
 		4BF564EF1FD2AA03006BDB0E /* String+Width.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF564EE1FD2AA03006BDB0E /* String+Width.swift */; };
 /* End PBXBuildFile section */
 
@@ -530,7 +530,6 @@
 		4BB7C427208DB584006CCAFF /* MyFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedVC.swift; sourceTree = "<group>"; };
 		4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPostVC.swift; sourceTree = "<group>"; };
 		4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticeGameViewCtrl.swift; sourceTree = "<group>"; };
-		4BCC816320AD64F600AD3108 /* ScanProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanProgressView.swift; sourceTree = "<group>"; };
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
 		4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySwingWebViewVC.swift; sourceTree = "<group>"; };
 		4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSubscriptionManager.swift; sourceTree = "<group>"; };
@@ -544,6 +543,7 @@
 		4BE11A6A21353568008E529A /* CustomColorSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomColorSlider.swift; sourceTree = "<group>"; };
 		4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareStatsVC.swift; sourceTree = "<group>"; };
 		4BE1E2C7206CFA7000A32845 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		4BE4196821B29A6100C49AB6 /* CircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
 		4BF564EE1FD2AA03006BDB0E /* String+Width.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Width.swift"; sourceTree = "<group>"; };
 		74C4161709B89182A1A47152 /* Pods-Golfication.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.debug.xcconfig"; sourceTree = "<group>"; };
 		BAEB7E85ED122E864139FDF9 /* Pods-Golfication.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.release.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.release.xcconfig"; sourceTree = "<group>"; };
@@ -609,10 +609,10 @@
 		0DB732FF1FA077D60078F08B /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				4BE4196821B29A6100C49AB6 /* CircularProgress.swift */,
 				3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */,
 				3EDC6BB92109E97A009B6F49 /* ExitGamePopUpView.xib */,
 				4B04C4C220C03930000D2C23 /* SDLoader */,
-				4BCC816320AD64F600AD3108 /* ScanProgressView.swift */,
 				4BCC816520AD652300AD3108 /* ScanProgressView.xib */,
 				4BA64E452000A54400C8C03F /* Chatlogo.swift */,
 				4B7F4AE01FFD10A300191452 /* customPieViewCenter.swift */,
@@ -1340,6 +1340,7 @@
 				TargetAttributes = {
 					0D5D4A361F94D382004621C7 = {
 						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1643,7 +1644,6 @@
 				4BB26D1F1FF77EDB001E9556 /* OTTViewController.swift in Sources */,
 				4B1F6BE32090A29F00312EA7 /* DebugMapViewController.swift in Sources */,
 				4B1F6BD82090A29F00312EA7 /* SearchLocationVC.swift in Sources */,
-				4BCC816420AD64F600AD3108 /* ScanProgressView.swift in Sources */,
 				4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */,
 				3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */,
 				3EB5D2F9215F78CD007C55E3 /* GolficationXFirmware.swift in Sources */,
@@ -1759,6 +1759,7 @@
 				4B04C4CA20C03930000D2C23 /* SDLoader.swift in Sources */,
 				4B7F521D2158DC6F002E328A /* PKCButton.swift in Sources */,
 				3EAE867C2125573F0081857B /* PracticeSessionVC.swift in Sources */,
+				4BE4196921B29A6100C49AB6 /* CircularProgress.swift in Sources */,
 				0D7F3BF61F9E2AD900AE5301 /* Date+String.swift in Sources */,
 				4BB26CCA1FF77E2B001E9556 /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				3E40F98420E62E2A00092170 /* ShotDetailsTableViewCell.swift in Sources */,

@@ -190,6 +190,14 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     for i in 0..<golfBagArray.count{
                         if let dict = golfBagArray[i] as? NSDictionary{
                             self.selectedClubs.add(dict)
+                            
+                            if dict.value(forKey: "tagNum") != nil{
+                                if let tagNum = dict.value(forKey: "tagNum") as? Int{
+                                    if tagNum == 0{
+                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["tagNum":""])
+                                    }
+                                }
+                            }
                         }
                         else{
                             let tempArray = snapshot.value as! NSMutableArray

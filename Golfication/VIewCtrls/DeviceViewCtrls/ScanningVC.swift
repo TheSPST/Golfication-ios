@@ -34,7 +34,7 @@ class ScanningVC: UIViewController {
     var activeMatchId = String()
     var swingMatchId = String()
     var isPracticeMatch = Bool()
-    var swingDetails = [(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64)]()
+    var swingDetails = [(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64,hole:Int)]()
     @IBAction func backAction(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
@@ -115,7 +115,7 @@ class ScanningVC: UIViewController {
                                                     let tempo = swin.value(forKey: "tempo") as! Double
                                                     let club = swin.value(forKey: "club") as! String
                                                     let time = swin.value(forKey: "timestamp") as! Int64
-                                                    self.swingDetails.append((shotNo: shot, bs: bs, ds: ds, hv: hv, cv: cv, ba: ba, tempo: tempo, club: club, time: time))
+                                                    self.swingDetails.append((shotNo: shot, bs: bs, ds: ds, hv: hv, cv: cv, ba: ba, tempo: tempo, club: club, time: time,hole:0))
                                                 }
                                             }
                                         }
@@ -190,6 +190,7 @@ class ScanningVC: UIViewController {
                             }
                             viewCtrl.shotsArray = shotsAr
                             viewCtrl.tempArray1 = swingArr
+                            viewCtrl.moveToViewController(at: shotsAr.count-1)
                             self.navigationController?.pushViewController(viewCtrl, animated: true)
                         })
                     }else{

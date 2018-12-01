@@ -69,12 +69,23 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
         }
     }
     
+    @objc func backAction(_ sender: UIBarButtonItem) {
+          self.navigationController?.popViewController(animated: true)
+    }
+    
     override func viewDidLoad() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.startMatch(_:)), name: NSNotification.Name(rawValue: "startMatch"), object: nil)
         self.tabBarController?.tabBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
+        
         let btn = UIBarButtonItem(title: "Continue".localized(), style: .done, target: self, action: #selector(self.btnContinueAction))
+        btn.tintColor = UIColor.glfBluegreen
         self.navigationItem.setRightBarButtonItems([btn], animated: true)
+        
+        let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
+        backBtn.tintColor = UIColor.glfBluegreen
+        self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
+
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white
         settings.style.selectedBarBackgroundColor = UIColor.glfBluegreen

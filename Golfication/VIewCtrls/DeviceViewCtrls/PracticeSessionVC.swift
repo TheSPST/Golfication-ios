@@ -95,6 +95,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     var handicap = String()
     var benchMarkVal = String()
     @IBOutlet weak var lblBottomClubSpeedKPH: UILabel!
+    @IBOutlet weak var lblBottomHandSpeedKPH: UILabel!
     @IBOutlet weak var lblBottomClubSpeedCHS: UILabel!
     @IBOutlet weak var lblTempoColon: UILabel!
     @IBOutlet weak var lblSwingTempo: UILabel!
@@ -109,7 +110,10 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if Constants.distanceFilter == 0{
+            lblBottomClubSpeedKPH.text = "MPH"
+            lblBottomHandSpeedKPH.text = "MPH"
+        }
         initTempArr()
         self.shotBtnViews = [view1SwingScore,view2Clubhead,view3ClubPlane,view4Tempo,view5BackSwing,view6HandSpeed]
         self.shotTopViews = [view1SwingV,view2ClubheadV,view3ClubPlaneV,view4TempoV,view5BackSwingV,view6HandSpeedV]
@@ -231,7 +235,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             tempArray.append("\(Int(swingScore))")
             tempArray.append("\(Int(clubSpeed))")
 //            tempArray.append("+\(Int(5))%")
-            tempArray.append("-")
+            tempArray.append("+5")
             tempArray.append("\(tempo.rounded(toPlaces: 1))")
             lbl4Tempo1V.text = "1"
             tempArray.append("\(Int(backSwingAngle))")
@@ -298,7 +302,8 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                     shotTopViews[i].isHidden = false
                     if tagVal == 0{
                         DispatchQueue.main.async(execute: {
-                            self.swingScoreCircularView.setProgress(value: CGFloat(83), animationDuration: 1)
+                            let swingScore = self.swingDetails.value(forKey: "swingScore") as! Int
+                            self.swingScoreCircularView.setProgress(value: CGFloat(swingScore), animationDuration: 1)
                         })
                     }
                     else if tagVal == 1{

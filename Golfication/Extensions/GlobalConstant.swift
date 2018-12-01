@@ -69,7 +69,8 @@ struct Constants{
     static var charctersticsGlobalForWrite : CBCharacteristic!
     static var charctersticsGlobalForRead : CBCharacteristic!
     static var allClubs = ["Dr","3w","1i","1h","2h","3h","2i","4w","4h","3i","5w","5h","4i","7w","6h","5i","7h","6i","7i","8i","9i","Pw","Gw","Sw","Lw","Pu"]
-
+    // MARK: BLESCANNING
+    static var bleObserver = 0
     // MARK: FeedPostVC
     static var fromStatsPost = false
     //MARK: SwingsSessions

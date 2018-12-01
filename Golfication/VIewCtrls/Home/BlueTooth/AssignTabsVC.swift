@@ -11,13 +11,22 @@ import FirebaseAuth
 import XLPagerTabStrip
 import CoreBluetooth
 import CoreBluetooth
+import UICircularProgressRing
 
 class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, IndicatorInfoProvider, BluetoothDelegate {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var lblTagName: UILocalizedLabel!
-    @IBOutlet weak var scanProgressView: ScanProgressView!
+    var scanProgressView: UIView!
+    var btnNoTag: UIButton!
+    var btnRetry: UIButton!
+    var btnCancel:UIButton!
+    
+    weak var tagCircularView: CircularProgress!
+    var lblScanStatus: UILabel!
+    var clubImageView:UIImageView!
+    
     let progressView = SDLoader()
     @IBOutlet weak var btnSyncTag: UIButton!
     var selectedBagStr = String()
@@ -36,10 +45,9 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     var golfBagStr = String()
     var indexOfCellBeforeDragging = 0
     var sharedInstance: BluetoothSync!
-    var timer = Timer()
     var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
     var golfBagArray = NSMutableArray()
-    
+
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: golfBagStr)
     }
@@ -52,6 +60,8 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     override func viewDidLoad() {
         super.viewDidLoad()
         btnSyncTag.layer.cornerRadius = 3.0
+        self.btnSyncTag.backgroundColor = UIColor.glfBluegreen
+
         NotificationCenter.default.addObserver(self, selector: #selector(btnContinueAction), name: NSNotification.Name(rawValue: "command"), object: nil)
     }
     
@@ -61,7 +71,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
+
         if golfBagStr == "Drivers"{
             commanBagArray = golfBagDriverArray
         }
@@ -93,7 +103,76 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         else{
             pageControl.isHidden = false
         }
+        
+        if scanProgressView != nil{
+            self.tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+            scanProgressView.removeFromSuperview()
+        }
         setUpData()
+    }
+    
+    func setupScanUI(){
+        self.scanProgressView = (Bundle.main.loadNibNamed("ScanProgressView", owner: self, options: nil)![0] as! UIView)
+        self.scanProgressView.frame = self.view.bounds
+        self.view.addSubview(self.scanProgressView)
+
+        btnNoTag = (scanProgressView.viewWithTag(111) as! UIButton)
+        btnNoTag.layer.cornerRadius = btnNoTag.frame.size.height/2
+        
+        btnRetry = (scanProgressView.viewWithTag(222) as! UIButton)
+        btnRetry.addTarget(self, action: #selector(self.retryAction(_:)), for: .touchUpInside)
+        btnRetry.layer.cornerRadius = 3.0
+        
+        btnCancel = (scanProgressView.viewWithTag(333) as! UIButton)
+        btnCancel.addTarget(self, action: #selector(self.cancelTagAction(_:)), for: .touchUpInside)
+        btnCancel.isHidden = true
+        
+        tagCircularView = (scanProgressView.viewWithTag(444) as! CircularProgress)
+        tagCircularView.progressColor = UIColor.glfBluegreen
+        tagCircularView.trackColor = UIColor.clear
+        tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+        tagCircularView.progressLayer.lineWidth = 3.0
+        
+        lblScanStatus = (scanProgressView.viewWithTag(555) as! UILabel)
+        
+        clubImageView = (scanProgressView.viewWithTag(666) as! UIImageView)
+        clubImageView.image =  UIImage(named: selectedBagStr)
+    }
+    
+    func enableSubViews(){
+        let thePresenter = (self.navigationController?.visibleViewController)!
+        if (thePresenter.isKind(of:ButtonBarPagerTabStripViewController.self)) {
+            thePresenter.view.isUserInteractionEnabled = true
+        }
+        if (thePresenter.isKind(of:AssignTagVC.self)) {
+            thePresenter.navigationItem.rightBarButtonItem?.isEnabled = true
+            thePresenter.navigationItem.leftBarButtonItem?.isEnabled = true
+        }
+    }
+    
+    func disableSubViews(){
+        let thePresenter = (self.navigationController?.visibleViewController)!
+        if (thePresenter.isKind(of:ButtonBarPagerTabStripViewController.self)) {
+            thePresenter.view.isUserInteractionEnabled = false
+        }
+        if (thePresenter.isKind(of:AssignTagVC.self)) {
+            thePresenter.navigationItem.rightBarButtonItem?.isEnabled = false
+            thePresenter.navigationItem.leftBarButtonItem?.isEnabled = false
+        }
+    }
+    
+    @objc func cancelTagAction(_ sender: UIButton!) {
+        scanProgressView.removeFromSuperview()
+        enableSubViews()
+    }
+    
+    @objc func retryAction(_ sender: UIButton) {
+        if scanProgressView != nil{
+            self.tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+            scanProgressView.removeFromSuperview()
+            enableSubViews()
+        }
+        syncTagAction(btnSyncTag)
     }
     
     func setUpData(){
@@ -109,14 +188,15 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             }
         }
     }
+    
     func setUpTagData(){
         if self.golfBagArray.count > 0{
             for i in 0..<self.golfBagArray.count{
                 if let dict = self.golfBagArray[i] as? NSDictionary{
                     if let tag = dict.value(forKey: "tag") as? Bool{
-                        self.lblTagName.text = "No tags assigned"
-                        self.btnSyncTag.backgroundColor = UIColor.glfBluegreen
-                        self.btnSyncTag.setTitle("Sync Tags", for: .normal)
+                        self.lblTagName.text = "None"
+                        self.lblTagName.textColor = UIColor.black.withAlphaComponent(0.5)
+                        self.btnSyncTag.setTitle("Sync Tag", for: .normal)
 
                         for j in 0..<self.commanBagArray.count{
                             if self.selectedBagStr == self.commanBagArray[j] {
@@ -133,9 +213,9 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                             if let tagName = dict.value(forKey: "tagName") as? String{
                                 if self.selectedBagStr == dict.value(forKey: "clubName") as? String{
                                     self.lblTagName.text = tagName
-                                    
-                                    self.btnSyncTag.backgroundColor = UIColor.glfWarmGrey
-                                    self.btnSyncTag.setTitle("Desync Tags", for: .normal)
+                                    self.lblTagName.textColor = UIColor.glfBluegreen
+
+                                    self.btnSyncTag.setTitle("Unsync Tag", for: .normal)
 
                                     for j in 0..<self.commanBagArray.count{
                                         if self.selectedBagStr == self.commanBagArray[j] {
@@ -184,13 +264,12 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     func updateSyncBtnWithout(isSync:Bool){
         if(isSync){
-            self.btnSyncTag.backgroundColor = UIColor.glfWarmGrey
-            self.btnSyncTag.setTitle("Desync Tags", for: .normal)
+            self.btnSyncTag.setTitle("Unsync Tag", for: .normal)
         }else{
-            self.btnSyncTag.backgroundColor = UIColor.glfBluegreen
-            self.btnSyncTag.setTitle("Sync Tags", for: .normal)
+            self.btnSyncTag.setTitle("Sync Tag", for: .normal)
         }
     }
+    
     func updateSyncBtn(isSync:Bool,club:String?){
         var bagDict = NSMutableDictionary()
         var index : Int!
@@ -205,17 +284,28 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             }
         }
         if(isSync){
+            self.setupScanUI()
+            
             self.tagsIn5Sec.removeAllObjects()
             sharedInstance = BluetoothSync.getInstance()
             sharedInstance.delegate = self
             sharedInstance.initCBCentralManager()
             
-            timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(timerAction), userInfo: nil, repeats: false)
-            
+            DispatchQueue.main.async {
+                self.lblScanStatus.text = "Waiting for tag..."
+                self.btnRetry.isHidden = true
+                self.btnNoTag.isHidden = true
+                
+                self.disableSubViews()
+            }
+            DispatchQueue.main.async(execute: {
+                self.tagCircularView.setProgressWithAnimation(duration: 5.0, value: 1.0)
+                self.perform(#selector(self.animateProgress), with: nil, afterDelay: 5.0)
+            })
         }else{
-            self.btnSyncTag.backgroundColor = UIColor.glfBluegreen
-            self.btnSyncTag.setTitle("Sync Tags", for: .normal)
-            self.lblTagName.text = "No tags assigned"
+            self.btnSyncTag.setTitle("Sync Tag", for: .normal)
+            self.lblTagName.text = "None"
+            self.lblTagName.textColor = UIColor.black.withAlphaComponent(0.5)
 
             if(club != nil){
                 clubs.setValue(true, forKey: club!)
@@ -230,37 +320,46 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             }
         }
     }
-    
-    @objc func timerAction() {
-        timer.invalidate()
-        self.sharedInstance.stopScanPeripheral()
-        self.sharedInstance.delegate = nil
-        self.scanProgressView.hide(navItem: self.navigationItem)
-        
-        let data = self.tagsIn5Sec.allKeys as! [String]
-        let ordered = data.sorted()
-        debugPrint(self.tagsIn5Sec)
-        if !ordered.isEmpty{
-            if let name = (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral).name{
-                self.syncTag(tagName: name, peripheral: (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
+
+    @objc func animateProgress() {
+        let cp = self.view.viewWithTag(444) as! CircularProgress
+
+            self.sharedInstance.stopScanPeripheral()
+            self.sharedInstance.delegate = nil
+            
+            let data = self.tagsIn5Sec.allKeys as! [String]
+            let ordered = data.sorted()
+            debugPrint(self.tagsIn5Sec)
+            if !ordered.isEmpty{
+                if let name = (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral).name{
+                    
+                    self.syncTag(tagName: name, peripheral: (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
+                    
+                }else{
+                    self.lblScanStatus.text = "No Tag Found"
+                    cp.setProgressWithAnimation(duration: 0.0, value: 0.0)
+                    self.btnRetry.isHidden = false
+                    self.btnNoTag.isHidden = false
+                    self.btnCancel.isHidden = false
+                    debugPrint("Please try again.")
+                    enableSubViews()
+                }
             }else{
-                let alertVC = UIAlertController(title: "Alert", message: "Please try again.", preferredStyle: UIAlertControllerStyle.alert)
-                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-                    self.dismiss(animated: true, completion: nil)
-                })
-                alertVC.addAction(action)
-                self.present(alertVC, animated: true, completion: nil)
-            }
-        }else{
+                self.lblScanStatus.text = "No Tag Found"
+                cp.setProgressWithAnimation(duration: 0.0, value: 0.0)
+                self.btnRetry.isHidden = false
+                self.btnNoTag.isHidden = false
+                self.btnCancel.isHidden = false
                 self.view.makeToast("No tag found, Please try again")
-        }
+                enableSubViews()
+            }
     }
-    
+
     @IBAction func syncTagAction(_ sender: UIButton) {
         debugPrint(selectedBagStr)
         var isSync = true
         self.beconArray.removeAll()
-        if(sender.currentTitle == "Desync Tags"){
+        if(sender.currentTitle == "Unsync Tag"){
             isSync = false
         }
         
@@ -408,6 +507,10 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                         self.golfBagArr.replaceObject(at: i, with: golfBagDict)
                         
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag": self.golfBagArr], withCompletionBlock: { (error, ref) in
+                            
+                            self.tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+                            self.scanProgressView.removeFromSuperview()
+                            self.enableSubViews()
                             self.setSyncData(tagName: "Tag \(tagNameInt)", peripheral: peripheral)
                             return
                         })
@@ -415,14 +518,14 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 }
             }
             else{
-                let alertVC = UIAlertController(title: "Alert", message: "Tag is already used, Please try again.", preferredStyle: UIAlertControllerStyle.alert)
-                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-                    self.dismiss(animated: true, completion: nil)
-                })
-                alertVC.addAction(action)
-                self.present(alertVC, animated: true, completion: nil)
+                self.lblScanStatus.text = "Tag is already used."
+                self.tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+
+                self.btnRetry.isHidden = false
+                self.btnNoTag.isHidden = false
+                self.btnCancel.isHidden = false
+                enableSubViews()
                 
-                self.scanProgressView.hide(navItem: self.navigationItem)
                 self.sharedInstance.stopScanPeripheral()
                 self.sharedInstance.delegate = nil
             }
@@ -432,10 +535,10 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     
     func setSyncData(tagName: String, peripheral: CBPeripheral){
-        self.scanProgressView.hide(navItem: self.navigationItem)
         self.lblTagName.text = tagName
-        self.btnSyncTag.backgroundColor = UIColor.glfWarmGrey
-        self.btnSyncTag.setTitle("Desync Tags", for: .normal)
+        self.lblTagName.textColor = UIColor.glfBluegreen
+
+        self.btnSyncTag.setTitle("Unsync Tag", for: .normal)
         
         for j in 0..<self.commanBagArray.count{
             if self.selectedBagStr == self.commanBagArray[j] {
@@ -490,16 +593,13 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         debugPrint("peripheral.name== ", peripheral.name ?? "")
         debugPrint("RSSI== ", RSSI)
         debugPrint(advertisementData["kCBAdvDataLocalName"] as Any)
-        self.scanProgressView.show(navItem: self.navigationItem)
-        
+
         if let newPeriName = advertisementData["kCBAdvDataLocalName"] as? String{
             if newPeriName.contains("SGX") ||  newPeriName.contains("GGX") || newPeriName.contains("LGX"){
                 tagsIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
-//                self.syncTag(tagName: newPeriName, peripheral: peripheral)
             }
         }else if let periName = peripheral.name{
             if periName.contains("SGX") ||  periName.contains("GGX") || periName.contains("LGX"){
-//                self.syncTag(tagName: periName, peripheral: peripheral)
                 tagsIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
             }
         }
@@ -526,7 +626,8 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         else {
             debugPrint("No service Found")
         }
-        self.scanProgressView.hide(navItem: self.navigationItem)
+        scanProgressView.removeFromSuperview()
+        enableSubViews()
         sharedInstance.delegate = nil
     }
 }
