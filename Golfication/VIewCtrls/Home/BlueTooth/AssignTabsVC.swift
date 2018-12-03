@@ -322,7 +322,6 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
 
     @objc func animateProgress() {
-        let cp = self.view.viewWithTag(444) as! CircularProgress
 
             self.sharedInstance.stopScanPeripheral()
             self.sharedInstance.delegate = nil
@@ -337,7 +336,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     
                 }else{
                     self.lblScanStatus.text = "No Tag Found"
-                    cp.setProgressWithAnimation(duration: 0.0, value: 0.0)
+                    tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
                     self.btnRetry.isHidden = false
                     self.btnNoTag.isHidden = false
                     self.btnCancel.isHidden = false
@@ -346,7 +345,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 }
             }else{
                 self.lblScanStatus.text = "No Tag Found"
-                cp.setProgressWithAnimation(duration: 0.0, value: 0.0)
+                tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
                 self.btnRetry.isHidden = false
                 self.btnNoTag.isHidden = false
                 self.btnCancel.isHidden = false

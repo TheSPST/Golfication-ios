@@ -250,7 +250,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var btnRetry: UIButton!
     var btnNoDevice: UIButton!
     var lblScanStatus: UILabel!
-    var deviceCircularView: UICircularProgressRingView!
+    var deviceCircularView: CircularProgress!
     var isDeviceSetup = false
     var swingShotArr = NSArray()
     // MARK: golfXAction
@@ -269,7 +269,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBarG"), for: .normal)
                     self.navigationItem.rightBarButtonItem?.isEnabled = false
                     
-                    self.golfXPopupView = Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView
+                    self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
                     self.golfXPopupView.frame = self.view.bounds
                     self.view.addSubview(self.golfXPopupView)
                     self.setGofXUISetup()
@@ -300,9 +300,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let btnCancel = golfXPopupView.viewWithTag(333) as! UIButton
         btnCancel.addTarget(self, action: #selector(self.cancelGolfXAction(_:)), for: .touchUpInside)
         
-        deviceCircularView = (golfXPopupView.viewWithTag(444) as! UICircularProgressRingView)
-        self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-        
+        deviceCircularView = (golfXPopupView.viewWithTag(444) as! CircularProgress)
+        deviceCircularView.progressColor = UIColor.glfBluegreen
+        deviceCircularView.trackColor = UIColor.clear
+        deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+        deviceCircularView.progressLayer.lineWidth = 3.0
+
         lblScanStatus = (golfXPopupView.viewWithTag(555) as! UILabel)
         
         self.setInitialDeviceData()
@@ -338,29 +341,29 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.btnNoDevice.isHidden = true
         }
         DispatchQueue.main.async(execute: {
-            self.deviceCircularView.setProgress(value: CGFloat(50), animationDuration: 1)
-            
-            self.deviceCircularView.setProgress(value: CGFloat(100), animationDuration: 5, completion: {
-                if(Constants.deviceGolficationX == nil){
-                    self.navigationItem.rightBarButtonItem?.isEnabled = false
-                    self.lblScanStatus.text = "Couldn't find your device"
-                    self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-                    self.btnRetry.isHidden = false
-                    self.btnNoDevice.isHidden = false
-                    self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
-                    Constants.ble.stopScanning()
-                }
-                else{
-                    self.navigationItem.rightBarButtonItem?.isEnabled = true
-                    self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-                    //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
-                    self.golfXPopupView.removeFromSuperview()
-                    self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBar"),for: .normal)
-                    Constants.ble.stopScanning()
-                    self.view.makeToast("Device is connected.")
-                }
-            })
+            self.deviceCircularView.setProgressWithAnimation(duration: 5.0, value: 1.0)
+            self.perform(#selector(self.animateProgress), with: nil, afterDelay: 5.0)
         })
+    }
+    @objc func animateProgress() {
+        if(Constants.deviceGolficationX == nil){
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+            self.lblScanStatus.text = "Couldn't find your device"
+            deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+            self.btnRetry.isHidden = false
+            self.btnNoDevice.isHidden = false
+            self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
+            Constants.ble.stopScanning()
+        }
+        else{
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+            deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
+            self.golfXPopupView.removeFromSuperview()
+            self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBar"),for: .normal)
+            Constants.ble.stopScanning()
+            self.view.makeToast("Device is connected.")
+        }
     }
     func checkDeviceStatus() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.golficationXDisconnected(_:)), name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)

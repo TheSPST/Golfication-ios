@@ -301,10 +301,11 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                 if shotTopViews[i].tag == tagVal{
                     shotTopViews[i].isHidden = false
                     if tagVal == 0{
-                        DispatchQueue.main.async(execute: {
-                            let swingScore = self.swingDetails.value(forKey: "swingScore") as! Int
-                            self.swingScoreCircularView.setProgress(value: CGFloat(swingScore), animationDuration: 1)
-                        })
+                        if let swingScore = self.swingDetails.value(forKey: "swingScore") as? Int{
+                            DispatchQueue.main.async(execute: {
+                                self.swingScoreCircularView.setProgress(value: CGFloat(swingScore), animationDuration: 1)
+                            })
+                        }
                     }
                     else if tagVal == 1{
                         let avgVh1 = 55.5
@@ -458,7 +459,5 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         }
         self.swingAngleCircular_Red.addSubview(backSwingClub)
         swingAngleCircular_Red.addSubview(backSwingUserImg)
-        
-        //        backSwingUserImg.bringSubview(toFront: backSwingClub)
     }
 }

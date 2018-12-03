@@ -162,7 +162,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var btnRetry: UIButton!
     var btnNoDevice: UIButton!
     var lblScanStatus: UILabel!
-    var deviceCircularView: UICircularProgressRingView!
+    var deviceCircularView: CircularProgress!
     var isDeviceSetup = false
     // MARK: golfXAction
     @objc func golfXAction() {
@@ -180,7 +180,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
                 self.navigationItem.rightBarButtonItem?.isEnabled = false
 
-                self.golfXPopupView = Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView
+                self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
                 self.golfXPopupView.frame = self.view.bounds
                 self.view.addSubview(self.golfXPopupView)
                 self.setGofXUISetup()
@@ -200,6 +200,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
@@ -222,20 +223,23 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func setGofXUISetup(){
-        btnNoDevice = golfXPopupView.viewWithTag(111) as! UIButton
+        btnNoDevice = (golfXPopupView.viewWithTag(111) as! UIButton)
         btnNoDevice.layer.cornerRadius = btnNoDevice.frame.size.height/2
 
-        btnRetry = golfXPopupView.viewWithTag(222) as! UIButton
+        btnRetry = (golfXPopupView.viewWithTag(222) as! UIButton)
         btnRetry.addTarget(self, action: #selector(self.retryAction(_:)), for: .touchUpInside)
         btnRetry.layer.cornerRadius = 3.0
         
         let btnCancel = golfXPopupView.viewWithTag(333) as! UIButton
         btnCancel.addTarget(self, action: #selector(self.cancelGolfXAction(_:)), for: .touchUpInside)
         
-        deviceCircularView = golfXPopupView.viewWithTag(444) as! UICircularProgressRingView
-        self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
+        deviceCircularView = (golfXPopupView.viewWithTag(444) as! CircularProgress)
+        deviceCircularView.progressColor = UIColor.glfBluegreen
+        deviceCircularView.trackColor = UIColor.clear
+        deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+        deviceCircularView.progressLayer.lineWidth = 3.0
 
-        lblScanStatus = golfXPopupView.viewWithTag(555) as! UILabel
+        lblScanStatus = (golfXPopupView.viewWithTag(555) as! UILabel)
         
         self.setInitialDeviceData()
 }
@@ -249,31 +253,33 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         
         DispatchQueue.main.async(execute: {
-        self.deviceCircularView.setProgress(value: CGFloat(50), animationDuration: 1)
-
-        self.deviceCircularView.setProgress(value: CGFloat(100), animationDuration: 5, completion: {
-            if(Constants.deviceGolficationX == nil){
-                self.navigationItem.rightBarButtonItem?.isEnabled = false
-                self.lblScanStatus.text = "Couldn't find your device"
-                self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-                self.btnRetry.isHidden = false
-                self.btnNoDevice.isHidden = false
-                self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-                Constants.ble.stopScanning()
-            }
-            else{
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-                self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-                //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
-                self.golfXPopupView.removeFromSuperview()
-                self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
-                Constants.ble.stopScanning()
-                self.view.makeToast("Device is connected.")
-            }
-        })
+            self.deviceCircularView.setProgressWithAnimation(duration: 5.0, value: 1.0)
+            self.perform(#selector(self.animateProgress), with: nil, afterDelay: 5.0)
     })
 }
-    
+ 
+    @objc func animateProgress() {
+        if(Constants.deviceGolficationX == nil){
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+            self.lblScanStatus.text = "Couldn't find your device"
+            deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+            self.btnRetry.isHidden = false
+            self.btnNoDevice.isHidden = false
+            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+            Constants.ble.stopScanning()
+        }
+        else{
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+            deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
+            self.golfXPopupView.removeFromSuperview()
+            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+            Constants.ble.stopScanning()
+            self.view.makeToast("Device is connected.")
+        }
+
+    }
+
     @objc func retryAction(_ sender: UIButton) {
         if Constants.isDevice{
             Constants.ble.startScanning()

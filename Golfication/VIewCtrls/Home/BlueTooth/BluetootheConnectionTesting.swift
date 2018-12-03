@@ -62,7 +62,7 @@ class BluetootheConnectionTesting: UIViewController {
     var btnRetry: UIButton!
     var btnNoDevice: UIButton!
     var lblScanStatus: UILabel!
-    var deviceCircularView: UICircularProgressRingView!
+    var deviceCircularView: CircularProgress!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,8 +133,12 @@ class BluetootheConnectionTesting: UIViewController {
         
         let btnCancel = (golfXPopupView.viewWithTag(333) as! UIButton)
         btnCancel.addTarget(self, action: #selector(self.cancelGolfXAction(_:)), for: .touchUpInside)
-        deviceCircularView = (golfXPopupView.viewWithTag(444) as! UICircularProgressRingView)
-        self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
+        deviceCircularView = (golfXPopupView.viewWithTag(444) as! CircularProgress)
+        deviceCircularView.progressColor = UIColor.glfBluegreen
+        deviceCircularView.trackColor = UIColor.clear
+        deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+        deviceCircularView.progressLayer.lineWidth = 3.0
+
         lblScanStatus = (golfXPopupView.viewWithTag(555) as! UILabel)
         setInitialDeviceData()
     }
@@ -147,30 +151,32 @@ class BluetootheConnectionTesting: UIViewController {
         }
         
         DispatchQueue.main.async(execute: {
-            self.deviceCircularView.setProgress(value: CGFloat(50), animationDuration: 1)
-            
-            self.deviceCircularView.setProgress(value: CGFloat(100), animationDuration: 5, completion: {
-                if(Constants.deviceGolficationX == nil){
-                    self.navigationItem.rightBarButtonItem?.isEnabled = false
-                    self.lblScanStatus.text = "Couldn't find your device"
-                    self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-                    self.btnRetry.isHidden = false
-                    self.btnNoDevice.isHidden = false
-                    self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-                    Constants.ble.stopScanning()
-                }
-                else{
-                    self.navigationItem.rightBarButtonItem?.isEnabled = true
-                    self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-                    //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
-                    self.golfXPopupView.removeFromSuperview()
-                    self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
-                    Constants.ble.stopScanning()
-                    self.view.makeToast("Device is connected.")
-                }
-            })
+            self.deviceCircularView.setProgressWithAnimation(duration: 5.0, value: 1.0)
+            self.perform(#selector(self.animateProgress), with: nil, afterDelay: 5.0)
         })
     }
+    
+    @objc func animateProgress() {
+        if(Constants.deviceGolficationX == nil){
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+            self.lblScanStatus.text = "Couldn't find your device"
+            deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+            self.btnRetry.isHidden = false
+            self.btnNoDevice.isHidden = false
+            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+            Constants.ble.stopScanning()
+        }
+        else{
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+            deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
+            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
+            self.golfXPopupView.removeFromSuperview()
+            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+            Constants.ble.stopScanning()
+            self.view.makeToast("Device is connected.")
+        }
+    }
+    
     @objc func setupFinished(_ notification: NSNotification){
         DispatchQueue.main.async {
             Constants.ble.isDeviceSetup = true

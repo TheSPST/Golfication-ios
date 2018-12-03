@@ -245,6 +245,7 @@
 		4BBEA024206E2F7A00EA2783 /* FeedPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */; };
 		4BC879BA20C517EF00A3B2BB /* PracticeGameViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */; };
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
+		4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4BCF8E2B21B502F70015338F /* swing_beep.mp3 */; };
 		4BCFF6D820453CBC00FCB10D /* MySwingWebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */; };
 		4BD5CF83214CE17E00BEBEED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */; };
 		4BD5CF85214D212500BEBEED /* RefreshSubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */; };
@@ -531,6 +532,7 @@
 		4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPostVC.swift; sourceTree = "<group>"; };
 		4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticeGameViewCtrl.swift; sourceTree = "<group>"; };
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
+		4BCF8E2B21B502F70015338F /* swing_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = swing_beep.mp3; sourceTree = "<group>"; };
 		4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySwingWebViewVC.swift; sourceTree = "<group>"; };
 		4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSubscriptionManager.swift; sourceTree = "<group>"; };
 		4BD6AABA20A9AA0C00F1839C /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
@@ -978,6 +980,7 @@
 		4B8C8CDF1FF66CB0001F5D01 /* Stuffs */ = {
 			isa = PBXGroup;
 			children = (
+				4BCF8E2B21B502F70015338F /* swing_beep.mp3 */,
 				4B8C8CEA1FF66CFB001F5D01 /* SF_Font */,
 			);
 			path = Stuffs;
@@ -1431,6 +1434,7 @@
 				3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */,
 				4B7E2A7C2175C20B00DFC3EB /* radar.png in Resources */,
 				4B8C8D401FF674D0001F5D01 /* SF-Pro-Display-BlackItalic.otf in Resources */,
+				4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */,
 				4B8C8D331FF674D0001F5D01 /* SF-Pro-Display-Bold.otf in Resources */,
 				4B1F6BC62090A29F00312EA7 /* CustomStyle.json in Resources */,
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
