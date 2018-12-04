@@ -567,8 +567,6 @@ class BLE: NSObject {
                     self.currentCommandData = param
                 })
             }else{
-//                newByteArray.removeLast(4)
-                let shotNum = self.shotNumFor8th(hole: 1)
                 var param : [UInt8] = [8,counter]
                 for i in newByteArray{
                     param.append(i)
@@ -583,10 +581,10 @@ class BLE: NSObject {
                     }
                 }
                 if(self.holeWithSwing.count == 0){
-                    param.append(0)
+                    param.append(UInt8(self.shotNumFor8th(hole: 1)))
                 }else{
                     if(holeWithSwing.last!.holeOut){
-                        param.append(0)
+                        param.append(UInt8(self.shotNumFor8th(hole: holeWithSwing.last!.hole+1)))
                     }else{
                         param.append(UInt8(holeWithSwing.last!.shotNo))
                     }
@@ -1436,7 +1434,16 @@ extension BLE: CBPeripheralDelegate {
                 }else if(dataArray[0] == UInt8(80)){
                     self.timerForWriteCommand8.invalidate()
                     self.isContinue = true
-                    
+                    debugPrint(currentCommandData)
+                    if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
+                        var holeNm = 1
+                        if self.holeWithSwing.last?.hole != scoring.count{
+                            holeNm = Int(self.currentCommandData[6])
+                            self.holeWithSwing.removeAll()
+                            self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false))
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+                        }
+                    }
                     self.uploadSwingScore()
                     if(self.isFinished){
                         self.sendNinthCommand(par: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])

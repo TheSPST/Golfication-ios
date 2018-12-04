@@ -28,13 +28,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qIA-ZY-q1v" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                    <rect key="frame" x="30" y="79" width="260" height="430"/>
+                    <rect key="frame" x="20" y="79" width="280" height="430"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="hIK-jy-XXE">
-                            <rect key="frame" x="0.0" y="20" width="260" height="380"/>
+                            <rect key="frame" x="0.0" y="20" width="280" height="380"/>
                             <subviews>
                                 <view tag="444" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QY9-rs-kNv" customClass="CircularProgress" customModule="Golfication" customModuleProvider="target">
-                                    <rect key="frame" x="15" y="0.0" width="230" height="230"/>
+                                    <rect key="frame" x="25" y="0.0" width="230" height="230"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="device1" translatesAutoresizingMaskIntoConstraints="NO" id="0SJ-MO-2ri">
                                             <rect key="frame" x="40" y="40" width="150" height="150"/>
@@ -66,7 +66,7 @@
                                     <viewLayoutGuide key="safeArea" id="RZh-ir-jsG"/>
                                 </view>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="5xE-Q7-bMP">
-                                    <rect key="frame" x="17.5" y="260" width="225.5" height="50"/>
+                                    <rect key="frame" x="27.5" y="260" width="225.5" height="50"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="555" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scanning for Golfication X..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rpi-kR-82F">
                                             <rect key="frame" x="11" y="0.0" width="203.5" height="20"/>
@@ -89,7 +89,7 @@
                                     </subviews>
                                 </stackView>
                                 <button opaque="NO" tag="222" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fkf-yN-yi2">
-                                    <rect key="frame" x="45" y="340" width="170" height="40"/>
+                                    <rect key="frame" x="55" y="340" width="170" height="40"/>
                                     <color key="backgroundColor" red="0.22352941179999999" green="0.56470588239999997" blue="0.41568627450000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="6Ta-UY-xf0"/>
@@ -103,7 +103,7 @@
                             </subviews>
                         </stackView>
                         <button opaque="NO" tag="333" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iwp-pV-2kl">
-                            <rect key="frame" x="240" y="5" width="20" height="20"/>
+                            <rect key="frame" x="260" y="5" width="20" height="20"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="20" id="K2A-hN-5Ij"/>
                                 <constraint firstAttribute="width" constant="20" id="PdZ-4M-2Gs"/>
@@ -128,8 +128,8 @@
             <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="qIA-ZY-q1v" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="DIx-hs-clx"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="qIA-ZY-q1v" secondAttribute="trailing" constant="30" id="HKX-nd-DdC"/>
-                <constraint firstItem="qIA-ZY-q1v" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="30" id="fxb-54-7aU"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="qIA-ZY-q1v" secondAttribute="trailing" constant="20" id="HKX-nd-DdC"/>
+                <constraint firstItem="qIA-ZY-q1v" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="fxb-54-7aU"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
         </view>

@@ -66,7 +66,9 @@ class BluetootheConnectionTesting: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Constants.ble = BLE()
+        if Constants.ble != nil{
+            Constants.ble = BLE()
+        }
         Constants.ble.isSetupScreen = true
         btnSetupTags.setCorner(color: UIColor.clear.cgColor)
         btnScanForDevice.setCorner(color: UIColor.clear.cgColor)
@@ -113,6 +115,7 @@ class BluetootheConnectionTesting: UIViewController {
         showPopUp()
     }
     @objc func btnActionConnectBL(_ sender: UIBarButtonItem) {
+        
         Constants.ble.startScanning()
         showPopUp()
     }
