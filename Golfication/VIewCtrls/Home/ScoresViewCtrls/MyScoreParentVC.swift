@@ -37,6 +37,9 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         
         super.viewDidLoad()
         
+        let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
+        backBtn.tintColor = UIColor.glfBluegreen
+        self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
         self.title = "My Scores".localized()
         Constants.finalFilterDic.removeAllObjects()
         buttonBarView.isHidden = true
@@ -44,6 +47,10 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         //self.getScoreDataFromFirebase()
     }
     
+    @objc func backAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
+
     func setupActivityIndicator(){
         actvtIndView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
         actvtIndView.color = UIColor.darkGray

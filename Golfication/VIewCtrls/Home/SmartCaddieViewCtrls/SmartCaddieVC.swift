@@ -58,9 +58,17 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         self.tabBarController?.tabBar.isHidden = true
         Analytics.logEvent("smart_caddie", parameters: [:])
         self.title = "Smart Caddie"
+        
+        let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
+        backBtn.tintColor = UIColor.glfBluegreen
+        self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
+
         Constants.finalFilterDic.removeAllObjects()
         self.automaticallyAdjustsScrollViewInsets = false
         self.setInitialUI()
+    }
+    @objc func backAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {

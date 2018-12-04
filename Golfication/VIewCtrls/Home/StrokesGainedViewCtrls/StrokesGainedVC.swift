@@ -70,11 +70,17 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         super.viewDidLoad()
         self.tabBarController?.tabBar.isHidden = true
         self.title = "Strokes Gained".localized()
-        
+        let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
+        backBtn.tintColor = UIColor.glfBluegreen
+        self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
         Constants.finalFilterDic.removeAllObjects()
         self.automaticallyAdjustsScrollViewInsets = false
         self.setupActivityIndicator()
         self.setInitialUI()
+    }
+    
+    @objc func backAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {

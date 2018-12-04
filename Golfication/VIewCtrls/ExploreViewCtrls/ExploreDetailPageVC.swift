@@ -174,6 +174,7 @@ class ExploreDetailPageVC:  UIViewController, UIScrollViewDelegate {
         let storyboard = UIStoryboard(name: "Explore", bundle: Bundle.main)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ExploreWebView") as! ExploreWebView
         viewCtrl.linkStr = linkAction
+        viewCtrl.title = self.title
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     

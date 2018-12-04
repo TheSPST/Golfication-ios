@@ -72,6 +72,10 @@ class BluetootheConnectionTesting: UIViewController {
         btnScanForDevice.setCorner(color: UIColor.clear.cgColor)
         btnDevice.setCircle(frame: self.btnDevice.frame)
         self.title = "Connect Device"
+        let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
+        backBtn.tintColor = UIColor.glfBluegreen
+        self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
+
         self.getGolfBagData()
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.setupFinished(_:)), name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
@@ -84,6 +88,9 @@ class BluetootheConnectionTesting: UIViewController {
         else{
             self.navigationItem.rightBarButtonItem = nil
         }
+    }
+    @objc func backAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
     }
     func checkDeviceStatus() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.golficationXDisconnected(_:)), name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)

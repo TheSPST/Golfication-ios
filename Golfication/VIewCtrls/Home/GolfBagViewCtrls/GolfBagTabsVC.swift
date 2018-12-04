@@ -36,6 +36,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
 
 //    @IBOutlet weak var scanProgressView: ScanProgressView!
     @IBOutlet weak var syncStackView: UIStackView!
+    @IBOutlet weak var scrlView: UIScrollView!
+
     let progressView = SDLoader()
     
     var selectedBagStr = String()
@@ -230,10 +232,10 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         Constants.syncdArray = NSMutableArray()
         bagMArray = NSMutableArray()
         
-        self.editView.isHidden = false
-        self.defaultView.isHidden = true
+//        self.editView.isHidden = false
+//        self.defaultView.isHidden = true
         
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        self.progressView.show(atView: self.scrlView, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
             self.progressView.hide(navItem: self.navigationItem)
             
@@ -250,7 +252,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 }
                 if (self.bagMArray.contains(self.selectedBagStr)){
                     self.btnAddToBag.isHidden = true
-                    
+                    self.btnRemove.isHidden = false
+
                     if !self.fromEdit{
                         self.editView.isHidden = true
                         self.defaultView.isHidden = false
@@ -258,10 +261,11 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 }
                 else{
                     self.btnAddToBag.isHidden = false
+                    self.btnRemove.isHidden = true
                     self.editView.isHidden = false
                     self.defaultView.isHidden = true
                 }
-                if Constants.syncdArray.count>0{
+                /*if Constants.syncdArray.count>0{
                     for j in 0..<Constants.syncdArray.count{
                         if self.selectedBagStr == Constants.syncdArray[j] as! String{
                             
@@ -284,7 +288,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                             //}
                         }
                     }
-                }
+                }*/
                 // -------------------------------------------------
                 
                 for i in 0..<golfBagArray.count{
@@ -366,7 +370,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     @IBAction func removeBagAction(_ sender: Any){
         
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        self.progressView.show(atView: self.scrlView, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
             self.progressView.hide(navItem: self.navigationItem)
             
@@ -399,6 +403,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                                 break
                             }
                         }
+                        self.getGolfBagData()
                         break
                         //}
                     }
@@ -413,7 +418,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     @IBAction func addToBagAction(_ sender: Any) {
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        self.progressView.show(atView: self.scrlView, navItem: self.navigationItem)
         let tempBagArray = NSMutableArray()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
             self.progressView.hide(navItem: self.navigationItem)
@@ -450,6 +455,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     //self.syncStackView.isHidden = false //commented by Amit
                     self.btnSyncTag.backgroundColor = UIColor.glfBluegreen75
                     self.btnSyncTag.setTitle("Sync Tags", for: .normal)
+                    
+                    self.getGolfBagData()
                 }
             }
                 else{
@@ -746,20 +753,21 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             
             if (self.bagMArray.contains(self.selectedBagStr)){
                 self.btnAddToBag.isHidden = true
+                self.btnRemove.isHidden = false
                 //syncStackView.isHidden = false //commented by Amit
-                
-                editView.isHidden = false
-                defaultView.isHidden = true
+                editView.isHidden = true
+                defaultView.isHidden = false
             }
             else{
                 syncStackView.isHidden = true
                 self.btnAddToBag.isHidden = false
-                
-                editView.isHidden = true
-                defaultView.isHidden = false
+                self.btnRemove.isHidden = true
+
+                editView.isHidden = false
+                defaultView.isHidden = true
             }
             
-            for j in 0..<Constants.syncdArray.count{
+            /*for j in 0..<Constants.syncdArray.count{
                 if selectedBagStr == Constants.syncdArray[j] as! String{
                     let indexPath = IndexPath(row: snapToIndex, section: 0)
                     guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
@@ -786,7 +794,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     //                    defaultView.isHidden = true
                     return
                 }
-            }
+            }*/
             let toValue = collectionViewFlowLayout.itemSize.width * CGFloat(snapToIndex)
             
             // Damping equal 1 => no oscillations => decay animation:
@@ -805,6 +813,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 collectionView.collectionViewLayout.collectionView!.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
                 if (self.bagMArray.contains(self.selectedBagStr)){
                     self.btnAddToBag.isHidden = true
+                    self.btnRemove.isHidden = false
+
                     //syncStackView.isHidden = false //commented by Amit
                     
                     editView.isHidden = true
@@ -813,12 +823,13 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 else{
                     syncStackView.isHidden = true
                     self.btnAddToBag.isHidden = false
-                    
+                    self.btnRemove.isHidden = true
+
                     editView.isHidden = false
                     defaultView.isHidden = true
                 }
                 
-                for j in 0..<Constants.syncdArray.count{
+                /*for j in 0..<Constants.syncdArray.count{
                     if selectedBagStr == Constants.syncdArray[j] as! String{
                         let indexPath = IndexPath(row: indexPath.row, section: 0)
                         guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
@@ -845,7 +856,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         //defaultView.isHidden = true
                         return
                     }
-                }
+                }*/
             }
         }
     }

@@ -381,7 +381,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if Constants.isDevice && Constants.deviceGolficationX == nil{
+            Constants.ble = BLE()
+            Constants.ble.isPracticeMatch = false
+        }
         imagePicker.delegate = self
         self.getHandicap()
         // for Bluetooth device setup
@@ -530,10 +533,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(true)
-        if Constants.isDevice && Constants.deviceGolficationX == nil{
-            Constants.ble = BLE()
-            Constants.ble.isPracticeMatch = false
-        }
+
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true
@@ -2172,9 +2172,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                     if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
-                        if Constants.deviceGolficationX != nil{
-                            Constants.ble.swingMatchId = ""
-                        }
+                        Constants.ble.discardGameFromDevice()
                         break
                     }
                 }

@@ -254,7 +254,10 @@ class ReferalViewCtrls: UIViewController {
         btnInvite3.setTitle("  " + "+ " + "Invite Friends".localized(), for: .normal)
 
         btnGet20PerDiscount.setTitle("  " + "Get $50 off".localized(), for: .normal)
-    
+        let originalImage1 = UIImage(named: "backArrow")!
+        let btnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        btnBack.tintColor = UIColor.white
+        btnBack.setImage(btnImage, for: .normal)
         self.initialSetup()
         self.checkHowManySuccessFullReferal()
         // Do any additional setup after loading the view.

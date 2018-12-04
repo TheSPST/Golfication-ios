@@ -267,8 +267,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
                 DispatchQueue.main.async(execute: {
                     self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBarG"), for: .normal)
-                    self.navigationItem.rightBarButtonItem?.isEnabled = false
-                    
+                    self.btnGolficationX.isUserInteractionEnabled = true
                     self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
                     self.golfXPopupView.frame = self.view.bounds
                     self.view.addSubview(self.golfXPopupView)
@@ -278,7 +277,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             else{
                 DispatchQueue.main.async(execute: {
                     self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBar"), for: .normal)
-                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                    self.btnGolficationX.isUserInteractionEnabled = false
                     self.view.makeToast("Device is already connected.")
                     Constants.ble.stopScanning()
                 })
@@ -325,6 +324,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         else{
             self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG") ,for: .normal)
+            self.btnGolficationX.isUserInteractionEnabled = true
             Constants.ble.stopScanning()
         }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
@@ -353,6 +353,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.btnRetry.isHidden = false
             self.btnNoDevice.isHidden = false
             self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
+            self.btnGolficationX.isUserInteractionEnabled = true
             Constants.ble.stopScanning()
         }
         else{
@@ -361,6 +362,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
             self.golfXPopupView.removeFromSuperview()
             self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBar"),for: .normal)
+            self.btnGolficationX.isUserInteractionEnabled = false
             Constants.ble.stopScanning()
             self.view.makeToast("Device is connected.")
         }
@@ -370,13 +372,16 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         if(Constants.deviceGolficationX == nil){
             self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
+            self.btnGolficationX.isUserInteractionEnabled = true
         }
         else{
             self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBar"),for:.normal)
+            self.btnGolficationX.isUserInteractionEnabled = false
         }
     }
     @objc func golficationXDisconnected(_ notification: NSNotification) {
         self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
+        self.btnGolficationX.isUserInteractionEnabled = true
         //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
     }
     @IBAction func btnActionGolficationX(_ sender: Any) {
@@ -1170,6 +1175,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             Constants.addPlayersArray.removeAllObjects()
             if(self.swingMatchId.count > 0){
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+                Constants.ble.discardGameFromDevice()
             }
             if Constants.mode>0{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
@@ -1551,13 +1557,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(self.selectedUserId)") { (snapshot) in
                 let playerDict = NSMutableDictionary()
                 var wantToDrag = false
+                var holeOut = false
                 if let dict = snapshot.value as? NSMutableDictionary{
                     playerDict.setObject(dict, forKey: self.selectedUserId as NSCopying)
                     self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
                     if let shots = dict.value(forKey: "shots") as? NSArray{
                         wantToDrag = shots.count > 1 ? true:false
                     }
-                    if(self.holeOutFlag){
+                    holeOut = dict.value(forKey: "holeOut") as! Bool
+                    if(holeOut){
                         self.uploadPutting(playerId: self.selectedUserId)
                     }
                 }
@@ -1574,6 +1582,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
                         self.uploadTotalStrokesGained(playerId: self.selectedUserId)
+                        if holeOut {
+                            self.btnActionPlayerStats(self.btnPlayersStats)
+                        }
                     })
                 })
             }
@@ -4861,7 +4872,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             }
             if(isTracking){
-                self.positionsOfCurveLines.append(self.positionsOfDotLine[0])
+                if !self.swingMatchId.isEmpty && self.positionsOfCurveLines.count == 1{
+                    
+                }else{
+                    self.positionsOfCurveLines.append(self.positionsOfDotLine[0])
+                }
             }
             if(positionsOfCurveLines.count != 0){
                 self.shotsDetails = getShotDataOrdered(indexToUpdate: holeIndex,playerId:selectedUserId)

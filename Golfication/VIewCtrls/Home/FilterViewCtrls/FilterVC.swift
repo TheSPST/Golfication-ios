@@ -40,6 +40,10 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
         self.automaticallyAdjustsScrollViewInsets = false
         self.fliterCollectionView.allowsMultipleSelection = true
         
+        let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
+        backBtn.tintColor = UIColor.glfBluegreen
+        self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
+
         if self.fromSwingSession{
             section2 = ["Practice", "Regular", "Tournament", "All".localized()]
             allSections.append(section2 as NSArray)
@@ -96,6 +100,10 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
         }*/
     }
     
+    @objc func backAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return allSections[section].count
     }

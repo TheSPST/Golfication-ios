@@ -15,8 +15,11 @@ class ExploreWebView: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.glfBluegreen
-        // Do any additional setup after loading the view.
+
+        let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
+        backBtn.tintColor = UIColor.glfBluegreen
+        self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
+        
         self.navigationController?.navigationBar.isHidden = false
         
         if let url = URL(string: linkStr) {
@@ -24,7 +27,9 @@ class ExploreWebView: UIViewController {
             webView.loadRequest(request)
         }
     }
-
+    @objc func backAction(_ sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

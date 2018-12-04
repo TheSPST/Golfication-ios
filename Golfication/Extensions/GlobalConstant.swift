@@ -48,7 +48,7 @@ struct Constants{
     static let GALLERY_ACTIVITY_REQUEST = 25*/
     
     // MARK: NewHomeVC
-    static let DEVICEDATA = DeviceData()
+//    static let DEVICEDATA = DeviceData()
     static var baselineDict: NSDictionary!
     static var strokesGainedDict = [NSMutableDictionary]()
     static var isUpdateInfo = false

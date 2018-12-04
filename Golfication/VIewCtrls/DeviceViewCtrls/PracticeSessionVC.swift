@@ -168,7 +168,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     
     func getUserData(){
         if let club = self.swingDetails.value(forKey: "club") as? String{
-            if club != "Pu" && !Constants.benchmark_Key.isEmpty{
+            if club != "Pu" && !Constants.benchmark_Key.isEmpty && club != ""{
                 self.getBenchmarkData(benchMark: Constants.benchmark_Key, clubName:club)
             }
         }
