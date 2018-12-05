@@ -389,16 +389,23 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
                     cell.backgroundColor = UIColor.glfWarmGrey.withAlphaComponent(0.5)
                     cell.lblScore.text = "N/A"
                     cell.lblScore.textColor = UIColor.glfWarmGrey
+                }else{
+                    cell.backgroundColor = UIColor.glfWhite
                 }
             }
         }
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let swingDetails = tempArray1[indexPath.item] as? NSMutableDictionary{
+        var sectioncount = 0
+        for i in 0..<(indexPath.section == 0 ? 1:indexPath.section){
+            sectioncount += self.holeParStrokesG[i].strkG.count
+        }
+        sectioncount += indexPath.row
+        if let swingDetails = tempArray1[sectioncount] as? NSMutableDictionary{
             if let club = swingDetails.value(forKey: "club") as? String{
                 if club != "Pu"{
-                    self.moveToViewController(at: indexPath.item)
+                    self.moveToViewController(at: sectioncount)
                     self.swingDetailsView.isHidden = true
                 }
             }

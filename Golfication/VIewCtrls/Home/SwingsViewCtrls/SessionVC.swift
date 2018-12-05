@@ -68,7 +68,10 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                     if let key = dataDic.value(forKey: "matchKey") as? String{
                         let holeNum = dic.value(forKey: "holeNum") as! Int
                         let shotNum = dic.value(forKey: "shotNum") as! Int
-                        holeShot.append((key:key,hole: holeNum-1, shot: shotNum-1))
+                        if shotNum != 0{
+                            holeShot.append((key:key,hole: holeNum-1, shot: shotNum-1))
+                        }
+
                     }
                 }
                 let matchDic = NSMutableDictionary()
@@ -230,7 +233,30 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         }
         else{
             viewCtrl.fromRoundsPlayed = true
-            viewCtrl.holeShot = (array[indexPath.row] as AnyObject).value(forKey:"holeShot") as! [(key:String,hole:Int,shot:Int)]
+            var holeShotArr = (array[indexPath.row] as AnyObject).value(forKey:"holeShot") as! [(key:String,hole:Int,shot:Int)]
+            holeShotArr = holeShotArr.sorted(by: { $0.hole < $1.hole })
+            var tempArr = [(key:String,hole:Int,shot:Int)]()
+            var shots = [Int]()
+            for i in 0..<holeShotArr.count-1{
+                if holeShotArr[i].hole == holeShotArr[i+1].hole{
+                    shots.append(holeShotArr[i].shot)
+                }else{
+                    shots.append(holeShotArr[i].shot)
+                    shots = shots.sorted()
+                    for data in shots{
+                        tempArr.append((key:holeShotArr[i].key,hole: holeShotArr[i].hole, shot: data))
+                    }
+                    shots.removeAll()
+                }
+            }
+            shots.append(holeShotArr.last!.shot)
+            shots = shots.sorted()
+            for data in shots{
+                tempArr.append((holeShotArr.last!.key,hole: holeShotArr.last!.hole, shot: data))
+            }
+            shots.removeAll()
+            viewCtrl.holeShot = tempArr
+            debugPrint(tempArr)
             viewCtrl.title = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
         }
         self.navigationController?.pushViewController(viewCtrl, animated: true)

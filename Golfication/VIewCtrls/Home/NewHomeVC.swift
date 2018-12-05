@@ -670,7 +670,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
                                 if(snapshot.value != nil){
                                     if let data = snapshot.value as? NSDictionary{
-                                        debugPrint(data.value(forKey: "matchKey"))
+//                                        debugPrint(data.value(forKey: "matchKey"))
                                         if let _ = data.value(forKey: "swings") as? NSMutableArray{
                                             swingMArray.add(data)
                                         }
@@ -856,6 +856,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 if let trial = userData.value(forKey: "trial") as? Bool{
                     self.isTrial = trial
+                }
+                if let handed = userData.value(forKey: "handed") as? String{
+                    Constants.handed = handed
                 }
                 if let proMode = userData.value(forKey: "proMode") as? Bool{
                     Constants.isProMode = proMode
