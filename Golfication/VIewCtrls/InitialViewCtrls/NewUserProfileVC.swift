@@ -75,9 +75,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             let x =  CGFloat(self.pageControl.currentPage) * (pageWidth)
             scrollView.setContentOffset(CGPoint(x:x, y:0), animated: false)
             
-            btnNext.setTitle(" " + "Next".localized() + " ", for: .normal)
+            btnNext.setTitle("   " + "Next".localized() + "   ", for: .normal)
             if pageControl.currentPage == 2 {
-                btnNext.setTitle("Done", for: .normal)
+                btnNext.setTitle("  Done  ", for: .normal)
             }
             currentPageIndex = self.pageControl.currentPage
             if pageControl.currentPage == 1 || pageControl.currentPage == 2 {
@@ -124,7 +124,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         super.viewDidLoad()
         
         btnSkip.setTitle(" " + "Skip".localized() + " ", for: .normal)
-        btnNext.setTitle(" " + "Next".localized() + " ", for: .normal)
+        btnNext.setTitle("   " + "Next".localized() + "   ", for: .normal)
 
         btnNext.layer.cornerRadius = 15.0
         self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
@@ -555,6 +555,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         switch sender.tag{
         case 0:
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Left"] as [AnyHashable:Any])
+            Constants.handed = "Left"
             btnHandiLeft.setImage(#imageLiteral(resourceName: "handiLeftDark"), for: .normal)
             btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtLight"), for: .normal)
             lblHandiLeft.textColor = UIColor.black
@@ -562,6 +563,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             
         case 1:
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
+            Constants.handed = "Right"
             btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtDark"), for: .normal)
             btnHandiLeft.setImage(#imageLiteral(resourceName: "handiLeftLight"), for: .normal)
             lblHandiLeft.textColor = UIColor(rgb: 0x133022)
@@ -641,9 +643,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let x = CGFloat(pageControl.currentPage) * (newProfileScrlView.frame.size.width)
         newProfileScrlView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle(" " + "Next".localized() + " ", for: .normal)
+        btnNext.setTitle("   " + "Next".localized() + "   ", for: .normal)
         if currentPageIndex == 2 {
-            btnNext.setTitle("Done", for: .normal)
+            btnNext.setTitle("  Done  ", for: .normal)
         }
         if currentPageIndex == 3{
             currentPageIndex = 0
@@ -662,9 +664,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let x = CGFloat(pageControl.currentPage) * (newProfileScrlView.frame.size.width)
         newProfileScrlView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle(" " + "Next".localized() + " ", for: .normal)
+        btnNext.setTitle("   " + "Next".localized() + "   ", for: .normal)
         if currentPageIndex == 2 {
-            btnNext.setTitle("Done", for: .normal)
+            btnNext.setTitle("  Done  ", for: .normal)
         }
         if currentPageIndex == 3{
             currentPageIndex = 0

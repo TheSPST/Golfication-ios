@@ -179,8 +179,10 @@ class ProfileVC: UIViewController {
         switch handSelection.selectedSegmentIndex {
         case 0:
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Left"] as [AnyHashable:Any])
+            Constants.handed = "Left"
         case 1:
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
+            Constants.handed = "Right"
         default:
             break;
         }

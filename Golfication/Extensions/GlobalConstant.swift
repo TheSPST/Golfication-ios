@@ -59,7 +59,7 @@ struct Constants{
     static var isDevice = Bool()
     static var isProMode = Bool()
     static var firmwareVersion : Int!
-    
+    static var handed:String!
     // MARK: GolfBagTabsVC
     static var syncdArray = NSMutableArray()
     static var tagClubNum = [(tag:Int, club: Int, clubName: String)]()

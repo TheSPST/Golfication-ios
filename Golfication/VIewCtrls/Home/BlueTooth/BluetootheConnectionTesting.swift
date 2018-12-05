@@ -66,7 +66,7 @@ class BluetootheConnectionTesting: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if Constants.ble != nil{
+        if Constants.ble == nil{
             Constants.ble = BLE()
         }
         Constants.ble.isSetupScreen = true
@@ -153,7 +153,6 @@ class BluetootheConnectionTesting: UIViewController {
         setInitialDeviceData()
     }
     func setInitialDeviceData(){
-        
         DispatchQueue.main.async {
             self.lblScanStatus.text = "Scanning for Golfication X..."
             self.btnRetry.isHidden = true
@@ -179,7 +178,6 @@ class BluetootheConnectionTesting: UIViewController {
         else{
             self.navigationItem.rightBarButtonItem?.isEnabled = true
             deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
-            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
             self.golfXPopupView.removeFromSuperview()
             self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
             Constants.ble.stopScanning()
@@ -190,15 +188,9 @@ class BluetootheConnectionTesting: UIViewController {
     @objc func setupFinished(_ notification: NSNotification){
         DispatchQueue.main.async {
             Constants.ble.isDeviceSetup = true
-            let alertVC = UIAlertController(title: "Alert", message: "Golfication X setup successfull ompleted.", preferredStyle: UIAlertControllerStyle.alert)
-            let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-                self.dismiss(animated: true, completion: nil)
+            UIApplication.shared.keyWindow?.makeToast("Golfication X setup successfull completed.")
                 self.navigationController?.popToRootViewController(animated: true)
-                
-            })
-            alertVC.addAction(action)
-            self.present(alertVC, animated: true, completion: nil)
-            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue:"command2Finished"))
+                NotificationCenter.default.removeObserver(NSNotification.Name(rawValue:"command2Finished"))
         }
     }
     @objc func cancelGolfXAction(_ sender: UIButton!) {
@@ -234,7 +226,11 @@ class BluetootheConnectionTesting: UIViewController {
         Constants.ble.stopScanning()
         self.view.makeToast("Device is connected.")
         
-        
+        if Constants.handed.contains("Left"){
+            self.handiChangedAction(self.btnHandiLeft)
+        }else{
+            self.handiChangedAction(self.btnHandiRight)
+        }
     }
     
 
@@ -322,32 +318,16 @@ class BluetootheConnectionTesting: UIViewController {
     }
     func getIsDeviceAlreadySetup(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "deviceSetup") { (snapshot) in
+            var isSetup = false
             if (snapshot.value as? Bool) != nil{
-                self.isDeviceSetup = snapshot.value as! Bool
+                isSetup = snapshot.value as! Bool
             }
             DispatchQueue.main.async(execute: {
-                self.getActiveRound()
+                self.isDeviceSetup = isSetup
+                self.progressView.hide(navItem: self.navigationItem)
             })
         }
     }
-    func getActiveRound(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseUserData(addedPath: "\(Auth.auth().currentUser!.uid)/activeMatches") { (snapshot) in
-            var activeRoundKeysArray = [String:Bool]()
-            if (snapshot.value != nil) {
-                activeRoundKeysArray = (snapshot.value as? [String : Bool])!
-            }
-            DispatchQueue.main.async(execute: {
-                for data in activeRoundKeysArray{
-                    if(data.value){
-                        self.activeMatchId = data.key
-                    }
-                }
-                
-                self.getSwingKey(matchId:self.activeMatchId)
-            })
-        }
-    }
-    
     // MARK: handiChangedAction
     @IBAction func handiChangedAction(_ sender: UIButton) {
         switch sender.tag{
@@ -359,7 +339,6 @@ class BluetootheConnectionTesting: UIViewController {
             lblHandiRight.textColor = UIColor(rgb: 0x133022)
             handiLeftView.layer.borderColor = UIColor.glfBluegreen.cgColor
             handiRightView.layer.borderColor = UIColor.clear.cgColor
-            
         case 1:
             self.sgmntCtrlOrientation.selectedSegmentIndex = 1
             btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtDark"), for: .normal)
@@ -370,39 +349,6 @@ class BluetootheConnectionTesting: UIViewController {
             handiRightView.layer.borderColor = UIColor.glfBluegreen.cgColor
         default:
             break;
-        }
-    }
-    
-    
-    func getSwingKey(matchId:String){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseUserData(addedPath: "matchData/\(matchId)/plyer/\(Auth.auth().currentUser!.uid)/swingKey") { (snapshot) in
-            if (snapshot.value != nil) {
-                self.swingMatchId = snapshot.value as! String
-            }
-            DispatchQueue.main.async(execute: {
-                self.getCurrentGameID()
-            })
-        }
-    }
-    func getCurrentGameID(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(self.swingMatchId)") { (snapshot) in
-            var swingData = NSMutableDictionary()
-            if (snapshot.value != nil) {
-                swingData = snapshot.value as! NSMutableDictionary
-            }
-            DispatchQueue.main.async(execute: {
-                self.progressView.hide(navItem: self.navigationItem)
-                for (key,value) in swingData{
-                    if(key as! String == "gameId"){
-                        self.currentGameId = value as! Int
-                    }
-                    else if(key as! String == "playType"){
-                        if(value as! String == "practice"){
-                            self.isPracticeMatch = true
-                        }
-                    }
-                }
-            })
         }
     }
 

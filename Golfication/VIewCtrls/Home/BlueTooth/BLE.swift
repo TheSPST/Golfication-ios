@@ -1202,6 +1202,9 @@ extension BLE: CBPeripheralDelegate {
                 if  dataArray[0] == UInt8(1) && (dataArray[0] == currentCommandData[0]) && (dataArray[1] == currentCommandData[1]){
                     timerForWriteCommand1.invalidate()
                     debugPrint("RecviedResult 1")
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":self.leftOrRight == 1 ? "Left":"Right"])
+                    Constants.handed = self.leftOrRight == 1 ? "Left":"Right"
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit":self.metric == 1 ? 1:0])
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name:NSNotification.Name(rawValue: "responseFirstCommand"),object:nil)
                     }
@@ -1211,13 +1214,8 @@ extension BLE: CBPeripheralDelegate {
                     if(self.tagClubNumber.count == 0){
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
-                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":self.leftOrRight == 1 ? "Left":"Right"])
-                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit":self.metric == 1 ? 1:0])
-//                        DispatchQueue.main.async(execute: {
-                            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
-//                        })
-                        //                        self.startMatch()
+                        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
                     }else{
                         if(totalTagInFirstPackate == 0){
                             self.sendSecondCommand(packet: 41)
@@ -1230,8 +1228,7 @@ extension BLE: CBPeripheralDelegate {
                     debugPrint("RecviedResult 2.2   ----  \(self.totalClub!)")
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":self.leftOrRight == 1 ? "Left":"Right"])
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit":self.metric == 1 ? 1:0])
+
                     NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
                     //                    self.startMatch()
@@ -1275,6 +1272,10 @@ extension BLE: CBPeripheralDelegate {
                 }else if(dataArray[0] == UInt8(4)){
                     self.invalidateAllTimers()
                     self.currentGameId = responseInIntFirst4
+                    DispatchQueue.main.async(execute: {
+                        UIApplication.shared.keyWindow?.makeToast("Game Discarded Successfully.")
+                    })
+
                 }else if (dataArray[0] == UInt8(6)){
                     timerForWriteCommand61.invalidate()
                     if (currentCommandData[1] > 200) && (dataArray[1] == currentCommandData[1]-200){
@@ -1434,7 +1435,7 @@ extension BLE: CBPeripheralDelegate {
                 }else if(dataArray[0] == UInt8(80)){
                     self.timerForWriteCommand8.invalidate()
                     self.isContinue = true
-                    debugPrint(currentCommandData)
+                    self.uploadSwingScore()
                     if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
                         var holeNm = 1
                         if self.holeWithSwing.last?.hole != scoring.count{
@@ -1444,7 +1445,7 @@ extension BLE: CBPeripheralDelegate {
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                         }
                     }
-                    self.uploadSwingScore()
+                    
                     if(self.isFinished){
                         self.sendNinthCommand(par: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                     }
@@ -1671,8 +1672,9 @@ extension BLE: CBPeripheralDelegate {
         DispatchQueue.main.async {
             debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
             self.invalidateAllTimers()
-            self.alertShowing(msg: "GolficationX disconnected Please connect again")
+//            self.alertShowing(msg: "GolficationX disconnected Please connect again")
             //        centralManager.connect(deviceGolficationX!, options: nil)
+            UIApplication.shared.keyWindow?.makeToast("Device Disconnected.....")
             Constants.deviceGolficationX = nil
             self.charctersticsWrite = nil
             self.charctersticsRead = nil
