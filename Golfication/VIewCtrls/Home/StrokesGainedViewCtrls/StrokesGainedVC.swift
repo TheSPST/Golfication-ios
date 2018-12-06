@@ -53,9 +53,6 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
     var totalProximity = [Double]()//2
     var totalHoleOutDistance = [Double]()//3
     
-    let catagoryWise = ["Off the Tee","Approach","Around The Green","Putting"]
-    let clubs = ["Dr","3w","1i","1h","2h","3h","2i","4w","4h","3i","5w","5h","4i","7w","6h","5i","7h","6i","7i","8i","9i","Pw","Gw","Sw","Lw","Pu"]
-    
     var myDataArray = NSMutableArray()
     var filteredArray = [NSDictionary]()
     var cardViewMArray = NSMutableArray()
@@ -434,7 +431,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         strokesGainedData.removeAll()
         strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
         
-        for data in self.catagoryWise{
+        for data in Constants.catagoryWise{
             self.strokesGainedData.append((data,0.0,0.0,0,0.0))
         }
         
@@ -496,7 +493,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
             //            let score = Scores()
             if let smartCaddieDic = ((myDataArray[i] as AnyObject).object(forKey:"smartCaddie") as? NSDictionary){
                 var clubWiseArray = [Club]()
-                for key in self.clubs{
+                for key in Constants.allClubs{
                     var keysArray = smartCaddieDic.value(forKey: " \(key)")
                     if(keysArray == nil){
                         keysArray = smartCaddieDic.value(forKey: "\(key)")

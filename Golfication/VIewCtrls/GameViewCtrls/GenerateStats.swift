@@ -309,7 +309,7 @@
                                                                 if ((a*a-x*x).squareRoot()<b) {
                                                                     y = 0 - y
                                                                 }
-                                                                if (shotsDic.value(forKey: "distanceToHole0") as? String) == "L"{
+                                                                if (shotsDic.value(forKey: "heading") as? String) == "L"{
                                                                     x = 0 - x
                                                                 }
                                                             }

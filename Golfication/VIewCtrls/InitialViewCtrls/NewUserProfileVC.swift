@@ -131,7 +131,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.btnCheckbox.tintColor = UIColor.clear
         
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
+        Constants.handed = "Right"
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"-"] as [AnyHashable:Any])
+        Constants.handicap = "-"
         
         self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "check"), for: .normal)
         self.btnCheckbox.imageView?.sizeToFit()
@@ -526,6 +528,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 //            self.sliderHandicapNumber.isEnabled = true
             self.lblHandicap.text = "Handicap \((self.sliderHandicapNumber.value*10).rounded()/10)"//(value as! NSString).floatValue
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
+            Constants.handicap = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
         }
         else{
             self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "check"), for: .normal)
@@ -536,6 +539,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             self.lblHandicap.text = "-"
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"-"] as [AnyHashable:Any])
+            Constants.handicap = "-"
         }
     }
     
@@ -548,6 +552,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
 
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\(Int(self.sliderHandicapNumber.value))"] as [AnyHashable:Any])
+        Constants.handicap = "\(Int(self.sliderHandicapNumber.value))"
     }
     
     // MARK: handiChangedAction

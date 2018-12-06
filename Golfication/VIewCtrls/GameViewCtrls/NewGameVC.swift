@@ -147,7 +147,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     func getHandicap(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "handicap") { (snapshot) in
             if let handic = snapshot.value as? String{
-                Constants.handicap = handic == "-" ? 0:Double(handic)!
+                Constants.handicap = handic
             }
         }
     }
@@ -1891,7 +1891,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if Constants.selectedTee.count > 1{
             tempdic.setObject(Constants.selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject("\(Constants.handicap)", forKey: "handicap" as NSCopying)
+            tempdic.setObject(Constants.handicap, forKey: "handicap" as NSCopying)
         }
 
         var imagUrl =  ""
@@ -2003,7 +2003,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tempdic.setObject(Auth.auth().currentUser?.displayName ?? "", forKey: "name" as NSCopying)
         if Constants.selectedTee.count > 1{
             tempdic.setObject(Constants.selectedTee.lowercased(), forKey: "tee" as NSCopying)
-            tempdic.setObject("\(Constants.handicap)", forKey: "handicap" as NSCopying)
+            tempdic.setObject(Constants.handicap, forKey: "handicap" as NSCopying)
             
         }
         var imagUrl =  ""

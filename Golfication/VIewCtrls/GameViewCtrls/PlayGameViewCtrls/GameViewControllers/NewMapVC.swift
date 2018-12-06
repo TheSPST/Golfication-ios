@@ -253,6 +253,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var deviceCircularView: CircularProgress!
     var isDeviceSetup = false
     var swingShotArr = NSArray()
+    
     // MARK: golfXAction
     @objc func golfXAction() {
         if Constants.isDevice{
@@ -4804,7 +4805,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         if(activePlay.isSelected && activePlay.id == key as! String){
                             let shots = value as! NSDictionary
                             var shotsArray = NSArray()
-                            var isSwing = false
+//                            var isSwing = false
                             for(key,value)in shots{
                                 if(key as! String == "shots"){
                                     shotsArray = value as! NSArray
@@ -4832,11 +4833,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                         self.btnPenaltyShot.isHidden = isPintMarker
                                         self.btnAddPenaltyLbl.isHidden = isPintMarker
                                     }
-                                }else if(key as! String == "swing"){
-                                    isSwing = true
                                 }
                             }
-                            if isSwing || (self.swingMatchId.count != 0){
+                            if (self.swingMatchId.count != 0){
                                 for i in 0..<shotsArray.count {
                                     let shotLatLng = shotsArray[i] as! NSDictionary
                                     playerShotsArray.append(shotLatLng as! NSMutableDictionary)
@@ -6043,7 +6042,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             DispatchQueue.main.async(execute: {
                 if(self.isContinue){
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: false)
-//                    self.getSwingData(swingKey: swingKey)
                 }
             })
         }

@@ -87,7 +87,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     let progressView = SDLoader()
     
     // MARK: - Initialize Variables
-    var genderData : String!
     var holeShots = [HoleShotPar]()
     var dataArray = [Feeds]()
     var btnTabsArray = [UIButton]()
@@ -109,18 +108,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var selectedHomeGolfID: String = ""
     var selectedHomeGolfName: String = ""
     var mappedStr = ""
-    var profileHandicap: String?
     var profileScoring: Int?
     
     var strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
-    let catagoryWise = ["Off the Tee","Approach","Around The Green","Putting"]
-    let clubs = ["Dr","3w","1i","1h","2h","3h","2i","4w","4h","3i","5w","5h","4i","7w","6h","5i","7h","6i","7i","8i","9i","Pw","Gw","Sw","Lw","Pu"]
     var clubData = ["Dr":"Driver","w":"Wood","h":"Hybrid","i":"Iron","Pw":"Pitching Wedge","Gw":"Gap Wedge","Sw":"Sand Wedge","Lw":"Lob Wedge","Pu":"Putter"]
     var cardViewMArray = NSMutableArray()
     var cellIndex = 5
     var clubInsideGolfClub = [String]()
     
-    var isTrial = false
     // MARK: - inviteAction
     @IBAction func inviteAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Profile", bundle: nil)
@@ -453,14 +448,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         strokesGainedData.removeAll()
         strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
         var smartCaddieAvg = [(clubName: String,clubTotalDistance: Double,clubStrokesGained: Double,clubDistanceArray:[Double])]()
-        for data in self.catagoryWise{
+        for data in Constants.catagoryWise{
             self.strokesGainedData.append((data,0.0,0.0,0,0.0))
             
         }
-        for data in self.clubs{
+        for data in Constants.allClubs{
             smartCaddieAvg.append((data,0.0,0.0,[0.0]))
         }
-        for i in 0..<self.clubs.count{
+        for i in 0..<Constants.allClubs.count{
             var distanceArray = [Double]()
             var value = 0.0
             var strokesGained = 0.0
@@ -530,7 +525,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     func createSmartDataWith(clubDict:[(String,Club)]){
         var clubWithAllDistance = [(club:String,arr:[Double])]()
-        for club in self.clubs{
+        for club in Constants.allClubs{
             clubWithAllDistance.append((club: club, arr: [Double()]))
         }
         for data in clubDict{
@@ -561,7 +556,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             if let smartCaddieDic = ((myDataArray[i] as AnyObject).object(forKey:"smartCaddie") as? NSDictionary){
                 var clubWiseArray = [Club]()
                 self.totalCaddie += 1
-                for key in self.clubs{
+                for key in Constants.allClubs{
                     let keysArray = smartCaddieDic.value(forKeyPath: "\(key)")
                     if((keysArray) != nil){
                         let valueArray = keysArray as! NSArray
@@ -841,7 +836,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             if(snapshot.childrenCount > 0){
                 var userData = NSDictionary()
                 userData = snapshot.value as! NSDictionary
-                
+                if (userData.value(forKey: "handed") == nil){
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
+                    Constants.handed = "Right"
+                }
+                if (userData.value(forKey: "handicap") == nil){
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"-"] as [AnyHashable:Any])
+                    Constants.handicap = "-"
+                }
                 if let unit = userData.object(forKey: "unit") as? Int{
                     Constants.distanceFilter = unit
                 }
@@ -855,7 +857,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     Constants.isDevice = device
                 }
                 if let trial = userData.value(forKey: "trial") as? Bool{
-                    self.isTrial = trial
+                    Constants.trial = trial
                 }
                 if let handed = userData.value(forKey: "handed") as? String{
                     Constants.handed = handed
@@ -903,6 +905,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                     if (device == "ios") || ((device == "android") && (proMembership.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID)){
                                         
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["trial" :true] as [AnyHashable:Any])
+                                    Constants.trial = true
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMembership" :NSNull()] as [AnyHashable:Any])
                                     
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :false] as [AnyHashable:Any])
@@ -1040,13 +1043,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                 }
                 if let handicap = userData["handicap"] as? String{
-                    self.profileHandicap = handicap
+                    Constants.handicap = handicap
                     if handicap != "-"{
                         hcp = Double(handicap)?.rounded() ?? 0
                     }
                 }
                 if let gender = userData["gender"] as? String{
-                    self.genderData = gender
+                    Constants.gender = gender
                 }
                 if let myFeeds = userData["myFeeds"] as? [String : Bool]{
                     self.dataArray.removeAll()
@@ -1130,22 +1133,22 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     func getBenchmarkKey(){
         var benchmark_Key = String()
-        if self.genderData == "male"{
-            if self.profileHandicap == "-"{
+        if Constants.gender == "male"{
+            if Constants.handicap == "-"{
                 benchmark_Key = "M6";
-            }else if self.profileHandicap! >= "0" && self.profileHandicap! < "6"{
+            }else if Constants.handicap >= "0" && Constants.handicap < "6"{
                 benchmark_Key = "M0";
-            }else if self.profileHandicap! >= "6" && self.profileHandicap! < "20"{
+            }else if Constants.handicap >= "6" && Constants.handicap < "20"{
                 benchmark_Key = "M6";
             }else{
                 benchmark_Key = "M20";
             }
         }else{
-            if self.profileHandicap == "-"{
+            if Constants.handicap == "-"{
                 benchmark_Key = "F6";
-            }else if self.profileHandicap! >= "0" && self.profileHandicap! < "6"{
+            }else if Constants.handicap >= "0" && Constants.handicap < "6"{
                 benchmark_Key = "F0";
-            }else if self.profileHandicap! >= "6" && self.profileHandicap! < "20"{
+            }else if Constants.handicap >= "6" && Constants.handicap < "20"{
                 benchmark_Key = "F6";
             }else{
                 benchmark_Key = "F20";
@@ -1244,7 +1247,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.setProLockedUI(targetView: self.viewSGTab)
         }
         lblProfileHomeCourse.text = self.profileHomeCourse ?? "-"
-        lblProfileHandicap.text = "\(self.profileHandicap ?? "0")"
+        lblProfileHandicap.text = Constants.handicap
         lblProfileScoring.text = "\(self.profileScoring ?? 0)"
         
         self.btnProfileBasic.setTitle("Basic", for: .normal)
@@ -1255,7 +1258,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
             if (newUser && !Constants.isProMode){
                 if (self.profileHomeCourse != nil && self.profileHomeCourse != "") || (mappedStr == "2"){
-                    if !isTrial{
+                    if !(Constants.trial){
                     self.viewBecomePro.isHidden = false
                     self.view.layoutIfNeeded()
                     }

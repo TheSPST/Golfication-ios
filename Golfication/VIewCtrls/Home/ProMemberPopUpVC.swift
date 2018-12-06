@@ -70,8 +70,6 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     
     var progressView = SDLoader()
 
-    var trial = false
-
     @IBAction func privacyPolicyAction(_ sender: Any) {
         
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
@@ -95,7 +93,7 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     @IBAction func yearSubscriptionAction(_ sender: Any) {
         //0->monthly , 1->trial monthly, 2-> trial yearly, 3->yearly
 
-        if trial == true{
+        if Constants.trial == true{
             IAPHandler.shared.purchaseMyProduct(index: 3)
         }
         else{
@@ -104,7 +102,7 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     }
     
     @IBAction func monthSubscriptionAction(_ sender: Any) {
-        if trial == true{
+        if Constants.trial == true{
             IAPHandler.shared.purchaseMyProduct(index: 0)
         }
         else{
@@ -191,11 +189,11 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "trial") { (snapshot) in
             if(snapshot.value != nil){
-                self.trial = snapshot.value as! Bool
+                Constants.trial = snapshot.value as! Bool
                 self.lbl30DaysTrial.isHidden = true
             }
             else{
-                self.trial = false
+                Constants.trial = false
                 self.lbl30DaysTrial.isHidden = false
             }
             DispatchQueue.main.async( execute: {

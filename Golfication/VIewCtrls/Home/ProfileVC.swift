@@ -167,8 +167,10 @@ class ProfileVC: UIViewController {
         switch genderSgmtCtrl.selectedSegmentIndex {
         case 0:
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"male"] as [AnyHashable:Any])
+            Constants.gender = "male"
         case 1:
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"female"] as [AnyHashable:Any])
+            Constants.gender = "female"
         default:
             break;
         }
@@ -434,6 +436,7 @@ class ProfileVC: UIViewController {
     @IBAction func sliderChangedAction(_ sender: Any) {
         self.lblHandicap.text = "Handicap".localized() + " \((self.slider.value*10).rounded()/10)"//(value as! NSString).floatValue
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.slider.value*10).rounded()/10)"] as [AnyHashable:Any])
+        Constants.handicap = "\((self.slider.value*10).rounded()/10)"
     }
     
     // MARK: btnCheckBoxAction
@@ -445,6 +448,7 @@ class ProfileVC: UIViewController {
             self.sliderHandicapNumber.isEnabled = true
             
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\(Int(self.slider.value))"] as [AnyHashable:Any])
+            Constants.handicap = "\(Int(self.slider.value))"
         }
         else{
             self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "path15"), for: .normal)
@@ -454,6 +458,7 @@ class ProfileVC: UIViewController {
             self.sliderHandicapNumber.isEnabled = false
             
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"-"] as [AnyHashable:Any])
+            Constants.handicap = "-"
         }
     }
     
@@ -496,157 +501,142 @@ class ProfileVC: UIViewController {
         PKCCropHelper.shared.degressBeforeImage = UIImage(named: "pkc_crop_rotate_left.png")
         PKCCropHelper.shared.degressAfterImage = UIImage(named: "pkc_crop_rotate_right.png")
 
-        getData()
+        if Constants.gender == ""{
+            self.genderCardView.isHidden = false
+        }
+        else{
+            self.genderCardView.isHidden = true
+            if Constants.gender == "male"{
+                self.genderSgmtCtrl.selectedSegmentIndex = 0
+            }
+            else{
+                self.genderSgmtCtrl.selectedSegmentIndex = 1
+            }
+        }
         
+        if Constants.handed == ""{
+            self.handSelection.selectedSegmentIndex = 1
+        }
+        else{
+            self.handSelection.selectedSegmentIndex = 1
+            if(Constants.handed == "Left"){
+                self.handSelection.selectedSegmentIndex = 0
+            }
+        }
+        
+        if Constants.handicap == ""{
+            self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "path15"), for: .normal)
+            self.btnCheckbox.imageView?.sizeToFit()
+            self.btnCheckbox.isSelected = true
+            self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
+            self.sliderHandicapNumber.isEnabled = false
+        }
+        else{
+            if Constants.handicap == "-"{
+                self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "path15"), for: .normal)
+                self.btnCheckbox.imageView?.sizeToFit()
+                self.btnCheckbox.isSelected = true
+                self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
+                self.sliderHandicapNumber.isEnabled = false
+            }
+            self.sliderHandicapNumber.value = (Constants.handicap as NSString).floatValue
+            self.lblHandicap.text = "Handicap".localized() + " \(self.sliderHandicapNumber.value)"
+        }
+        getData()
     }
     
     // MARK: getData
     func getData()  {
         btnUpdradeNow.isEnabled = false
         progressView.show(atView: self.view, navItem: self.navigationItem)
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "") { (snapshot) in
-            
-            var userData = NSMutableDictionary()
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "proMembership") { (snapshot) in
+            self.progressView.hide(navItem: self.navigationItem)
+
             if(snapshot.value != nil){
-                userData = snapshot.value as! NSMutableDictionary
-            }
-            DispatchQueue.main.async(execute: {
+                var proData = NSDictionary()
+                proData = snapshot.value as! NSDictionary
                 
-                if (userData.value(forKey: "golfBag") == nil){
-//                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag":self.selectedClubs] as [AnyHashable:Any])
+                self.viewTopWhatIsPro.isHidden = true
+                self.whatISProHeightConstraint.constant = 0.0
+                self.view.layoutIfNeeded()
+                
+                self.viewUpgradeInactive.isHidden = true
+                self.viewUpgradeFreeActive.isHidden = true
+                self.viewUpgradeActive.isHidden = false
+                
+                if proData.value(forKey: "productID") as! String == Constants.PROMO_CODE_YEARLY_PRODUCT_ID{
+                    self.btnActiveIndiegogo.isHidden = true
+                    self.lblNextBilling.isHidden = true
                 }
-                if (userData.value(forKey: "gender") == nil){
-                    self.genderCardView.isHidden = false
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"male"] as [AnyHashable:Any])
+                
+                let timeNow = NSDate()
+                let formatter = DateFormatter()
+                formatter.locale = Locale(identifier: "en")
+                formatter.dateFormat = "dd-MMM-yyyy HH:mm:ss"
+                let currentDateStr = formatter.string(from: timeNow as Date)
+                let currentDate = formatter.date(from: currentDateStr)
+                
+                let expiryDF = DateFormatter()
+                expiryDF.locale = Locale(identifier: "en")
+                expiryDF.dateFormat = "dd-MMM-yyyy HH:mm:ss"
+                
+                let expDate = expiryDF.date(from: proData.value(forKey: "expiryDate") as! String)
+                //let expDateStr = formatter.string(from: expDate!)
+                
+                if (proData.value(forKey: "expiryDate") != nil){
+                    let locale = NSLocale.current.identifier
+                    expiryDF.locale = Locale(identifier: locale)
+                    let myDateStr = expiryDF.string(from: expDate!)
+                    
+                    self.lblNextBilling.text = "Next Billing " + myDateStr
                 }
-                if (userData.value(forKey: "handed") == nil){
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
-                    self.handSelection.selectedSegmentIndex = 1
+                if (proData.value(forKey: "transactionDate") != nil){
+                    let df = DateFormatter()
+                    df.locale = Locale(identifier: "en")
+                    df.dateFormat = "dd-MMM-yyyy HH:mm:ss"
+                    let myDate = df.date(from: proData.value(forKey: "transactionDate") as! String)
+                    df.dateFormat = "dd-MMM-yyyy"
+                    
+                    let locale = NSLocale.current.identifier
+                    df.locale = Locale(identifier: locale)
+                    let myDateStr = df.string(from: myDate!)
+                    
+                    self.lblLastBilling.text = "Member since " + " \(myDateStr)"
                 }
-                if (userData.value(forKey: "handicap") == nil){
-//                    if ((userData.value(forKey: "handicap") as! String) == "-"){
-                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"-"] as [AnyHashable:Any])
-                        self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "path15"), for: .normal)
-                        self.btnCheckbox.imageView?.sizeToFit()
-                        self.btnCheckbox.isSelected = true
-                        self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
-                        self.sliderHandicapNumber.isEnabled = false
-//                    }
+                
+                switch currentDate?.compare(expDate!) {
+                case .orderedAscending?     :   debugPrint("currentDate is earlier than expDate")
+                    
+                case .orderedDescending?    :   debugPrint("currentDate is later than expDate")
+                self.viewUpgradeInactive.isHidden = false
+                self.viewUpgradeFreeActive.isHidden = true
+                self.viewUpgradeActive.isHidden = true
+                self.lblInactivePrice.text = "Your Pro Membership has been expired"
+                case .orderedSame?          :   debugPrint("Both dates are same")
+                self.viewUpgradeInactive.isHidden = false
+                self.viewUpgradeFreeActive.isHidden = true
+                self.viewUpgradeActive.isHidden = true
+                self.lblInactivePrice.text = "Your Pro Membership has been expired"
+                case .none: break
                 }
-                if (userData.value(forKey: "proMembership") == nil){
-                    self.viewTopWhatIsPro.isHidden = false
-                    self.whatISProHeightConstraint.constant = 57.0
-
-                    self.lblInactivePrice.text = "free for 30 days".localized()
-                    if (userData.value(forKey: "trial") as? Bool) != nil{
-                        self.lblInactivePrice.text = "Your Pro Membership has been expired"
-                        self.viewTopWhatIsPro.isHidden = true
-                        self.whatISProHeightConstraint.constant = 0.0
-                    }
-                    self.viewUpgradeInactive.isHidden = false
-                    self.viewUpgradeFreeActive.isHidden = true
-                    self.viewUpgradeActive.isHidden = true
+            }
+            else{
+                self.viewTopWhatIsPro.isHidden = false
+                self.whatISProHeightConstraint.constant = 57.0
+                
+                self.lblInactivePrice.text = "free for 30 days".localized()
+                if Constants.trial == true{
+                    self.lblInactivePrice.text = "Your Pro Membership has been expired"
+                    self.viewTopWhatIsPro.isHidden = true
+                    self.whatISProHeightConstraint.constant = 0.0
                 }
-                for (key,value) in userData{
-                    let keys = key as! String
-                     if (keys == "handed"){
-                        self.handSelection.selectedSegmentIndex = 1
-                        if(value as! String == "Left"){
-                            self.handSelection.selectedSegmentIndex = 0
-                        }
-                    }else if (keys == "handicap"){
-                        if (value as! NSString) == "-"{
-                            self.sliderHandicapNumber.isEnabled = false
-                            self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "path15"), for: .normal)
-                            self.btnCheckbox.imageView?.sizeToFit()
-                            self.btnCheckbox.isSelected = true
-                            self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
-                        }
-
-                        self.sliderHandicapNumber.value = (value as! NSString).floatValue
-                        self.lblHandicap.text = "Handicap".localized() + " \(self.sliderHandicapNumber.value)"
-                    }
-                    else if(keys == "gender"){
-                        self.genderCardView.isHidden = true
-                        if value as? String == "male"{
-                            self.genderSgmtCtrl.selectedSegmentIndex = 0
-                        }
-                        else{
-                            self.genderSgmtCtrl.selectedSegmentIndex = 1
-                        }
-                    }
-                    else if(keys == "proMembership"){
-                        self.viewTopWhatIsPro.isHidden = true
-                        self.whatISProHeightConstraint.constant = 0.0
-                        self.view.layoutIfNeeded()
-                        
-                    let dic  = value as! NSDictionary
-                            self.viewUpgradeInactive.isHidden = true
-                            self.viewUpgradeFreeActive.isHidden = true
-                            self.viewUpgradeActive.isHidden = false
-                            
-                            if dic.value(forKey: "productID") as! String == Constants.PROMO_CODE_YEARLY_PRODUCT_ID{
-                                self.btnActiveIndiegogo.isHidden = true
-                                self.lblNextBilling.isHidden = true
-                            }
-                            
-                            let timeNow = NSDate()
-                            let formatter = DateFormatter()
-                            formatter.locale = Locale(identifier: "en")
-                            formatter.dateFormat = "dd-MMM-yyyy HH:mm:ss"
-                            let currentDateStr = formatter.string(from: timeNow as Date)
-                            let currentDate = formatter.date(from: currentDateStr)
-                            
-                            let expiryDF = DateFormatter()
-                            expiryDF.locale = Locale(identifier: "en")
-                            expiryDF.dateFormat = "dd-MMM-yyyy HH:mm:ss"
-
-                            let expDate = expiryDF.date(from: dic.value(forKey: "expiryDate") as! String)
-                            //let expDateStr = formatter.string(from: expDate!)
-
-                            if (dic.value(forKey: "expiryDate") != nil){
-                                let locale = NSLocale.current.identifier
-                                expiryDF.locale = Locale(identifier: locale)
-                                let myDateStr = expiryDF.string(from: expDate!)
-
-                                self.lblNextBilling.text = "Next Billing " + myDateStr
-                            }
-                            if (dic.value(forKey: "transactionDate") != nil){
-                                let df = DateFormatter()
-                                df.locale = Locale(identifier: "en")
-                                df.dateFormat = "dd-MMM-yyyy HH:mm:ss"
-                                let myDate = df.date(from: dic.value(forKey: "transactionDate") as! String)
-                                df.dateFormat = "dd-MMM-yyyy"
-                                
-                                let locale = NSLocale.current.identifier
-                                df.locale = Locale(identifier: locale)
-                                let myDateStr = df.string(from: myDate!)
-
-                                self.lblLastBilling.text = "Member since " + " \(myDateStr)"
-                            }
-                        
-                            switch currentDate?.compare(expDate!) {
-                            case .orderedAscending?     :   debugPrint("currentDate is earlier than expDate")
-                                
-                            case .orderedDescending?    :   debugPrint("currentDate is later than expDate")
-                                                            self.viewUpgradeInactive.isHidden = false
-                                                            self.viewUpgradeFreeActive.isHidden = true
-                                                            self.viewUpgradeActive.isHidden = true
-                                                            self.lblInactivePrice.text = "Your Pro Membership has been expired"
-                            case .orderedSame?          :   debugPrint("Both dates are same")
-                                                            self.viewUpgradeInactive.isHidden = false
-                                                            self.viewUpgradeFreeActive.isHidden = true
-                                                            self.viewUpgradeActive.isHidden = true
-                                                            self.lblInactivePrice.text = "Your Pro Membership has been expired"
-                            case .none: break
-                            }
-                    }
-                }
-                self.btnUpdradeNow.isEnabled = true
-                self.setupInitialUI()
-                self.progressView.hide(navItem: self.navigationItem)
-                self.viewProMembership.isHidden = false
-            })
+                self.viewUpgradeInactive.isHidden = false
+                self.viewUpgradeFreeActive.isHidden = true
+                self.viewUpgradeActive.isHidden = true
+            }
+            self.btnUpdradeNow.isEnabled = true
+            self.setupInitialUI()
+            self.viewProMembership.isHidden = false
         }
     }
     

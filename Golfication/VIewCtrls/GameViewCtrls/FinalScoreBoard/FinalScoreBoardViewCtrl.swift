@@ -12,8 +12,6 @@ import FirebaseAuth
 import UICircularProgressRing
 import Firebase
 class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableViewDataSource,CustomProModeDelegate{
-    let catagoryWise = ["Off the Tee","Approach","Around The Green","Putting"]
-    let clubs = ["Dr","3w","1i","1h","2h","3h","2i","4w","4h","3i","5w","5h","4i","7w","6h","5i","7h","6i","7i","8i","9i","Pw","Gw","Sw","Lw","Pu"]
     var strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
     var parWiseValues = ParWise()
     var finalPlayersData = NSMutableArray()
@@ -228,7 +226,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         let sandImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         sandImageView.image = sandImage
         sandImageView.tintColor = UIColor.glfWhite
-        for data in self.catagoryWise{
+        for data in Constants.catagoryWise{
             self.strokesGainedData.append((data,0.0,0.0,0,0.0))
         }
         if(Constants.distanceFilter == 1){
@@ -962,7 +960,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         var clubDict = [(String,Club)]()
             if let smartCaddieDic = myDataDict.object(forKey:"smartCaddie") as? NSDictionary{
                 var clubWiseArray = [Club]()
-                for key in self.clubs{
+                for key in Constants.allClubs{
                     var keysArray = smartCaddieDic.value(forKeyPath: " \(key)")
                     if (keysArray == nil){
                         keysArray = smartCaddieDic.value(forKey: "\(key)")

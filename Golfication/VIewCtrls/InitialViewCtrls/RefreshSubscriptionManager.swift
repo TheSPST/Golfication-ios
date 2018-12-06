@@ -97,8 +97,10 @@ class RefreshSubscriptionManager: NSObject {
                                 if(Auth.auth().currentUser!.uid.count > 1){
                                     
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["trial" :NSNull()] as [AnyHashable:Any])
+                                    Constants.trial = false
                                     if items.first!.isTrialPeriod == false{
                                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["trial" :true] as [AnyHashable:Any])
+                                        Constants.trial = true
                                     }
                                     
                                     if self.firTimeEnd != nil{
