@@ -13,7 +13,7 @@ import FirebaseAuth
 
 class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, IndicatorInfoProvider {
     @IBOutlet weak var sessionTableView: UITableView!
-
+    
     var expandedSectionHeaderNumber: Int = -1
     var expandedSectionHeader: UITableViewHeaderFooterView!
     let kHeaderSectionTag: Int = 6900
@@ -23,7 +23,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
     
     var sessionMArray = NSMutableArray()
     let progressView = SDLoader()
-
+    
     var parVal = Int()
     var strokesGainedVal = Double()
     
@@ -32,7 +32,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         
         let practiceMArray = NSMutableArray()
         let matchMArray = NSMutableArray()
-
+        
         for i in 0..<sessionMArray.count{
             let dataDic = sessionMArray[i] as! NSDictionary
             
@@ -54,7 +54,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                 practiceDic.setValue(avgSwingScore/Double(swingArray.count), forKey: "swingScoreAvg")
                 practiceDic.setValue(clubArray.count, forKey: "club")
                 practiceDic.setValue(swingArray, forKey: "swingArray")
-
+                
                 practiceMArray.add(practiceDic)
             }
             else{
@@ -71,7 +71,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                         if shotNum != 0{
                             holeShot.append((key:key,hole: holeNum-1, shot: shotNum-1))
                         }
-
+                        
                     }
                 }
                 let matchDic = NSMutableDictionary()
@@ -95,7 +95,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         else if practiceMArray.count == 0 && matchMArray.count == 0{
             sectionNames = []
             sectionItems = []
-
+            
         }
         else if practiceMArray.count > 0 && matchMArray.count == 0{
             sectionNames = ["Practise Session(\(practiceMArray.count))"]
@@ -109,7 +109,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         self.sessionTableView.delegate = self
         self.sessionTableView.dataSource = self
         self.sessionTableView.reloadData()
-        }
+    }
     
     // MARK: - Tableview Methods
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -195,29 +195,42 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         dateFormatter.locale = Locale(identifier: "en")
         dateFormatter.dateFormat = "MMM d, yyyy"
         let strDate = dateFormatter.string(from: date)
-
+        
         cell.lblDate.text = strDate
         cell.lblSwingClub.text = "\((array[indexPath.row] as AnyObject).value(forKey:"swing") as! Int)" + " Swing(s), " + "\((array[indexPath.row] as AnyObject).value(forKey:"club") as! Int)" + " Club(s)"
         cell.lblAvg.text = String(Int((array[indexPath.row] as AnyObject).value(forKey:"swingScoreAvg") as! Double))
-        if indexPath.section == 0{
-            var incr = array.count
-            incr = incr - indexPath.row
-            cell.lblSession.text = "Session" + "\(incr)"
+        
+        if sectionNames.count == 2{
+            if indexPath.section == 0{
+                var incr = array.count
+                incr = incr - indexPath.row
+                cell.lblSession.text = "Session" + "\(incr)"
+            }
+            else{
+                cell.lblSession.text = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
+            }
         }
         else{
-            cell.lblSession.text = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
+            let headerName = sectionNames[indexPath.section] as! String
+            let dropFirst16 = String(headerName.prefix(16))
+            if dropFirst16 == "Practise Session"{
+                var incr = array.count
+                incr = incr - indexPath.row
+                cell.lblSession.text = "Session" + "\(incr)"
+            }
+            else{
+                cell.lblSession.text = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
+            }
         }
         //cell.lblAvg.text = ""
-
         cell.avgCircleView.layer.cornerRadius = cell.avgCircleView.frame.size.height/2
-
         cell.selectionStyle = .none
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "PracticePageContainerVC") as! PracticePageContainerVC
-//        viewCtrl.swingKey = swingKey
+        //viewCtrl.swingKey = swingKey
         let array = self.sectionItems[indexPath.section] as! NSArray
         var shotsAr = [String]()
         let swingArr = (array[indexPath.row] as AnyObject).value(forKey:"swingArray") as! NSArray
@@ -227,44 +240,83 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         }
         viewCtrl.shotsArray = shotsAr
         viewCtrl.tempArray1 = swingArr
-        if indexPath.section == 0{
-            viewCtrl.fromRoundsPlayed = false
-            viewCtrl.title = "Practice Session \(indexPath.row+1)"
+        
+        if sectionNames.count == 2{
+            if indexPath.section == 0{
+                viewCtrl.fromRoundsPlayed = false
+                viewCtrl.title = "Practice Session \(indexPath.row+1)"
+            }
+            else{
+                viewCtrl.fromRoundsPlayed = true
+                var holeShotArr = (array[indexPath.row] as AnyObject).value(forKey:"holeShot") as! [(key:String,hole:Int,shot:Int)]
+                holeShotArr = holeShotArr.sorted(by: { $0.hole < $1.hole })
+                var tempArr = [(key:String,hole:Int,shot:Int)]()
+                var shots = [Int]()
+                for i in 0..<holeShotArr.count-1{
+                    if holeShotArr[i].hole == holeShotArr[i+1].hole{
+                        shots.append(holeShotArr[i].shot)
+                    }else{
+                        shots.append(holeShotArr[i].shot)
+                        shots = shots.sorted()
+                        for data in shots{
+                            tempArr.append((key:holeShotArr[i].key,hole: holeShotArr[i].hole, shot: data))
+                        }
+                        shots.removeAll()
+                    }
+                }
+                shots.append(holeShotArr.last!.shot)
+                shots = shots.sorted()
+                for data in shots{
+                    tempArr.append((holeShotArr.last!.key,hole: holeShotArr.last!.hole, shot: data))
+                }
+                shots.removeAll()
+                viewCtrl.holeShot = tempArr
+                debugPrint(tempArr)
+                viewCtrl.title = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
+            }
         }
         else{
-            viewCtrl.fromRoundsPlayed = true
-            var holeShotArr = (array[indexPath.row] as AnyObject).value(forKey:"holeShot") as! [(key:String,hole:Int,shot:Int)]
-            holeShotArr = holeShotArr.sorted(by: { $0.hole < $1.hole })
-            var tempArr = [(key:String,hole:Int,shot:Int)]()
-            var shots = [Int]()
-            for i in 0..<holeShotArr.count-1{
-                if holeShotArr[i].hole == holeShotArr[i+1].hole{
-                    shots.append(holeShotArr[i].shot)
-                }else{
-                    shots.append(holeShotArr[i].shot)
-                    shots = shots.sorted()
-                    for data in shots{
-                        tempArr.append((key:holeShotArr[i].key,hole: holeShotArr[i].hole, shot: data))
+            let headerName = sectionNames[indexPath.section] as! String
+            let dropFirst16 = String(headerName.prefix(16))
+            
+            if dropFirst16 == "Practise Session"{
+                viewCtrl.fromRoundsPlayed = false
+                viewCtrl.title = "Practice Session \(indexPath.row+1)"
+            }
+            else{
+                viewCtrl.fromRoundsPlayed = true
+                var holeShotArr = (array[indexPath.row] as AnyObject).value(forKey:"holeShot") as! [(key:String,hole:Int,shot:Int)]
+                holeShotArr = holeShotArr.sorted(by: { $0.hole < $1.hole })
+                var tempArr = [(key:String,hole:Int,shot:Int)]()
+                var shots = [Int]()
+                for i in 0..<holeShotArr.count-1{
+                    if holeShotArr[i].hole == holeShotArr[i+1].hole{
+                        shots.append(holeShotArr[i].shot)
+                    }else{
+                        shots.append(holeShotArr[i].shot)
+                        shots = shots.sorted()
+                        for data in shots{
+                            tempArr.append((key:holeShotArr[i].key,hole: holeShotArr[i].hole, shot: data))
+                        }
+                        shots.removeAll()
                     }
-                    shots.removeAll()
                 }
+                shots.append(holeShotArr.last!.shot)
+                shots = shots.sorted()
+                for data in shots{
+                    tempArr.append((holeShotArr.last!.key,hole: holeShotArr.last!.hole, shot: data))
+                }
+                shots.removeAll()
+                viewCtrl.holeShot = tempArr
+                debugPrint(tempArr)
+                viewCtrl.title = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
             }
-            shots.append(holeShotArr.last!.shot)
-            shots = shots.sorted()
-            for data in shots{
-                tempArr.append((holeShotArr.last!.key,hole: holeShotArr.last!.hole, shot: data))
-            }
-            shots.removeAll()
-            viewCtrl.holeShot = tempArr
-            debugPrint(tempArr)
-            viewCtrl.title = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
         }
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
     }
     
     // MARK: - Expand / Collapse Methods
@@ -338,5 +390,5 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: "Session")
     }
-
+    
 }

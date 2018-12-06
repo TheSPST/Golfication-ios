@@ -1435,10 +1435,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         courseId = "course_\(self.matchDataDict.value(forKeyPath: "courseId") as! String)"
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
-        
+        if self.courseData.numberOfHoles.count != 0{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
+        }else{
+            self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
+        }
     }
     @objc func hideStableFord(_ notification:NSNotification){
         let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
@@ -3227,9 +3229,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         btnSelectClubs.setCornerWithRadius(color: UIColor.clear.cgColor, radius: btnSelectClubs.frame.height/2)
         lblShotNumber.setCornerWithRadius(color: UIColor.clear.cgColor, radius: lblShotNumber.frame.height/2)
         lblEditShotNumber.setCornerWithRadius(color: UIColor.clear.cgColor, radius: lblEditShotNumber.frame.height/2)
-        courseData.clubs.remove(at: courseData.clubs.index(of: "more")!)
-        
-        
+        if Constants.deviceGolficationX == nil{
+            courseData.clubs.remove(at: courseData.clubs.index(of: "more")!)
+        }
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         swipeUp.addTarget(self, action: #selector(self.swipedViewUp))
         btnPlayersStats.addGestureRecognizer(swipeUp)
@@ -5984,9 +5986,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
 
             }
-            debugPrint(Constants.ble)
-            Constants.ble.isPracticeMatch = false
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreen)
+//            Constants.ble.isPracticeMatch = false
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreen)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 self.getActiveRound()
             })
@@ -6005,7 +6006,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                 }
                 if(!self.isContinue){
-                    self.hideWhenDeviceConnected()
+                    if !self.swingMatchId.isEmpty{
+                        self.hideWhenDeviceConnected()
+                    }
                     ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
                     ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["courseName":(self.matchDataDict.value(forKey: "courseName") as! String)])
                     ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["matchKey":"\(self.currentMatchId)"])

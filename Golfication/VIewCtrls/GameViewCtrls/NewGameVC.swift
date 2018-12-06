@@ -99,7 +99,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var finalMatchDic = NSMutableDictionary()
     var recentPlyrMArr = NSMutableArray()
     var golfDataMArray = [NSMutableDictionary]()
-
+    var notifScoring = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
     var isContinueClicked = Bool()
     var gameTypePopUp = Bool()
     
@@ -115,7 +115,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var attributedStringArray = [String]()
     var detailedScore = NSMutableArray()
     // Marke : StartingTee Action
-    
+    var courseData = CourseData()
     @IBAction func btnActionStartingTee(_ sender: UIButton) {
         let myController = UIAlertController(title: "Select Tee", message: "Please select your Tee according to your Handicap", preferredStyle: UIAlertControllerStyle.actionSheet)
         
@@ -399,6 +399,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
 
         // for continue action from scorecard
         NotificationCenter.default.addObserver(self, selector: #selector(continueButtonAction(_:)), name: NSNotification.Name(rawValue: "continueAction"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.loadMapWithBLECommands(_:)), name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
 
         //Apply to the label
         btnMoreInfo.isHidden = true
@@ -1826,26 +1827,41 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
     @objc func defaultMapApiCompleted(_ notification: NSNotification) {
+        notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
+        if Constants.deviceGolficationX != nil{
+            self.courseData.startingIndex = Constants.startingHole == "" ? 1:Int(Constants.startingHole)
+            self.courseData.gameTypeIndex = Constants.gameType == "9 holes" ? 9:18
+            self.courseData.getGolfCourseDataFromFirebase(courseId: "course_\(Constants.selectedGolfID)")
+        }else{
+            self.progressView.hide(navItem: self.navigationItem)
+            let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "NewMapVC") as! NewMapVC
+            viewCtrl.matchDataDict = Constants.matchDataDic
+            viewCtrl.isContinue = false
+            viewCtrl.currentMatchId = Constants.matchId
+            viewCtrl.scoring = notifScoring
+            viewCtrl.courseId = "course_\(Constants.selectedGolfID)"
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
+        }
+
+    }
+    @objc func loadMapWithBLECommands(_ notification: NSNotification) {
         var isDeviceConnected = false
         if Constants.deviceGolficationX != nil{
             isDeviceConnected = true
         }
-        let notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
         self.progressView.hide(navItem: self.navigationItem)
-        
         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "NewMapVC") as! NewMapVC
-        
         viewCtrl.matchDataDict = Constants.matchDataDic
         viewCtrl.isContinue = false
         viewCtrl.currentMatchId = Constants.matchId
         viewCtrl.scoring = notifScoring
         viewCtrl.courseId = "course_\(Constants.selectedGolfID)"
         viewCtrl.isDeviceConnected = isDeviceConnected
+        viewCtrl.courseData = self.courseData
         self.navigationController?.pushViewController(viewCtrl, animated: true)
-        
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
     }
-    
     // MARK: startGameAction
     func startGameAction() {
         //        self.progressView.show(navItem: self.navigationItem)

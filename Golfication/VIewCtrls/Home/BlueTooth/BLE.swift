@@ -81,6 +81,7 @@ class BLE: NSObject {
     var isContinue = false
     var player: AVAudioPlayer?
     var gameIDArr : [UInt8]!
+    var oldLatLng = CLLocationCoordinate2D()
     var isProperConnected:Bool!{
         var isTrue = false
         if(Constants.deviceGolficationX != nil) && self.service_Read != nil && self.service_Write != nil{
@@ -691,8 +692,13 @@ class BLE: NSObject {
         self.swingMatchId = ""
         if Constants.deviceGolficationX != nil{
             randomGenerator()
-            let param = [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]]
-            sendFourthCommand(param: param)
+            if gameIDArr == nil{
+                UIApplication.shared.keyWindow?.makeToast("No game available to discard.")
+            }else{
+                let param = [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]]
+                sendFourthCommand(param: param)
+            }
+
         }
     }
 }
@@ -1327,6 +1333,7 @@ extension BLE: CBPeripheralDelegate {
                             
                             if(!self.isPracticeMatch){
                                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
                                 matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
                                 matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
                                 let gameAlert = UIAlertController(title: "Device GPS", message: "Which GPS you want to use?", preferredStyle: UIAlertControllerStyle.alert)
@@ -1417,11 +1424,18 @@ extension BLE: CBPeripheralDelegate {
                         memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&lat, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
                         memccpy(&lng, [dataArray[14],dataArray[15],dataArray[16],dataArray[17]], 4, 4)
-                        
+                        oldLatLng = CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng))
+                        if (oldLatLng.latitude == Double(lat)) && (oldLatLng.longitude == Double(lng)){
+                            let newPoint = GMSGeometryOffset(CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng)), 1,CLLocationDirection(arc4random_uniform(360)))
+                            holeWithSwing[holeWithSwing.count-1].lat = newPoint.latitude
+                            holeWithSwing[holeWithSwing.count-1].lng = newPoint.longitude
+                        }else{
+                            holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
+                            holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
+                        }
                         swingDetails[swingDetails.count-1].cv = Double(clubVelocity)
                         swingDetails[swingDetails.count-1].ba = Double(backAngle)
-                        holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
-                        holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
+
                         debugPrint("Lattitude From Device : ",Double(lat))
                         debugPrint("Longitude From Device : ",Double(lng))
                         if (holeWithSwing[holeWithSwing.count-1].holeOut){

@@ -388,6 +388,14 @@ class CourseData:NSObject{
             }
         }
         debugPrint("clubs \(clubData)")
+        if Constants.deviceGolficationX != nil{
+            Constants.ble.isPracticeMatch = false
+            var centerPointOfTeeNGreenWithPar = [(tee:CLLocationCoordinate2D,fairway:CLLocationCoordinate2D,green:CLLocationCoordinate2D,par:Int)]()
+            for i in 0..<centerPointOfTeeNGreen.count{
+                centerPointOfTeeNGreenWithPar.append((tee: centerPointOfTeeNGreen[i].tee, fairway: centerPointOfTeeNGreen[i].fairway, green: centerPointOfTeeNGreen[i].green, par: numberOfHoles[i].par))
+            }
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreenWithPar)
+        }
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
     }
     func calculateTagWithClubNumber(){

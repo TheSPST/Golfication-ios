@@ -232,7 +232,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     }
     
     // MARK: - Tableview Methods
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if fromRoundsPlayed{
@@ -295,34 +295,34 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-            let header = UIView()
-            header.backgroundColor = UIColor.lightGray.withAlphaComponent(0.10)
+        let header = UIView()
+        header.backgroundColor = UIColor.lightGray.withAlphaComponent(0.10)
         
-            let label = UILabel()
+        let label = UILabel()
         
-            label.frame = CGRect(x: 10, y: 0, width: 200, height: 44.0)
-            label.text = "Hole - \(self.holeParStrokesG[section].hole+1) Par \(self.holeParStrokesG[section].par)"
-            label.textColor = UIColor.glfBluegreen
-            header.addSubview(label)
+        label.frame = CGRect(x: 10, y: 0, width: 200, height: 44.0)
+        label.text = "Hole - \(self.holeParStrokesG[section].hole+1) Par \(self.holeParStrokesG[section].par)"
+        label.textColor = UIColor.glfBluegreen
+        header.addSubview(label)
         
-            if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
-                viewWithTag.removeFromSuperview()
-            }
-            let headerFrame = self.swingTableView.frame.size
+        if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
+            viewWithTag.removeFromSuperview()
+        }
+        let headerFrame = self.swingTableView.frame.size
         
-            let theImageView = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 13, width: 18, height: 18))
-            theImageView.image = UIImage(named: "Chevron-Dn-Wht")
-            theImageView.tag = kHeaderSectionTag + section
+        let theImageView = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 13, width: 18, height: 18))
+        theImageView.image = UIImage(named: "Chevron-Dn-Wht")
+        theImageView.tag = kHeaderSectionTag + section
         
-            header.addSubview(theImageView)
+        header.addSubview(theImageView)
         
-            // make headers touchable
-            header.tag = section
-            let headerTapGesture = UITapGestureRecognizer()
-            headerTapGesture.addTarget(self, action: #selector(self.sectionHeaderWasTouched(_:)))
-            header.addGestureRecognizer(headerTapGesture)
+        // make headers touchable
+        header.tag = section
+        let headerTapGesture = UITapGestureRecognizer()
+        headerTapGesture.addTarget(self, action: #selector(self.sectionHeaderWasTouched(_:)))
+        header.addGestureRecognizer(headerTapGesture)
         
-            return header
+        return header
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -342,7 +342,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         }
         if let swingDetails = tempArray1[index] as? NSMutableDictionary{
             if fromRoundsPlayed{
-               cell.lblTitle.text = "Shot \(swingDetails.value(forKey: "shotNum") as! Int)"
+                cell.lblTitle.text = "Shot \(swingDetails.value(forKey: "shotNum") as! Int)"
                 let strkGain = holeParStrokesG[indexPath.section].strkG[indexPath.row]
                 var color = UIColor.glfRosyPink
                 if strkGain.contains("+"){
@@ -353,7 +353,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
                 let dict1: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : color]
                 let dict2: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfFlatBlue]
                 let dict3: [NSAttributedStringKey : Any] = [NSAttributedStringKey.foregroundColor : UIColor.glfWarmGrey]
-
+                
                 let attributedText = NSMutableAttributedString()
                 if let club = swingDetails.value(forKey: "club") as? String{
                     attributedText.append(NSAttributedString(string: "\(club == "" ? "Driver":BackgroundMapStats.getClubName(club: club))", attributes: dict2))
@@ -397,16 +397,31 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var sectioncount = 0
-        for i in 0..<(indexPath.section == 0 ? 1:indexPath.section){
-            sectioncount += self.holeParStrokesG[i].strkG.count
+        if fromRoundsPlayed{
+            var sectioncount = 0
+            for i in 0..<(indexPath.section == 0 ? 1:indexPath.section){
+                sectioncount += self.holeParStrokesG[i].strkG.count
+            }
+            sectioncount += indexPath.row
+            if self.holeParStrokesG.count == 1{
+                sectioncount = indexPath.row
+            }
+            if let swingDetails = tempArray1[sectioncount] as? NSMutableDictionary{
+                if let club = swingDetails.value(forKey: "club") as? String{
+                    if club != "Pu"{
+                        self.moveToViewController(at: sectioncount)
+                        self.swingDetailsView.isHidden = true
+                    }
+                }
+            }
         }
-        sectioncount += indexPath.row
-        if let swingDetails = tempArray1[sectioncount] as? NSMutableDictionary{
-            if let club = swingDetails.value(forKey: "club") as? String{
-                if club != "Pu"{
-                    self.moveToViewController(at: sectioncount)
-                    self.swingDetailsView.isHidden = true
+        else{
+            if let swingDetails = tempArray1[indexPath.item] as? NSMutableDictionary{
+                if let club = swingDetails.value(forKey: "club") as? String{
+                    if club != "Pu"{
+                        self.moveToViewController(at: indexPath.item)
+                        self.swingDetailsView.isHidden = true
+                    }
                 }
             }
         }
