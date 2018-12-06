@@ -182,7 +182,7 @@ class ARPlanViewController: UIViewController {
         lbl.textColor = UIColor.white
         lbl.textAlignment = .left
         lbl.numberOfLines = 0
-        lbl.text = "\(text) \(Int(distance*YARD)) yard"
+        lbl.text = "\(text) \(Int(distance*Constants.YARD)) yard"
         boxView.addSubview(lbl)
 //        boxView.sizeToFit()
         self.viewFeatures.append(boxView)

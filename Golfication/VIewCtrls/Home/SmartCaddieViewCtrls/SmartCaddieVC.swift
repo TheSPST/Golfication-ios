@@ -463,7 +463,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                             if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
                                 clubData.distance = distance
                                 if(Constants.distanceFilter == 1){
-                                    clubData.distance = distance/YARD
+                                    clubData.distance = distance/Constants.YARD
                                 }
                             }
                             var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double

@@ -531,9 +531,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                         chip.und = (chipping[i] as AnyObject).object(forKey:"und") as? Int
                         chip.green = (chipping[i] as AnyObject).object(forKey:"green") as? Bool
                         if(Constants.distanceFilter == 1){
-                            chip.proximityX = chip.proximityX/YARD
-                            chip.proximityY = chip.proximityY/YARD
-                            chip.distance = chip.distance/YARD
+                            chip.proximityX = chip.proximityX/Constants.YARD
+                            chip.proximityY = chip.proximityY/Constants.YARD
+                            chip.distance = chip.distance/Constants.YARD
                         }
                         self.chippingArray.append(chip)
                     }
@@ -557,7 +557,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                         }
 
                         if(Constants.distanceFilter == 1){
-                            hole.distance = hole.distance/YARD
+                            hole.distance = hole.distance/Constants.YARD
                         }
                         if let fHit = (holes[i] as AnyObject).object(forKey:"fairway") as? String{
                             hole.hitMiss = fHit
@@ -576,9 +576,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                         chip.und = (chipping[i] as AnyObject).object(forKey:"und") as? Int
                         chip.green = (chipping[i] as AnyObject).object(forKey:"green") as? Bool
                         if(Constants.distanceFilter == 1){
-                            chip.proximityX = chip.proximityX/YARD
-                            chip.proximityY = chip.proximityY/YARD
-                            chip.distance = chip.distance/YARD
+                            chip.proximityX = chip.proximityX/Constants.YARD
+                            chip.proximityY = chip.proximityY/Constants.YARD
+                            chip.distance = chip.distance/Constants.YARD
                         }
                         self.sandArray.append(chip)
                     }
@@ -594,9 +594,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                         chip.und = (chipping[i] as AnyObject).object(forKey:"und") as? Int
                         chip.green = (chipping[i] as AnyObject).object(forKey:"green") as? Bool
                         if(Constants.distanceFilter == 1){
-                            chip.proximityX = chip.proximityX/YARD
-                            chip.proximityY = chip.proximityY/YARD
-                            chip.distance = chip.distance/YARD
+                            chip.proximityX = chip.proximityX/Constants.YARD
+                            chip.proximityY = chip.proximityY/Constants.YARD
+                            chip.distance = chip.distance/Constants.YARD
                         }
                         self.appraochArray.append(chip)
                     }

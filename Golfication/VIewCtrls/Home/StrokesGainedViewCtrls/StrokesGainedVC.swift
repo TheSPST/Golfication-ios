@@ -509,7 +509,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                             if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
                                 clubData.distance = distance
                                 if(Constants.distanceFilter == 1){
-                                    clubData.distance = distance/YARD
+                                    clubData.distance = distance/Constants.YARD
                                 }
                             }
                             var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
@@ -529,7 +529,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                             if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
                                 clubData.proximity = proximity
                                 if(Constants.distanceFilter == 1){
-                                    clubData.proximity = proximity/YARD
+                                    clubData.proximity = proximity/Constants.YARD
                                 }
                                 
                             }

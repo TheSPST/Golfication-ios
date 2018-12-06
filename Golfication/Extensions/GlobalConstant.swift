@@ -27,7 +27,7 @@ struct Constants{
     static var handicap = ""
     static var trial = false
     static let catagoryWise = ["Off the Tee","Approach","Around The Green","Putting"]
-
+    static let YARD:Double = 1.09361
     // MARK: GolfBagTabsVC
     static var syncdArray = NSMutableArray()
     static var tagClubNum = [(tag:Int, club: Int, clubName: String)]()

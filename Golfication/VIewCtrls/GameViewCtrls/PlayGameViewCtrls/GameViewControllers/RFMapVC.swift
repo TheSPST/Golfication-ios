@@ -1117,7 +1117,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
         var suffix = "meter"
         if(Constants.distanceFilter != 1){
-            distance = distance*YARD
+            distance = distance*Constants.YARD
             suffix = "yard"
         }
         Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[self.holeIndex].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0)
@@ -2475,7 +2475,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].fairway)
         self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].green)
         self.updateWindSpeed(latLng: positionsOfDotLine[1], indexToUpdate: indexToUpdate)
-        let distance = GMSGeometryDistance(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!) * YARD
+        let distance = GMSGeometryDistance(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!) * Constants.YARD
         let heading = GMSGeometryHeading(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!)
         if(distance < 250){
             positionsOfDotLine[1] = GMSGeometryOffset(self.positionsOfDotLine.last!, -1, heading)
@@ -2546,15 +2546,15 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         }else{
                             data = self.courseData.holeGreenDataArr[indexToUpdate]
                         }
-                        var distanceF = GMSGeometryDistance(data.front,self.userLocationForClub!) * YARD
-                        var distanceC = GMSGeometryDistance(data.center,self.userLocationForClub!) * YARD
-                        var distanceE = GMSGeometryDistance(data.back,self.userLocationForClub!) * YARD
+                        var distanceF = GMSGeometryDistance(data.front,self.userLocationForClub!) * Constants.YARD
+                        var distanceC = GMSGeometryDistance(data.center,self.userLocationForClub!) * Constants.YARD
+                        var distanceE = GMSGeometryDistance(data.back,self.userLocationForClub!) * Constants.YARD
                         var suffix = "yd"
                         if(Constants.distanceFilter == 1){
                             suffix = "m"
-                            distanceF = distanceF/YARD
-                            distanceC = distanceC/YARD
-                            distanceE = distanceE/YARD
+                            distanceF = distanceF/Constants.YARD
+                            distanceC = distanceC/Constants.YARD
+                            distanceE = distanceE/Constants.YARD
                         }
                         self.lblFrontDist.text = "\(Int(distanceF)) \(suffix)"
                         self.lblCenterDist.text = "\(Int(distanceC)) \(suffix)"
@@ -2605,7 +2605,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         var clubName = String()
         var distance = distance
         if(Constants.distanceFilter == 1){
-            distance = distance/YARD
+            distance = distance/Constants.YARD
         }
         
         let dict1: [NSAttributedStringKey : Any] = [
@@ -2721,14 +2721,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             var markerClub1 = String()
             
             suggestedMarker1.map = nil
-            let dist1 = GMSGeometryDistance(position.first!, position[1]) * YARD
-            let dist = GMSGeometryDistance(position[1], position.last!) * YARD
+            let dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
+            let dist = GMSGeometryDistance(position[1], position.last!) * Constants.YARD
             
             markerText1 = "  \(Int(dist1)) yd "
             markerText = "  \(Int(dist == 0 ? 1:dist)) yd "
             if(Constants.distanceFilter == 1){
-                markerText = "  \(Int((dist < YARD ? YARD:dist)/(YARD))) m "
-                markerText1 = "  \(Int(dist1/(YARD))) m "
+                markerText = "  \(Int((dist < Constants.YARD ? Constants.YARD:dist)/(Constants.YARD))) m "
+                markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
             }
             markerClub1 = clubReco(dist: dist1, lie: "T")
             markerClub = clubReco(dist: dist, lie: "O")

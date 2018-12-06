@@ -119,7 +119,6 @@ class UserMarker:UIView{
     }
 }
 
-let YARD:Double = 1.09361
 var Timestamp: Int64 {
     return Int64(NSDate().timeIntervalSince1970*1000)
 }
@@ -1533,7 +1532,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
         var suffix = "meter"
         if(Constants.distanceFilter != 1){
-            distance = distance*YARD
+            distance = distance*Constants.YARD
             suffix = "yard"
         }
         Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[self.holeIndex].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking,isHole: self.holeOutFlag)
@@ -1968,7 +1967,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 positionsOfCurveLines.append(positionsOfDotLine[1])
                 
                 let heading = GMSGeometryHeading(positionsOfDotLine[1], positionsOfDotLine[2])
-                let dist = GMSGeometryDistance(positionsOfDotLine[1], positionsOfDotLine[2])*YARD
+                let dist = GMSGeometryDistance(positionsOfDotLine[1], positionsOfDotLine[2])*Constants.YARD
                 var midPoint = GMSGeometryOffset(positionsOfDotLine[1], GMSGeometryDistance(positionsOfDotLine[1], positionsOfDotLine[2])*0.7, heading)
                 if(dist<201) && Int(dist)>0{
                     for i in 1..<Int(dist){
@@ -2024,7 +2023,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
                 self.uploadStats(shot: shotCount,clubName:shotClub, playerKey: self.selectedUserId)
                 if(!self.positionsOfDotLine.isEmpty){
-                    if(GMSGeometryDistance(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!) * YARD) < 100{
+                    if(GMSGeometryDistance(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!) * Constants.YARD) < 100{
                         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.allowAnimatedContent, animations: {
                             self.btnHoleOut.isHidden = false
                             self.btnHoleoutLbl.isHidden = false
@@ -2110,7 +2109,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 self.playerShotsArray = [NSMutableDictionary]()
                                 
                                 if(self.scoring[self.holeIndex].par>3){
-                                    drivingDistance = GMSGeometryDistance(self.positionsOfCurveLines[shot-1], self.positionsOfCurveLines[shot])*YARD
+                                    drivingDistance = GMSGeometryDistance(self.positionsOfCurveLines[shot-1], self.positionsOfCurveLines[shot])*Constants.YARD
                                     self.playerArrayWithDetails.setObject(drivingDistance.rounded(toPlaces: 2), forKey: "drivingDistance" as NSCopying)
                                 }
                                 if(!self.holeOutFlag){
@@ -2322,7 +2321,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
                 shotCount = shotCount+1
                 if(!self.positionsOfDotLine.isEmpty){
-                    if(GMSGeometryDistance(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!) * YARD) < 100{
+                    if(GMSGeometryDistance(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!) * Constants.YARD) < 100{
                         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.allowAnimatedContent, animations: {
                             self.btnHoleOut.isHidden = false
                             self.btnHoleoutLbl.isHidden = false
@@ -2991,14 +2990,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 var distanceInYrd = shotDetails[newJ].distance
                 var suffix = "yd"
                 if(Constants.distanceFilter == 1){
-                    distanceInYrd = shotDetails[newJ].distance/YARD
+                    distanceInYrd = shotDetails[newJ].distance/Constants.YARD
                     suffix = "m"
                 }
                 if(shotDetails[newJ].swingScore == "G" && shotDetails[newJ].endingPoint == "G"){
                     distanceInYrd = 3 * distanceInYrd
                     suffix = "ft"
                     if(Constants.distanceFilter == 1){
-                        distanceInYrd = shotDetails[newJ].distance/(YARD)
+                        distanceInYrd = shotDetails[newJ].distance/(Constants.YARD)
                         suffix = "m"
                     }
                 }
@@ -3039,14 +3038,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                     suffix = "yd"
                     if(Constants.distanceFilter == 1){
-                        remainingDistance = remainingDistance/YARD
+                        remainingDistance = remainingDistance/Constants.YARD
                         suffix = "m"
                     }
                     //                    if(shotDetails[newJ].swingScore == "G" && shotDetails[newJ].endingPoint == "G"){
                     //                        remainingDistance = 3 * distanceInYrd
                     //                        suffix = "ft"
                     //                        if(distanceFilter == 1){
-                    //                            remainingDistance = shotDetails[newJ].distance/(YARD)
+                    //                            remainingDistance = shotDetails[newJ].distance/(Constants.YARD)
                     //                            suffix = "m"
                     //                        }
                     //                    }
@@ -3682,7 +3681,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             ref.child("matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(playerId)/").updateChildValues(faiDict as! [AnyHashable : Any])
             let drivDistDict = NSMutableDictionary()
             if(self.scoring[self.holeIndex].par>3){
-                let drivingDistance = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines[shot])*YARD
+                let drivingDistance = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines[shot])*Constants.YARD
                 drivDistDict.setObject(drivingDistance.rounded(toPlaces: 2), forKey: "drivingDistance" as NSCopying)
             }
             ref.child("matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(playerId)/").updateChildValues(drivDistDict as! [AnyHashable : Any])
@@ -3758,27 +3757,27 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(distanceBwHole1 == 0) && !positionsOfDotLine.isEmpty{
             distanceBwHole1 = GMSGeometryDistance(positionsOfCurveLines[shot], positionsOfDotLine.last!)
         }
-        shotDictionary.setObject((distanceBwShots*YARD).rounded(toPlaces:2), forKey: "distance" as NSCopying)
-        shotDictionary.setObject((distanceBwHole0*YARD).rounded(toPlaces:2), forKey: "distanceToHole0" as NSCopying)
-        shotDictionary.setObject((distanceBwHole1*YARD).rounded(toPlaces:2), forKey: "distanceToHole1" as NSCopying)
+        shotDictionary.setObject((distanceBwShots*Constants.YARD).rounded(toPlaces:2), forKey: "distance" as NSCopying)
+        shotDictionary.setObject((distanceBwHole0*Constants.YARD).rounded(toPlaces:2), forKey: "distanceToHole0" as NSCopying)
+        shotDictionary.setObject((distanceBwHole1*Constants.YARD).rounded(toPlaces:2), forKey: "distanceToHole1" as NSCopying)
         start = BackgroundMapStats.setStartingEndingChar(str:start)
         end = BackgroundMapStats.setStartingEndingChar(str:end)
         
         if(end == "G"){
-            end = "G\(Int((distanceBwHole1*YARD*3).rounded()))"
+            end = "G\(Int((distanceBwHole1*Constants.YARD*3).rounded()))"
         }else{
-            end = "\(end)\(Int((distanceBwHole1*YARD).rounded()))"
+            end = "\(end)\(Int((distanceBwHole1*Constants.YARD).rounded()))"
         }
         if(start == "G"){
-            start = "G\(Int((distanceBwHole0*YARD*3).rounded()))"
+            start = "G\(Int((distanceBwHole0*Constants.YARD*3).rounded()))"
         }else{
-            start = "\(start)\(Int((distanceBwHole0*YARD).rounded()))"
+            start = "\(start)\(Int((distanceBwHole0*Constants.YARD).rounded()))"
         }
-        if(Int((distanceBwHole0*YARD).rounded()) == 0){
+        if(Int((distanceBwHole0*Constants.YARD).rounded()) == 0){
             start = "G1"
-        }else if(Int((distanceBwHole0*YARD).rounded()) > 600){
+        }else if(Int((distanceBwHole0*Constants.YARD).rounded()) > 600){
             start = "\(start)600"
-        }else if (Int((distanceBwHole0*YARD).rounded()) < 100) && shot == 0{
+        }else if (Int((distanceBwHole0*Constants.YARD).rounded()) < 100) && shot == 0{
             start = "\(start)100"
         }
         debugPrint(start)
@@ -3943,7 +3942,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
                 let attributedText = NSMutableAttributedString()
                 
-                var distanceInYrd = distance * YARD
+                var distanceInYrd = distance * Constants.YARD
                 var suffix = "yd"
                 let isLatLng1InsideGreen = BackgroundMapStats.findPositionOfPointInside(position: latLng1, whichFeature: courseData.numberOfHoles[holeIndex].green)
                 let isLatLng2InsideGreen = BackgroundMapStats.findPositionOfPointInside(position: latLng2, whichFeature: courseData.numberOfHoles[holeIndex].green)
@@ -4099,7 +4098,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         if(!holeOutFlag){
             if(BackgroundMapStats.findPositionOfPointInside(position: position.first!, whichFeature:courseData.numberOfHoles[self.holeIndex].green)){
-                let distance = GMSGeometryDistance(position.first!, position[1]) * YARD * 3
+                let distance = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD * 3
                 markerText = "  \(Int(distance)) ft "
                 if(Constants.distanceFilter == 1){
                     let distance = GMSGeometryDistance(position.first!, position.last!)
@@ -4116,18 +4115,18 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     let fullName = BackgroundMapStats.returnLandedOnFullName(data: lie)
                     btnForSuggMarkOffCourse.lblTitle.text = fullName.0
                     suggestedMarkerOffCourse.iconView = btnForSuggMarkOffCourse
-                    suggestedMarkerOffCourse.position = GMSGeometryOffset(position.first!, distance/(2*YARD*3), GMSGeometryHeading(position[0], position[1]))
+                    suggestedMarkerOffCourse.position = GMSGeometryOffset(position.first!, distance/(2*Constants.YARD*3), GMSGeometryHeading(position[0], position[1]))
                     suggestedMarkerOffCourse.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarkerOffCourse.map = self.mapView
                     btnForSuggMarkOffCourse.lblSubtitle.attributedText = NSAttributedString(string: markerText, attributes: dict2)
                 }
             }else{
-                let distance = GMSGeometryDistance(position.first!, position.last!) * YARD
+                let distance = GMSGeometryDistance(position.first!, position.last!) * Constants.YARD
                 if(distance > 100){
-                    let dist1 = GMSGeometryDistance(position.first!, position[1]) * YARD
+                    let dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
                     markerText1 = "  \(Int(dist1)) yd "
                     if(Constants.distanceFilter == 1){
-                        markerText1 = "  \(Int(dist1/(YARD))) m "
+                        markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
                     }
                     let lie = callFindPositionInsideFeature(position: position[1])
                     if(self.shotCount != 0){
@@ -4148,14 +4147,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     let fullName = BackgroundMapStats.returnLandedOnFullName(data: lie)
                     btnForSuggMarkOffCourse.lblTitle.text = fullName.0
                     suggestedMarkerOffCourse.iconView = btnForSuggMarkOffCourse
-                    suggestedMarkerOffCourse.position = GMSGeometryOffset(position.first!, dist1/(2*YARD), GMSGeometryHeading(position.first!, position[1]))
+                    suggestedMarkerOffCourse.position = GMSGeometryOffset(position.first!, dist1/(2*Constants.YARD), GMSGeometryHeading(position.first!, position[1]))
                     suggestedMarkerOffCourse.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarkerOffCourse.map = self.mapView
                 }else{
-                    let distance = GMSGeometryDistance(position[0], position[1]) * YARD
+                    let distance = GMSGeometryDistance(position[0], position[1]) * Constants.YARD
                     markerText = " \(Int(distance.rounded())) yd"
                     if(Constants.distanceFilter == 1){
-                        markerText = " \(Int((distance/YARD).rounded())) m"
+                        markerText = " \(Int((distance/Constants.YARD).rounded())) m"
                     }
                     if(self.shotCount != 0){
                         markerClub = " \(clubReco(dist: distance, lie: "O"))"
@@ -4176,7 +4175,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     let fullName = BackgroundMapStats.returnLandedOnFullName(data: lie)
                     btnForSuggMarkOffCourse.lblTitle.text = fullName.0
                     suggestedMarkerOffCourse.iconView = btnForSuggMarkOffCourse
-                    suggestedMarkerOffCourse.position = GMSGeometryOffset(position[0], distance/(2*YARD), GMSGeometryHeading(position[0], position[1]))
+                    suggestedMarkerOffCourse.position = GMSGeometryOffset(position[0], distance/(2*Constants.YARD), GMSGeometryHeading(position[0], position[1]))
                     suggestedMarkerOffCourse.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarkerOffCourse.map = self.mapView
                 }
@@ -4472,7 +4471,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             NSAttributedStringKey.foregroundColor : UIColor.white]
         if(!holeOutFlag){
             if(BackgroundMapStats.findPositionOfPointInside(position: position.first!, whichFeature:courseData.numberOfHoles[self.holeIndex].green)){
-                let distance = GMSGeometryDistance(position.first!, position.last!) * YARD * 3
+                let distance = GMSGeometryDistance(position.first!, position.last!) * Constants.YARD * 3
                 markerText = "  \(Int(distance)) ft "
                 if(Constants.distanceFilter == 1){
                     let distance = GMSGeometryDistance(position.first!, position.last!)
@@ -4491,22 +4490,22 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     attributedText.append(NSAttributedString(string: markerText, attributes: dict2))
                     btnForSuggMark1.setAttributedTitle(attributedText, for: .normal)
                     suggestedMarker1.iconView = btnForSuggMark1
-                    suggestedMarker1.position = GMSGeometryOffset(position[0], distance/(6*YARD), GMSGeometryHeading(position[1], position.last!))
+                    suggestedMarker1.position = GMSGeometryOffset(position[0], distance/(6*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
                     suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker1.map = self.mapView
                     suggestedMarker2.map = nil
                 }
             }else{
-                let distance = GMSGeometryDistance(position.first!, position.last!) * YARD
+                let distance = GMSGeometryDistance(position.first!, position.last!) * Constants.YARD
                 if(distance > 100){
-                    let dist1 = GMSGeometryDistance(position.first!, position[1]) * YARD
-                    let dist = GMSGeometryDistance(position[1], position.last!) * YARD
+                    let dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
+                    let dist = GMSGeometryDistance(position[1], position.last!) * Constants.YARD
                     
                     markerText1 = "  \(Int(dist1)) yd "
                     markerText = "  \(Int(dist)) yd "
                     if(Constants.distanceFilter == 1){
-                        markerText = "  \(Int(dist/(YARD))) m "
-                        markerText1 = "  \(Int(dist1/(YARD))) m "
+                        markerText = "  \(Int(dist/(Constants.YARD))) m "
+                        markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
                     }
                     let lie = callFindPositionInsideFeature(position: position[1])
                     if(self.shotCount != 0){
@@ -4537,7 +4536,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     btnForSuggMark1.setAttributedTitle(attributedText1, for: .normal)
                     //                    debugPrint("str2: \(attributedText1.string)")
                     suggestedMarker1.iconView = btnForSuggMark1
-                    suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/(2*YARD), GMSGeometryHeading(position.first!, position[1]))
+                    suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/(2*Constants.YARD), GMSGeometryHeading(position.first!, position[1]))
                     suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker1.map = !isTracking ? self.mapView : nil
                     let attributedText = NSMutableAttributedString()
@@ -4547,14 +4546,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     
                     //                    debugPrint("str1: \(attributedText.string)")
                     suggestedMarker2.iconView = btnForSuggMark2
-                    suggestedMarker2.position = GMSGeometryOffset(position[1], dist/(2*YARD), GMSGeometryHeading(position[1], position.last!))
+                    suggestedMarker2.position = GMSGeometryOffset(position[1], dist/(2*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
                     suggestedMarker2.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker2.map = !isTracking ? self.mapView : nil
                 }else{
-                    let distance = GMSGeometryDistance(position[0], position.last!) * YARD
+                    let distance = GMSGeometryDistance(position[0], position.last!) * Constants.YARD
                     markerText = " \(Int(distance.rounded())) yd"
                     if(Constants.distanceFilter == 1){
-                        markerText = " \(Int((distance/YARD).rounded())) m"
+                        markerText = " \(Int((distance/Constants.YARD).rounded())) m"
                     }
                     if(self.shotCount != 0){
                         markerClub = " \(clubReco(dist: distance, lie: "O"))"
@@ -4572,7 +4571,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     attributedText.append(NSAttributedString(string: markerText, attributes: dict2))
                     btnForSuggMark1.setAttributedTitle(attributedText, for: .normal)
                     suggestedMarker1.iconView = btnForSuggMark1
-                    suggestedMarker1.position = GMSGeometryOffset(position[0], distance/(2*YARD), GMSGeometryHeading(position[1], position.last!))
+                    suggestedMarker1.position = GMSGeometryOffset(position[0], distance/(2*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
                     suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker1.map = !isTracking ? self.mapView : nil
                     suggestedMarker2.map = nil
@@ -4593,7 +4592,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     path.add(positions[i])
                 }
             }
-            let distance = GMSGeometryDistance(positions.first!, positions.last!) * YARD
+            let distance = GMSGeometryDistance(positions.first!, positions.last!) * Constants.YARD
             markers[1].map = self.mapView
             if(distance < 100) && (isOnCourse){
                 if(positions.count == 3){
@@ -4756,7 +4755,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             let fPoint = GMSGeometryOffset(courseData.centerPointOfTeeNGreen[indexToUpdate].green, 10, heading)
             self.positionsOfDotLine.append(fPoint)
         }else{
-            let dist = GMSGeometryDistance(self.positionsOfDotLine[0], courseData.centerPointOfTeeNGreen[indexToUpdate].green)*YARD
+            let dist = GMSGeometryDistance(self.positionsOfDotLine[0], courseData.centerPointOfTeeNGreen[indexToUpdate].green)*Constants.YARD
             self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].fairway)
             if(dist > 250){
                 self.positionsOfDotLine[1] = GMSGeometryOffset(self.positionsOfDotLine[0], 220, GMSGeometryHeading(self.positionsOfDotLine[0], courseData.centerPointOfTeeNGreen[indexToUpdate].green))
@@ -4781,7 +4780,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if(self.userLocationForClub != nil) && (self.selectedUserId == Auth.auth().currentUser!.uid) && isOnCourse{
             self.positionsOfDotLine[0] = self.userLocationForClub!
-            let dist = GMSGeometryDistance(self.positionsOfDotLine[0], courseData.centerPointOfTeeNGreen[indexToUpdate].green)*YARD
+            let dist = GMSGeometryDistance(self.positionsOfDotLine[0], courseData.centerPointOfTeeNGreen[indexToUpdate].green)*Constants.YARD
             if(dist > 250){
                 self.positionsOfDotLine[1] = GMSGeometryOffset(self.positionsOfDotLine[0], 250, GMSGeometryHeading(self.positionsOfDotLine[0], courseData.centerPointOfTeeNGreen[indexToUpdate].green))
             }
@@ -4895,7 +4894,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if(!holeOutFlag){
                     
                     positionsOfDotLine[0] = positionsOfCurveLines.last!
-                    let dist = GMSGeometryDistance(positionsOfDotLine.first!, positionsOfDotLine.last!) * YARD
+                    let dist = GMSGeometryDistance(positionsOfDotLine.first!, positionsOfDotLine.last!) * Constants.YARD
                     let heading = GMSGeometryHeading(positionsOfDotLine.first!, positionsOfDotLine.last!)
                     var midPoint = GMSGeometryOffset(positionsOfDotLine.first!, GMSGeometryDistance(positionsOfDotLine.first!, positionsOfDotLine.last!)*0.7, heading)
                     if(dist<201 && Int(dist) > 0){
@@ -4921,7 +4920,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     if(!isOnCourse){
                         self.btnTrackShot.setImage(#imageLiteral(resourceName: "track_Shot"), for: .normal)
                     }
-                    if(GMSGeometryDistance(self.positionsOfDotLine[1], self.positionsOfDotLine.last!) * YARD) < 100{
+                    if(GMSGeometryDistance(self.positionsOfDotLine[1], self.positionsOfDotLine.last!) * Constants.YARD) < 100{
                         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.allowAnimatedContent, animations: {
                             self.btnHoleOut.isHidden = self.isOnCourse
                             self.btnSelectClubs.isHidden = false
@@ -5103,15 +5102,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 }
                                 
                                 let data = self.setFronBackCenter(ind: indexToUpdate, currentLocation: self.userLocationForClub!)
-                                var distanceF = GMSGeometryDistance(data.front,self.userLocationForClub!) * YARD
-                                var distanceC = GMSGeometryDistance(data.center,self.userLocationForClub!) * YARD
-                                var distanceE = GMSGeometryDistance(data.back,self.userLocationForClub!) * YARD
+                                var distanceF = GMSGeometryDistance(data.front,self.userLocationForClub!) * Constants.YARD
+                                var distanceC = GMSGeometryDistance(data.center,self.userLocationForClub!) * Constants.YARD
+                                var distanceE = GMSGeometryDistance(data.back,self.userLocationForClub!) * Constants.YARD
                                 var suffix = "yd"
                                 if(Constants.distanceFilter == 1){
                                     suffix = "m"
-                                    distanceF = distanceF/YARD
-                                    distanceC = distanceC/YARD
-                                    distanceE = distanceE/YARD
+                                    distanceF = distanceF/Constants.YARD
+                                    distanceC = distanceC/Constants.YARD
+                                    distanceE = distanceE/Constants.YARD
                                 }
                                 self.lblFrontDistance.text = "\(Int(distanceF)) \(suffix)"
                                 self.lblDistance.text = "\(Int(distanceC)) \(suffix)"
@@ -5235,7 +5234,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if data.isSelected && data.id == "jpSgWiruZuOnWybYce55YDYGXP62" && self.positionsOfDotLine.count>2{
                     self.isBotTurn = true
                     self.btnTrackShot.isEnabled = false
-                    let distance = GMSGeometryDistance(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!) * YARD
+                    let distance = GMSGeometryDistance(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!) * Constants.YARD
                     if(self.scoring[self.holeIndex].par == 3){
                         self.botPlayerShotForPar3(gir:0,distance:distance, distanceFairwayOrRough: self.distanceFairway)
                         if(distance > 350){
@@ -5429,7 +5428,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnActionTrackShots(self.btnTrackShot)
             }
             if(!holeOutFlag){
-                let newDistance = GMSGeometryDistance(shotPoint1, positionsOfDotLine.last!) * YARD
+                let newDistance = GMSGeometryDistance(shotPoint1, positionsOfDotLine.last!) * Constants.YARD
                 if(BackgroundMapStats.findPositionOfPointInside(position: shotPoint1, whichFeature: courseData.numberOfHoles[holeIndex].green)){
                     var end = "G\(Int(floor(newDistance)))"
                     end = end == "G0" ? "G1" : end
@@ -5481,7 +5480,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 debugPrint("Distance:\(distance)")
                 debugPrint("MaxDrive : \(self.maxDrive)")
                 debugPrint("AvgDrive\(self.avgDrive)")
-                nextPoint = GMSGeometryOffset(self.positionsOfDotLine.first!, distance/YARD - shotDist, headingRandom)
+                nextPoint = GMSGeometryOffset(self.positionsOfDotLine.first!, distance/Constants.YARD - shotDist, headingRandom)
                 
                 if(random <= self.fairwayHitPerc){
                     fairway = "H"
@@ -5607,10 +5606,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }else{
                     landOnFairwayDict = distanceRough
                 }
-                let newDistance = GMSGeometryDistance(nextPoint, positionsOfDotLine.last!) * YARD
+                let newDistance = GMSGeometryDistance(nextPoint, positionsOfDotLine.last!) * Constants.YARD
                 self.botPlayerShotForPar3(gir: girWithF, distance: newDistance, distanceFairwayOrRough: landOnFairwayDict)
             }else{
-                let newDistance = GMSGeometryDistance(nextPoint, positionsOfDotLine.last!) * YARD * 3
+                let newDistance = GMSGeometryDistance(nextPoint, positionsOfDotLine.last!) * Constants.YARD * 3
                 let end = "G\(Int(floor(newDistance)))"
                 self.botStrokesGained = Constants.strokesGainedDict[Constants.skrokesGainedFilter].value(forKey:end ) as! Double
                 getPuttsPoints(strkGained: botStrokesGained-botSGPutting, lastCoord: nextPoint, holeCoord: positionsOfDotLine.last!)
@@ -6430,7 +6429,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     gir = false
                     playerShotsArray = [NSMutableDictionary]()
                     if(self.scoring[holeIndex].par>3){
-                        drivingDistance = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines[shot])*YARD
+                        drivingDistance = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines[shot])*Constants.YARD
                         playerArrayWithDetails.setObject(drivingDistance.rounded(toPlaces: 2), forKey: "drivingDistance" as NSCopying)
                     }
                     if(self.scoring[holeIndex].par > 3){
@@ -6717,27 +6716,27 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
             }
         }
-        shotDictionary.setObject((distanceBwShots*YARD).rounded(toPlaces:2), forKey: "distance" as NSCopying)
-        shotDictionary.setObject((distanceBwHole0*YARD).rounded(toPlaces:2), forKey: "distanceToHole0" as NSCopying)
-        shotDictionary.setObject((distanceBwHole1*YARD).rounded(toPlaces:2), forKey: "distanceToHole1" as NSCopying)
+        shotDictionary.setObject((distanceBwShots*Constants.YARD).rounded(toPlaces:2), forKey: "distance" as NSCopying)
+        shotDictionary.setObject((distanceBwHole0*Constants.YARD).rounded(toPlaces:2), forKey: "distanceToHole0" as NSCopying)
+        shotDictionary.setObject((distanceBwHole1*Constants.YARD).rounded(toPlaces:2), forKey: "distanceToHole1" as NSCopying)
         start = BackgroundMapStats.setStartingEndingChar(str:start)
         end = BackgroundMapStats.setStartingEndingChar(str:end)
         
         if(end == "G"){
-            end = "G\(Int((distanceBwHole1*YARD*3).rounded()))"
+            end = "G\(Int((distanceBwHole1*Constants.YARD*3).rounded()))"
         }else{
-            end = "\(end)\(Int((distanceBwHole1*YARD).rounded()))"
+            end = "\(end)\(Int((distanceBwHole1*Constants.YARD).rounded()))"
         }
         if(start == "G"){
-            start = "G\(Int((distanceBwHole0*YARD*3).rounded()))"
+            start = "G\(Int((distanceBwHole0*Constants.YARD*3).rounded()))"
         }else{
-            start = "\(start)\(Int((distanceBwHole0*YARD).rounded()))"
+            start = "\(start)\(Int((distanceBwHole0*Constants.YARD).rounded()))"
         }
-        if(Int((distanceBwHole0*YARD).rounded()) == 0){
+        if(Int((distanceBwHole0*Constants.YARD).rounded()) == 0){
             start = "G1"
-        }else if(Int((distanceBwHole0*YARD).rounded()) > 600){
+        }else if(Int((distanceBwHole0*Constants.YARD).rounded()) > 600){
             start = "\(start)600"
-        }else if (Int((distanceBwHole0*YARD).rounded()) < 100) && shotCount == 0{
+        }else if (Int((distanceBwHole0*Constants.YARD).rounded()) < 100) && shotCount == 0{
             start = "\(start)100"
         }
         var numberOfPenalty = 0
@@ -6762,7 +6761,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         var approachDistance = 0.0
         let appDistDict = NSMutableDictionary()
         for i in 0..<positionsOfCurveLines.count{
-            approachDistance = GMSGeometryDistance(positionsOfCurveLines[i],courseData.centerPointOfTeeNGreen[holeIndex].green)*YARD
+            approachDistance = GMSGeometryDistance(positionsOfCurveLines[i],courseData.centerPointOfTeeNGreen[holeIndex].green)*Constants.YARD
             if(approachDistance<200 && approachDistance != 0){
                 appDistDict.setObject(approachDistance.rounded(toPlaces: 2), forKey: "approachDistance" as NSCopying)
                 break
@@ -6774,7 +6773,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         var appDistance = Double()
         var sandUpDown : Bool!
         for i in 0..<positionsOfCurveLines.count-1{
-            appDistance = GMSGeometryDistance(positionsOfCurveLines[i], courseData.numberOfHoles[holeIndex].green[BackgroundMapStats.nearByPoint(newPoint: positionsOfCurveLines[i], array: courseData.numberOfHoles[holeIndex].green)])*YARD
+            appDistance = GMSGeometryDistance(positionsOfCurveLines[i], courseData.numberOfHoles[holeIndex].green[BackgroundMapStats.nearByPoint(newPoint: positionsOfCurveLines[i], array: courseData.numberOfHoles[holeIndex].green)])*Constants.YARD
             if(appDistance<70){
                 if((positionsOfCurveLines.count-1 == i+2 || positionsOfCurveLines.count-1 == i+1) && callFindPositionInsideFeature(position:positionsOfCurveLines[i]) == "GB" ){
                     sandUpDown = true
@@ -6840,7 +6839,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         var appDistance = Double()
         var chipUpDown : Bool!
         for i in 0..<positionsOfCurveLines.count-1{
-            appDistance = GMSGeometryDistance(positionsOfCurveLines[i], courseData.numberOfHoles[holeIndex].green[BackgroundMapStats.nearByPoint(newPoint: positionsOfCurveLines[i], array: courseData.numberOfHoles[holeIndex].green)])*YARD
+            appDistance = GMSGeometryDistance(positionsOfCurveLines[i], courseData.numberOfHoles[holeIndex].green[BackgroundMapStats.nearByPoint(newPoint: positionsOfCurveLines[i], array: courseData.numberOfHoles[holeIndex].green)])*Constants.YARD
             if(appDistance<70){
                 if((positionsOfCurveLines.count-1 == i+2 || positionsOfCurveLines.count-1 == i+1) && callFindPositionInsideFeature(position:positionsOfCurveLines[i]) != "GB" ){
                     chipUpDown = true
@@ -7146,7 +7145,7 @@ extension NewMapVC : UITableViewDelegate,UITableViewDataSource{
             if (self.penaltyShots[indexPath.row]){
                 cell.initDesign(shot: "\(indexPath.row + 1)", club: "  ", distance: "   ", landedOn: "Penalty",color:UIColor.glfDustyRed ,sg: "    ")
             }else{
-                cell.initDesign(shot: "\(indexPath.row + 1)", club: "\(self.shotsDetails[indexPath.row].club)", distance: "\(Int(self.shotsDetails[indexPath.row].distance / (Constants.distanceFilter == 1 ? YARD:1))) \(suffix)", landedOn: endingPointWithColor.0.localized(),color:endingPointWithColor.1 ,sg: "\(prefix)\(self.shotsDetails[indexPath.row].strokesGained.rounded(toPlaces: 2))")
+                cell.initDesign(shot: "\(indexPath.row + 1)", club: "\(self.shotsDetails[indexPath.row].club)", distance: "\(Int(self.shotsDetails[indexPath.row].distance / (Constants.distanceFilter == 1 ? Constants.YARD:1))) \(suffix)", landedOn: endingPointWithColor.0.localized(),color:endingPointWithColor.1 ,sg: "\(prefix)\(self.shotsDetails[indexPath.row].strokesGained.rounded(toPlaces: 2))")
             }
         }
         self.btnTotalShotsNumber.isHidden = !holeOutFlag

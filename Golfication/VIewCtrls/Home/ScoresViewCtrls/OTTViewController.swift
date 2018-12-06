@@ -577,7 +577,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
                     hole.distance = (holes[i] as AnyObject).object(forKey:"distance") as! Double
                     hole.spread = (holes[i] as AnyObject).object(forKey:"spread") as! Double
                     if(Constants.distanceFilter == 1){
-                        hole.distance = hole.distance/YARD
+                        hole.distance = hole.distance/Constants.YARD
                     }
                     if let fHit = (holes[i] as AnyObject).object(forKey:"fairway") as? String{
                         hole.hitMiss = fHit

@@ -1834,7 +1834,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                     var drivingDistance = value as! Double
                                                     var suffix = "m"
                                                     if(Constants.distanceFilter != 1){
-                                                        drivingDistance = drivingDistance*YARD
+                                                        drivingDistance = drivingDistance*Constants.YARD
                                                         suffix = "yd"
                                                     }
                                                     //                                            label.text = "\(Int(drivingDistance))\(suffix)"
@@ -1874,7 +1874,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                     var approchDist = value as! Double
                                                     var suffix = "m"
                                                     if(Constants.distanceFilter != 1){
-                                                        approchDist = approchDist*YARD
+                                                        approchDist = approchDist*Constants.YARD
                                                         suffix = "yd"
                                                     }
                                                     //                                            label.text = "\(Int(approchDist))\(suffix)"

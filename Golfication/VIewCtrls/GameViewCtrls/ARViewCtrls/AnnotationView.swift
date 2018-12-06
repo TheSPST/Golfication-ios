@@ -58,7 +58,7 @@ class AnnotationView: ARAnnotationView {
     
     if let annotation = annotation as? Place {
         titleLabel?.text = annotation.placeName
-        distanceLabel?.text = " " + String(Int(annotation.distanceFromUser * YARD)) + " yd"
+        distanceLabel?.text = " " + String(Int(annotation.distanceFromUser * Constants.YARD)) + " yd"
         if(Constants.distanceFilter == 1){
             distanceLabel?.text = " " + String(Int(annotation.distanceFromUser)) + " m"
         }

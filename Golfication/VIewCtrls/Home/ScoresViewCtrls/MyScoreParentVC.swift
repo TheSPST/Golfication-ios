@@ -177,9 +177,9 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                     chip.proximityX = (chipping[i] as AnyObject).object(forKey:"proximityX") as? Double
                     chip.proximityY = (chipping[i] as AnyObject).object(forKey:"proximityY") as? Double
                     if(Constants.distanceFilter == 1){
-                        chip.proximityX = chip.proximityX/YARD
-                        chip.proximityY = chip.proximityY/YARD
-                        chip.distance = chip.distance/YARD
+                        chip.proximityX = chip.proximityX/Constants.YARD
+                        chip.proximityY = chip.proximityY/Constants.YARD
+                        chip.distance = chip.distance/Constants.YARD
                     }
                     chip.und = (chipping[i] as AnyObject).object(forKey:"und") as? Int
                     chip.green = (chipping[i] as AnyObject).object(forKey:"green") as? Bool
@@ -203,9 +203,9 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                     chip.proximityX = (sand[i] as AnyObject).object(forKey:"proximityX") as? Double
                     chip.proximityY = (sand[i] as AnyObject).object(forKey:"proximityY") as? Double
                     if(Constants.distanceFilter == 1){
-                        chip.proximityX = chip.proximityX/YARD
-                        chip.proximityY = chip.proximityY/YARD
-                        chip.distance = chip.distance/YARD
+                        chip.proximityX = chip.proximityX/Constants.YARD
+                        chip.proximityY = chip.proximityY/Constants.YARD
+                        chip.distance = chip.distance/Constants.YARD
                     }
                     chip.green = (sand[i] as AnyObject).object(forKey:"green") as? Bool
                     if let und = ((sand[i] as AnyObject).object(forKey:"und") as? Int){
@@ -231,9 +231,9 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                     chip.proximityY = (approach[i] as AnyObject).object(forKey:"proximityY") as! Double
                     chip.green = (approach[i] as AnyObject).object(forKey:"green") as? Bool
                     if(Constants.distanceFilter == 1){
-                        chip.proximityX = chip.proximityX/YARD
-                        chip.proximityY = chip.proximityY/YARD
-                        chip.distance = chip.distance/YARD
+                        chip.proximityX = chip.proximityX/Constants.YARD
+                        chip.proximityY = chip.proximityY/Constants.YARD
+                        chip.distance = chip.distance/Constants.YARD
                     }
                     if let und = ((approach[i] as AnyObject).object(forKey:"und") as? Int){
                         chip.und = und
