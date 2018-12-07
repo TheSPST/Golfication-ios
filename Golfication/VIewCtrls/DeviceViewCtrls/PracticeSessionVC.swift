@@ -126,7 +126,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             shotLblB[i].text = tempArray[i]
         }
         self.title = "Practice Session \(count)"
-        
+        debugPrint(self)
         self.perform(#selector(self.updateProgress), with: nil, afterDelay:0.0)
         self.swingScoreCircularView.innerCapStyle = .square
         self.swingScoreCircularView.outerCapStyle = .square
@@ -263,7 +263,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             scrollView.isHidden = true
             startSwingingSV.isHidden = false
             self.view.backgroundColor = UIColor(rgb: 0xF6F6F5)
-            self.swingProgressView.setProgress(100, animated: true)
+//            self.swingProgressView.setProgress(100, animated: true)
         }
         }
     }

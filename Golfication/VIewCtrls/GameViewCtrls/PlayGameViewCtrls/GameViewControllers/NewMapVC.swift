@@ -5908,10 +5908,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.selectedUserId = k as! String
                         self.lblPlayersName.text = "Your Score".localized()
                         btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
-                        if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
-                            self.swingMatchId = swingKey
-                            if(swingKey != ""){
-                                self.getGameId(swingKey:self.swingMatchId)
+                        if !isHoleByHole{
+                            if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
+                                self.swingMatchId = swingKey
+                                if(swingKey != ""){
+                                    self.getGameId(swingKey:self.swingMatchId)
+                                }
                             }
                         }
                     }else{

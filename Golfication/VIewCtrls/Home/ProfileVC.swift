@@ -16,7 +16,7 @@ import FirebaseStorage
 
 //var profileGolfName = String()
 
-class ProfileVC: UIViewController {
+class ProfileVC: UIViewController, BluetoothDelegate {
     
     // MARK: - Set Outlets
     @IBOutlet weak var lblTryPremium: UILabel!
@@ -82,10 +82,46 @@ class ProfileVC: UIViewController {
     
     var cropVC: PKCCropViewController!
 
+    var sharedInstance: BluetoothSync!
+    
     // MARK: connectBluetoothAction
     @IBAction func connectBluetoothAction(_ sender: Any) {
-        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        self.sharedInstance = BluetoothSync.getInstance()
+        self.sharedInstance.delegate = self
+        self.sharedInstance.initCBCentralManager()
+    }
+    
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            self.sharedInstance.delegate = nil
+            return
+            
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
+        }
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
     }
     
     // MARK: inviteNowAction

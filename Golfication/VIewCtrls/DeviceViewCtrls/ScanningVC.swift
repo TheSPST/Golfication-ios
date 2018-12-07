@@ -167,6 +167,7 @@ class ScanningVC: UIViewController {
     }
     @objc func showShotsAfterSwing(_ notification:NSNotification){
         if let dict = notification.object as? NSMutableDictionary{
+//            Constants.ble.playSound()
             self.currentGameId = dict.value(forKey: "gameId") as! Int
             let swingKey = dict.value(forKey: "id") as! String
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(swingKey)/") { (snapshot) in

@@ -750,11 +750,16 @@ extension BLE: CBCentralManagerDelegate {
                 bluetoothStatus = "Bluetooth_OFF"
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "BluetoothStatus"), object: bluetoothStatus)
             })
+            Constants.ble.invalidateAllTimers()
+
             charctersticsWrite = nil
             charctersticsRead = nil
             Constants.deviceGolficationX = nil
             Constants.charctersticsGlobalForWrite = nil
             Constants.charctersticsGlobalForRead = nil
+            
+            Constants.ble = nil
+
         }
         else if(central.state == CBManagerState.unsupported) {
             DispatchQueue.main.async(execute: {
@@ -826,6 +831,8 @@ extension BLE: CBCentralManagerDelegate {
         }
     }
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
+
         Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD])
         DispatchQueue.main.async(execute: {
             var i = 0
@@ -839,6 +846,7 @@ extension BLE: CBCentralManagerDelegate {
                         self.timerForService.invalidate()
                         self.centralManager.stopScan()
                         self.centralManager.cancelPeripheralConnection(Constants.deviceGolficationX)
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
                     }
                 }
                 else{
@@ -1456,7 +1464,9 @@ extension BLE: CBPeripheralDelegate {
                             holeNm = Int(self.currentCommandData[6])
                             self.holeWithSwing.removeAll()
                             self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false))
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+                            if !isPracticeMatch{
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+                            }
                         }
                     }
                     
@@ -1486,7 +1496,6 @@ extension BLE: CBPeripheralDelegate {
                         holeWithSwing.append((hole: 0, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false))
                     }
                     if(isPracticeMatch){
-                        self.playSound()
                         memccpy(&backSwing, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
                         memccpy(&downSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&handVelocity, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)

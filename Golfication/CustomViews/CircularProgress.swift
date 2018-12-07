@@ -74,4 +74,14 @@ class CircularProgress: UIView {
         progressLayer.strokeEnd = CGFloat(value)
         progressLayer.add(animation, forKey: "animateCircle")
     }
+    func setProgressWithAnimationGolfX(duration: TimeInterval, fromValue: Float ,toValue: Float) {
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        animation.duration = duration
+        // Animate from 0 (no circle) to 1 (full circle)
+        animation.fromValue = fromValue
+        animation.toValue = toValue
+        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        progressLayer.strokeEnd = CGFloat(toValue)
+        progressLayer.add(animation, forKey: "animateCircle")
+    }
 }

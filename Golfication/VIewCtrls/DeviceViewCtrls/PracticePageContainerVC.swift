@@ -158,6 +158,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     //MARK: showShotsAfterSwing
     @objc func showShotsAfterSwing(_ notification:NSNotification){
         if let dict = notification.object as? NSMutableDictionary{
+            Constants.ble.playSound()
             let swingKey = dict.value(forKey: "id") as! String
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(swingKey)/") { (snapshot) in
                 var dict = NSMutableDictionary()
