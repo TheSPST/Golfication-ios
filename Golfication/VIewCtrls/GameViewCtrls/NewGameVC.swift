@@ -17,7 +17,7 @@ import CoreBluetooth
 import UICircularProgressRing
 import FirebaseStorage
 
-class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, BluetoothDelegate{
     
     // MARK: Set Outlets
     
@@ -114,6 +114,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var scoringMode = ""
     var attributedStringArray = [String]()
     var detailedScore = NSMutableArray()
+    var sharedInstance: BluetoothSync!
+
     // Marke : StartingTee Action
     var courseData = CourseData()
     @IBAction func btnActionStartingTee(_ sender: UIButton) {
@@ -166,10 +168,45 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var isDeviceSetup = false
     // MARK: golfXAction
     @objc func golfXAction() {
-        if Constants.isDevice{
-            Constants.ble.startScanning()
+        
+        self.sharedInstance = BluetoothSync.getInstance()
+        self.sharedInstance.delegate = self
+        self.sharedInstance.initCBCentralManager()
+    }
+    
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            
+            if Constants.isDevice{
+                Constants.ble.startScanning()
+            }
+            NotificationCenter.default.addObserver(self, selector: #selector(self.bluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+            self.sharedInstance.delegate = nil
+            return
+            
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(self.bluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
     }
     @objc func bluetoothStatus(_ notification: NSNotification) {
         let notifBleStatus = notification.object as! String
@@ -1514,7 +1551,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     self.lblContinueGolfName.text = Constants.selectedGolfName
                     //self.lblContinueHoleNum.text = "Playing Hole " + startingHole
                 }
-                if !Constants.ble.swingMatchId.isEmpty{
+                
+                if Constants.ble != nil && !Constants.ble.swingMatchId.isEmpty{
                     self.checkSwingKey()
                 }else{
                     if self.isContinueClicked{

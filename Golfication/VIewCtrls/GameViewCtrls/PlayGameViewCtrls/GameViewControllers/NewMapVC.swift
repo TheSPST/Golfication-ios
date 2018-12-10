@@ -1432,6 +1432,18 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.gameTypeIndex = self.matchDataDict.value(forKey: "matchType") as! String == "9 holes" ? 9:18
             self.courseData.startingIndex = self.startingIndex
             self.courseData.gameTypeIndex = self.gameTypeIndex
+        }else{
+            if let players = self.matchDataDict.value(forKeyPath: "player") as? NSMutableDictionary{
+                for data in players{
+                    if ((data.value as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                        if let swingKey = (data.value as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                            self.swingMatchId = swingKey
+                            self.getSwingData(swingKey: swingKey)
+                            break
+                        }
+                    }
+                }
+            }
         }
         courseId = "course_\(self.matchDataDict.value(forKeyPath: "courseId") as! String)"
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
@@ -7000,9 +7012,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         
-        if(!isHoleByHole) && self.selectedUserId != "jpSgWiruZuOnWybYce55YDYGXP62" && !self.markers.contains(marker) && !isTracking && btnClose.isHidden{
+        if self.selectedUserId != "jpSgWiruZuOnWybYce55YDYGXP62" && !self.markers.contains(marker) && !isTracking && btnClose.isHidden{
             tappedMarker = marker
-            if (tappedMarker.iconView)?.tag != nil {
+            
+            if (tappedMarker.iconView)?.tag != nil  && !isHoleByHole{
                 self.codeWhenClickToBackView()
                 self.btnTrackShot.tag = tappedMarker.iconView!.tag
                 self.btnTrackShot.setImage(#imageLiteral(resourceName: "edit_White"), for: .normal)

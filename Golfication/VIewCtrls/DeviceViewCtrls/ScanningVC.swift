@@ -12,19 +12,14 @@ import FirebaseAuth
 
 class ScanningVC: UIViewController {
     
-    @IBOutlet weak var deviceCircularView: UICircularProgressRingView!
-    @IBOutlet weak var btnRetry: UIButton!
-    @IBOutlet weak var btnNoDevice: UIButton!
     @IBOutlet weak var btnBuyNow: UIButton!
 
     @IBOutlet weak var lblWaitingForSwing: UILabel!
     @IBOutlet weak var lblStartSwinging: UILabel!
     @IBOutlet weak var barBtnBLE: UIBarButtonItem!
-    @IBOutlet weak var lblScanStatus: UILabel!
     @IBOutlet weak var viewHaveDevice: UIView!
     
     @IBOutlet weak var noDeviceSV: UIStackView!
-    @IBOutlet weak var startScanningSV: UIStackView!
     @IBOutlet weak var startSwingingSV: UIStackView!
 
     @IBOutlet weak var swingProgressView: UIProgressView!
@@ -40,11 +35,15 @@ class ScanningVC: UIViewController {
     }
     var isDeviceSetup = false
     var progressValue = 0.0
+    var deviceCircularView: CircularProgress!
+    var golfXPopupView: UIView!
+    var btnRetry: UIButton!
+    var btnNoDevice: UIButton!
+    var lblScanStatus: UILabel!
+
     @IBAction func barBtnBLEAction(_ sender: Any) {
         if (self.barBtnBLE.image == #imageLiteral(resourceName: "golficationBarG")){
-            Constants.ble = BLE()
-            Constants.ble.startScanning()
-            Constants.ble.isPracticeMatch = true
+            self.getSwingData()
         }
     }
     override func viewDidLoad() {
@@ -53,13 +52,12 @@ class ScanningVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.noSetup(_:)), name: NSNotification.Name(rawValue: "noSetup"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.takeSwing(_:)), name: NSNotification.Name(rawValue: "readyToTakeSwing"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.reloadData(_:)), name: NSNotification.Name(rawValue: "DeviceConnected"), object: nil)
+
         setInitialUI()
         
         if Constants.isDevice{
-            viewHaveDevice.isHidden = false
+            viewHaveDevice.isHidden = true
             noDeviceSV.isHidden = true
-            startScanningSV.isHidden = false
-            startSwingingSV.isHidden = true
             getSwingData()
         }
         else{
@@ -67,6 +65,92 @@ class ScanningVC: UIViewController {
             noDeviceSV.isHidden = false
         }
     }
+
+    func showPopUp(){
+        NotificationCenter.default.addObserver(self, selector: #selector(self.SeventyFivePercentUpdated(_:)), name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.ScanningTimeOut(_:)), name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
+        
+        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
+        self.golfXPopupView.frame = self.view.bounds
+        self.view.addSubview(self.golfXPopupView)
+        setGofXUISetup()
+    }
+    func setGofXUISetup(){
+        btnNoDevice = (golfXPopupView.viewWithTag(111) as! UIButton)
+        btnNoDevice.layer.cornerRadius = btnNoDevice.frame.size.height/2
+        
+        btnRetry = (golfXPopupView.viewWithTag(222) as! UIButton)
+        btnRetry.addTarget(self, action: #selector(self.retryAction(_:)), for: .touchUpInside)
+        btnRetry.layer.cornerRadius = 3.0
+        
+        let btnCancel = (golfXPopupView.viewWithTag(333) as! UIButton)
+        btnCancel.addTarget(self, action: #selector(self.cancelGolfXAction(_:)), for: .touchUpInside)
+        deviceCircularView = (golfXPopupView.viewWithTag(444) as! CircularProgress)
+        deviceCircularView.progressColor = UIColor.glfBluegreen
+        deviceCircularView.trackColor = UIColor.clear
+        deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+        deviceCircularView.progressLayer.lineWidth = 3.0
+        
+        lblScanStatus = (golfXPopupView.viewWithTag(555) as! UILabel)
+        DispatchQueue.main.async {
+            self.lblScanStatus.text = "Scanning for Golfication X..."
+            self.btnRetry.isHidden = true
+            self.btnNoDevice.isHidden = true
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.0, toValue: 0.50)
+        }
+    }
+    @objc func cancelGolfXAction(_ sender: UIButton!) {
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        golfXPopupView.removeFromSuperview()
+    }
+    @objc func SeventyFivePercentUpdated(_ notification: NSNotification){
+        DispatchQueue.main.async(execute: {
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.50, toValue: 0.75)
+            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
+        })
+    }
+    
+    @objc func updateScreen(_ notification: NSNotification){
+        DispatchQueue.main.async(execute: {
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.75, toValue: 0.90)
+            self.perform(#selector(self.animateProgress), with: nil, afterDelay: 1.0)
+        })
+    }
+    
+    @objc func ScanningTimeOut(_ notification: NSNotification){
+        DispatchQueue.main.async(execute: {
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+            self.lblScanStatus.text = "Couldn't find your device"
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+            self.btnRetry.isHidden = false
+            self.btnNoDevice.isHidden = false
+            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+            Constants.ble.stopScanning()
+            
+            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
+        })
+    }
+    @objc func animateProgress() {
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        Constants.ble.stopScanning()
+        Constants.ble.isPracticeMatch = true
+//        Constants.ble.isDeviceSetup = false
+//        Constants.ble.swingMatchId = self.swingMatchId
+//        Constants.ble.currentGameId = self.currentGameId
+//        Constants.ble.swingDetails = self.swingDetails
+        
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
+        Constants.ble.sendThirdCommand()
+
+        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
+    }
+
     var totalPracticeSession = 1
     func getSwingData() {
         var swingMArray = NSMutableArray()
@@ -84,7 +168,6 @@ class ScanningVC: UIViewController {
                     let group = DispatchGroup()
                     if(dataDic.count == 0){
                         self.progressView.hide(navItem: self.navigationItem)
-                        self.retryAction(self.btnRetry)
                     }
                     for (key, value) in dataDic{
                         group.enter()
@@ -142,7 +225,37 @@ class ScanningVC: UIViewController {
                         swingMArray = NSMutableArray()
                         swingMArray = array.mutableCopy() as! NSMutableArray
                         debugPrint(swingMArray)
-                        self.retryAction(self.btnRetry)
+                        if swingMArray.count > 0{
+                            let dict = NSMutableDictionary()
+                            dict.addEntries(from: ["id" : self.swingMatchId])
+                            dict.addEntries(from: ["gameId":self.currentGameId])
+                            
+                            if Constants.ble == nil{
+                                Constants.ble = BLE()
+
+                            }else{
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwing"), object: dict)
+                            }
+                            Constants.ble.startScanning()
+                            Constants.ble.isSetupScreen = true
+                            Constants.ble.isPracticeMatch = true
+                            Constants.ble.isDeviceSetup = false
+                            Constants.ble.swingMatchId = self.swingMatchId
+                            Constants.ble.currentGameId = self.currentGameId
+                            self.showPopUp()
+                            
+                        }else{
+                            if Constants.ble == nil{
+                                Constants.ble = BLE()
+                            }
+                            Constants.ble.startScanning()
+                            Constants.ble.isSetupScreen = true
+                            Constants.ble.isPracticeMatch = true
+                            Constants.ble.isDeviceSetup = false
+                            Constants.ble.swingMatchId = self.swingMatchId
+                            Constants.ble.currentGameId = self.currentGameId
+                            self.showPopUp()
+                        }
                     })
                 })
                 
@@ -153,35 +266,52 @@ class ScanningVC: UIViewController {
     }
     @objc func reloadData(_ notification:NSNotification){
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
             self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
         }
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DeviceConnected"))
     }
 
     @objc func takeSwing(_ notification:NSNotification){
-        self.noDeviceSV.isHidden = true
-        self.startScanningSV.isHidden = true
-        self.startSwingingSV.isHidden = false
-        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+        self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.3, fromValue: 0.90, toValue: 1.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+            self.noDeviceSV.isHidden = true
+            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+            self.golfXPopupView.removeFromSuperview()
+            self.startSwingingSV.isHidden = false
+            self.viewHaveDevice.isHidden = false
+        
+        })
+//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "readyToTakeSwing"))
     }
+    
     @objc func showShotsAfterSwing(_ notification:NSNotification){
         if let dict = notification.object as? NSMutableDictionary{
 //            Constants.ble.playSound()
+
+
             self.currentGameId = dict.value(forKey: "gameId") as! Int
             let swingKey = dict.value(forKey: "id") as! String
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(swingKey)/") { (snapshot) in
+                
+                if self.deviceCircularView != nil{
+                    self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.0, toValue: 1.0)
+                }
                 var dict = NSMutableDictionary()
                 if let diction = snapshot.value as? NSMutableDictionary{
                     dict = diction
                 }
                 DispatchQueue.main.async(execute: {
                     if let swingArr = dict.value(forKey: "swings") as? NSArray{
-                        debugPrint("Diction:\(swingArr)")
+//                        debugPrint("Diction:\(swingArr)")
                         self.lblWaitingForSwing.text = "Fetching Swing details...."
                         self.lblStartSwinging.text = "Swing Detected"
                         self.perform(#selector(self.updateProgress), with: nil, afterDelay: 0)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                            if self.deviceCircularView != nil{
+                                self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+                                self.deviceCircularView.removeFromSuperview()
+                            }
                             let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "PracticePageContainerVC") as! PracticePageContainerVC
                             viewCtrl.swingKey = swingKey
                             viewCtrl.count = self.totalPracticeSession
@@ -191,11 +321,15 @@ class ScanningVC: UIViewController {
                             }
                             viewCtrl.shotsArray = shotsAr
                             viewCtrl.tempArray1 = swingArr
+                            viewCtrl.currentGameId = self.currentGameId
+                            viewCtrl.swingId = self.swingMatchId
                             viewCtrl.moveToViewController(at: shotsAr.count-1)
                             self.navigationController?.pushViewController(viewCtrl, animated: true)
                         })
                     }else{
+                        self.viewHaveDevice.isHidden = false
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "readyToTakeSwing"), object: nil)
+                        
                     }
                 })
             }
@@ -204,68 +338,12 @@ class ScanningVC: UIViewController {
     }
     
     func setInitialUI(){
-        btnNoDevice.layer.cornerRadius = btnNoDevice.frame.size.height/2
-        btnRetry.layer.cornerRadius = 3.0
+        //btnNoDevice.layer.cornerRadius = btnNoDevice.frame.size.height/2
         btnBuyNow.layer.cornerRadius = 3.0
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
         self.barBtnBLE.isEnabled = true
     }
-    func getIsDeviceAlreadySetup(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "deviceSetup") { (snapshot) in
-            if (snapshot.value as? Bool) != nil{
-                self.isDeviceSetup = snapshot.value as! Bool
-            }
-            DispatchQueue.main.async(execute: {
-                if(self.isDeviceSetup){
-                    self.setInitialDeviceData()
-                }else{
-                    self.view.makeToast("Please Finish Setup First from the profile.")
-                    self.noDeviceSV.isHidden = false
-                    self.startScanningSV.isHidden = true
-                    self.startSwingingSV.isHidden = true
-                    self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-                }
-            })
-        }
-    }
-    func setInitialDeviceData(){
-        lblScanStatus.text = "Scanning for Golfication X..."
-        btnRetry.isHidden = true
-        btnNoDevice.isHidden = true
-        startSwingingSV.isHidden = true
-        DispatchQueue.main.async(execute: {
-             if(Constants.deviceGolficationX == nil){
-                Constants.ble = BLE()
-                Constants.ble.isDeviceSetup = false
-                Constants.ble.startScanning()
-                Constants.ble.isPracticeMatch = true
-                Constants.ble.swingMatchId = self.swingMatchId
-                Constants.ble.currentGameId = self.currentGameId
-//                Constants.ble.swingDetails = self.swingDetails
-                debugPrint("swingMatchId:",self.swingMatchId)
-                debugPrint("currentGameId:",self.currentGameId)
-                debugPrint("swingDetails:",self.swingDetails)
-                self.deviceCircularView.setProgress(value: CGFloat(90), animationDuration: 5.5, completion: {
-                    if(Constants.deviceGolficationX != nil) && !Constants.ble.isContinue{
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
-                    }else{
-                        self.lblScanStatus.text = "Couldn't find your device"
-                        self.deviceCircularView.setProgress(value: CGFloat(0), animationDuration: 0.0)
-                        self.btnRetry.isHidden = false
-                        self.btnNoDevice.isHidden = false
-                        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-                    }
-                })
-             }else{
-                Constants.ble.isPracticeMatch = true
-                Constants.ble.isDeviceSetup = false
-                Constants.ble.swingMatchId = self.swingMatchId
-                Constants.ble.currentGameId = self.currentGameId
-                Constants.ble.swingDetails = self.swingDetails
-                Constants.ble.sendThirdCommand()
-            }
-        })
-    }
+
     @objc func updateProgress() {
         progressValue = progressValue + 0.1
         self.swingProgressView.progress = Float(progressValue)
@@ -277,11 +355,24 @@ class ScanningVC: UIViewController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
+        
+        if(Constants.deviceGolficationX != nil){
+            Constants.ble.isPracticeMatch = true
+            Constants.ble.sendThirdCommand()
+        }
     }
+    
+    @objc func retryAction(_ sender: UIButton) {
+        viewHaveDevice.isHidden = false
+        noDeviceSV.isHidden = true
 
-    @IBAction func retryAction(_ sender: UIButton) {
-        btnRetry.isHidden = true
-        self.btnNoDevice.isHidden = true
-        self.setInitialDeviceData()
+        if Constants.ble == nil{
+            Constants.ble = BLE()
+        }
+        Constants.ble.isSetupScreen = true
+        Constants.ble.startScanning()
+        self.golfXPopupView.removeFromSuperview()
+        showPopUp()
+        startSwingingSV.isHidden = true
     }
 }

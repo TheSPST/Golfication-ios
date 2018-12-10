@@ -50,7 +50,8 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     var count:Int!
     var superClassName : String!
     var fromRoundsPlayed = Bool()
-    
+    var swingId = String()
+    var currentGameId = Int()
     override func viewDidLoad() {
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white
@@ -79,6 +80,8 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         }
         debugPrint("tempArray1==",tempArray1)
         self.reloadTableWithStrokesGained()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+
     }
     func reloadTableWithStrokesGained(){
         let group = DispatchGroup()
@@ -135,7 +138,25 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             self.swingTableView.reloadData()
         }
     }
+    @objc func chkBluetoothStatus(_ notification: NSNotification) {
+        let notifBleStatus = notification.object as! String
+        if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
+            //            self.setInitialDeviceData()
+        }
+        else{
+            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+//            Constants.ble.stopScanning()
+        }
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+    }
     @IBAction func barBtnBLEAction(_ sender: Any) {
+        if (self.barBtnBLE.image == #imageLiteral(resourceName: "golficationBarG")){
+            Constants.ble = BLE()
+            Constants.ble.startScanning()
+            Constants.ble.currentGameId = self.currentGameId
+            Constants.ble.swingMatchId = self.swingId
+            Constants.ble.isPracticeMatch = true
+        }
     }
     
     @IBAction func barBtnMenuAction(_ sender: Any) {

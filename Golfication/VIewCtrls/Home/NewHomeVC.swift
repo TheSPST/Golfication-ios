@@ -17,7 +17,7 @@ enum VersionError: Error {
     case invalidResponse, invalidBundleInfo
 }
 
-class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CustomProModeDelegate {
+class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CustomProModeDelegate, BluetoothDelegate{
     // MARK: - Set Outlets
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
     
@@ -779,13 +779,46 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         btnInvite.layer.cornerRadius = 3.0
     }
-    
+    var sharedInstance: BluetoothSync!
     // MARK: - startGameAction
     @IBAction func practiceAction(_ sender: Any) {
-        let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        sharedInstance = BluetoothSync.getInstance()
+        sharedInstance.delegate = self
+        sharedInstance.initCBCentralManager()
     }
     
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            
+            let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            sharedInstance.delegate = nil
+            return
+            
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
+        }
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+    }
     // MARK: - mySwingAction
     @IBAction func mySwingBtnAction(_ sender: UIButton) {
         self.mySwingAction(sender)

@@ -751,13 +751,11 @@ extension BLE: CBCentralManagerDelegate {
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "BluetoothStatus"), object: bluetoothStatus)
             })
             Constants.ble.invalidateAllTimers()
-
             charctersticsWrite = nil
             charctersticsRead = nil
             Constants.deviceGolficationX = nil
             Constants.charctersticsGlobalForWrite = nil
             Constants.charctersticsGlobalForRead = nil
-            
             Constants.ble = nil
 
         }
@@ -850,7 +848,9 @@ extension BLE: CBCentralManagerDelegate {
                     }
                 }
                 else{
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+//                    if self.isSetupScreen{
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+//                    }
                     self.isDeviceStillConnected = true
                     self.timerForService.invalidate()
                 }
@@ -898,9 +898,9 @@ extension BLE: CBPeripheralDelegate {
                 self.charctersticsWrite = characteristic
                 Constants.charctersticsGlobalForWrite = characteristic
                 debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
-                DispatchQueue.main.async(execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
                     self.sendEleventhCommand()
-                })
+                }
             }else if (characteristic.uuid == golficationXCharacteristicCBUUIDRead){
                 self.charctersticsRead = characteristic
                 Constants.charctersticsGlobalForRead = characteristic
@@ -1273,6 +1273,7 @@ extension BLE: CBPeripheralDelegate {
                                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
                                     self.swingMatchId = ""
                                     self.randomGenerator()
+                                    self.swingDetails.removeAll()
                                     self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                                 }))
@@ -1287,6 +1288,7 @@ extension BLE: CBPeripheralDelegate {
                     self.invalidateAllTimers()
                     self.currentGameId = responseInIntFirst4
                     DispatchQueue.main.async(execute: {
+                        self.endAllActiveSessions()
                         UIApplication.shared.keyWindow?.makeToast("Game Discarded Successfully.")
                     })
 
@@ -1326,6 +1328,7 @@ extension BLE: CBPeripheralDelegate {
                         self.isFirst = false
                         DispatchQueue.main.async(execute: {
                             UIApplication.shared.keyWindow?.makeToast("Ready to take swing...")
+//                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "readyToTakeSwing"), object: nil)
                         })
                         
@@ -1458,13 +1461,13 @@ extension BLE: CBPeripheralDelegate {
                     self.timerForWriteCommand8.invalidate()
                     self.isContinue = true
                     self.uploadSwingScore()
-                    if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
-                        var holeNm = 1
-                        if self.holeWithSwing.last?.hole != scoring.count{
-                            holeNm = Int(self.currentCommandData[6])
-                            self.holeWithSwing.removeAll()
-                            self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false))
-                            if !isPracticeMatch{
+                    if !isPracticeMatch{
+                        if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
+                            var holeNm = 1
+                            if self.holeWithSwing.last?.hole != scoring.count{
+                                holeNm = Int(self.currentCommandData[6])
+                                self.holeWithSwing.removeAll()
+                                self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false))
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                             }
                         }
@@ -1477,6 +1480,7 @@ extension BLE: CBPeripheralDelegate {
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
                     self.invalidateAllTimers()
                     if self.isPracticeMatch{
+                        self.swingDetails.removeAll()
                         DispatchQueue.main.async(execute: {
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
                         })

@@ -253,6 +253,7 @@ class BluetootheConnectionTesting: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if(Constants.deviceGolficationX != nil){
+            Constants.ble.currentGameId = 0
             updateScreenBLE()
         }
     }
