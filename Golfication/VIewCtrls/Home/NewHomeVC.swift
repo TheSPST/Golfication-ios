@@ -322,6 +322,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         self.getStrokesGainedFirebaseData()
         self.getGolficationXVersion()
+//        let promocodeArr = ["GOLFYKQ98","GOLFYKR34","GOLFYKS56","GOLFYKT20","GOLFYKT41","GOLFYKT52","GOLFYKU29","GOLFYKU32","GOLFYKU34","GOLFYKU45","GOLFYKZ2","GOLFYLA37","GOLFYLA91","GOLFYLB40","GOLFYLB42","GOLFYLB80","GOLFYLC72","GOLFYLC94","GOLFYLC96","GOLFYLD14","GOLFYLD17","GOLFYLE33","GOLFYLF77","GOLFYLG22","GOLFYLG39","GOLFYLH65","GOLFYLH92","GOLFYLI84","GOLFYLJ0","GOLFYLJ28","GOLFYLK27","GOLFYLK45","GOLFYLK51","GOLFYLM17","GOLFYLM20","GOLFYLN12","GOLFYLN28","GOLFYLN43","GOLFYLN75","GOLFYLQ71","GOLFYLR65","GOLFYLT0","GOLFYLT62","GOLFYLU37","GOLFYLU97","GOLFYLV61","GOLFYLW8","GOLFYLX20","GOLFYLX46","GOLFYLY18"]
+//        for data in promocodeArr{
+//            BackgroundMapStats.getDynamicLinkFromPromocode(code: data)
+//        }
+
 //        self.FindUser()
     }
 // Get user details which have Pro membership

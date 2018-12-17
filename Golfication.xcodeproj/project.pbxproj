@@ -30,7 +30,6 @@
 		3E15C1222142B86D002D43AF /* MultiplayerTeeSelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15C1212142B86D002D43AF /* MultiplayerTeeSelectionVC.swift */; };
 		3E15D32E1FFE0800005F4068 /* notificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15D32D1FFE0800005F4068 /* notificationExtension.swift */; };
 		3E15D3301FFE10F8005F4068 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E15D32F1FFE10F8005F4068 /* Notification.swift */; };
-		3E16F6322195696B00E7F2CE /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E16F6312195696B00E7F2CE /* GoogleService-Info-live.plist */; };
 		3E27BA5C20FF4D7700DC14AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E27BA5A20FF4D7700DC14AB /* Main.storyboard */; };
 		3E3367F02130052E00AC238F /* HomeFreeProMemberVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */; };
 		3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E3367F12130231F00AC238F /* ScanningGolfX.xib */; };
@@ -243,6 +242,7 @@
 		4BB26D451FF77EED001E9556 /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26D431FF77EED001E9556 /* ServerHandler.swift */; };
 		4BB7C428208DB584006CCAFF /* MyFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB7C427208DB584006CCAFF /* MyFeedVC.swift */; };
 		4BBEA024206E2F7A00EA2783 /* FeedPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */; };
+		4BC2464221C142640041F326 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BC2464121C142640041F326 /* GoogleService-Info-live.plist */; };
 		4BC879BA20C517EF00A3B2BB /* PracticeGameViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */; };
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
 		4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4BCF8E2B21B502F70015338F /* swing_beep.mp3 */; };
@@ -293,7 +293,6 @@
 		3E15C1212142B86D002D43AF /* MultiplayerTeeSelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerTeeSelectionVC.swift; sourceTree = "<group>"; };
 		3E15D32D1FFE0800005F4068 /* notificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = notificationExtension.swift; sourceTree = "<group>"; };
 		3E15D32F1FFE10F8005F4068 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
-		3E16F6312195696B00E7F2CE /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		3E27BA5B20FF4D7700DC14AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeFreeProMemberVC.swift; sourceTree = "<group>"; };
 		3E3367F12130231F00AC238F /* ScanningGolfX.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScanningGolfX.xib; sourceTree = "<group>"; };
@@ -530,6 +529,7 @@
 		4BB26D4B1FF780A4001E9556 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BB7C427208DB584006CCAFF /* MyFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedVC.swift; sourceTree = "<group>"; };
 		4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPostVC.swift; sourceTree = "<group>"; };
+		4BC2464121C142640041F326 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticeGameViewCtrl.swift; sourceTree = "<group>"; };
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
 		4BCF8E2B21B502F70015338F /* swing_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = swing_beep.mp3; sourceTree = "<group>"; };
@@ -1265,7 +1265,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				3E16F6312195696B00E7F2CE /* GoogleService-Info-live.plist */,
+				4BC2464121C142640041F326 /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1400,11 +1400,11 @@
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
-				3E16F6322195696B00E7F2CE /* GoogleService-Info-live.plist in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
 				3EAE867F2125573F0081857B /* Device.storyboard in Resources */,
 				4B8C8D3D1FF674D0001F5D01 /* SF-Pro-Display-Thin.otf in Resources */,
+				4BC2464221C142640041F326 /* GoogleService-Info-live.plist in Resources */,
 				4B17C4722195BCF7004CA13C /* Localizable.strings in Resources */,
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,

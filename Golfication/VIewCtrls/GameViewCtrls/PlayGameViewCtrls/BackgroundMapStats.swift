@@ -471,5 +471,40 @@ class BackgroundMapStats: NSObject {
         view.layer.position = position;
         view.layer.anchorPoint = anchorPoint;
     }
+    static func getDynamicLinkFromPromocode(code:String){
+        let link = URL(string: "https://p5h99.app.goo.gl/mVFa?promocode=\(code)")
+        let referralLink = DynamicLinkComponents(link: link!, domain: "p5h99.app.goo.gl")
+        referralLink.iOSParameters = DynamicLinkIOSParameters(bundleID: "com.khelfie.Khelfie")
+        referralLink.iOSParameters?.minimumAppVersion = "1.0.1"
+        referralLink.iOSParameters?.appStoreID = "1216612467"
+        referralLink.androidParameters = DynamicLinkAndroidParameters(packageName: "com.khelfiegolf")
+        referralLink.androidParameters?.minimumVersion = 1
+        referralLink.shorten { (shortURL, warnings, error) in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            let invitationUrl = shortURL
+            let invitationStr = invitationUrl?.absoluteString
+            debugPrint("URL",invitationUrl!)
+//            let shareItems = [invitationStr] as! [String]
+//            let activityViewController = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
+//            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+            
+            // exclude some activity types from the list (optional)
+//            activityViewController.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.postToFacebook, UIActivityType.postToTwitter, UIActivityType.message, UIActivityType.mail, UIActivityType.postToFlickr, UIActivityType.postToWeibo, UIActivityType.postToVimeo]
+//            // present the view controller
+//            //https://stackoverflow.com/questions/35931946/basic-example-for-sharing-text-or-image-with-uiactivityviewcontroller-in-swift
+//            //http://www.rockhoppertech.com/blog/uiactivitycontroller-in-swift/
+//            activityViewController.completionWithItemsHandler = {
+//                (s, ok, items, error) in
+//                if ok{
+//                    self.sendFriendDataToFirebase(usrName: (textField?.text)!, userId: userId)
+//                }
+//            }
+            
+//            self.present(activityViewController, animated: true, completion: nil)
+        }
+    }
 }
 

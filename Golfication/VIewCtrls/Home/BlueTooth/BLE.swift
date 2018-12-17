@@ -287,15 +287,18 @@ class BLE: NSObject {
         self.sendThirdCommand()
     }
     private func sendEleventhCommand(){
+        
         if(Constants.charctersticsGlobalForWrite != nil){
-            let param : [UInt8] = [11]
+            self.randomGenerator()
+            let param : [UInt8] = [11,counter]
             var writeData = Data()
             self.currentCommandData = param
             writeData =  Data(bytes:param)
             var counte = 0
             Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
             self.timerForWriteCommand11 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
-                let param : [UInt8] = [11]
+                self.randomGenerator()
+                let param : [UInt8] = [11,self.counter]
                 writeData =  Data(bytes:param)
                 Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
                 self.currentCommandData = param
@@ -1469,6 +1472,8 @@ extension BLE: CBPeripheralDelegate {
                                 self.holeWithSwing.removeAll()
                                 self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false))
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+                            }else{
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             }
                         }
                     }
@@ -1609,8 +1614,9 @@ extension BLE: CBPeripheralDelegate {
                             }))
                             gameAlert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (action: UIAlertAction!) in
                                 debugPrint("Updating")
+                                self.randomGenerator()
                                 let newByteArr = self.toByteArray(Constants.firmwareVersion)
-                                let param = [12,newByteArr[0],newByteArr[1]]
+                                let param = [12,self.counter,newByteArr[0],newByteArr[1]]
                                 self.currentCommandData = param
                                 Constants.deviceGolficationX.writeValue(Data(bytes: param), for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
                             }))

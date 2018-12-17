@@ -63,6 +63,7 @@ class BluetootheConnectionTesting: UIViewController {
     var btnNoDevice: UIButton!
     var lblScanStatus: UILabel!
     var deviceCircularView: CircularProgress!
+    var timeOutTimer = Timer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,11 +74,11 @@ class BluetootheConnectionTesting: UIViewController {
         let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
         backBtn.tintColor = UIColor.glfBluegreen
         self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
-
+        
         self.getGolfBagData()
         NotificationCenter.default.addObserver(self, selector: #selector(self.setupFinished(_:)), name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.responseFirstCommand(_:)), name: NSNotification.Name(rawValue: "responseFirstCommand"), object: nil)
-            barBtnBLE = UIBarButtonItem(image: #imageLiteral(resourceName: "golficationBarG"), style: .plain, target: self, action: #selector(self.btnActionConnectBL(_:)))
+        barBtnBLE = UIBarButtonItem(image:  UIImage(named: "golficationBarG"), style: .plain, target: self, action: #selector(self.btnActionConnectBL(_:)))
         if Constants.isDevice{
             self.navigationItem.rightBarButtonItem = barBtnBLE
             checkDeviceStatus()
@@ -93,15 +94,15 @@ class BluetootheConnectionTesting: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.golficationXDisconnected(_:)), name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
         
         if(Constants.deviceGolficationX == nil){
-            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+            self.barBtnBLE.image =  UIImage(named: "golficationBarG")
         }
         else{
-            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+            self.barBtnBLE.image =  UIImage(named: "golficationBar")
         }
     }
     @objc func golficationXDisconnected(_ notification: NSNotification) {
-        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
+        self.barBtnBLE.image =  UIImage(named: "golficationBarG")
+        //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
     }
     @objc func retryAction(_ sender: UIButton) {
         if Constants.ble == nil{
@@ -113,37 +114,46 @@ class BluetootheConnectionTesting: UIViewController {
         showPopUp()
     }
     @objc func btnActionConnectBL(_ sender: UIBarButtonItem) {
+        if Constants.deviceGolficationX == nil{
+            if Constants.ble == nil{
+                Constants.ble = BLE()
+            }
+            Constants.ble.isSetupScreen = true
+            Constants.ble.startScanning()
+            showPopUp()
+        }
+    }
+    @IBAction func btnActionScanForDevice(_ sender: UIButton) {
         if Constants.ble == nil{
             Constants.ble = BLE()
         }
         Constants.ble.isSetupScreen = true
         Constants.ble.startScanning()
         showPopUp()
-    }
-    @IBAction func btnActionScanForDevice(_ sender: UIButton) {
-        if Constants.ble == nil{
-           Constants.ble = BLE()
-        }
-        Constants.ble.isSetupScreen = true
-        Constants.ble.startScanning()
-        showPopUp()
-//        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "responseFirstCommand"),object:nil)
-
+        //        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "responseFirstCommand"),object:nil)
+        
     }
     func showPopUp(){
+        self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.SeventyFivePercentUpdated(_:)), name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.ScanningTimeOut(_:)), name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
-
-        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+        
+        self.barBtnBLE.image =  UIImage(named: "golficationBarG")
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
         self.golfXPopupView.frame = self.view.bounds
         self.view.addSubview(self.golfXPopupView)
         setGofXUISetup()
     }
+    @objc func timerAction() {
+        self.timeOutTimer.invalidate()
+        self.noDeviceAvailable()
+    }
+    
     
     func setGofXUISetup(){
         btnNoDevice = (golfXPopupView.viewWithTag(111) as! UIButton)
@@ -160,7 +170,7 @@ class BluetootheConnectionTesting: UIViewController {
         deviceCircularView.trackColor = UIColor.clear
         deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
         deviceCircularView.progressLayer.lineWidth = 3.0
-
+        
         lblScanStatus = (golfXPopupView.viewWithTag(555) as! UILabel)
         DispatchQueue.main.async {
             self.lblScanStatus.text = "Scanning for Golfication X..."
@@ -172,20 +182,26 @@ class BluetootheConnectionTesting: UIViewController {
     
     @objc func ScanningTimeOut(_ notification: NSNotification){
         DispatchQueue.main.async(execute: {
-            self.navigationItem.rightBarButtonItem?.isEnabled = false
-            self.lblScanStatus.text = "Couldn't find your device"
-            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
-            self.btnRetry.isHidden = false
-            self.btnNoDevice.isHidden = false
-            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-            Constants.ble.stopScanning()
-
+            self.noDeviceAvailable()
             NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
         })
     }
     
+    func noDeviceAvailable() {
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.lblScanStatus.text = "Couldn't find your device"
+        self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+        self.btnRetry.isHidden = false
+        self.btnNoDevice.isHidden = false
+        self.barBtnBLE.image =  UIImage(named: "golficationBarG")
+        Constants.ble.stopScanning()
+    }
+    
     @objc func SeventyFivePercentUpdated(_ notification: NSNotification){
         DispatchQueue.main.async(execute: {
+            self.timeOutTimer.invalidate()
+            self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
+            
             self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.50, toValue: 0.75)
             NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
         })
@@ -200,7 +216,7 @@ class BluetootheConnectionTesting: UIViewController {
         updateScreenBLE()
     }
     func updateScreenBLE(){
-        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+        self.barBtnBLE.image =  UIImage(named: "golficationBar")
         self.lblDeviceName.text = "\(Constants.deviceGolficationX.name ?? "No Name")"
         self.stackViewHowToConnect.isHidden = true
         self.stackViewChooseDetails.isHidden = false
@@ -221,7 +237,7 @@ class BluetootheConnectionTesting: UIViewController {
         self.view.layoutIfNeeded()
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         
-        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+        self.barBtnBLE.image =  UIImage(named: "golficationBar")
         self.view.makeToast("Device is connected.")
         
         if Constants.handed.contains("Left"){
@@ -234,8 +250,8 @@ class BluetootheConnectionTesting: UIViewController {
         DispatchQueue.main.async {
             Constants.ble.isDeviceSetup = true
             UIApplication.shared.keyWindow?.makeToast("Golfication X setup successfull completed.")
-                self.navigationController?.popToRootViewController(animated: true)
-                NotificationCenter.default.removeObserver(NSNotification.Name(rawValue:"command2Finished"))
+            self.navigationController?.popToRootViewController(animated: true)
+            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue:"command2Finished"))
         }
     }
     @objc func cancelGolfXAction(_ sender: UIButton!) {
@@ -243,13 +259,15 @@ class BluetootheConnectionTesting: UIViewController {
         golfXPopupView.removeFromSuperview()
     }
     @objc func updateScreen(_ notification: NSNotification){
+        self.timeOutTimer.invalidate()
+        
         DispatchQueue.main.async(execute: {
             self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.75, toValue: 1.0)
             self.perform(#selector(self.animateProgress), with: nil, afterDelay: 1.0)
         })
     }
     
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if(Constants.deviceGolficationX != nil){
@@ -350,16 +368,16 @@ class BluetootheConnectionTesting: UIViewController {
         switch sender.tag{
         case 0:
             self.sgmntCtrlOrientation.selectedSegmentIndex = 0
-            btnHandiLeft.setImage(#imageLiteral(resourceName: "handiLeftDark"), for: .normal)
-            btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtLight"), for: .normal)
+            btnHandiLeft.setImage(UIImage(named: "handiLeftDark"), for: .normal)
+            btnHandiRight.setImage(UIImage(named: "handiRIghtLight"), for: .normal)
             lblHandiLeft.textColor = UIColor.black
             lblHandiRight.textColor = UIColor(rgb: 0x133022)
             handiLeftView.layer.borderColor = UIColor.glfBluegreen.cgColor
             handiRightView.layer.borderColor = UIColor.clear.cgColor
         case 1:
             self.sgmntCtrlOrientation.selectedSegmentIndex = 1
-            btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtDark"), for: .normal)
-            btnHandiLeft.setImage(#imageLiteral(resourceName: "handiLeftLight"), for: .normal)
+            btnHandiRight.setImage(UIImage(named: "handiRIghtDark"), for: .normal)
+            btnHandiLeft.setImage(UIImage(named: "handiLeftLight"), for: .normal)
             lblHandiLeft.textColor = UIColor(rgb: 0x133022)
             lblHandiRight.textColor = UIColor.black
             handiLeftView.layer.borderColor = UIColor.clear.cgColor
@@ -368,7 +386,7 @@ class BluetootheConnectionTesting: UIViewController {
             break;
         }
     }
-
+    
     @IBAction func btnActionSetupTags(_ sender: UIButton) {
         let leftOrRight :UInt8 = UInt8(self.sgmntCtrlOrientation.selectedSegmentIndex + 1)
         let metric :UInt8 = UInt8(self.sgmntCtrlMetric.selectedSegmentIndex + 1)

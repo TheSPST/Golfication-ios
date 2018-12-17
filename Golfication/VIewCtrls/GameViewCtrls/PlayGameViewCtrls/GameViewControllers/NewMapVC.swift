@@ -123,7 +123,7 @@ var Timestamp: Int64 {
     return Int64(NSDate().timeIntervalSince1970*1000)
 }
 
-class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,ExitGamePopUpDelegate, ARViewDelegate{
+class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,ExitGamePopUpDelegate, ARViewDelegate, BluetoothDelegate{
     
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var btnCenter: UILocalizedButton!
@@ -252,121 +252,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var deviceCircularView: CircularProgress!
     var isDeviceSetup = false
     var swingShotArr = NSArray()
-    
-    // MARK: golfXAction
-    @objc func golfXAction() {
-        if Constants.isDevice{
-            Constants.ble.startScanning()
-        }
-        NotificationCenter.default.addObserver(self, selector: #selector(self.bluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
-    }
-    @objc func bluetoothStatus(_ notification: NSNotification) {
-        let notifBleStatus = notification.object as! String
-        if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
-            if(Constants.deviceGolficationX == nil){
-                
-                DispatchQueue.main.async(execute: {
-                    self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBarG"), for: .normal)
-                    self.btnGolficationX.isUserInteractionEnabled = true
-                    self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
-                    self.golfXPopupView.frame = self.view.bounds
-                    self.view.addSubview(self.golfXPopupView)
-                    self.setGofXUISetup()
-                })
-            }
-            else{
-                DispatchQueue.main.async(execute: {
-                    self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBar"), for: .normal)
-                    self.btnGolficationX.isUserInteractionEnabled = false
-                    self.view.makeToast("Device is already connected.")
-                    Constants.ble.stopScanning()
-                })
-            }
-        }
-        else{
-            Constants.ble.stopScanning()
-        }
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
-    }
-    func setGofXUISetup(){
-        btnNoDevice = (golfXPopupView.viewWithTag(111) as! UIButton)
-        btnNoDevice.layer.cornerRadius = btnNoDevice.frame.size.height/2
-        
-        btnRetry = (golfXPopupView.viewWithTag(222) as! UIButton)
-        btnRetry.addTarget(self, action: #selector(self.retryAction(_:)), for: .touchUpInside)
-        btnRetry.layer.cornerRadius = 3.0
-        
-        let btnCancel = golfXPopupView.viewWithTag(333) as! UIButton
-        btnCancel.addTarget(self, action: #selector(self.cancelGolfXAction(_:)), for: .touchUpInside)
-        
-        deviceCircularView = (golfXPopupView.viewWithTag(444) as! CircularProgress)
-        deviceCircularView.progressColor = UIColor.glfBluegreen
-        deviceCircularView.trackColor = UIColor.clear
-        deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
-        deviceCircularView.progressLayer.lineWidth = 3.0
 
-        lblScanStatus = (golfXPopupView.viewWithTag(555) as! UILabel)
-        
-        self.setInitialDeviceData()
-    }
-    @objc func retryAction(_ sender: UIButton) {
-        if Constants.isDevice{
-            Constants.ble.startScanning()
-        }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
-    }
-    
-    @objc func chkBluetoothStatus(_ notification: NSNotification) {
-        let notifBleStatus = notification.object as! String
-        if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
-            self.setInitialDeviceData()
-        }
-        else{
-            self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG") ,for: .normal)
-            self.btnGolficationX.isUserInteractionEnabled = true
-            Constants.ble.stopScanning()
-        }
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
-    }
-    
-    @objc func cancelGolfXAction(_ sender: UIButton!) {
-        self.navigationItem.rightBarButtonItem?.isEnabled = true
-        golfXPopupView.removeFromSuperview()
-    }
-    func setInitialDeviceData(){
-        DispatchQueue.main.async {
-            self.lblScanStatus.text = "Scanning for Golfication X..."
-            self.btnRetry.isHidden = true
-            self.btnNoDevice.isHidden = true
-        }
-        DispatchQueue.main.async(execute: {
-            self.deviceCircularView.setProgressWithAnimation(duration: 5.0, value: 1.0)
-            self.perform(#selector(self.animateProgress), with: nil, afterDelay: 5.0)
-        })
-    }
-    @objc func animateProgress() {
-        if(Constants.deviceGolficationX == nil){
-            self.navigationItem.rightBarButtonItem?.isEnabled = false
-            self.lblScanStatus.text = "Couldn't find your device"
-            deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
-            self.btnRetry.isHidden = false
-            self.btnNoDevice.isHidden = false
-            self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
-            self.btnGolficationX.isUserInteractionEnabled = true
-            Constants.ble.stopScanning()
-        }
-        else{
-            self.navigationItem.rightBarButtonItem?.isEnabled = true
-            deviceCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
-            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatchCalling"), object: true)
-            self.golfXPopupView.removeFromSuperview()
-            self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBar"),for: .normal)
-            self.btnGolficationX.isUserInteractionEnabled = false
-            Constants.ble.stopScanning()
-            self.view.makeToast("Device is connected.")
-        }
-    }
     func checkDeviceStatus() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.golficationXDisconnected(_:)), name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
         
@@ -383,10 +269,260 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
         self.btnGolficationX.isUserInteractionEnabled = true
     }
+    
+    //----------------------------------- Amit's Changes -----------------------------
+    var sharedInstance: BluetoothSync!
+    var timeOutTimer = Timer()
+
     @IBAction func btnActionGolficationX(_ sender: Any) {
-        Constants.ble.startScanning()
+        if(Constants.deviceGolficationX == nil){
+            self.sharedInstance = BluetoothSync.getInstance()
+            self.sharedInstance.delegate = self
+            self.sharedInstance.initCBCentralManager()
+        }
     }
 
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            self.btnActionBack(self.btnBack)
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            
+            if self.deviceGameID == 0{
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(self.swingMatchId)/gameId") { (snapshot) in
+                    var gameid = 0
+                    if (snapshot.value != nil) {
+                        gameid = snapshot.value as! Int
+                        self.deviceGameID = gameid
+                    }
+                    DispatchQueue.main.async(execute: {
+                        if Constants.ble == nil{
+                            Constants.ble = BLE()
+                        }
+                        Constants.ble.isPracticeMatch = false
+                        Constants.ble.swingMatchId = self.swingMatchId
+                        Constants.ble.currentGameId = self.deviceGameID
+                        Constants.ble.startScanning()
+//                        NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+
+                        self.showPopUp()
+                        self.sharedInstance.delegate = nil
+                    })
+                }
+            }else{
+                if Constants.ble == nil{
+                    Constants.ble = BLE()
+                }
+                Constants.ble.isPracticeMatch = false
+                Constants.ble.swingMatchId = self.swingMatchId
+                Constants.ble.currentGameId = self.deviceGameID
+                Constants.ble.startScanning()
+//                NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+
+                showPopUp()
+                self.sharedInstance.delegate = nil
+            }
+            return
+            
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
+        }
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+    }
+    
+    func showPopUp(){
+        self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.SeventyFivePercentUpdated(_:)), name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.ScanningTimeOut(_:)), name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
+        
+        self.btnGolficationX.setImage(UIImage(named:"golficationBarG"), for: .normal)
+//        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
+        self.golfXPopupView.frame = self.view.bounds
+        self.view.addSubview(self.golfXPopupView)
+        setGofXUISetup()
+    }
+    
+    @objc func timerAction() {
+        self.timeOutTimer.invalidate()
+        self.noDeviceAvailable()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        statusStableFord()
+        self.navigationController?.navigationBar.isHidden = true
+        
+        if Constants.isDevice{
+            if(Constants.deviceGolficationX != nil){
+                updateScreenBLE()
+            }
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(false)
+
+        if(selectClubDropper.status != .hidden){
+            selectClubDropper.hide()
+        }
+        if(isOnCourse){
+            self.mapTimer.invalidate()
+        }
+        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidBecomeActive)
+        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidEnterBackground)
+        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationWillEnterForeground)
+        
+        ref.child("matchData/\(self.currentMatchId)/scoring/\(self.index)/\(self.selectedUserId)").removeAllObservers()
+        UIApplication.shared.isIdleTimerDisabled = false
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+
+    }
+    
+    func setGofXUISetup(){
+        
+        btnNoDevice = (golfXPopupView.viewWithTag(111) as! UIButton)
+        btnNoDevice.layer.cornerRadius = btnNoDevice.frame.size.height/2
+        
+        btnRetry = (golfXPopupView.viewWithTag(222) as! UIButton)
+        btnRetry.addTarget(self, action: #selector(self.retryAction(_:)), for: .touchUpInside)
+        btnRetry.layer.cornerRadius = 3.0
+        
+        let btnCancel = golfXPopupView.viewWithTag(333) as! UIButton
+        btnCancel.addTarget(self, action: #selector(self.cancelGolfXAction(_:)), for: .touchUpInside)
+        
+        deviceCircularView = (golfXPopupView.viewWithTag(444) as! CircularProgress)
+        deviceCircularView.progressColor = UIColor.glfBluegreen
+        deviceCircularView.trackColor = UIColor.clear
+        deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+        deviceCircularView.progressLayer.lineWidth = 3.0
+        
+        lblScanStatus = (golfXPopupView.viewWithTag(555) as! UILabel)
+        
+        DispatchQueue.main.async {
+            self.lblScanStatus.text = "Scanning for Golfication X..."
+            self.btnRetry.isHidden = true
+            self.btnNoDevice.isHidden = true
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.0, toValue: 0.50)
+        }
+    }
+    @objc func ScanningTimeOut(_ notification: NSNotification){
+        DispatchQueue.main.async(execute: {
+            self.noDeviceAvailable()
+            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
+        })
+    }
+    func noDeviceAvailable() {
+//        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.lblScanStatus.text = "Couldn't find your device"
+        self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+        self.btnRetry.isHidden = false
+        self.btnNoDevice.isHidden = false
+        self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for: .normal)
+        Constants.ble.stopScanning()
+    }
+    @objc func SeventyFivePercentUpdated(_ notification: NSNotification){
+        self.timeOutTimer.invalidate()
+        self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
+        DispatchQueue.main.async(execute: {
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.50, toValue: 0.75)
+            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
+        })
+    }
+    @objc func updateScreen(_ notification: NSNotification){
+        self.timeOutTimer.invalidate()
+        DispatchQueue.main.async(execute: {
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.75, toValue: 1.0)
+            self.perform(#selector(self.animateProgress), with: nil, afterDelay: 1.0)
+        })
+    }
+    @objc func animateProgress() {
+//        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+        self.golfXPopupView.removeFromSuperview()
+        Constants.ble.stopScanning()
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
+        updateScreenBLE()
+    }
+
+    func updateScreenBLE(){
+        self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBar"), for: .normal)
+//        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        self.view.makeToast("Device is connected.")
+    }
+    @objc func retryAction(_ sender: UIButton) {
+        self.golfXPopupView.removeFromSuperview()
+        btnActionGolficationX(self.btnGolficationX)
+        /*if Constants.ble == nil{
+            Constants.ble = BLE()
+            Constants.ble.isPracticeMatch = false
+//            NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+        }
+        Constants.ble.startScanning()
+        showPopUp()*/
+    }
+    @objc func chkBluetoothStatus(_ notification: NSNotification) {
+        let notifBleStatus = notification.object as! String
+        if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
+        }
+        else{
+            self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBarG"), for: .normal)
+            self.btnActionBack(self.btnBack)
+        }
+    }
+    /*@objc func chkBluetoothStatus(_ notification: NSNotification) {
+        let notifBleStatus = notification.object as! String
+        if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
+            if(Constants.deviceGolficationX == nil){
+                
+                DispatchQueue.main.async(execute: {
+                    self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBarG"), for: .normal)
+                })
+            }
+            else{
+                DispatchQueue.main.async(execute: {
+                    self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBar"), for: .normal)
+                    self.view.makeToast("Device is already connected.")
+//                    Constants.ble.stopScanning()
+                })
+            }
+        }
+        else if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_OFF"){
+            self.btnGolficationX.setImage(#imageLiteral(resourceName: "golficationBarG"), for: .normal)
+        }else{
+            //Constants.ble.stopScanning()
+        }
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+    }*/
+    @objc func cancelGolfXAction(_ sender: UIButton!) {
+//        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        golfXPopupView.removeFromSuperview()
+    }
+    // -------------------------------------- End ---------------------------------------------
+    
+    
     // MARK:- All PanGesture Related Local Variables
     var panGesture  = UIPanGestureRecognizer()
     var btnPanGesture  = UIPanGestureRecognizer()
@@ -1374,43 +1510,29 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         backgroundTask = UIBackgroundTaskInvalid
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        statusStableFord()
-        self.navigationController?.navigationBar.isHidden = true
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(false)
-        if(selectClubDropper.status != .hidden){
-            selectClubDropper.hide()
-        }
-        if(isOnCourse){
-            self.mapTimer.invalidate()
-        }
-        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidBecomeActive)
-        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidEnterBackground)
-        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationWillEnterForeground)
-
-        ref.child("matchData/\(self.currentMatchId)/scoring/\(self.index)/\(self.selectedUserId)").removeAllObservers()
-        UIApplication.shared.isIdleTimerDisabled = false
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
+        NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+
         if let onCourse = self.matchDataDict.value(forKeyPath: "onCourse") as? Bool{
             self.isOnCourse = onCourse
             if Constants.deviceGolficationX != nil && isDeviceConnected{
                 self.btnGolficationX.isHidden = false
-                self.btnGolficationX.isUserInteractionEnabled = false
+//                self.btnGolficationX.isUserInteractionEnabled = false
             }else if isDeviceConnected{
                 if Constants.deviceGolficationX == nil{
                     self.btnGolficationX.setImage(UIImage(named: "golficationBarG"), for: .normal)
-                    self.btnGolficationX.isUserInteractionEnabled = true
+//                    self.btnGolficationX.isUserInteractionEnabled = true
                 }
+            }else if isContinue && Constants.deviceGolficationX != nil && !isDeviceConnected{
+                self.btnGolficationX.isHidden = false
+//                self.btnGolficationX.isUserInteractionEnabled = false
             }
-            self.checkDeviceStatus()
+//            self.checkDeviceStatus()
         
         }
+        // for BluetoothChecking
         // register background task
         if(isOnCourse){
             if Constants.onCourseNotification == 1{
@@ -3548,7 +3670,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         if (sender.numberOfTouches == 2){
-            let rotationAngle = self.mapView.camera.bearing - self.windHeading
+            var rotationAngle = self.mapView.camera.bearing - self.windHeading
+            if isOnCourse{
+                if let location = self.locationManager.location{
+                    let heading = GMSGeometryHeading(location.coordinate,self.courseData.centerPointOfTeeNGreen[self.holeIndex].green)
+                    rotationAngle = heading - self.windHeading
+                }
+            }
+            
             self.imgViewWind.transform = CGAffineTransform(rotationAngle: CGFloat(rotationAngle) / 180.0 * CGFloat(Double.pi))
         }
         
@@ -5077,6 +5206,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             
                             if let currentLocation: CLLocation = self.locationManager.location{
                                 self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+                                let heading = GMSGeometryHeading(currentLocation.coordinate,self.courseData.centerPointOfTeeNGreen[self.holeIndex].green)
+                                let rotationAngle = heading - self.windHeading
+                                self.imgViewWind.transform = CGAffineTransform(rotationAngle: CGFloat(rotationAngle) / 180.0 * CGFloat(Double.pi))
+
                             }
                             let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
                             if (distance < 15000.0){
@@ -6048,12 +6181,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnAddPenaltyLbl.isHidden = true
         
     }
+    var deviceGameID = Int()
     func getGameId(swingKey:String){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(swingKey)/gameId") { (snapshot) in
             var gameid = 0
             if (snapshot.value != nil) {
                 gameid = snapshot.value as! Int
                 Constants.ble.currentGameId = gameid
+                self.deviceGameID = gameid
             }
             DispatchQueue.main.async(execute: {
                 if(self.isContinue){

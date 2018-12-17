@@ -40,6 +40,7 @@ class ScanningVC: UIViewController {
     var btnRetry: UIButton!
     var btnNoDevice: UIButton!
     var lblScanStatus: UILabel!
+    var timeOutTimer = Timer()
 
     @IBAction func barBtnBLEAction(_ sender: Any) {
         if (self.barBtnBLE.image == #imageLiteral(resourceName: "golficationBarG")){
@@ -67,6 +68,8 @@ class ScanningVC: UIViewController {
     }
 
     func showPopUp(){
+        self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
+
         NotificationCenter.default.addObserver(self, selector: #selector(self.SeventyFivePercentUpdated(_:)), name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
@@ -79,6 +82,10 @@ class ScanningVC: UIViewController {
         self.golfXPopupView.frame = self.view.bounds
         self.view.addSubview(self.golfXPopupView)
         setGofXUISetup()
+    }
+    @objc func timerAction() {
+        self.timeOutTimer.invalidate()
+        self.noDeviceAvailable()
     }
     func setGofXUISetup(){
         btnNoDevice = (golfXPopupView.viewWithTag(111) as! UIButton)
@@ -109,6 +116,9 @@ class ScanningVC: UIViewController {
         golfXPopupView.removeFromSuperview()
     }
     @objc func SeventyFivePercentUpdated(_ notification: NSNotification){
+        self.timeOutTimer.invalidate()
+        self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
+
         DispatchQueue.main.async(execute: {
             self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.50, toValue: 0.75)
             NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
@@ -116,6 +126,7 @@ class ScanningVC: UIViewController {
     }
     
     @objc func updateScreen(_ notification: NSNotification){
+        self.timeOutTimer.invalidate()
         DispatchQueue.main.async(execute: {
             self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.75, toValue: 0.90)
             self.perform(#selector(self.animateProgress), with: nil, afterDelay: 1.0)
@@ -124,17 +135,21 @@ class ScanningVC: UIViewController {
     
     @objc func ScanningTimeOut(_ notification: NSNotification){
         DispatchQueue.main.async(execute: {
-            self.navigationItem.rightBarButtonItem?.isEnabled = false
-            self.lblScanStatus.text = "Couldn't find your device"
-            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
-            self.btnRetry.isHidden = false
-            self.btnNoDevice.isHidden = false
-            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-            Constants.ble.stopScanning()
-            
+           self.noDeviceAvailable()
             NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
         })
     }
+    
+    func noDeviceAvailable() {
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.lblScanStatus.text = "Couldn't find your device"
+        self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+        self.btnRetry.isHidden = false
+        self.btnNoDevice.isHidden = false
+        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+        Constants.ble.stopScanning()
+    }
+    
     @objc func animateProgress() {
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         Constants.ble.stopScanning()
