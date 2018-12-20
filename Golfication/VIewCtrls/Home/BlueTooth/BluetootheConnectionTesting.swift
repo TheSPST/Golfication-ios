@@ -153,17 +153,25 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         self.present(alertVC, animated: true, completion: nil)
     }
     @objc func retryAction(_ sender: UIButton) {
+        if self.golfXPopupView != nil{
+            self.golfXPopupView.removeFromSuperview()
+        }
         sharedInstance = BluetoothSync.getInstance()
         sharedInstance.delegate = self
         sharedInstance.initCBCentralManager()
-
     }
     @objc func btnActionConnectBL(_ sender: UIBarButtonItem) {
+        if self.golfXPopupView != nil{
+            self.golfXPopupView.removeFromSuperview()
+        }
         sharedInstance = BluetoothSync.getInstance()
         sharedInstance.delegate = self
         sharedInstance.initCBCentralManager()
     }
     @IBAction func btnActionScanForDevice(_ sender: UIButton) {
+        if self.golfXPopupView != nil{
+            self.golfXPopupView.removeFromSuperview()
+        }
         sharedInstance = BluetoothSync.getInstance()
         sharedInstance.delegate = self
         sharedInstance.initCBCentralManager()

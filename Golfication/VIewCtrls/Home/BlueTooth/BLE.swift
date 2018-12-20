@@ -881,7 +881,7 @@ extension BLE: CBPeripheralDelegate {
                     Constants.deviceGolficationX.discoverCharacteristics(nil, for: service_Write)
                 }
                 if(service.uuid == golficationXCharacteristicCBUUIDOAD){
-                    debugPrint("Write UUID  :\(service.uuid)")
+                    debugPrint("OAD UUID  :\(service.uuid)")
                     Constants.deviceGolficationX.discoverCharacteristics(nil, for: service)
                 }
             }
