@@ -12,13 +12,10 @@ import FirebaseStorage
 class TIOADViewController: UIViewController{
 
     var perip : CBPeripheral!
-    var deviceList = NSMutableArray()
-    
     var oadImage: TIOADToadImageReader!
     var client: TIOADClient!
     var deviceSelected: Bool!
-    var man: CBCentralManager!
-
+    
     @IBOutlet weak var TIOADProgress: UIProgressView!
     @IBOutlet weak var TIOADCurrentStatus: UILabel!
     @IBOutlet weak var TIOADOADImage: UILabel!
@@ -27,7 +24,6 @@ class TIOADViewController: UIViewController{
     @IBOutlet weak var TIOADMTUSize: UILabel!
     @IBOutlet weak var TIOADBlockSize: UILabel!
     @IBOutlet weak var TIOADImageInfo: UITextView!
-    @IBOutlet weak var TIOADDevicesFoundTableView: UITableView!
     @IBOutlet weak var TIOADChipID: UILabel!
     @IBOutlet weak var TIOADTotalBytes: UILabel!
     @IBOutlet weak var TIOADCurrentByte: UILabel!
@@ -46,7 +42,7 @@ class TIOADViewController: UIViewController{
         self.title = "OAD"
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-
+        TIOADStartScanButton.setTitle("Downoad File", for: .normal)
         self.TIOADActivityIndicator.startAnimating()
         self.TIOADProgress.isHidden = true
         self.TIOADStartScanButton.isEnabled = false
@@ -67,9 +63,6 @@ class TIOADViewController: UIViewController{
                             self.TIOADOADImage.text = self.fileName
                             
                             self.TIOADImageInfo.text = self.oadImage.description
-                            self.TIOADDevicesFoundTableView.delegate = self
-                            self.TIOADDevicesFoundTableView.dataSource = self
-                            self.deviceList = NSMutableArray()
                             self.deviceSelected = false
                             
                             self.TIOADActivityIndicator.stopAnimating()
@@ -92,6 +85,7 @@ class TIOADViewController: UIViewController{
                     self.TIOADMTUSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
                     self.TIOADBlockSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse)-4)"
                     self.deviceSelected = true
+                    self.TIOADStartScanButton.setTitle("Start Updating", for: .normal)
                 }
             }
         }
@@ -132,6 +126,11 @@ extension TIOADViewController: TIOADClientProgressDelegate{
             self.TIOADStartScanButton.isEnabled = true
             self.TIOADChipID.text = client.getChipId()
         }
+            if let status = TIOADClient.getStateString(from: state){
+                if status.contains("Feedback complete OK"){
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            }
         self.TIOADCurrentStatus.text = TIOADClient.getStateString(from: state)
         
         if ((error) != nil) {
@@ -143,30 +142,5 @@ extension TIOADViewController: TIOADClientProgressDelegate{
             }
             
         }
-    }
-}
-
-extension TIOADViewController: UITableViewDelegate, UITableViewDataSource{
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // 1
-        // Return the number of sections.
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // 2
-        return self.deviceList.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return self.deviceList[indexPath.row] as! TIOADDeviceTableViewCell
-    }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let cell = self.deviceList[indexPath.row] as! TIOADDeviceTableViewCell
-        man.connect(cell.p, options: nil)
-        deviceSelected = true
-        self.TIOADStartScanButton.isEnabled = false
-        self.TIOADStartScanButton.setTitle("Start Programming", for: .normal)
     }
 }

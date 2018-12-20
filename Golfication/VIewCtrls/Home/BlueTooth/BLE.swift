@@ -752,6 +752,7 @@ extension BLE: CBCentralManagerDelegate {
                 UIApplication.shared.keyWindow?.makeToast("Make sure that your bluetooth is turned on.")
                 bluetoothStatus = "Bluetooth_OFF"
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "BluetoothStatus"), object: bluetoothStatus)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
             })
             Constants.ble.invalidateAllTimers()
             charctersticsWrite = nil
@@ -1141,6 +1142,7 @@ extension BLE: CBPeripheralDelegate {
                 shotDict.setValue(newPoint.longitude, forKey: "lng1")
             }
         }else{
+            
             shotDict.setValue(nextData.lat, forKey: "lat1")
             shotDict.setValue(nextData.lng, forKey: "lng1")
         }
@@ -1350,15 +1352,16 @@ extension BLE: CBPeripheralDelegate {
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
                                 matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
                                 matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
-                                let gameAlert = UIAlertController(title: "Device GPS", message: "Which GPS you want to use?", preferredStyle: UIAlertControllerStyle.alert)
-                                gameAlert.addAction(UIAlertAction(title: "Phone GPS", style: .default, handler: { (action: UIAlertAction!) in
-                                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"phone"])
-                                }))
-                                gameAlert.addAction(UIAlertAction(title: "Device GPS", style: .default, handler: { (action: UIAlertAction!) in
-                                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"device"])
-                                    
-                                }))
-                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                                UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
+//                                let gameAlert = UIAlertController(title: "Device GPS", message: "Which GPS you want to use?", preferredStyle: UIAlertControllerStyle.alert)
+//                                gameAlert.addAction(UIAlertAction(title: "Phone GPS", style: .default, handler: { (action: UIAlertAction!) in
+//                                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"phone"])
+//                                }))
+//                                gameAlert.addAction(UIAlertAction(title: "Device GPS", style: .default, handler: { (action: UIAlertAction!) in
+//                                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"device"])
+//
+//                                }))
+//                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
                             }
                             ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
                         })
@@ -1577,8 +1580,15 @@ extension BLE: CBPeripheralDelegate {
                                 holeWithSwing[holeWithSwing.count-1].lng = location.coordinate.longitude
                             }
                         }else{
-                            holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
-                            holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
+                            oldLatLng = CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng))
+                            if (oldLatLng.latitude == Double(lat)) && (oldLatLng.longitude == Double(lng)){
+                                let newPoint = GMSGeometryOffset(CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng)), 1,CLLocationDirection(arc4random_uniform(360)))
+                                holeWithSwing[holeWithSwing.count-1].lat = newPoint.latitude
+                                holeWithSwing[holeWithSwing.count-1].lng = newPoint.longitude
+                            }else{
+                                holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
+                                holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
+                            }
                             debugPrint("Lattitude From Device : ",Double(lat))
                             debugPrint("Longitude From Device : ",Double(lng))
                         }

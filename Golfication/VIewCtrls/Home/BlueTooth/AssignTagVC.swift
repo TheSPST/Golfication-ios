@@ -85,6 +85,7 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
         let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
         backBtn.tintColor = UIColor.glfBluegreen
         self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
 
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white
@@ -101,5 +102,15 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
         self.title = "Assign Tags"
         self.progressView.hide(navItem: self.navigationItem)
     }
-
+    @objc func chkBluetoothStatus(_ notification: NSNotification) {
+        let notifBleStatus = notification.object as! String
+        if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
+            //            self.setInitialDeviceData()
+        }
+        else{
+            self.navigationController?.popViewController(animated: false)
+            //            Constants.ble.stopScanning()
+        }
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+    }
 }

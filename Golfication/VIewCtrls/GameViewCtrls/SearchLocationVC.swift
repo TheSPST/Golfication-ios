@@ -119,7 +119,9 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
         }
         else{
             let currentLocation: CLLocation = locationManager.location!
+//            let currentLocation: CLLocation = CLLocation(latitude: 29.8921011, longitude: -95.3320741)
             self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
+//            self.getNearByData(latitude: 29.8921011, longitude: -95.3320741, currentLocation: currentLocation)
         }
     }
     

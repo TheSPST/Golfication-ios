@@ -11,7 +11,7 @@ import FirebaseAuth
 import GoogleMaps
 import UICircularProgressRing
 
-class BluetootheConnectionTesting: UIViewController {
+class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     
     @IBOutlet weak var btnDevice: UIButton!
     @IBOutlet weak var lblDeviceName: UILabel!
@@ -64,7 +64,7 @@ class BluetootheConnectionTesting: UIViewController {
     var lblScanStatus: UILabel!
     var deviceCircularView: CircularProgress!
     var timeOutTimer = Timer()
-    
+    var sharedInstance: BluetoothSync!
     override func viewDidLoad() {
         super.viewDidLoad()
         btnSetupTags.setCorner(color: UIColor.clear.cgColor)
@@ -102,37 +102,73 @@ class BluetootheConnectionTesting: UIViewController {
     }
     @objc func golficationXDisconnected(_ notification: NSNotification) {
         self.barBtnBLE.image =  UIImage(named: "golficationBarG")
-        //        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
+        self.btnDevice.frame.origin.x = self.btnDevice.frame.origin.x - 25
+        self.btnDevice.frame.origin.y = self.btnDevice.frame.origin.y - 25
+        self.stackViewHowToConnect.isHidden = false
+        self.stackViewChooseDetails.isHidden = true
+        self.btnScanForDevice.isHidden = false
+        self.stackViewForSetupTag.isHidden = true
+        self.stackViewDeviceConnected.isHidden = true
+        self.btnDevice.isHidden = false
+        self.lblToDiffer.isHidden = true
+        self.btnDeviceAfterConnected.isHidden = true
+        self.view.layoutIfNeeded()
+
+    }
+    
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            if Constants.deviceGolficationX == nil{
+                if Constants.ble == nil{
+                    Constants.ble = BLE()
+                }
+                Constants.ble.isSetupScreen = true
+                Constants.ble.startScanning()
+                showPopUp()
+            }
+            sharedInstance.delegate = nil
+            return
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
+        }
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
     }
     @objc func retryAction(_ sender: UIButton) {
-        if Constants.ble == nil{
-            Constants.ble = BLE()
-        }
-        Constants.ble.isSetupScreen = true
-        Constants.ble.startScanning()
-        self.golfXPopupView.removeFromSuperview()
-        showPopUp()
+        sharedInstance = BluetoothSync.getInstance()
+        sharedInstance.delegate = self
+        sharedInstance.initCBCentralManager()
+
     }
     @objc func btnActionConnectBL(_ sender: UIBarButtonItem) {
-        if Constants.deviceGolficationX == nil{
-            if Constants.ble == nil{
-                Constants.ble = BLE()
-            }
-            Constants.ble.isSetupScreen = true
-            Constants.ble.startScanning()
-            showPopUp()
-        }
+        sharedInstance = BluetoothSync.getInstance()
+        sharedInstance.delegate = self
+        sharedInstance.initCBCentralManager()
     }
     @IBAction func btnActionScanForDevice(_ sender: UIButton) {
-        if Constants.ble == nil{
-            Constants.ble = BLE()
-        }
-        Constants.ble.isSetupScreen = true
-        Constants.ble.startScanning()
-        showPopUp()
-        //        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "responseFirstCommand"),object:nil)
-        
+        sharedInstance = BluetoothSync.getInstance()
+        sharedInstance.delegate = self
+        sharedInstance.initCBCentralManager()
     }
+    
     func showPopUp(){
         self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
         
