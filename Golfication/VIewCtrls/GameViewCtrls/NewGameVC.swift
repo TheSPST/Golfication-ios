@@ -167,9 +167,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var lblScanStatus: UILabel!
     var deviceCircularView: CircularProgress!
     var isDeviceSetup = false
+    var fromGolfBarBtn = false
     // MARK: golfXAction
     @objc func golfXAction() {
         if(Constants.deviceGolficationX == nil){
+            fromGolfBarBtn = true
             self.sharedInstance = BluetoothSync.getInstance()
             self.sharedInstance.delegate = self
             self.sharedInstance.initCBCentralManager()
@@ -186,6 +188,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             break
         case .poweredOn:
             debugPrint("State : Powered On")
+            if(Constants.deviceGolficationX == nil) && fromGolfBarBtn{
+               fromGolfBarBtn = false
             if Constants.ble == nil{
                 Constants.ble = BLE()
                 Constants.ble.isPracticeMatch = false
@@ -193,7 +197,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
             Constants.ble.startScanning()
             showPopUp()
-            self.sharedInstance.delegate = nil
+            }
+//            self.sharedInstance.delegate = nil
             return
             
         case .unsupported:
@@ -204,14 +209,31 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             break
         }
         
+        if Constants.ble == nil{
+            Constants.ble = BLE()
+        }
+        Constants.ble.stopScanning()
+        Constants.deviceGolficationX = nil
+        self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        if golfXPopupView != nil{
+           self.golfXPopupView.removeFromSuperview()
+        }
+        fromGolfBarBtn = false
+        self.timeOutTimer.invalidate()
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
+
         let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
             self.dismiss(animated: true, completion: nil)
-            self.sharedInstance.delegate = nil
+//            self.sharedInstance.delegate = nil
         })
         alertVC.addAction(action)
         self.present(alertVC, animated: true, completion: nil)
     }
+    
     func showPopUp(){
         self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
 
@@ -302,6 +324,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
         self.golfXPopupView.removeFromSuperview()
+        if Constants.ble == nil{
+           Constants.ble = BLE()
+        }
         Constants.ble.stopScanning()
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         updateScreenBLE()
@@ -414,6 +439,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if(Constants.deviceGolficationX != nil){
+        self.sharedInstance = BluetoothSync.getInstance()
+        self.sharedInstance.delegate = self
+        self.sharedInstance.initCBCentralManager()
+        }
         imagePicker.delegate = self
         self.getHandicap()
         // for Bluetooth device setup

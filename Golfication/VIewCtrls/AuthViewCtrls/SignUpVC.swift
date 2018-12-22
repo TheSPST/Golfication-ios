@@ -47,6 +47,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
             
             // Perform login by calling Firebase APIs
+            self.progressView.show()
             Auth.auth().signIn(with: credential, completion: { (user, error) in
                 if let error = error {
                     debugPrint("Login error: \(error.localizedDescription)")
@@ -119,7 +120,6 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             var isFirst = true
             
             FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "device") { (snapshot) in
-                self.progressView.show(atView: self.view, navItem: self.navigationItem)
                 self.isNewUser = true
 
                 if(snapshot.value != nil){
@@ -131,7 +131,6 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                 UserDefaults.standard.synchronize()
                 DispatchQueue.main.async(execute: {
                     FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "proMode") { (snapshot) in
-                        self.progressView.show(atView: self.view, navItem: self.navigationItem)
                         self.isNewUser = true
 
                         if(snapshot.value != nil){
@@ -167,12 +166,12 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                                 }
                                 let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewUserProfileVC") as! NewUserProfileVC
                                 self.navigationController?.pushViewController(viewCtrl, animated: false)
-                                self.progressView.hide(navItem: self.navigationItem)
+                                self.progressView.hide()
                                 self.sendMailingRequestToServer(uName: fbName,uEmail: fbEmail)
 
                             }
                             else{
-                                self.progressView.hide(navItem: self.navigationItem)
+                                self.progressView.hide()
 
                                 let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
                                 self.navigationController?.pushViewController(tabBarCtrl, animated: true)

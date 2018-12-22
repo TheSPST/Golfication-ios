@@ -134,7 +134,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
                 Constants.ble.startScanning()
                 showPopUp()
             }
-            sharedInstance.delegate = nil
+//            sharedInstance.delegate = nil
             return
         case .unsupported:
             alert = "This device is unsupported."
@@ -144,16 +144,29 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
             break
         }
         
+        if Constants.ble == nil{
+            Constants.ble = BLE()
+        }
+        Constants.ble.stopScanning()
+        Constants.deviceGolficationX = nil
+        self.barBtnBLE.image =  UIImage(named: "golficationBarG")
+        self.timeOutTimer.invalidate()
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
+
         let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
             self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
             self.sharedInstance.delegate = nil
         })
         alertVC.addAction(action)
         self.present(alertVC, animated: true, completion: nil)
     }
+
     @objc func retryAction(_ sender: UIButton) {
-        if self.golfXPopupView != nil{
+        if golfXPopupView != nil{
             self.golfXPopupView.removeFromSuperview()
         }
         sharedInstance = BluetoothSync.getInstance()
@@ -161,7 +174,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         sharedInstance.initCBCentralManager()
     }
     @objc func btnActionConnectBL(_ sender: UIBarButtonItem) {
-        if self.golfXPopupView != nil{
+        if golfXPopupView != nil{
             self.golfXPopupView.removeFromSuperview()
         }
         sharedInstance = BluetoothSync.getInstance()
@@ -169,7 +182,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         sharedInstance.initCBCentralManager()
     }
     @IBAction func btnActionScanForDevice(_ sender: UIButton) {
-        if self.golfXPopupView != nil{
+        if golfXPopupView != nil{
             self.golfXPopupView.removeFromSuperview()
         }
         sharedInstance = BluetoothSync.getInstance()

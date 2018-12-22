@@ -149,7 +149,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 self.swipePrev.isEnabled = false
                 self.btnFinishRound.isHidden = false
             }
-            self.updateData(indexToUpdate: self.holeIndex)
+            self.updateData(indexToUpdate: self.holeIndex%self.gameTypeIndex)
             return
         }, cancel: { ActionMultipleStringCancelBlock in return }, origin: sender)
         

@@ -10,7 +10,7 @@ import UIKit
 import UICircularProgressRing
 import FirebaseAuth
 
-class ScanningVC: UIViewController {
+class ScanningVC: UIViewController, BluetoothDelegate {
     
     @IBOutlet weak var btnBuyNow: UIButton!
 
@@ -65,8 +65,54 @@ class ScanningVC: UIViewController {
             viewHaveDevice.isHidden = true
             noDeviceSV.isHidden = false
         }
+        
+        sharedInstance = BluetoothSync.getInstance()
+        sharedInstance.delegate = self
+        sharedInstance.initCBCentralManager()
     }
+    var sharedInstance: BluetoothSync!
 
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            
+//            sharedInstance.delegate = nil
+            return
+            
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
+        }
+        if Constants.ble == nil{
+            Constants.ble = BLE()
+        }
+        Constants.ble.stopScanning()
+        
+        self.timeOutTimer.invalidate()
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+    }
+    
     func showPopUp(){
         self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
 

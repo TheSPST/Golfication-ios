@@ -28,7 +28,7 @@
         <!--Referal View Ctrls-->
         <scene sceneID="HNd-YM-354">
             <objects>
-                <viewController storyboardIdentifier="ReferalViewCtrls" id="lqY-iI-iA7" customClass="ReferalViewCtrls" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ReferalViewCtrls" id="lqY-iI-iA7" userLabel="Referal View Ctrls" customClass="ReferalViewCtrls" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JOj-k1-tud">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -520,6 +520,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Zsl-vH-P6V"/>
                     </view>
+                    <navigationItem key="navigationItem" id="V7i-ex-tH3">
+                        <barButtonItem key="leftBarButtonItem" id="7ku-OZ-hNR">
+                            <color key="tintColor" red="0.18039215689999999" green="0.62352941179999999" blue="0.50196078430000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="ReferalCardView" destination="42B-qh-Sss" id="Lyt-9J-ZTZ"/>
                         <outlet property="ReferalFrontCardView" destination="ds1-Yq-zhm" id="wh8-xH-zqZ"/>

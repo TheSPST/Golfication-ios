@@ -24,7 +24,7 @@ class CourseData:NSObject{
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     func getGolfCourseDataFromFirebase(courseId:String){
 //        courseId = "course_9999999"
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:"course_99999999") { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
             var rangeFinderHoles = NSArray()
@@ -204,7 +204,9 @@ class CourseData:NSObject{
                     debugPrint(self.gameTypeIndex)
                     debugPrint(self.startingIndex)
                     debugPrint(self.holeGreenDataArr.count)
-                    debugPrint(self.holeHcpWithTee)
+                    debugPrint(self.holeHcpWithTee.count)
+                    var temp = self.propertyArray
+                    temp.removeAll()
                     if(self.numberOfHoles.count < self.gameTypeIndex){
                         var tempArr = self.propertyArray
                         var tempHoleArr = self.centerPointOfTeeNGreen
@@ -230,58 +232,83 @@ class CourseData:NSObject{
                         self.propertyArray = tempArr
                         self.centerPointOfTeeNGreen = tempHoleArr
                         self.holeHcpWithTee = temp
-                    }
-                    let min = self.startingIndex-1
-                    var max = self.numberOfHoles.count-1
-                    
-                    if(self.numberOfHoles.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.numberOfHoles.count{
-                        max = (self.startingIndex+self.gameTypeIndex) - 1
-                    }else if self.startingIndex+self.gameTypeIndex-1 > self.numberOfHoles.count{
-                        if(self.gameTypeIndex < self.numberOfHoles.count){
-                            max =  (self.startingIndex+self.gameTypeIndex-1) - self.numberOfHoles.count
-                        }
-                    }
-                    var temp = self.propertyArray
-                    temp.removeAll()
-                    var newTemp = self.centerPointOfTeeNGreen
-                    newTemp.removeAll()
-                    var tempholeGreenDataArr = [GreenData]()
-                    var tempNumofHole = self.numberOfHoles
-                    tempNumofHole.removeAll()
-                    var hcpData = self.holeHcpWithTee
-                    hcpData.removeAll()
-                    
-                    for i in self.startingIndex-1..<self.gameTypeIndex+self.startingIndex-1{
-                        debugPrint("index:",i)
-                        debugPrint("validIndex:",self.getValidIndex(isNext: true, index: i, max: max, min: min))
-                        let newIndex = self.getValidIndex(isNext: true, index: i, max: max, min: min)
-                        for j in 0..<self.propertyArray.count{
-                            if self.propertyArray[j].hole == newIndex+1{
-                                temp.append(self.propertyArray[j])
+                    }else if (self.numberOfHoles.count > self.gameTypeIndex){
+                        if (self.startingIndex > self.gameTypeIndex){
+                            self.numberOfHoles.removeFirst(9)
+                            self.centerPointOfTeeNGreen.removeFirst(9)
+                            self.holeHcpWithTee.removeFirst(9)
+                            for i in 0..<9{
+                                for j in 0..<self.propertyArray.count{
+                                    if self.propertyArray[j].hole == i+1{
+                                        temp.append(self.propertyArray[j])
+                                    }
+                                }
+                            }
+                        }else if (self.startingIndex < self.gameTypeIndex){
+                            self.numberOfHoles.removeLast(9)
+                            self.centerPointOfTeeNGreen.removeLast(9)
+                            self.holeHcpWithTee.removeLast(9)
+                            for i in 9..<18{
+                                for j in 0..<self.propertyArray.count{
+                                    if self.propertyArray[j].hole == i+1{
+                                        temp.append(self.propertyArray[j])
+                                    }
+                                }
                             }
                         }
-                        if !self.centerPointOfTeeNGreen.isEmpty{
-                            if newIndex < self.centerPointOfTeeNGreen.count{
-                                newTemp.append(self.centerPointOfTeeNGreen[newIndex])
-                            }
-                        }
-                        if(!self.holeGreenDataArr.isEmpty){
-                            tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
-                        }
-                        tempNumofHole.append(self.numberOfHoles[newIndex])
-                        if(!self.holeHcpWithTee.isEmpty){
-                            self.holeHcpWithTee[newIndex].hole = newIndex+1
-                            hcpData.append(self.holeHcpWithTee[newIndex])
-                        }
                     }
-                    if(!newTemp.isEmpty){
-                        self.centerPointOfTeeNGreen = newTemp
-                        self.propertyArray = temp
-                 
-                        self.holeGreenDataArr = tempholeGreenDataArr
-                        self.numberOfHoles = tempNumofHole
-                        self.holeHcpWithTee = hcpData
-                    }
+                    self.propertyArray = temp
+//                    let min = (self.startingIndex%self.gameTypeIndex)-1
+//                    let max = self.numberOfHoles.count-1
+                    
+//                    if(self.numberOfHoles.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.numberOfHoles.count{
+//                        max = (self.startingIndex+self.gameTypeIndex) - 1
+//                    }else if self.startingIndex+self.gameTypeIndex-1 > self.numberOfHoles.count{
+//                        if(self.gameTypeIndex < self.numberOfHoles.count){
+//                            max =  (self.startingIndex+self.gameTypeIndex-1) - self.numberOfHoles.count
+//                        }
+//                    }
+//                    var temp = self.propertyArray
+//                    temp.removeAll()
+//                    var newTemp = self.centerPointOfTeeNGreen
+//                    newTemp.removeAll()
+//                    var tempholeGreenDataArr = [GreenData]()
+//                    var tempNumofHole = self.numberOfHoles
+//                    tempNumofHole.removeAll()
+//                    var hcpData = self.holeHcpWithTee
+//                    hcpData.removeAll()
+                    
+//                    for i in self.startingIndex-1..<self.gameTypeIndex+self.startingIndex-1{
+//                        debugPrint("index:",i)
+//                        debugPrint("validIndex:",self.getValidIndex(isNext: true, index: i, max: max, min: min))
+//                        let newIndex = self.getValidIndex(isNext: true, index: i, max: max, min: min)
+//                        for j in 0..<self.propertyArray.count{
+//                            if self.propertyArray[j].hole == newIndex+1{
+//                                temp.append(self.propertyArray[j])
+//                            }
+//                        }
+//                        if !self.centerPointOfTeeNGreen.isEmpty{
+//                            if newIndex < self.centerPointOfTeeNGreen.count{
+//                                newTemp.append(self.centerPointOfTeeNGreen[newIndex])
+//                            }
+//                        }
+//                        if(!self.holeGreenDataArr.isEmpty){
+//                            tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
+//                        }
+//                        tempNumofHole.append(self.numberOfHoles[newIndex])
+//                        if(!self.holeHcpWithTee.isEmpty){
+//                            self.holeHcpWithTee[newIndex].hole = newIndex+1
+//                            hcpData.append(self.holeHcpWithTee[newIndex])
+//                        }
+//                    }
+//                    if(!newTemp.isEmpty){
+//                        self.centerPointOfTeeNGreen = newTemp
+//                        self.propertyArray = temp
+//
+//                        self.holeGreenDataArr = tempholeGreenDataArr
+//                        self.numberOfHoles = tempNumofHole
+//                        self.holeHcpWithTee = hcpData
+//                    }
                 }
                 self.getGolfBagData()
             }

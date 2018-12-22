@@ -582,6 +582,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()]]
             }
+            
         }
         else{
             self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],

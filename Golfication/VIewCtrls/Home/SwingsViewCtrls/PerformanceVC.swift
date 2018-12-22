@@ -55,10 +55,10 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             let dataDic = performanceMArray[i] as! NSDictionary
             let tempSwingArray = dataDic.value(forKey: "swings") as! NSMutableArray
             for j in 0..<tempSwingArray.count{
-                let dic = tempSwingArray[j] as! NSDictionary
-                
-                clubArray.append(dic.value(forKey: "club") as! String)
-                swingArray.add(dic)
+                if let dic = tempSwingArray[j] as? NSDictionary{
+                    clubArray.append(dic.value(forKey: "club") as! String)
+                    swingArray.add(dic)
+                }
             }
         }
         clubArray = Array(Set(clubArray))
