@@ -61,17 +61,18 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                 var clubArray = [String]()
                 var holeShot = [(key:String,hole:Int,shot:Int)]()
                 for j in 0..<swingArray.count{
-                    let dic = swingArray[j] as! NSDictionary
-                    clubArray.append(dic.value(forKey: "club") as! String)
-                    clubArray = Array(Set(clubArray))
-                    avgSwingScore += dic.value(forKey: "swingScore") as! Double
-                    if let key = dataDic.value(forKey: "matchKey") as? String{
-                        let holeNum = dic.value(forKey: "holeNum") as! Int
-                        let shotNum = dic.value(forKey: "shotNum") as! Int
-                        if shotNum != 0{
-                            holeShot.append((key:key,hole: holeNum-1, shot: shotNum-1))
+                    if let dic = swingArray[j] as? NSDictionary{
+                        clubArray.append(dic.value(forKey: "club") as! String)
+                        clubArray = Array(Set(clubArray))
+                        avgSwingScore += dic.value(forKey: "swingScore") as! Double
+                        if let key = dataDic.value(forKey: "matchKey") as? String{
+                            let holeNum = dic.value(forKey: "holeNum") as! Int
+                            let shotNum = dic.value(forKey: "shotNum") as! Int
+                            if shotNum != 0{
+                                holeShot.append((key:key,hole: holeNum-1, shot: shotNum-1))
+                            }
+                            
                         }
-                        
                     }
                 }
                 let matchDic = NSMutableDictionary()
