@@ -224,6 +224,7 @@ class BLE: NSObject {
     func sendFirstCommand(leftOrRight:UInt8,metric:UInt8){
         timeOut = 0
 //        debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
+        self.isSetupScreen = false
         if(Constants.charctersticsGlobalForWrite != nil){
             invalidateAllTimers()
             self.randomGenerator()
@@ -1273,19 +1274,21 @@ extension BLE: CBPeripheralDelegate {
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                         }else{
                             DispatchQueue.main.async(execute: {
-                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
-                                gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-                                    self.swingMatchId = ""
-                                    self.randomGenerator()
-                                    self.swingDetails.removeAll()
-                                    self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-                                }))
-                                gameAlert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { (action: UIAlertAction!) in
-                                    debugPrint("Game Discard cancel Press")
-                                }))
-                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                                if !self.isSetupScreen{
+                                    let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
+                                    gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
+                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+                                        self.swingMatchId = ""
+                                        self.randomGenerator()
+                                        self.swingDetails.removeAll()
+                                        self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+                                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+                                    }))
+                                    gameAlert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { (action: UIAlertAction!) in
+                                        debugPrint("Game Discard cancel Press")
+                                    }))
+                                    UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                                }
                             })
                         }
                     }

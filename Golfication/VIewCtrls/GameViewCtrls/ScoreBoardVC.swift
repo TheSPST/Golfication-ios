@@ -105,7 +105,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     var tblView: UITableView!
     var superView : Bool!
     let kHeaderSectionTag: Int = 6900
-    
+    var superClassName = String()
     var menueTableView: UITableView!
     
     var expandedSectionHeaderNumber: Int = -1
@@ -144,8 +144,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             self.scrollView = (scrollView1 == self.menueTableView) ? self.tblView : scrollView1
             self.scrollView.setContentOffset(scrollView1.contentOffset, animated: false)
         }
-        else
-        {
+        else{
             tblView.isScrollEnabled = false
         }
     }
@@ -272,7 +271,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     @objc func btnContinueAction(){
-        let superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
+        self.superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
         if  superClassName == "newGameVC"{
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "continueAction"), object: nil)
         }else{
@@ -701,8 +700,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         statusStableFord()
     }
     var courseData = CourseData()
+    var isTouchEnable = true
     func loadStableFordData(){
-        if  self.holeHcpWithTee.isEmpty && !isContinue{
+        if  self.holeHcpWithTee.isEmpty{
             var matchDataDictionary = NSMutableDictionary()
             if(isFinalSummary){
                 matchDataDictionary = self.matchDataDict
@@ -715,6 +715,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             self.courseData.startingIndex = startingIndex
             self.courseData.gameTypeIndex = gameTypeIndex
             let courseId = "course_\(matchDataDictionary.value(forKeyPath: "courseId") as! String)"
+            if let matchType = matchDataDictionary.value(forKeyPath: "scoringMode") as? String{
+                if matchType.contains("advanced"){
+                    self.isTouchEnable = false
+                }
+            }else if isFinalSummary{
+                self.isTouchEnable = false
+            }
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
             self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
             NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
@@ -1623,7 +1630,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     btn.userData = playerId
                     btn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
                     subView.addSubview(btn)
-                    btn.isUserInteractionEnabled = isContinue
+                    btn.isUserInteractionEnabled = self.isTouchEnable
                     
                     for dataDict in self.scoreData[i].players{
                         for (key,value) in dataDict{
@@ -1809,8 +1816,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     btn.userData = playerId
                     btn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
                     cell.contentView.addSubview(btn)
-                    btn.isUserInteractionEnabled = isContinue
-                    
+                    btn.isUserInteractionEnabled = self.isTouchEnable
                     //                    let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 40, height: 32))
                     //                    label.text = "-"
                     //                    label.textAlignment = .center

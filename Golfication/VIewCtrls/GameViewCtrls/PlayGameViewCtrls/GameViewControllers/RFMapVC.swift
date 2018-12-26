@@ -775,6 +775,28 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         viewCtrl.playerData = players
         viewCtrl.isContinue = true
         viewCtrl.holeHcpWithTee = self.courseData.holeHcpWithTee
+        var selectedTee = [(tee:String,color:String,handicap:Double)]()
+        for data in players{
+            if let player = data as? NSMutableDictionary{
+                var teeOfP = String()
+                if let tee = player.value(forKeyPath: "tee") as? String{
+                    teeOfP = tee
+                }
+                var teeColorOfP = String()
+                if let tee = player.value(forKeyPath: "teeColor") as? String{
+                    teeColorOfP = tee
+                }
+                var handicapOfP = Double()
+                if let hcp = player.value(forKeyPath: "handicap") as? String{
+                    handicapOfP = Double(hcp)!
+                }
+                if(teeOfP != ""){
+                    selectedTee.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
+                }
+            }
+        }
+        viewCtrl.teeTypeArr = selectedTee
+
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     

@@ -106,6 +106,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         
         let myController = UIAlertController(title: "Menu", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
         let saveOption = (UIAlertAction(title: "Save Round", style: UIAlertActionStyle.default, handler: { action in
+            NotificationCenter.default.addObserver(self, selector: #selector(self.statsCompleted(_:)), name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
             self.saveAndviewScore()
         }))
         let restartOption = (UIAlertAction(title: "Restart Round", style: UIAlertActionStyle.default, handler: { action in
@@ -539,6 +540,27 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         viewCtrl.isContinue = true
         viewCtrl.holeHcpWithTee = self.holeHcpWithTee
         viewCtrl.isBasic = true
+        var selectedTee = [(tee:String,color:String,handicap:Double)]()
+        for data in players{
+            if let player = data as? NSMutableDictionary{
+                var teeOfP = String()
+                if let tee = player.value(forKeyPath: "tee") as? String{
+                    teeOfP = tee
+                }
+                var teeColorOfP = String()
+                if let tee = player.value(forKeyPath: "teeColor") as? String{
+                    teeColorOfP = tee
+                }
+                var handicapOfP = Double()
+                if let hcp = player.value(forKeyPath: "handicap") as? String{
+                    handicapOfP = Double(hcp)!
+                }
+                if(teeOfP != ""){
+                    selectedTee.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
+                }
+            }
+        }
+        viewCtrl.teeTypeArr = selectedTee
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     

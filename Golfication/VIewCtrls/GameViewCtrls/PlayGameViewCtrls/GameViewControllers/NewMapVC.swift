@@ -384,7 +384,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(false)
 
-        if(selectClubDropper.status != .hidden){
+        if (selectClubDropper != nil) && (selectClubDropper.status != .hidden){
             selectClubDropper.hide()
         }
         if(isOnCourse){
@@ -1432,6 +1432,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = self.scoring
         let players = NSMutableArray()
+        var selectedTee = [(tee:String,color:String,handicap:Double)]()
         if(self.matchDataDict.object(forKey: "player") != nil){
             let tempArray = matchDataDict.object(forKey: "player")! as! NSMutableDictionary
             for (k,v) in tempArray{
@@ -1441,7 +1442,28 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         viewCtrl.playerData = players
+        for data in players{
+            if let player = data as? NSMutableDictionary{
+                var teeOfP = String()
+                if let tee = player.value(forKeyPath: "tee") as? String{
+                    teeOfP = tee
+                }
+                var teeColorOfP = String()
+                if let tee = player.value(forKeyPath: "teeColor") as? String{
+                    teeColorOfP = tee
+                }
+                var handicapOfP = Double()
+                if let hcp = player.value(forKeyPath: "handicap") as? String{
+                    handicapOfP = Double(hcp)!
+                }
+                if(teeOfP != ""){
+                    selectedTee.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
+                }
+            }
+        }
         viewCtrl.holeHcpWithTee = self.courseData.holeHcpWithTee
+        viewCtrl.teeTypeArr = selectedTee
+        viewCtrl.isContinue = true
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     func registerBackgroundTask() {

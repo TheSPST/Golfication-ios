@@ -40,10 +40,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     @IBOutlet weak var lblRequestInfo: UILabel!
     @IBOutlet weak var lblRFRequestInfo: UILabel!
-
+    
     @IBOutlet var gameTypeSgmtCtrl: UISegmentedControl!
-//    @IBOutlet var scoringTypeSgmtCtrl: UISegmentedControl!
-
+    //    @IBOutlet var scoringTypeSgmtCtrl: UISegmentedControl!
+    
     @IBOutlet weak var btnEnd: UILocalizedButton!
     @IBOutlet weak var btnOnePlayer: UIButton!
     @IBOutlet weak var btnTwoPlayer: UIButton!
@@ -59,28 +59,28 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @IBOutlet weak var btnMoreInfo: UIButton!
     @IBOutlet weak var btnHomeCourse: UILocalizedButton!
     @IBOutlet weak var btnNearestCourse: UILocalizedButton!
-
+    
     @IBOutlet weak var btnStartContinue: UIButton!
-
+    
     @IBOutlet weak var classicScoringSV: UIStackView!
-//    @IBOutlet weak var newGameSV: UIStackView!
+    //    @IBOutlet weak var newGameSV: UIStackView!
     
     @IBOutlet weak var newGamescrollView: UIScrollView!
-
+    
     let progressView = SDLoader()
     @IBOutlet weak var continueGameView: UIView!
     @IBOutlet weak var golfCourseBgView: UIView!
-
+    
     @IBOutlet weak var scoreTableView: UITableView!
     
     @IBOutlet weak var scoreTblHConstraint: NSLayoutConstraint!
-
+    
     @IBOutlet weak var switchRangeFinder: UISwitch!
     @IBOutlet weak var switchShotTracker: UISwitch!
     @IBOutlet weak var stackRequestInfo: UIStackView!
-
+    
     var barBtnBLE: UIBarButtonItem!
-
+    
     let imagePicker = UIImagePickerController()
     var cameraBtn: UIButton!
     var requestSFPopupView: UIView!
@@ -90,7 +90,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var holeType = 0
     var holeOutCount = 0
     var currentHoleFromFirebase : Int!
-
+    
     var scoring = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
     var players = NSMutableArray()
     var btnPlayerArray = [UIButton]()
@@ -107,16 +107,16 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var homeCourseId = String()
     var homeCourseLat = String()
     var homeCourseLng = String()
-
+    
     var gameMode = ""
-//    var gameType: String = "18 holes"
+    //    var gameType: String = "18 holes"
     var requestedMatchId = String()
     var scoringMode = ""
     var attributedStringArray = [String]()
     var detailedScore = NSMutableArray()
     var sharedInstance: BluetoothSync!
     var timeOutTimer = Timer()
-
+    
     // Marke : StartingTee Action
     var courseData = CourseData()
     @IBAction func btnActionStartingTee(_ sender: UIButton) {
@@ -188,17 +188,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             break
         case .poweredOn:
             debugPrint("State : Powered On")
-            if(Constants.deviceGolficationX == nil) && fromGolfBarBtn{
-               fromGolfBarBtn = false
-            if Constants.ble == nil{
-                Constants.ble = BLE()
-                Constants.ble.isPracticeMatch = false
-                NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+            if(Constants.deviceGolficationX == nil) && (fromGolfBarBtn || fromStartContinueBtn){
+                fromGolfBarBtn = false
+                
+                if Constants.ble == nil{
+                    Constants.ble = BLE()
+                    Constants.ble.isPracticeMatch = false
+//                    NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+                }
+                Constants.ble.startScanning()
+                showPopUp()
             }
-            Constants.ble.startScanning()
-            showPopUp()
-            }
-//            self.sharedInstance.delegate = nil
             return
             
         case .unsupported:
@@ -217,18 +217,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         if golfXPopupView != nil{
-           self.golfXPopupView.removeFromSuperview()
+            self.golfXPopupView.removeFromSuperview()
         }
         fromGolfBarBtn = false
         self.timeOutTimer.invalidate()
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
-
+        
         let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
             self.dismiss(animated: true, completion: nil)
-//            self.sharedInstance.delegate = nil
         })
         alertVC.addAction(action)
         self.present(alertVC, animated: true, completion: nil)
@@ -236,7 +235,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     func showPopUp(){
         self.timeOutTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.timerAction), userInfo: nil, repeats: false)
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.SeventyFivePercentUpdated(_:)), name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
@@ -258,7 +257,16 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+//        if sharedInstance != nil{
+//            self.sharedInstance.delegate = nil
+//        }
+        fromStartContinueBtn = false
+        self.timeOutTimer.invalidate()
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
+
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
     }
     
     func setGofXUISetup(){
@@ -287,7 +295,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.0, toValue: 0.50)
         }
     }
- 
+    
     @objc func ScanningTimeOut(_ notification: NSNotification){
         DispatchQueue.main.async(execute: {
             self.noDeviceAvailable()
@@ -325,7 +333,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
         self.golfXPopupView.removeFromSuperview()
         if Constants.ble == nil{
-           Constants.ble = BLE()
+            Constants.ble = BLE()
         }
         Constants.ble.stopScanning()
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
@@ -335,12 +343,22 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         self.view.makeToast("Device is connected.")
+        
+        if (!fromGolfBarBtn) && (fromStartContinueBtn) && (!isContinueClicked){
+            fromStartContinueBtn = false
+            playGolfX()
+        }
+        else if (!fromGolfBarBtn) && (fromStartContinueBtn) && (isContinueClicked){
+            fromStartContinueBtn = false
+
+            setActiveMatchUI()
+        }
     }
     @objc func retryAction(_ sender: UIButton) {
         if Constants.ble == nil{
             Constants.ble = BLE()
             Constants.ble.isPracticeMatch = false
-            NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
+//            NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
         }
         Constants.ble.startScanning()
         self.golfXPopupView.removeFromSuperview()
@@ -353,10 +371,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         else{
             self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-//            Constants.ble.stopScanning()
+            //            Constants.ble.stopScanning()
         }
     }
-
+    
     @objc func cancelGolfXAction(_ sender: UIButton!) {
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         golfXPopupView.removeFromSuperview()
@@ -364,14 +382,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     @IBAction func rangeFinderChanged(mySwitch: UISwitch) {
         if mySwitch.isOn {
-           scoringMode = "rangeFinder"
-           lblRangeFinder.textColor = UIColor.glfBluegreen
+            scoringMode = "rangeFinder"
+            lblRangeFinder.textColor = UIColor.glfBluegreen
         }
         else {
             scoringMode = "classic"
             switchShotTracker.isOn = false
             lblShotTracker.textColor = UIColor.lightGray
-//            shotTrackerChanged(mySwitch: switchShotTracker)
+            //            shotTrackerChanged(mySwitch: switchShotTracker)
             lblRangeFinder.textColor = UIColor.lightGray
         }
     }
@@ -388,61 +406,61 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             lblShotTracker.textColor = UIColor.lightGray
         }
     }
-
+    
     @objc func tapLabel(tap: UITapGestureRecognizer) {
         for attributedText in attributedStringArray {
             if attributedText == "course often"{
-            guard let range = self.lblRequestInfo.text?.range(of: attributedText)?.nsRange
-                else {
-                return
-            }
-            if tap.didTapAttributedTextInLabel(label: self.lblRequestInfo, inRange: range) {
-                
-                if(Auth.auth().currentUser!.uid.count > 1){
-                    ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues([Constants.selectedGolfID:Timestamp] as [AnyHashable:Any])
+                guard let range = self.lblRequestInfo.text?.range(of: attributedText)?.nsRange
+                    else {
+                        return
                 }
-                let alert = UIAlertController(title: "Alert", message: "Thanks for your request. We will notify you when this course is mapped for advanced scoring.", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                lblRequestMap.text = ""
-                lblRequestMap.isHidden = true
-                btnMoreInfo.isHidden = true
-                stackRequestInfo.isHidden = true
-                attributedStringArray = [String]()
-
-                /*if scoringMode == "rangeFinder" || scoringMode == "classic"{
-                    moreInfoAction(btnMoreInfo)
-                }
-                else{
-                    if let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "CustomPopUpViewController") as? CustomPopUpViewController{
-                        viewCtrl.isInfo = false
-                        if scoringMode == "classic"{
-                            isAdvanced = false
-                        }
-                        else{
-                            isAdvanced = true
-                        }
-                        self.present(viewCtrl, animated: true, completion: nil)
-                        
-                        viewCtrl.btnCheckBox.isHidden = true
-                        viewCtrl.lblAlwaysChoose.isHidden = true
-                        viewCtrl.btnContinue.setTitle("Select", for: .normal)
-                        viewCtrl.btnContinue.addTarget(self, action: #selector(self.selectScoringAction(_:)), for: .touchUpInside)
+                if tap.didTapAttributedTextInLabel(label: self.lblRequestInfo, inRange: range) {
+                    
+                    if(Auth.auth().currentUser!.uid.count > 1){
+                        ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues([Constants.selectedGolfID:Timestamp] as [AnyHashable:Any])
                     }
-                }*/
+                    let alert = UIAlertController(title: "Alert", message: "Thanks for your request. We will notify you when this course is mapped for advanced scoring.", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    lblRequestMap.text = ""
+                    lblRequestMap.isHidden = true
+                    btnMoreInfo.isHidden = true
+                    stackRequestInfo.isHidden = true
+                    attributedStringArray = [String]()
+                    
+                    /*if scoringMode == "rangeFinder" || scoringMode == "classic"{
+                     moreInfoAction(btnMoreInfo)
+                     }
+                     else{
+                     if let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "CustomPopUpViewController") as? CustomPopUpViewController{
+                     viewCtrl.isInfo = false
+                     if scoringMode == "classic"{
+                     isAdvanced = false
+                     }
+                     else{
+                     isAdvanced = true
+                     }
+                     self.present(viewCtrl, animated: true, completion: nil)
+                     
+                     viewCtrl.btnCheckBox.isHidden = true
+                     viewCtrl.lblAlwaysChoose.isHidden = true
+                     viewCtrl.btnContinue.setTitle("Select", for: .normal)
+                     viewCtrl.btnContinue.addTarget(self, action: #selector(self.selectScoringAction(_:)), for: .touchUpInside)
+                     }
+                     }*/
+                }
             }
         }
     }
-}
-
+    
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         if(Constants.deviceGolficationX != nil){
-        self.sharedInstance = BluetoothSync.getInstance()
-        self.sharedInstance.delegate = self
-        self.sharedInstance.initCBCentralManager()
+            self.sharedInstance = BluetoothSync.getInstance()
+            self.sharedInstance.delegate = self
+            self.sharedInstance.initCBCentralManager()
         }
         imagePicker.delegate = self
         self.getHandicap()
@@ -455,11 +473,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         NotificationCenter.default.addObserver(self, selector: #selector(completeDeviceSetup(_:)), name: NSNotification.Name(rawValue: "setupDevice"), object: nil)
         // End Round
         NotificationCenter.default.addObserver(self, selector: #selector(self.EndRound(_:)), name: NSNotification.Name(rawValue: "EndRound"), object: nil)
-
+        
         // for continue action from scorecard
         NotificationCenter.default.addObserver(self, selector: #selector(continueButtonAction(_:)), name: NSNotification.Name(rawValue: "continueAction"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMapWithBLECommands(_:)), name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
-
+        
         //Apply to the label
         btnMoreInfo.isHidden = true
         scoreTableView.allowsSelection = false
@@ -487,7 +505,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         buttonscheck.append(btnOneHole)
         buttonscheck.append(btnTenHole)
         buttonscheck.append(btnOtherHole)
-
+        
         setInitialUi()
         getUserDataFromFireBase()
         if(Constants.strokesGainedDict.count == 0){
@@ -505,7 +523,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             else{
                 self.btnHomeCourse.isHidden = true
             }
-         }
+        }
     }
     
     // Mark: StartShowCase
@@ -518,7 +536,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             highlighteStart.highlightColor = UIColor.glfWhite
             
             let playerAddedShowCase = CTShowcaseView(title: "", message: "DeeJay have been added\nto your game." , key:"playerAdded") { () -> () in
-//                self.scrollNewGame.contentOffset = .zero
+                //                self.scrollNewGame.contentOffset = .zero
                 startGameShowCase.setup(for: self.btnStartContinue!, offset: .zero , margin: 0)
                 startGameShowCase.show()
             }
@@ -546,8 +564,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             
             addPlayerShowCase.highlighter = highlighteAddPlayer
             let showcaseSelectHole = CTShowcaseView(title: "", message: "Start at Hole 1", key: "selectHole") { () -> () in
-//                let point = CGPoint(x: 0, y: 200)
-//                self.scrollNewGame.contentOffset = point
+                //                let point = CGPoint(x: 0, y: 200)
+                //                self.scrollNewGame.contentOffset = point
                 self.startHoleAction(sender: self.btnOneHole)
                 addPlayerShowCase.setup(for: self.btnRcntOnePlayer, offset: .zero , margin: 5)
                 addPlayerShowCase.show()
@@ -559,7 +577,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             highlighter1.maxOffset = 10
             showcaseSelectHole.highlighter = highlighter1
             let showcaseGameType = CTShowcaseView(title: "", message: "Start a 9-hole or 18-hole round.", key: "gameType") { () -> () in
-
+                
                 self.startHoleAction(sender: self.btnOneHole)
                 addPlayerShowCase.setup(for: self.btnRcntOnePlayer, offset: .zero , margin: 5)
                 addPlayerShowCase.show()
@@ -577,7 +595,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 showcaseGameType.show()
             }
             if(isShowCase){
-//                self.gameTypeSgmtCtrl.selectedSegmentIndex = 1
+                //                self.gameTypeSgmtCtrl.selectedSegmentIndex = 1
                 btnTenHole.backgroundColor = UIColor(rgb: 0x008F63)
                 btnTenHole.setTitleColor(UIColor.white, for: .normal)
                 self.btnRcntOnePlayer.setBackgroundImage(#imageLiteral(resourceName: "dJohnson"), for: .normal)
@@ -593,7 +611,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(true)
-
+        
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true
@@ -612,10 +630,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         if(isShowCase) && Constants.matchId.count == 0{
             DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-//                self.startShowcase()
+                //                self.startShowcase()
             })
         }
-
+        
         // --------------------------- From select course vc
         if !(Constants.selectedLat == "" && Constants.selectedLong == "") {
             let spString = Constants.selectedLat.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
@@ -688,7 +706,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         btnNearestCourse.tintColor = UIColor.white
         btnNearestCourse.setImage(courseImage, for: .normal)
         btnNearestCourse.setTitle(" " + "Nearest Course".localized(), for: .normal)
-
+        
         let originalImage1 = #imageLiteral(resourceName: "home_icon")
         let homeImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnHomeCourse.tintColor = UIColor.white
@@ -723,7 +741,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         playOnCourseAction(btnPlayOnCourse)
     }
-
+    
     func deselectGOlfXView() {
         btnCheckBox.setCircle(frame: btnCheckBox.frame)
         btnCheckBox.backgroundColor = UIColor.lightGray
@@ -742,25 +760,25 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @IBAction func homeCourseAction(_ sender: Any) {
         
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-
+        
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails") { (snapshot) in
             
             if(snapshot.value != nil){
                 var homeCourseData = NSDictionary()
                 homeCourseData = snapshot.value as! NSDictionary
                 //// -------------------------------------------------
-
-                    self.homeCourseId = homeCourseData.object(forKey: "id") as! String
-                    self.homeCourseName = homeCourseData.object(forKey: "name") as! String
-                    self.homeCourseLng = homeCourseData.object(forKey: "lng") as! String
-                    self.homeCourseLat = homeCourseData.object(forKey: "lat") as! String
                 
-                    self.lblGolfName.text = self.homeCourseName
-
-                    Constants.selectedGolfName = self.homeCourseName
-                    Constants.selectedGolfID = self.homeCourseId
-                    Constants.selectedLat = self.homeCourseLat
-                    Constants.selectedLong = self.homeCourseLng
+                self.homeCourseId = homeCourseData.object(forKey: "id") as! String
+                self.homeCourseName = homeCourseData.object(forKey: "name") as! String
+                self.homeCourseLng = homeCourseData.object(forKey: "lng") as! String
+                self.homeCourseLat = homeCourseData.object(forKey: "lat") as! String
+                
+                self.lblGolfName.text = self.homeCourseName
+                
+                Constants.selectedGolfName = self.homeCourseName
+                Constants.selectedGolfID = self.homeCourseId
+                Constants.selectedLat = self.homeCourseLat
+                Constants.selectedLong = self.homeCourseLng
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
@@ -771,7 +789,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: nearestCourseAction
     @IBAction func nearestCourseAction(_ sender: Any) {
-//        let locationManager = CLLocationManager()
+        //        let locationManager = CLLocationManager()
         if(locationManager.location == nil){
             locationManager.requestAlwaysAuthorization()
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -780,7 +798,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
         }
         else{
-
+            
             let alert = UIAlertController(title: "Alert", message: "Please enable GPS to get your nearest course.", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
                 self.locationManager.requestAlwaysAuthorization()
@@ -857,7 +875,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             Constants.startingHole = String(btn.tag)
         }
     }
-
+    
     func otherHoleAction(_ sender: Any) {
         
         let btn = sender as! UIButton
@@ -941,15 +959,15 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 group.enter()
                 if(data.value){
                     Constants.matchId = data.key
-//                    let object = BackgroundMapStats()
-//                    object.getScoreFromMatchDataFirebase(keyId: data.key)
+                    //                    let object = BackgroundMapStats()
+                    //                    object.getScoreFromMatchDataFirebase(keyId: data.key)
                 }else if(!data.value){
                     self.requestedMatchId = data.key
                 }
                 group.leave()
             }
             group.notify(queue: .main){
-//                self.progressView.hide(navItem: self.navigationItem)
+                //                self.progressView.hide(navItem: self.navigationItem)
                 self.setActiveMatchUI()
                 self.getDeletedMAtch()
             }
@@ -995,7 +1013,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let myLocation = CLLocation()
         
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-
+        
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "") { (snapshot) in
             
             if(snapshot.childrenCount > 0){
@@ -1018,10 +1036,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 Constants.selectedLong = "\(spString.last!)"
                             }
                         }
-//                        self.getNearByData(latitude: Double(selectedLat)!, longitude: Double(selectedLong)!, currentLocation: myLocation)
+                        //                        self.getNearByData(latitude: Double(selectedLat)!, longitude: Double(selectedLong)!, currentLocation: myLocation)
                         
-                            self.selectedGameTypeFromFirebase()
-                            self.setActiveMatchUI()
+                        self.selectedGameTypeFromFirebase()
+                        self.setActiveMatchUI()
                     }
                     else if let homeCourseDic = userData.object(forKey: "homeCourseDetails") as? NSDictionary{
                         self.homeCourseId = homeCourseDic.object(forKey: "id") as! String
@@ -1076,7 +1094,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     let lng = Double("-147.576172")!
                     self.getNearByData(latitude: lat, longitude: lng, currentLocation: myLocation)
                 }
-
+                
                 
                 // -----------------------------------------------------
                 if let friendsData = userData["friends"] as? [String : Bool]{
@@ -1125,7 +1143,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: getNearByData
     func getNearByData(latitude: Double, longitude: Double, currentLocation: CLLocation){
-
+        
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         let serverHandler = ServerHandler()
         serverHandler.state = 0
@@ -1208,7 +1226,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.progressView.hide(navItem: self.navigationItem)
             //btnStartContinue.setTitle("Start Round", for: .normal) // Amit's Changes
             btnStartContinue.setTitle("Next".localized(), for: .normal)
-
+            
             continueGameView.isHidden = true
             newGamescrollView.isHidden = false
         }
@@ -1277,14 +1295,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     // MARK: selectedGameTypeFromFirebase
     func selectedGameTypeFromFirebase() {
-
+        
         if  !(Constants.selectedGolfID == "") {
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
             let golfId = "course_\(Constants.selectedGolfID)"
             self.checkRangeFinderHoleData()
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)") { (snapshot) in
                 if snapshot.value != nil{
-
+                    
                     DispatchQueue.main.async(execute: {
                         let golfData = snapshot.value as! NSDictionary
                         
@@ -1301,8 +1319,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         if (golfData.object(forKey: "coordinates") as? NSArray) != nil{
                             self.classicScoringSV.isHidden = true
                             self.stackRequestInfo.isHidden = true
-//                            self.scoringTypeSgmtCtrl.isEnabled = true
-//                            self.scoringTypeSgmtCtrl.selectedSegmentIndex = 1
+                            //                            self.scoringTypeSgmtCtrl.isEnabled = true
+                            //                            self.scoringTypeSgmtCtrl.selectedSegmentIndex = 1
                             
                             self.gameMode = "Advanced(GPS)"
                             self.scoringMode = "Advanced(GPS)"
@@ -1310,11 +1328,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                             self.switchShotTracker.isOn = true
                             //self.shotTrackerChanged(mySwitch: self.switchShotTracker)
                             self.switchShotTracker.isEnabled = true
-
+                            
                             self.switchRangeFinder.isOn = true
                             //self.rangeFinderChanged(mySwitch: self.switchRangeFinder)
                             self.switchRangeFinder.isEnabled = true
-
+                            
                         }
                         else{
                             if let rangefinder = golfData.object(forKey: "rangefinder") as? NSDictionary{
@@ -1336,11 +1354,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                     
                                     self.lblRFRequestInfo.text = "*Shot tracking is currently unavailable for this course."
                                     self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
-
+                                    
                                     self.switchRangeFinder.isOn = true
                                     //self.rangeFinderChanged(mySwitch: self.switchRangeFinder)
                                     self.switchRangeFinder.isEnabled = true
-
+                                    
                                     self.switchShotTracker.isOn = false
                                     //self.shotTrackerChanged(mySwitch: self.switchShotTracker)
                                     self.switchShotTracker.isEnabled = false
@@ -1352,11 +1370,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                     
                                     self.lblRFRequestInfo.text = "*Shot tracking and Rangefinder is currently unavailable for this course."
                                     self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
-
+                                    
                                     self.switchRangeFinder.isOn = false
                                     //self.rangeFinderChanged(mySwitch: self.switchRangeFinder)
                                     self.switchRangeFinder.isEnabled = false
-
+                                    
                                     self.switchShotTracker.isOn = false
                                     //self.shotTrackerChanged(mySwitch: self.switchShotTracker)
                                     self.switchShotTracker.isEnabled = false
@@ -1369,7 +1387,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 
                                 self.lblRFRequestInfo.text = "*Shot tracking and Rangefinder is currently unavailable for this course."
                                 self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
-
+                                
                                 self.switchRangeFinder.isOn = false
                                 //self.rangeFinderChanged(mySwitch: self.switchRangeFinder)
                                 self.switchRangeFinder.isEnabled = false
@@ -1378,28 +1396,28 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 //self.shotTrackerChanged(mySwitch: self.switchShotTracker)
                                 self.switchShotTracker.isEnabled = false
                             }
-//                            self.classicScoringSV.isHidden = false  // changed by Amit
-//                            self.stackRequestInfo.isHidden = false
-                             self.classicScoringSV.isHidden = true
-                             self.stackRequestInfo.isHidden = true
-
+                            //                            self.classicScoringSV.isHidden = false  // changed by Amit
+                            //                            self.stackRequestInfo.isHidden = false
+                            self.classicScoringSV.isHidden = true
+                            self.stackRequestInfo.isHidden = true
+                            
                             let myMutableString = NSMutableAttributedString(string: self.lblRequestInfo.text!)
                             myMutableString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(rgb: 0x3A7CA5), range: NSRange(location: 33, length: 8))
                             self.lblRequestInfo.attributedText = myMutableString
-
+                            
                             self.attributedStringArray.append("course often")
                             let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
                             self.lblRequestInfo.addGestureRecognizer(tap)
                             self.lblRequestInfo.isUserInteractionEnabled = true
-
-//                            self.scoringTypeSgmtCtrl.isEnabled = false
-//                            self.scoringTypeSgmtCtrl.selectedSegmentIndex = 0
+                            
+                            //                            self.scoringTypeSgmtCtrl.isEnabled = false
+                            //                            self.scoringTypeSgmtCtrl.selectedSegmentIndex = 0
                         }
-//                        self.scoringModeChanged(self.scoringTypeSgmtCtrl)
+                        //                        self.scoringModeChanged(self.scoringTypeSgmtCtrl)
                         self.progressView.hide(navItem: self.navigationItem)
                         debugPrint("ModeGame",self.gameMode)
                         debugPrint("modeScoring",self.scoringMode)
-
+                        
                         if Constants.isDevice{
                             self.lblLegacyAppMode.isHidden = false
                             self.golficationXView.isHidden = false
@@ -1454,10 +1472,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: getScoreFromMatchDataFirebase
     func getScoreFromMatchDataFirebase(keyId:String){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-
+        
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(keyId)/") { (snapshot) in
             self.progressView.hide(navItem: self.navigationItem)
-
+            
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
                 Constants.matchDataDic = matchDict as! NSMutableDictionary
@@ -1576,7 +1594,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         self.scoreTblHConstraint.constant = CGFloat(65*self.players.count)
                     }
                     self.view.layoutIfNeeded()
-
+                    
                     self.lblContinueGolfName.text = Constants.selectedGolfName
                     //self.lblContinueHoleNum.text = "Playing Hole " + startingHole
                 }
@@ -1589,7 +1607,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         self.redirectToGameModeScreen()
                     }
                 }
-
+                
             })
         }
     }
@@ -1622,7 +1640,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     func redirectToGameModeScreen() {
         self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
-
+        
         if(Constants.mode == 3){
             let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "BasicScoringVC") as! BasicScoringVC
             viewCtrl.scoreData = self.scoring
@@ -1633,23 +1651,23 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.checkingLocation()
         }
         
-//        else if(mode == 2){
-//            if  !(selectedGolfID == "") {
-//                self.checkingLocation()
-//
-//            }
-//        }
-//        else{
-//            if  !(selectedGolfID == ""){
-//                self.checkingLocation()
-//            }
-//        }
+        //        else if(mode == 2){
+        //            if  !(selectedGolfID == "") {
+        //                self.checkingLocation()
+        //
+        //            }
+        //        }
+        //        else{
+        //            if  !(selectedGolfID == ""){
+        //                self.checkingLocation()
+        //            }
+        //        }
         Notification.sendLocaNotificatonToUser()
     }
     func checkingLocation(){
         let onCourse = Constants.matchDataDic.value(forKey: "onCourse") as! Bool
         if onCourse{
-//            let locationManager = CLLocationManager()
+            //            let locationManager = CLLocationManager()
             if(locationManager.location == nil){
                 locationManager.requestAlwaysAuthorization()
                 locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -1713,21 +1731,21 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @IBOutlet weak var golficationXView: UIView!
     @IBOutlet weak var lblLegacyAppMode: UILabel!
     @IBOutlet weak var btnRequestMapping: UIButton!
-
+    
     @IBOutlet weak var playGolfXView: UIView!
     @IBOutlet weak var mappingGolfXView: UIView!
-
+    
     @IBOutlet weak var lblOverlapping: UILabel!
     @IBOutlet weak var popUpContainerView: UIView!
     @IBOutlet weak var popUpSubView: CardView!
-
+    
     var modeInt = 0
     
     @IBAction func playGolfXAction(_ sender: Any) {
         modeInt = 0
-
+        
         btnCheckBox.backgroundColor = UIColor.glfBluegreen
-
+        
         golficationXView.layer.borderWidth = 1.0
         golficationXView.layer.borderColor = UIColor.glfBluegreen.cgColor
         golficationXView.layer.cornerRadius = 5
@@ -1740,15 +1758,15 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         btnPlayOnCourse.setCorner(color: UIColor.lightGray.cgColor)
         btnPrevRound.setCorner(color: UIColor.lightGray.cgColor)
-
+        
         lblPlayOnCourse.textColor = UIColor.lightGray
         imagePlayOnCourse.image = #imageLiteral(resourceName: "on_course_0")
         lblSubPlayOnCourse.textColor = UIColor.lightGray
-
+        
         lblPrevRound.textColor = UIColor.lightGray
         imagePrevRound.image = #imageLiteral(resourceName: "score_prev_0")
         lblSubPrevRound.textColor = UIColor.lightGray
-
+        
         btnStartContinue.setTitle("Start".localized(), for: .normal)
     }
     
@@ -1766,7 +1784,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblSubPrevRound.textColor = UIColor.lightGray
         
         btnStartContinue.setTitle("Next".localized(), for: .normal)
-
+        
         deselectGOlfXView()
     }
     @IBAction func prevRoundAction(_ sender: Any) {
@@ -1777,17 +1795,19 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblPlayOnCourse.textColor = UIColor.lightGray
         imagePlayOnCourse.image = #imageLiteral(resourceName: "on_course_0")
         lblSubPlayOnCourse.textColor = UIColor.lightGray
-
+        
         lblPrevRound.textColor = UIColor.glfBluegreen
         imagePrevRound.image = #imageLiteral(resourceName: "score_prev_1")
         lblSubPrevRound.textColor = UIColor.glfBluegreen
         
         btnStartContinue.setTitle("Next".localized(), for: .normal)
-
+        
         deselectGOlfXView()
     }
     
+    var fromStartContinueBtn = false
     @IBAction func startContinueAction(_ sender: Any) {
+        fromStartContinueBtn = true
         // Amit's Changes
         if btnStartContinue.titleLabel?.text == "Continue Round".localized(){
             var swingK = String()
@@ -1806,11 +1826,24 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 isContinueClicked = true
                 setActiveMatchUI()
             }else{
+                isContinueClicked = true
                 view.makeToast("Please Connect Device first...")
+                fromGolfBarBtn = false
+                self.sharedInstance = BluetoothSync.getInstance()
+                self.sharedInstance.delegate = self
+                self.sharedInstance.initCBCentralManager()
             }
         }
         else if btnStartContinue.titleLabel?.text == "Start".localized(){
-             playGolfX()
+            if(Constants.deviceGolficationX == nil){
+                fromGolfBarBtn = false
+                self.sharedInstance = BluetoothSync.getInstance()
+                self.sharedInstance.delegate = self
+                self.sharedInstance.initCBCentralManager()
+            }
+            else{
+                playGolfX()
+            }
         }
         else{
             isContinueClicked = false
@@ -1866,7 +1899,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             break
         }
     }
-
+    
     @IBAction func addFriendAction(sender: UIButton) {
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "SearchPlayerVC") as! SearchPlayerVC
         viewCtrl.selectedMode = modeInt
@@ -1910,7 +1943,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
         }
-
+        
     }
     @objc func loadMapWithBLECommands(_ notification: NSNotification) {
         var isDeviceConnected = false
@@ -1976,7 +2009,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             tempdic.setObject(Constants.selectedTee.lowercased(), forKey: "tee" as NSCopying)
             tempdic.setObject(Constants.handicap, forKey: "handicap" as NSCopying)
         }
-
+        
         var imagUrl =  ""
         if(Auth.auth().currentUser?.photoURL != nil){
             imagUrl = "\((Auth.auth().currentUser?.photoURL)!)"
@@ -2038,7 +2071,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @objc func completeDeviceSetup(_ notiication : NSNotification){
         let alertVC = UIAlertController(title: "Alert", message: "Please finish the device setup first.", preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-//            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
+            //            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
             self.navigationController?.popToRootViewController(animated: false)
             self.dismiss(animated: true, completion: nil)
         })
@@ -2209,7 +2242,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         myController.addAction(cancelOption)
         present(myController, animated: true, completion: nil)
     }
-
+    
     
     func checkHoleOutZero() -> Int{
         // --------------------------- Check If User has not completed detail scoring  ------------------------
@@ -2260,7 +2293,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     }
                 }
             }
-
+            
             Constants.isUpdateInfo = true
             self.navigationController?.popViewController(animated: true)
             Constants.addPlayersArray.removeAllObjects()
@@ -2288,7 +2321,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
         if (totalThru >= 9) && !(Constants.mode == 1) && (holIndex > -1){
-//        if (totalThru >= 6) && !(mode == 1) && (holIndex>0){
+            //        if (totalThru >= 6) && !(mode == 1) && (holIndex>0){
             let emptyAlert = UIAlertController(title: "Alert", message: "Would you like to complete Detailed Scoring to get better stats?", preferredStyle: UIAlertControllerStyle.alert)
             emptyAlert.addAction(UIAlertAction(title: "Add Detailed Scores", style: .default, handler: { (action: UIAlertAction!) in
                 
@@ -2332,7 +2365,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @objc func statsCompleted(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide(navItem: self.navigationItem)
-
+        
         if(Constants.matchId.count > 1){
             ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(Constants.matchId)").removeValue()
         }
@@ -2529,9 +2562,31 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = scoring
         viewCtrl.playerData = players
+        viewCtrl.isContinue = true
+        var selectedTee = [(tee:String,color:String,handicap:Double)]()
+        for data in players{
+            if let player = data as? NSMutableDictionary{
+                var teeOfP = String()
+                if let tee = player.value(forKeyPath: "tee") as? String{
+                    teeOfP = tee
+                }
+                var teeColorOfP = String()
+                if let tee = player.value(forKeyPath: "teeColor") as? String{
+                    teeColorOfP = tee
+                }
+                var handicapOfP = Double()
+                if let hcp = player.value(forKeyPath: "handicap") as? String{
+                    handicapOfP = Double(hcp)!
+                }
+                if(teeOfP != ""){
+                    selectedTee.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
+                }
+            }
+        }
+        viewCtrl.teeTypeArr = selectedTee
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
-
+    
     
     // MARK: UITableView Methods
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
