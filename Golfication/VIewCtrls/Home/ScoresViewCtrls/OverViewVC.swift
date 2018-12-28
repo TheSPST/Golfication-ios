@@ -11,7 +11,7 @@ import XLPagerTabStrip
 import Charts
 import FirebaseAnalytics
 
-class OverViewVC: UIViewController, IndicatorInfoProvider {
+class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider {
     
     @IBOutlet weak var overviewStackView: UIStackView!
     @IBOutlet weak var lblRoundsAvg: UILabel!
@@ -32,6 +32,12 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
     @IBOutlet weak var barViewRounds: BarChartView!
     @IBOutlet weak var lblAvgScoreDistribution: UILabel!
     
+    @IBOutlet weak var strokeGainedChartView: CardView!
+    @IBOutlet weak var lblProSG: UILabel!
+    @IBOutlet weak var lblStrokesGainedPerClubAvg: UILabel!
+    @IBOutlet weak var strokesGainedPerClubBarChart: BarChartView!
+    var totalCaddie = Int()
+
     var bestRound = Double()
     var avgScore = Double()
     var scores = [Scores]()
@@ -55,7 +61,118 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
         self.setViewScoringPieChart()
         self.setViewParAveragesBarChart()
         
- 
+ //------------- Amit's Changes -------------------------------
+        strokeGainedChartView.setGradientColor(topColor: UIColor(red:58.0/255.0, green:124.0/255.0, blue:165.0/255.0, alpha:1.0), bottomColor: UIColor(red:0.0, green:138.0/255.0, blue:100.0/255.0, alpha:1.0))
+        lblProSG.layer.cornerRadius = 3.0
+        lblProSG.layer.masksToBounds = true
+        lblStrokesGainedPerClubAvg.isHidden = true
+
+        if !Constants.isProMode {
+            self.setProLockedUI(targetView: self.strokeGainedChartView, title: "Strokes Gained Per Club")
+            self.lblProSG.isHidden = true
+
+        }
+        else{
+            self.lblProSG.backgroundColor = UIColor.clear
+            self.lblProSG.layer.borderWidth = 1.0
+            self.lblProSG.layer.borderColor = UIColor(rgb: 0xFFC700).cgColor
+            self.lblProSG.textColor = UIColor(rgb: 0xFFC700)
+            self.lblProSG.isHidden = false
+        }
+        self.setStrokesGainedPerClubBarChart()
+        //-----------------------------------------------------
+    }
+    
+    func setStrokesGainedPerClubBarChart(){
+        var dataPoints = [String]()
+        var dataValues = [Double]()
+        var strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
+        
+        for data in Constants.catagoryWise{
+            strokesGainedData.append((data,0.0,0.0,0,0.0))
+        }
+        for score in scores{
+            for i in 0..<score.clubDict.count{
+                let clubClass = score.clubDict[i].1 as Club
+                if(clubClass.type >= 0 && clubClass.type < 4){
+                    strokesGainedData[clubClass.type].clubTotalDistance += clubClass.distance
+                    strokesGainedData[clubClass.type].clubStrokesGained += clubClass.strokesGained
+                    strokesGainedData[clubClass.type].clubSwingScore += clubClass.swingScore
+                    strokesGainedData[clubClass.type].clubCount += 1
+                }
+            }
+        }
+        debugPrint(strokesGainedData)
+
+        for data in strokesGainedData{
+            dataPoints.append(data.clubType.localized())
+            dataValues.append((data.clubStrokesGained / Double(totalCaddie)).rounded(toPlaces: 1))
+            print(data)
+        }
+        self.strokesGainedPerClubBarChart.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: self.strokesGainedPerClubBarChart, color: UIColor.glfWhite, barWidth: 0.4,valueColor: UIColor.glfWhite.withAlphaComponent(0.5))
+        strokesGainedPerClubBarChart.leftAxis.gridColor = UIColor.glfWhite.withAlphaComponent(0.25)
+        strokesGainedPerClubBarChart.leftAxis.labelTextColor  = UIColor.glfWhite.withAlphaComponent(0.5)
+        strokesGainedPerClubBarChart.xAxis.labelTextColor = UIColor.glfWhite.withAlphaComponent(0.5)
+        
+        let publicScore  = PublicScore()
+        let publicScoreStr = publicScore.getSGPerClub(gainAvg: dataValues[0], gainAvg1: dataValues[1], gainAvg2: dataValues[2], gainAvg3: dataValues[3])
+        lblStrokesGainedPerClubAvg.isHidden = false
+        lblStrokesGainedPerClubAvg.text = publicScoreStr
+    }
+    
+    func setProLockedUI(targetView:UIView?, title:String) {
+        
+        let customProModeView = CustomProModeView()
+        customProModeView.frame =  CGRect(x: 0, y: 0, width: (self.view?.frame.size.width)!-16, height: (targetView?.frame.size.height)!)
+        customProModeView.delegate = self
+        customProModeView.btnDevice.isHidden = true
+        customProModeView.btnPro.isHidden = false
+        
+        customProModeView.proImageView.frame.size.width = 45
+        customProModeView.proImageView.frame.size.height = 45
+        customProModeView.proImageView.frame.origin.x = (customProModeView.frame.size.width)-45-4
+        customProModeView.proImageView.frame.origin.y = 0
+        
+        customProModeView.label.frame.size.width = (customProModeView.bounds.width)-80
+        customProModeView.label.frame.size.height = 50
+        customProModeView.label.center = CGPoint(x: (customProModeView.bounds.midX), y: (customProModeView.bounds.midY)-40)
+        customProModeView.label.backgroundColor = UIColor.clear
+        
+        customProModeView.btnPro.frame.size.width = (customProModeView.label.frame.size.width/2)+10
+        customProModeView.btnPro.frame.size.height = 40
+        customProModeView.btnPro.center = CGPoint(x: customProModeView.bounds.midX, y: customProModeView.label.frame.origin.y + customProModeView.label.frame.size.height + 20)
+        
+        customProModeView.titleLabel.frame = CGRect(x: customProModeView.frame.origin.x + 16, y: customProModeView.frame.origin.y + 16, width: customProModeView.bounds.width, height: 30)
+        customProModeView.titleLabel.backgroundColor = UIColor.clear
+        customProModeView.titleLabelText = title
+        
+        customProModeView.labelText = "Pro members only"
+        customProModeView.btnTitle = "Become a Pro"
+        //customProModeView.backgroundColor = UIColor.clear
+        customProModeView.backgroundColor = UIColor(red:110.0/255.0, green:185.0/255.0, blue:165.0/255.0, alpha:1.0)
+        
+        if !checkCaddie{
+            customProModeView.btnPro.center = CGPoint(x: customProModeView.bounds.midX, y: customProModeView.label.frame.origin.y + customProModeView.label.frame.size.height + 30)
+            
+            customProModeView.titleLabel.textColor = UIColor.darkGray
+            customProModeView.labelText = "Unlock this stat by playing a round with Shot Tracking"
+            customProModeView.btnTitle = "Play Now"
+            customProModeView.backgroundColor = UIColor.white
+        }
+        targetView?.addSubview(customProModeView)
+    }
+    
+    func proLockBtnPressed(button:UIButton) {
+        if !checkCaddie{
+            let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
+            self.navigationController?.pushViewController(mapViewController, animated: true)
+        }
+        else{
+            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            playButton.contentView.isHidden = true
+            playButton.floatButton.isHidden = true
+        }
     }
     
     func setupUI(){
@@ -93,9 +210,11 @@ class OverViewVC: UIViewController, IndicatorInfoProvider {
                         shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
                         shareStatsButton.tintColor = UIColor.glfFlatBlue
                         shareStatsButton.tag = viewTag
-                        if (v == roundCardView){
+                    //------------- Amit's Changes -------------------------------
+                        if (v == roundCardView) || (v == self.strokeGainedChartView){
                             shareStatsButton.tintColor = UIColor.white
                         }
+                    //-------------------------------------------------------------
                         shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                         v.addSubview(shareStatsButton)
                         viewTag = viewTag+1

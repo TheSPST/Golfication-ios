@@ -35,6 +35,7 @@ class Scores: NSObject {
     var girMiss : Double!
     var girWithFairway: Double!
     var girWoFairway: Double!
+    var clubDict = [(String,Club)]()
 }
 
 class Hole:NSObject{

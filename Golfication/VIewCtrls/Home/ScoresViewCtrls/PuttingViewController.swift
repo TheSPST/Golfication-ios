@@ -11,7 +11,7 @@ import XLPagerTabStrip
 import Charts
 import FirebaseAnalytics
 var putsPerRoundHCP = [Double]()
-class PuttingViewController: UIViewController, IndicatorInfoProvider {
+class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorInfoProvider {
     
     @IBOutlet weak var puttingStackView: UIStackView!
     @IBOutlet weak var lblPuttsPerHoleAvg: UILabel!
@@ -24,6 +24,13 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
     @IBOutlet weak var pieViewPuttsBreakUp: PieChartView!
     @IBOutlet weak var barViewPuttsVsHandicap: BarChartView!
     
+    @IBOutlet weak var puttingCardView: CardView!
+    @IBOutlet weak var lblProPutting: UILabel!
+    @IBOutlet weak var lblStrokesGainedPuttingAvg: UILocalizedLabel!
+    @IBOutlet weak var lblPuttingSG: UILabel!
+    @IBOutlet weak var lblFirstPuttProximity: UILabel!
+    @IBOutlet weak var lblHoleOutDistance: UILabel!
+
     var totalPutts = 0.0
     var isDemoUser :Bool!
     var scores = [Scores]()
@@ -40,8 +47,126 @@ class PuttingViewController: UIViewController, IndicatorInfoProvider {
         self.setupPuttsBreakUp()
         
         // Do any additional setup after loading the view.
+        
+        //---------------------------------------------------
+        lblProPutting.layer.cornerRadius = 3.0
+        lblProPutting.layer.masksToBounds = true
+        lblStrokesGainedPuttingAvg.isHidden = true
+
+        lblPuttingSG.isHidden = true
+        self.lblPuttingSG.setCorner(color: UIColor.glfBlack50.cgColor)
+
+        if !Constants.isProMode {
+            
+            self.setProLockedUI(targetView: self.puttingCardView, title: "Putting".localized())
+            self.lblProPutting.isHidden = true
+        }
+        else{
+            self.lblProPutting.isHidden = false
+
+        }
+        setHoleOutDistanceWithPuttProximity()
     }
     
+    func setHoleOutDistanceWithPuttProximity(){
+        var totalHoleOutDistance = [Double]()//3
+        var totalProximity = [Double]()//2
+
+        for score in scores{
+            for i in 0..<score.clubDict.count{
+                let clubClass = score.clubDict[i].1 as Club
+                if(clubClass.type >= 0 && clubClass.type < 4){
+                    if(clubClass.proximity != 0){
+                    totalProximity.append(clubClass.proximity)
+                    }
+                    if(clubClass.holeout != 0){
+                    totalHoleOutDistance.append(clubClass.holeout)
+                    }
+                }
+            }
+        }
+//---------------------------------------------------------------------------------------------
+        var isTotalProximity = false
+        var isHoleOutTrue = false
+        if(totalHoleOutDistance.count > 0){
+            let sum = totalHoleOutDistance.reduce(0, +)
+            self.lblHoleOutDistance.text = "\((sum/Double(totalHoleOutDistance.count)).rounded(toPlaces: 1)) ft"
+        }
+        else{
+            self.lblHoleOutDistance.isHidden = true
+            self.lblHoleOutDistance.text = "0.0ft"
+            isHoleOutTrue = true
+        }
+        if(totalProximity.count > 0){
+            let sum = totalProximity.reduce(0, +)
+            self.lblFirstPuttProximity.text = "\((sum/Double(totalProximity.count)).rounded(toPlaces: 1)) ft"
+            self.lblStrokesGainedPuttingAvg.isHidden = false
+            self.lblPuttingSG.isHidden = false
+            self.lblStrokesGainedPuttingAvg.text = "Proximity to Hole after Approach Putt"
+            self.lblPuttingSG.text = "\((sum/Double(totalProximity.count)).rounded(toPlaces: 1)) ft"
+        }
+        else{
+            self.lblFirstPuttProximity.text = "0.0 ft"
+            isTotalProximity = true
+        }
+        if(isTotalProximity && isHoleOutTrue){
+            puttingCardView.isHidden = true
+        }
+    }
+    
+    func setProLockedUI(targetView:UIView?, title:String) {
+        
+        let customProModeView = CustomProModeView()
+        customProModeView.frame =  CGRect(x: 0, y: 0, width: (self.view?.frame.size.width)!-16, height: (targetView?.frame.size.height)!)
+        customProModeView.delegate = self
+        customProModeView.btnDevice.isHidden = true
+        customProModeView.btnPro.isHidden = false
+        
+        customProModeView.proImageView.frame.size.width = 45
+        customProModeView.proImageView.frame.size.height = 45
+        customProModeView.proImageView.frame.origin.x = (customProModeView.frame.size.width)-45-4
+        customProModeView.proImageView.frame.origin.y = 0
+        
+        customProModeView.label.frame.size.width = (customProModeView.bounds.width)-80
+        customProModeView.label.frame.size.height = 50
+        customProModeView.label.center = CGPoint(x: (customProModeView.bounds.midX), y: (customProModeView.bounds.midY)-40)
+        customProModeView.label.backgroundColor = UIColor.clear
+        
+        customProModeView.btnPro.frame.size.width = (customProModeView.label.frame.size.width/2)+10
+        customProModeView.btnPro.frame.size.height = 40
+        customProModeView.btnPro.center = CGPoint(x: customProModeView.bounds.midX, y: customProModeView.label.frame.origin.y + customProModeView.label.frame.size.height + 20)
+        
+        customProModeView.titleLabel.frame = CGRect(x: customProModeView.frame.origin.x + 16, y: customProModeView.frame.origin.y + 16, width: customProModeView.bounds.width, height: 30)
+        customProModeView.titleLabel.backgroundColor = UIColor.clear
+        customProModeView.titleLabelText = title
+        
+        customProModeView.labelText = "Pro members only"
+        customProModeView.btnTitle = "Become a Pro"
+        //customProModeView.backgroundColor = UIColor.clear
+        customProModeView.backgroundColor = UIColor(red:110.0/255.0, green:185.0/255.0, blue:165.0/255.0, alpha:1.0)
+        
+        if !checkCaddie{
+            customProModeView.btnPro.center = CGPoint(x: customProModeView.bounds.midX, y: customProModeView.label.frame.origin.y + customProModeView.label.frame.size.height + 30)
+            
+            customProModeView.titleLabel.textColor = UIColor.darkGray
+            customProModeView.labelText = "Unlock this stat by playing a round with Shot Tracking"
+            customProModeView.btnTitle = "Play Now"
+            customProModeView.backgroundColor = UIColor.white
+        }
+        targetView?.addSubview(customProModeView)
+    }
+    func proLockBtnPressed(button:UIButton) {
+        if !checkCaddie{
+            let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
+            self.navigationController?.pushViewController(mapViewController, animated: true)
+        }
+        else{
+            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            playButton.contentView.isHidden = true
+            playButton.floatButton.isHidden = true
+        }
+    }
     
     func setupUI(){
         barViewPuttsPerHole.isUserInteractionEnabled = false

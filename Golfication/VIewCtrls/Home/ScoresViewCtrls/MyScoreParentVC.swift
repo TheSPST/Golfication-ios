@@ -61,10 +61,11 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
     }
     
     var checkCaddie = false
+    var totalCaddie = Int()
+
     func getScoreDataFromFirebase() {
-        
-        let appnedPath = "scoring"
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: appnedPath) { (snapshot) in
+        self.totalCaddie = 0
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "scoring") { (snapshot) in
             
             if(snapshot.childrenCount > 0){
                 self.dataDic = (snapshot.value as? NSDictionary)!
@@ -73,6 +74,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                     for (key1, _) in valDic{
                         if (key1 as! String  == "smartCaddie"){
                             self.checkCaddie = true
+                            self.totalCaddie += 1
                             break
                         }
                     }
@@ -242,6 +244,59 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                 }
                 score.approach.append(approachArray)
             }
+            if let smartCaddieDic = ((myDataArray[i] as AnyObject).object(forKey:"smartCaddie") as? NSDictionary){
+                var clubWiseArray = [Club]()
+                for key in Constants.allClubs{
+                    var keysArray = smartCaddieDic.value(forKey: " \(key)")
+                    if(keysArray == nil){
+                        keysArray = smartCaddieDic.value(forKey: "\(key)")
+                    }
+                    if((keysArray) != nil){
+                        let valueArray = keysArray as! NSArray
+                        for j in 0..<valueArray.count{
+                            let clubData = Club()
+                            let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
+                            if((backSwing) != nil){
+                                clubData.backswing = backSwing as! Double
+                            }
+                            if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
+                                clubData.distance = distance
+                                if(Constants.distanceFilter == 1){
+                                    clubData.distance = distance/Constants.YARD
+                                }
+                            }
+                            var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
+                            if let strk = (valueArray[j] as AnyObject).object(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
+                                strokesGained = strk
+                            }
+                            clubData.strokesGained = strokesGained
+                            
+                            let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
+                            if((swingScore) != nil){
+                                clubData.swingScore = swingScore as! Double
+                            }
+                            let type = (valueArray[j] as AnyObject).object(forKey: "type")
+                            if((type) != nil){
+                                clubData.type = type as! Int
+                            }
+                            if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
+                                clubData.proximity = proximity
+                                if(Constants.distanceFilter == 1){
+                                    clubData.proximity = proximity/Constants.YARD
+                                }
+                                
+                            }
+                            let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut")
+                            if((holeout) != nil){
+                                clubData.holeout = holeout as! Double
+                            }
+                            
+                            clubWiseArray.append(clubData)
+                            score.clubDict.append((key,clubData))
+                        }
+                    }
+                }
+            }
             scores.append(score)
             self.scoreArray.append(score.score)
         }
@@ -281,6 +336,8 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         child4.checkCaddie = self.checkCaddie
         child5.checkCaddie = self.checkCaddie
 
+        child1.totalCaddie = self.totalCaddie
+        
         let index = self.buttonBarView.selectedIndex
         
         var CSTypeArray = [String]()
