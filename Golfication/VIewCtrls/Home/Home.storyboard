@@ -7263,7 +7263,7 @@
                                                         <rect key="frame" x="133" y="0.0" width="128" height="26"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="11"/>
-                                                        <state key="normal" title="Strokes Gained">
+                                                        <state key="normal" title="Swing Sessions">
                                                             <color key="titleColor" red="0.57647058819999997" green="0.57647058819999997" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </state>
                                                     </button>

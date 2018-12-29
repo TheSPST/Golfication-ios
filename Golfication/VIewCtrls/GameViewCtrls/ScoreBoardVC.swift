@@ -385,14 +385,20 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                             playersArray.append(dict)
                         }
                     }
-                    self.scoreData.append((hole: i, par:par,players:playersArray))
+                    self.scoreData.append((hole: i+1, par:par,players:playersArray))
                 }
+                self.updateScoringHoleData()
             }
             
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
                 self.tblView.reloadData()
             })
+        }
+    }
+    func updateScoringHoleData(){
+        for i in 0..<self.holeHcpWithTee.count{
+            self.scoreData[i].hole = self.holeHcpWithTee[i].hole
         }
     }
     func resetScoreNodeForMe(){
@@ -510,8 +516,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
             index += 1
         }
-        for tee in holeHcpWithTee{
-            if tee.hole == holeNo{
+        for tee in holeHcpWithTee where tee.hole == holeNo{
+//            if tee.hole == holeNo{
                 for data in tee.teeBox {
                     if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[index].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[index].color).lowercased(){
                         hcp = data.value(forKey:"hcp") as? Int ?? 0
@@ -519,7 +525,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     }
                 }
                 break
-            }
+//            }
         }
         return hcp
     }
@@ -1177,7 +1183,36 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
     @objc func buttonAction(sender: CellButton!) {
+        var isActiveMatch = false
+        var isAdvanced = false
+        var swingK = String()
+
+        var matchDataDictionary = NSMutableDictionary()
+        if(isFinalSummary){
+            matchDataDictionary = self.matchDataDict
+        }else{
+            matchDataDictionary = Constants.matchDataDic
+        }
+        if let matchType = matchDataDictionary.value(forKeyPath: "scoringMode") as? String{
+            if matchType.contains("advanced"){
+            isAdvanced = true
+            }
+        }else if isFinalSummary{
+            isAdvanced = true
+        }
+        if Constants.matchId.count>0{
+            isActiveMatch = true
+        }
+        for data in self.playerData{
+            if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                    swingK = swingKey
+                    break
+                }
+            }
+        }
         
+        if ((isActiveMatch) && (!isAdvanced) && (swingK.isEmpty)){
         self.view.addSubview(self.scoringSuperView)
         self.scoringSuperView.isHidden = false
         self.scoringView.isHidden = false
@@ -1199,7 +1234,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.classicScoring = self.getScoreIntoClassicNode(hole: self.index,playerKey: self.playerId!)
         self.updateValue()
         lblHolePar.text = "Hole".localized() + " \(self.index+1) - " + "Par".localized() + " \(self.scoreData[self.index].par)"
-
+        }
     }
     
     func getScoreIntoClassicNode(hole:Int,playerKey:String)->classicMode{
@@ -1571,7 +1606,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 for i in 0..<scoreData.count{
                     
                     let label =  UILabel(frame: CGRect(x: 25+(width + padding)*CGFloat(i), y: 9, width: 35, height: 15))
-                    label.text = "\(i+1)"
+//                    label.text = "\(i+1)"
+                    label.text = "\(scoreData[i].hole)"
                     label.textAlignment = .center
                     label.textColor = UIColor.white
                     header.addSubview(label)
@@ -1806,7 +1842,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 var chipCountTotal = 0
                 var sandCountTotal = 0
                 for i in 0..<scoreData.count{
-                    
+                    debugPrint("ooo",i)
+
                     let btn = CellButton(frame:CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 40, height: 32))
                     btn.setTitle("-", for: .normal)
                     btn.titleLabel?.textAlignment = .center
@@ -1833,11 +1870,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                             
                             var imgArray = [#imageLiteral(resourceName: "hit"),#imageLiteral(resourceName: "gir_false")]
                             if(key as? String == playerId){
-                                if let dict = value as? NSMutableDictionary{
-                                    for (key,value) in dict{
+//                                if let dict = value as? NSMutableDictionary{
+                                let dict = value as! [String:Any]
+
+                                for (key,value) in dict{
                                         if Constants.mode == 1{
                                             if indexPath.row == 0{
-                                                if(key as! String == "drivingDistance"){
+                                                if(key == "drivingDistance"){
                                                     var drivingDistance = value as! Double
                                                     var suffix = "m"
                                                     if(Constants.distanceFilter != 1){
@@ -1852,7 +1891,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 1{
-                                                if(key as! String == "fairway"){
+                                                if(key == "fairway"){
                                                     let fairway = value as! String
                                                     //                                            label.text = ""
                                                     btn.setTitle("", for: .normal)
@@ -1877,7 +1916,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 2{
-                                                if(key as! String == "approachDistance"){
+                                                if(key == "approachDistance"){
                                                     var approchDist = value as! Double
                                                     var suffix = "m"
                                                     if(Constants.distanceFilter != 1){
@@ -1891,7 +1930,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 3{
-                                                if(key as! String == "gir"){
+                                                if(key == "gir"){
                                                     let gir = value as! Bool
                                                     //                                            label.text = ""
                                                     btn.setTitle("", for: .normal)
@@ -1910,7 +1949,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 4{
-                                                if(key as! String == "chipUpDown"){
+                                                if(key == "chipUpDown"){
                                                     if let chipUpDown = value as? Bool{
                                                         //                                                label.text = ""
                                                         btn.setTitle("", for: .normal)
@@ -1930,7 +1969,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 5{
-                                                if(key as! String == "sandUpDown"){
+                                                if(key == "sandUpDown"){
                                                     if let sandDown = value as? Bool{
                                                         //                                                label.text = ""
                                                         btn.setTitle("", for: .normal)
@@ -1950,7 +1989,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 6{
-                                                if(key as! String == "putting"){
+                                                if(key == "putting"){
                                                     let approchDist = value as! Int
                                                     //                                            label.text = "\(approchDist)"
                                                     btn.setTitle("\(approchDist)", for: .normal)
@@ -1959,7 +1998,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 7{
-                                                if(key as! String == "penaltyCount"){
+                                                if(key == "penaltyCount"){
                                                     let approchDist = value as! Int
                                                     //                                            label.text = "\(approchDist)"
                                                     btn.setTitle("\(approchDist)", for: .normal)
@@ -1969,11 +2008,12 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             else if indexPath.row == 8{
                                                 let hcp = self.getHCPValue(playerID:playerId!,holeNo: self.scoreData[i].hole)
                                                 debugPrint(i)
+                                                debugPrint("self.scoreData[i].hole:",self.scoreData[i].hole)
                                                 btn.setTitle("\(hcp)", for: .normal)
                                                 hcpTotal += hcp
                                             }
                                             else if indexPath.row == 9{
-                                                if(key as! String == "stableFordPoints"){
+                                                if(key == "stableFordPoints"){
                                                     let stableFord = value as! Int
                                                     //                                            label.text = "\(stableFord)"
                                                     btn.setTitle("\(stableFord)", for: .normal)
@@ -1982,7 +2022,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 10{
-                                                if(key as! String == "netScore"){
+                                                if(key == "netScore"){
                                                     let netScore = value as! Int
                                                     //                                            label.text = "\(netScore)"
                                                     btn.setTitle("\(netScore)", for: .normal)
@@ -1992,8 +2032,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             }
                                         }
                                         else{
+                                            debugPrint("no",i)
                                             if indexPath.row == 0{
-                                                if(key as! String == "fairway"){
+                                                if(key == "fairway"){
                                                     let fairway = value as! String
                                                     //                                                    label.text = ""
                                                     btn.setTitle("", for: .normal)
@@ -2018,7 +2059,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 1{
-                                                if(key as! String == "gir"){
+                                                if(key == "gir"){
                                                     let gir = value as! Bool
                                                     //                                                    label.text = ""
                                                     btn.setTitle("", for: .normal)
@@ -2038,7 +2079,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 
                                             }
                                             else if indexPath.row == 2{
-                                                if(key as! String == "chipCount"){
+                                                if(key == "chipCount"){
                                                     if let chipCount = value as? Int{
                                                         btn.setTitle("\(chipCount)", for: .normal)
                                                         chipCountTotal += chipCount
@@ -2047,7 +2088,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 3{
-                                                if(key as! String == "sandCount"){
+                                                if(key == "sandCount"){
                                                     if let sandCount = value as? Int{
                                                         btn.setTitle("\(sandCount)", for: .normal)
                                                         sandCountTotal += sandCount
@@ -2055,14 +2096,14 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 4{
-                                                if(key as! String == "putting"){
+                                                if(key == "putting"){
                                                     let approchDist = value as! Int
                                                     btn.setTitle("\(approchDist)", for: .normal)
                                                     puttsTotal += approchDist
                                                 }
                                             }
                                             else if indexPath.row == 5{
-                                                if(key as! String == "penaltyCount"){
+                                                if(key == "penaltyCount"){
                                                     let approchDist = value as! Int
                                                     btn.setTitle("\(approchDist)", for: .normal)
                                                     penaltyTotal += approchDist
@@ -2071,11 +2112,12 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             else if indexPath.row == 6{
                                                 let hcp = self.getHCPValue(playerID:playerId!,holeNo:self.scoreData[i].hole)
                                                 debugPrint(i)
+                                                debugPrint("self.scoreData[i].hole:",self.scoreData[i].hole)
                                                 btn.setTitle("\(hcp)", for: .normal)
                                                 hcpTotal += hcp
                                             }
                                             else if indexPath.row == 7{
-                                                if(key as! String == "stableFordPoints"){
+                                                if(key == "stableFordPoints"){
                                                     let stableFord = value as! Int
                                                     //                                                    label.text = "\(stableFord)"
                                                     btn.setTitle("\(stableFord)", for: .normal)
@@ -2083,7 +2125,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                 }
                                             }
                                             else if indexPath.row == 8{
-                                                if(key as! String == "netScore"){
+                                                if(key == "netScore"){
                                                     let netScore = value as! Int
                                                     //                                                    label.text = "\(netScore)"
                                                     btn.setTitle("\(netScore)", for: .normal)
@@ -2092,7 +2134,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             }
                                         }
                                     }
-                                }
+                                //}
                             }
                         }
                     }

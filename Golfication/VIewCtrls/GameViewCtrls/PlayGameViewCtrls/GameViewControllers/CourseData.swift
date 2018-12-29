@@ -24,7 +24,7 @@ class CourseData:NSObject{
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     func getGolfCourseDataFromFirebase(courseId:String){
 //        courseId = "course_9999999"
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:"course_9999999") { (snapshot) in
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
             var rangeFinderHoles = NSArray()

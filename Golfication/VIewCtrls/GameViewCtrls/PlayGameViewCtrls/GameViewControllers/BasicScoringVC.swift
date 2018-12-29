@@ -195,7 +195,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
             self.resetScoreNodeForMe()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                self.updateData(indexToUpdate:self.holeIndex)
+                self.updateData(indexToUpdate:self.holeIndex%self.gameTypeIndex)
                 self.progressView.hide(navItem: self.navigationItem)
                 var i = 0
                 for _ in self.playersButton{
@@ -582,6 +582,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.swipePrev.isEnabled = false
             self.btnFinishRound.isHidden = false
         }
+        self.holeIndex = self.holeIndex%self.gameTypeIndex
         self.updateData(indexToUpdate:self.holeIndex)
         
     }
@@ -734,6 +735,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.gameTypeIndex = matchDataDictionary.value(forKey: "matchType") as! String == "9 holes" ? 9:18
         self.courseData.startingIndex = self.startingIndex
         self.courseData.gameTypeIndex = self.gameTypeIndex
+        self.startingIndex = self.startingIndex%self.gameTypeIndex
         let courseId = "course_\(matchDataDictionary.value(forKeyPath: "courseId") as! String)"
         self.progressView.show(atView: self.view, navItem: navigationItem)
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
@@ -789,7 +791,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.swipePrev.isEnabled = false
             self.btnFinishRound.isHidden = false
         }
-        updateData(indexToUpdate: self.holeIndex)
+        updateData(indexToUpdate: self.holeIndex%self.gameTypeIndex)
         if(self.gameTypeIndex < scoreData.count){
             self.btnChangeHole.isUserInteractionEnabled = false
         }else{
@@ -932,7 +934,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     func updateHoleWiseShots(){
         var i = 0
-        for data in scoreData[self.holeIndex].players{
+        for data in scoreData[self.holeIndex%self.gameTypeIndex].players{
             let keys = data.allKeys as! [String]
             if keys.first == self.playerId{
                 if let holeData = data.value(forKey: self.playerId!) as? NSMutableDictionary{

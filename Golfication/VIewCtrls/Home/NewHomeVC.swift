@@ -186,11 +186,62 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - clickStrocksGained
     @IBAction func clickStrocksGained(_ sender: UIButton!) {
-        let storyboard = UIStoryboard(name: "Home", bundle: nil)
-        let strockesGainedVC = storyboard.instantiateViewController(withIdentifier: "StrokesGainedVC") as! StrokesGainedVC
-        self.navigationController?.pushViewController(strockesGainedVC, animated: true)
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
+//        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+//        let strockesGainedVC = storyboard.instantiateViewController(withIdentifier: "StrokesGainedVC") as! StrokesGainedVC
+//        self.navigationController?.pushViewController(strockesGainedVC, animated: true)
+//        playButton.contentView.isHidden = true
+//        playButton.floatButton.isHidden = true
+        getSwingData()
+    }
+    
+    func getSwingData() {
+        var swingMArray = NSMutableArray()
+        
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
+            
+            if(snapshot.value != nil){
+                
+                if let dataDic = snapshot.value as? [String:Bool]{
+                    let group = DispatchGroup()
+                    for (key, value) in dataDic{
+                        group.enter()
+                        
+                        if !value{
+                            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
+                                if(snapshot.value != nil){
+                                    if let data = snapshot.value as? NSDictionary{
+                                        //                                        debugPrint(data.value(forKey: "matchKey"))
+                                        if let _ = data.value(forKey: "swings") as? NSMutableArray{
+                                            swingMArray.add(data)
+                                        }
+                                    }
+                                }
+                                group.leave()
+                            }
+                        }
+                        else{
+                            group.leave()
+                        }
+                    }
+                    group.notify(queue: .main, execute: {
+                        self.progressView.hide(navItem: self.navigationItem)
+                        
+                        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+                        let array: NSArray = swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
+                        
+                        swingMArray.removeAllObjects()
+                        swingMArray = NSMutableArray()
+                        swingMArray = array.mutableCopy() as! NSMutableArray
+                        
+                        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+                        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "SwingSessionVC") as! SwingSessionVC
+                        viewCtrl.dataMArray = swingMArray
+                        self.navigationController?.pushViewController(viewCtrl, animated: true)
+                    })
+                }
+            }
+        }
     }
     
     @IBAction func smartCaddieAction(_ sender: UIButton){
@@ -644,63 +695,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - mySwingAction
     @objc func mySwingAction(_ sender: Any) {
-        /*let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
         viewCtrl.linkStr = "https://www.indiegogo.com/projects/golfication-x-ai-powered-golf-super-wearable/x/17803765#/"
         viewCtrl.fromIndiegogo = false
         viewCtrl.fromNotification = false
-        self.navigationController?.pushViewController(viewCtrl, animated: true)*/
-        getSwingData()
-    }
-    
-    func getSwingData() {
-        var swingMArray = NSMutableArray()
-        
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
-            
-            if(snapshot.value != nil){
-                
-                if let dataDic = snapshot.value as? [String:Bool]{
-                    let group = DispatchGroup()
-                    for (key, value) in dataDic{
-                        group.enter()
-                        
-                        if !value{
-                            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
-                                if(snapshot.value != nil){
-                                    if let data = snapshot.value as? NSDictionary{
-//                                        debugPrint(data.value(forKey: "matchKey"))
-                                        if let _ = data.value(forKey: "swings") as? NSMutableArray{
-                                            swingMArray.add(data)
-                                        }
-                                    }
-                                }
-                                group.leave()
-                            }
-                        }
-                        else{
-                            group.leave()
-                        }
-                    }
-                    group.notify(queue: .main, execute: {
-                        self.progressView.hide(navItem: self.navigationItem)
-                        
-                        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
-                        let array: NSArray = swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
-                        
-                        swingMArray.removeAllObjects()
-                        swingMArray = NSMutableArray()
-                        swingMArray = array.mutableCopy() as! NSMutableArray
-                        
-                        let storyboard = UIStoryboard(name: "Home", bundle: nil)
-                        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "SwingSessionVC") as! SwingSessionVC
-                        viewCtrl.dataMArray = swingMArray
-                        self.navigationController?.pushViewController(viewCtrl, animated: true)
-                    })
-                }
-            }
-        }
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     // MARK: - setInitialUI

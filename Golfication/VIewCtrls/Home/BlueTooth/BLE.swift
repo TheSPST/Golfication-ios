@@ -1288,6 +1288,8 @@ extension BLE: CBPeripheralDelegate {
                                         debugPrint("Game Discard cancel Press")
                                     }))
                                     UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                                }else{
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                                 }
                             })
                         }
@@ -1414,10 +1416,6 @@ extension BLE: CBPeripheralDelegate {
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
                             clubIndex = (Int(dataArray[14]))-1
                         }
-//                        var club = "Dr"
-//                        if !self.allClubs[clubIndex].contains("Pu"){
-//                            club = self.allClubs[clubIndex]
-//                        }
                         holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubIndex]
                         swingDetails[swingDetails.count-1].club = self.allClubs[clubIndex]
                         swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
