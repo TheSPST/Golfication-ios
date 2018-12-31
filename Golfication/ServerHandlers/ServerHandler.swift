@@ -9,9 +9,9 @@
 import UIKit
 
 class ServerHandler: NSObject {
-//https://www.khelfie.com/mysql/
+    //https://www.khelfie.com/mysql/
     let pathStr = "http://www.khelfie.com/mysql/"
-
+    
     let defaultSession = URLSession(configuration: .default)
     var errorMessage = String()
     var state = uint()
@@ -25,27 +25,27 @@ class ServerHandler: NSObject {
         
         if var urlComponents = URLComponents(string: pathStr + urlString) {
             urlComponents.query = dataString
-        
+            
             guard let url = urlComponents.url else { return }
             //print("ServerUrl= ",url)
             
             dataTask = defaultSession.dataTask(with: url) { (data, response, error) in
                 defer { self.dataTask = nil }
-        
+                
                 if let error = error {
                     self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
                     onCompletion(error as? [String : SelectCourseStruct], error.localizedDescription.debugDescription)
                 }
                 else if let data = data,
                     let response = response as? HTTPURLResponse, response.statusCode == 200{
-
+                    
                     do{
                         
-                    let courses = try JSONDecoder().decode([String:SelectCourseStruct].self, from: data)
-                    
-                    DispatchQueue.main.async {
-                        onCompletion(courses, error as? String)
-                    }
+                        let courses = try JSONDecoder().decode([String:SelectCourseStruct].self, from: data)
+                        
+                        DispatchQueue.main.async {
+                            onCompletion(courses, error as? String)
+                        }
                     }
                     catch let jsonErr {
                         //print("Error serializing json:", jsonErr.localizedDescription.debugDescription)
@@ -55,7 +55,7 @@ class ServerHandler: NSObject {
             }
             dataTask?.resume()
         }
-   }
+    }
     
     func sendMailingRequest(urlString: String, dataString: String, onCompletion: @escaping (String?, String?)-> Void ){
         

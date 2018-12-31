@@ -1642,8 +1642,8 @@ extension BLE: CBPeripheralDelegate {
                                 if let viewC = (vc as! UITabBarController).selectedViewController as? UINavigationController{
                                     let storyboard = UIStoryboard(name: "OAD", bundle: nil)
                                     let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
-                                    viewC.topViewController?.navigationController?.push(viewController: viewCtrl)
-                                    
+                                    viewCtrl.modalPresentationStyle = .overCurrentContext
+                                    viewC.topViewController?.present(viewCtrl, animated: true, completion: nil)
                                 }
                             }
                         }

@@ -234,7 +234,7 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/rishabhsood/Desktop/Golfication-28-Dec/Golfication/VIewCtrls/Home/NotificationViewCtrl/Notification.swift"
-                  timestampString = "567770658.512131"
+                  timestampString = "567781781.604121"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "205"
@@ -249,7 +249,7 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/rishabhsood/Desktop/Golfication-28-Dec/Golfication/VIewCtrls/Home/NotificationViewCtrl/Notification.swift"
-                  timestampString = "567770658.514493"
+                  timestampString = "567781781.60743"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "205"
@@ -345,54 +345,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "567770658.316569"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1086"
-            endingLineNumber = "1086"
-            landmarkName = "uploadShotsToMatchData()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "567770658.316972"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1096"
-            endingLineNumber = "1096"
-            landmarkName = "uploadShotsToMatchData()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "567770658.317233"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1087"
-            endingLineNumber = "1087"
-            landmarkName = "uploadShotsToMatchData()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
             timestampString = "567524287.285558"
             startingColumnNumber = "9223372036854775807"
@@ -410,7 +362,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/DeviceFramework/TI_OAD/TIOADViewController.swift"
-            timestampString = "567698948.940035"
+            timestampString = "567782062.229538"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "53"

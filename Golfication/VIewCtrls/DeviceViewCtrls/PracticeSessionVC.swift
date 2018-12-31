@@ -49,7 +49,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     //SixLabels
     @IBOutlet weak var lbl1SwingV: UILabel!
     @IBOutlet weak var lbl2ClubheadV: UILabel!
-    @IBOutlet weak var lbl3ClubPlaneV: UILabel!
+    var lbl3ClubPlaneV = UILabel()
     @IBOutlet weak var lbl4TempoV: UILabel!
     @IBOutlet weak var lbl4Tempo1V: UILabel!
     @IBOutlet weak var lbl5BackSwingV: UILabel!
