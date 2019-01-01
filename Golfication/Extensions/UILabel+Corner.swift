@@ -91,4 +91,11 @@ extension UIImageView{
         self.layer.borderColor = color
         self.layer.masksToBounds = true
     }
+    func setCircleWithColor(frame:CGRect,color:CGColor){
+        self.frame = frame
+        self.layer.cornerRadius = 0.5 * self.bounds.size.width
+        self.clipsToBounds = true
+        self.layer.borderWidth = 0.3
+        self.layer.borderColor = color
+    }
 }

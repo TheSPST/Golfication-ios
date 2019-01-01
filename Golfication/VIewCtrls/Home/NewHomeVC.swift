@@ -75,6 +75,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBOutlet weak var lblProfileHandicap: UILabel!
     @IBOutlet weak var lblProfileScoring: UILabel!
     @IBOutlet weak var lblPlayerMode: UILabel!
+    @IBOutlet weak var lblTotalSwingTaken: UILabel!
+    @IBOutlet weak var lblSwingScore: UILabel!
+    @IBOutlet weak var lblBestSwingScore: UILabel!
+    @IBOutlet weak var lblBestSwingClub: UILabel!
     
     @IBOutlet weak var playGolfStackView: UIStackView!
     @IBOutlet weak var scoreBarChartView: BarChartView!
@@ -82,6 +86,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var feedTableView: UITableView!
+    @IBOutlet weak var swingSessionTabImgVw: UIImageView!
     
     // @IBOutlet weak var strokeGainedChartView: CardView!
     let progressView = SDLoader()
@@ -116,6 +121,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var cellIndex = 5
     var clubInsideGolfClub = [String]()
     
+    var totalSwingCount = 0
+    var swingMArray = NSMutableArray()
+    
     // MARK: - inviteAction
     @IBAction func inviteAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Profile", bundle: nil)
@@ -145,8 +153,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // \
     @IBAction func notifiAction(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "OAD", bundle: nil)
-//        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
+        //        let storyboard = UIStoryboard(name: "OAD", bundle: nil)
+        //        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
@@ -186,63 +194,20 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - clickStrocksGained
     @IBAction func clickStrocksGained(_ sender: UIButton!) {
-//        let storyboard = UIStoryboard(name: "Home", bundle: nil)
-//        let strockesGainedVC = storyboard.instantiateViewController(withIdentifier: "StrokesGainedVC") as! StrokesGainedVC
-//        self.navigationController?.pushViewController(strockesGainedVC, animated: true)
-//        playButton.contentView.isHidden = true
-//        playButton.floatButton.isHidden = true
-        getSwingData()
-    }
-    
-    func getSwingData() {
-        var swingMArray = NSMutableArray()
+        //        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        //        let strockesGainedVC = storyboard.instantiateViewController(withIdentifier: "StrokesGainedVC") as! StrokesGainedVC
+        //        self.navigationController?.pushViewController(strockesGainedVC, animated: true)
+        //        playButton.contentView.isHidden = true
+        //        playButton.floatButton.isHidden = true
         
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
-            
-            if(snapshot.value != nil){
-                
-                if let dataDic = snapshot.value as? [String:Bool]{
-                    let group = DispatchGroup()
-                    for (key, value) in dataDic{
-                        group.enter()
-                        
-                        if !value{
-                            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
-                                if(snapshot.value != nil){
-                                    if let data = snapshot.value as? NSDictionary{
-                                        //                                        debugPrint(data.value(forKey: "matchKey"))
-                                        if let _ = data.value(forKey: "swings") as? NSMutableArray{
-                                            swingMArray.add(data)
-                                        }
-                                    }
-                                }
-                                group.leave()
-                            }
-                        }
-                        else{
-                            group.leave()
-                        }
-                    }
-                    group.notify(queue: .main, execute: {
-                        self.progressView.hide(navItem: self.navigationItem)
-                        
-                        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
-                        let array: NSArray = swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
-                        
-                        swingMArray.removeAllObjects()
-                        swingMArray = NSMutableArray()
-                        swingMArray = array.mutableCopy() as! NSMutableArray
-                        
-                        let storyboard = UIStoryboard(name: "Home", bundle: nil)
-                        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "SwingSessionVC") as! SwingSessionVC
-                        viewCtrl.dataMArray = swingMArray
-                        self.navigationController?.pushViewController(viewCtrl, animated: true)
-                    })
-                }
-            }
+        if swingMArray.count>0{
+            let storyboard = UIStoryboard(name: "Home", bundle: nil)
+            let viewCtrl = storyboard.instantiateViewController(withIdentifier: "SwingSessionVC") as! SwingSessionVC
+            viewCtrl.dataMArray = self.swingMArray
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
         }
     }
+    
     
     @IBAction func smartCaddieAction(_ sender: UIButton){
         // do other task
@@ -271,16 +236,16 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
-
-        /*let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "HomeFreeProMemberVC") as! HomeFreeProMemberVC
-        viewCtrl.modalPresentationStyle = .overCurrentContext
-        present(viewCtrl, animated: true, completion: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.free30DaysProActivated(_:)), name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)*/
+        /*let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "HomeFreeProMemberVC") as! HomeFreeProMemberVC
+         viewCtrl.modalPresentationStyle = .overCurrentContext
+         present(viewCtrl, animated: true, completion: nil)
+         
+         NotificationCenter.default.addObserver(self, selector: #selector(self.free30DaysProActivated(_:)), name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)*/
     }
     
     @objc func free30DaysProActivated(_ notification: NSNotification) {
-
+        
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "Free30DaysProActivated"), object: nil)
         
         self.btnUpgrade.isHidden = true
@@ -293,19 +258,19 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.btnProfileBasic.setTitleColor(UIColor.white, for: .normal)
     }
     
-
+    
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-//        DEVICEDATA.getDeviceData()
+        //        DEVICEDATA.getDeviceData()
         if (InstanceID.instanceID().token() != nil){
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :InstanceID.instanceID().token()!] as [AnyHashable:String])
         }
         NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)
-
+        
         //grodvLE1bLdGBRNrA97R0DBlrSv2 -Alish
-//        Notification.sendNotification(reciever: "YCUJckKEhXWqbFGtqfRfpiOzBdp2", message: "Amit just finished a round at Qutab.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
-
+        //        Notification.sendNotification(reciever: "YCUJckKEhXWqbFGtqfRfpiOzBdp2", message: "Amit just finished a round at Qutab.", type: "8", category: "finishedGame", matchDataId: "-LEEX_IIesOFOyZWkiu-", feedKey:"")
+        
         self.feedTableView.isHidden = true
         self.view.layoutIfNeeded()
         // ------------------------ Set User Name & Profile Image ------------------------------
@@ -327,7 +292,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let versionDetails = ["info":versionInfo]
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(versionDetails)
         //-----------------------------------------------------------------------------------------
-
+        
         btnTabsArray = [btnScoreTab, btnSGTab, btnStatsTab]
         viewTabsArray = [viewMyScoreTab, viewSGTab, viewClubTab]
         for i in 0..<btnTabsArray.count{
@@ -373,39 +338,39 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         self.getStrokesGainedFirebaseData()
         self.getGolficationXVersion()
-//        let promocodeArr = ["GOLFYKQ98","GOLFYKR34","GOLFYKS56","GOLFYKT20","GOLFYKT41","GOLFYKT52","GOLFYKU29","GOLFYKU32","GOLFYKU34","GOLFYKU45","GOLFYKZ2","GOLFYLA37","GOLFYLA91","GOLFYLB40","GOLFYLB42","GOLFYLB80","GOLFYLC72","GOLFYLC94","GOLFYLC96","GOLFYLD14","GOLFYLD17","GOLFYLE33","GOLFYLF77","GOLFYLG22","GOLFYLG39","GOLFYLH65","GOLFYLH92","GOLFYLI84","GOLFYLJ0","GOLFYLJ28","GOLFYLK27","GOLFYLK45","GOLFYLK51","GOLFYLM17","GOLFYLM20","GOLFYLN12","GOLFYLN28","GOLFYLN43","GOLFYLN75","GOLFYLQ71","GOLFYLR65","GOLFYLT0","GOLFYLT62","GOLFYLU37","GOLFYLU97","GOLFYLV61","GOLFYLW8","GOLFYLX20","GOLFYLX46","GOLFYLY18"]
-//        for data in promocodeArr{
-//            BackgroundMapStats.getDynamicLinkFromPromocode(code: data)
-//        }
-
-//        self.FindUser()
+        //        let promocodeArr = ["GOLFYKQ98","GOLFYKR34","GOLFYKS56","GOLFYKT20","GOLFYKT41","GOLFYKT52","GOLFYKU29","GOLFYKU32","GOLFYKU34","GOLFYKU45","GOLFYKZ2","GOLFYLA37","GOLFYLA91","GOLFYLB40","GOLFYLB42","GOLFYLB80","GOLFYLC72","GOLFYLC94","GOLFYLC96","GOLFYLD14","GOLFYLD17","GOLFYLE33","GOLFYLF77","GOLFYLG22","GOLFYLG39","GOLFYLH65","GOLFYLH92","GOLFYLI84","GOLFYLJ0","GOLFYLJ28","GOLFYLK27","GOLFYLK45","GOLFYLK51","GOLFYLM17","GOLFYLM20","GOLFYLN12","GOLFYLN28","GOLFYLN43","GOLFYLN75","GOLFYLQ71","GOLFYLR65","GOLFYLT0","GOLFYLT62","GOLFYLU37","GOLFYLU97","GOLFYLV61","GOLFYLW8","GOLFYLX20","GOLFYLX46","GOLFYLY18"]
+        //        for data in promocodeArr{
+        //            BackgroundMapStats.getDynamicLinkFromPromocode(code: data)
+        //        }
+        
+        //        self.FindUser()
     }
-// Get user details which have Pro membership
-//    func FindUser(){
-//        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
-//            self.progressView.show(atView: self.view, navItem: self.navigationItem)
-//            var userData = NSMutableDictionary()
-//            if(snapshot.value != nil){
-//                userData = snapshot.value as! NSMutableDictionary
-//                for (key,value) in userData{
-//                    if let v = value as? NSMutableDictionary{
-//                        if((v.value(forKey: "iosToken")) != nil) && (v.value(forKey: "proMode") as! Bool) {
-//                            if let pro = v.value(forKey: "proMembership") as? NSMutableDictionary{
-//                                if pro.value(forKey: "productID") as? String == "pro_subscription_trial_monthly" || pro.value(forKey: "productID") as? String == "pro_subscription_trial_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_monthly"{
-//                                    debugPrint("ios Key: \(key)")
-//                                    debugPrint("proMembership",v.value(forKey: "proMembership"))
-//                                }
-//                            }
-//
-//                        }
-//                    }
-//                }
-//            }
-//            DispatchQueue.main.async(execute: {
-//                self.progressView.hide(navItem: self.navigationItem)
-//            })
-//        }
-//    }
+    // Get user details which have Pro membership
+    //    func FindUser(){
+    //        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
+    //            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+    //            var userData = NSMutableDictionary()
+    //            if(snapshot.value != nil){
+    //                userData = snapshot.value as! NSMutableDictionary
+    //                for (key,value) in userData{
+    //                    if let v = value as? NSMutableDictionary{
+    //                        if((v.value(forKey: "iosToken")) != nil) && (v.value(forKey: "proMode") as! Bool) {
+    //                            if let pro = v.value(forKey: "proMembership") as? NSMutableDictionary{
+    //                                if pro.value(forKey: "productID") as? String == "pro_subscription_trial_monthly" || pro.value(forKey: "productID") as? String == "pro_subscription_trial_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_monthly"{
+    //                                    debugPrint("ios Key: \(key)")
+    //                                    debugPrint("proMembership",v.value(forKey: "proMembership"))
+    //                                }
+    //                            }
+    //
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //            DispatchQueue.main.async(execute: {
+    //                self.progressView.hide(navItem: self.navigationItem)
+    //            })
+    //        }
+    //    }
     
     func getGolficationXVersion(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion/version") { (snapshot) in
@@ -417,6 +382,45 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             })
         }
     }
+    
+    func getFullClubName(clubName: String) -> String{
+        var fullClubName = String()
+        
+        let lastChar = clubName.last!
+        let firstChar = clubName.first!
+        
+        if lastChar == "i"{
+            fullClubName = String(firstChar) + " Iron"
+        }
+        else if lastChar == "h"{
+            fullClubName = String(firstChar) + " Hybrid"
+        }
+        else if lastChar == "r"{
+            fullClubName = "Driver"
+        }
+        else if lastChar == "u"{
+            fullClubName = "Putter"
+        }
+        else if lastChar == "w"{
+            if clubName == "Pw"{
+                fullClubName =  "Pitching Wedge"
+            }
+            else if clubName == "Sw"{
+                fullClubName =  "Sand Wedge"
+            }
+            else if clubName == "Gw"{
+                fullClubName =  "Gap Wedge"
+            }
+            else if clubName == "Lw"{
+                fullClubName =  "Lob Wedge"
+            }
+            else{
+                fullClubName = String(firstChar) + " Woods"
+            }
+        }
+        return fullClubName
+    }
+    
     func getClubDataFromFirebase(isShow:Bool){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "clubsData") { (snapshot) in
             let clubDataDict = snapshot.value as! [String:NSMutableDictionary]
@@ -546,7 +550,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.lblClubStatSG.text = "\((strokeGainedAvg[bestClubIndex]).rounded(toPlaces: 2))"
             self.lblClubStatName.text = dataPointsClub[bestClubIndex]
         }
-
+        
         // StroesGaned BARGraph
         for i in 0..<clubDict.count{
             let clubClass = clubDict[i].1 as Club
@@ -688,7 +692,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     func proLockBtnPressed(button:UIButton) {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
-
+        
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
     }
@@ -705,6 +709,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - setInitialUI
     func setInitialUI(){
+        swingSessionTabImgVw.setCircleWithColor(frame: swingSessionTabImgVw.frame, color: UIColor.glfBluegreen.cgColor)
+        
         btnPreOrder.layer.cornerRadius = 3.0
         btnPreOrder.setTitle(" " + "Pre order Now!".localized() + " ", for: .normal)
         //        viewOnCourse.layer.cornerRadius = 3.0
@@ -832,7 +838,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(true)
         if(editWithTag != nil){
-           editWithTag = nil
+            editWithTag = nil
         }
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRoundHome"))
     }
@@ -907,13 +913,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     if let proMembership = userData.value(forKey: "proMembership") as? NSDictionary{
                         if let device  = proMembership.value(forKey: "device") as? String{
                             if (device == "ios"){
-                            let refreshManager = RefreshSubscriptionManager.shared
-                            refreshManager.loadDataIfNeeded() { success in
-                            debugPrint("refreshManager==",success)
+                                let refreshManager = RefreshSubscriptionManager.shared
+                                refreshManager.loadDataIfNeeded() { success in
+                                    debugPrint("refreshManager==",success)
+                                }
                             }
-                         }
                         }
-                            if let expTimestamp = proMembership.value(forKey: "timestamp") as? Int{
+                        if let expTimestamp = proMembership.value(forKey: "timestamp") as? Int{
                             
                             let number = "\(expTimestamp)"
                             let array = number.compactMap{Int(String($0))}
@@ -931,48 +937,48 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                 if (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID){
                                     
                                     timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-//                                    timeEnd = Calendar.current.date(byAdding: .minute, value: 5, to: timeStart as Date)
-                                 }
+                                    //                                    timeEnd = Calendar.current.date(byAdding: .minute, value: 5, to: timeStart as Date)
+                                }
                                 
                                 let timeNow = NSDate()
                                 let calendar = NSCalendar.current
                                 let components = calendar.dateComponents([.day], from: timeNow as Date, to: timeEnd!)
                                 if components.day == 0 || components.day! < 0{
-                            if let device = proMembership.value(forKey: "device") as? String{
+                                    if let device = proMembership.value(forKey: "device") as? String{
                                         
-                                    if (device == "ios") || ((device == "android") && (proMembership.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID)){
-                                        
-                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["trial" :true] as [AnyHashable:Any])
-                                    Constants.trial = true
-                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMembership" :NSNull()] as [AnyHashable:Any])
-                                    
-                                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :false] as [AnyHashable:Any])
-                                    Constants.isProMode = false
-                                    
-                                    let subDic = NSMutableDictionary()
-                                    subDic.setObject(proMembership.value(forKey: "productID") as! String, forKey: "productID" as NSCopying)
-                                    subDic.setObject(expTimestamp, forKey: "timestamp" as NSCopying)
-                                    subDic.setObject("expire", forKey: "type" as NSCopying)
-                                    let subKey = ref!.child("\(Auth.auth().currentUser!.uid)").childByAutoId().key
-                                    let subscriptionDict = NSMutableDictionary()
-                                    subscriptionDict.setObject(subDic, forKey: subKey as NSCopying)
-                                    ref.child("subscriptions/\(Auth.auth().currentUser!.uid)/").updateChildValues(subscriptionDict as! [AnyHashable : Any])
-                                    
-                                    let alert = UIAlertController(title: "", message: "Your pro membership subscription has expired. Would you like to renew it now?", preferredStyle: .alert)
-                                    
-                                    alert.addAction(UIAlertAction(title: "LATER", style: .default, handler: { [weak alert] (_) in
-                                        // Do Nothing
-                                        debugPrint("LATER Alert: \(alert?.title ?? "")")
-                                    }))
-                                    alert.addAction(UIAlertAction(title: "RENEW", style: .default, handler: { [weak alert] (_) in
-                                        debugPrint("RENEW Alert: \(alert?.title ?? "")")
-                                        
-                                        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-                                        self.navigationController?.pushViewController(viewCtrl, animated: true)
-                                    }))
-                                    self.present(alert, animated: true, completion: nil)
+                                        if (device == "ios") || ((device == "android") && (proMembership.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID)){
+                                            
+                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["trial" :true] as [AnyHashable:Any])
+                                            Constants.trial = true
+                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMembership" :NSNull()] as [AnyHashable:Any])
+                                            
+                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["proMode" :false] as [AnyHashable:Any])
+                                            Constants.isProMode = false
+                                            
+                                            let subDic = NSMutableDictionary()
+                                            subDic.setObject(proMembership.value(forKey: "productID") as! String, forKey: "productID" as NSCopying)
+                                            subDic.setObject(expTimestamp, forKey: "timestamp" as NSCopying)
+                                            subDic.setObject("expire", forKey: "type" as NSCopying)
+                                            let subKey = ref!.child("\(Auth.auth().currentUser!.uid)").childByAutoId().key
+                                            let subscriptionDict = NSMutableDictionary()
+                                            subscriptionDict.setObject(subDic, forKey: subKey as NSCopying)
+                                            ref.child("subscriptions/\(Auth.auth().currentUser!.uid)/").updateChildValues(subscriptionDict as! [AnyHashable : Any])
+                                            
+                                            let alert = UIAlertController(title: "", message: "Your pro membership subscription has expired. Would you like to renew it now?", preferredStyle: .alert)
+                                            
+                                            alert.addAction(UIAlertAction(title: "LATER", style: .default, handler: { [weak alert] (_) in
+                                                // Do Nothing
+                                                debugPrint("LATER Alert: \(alert?.title ?? "")")
+                                            }))
+                                            alert.addAction(UIAlertAction(title: "RENEW", style: .default, handler: { [weak alert] (_) in
+                                                debugPrint("RENEW Alert: \(alert?.title ?? "")")
+                                                
+                                                let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+                                                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                                            }))
+                                            self.present(alert, animated: true, completion: nil)
+                                        }
                                     }
-                                }
                                 }
                             }
                         }
@@ -1058,6 +1064,45 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                         else if(!data.value){
                             
                         }
+                    }
+                }
+                if let swingKeys = userData.value(forKey: "swingSession") as? NSDictionary{
+                    self.totalSwingCount = 0
+                    self.swingMArray = NSMutableArray()
+                    if let dataDic = swingKeys as? [String:Bool]{
+                        let group = DispatchGroup()
+                        for (key, value) in dataDic{
+                            group.enter()
+                            
+                            if !value{
+                                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
+                                    if(snapshot.value != nil){
+                                        if let data = snapshot.value as? NSDictionary{
+                                            //debugPrint(data.value(forKey: "matchKey"))
+                                            if let swing = data.value(forKey: "swings") as? NSMutableArray{
+                                                self.totalSwingCount = self.totalSwingCount + swing.count
+                                                self.swingMArray.add(data)
+                                            }
+                                        }
+                                    }
+                                    group.leave()
+                                }
+                            }
+                            else{
+                                group.leave()
+                            }
+                        }
+                        group.notify(queue: .main, execute: {
+                            self.progressView.hide(navItem: self.navigationItem)
+                            
+                            let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+                            let array: NSArray = self.swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
+                            self.swingMArray.removeAllObjects()
+                            self.swingMArray = NSMutableArray()
+                            self.swingMArray = array.mutableCopy() as! NSMutableArray
+                            
+                            self.setSwingSessionUI()
+                        })
                     }
                 }
                 if let homeCourseDic = userData["homeCourseDetails"] as? NSDictionary{
@@ -1167,6 +1212,86 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 self.getBenchmarkKey()
             })
+        }
+    }
+    func setSwingSessionUI() {
+        let swingTempArray = NSMutableArray()
+        var numOfItems = 0
+        var swingScoreSum = 0.0
+        var clubArray = [String]()
+        var clubName: String
+        var bestValArray = NSMutableArray()
+        
+        for i in 0..<self.swingMArray.count{
+            let dataDic = self.swingMArray[i] as! NSDictionary
+            let tempSwingArray = dataDic.value(forKey: "swings") as! NSMutableArray
+            for j in 0..<tempSwingArray.count{
+                if let dic = tempSwingArray[j] as? NSDictionary{
+                    clubArray.append(dic.value(forKey: "club") as! String)
+                    swingTempArray.add(dic)
+                }
+            }
+        }
+        clubArray = Array(Set(clubArray))
+        
+        let tempArray = ["Dr", "3w", "1i", "1h", "2h", "3h", "2i", "4w", "4h", "3i", "5w", "5h", "4i", "7w", "6h", "5i", "7h", "6i", "7i", "8i", "9i", "Pw", "Gw", "Sw", "Lw"]
+        var tempArray2 = [String]()
+        for j in 0..<tempArray.count{
+            if clubArray.contains(tempArray[j]){
+                tempArray2.append(tempArray[j])
+            }
+        }
+        clubArray.removeAll()
+        clubArray = [String]()
+        clubArray = tempArray2
+        
+        for q in 0..<clubArray.count{
+            var bestNumOfItems = 0
+            var bestSwingScoreSum = 0.0
+            clubName = String()
+            let bestValDic = NSMutableDictionary()
+            
+            for i in 0..<swingTempArray.count{
+                let dataDic = swingTempArray[i] as! NSDictionary
+                if clubArray[q] == (dataDic.value(forKey: "club") as! String){
+                    bestNumOfItems = bestNumOfItems + 1
+                    let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
+                    bestSwingScoreSum += swingScore
+                    clubName = clubArray[q]
+                }
+                numOfItems = numOfItems + 1
+                let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
+                swingScoreSum += swingScore
+            }
+            if bestNumOfItems>0{
+                let avgBestSwing = bestSwingScoreSum/Double(bestNumOfItems)
+                bestValDic.setObject(clubName , forKey: "clubName" as NSCopying)
+                bestValDic.setObject(avgBestSwing, forKey: "avgBestSwing" as NSCopying)
+                bestValArray.add(bestValDic)
+            }
+        }
+        let sortDescriptor = NSSortDescriptor(key: "avgBestSwing", ascending: false)
+        let array: NSArray = bestValArray.sortedArray(using: [sortDescriptor]) as NSArray
+        bestValArray.removeAllObjects()
+        bestValArray = NSMutableArray()
+        bestValArray = array.mutableCopy() as! NSMutableArray
+        
+        lblBestSwingScore.text = "-"
+        lblBestSwingClub.text = "-"
+        lblSwingScore.text = "-"
+        lblTotalSwingTaken.text = "-"
+        if let maxDic =  bestValArray.firstObject as? NSDictionary{
+            if maxDic.count>0{
+                lblBestSwingScore.text = "\(Int((maxDic.value(forKey: "avgBestSwing")) as! Double))"
+                lblBestSwingClub.text = getFullClubName(clubName:(maxDic.value(forKey: "clubName") as! String))
+            }
+        }
+        if numOfItems > 0{
+            let avgSwing = swingScoreSum/Double(numOfItems)
+            self.lblSwingScore.text = "\(Int(avgSwing))"
+        }
+        if totalSwingCount > 0{
+            self.lblTotalSwingTaken.text = "\(self.totalSwingCount)"
         }
     }
     func getBenchmarkKey(){
@@ -1284,6 +1409,20 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         if !Constants.isProMode {
             self.setProLockedUI(targetView: self.viewSGTab)
         }
+        else if !Constants.isDevice {
+            self.viewSGTab.makeBlurView(targetView: self.viewSGTab)
+            self.setDeviceLockedUI(targetView: self.viewSGTab, title: "Swing Sessions")
+        }
+        else if !Constants.isProMode && !Constants.isDevice {
+            self.setProLockedUI(targetView: self.viewSGTab)
+        }
+        else if Constants.isProMode && !Constants.isDevice {
+            self.setDeviceLockedUI(targetView: self.viewSGTab, title: "Swing Sessions")
+        }
+        else if !Constants.isProMode && Constants.isDevice {
+            self.setProLockedUI(targetView: self.viewSGTab)
+        }
+
         lblProfileHomeCourse.text = self.profileHomeCourse ?? "-"
         lblProfileHandicap.text = Constants.handicap
         lblProfileScoring.text = "\(self.profileScoring ?? 0)"
@@ -1297,8 +1436,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             if (newUser && !Constants.isProMode){
                 if (self.profileHomeCourse != nil && self.profileHomeCourse != "") || (mappedStr == "2"){
                     if !(Constants.trial){
-                    self.viewBecomePro.isHidden = false
-                    self.view.layoutIfNeeded()
+                        self.viewBecomePro.isHidden = false
+                        self.view.layoutIfNeeded()
                     }
                 }
             }
@@ -1327,6 +1466,43 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         //--------------------------------------------------------------------------------------
     }
     
+    func setDeviceLockedUI(targetView:UIView?, title: String) {
+        
+        let customProModeView = CustomProModeView()
+        customProModeView.frame =  CGRect(x: 0, y: 0, width: (self.view?.frame.size.width)!-16, height: (targetView?.frame.size.height)!)
+        customProModeView.delegate = self
+        customProModeView.btnDevice.isHidden = false
+        customProModeView.btnPro.isHidden = true
+        
+        customProModeView.proImageView.frame.size.width = 45
+        customProModeView.proImageView.frame.size.height = 45
+        customProModeView.proImageView.frame.origin.x = (customProModeView.frame.size.width)-45-4
+        customProModeView.proImageView.frame.origin.y = 0
+        
+        customProModeView.label.frame.size.width = (customProModeView.bounds.width)-80
+        customProModeView.label.frame.size.height = 50
+        customProModeView.label.center = CGPoint(x: (customProModeView.bounds.midX), y: (customProModeView.bounds.midY)-40)
+        customProModeView.label.backgroundColor = UIColor.clear
+        
+        customProModeView.btnDevice.frame.size.width = (customProModeView.label.frame.size.width/2)+10
+        customProModeView.btnDevice.frame.size.height = 40
+        customProModeView.btnDevice.center = CGPoint(x: customProModeView.bounds.midX, y: customProModeView.label.frame.origin.y + customProModeView.label.frame.size.height + 20)
+        
+        customProModeView.titleLabel.frame = CGRect(x: customProModeView.frame.origin.x + 16, y: customProModeView.frame.origin.y + 16, width: customProModeView.bounds.width, height: 30)
+        customProModeView.titleLabel.backgroundColor = UIColor.clear
+        customProModeView.titleLabelText = title
+        customProModeView.titleLabel.textColor = UIColor.darkGray
+        
+        customProModeView.labelText = "Golfication X required"
+        customProModeView.btnDeviceTitle = "Visit our store"
+        customProModeView.proImageView.image = UIImage(named: "device")
+        customProModeView.backgroundColor = UIColor.clear
+        targetView?.addSubview(customProModeView)
+    }
+    
+    func deviceLockBtnPressed(button:UIButton) {
+        //print("deviceLockBtnPressed")
+    }
     //    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
     //        debugPrint("touched")
     //    }
@@ -1474,7 +1650,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                 }
                 //-------------------------------------------------------------------------
-
+                
             }
             self.progressView.hide(navItem: self.navigationItem)
         }
@@ -2047,7 +2223,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 cell.shareImageView.isHidden = true
                 
                 cell.shareImageHConstraint.constant = cell.frame.size.height
-//                self.view.layoutIfNeeded()
+                //                self.view.layoutIfNeeded()
                 
                 if(holesData.count == 9){
                     cell.scoreView2.isHidden = true

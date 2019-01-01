@@ -530,6 +530,13 @@
                                                                             <constraint firstAttribute="height" constant="180" id="PBf-Kf-7tN"/>
                                                                         </constraints>
                                                                     </imageView>
+                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="swing 1" translatesAutoresizingMaskIntoConstraints="NO" id="rBS-AI-BIe">
+                                                                        <rect key="frame" x="113" y="3" width="130" height="171"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="171" id="Yyz-bh-Pdd"/>
+                                                                            <constraint firstAttribute="width" constant="130" id="mNW-ZD-lOB"/>
+                                                                        </constraints>
+                                                                    </imageView>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="cLH-m2-zaV">
                                                                         <rect key="frame" x="117.5" y="188" width="85" height="35"/>
                                                                         <subviews>
@@ -565,7 +572,9 @@
                                                                 <constraints>
                                                                     <constraint firstItem="gpx-m0-Pw3" firstAttribute="centerX" secondItem="UiA-ce-jbv" secondAttribute="centerX" id="4wX-lg-oSh"/>
                                                                     <constraint firstItem="cLH-m2-zaV" firstAttribute="centerX" secondItem="UiA-ce-jbv" secondAttribute="centerX" id="AVz-1K-okY"/>
+                                                                    <constraint firstItem="rBS-AI-BIe" firstAttribute="top" secondItem="gpx-m0-Pw3" secondAttribute="top" constant="-5" id="G8Y-Xk-rgW"/>
                                                                     <constraint firstItem="gpx-m0-Pw3" firstAttribute="top" secondItem="UiA-ce-jbv" secondAttribute="top" constant="8" id="Wfm-1K-Rj6"/>
+                                                                    <constraint firstItem="rBS-AI-BIe" firstAttribute="centerX" secondItem="UiA-ce-jbv" secondAttribute="centerX" constant="18" id="bQ8-tH-CFU"/>
                                                                     <constraint firstItem="cLH-m2-zaV" firstAttribute="top" secondItem="gpx-m0-Pw3" secondAttribute="bottom" id="eUg-7f-69Q"/>
                                                                 </constraints>
                                                             </view>
@@ -1017,10 +1026,10 @@
                                                                             <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mD0-NS-Cv1">
                                                                                 <rect key="frame" x="220" y="0.0" width="95" height="95"/>
                                                                                 <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfO-gN-cst">
-                                                                                        <rect key="frame" x="41" y="29.5" width="13.5" height="36"/>
-                                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="30"/>
-                                                                                        <nil key="textColor"/>
+                                                                                    <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfO-gN-cst">
+                                                                                        <rect key="frame" x="10" y="33.5" width="75" height="18"/>
+                                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
+                                                                                        <color key="textColor" red="0.52941176469999995" green="0.63921568630000003" blue="0.60392156860000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" tag="557" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Club Plane" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sih-s6-Drg">
@@ -1036,11 +1045,13 @@
                                                                                         </connections>
                                                                                     </button>
                                                                                 </subviews>
-                                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <color key="backgroundColor" red="0.98431372549019602" green="0.98431372549019602" blue="0.98431372549019602" alpha="1" colorSpace="calibratedRGB"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="trailing" secondItem="j4Y-Jk-fv7" secondAttribute="trailing" id="1jO-lP-YSJ"/>
-                                                                                    <constraint firstItem="hfO-gN-cst" firstAttribute="centerY" secondItem="mD0-NS-Cv1" secondAttribute="centerY" id="3pg-ex-LiC"/>
+                                                                                    <constraint firstItem="hfO-gN-cst" firstAttribute="centerY" secondItem="mD0-NS-Cv1" secondAttribute="centerY" constant="-5" id="3pg-ex-LiC"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="hfO-gN-cst" secondAttribute="trailing" constant="10" id="BYS-BN-xVl"/>
                                                                                     <constraint firstAttribute="bottom" secondItem="sih-s6-Drg" secondAttribute="bottom" constant="10" id="Cjx-gJ-JN1"/>
+                                                                                    <constraint firstItem="hfO-gN-cst" firstAttribute="leading" secondItem="mD0-NS-Cv1" secondAttribute="leading" constant="10" id="TrZ-72-zXz"/>
                                                                                     <constraint firstAttribute="bottom" secondItem="j4Y-Jk-fv7" secondAttribute="bottom" id="bAg-m7-Xwn"/>
                                                                                     <constraint firstItem="j4Y-Jk-fv7" firstAttribute="leading" secondItem="mD0-NS-Cv1" secondAttribute="leading" id="c11-Vt-LuV"/>
                                                                                     <constraint firstItem="j4Y-Jk-fv7" firstAttribute="top" secondItem="mD0-NS-Cv1" secondAttribute="top" id="g7n-2H-VX8"/>
@@ -1493,5 +1504,6 @@
         <image name="golfer_swing" width="134" height="380"/>
         <image name="golficationBar" width="25" height="25"/>
         <image name="menu_black" width="40" height="40"/>
+        <image name="swing 1" width="260" height="382"/>
     </resources>
 </document>

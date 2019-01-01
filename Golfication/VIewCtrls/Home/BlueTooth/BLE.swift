@@ -1234,7 +1234,6 @@ extension BLE: CBPeripheralDelegate {
                     if(self.tagClubNumber.count == 0){
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
-                        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
                     }else{
                         if(totalTagInFirstPackate == 0){
@@ -1248,8 +1247,6 @@ extension BLE: CBPeripheralDelegate {
                     debugPrint("RecviedResult 2.2   ----  \(self.totalClub!)")
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
-
-                    NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
                     //                    self.startMatch()
                 }else if dataArray[0] == UInt8(3){
@@ -1716,18 +1713,19 @@ extension BLE: CBPeripheralDelegate {
         DispatchQueue.main.async {
             debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
             self.invalidateAllTimers()
-//            self.alertShowing(msg: "GolficationX disconnected Please connect again")
-            //        centralManager.connect(deviceGolficationX!, options: nil)
             UIApplication.shared.keyWindow?.makeToast("Device Disconnected.....")
             Constants.deviceGolficationX = nil
             self.charctersticsWrite = nil
             self.charctersticsRead = nil
             Constants.charctersticsGlobalForWrite = nil
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
-//            if(self.isPracticeMatch){
+            if Constants.OADFeedback{
+               Constants.OADFeedback = false
+               Constants.ble = nil
+            }else{
                 Constants.deviceGolficationX = peripheral
                 self.centralManager.connect(peripheral, options: nil)
-//            }
+            }
         }
     }
     

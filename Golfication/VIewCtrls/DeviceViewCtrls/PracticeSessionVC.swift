@@ -235,7 +235,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             tempArray.append("\(Int(swingScore))")
             tempArray.append("\(Int(clubSpeed))")
 //            tempArray.append("+\(Int(5))%")
-            tempArray.append("+5")
+            tempArray.append("Coming Soon")
             tempArray.append("\(tempo.rounded(toPlaces: 1))")
             lbl4Tempo1V.text = "1"
             tempArray.append("\(Int(backSwingAngle))")
@@ -281,7 +281,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     
     func btnTapped(tagVal:Int) {
         
-        if tagVal != 2{
+        //if tagVal != 2{
             //---------------------- default color ---------
             lblBottomClubSpeedKPH.textColor = UIColor(rgb: 0x87A39A)
             lblBottomClubSpeedCHS.textColor = UIColor(rgb: 0x87A39A)
@@ -398,7 +398,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                     }
                 }
             }
-        }
+        //}
     }
     func setBackSwingAngleDesign(backSwingAngle:Double){
         swingAngleCircular_Red.shouldShowValueText = false

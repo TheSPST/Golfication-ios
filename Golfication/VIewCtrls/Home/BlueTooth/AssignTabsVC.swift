@@ -12,11 +12,13 @@ import XLPagerTabStrip
 import CoreBluetooth
 import CoreBluetooth
 import UICircularProgressRing
-
+import ActionSheetPicker_3_0
 class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, IndicatorInfoProvider, BluetoothDelegate {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    @IBOutlet weak var stackViewAvgDist: UIStackView!
+    @IBOutlet weak var btnAvgDistance: UIButton!
     @IBOutlet weak var lblTagName: UILocalizedLabel!
     var scanProgressView: UIView!
     var btnNoTag: UIButton!
@@ -91,6 +93,14 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             commanBagArray = golfBagPuttArray
         }
         selectedBagStr = commanBagArray[pageControl.currentPage]
+        if self.selectedBagStr.contains("Pu"){
+            self.stackViewAvgDist.isHidden = true
+            self.btnAvgDistance.isHidden = true
+        }
+        for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+            self.btnAvgDistance.setTitle("\(getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
+        }
+        
         pageControl.numberOfPages = commanBagArray.count
         collectionViewFlowLayout.minimumLineSpacing = 0
         
@@ -175,6 +185,45 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         syncTagAction(btnSyncTag)
     }
     
+    @IBAction func selectAvdDistance(_ sender: Any) {
+        var rangeArr = [Int]()
+        var avg = 0
+        for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+            avg = getDataInTermOf5(data:Int((data.max + data.min)/2))
+        }
+        debugPrint("avg:",avg)
+        if avg > 0{
+            let min = getDataInTermOf5(data:Int((avg * 50)/100))
+            let max = getDataInTermOf5(data:Int((avg * 150)/100))
+            var i = min
+            while i < max{
+                rangeArr.append(i)
+                i += 5
+            }
+            ActionSheetStringPicker.show(withTitle: "Choose Average Distance", rows: rangeArr.reversed(), initialSelection: rangeArr.reversed().firstIndex(of: avg) ?? rangeArr.count/2, doneBlock: {
+                picker, value, index in
+                self.btnAvgDistance.setTitle("\(index!)", for: .normal)
+                return
+            }, cancel: { ActionStringCancelBlock in
+                
+                return
+                
+            }, origin: sender)
+        }
+
+        
+    }
+    func getDataInTermOf5(data:Int)->Int{
+        var avg = data
+        if (avg%10) != 5{
+            if (avg%10) % 5 < 3{
+                avg -= (avg%10) % 5
+            }else{
+                avg += (5-((avg%10) % 5))
+            }
+        }
+        return avg
+    }
     func setUpData(){
         
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
@@ -411,6 +460,9 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             let snapToIndex = indexOfCellBeforeDragging + (hasEnoughVelocityToSlideToTheNextCell ? 1 : -1)
             pageControl.currentPage = snapToIndex
             selectedBagStr = commanBagArray[snapToIndex]
+            for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                self.btnAvgDistance.setTitle("\(getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
+            }
             if let isSync = clubs.value(forKey: selectedBagStr) as? Bool{
             updateSyncBtnWithout(isSync:isSync)
             }
@@ -431,6 +483,9 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             if indexPath.row >= 0 && commanBagArray.count > indexPath.row{
                 pageControl.currentPage = indexPath.row
                 selectedBagStr = commanBagArray[indexPath.row]
+                for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                    self.btnAvgDistance.setTitle("\(getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
+                }
                 if let isSync = clubs.value(forKey: selectedBagStr) as? Bool{
                 updateSyncBtnWithout(isSync:isSync)
                 }
@@ -594,11 +649,11 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         debugPrint(advertisementData["kCBAdvDataLocalName"] as Any)
 
         if let newPeriName = advertisementData["kCBAdvDataLocalName"] as? String{
-            if newPeriName.contains("SGX") ||  newPeriName.contains("GGX") || newPeriName.contains("LGX"){
+            if newPeriName.contains("LGX") {//||  newPeriName.contains("GGX") || newPeriName.contains("LGX"){
                 tagsIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
             }
         }else if let periName = peripheral.name{
-            if periName.contains("SGX") ||  periName.contains("GGX") || periName.contains("LGX"){
+            if periName.contains("LGX") {//||  periName.contains("GGX") || periName.contains("LGX"){
                 tagsIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
             }
         }

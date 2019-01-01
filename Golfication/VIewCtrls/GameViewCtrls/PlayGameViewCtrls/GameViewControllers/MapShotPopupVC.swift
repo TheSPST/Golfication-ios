@@ -131,7 +131,7 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
 
         let scoreVal3 =  self.shotsDetails[self.pageIndex][2] as! String
         let shotBtnLbl3 = mapShotPopupView.viewWithTag(42) as! UILabel
-        shotBtnLbl3.text = "\(scoreVal3)"
+        shotBtnLbl3.text = "Comming Soon"//"\(scoreVal3)"
 
         let scoreVal4 =  self.shotsDetails[self.pageIndex][3] as! String
         let shotBtnLbl4 = mapShotPopupView.viewWithTag(43) as! UILabel
@@ -250,7 +250,7 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
     }
 
     func btnTapped(tagVal:Int) {
-        if tagVal != 22{
+        //if tagVal != 22{
             
             for i in 0..<self.shotBtnViews.count{
                 shotBtnViews[i].layer.cornerRadius = 3.0
@@ -367,10 +367,10 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
                 let finalScoreVal = scoreVal[3] as Int
                 shotTopLbls[1].text = "\(finalScoreVal)"
             }
-            else if tagVal+180 == 202{
-                let scoreVal =  self.shotsDetails[self.pageIndex][2] as! String
-                shotTopLbls[2].text = "\(scoreVal)"
-            }
+//            else if tagVal+180 == 202{
+//                let scoreVal =  self.shotsDetails[self.pageIndex][2] as! String
+//                shotTopLbls[2].text = "\(scoreVal)"
+//            }
             else if tagVal+180 == 203{
                 let scoreVal =  self.shotsDetails[self.pageIndex][3] as! String
                 shotTopLbls[3].text = "\(scoreVal) : 1"
@@ -384,7 +384,7 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
                 let finalScoreVal = scoreVal[3]
                 shotTopLbls[5].text = "\(finalScoreVal)"
             }
-        }
+        //}
     }
     func setBackSwingAngleDesign(backSwingAngle:Double){
         swingAngleCircular_Red.shouldShowValueText = false

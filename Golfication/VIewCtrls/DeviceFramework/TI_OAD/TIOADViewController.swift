@@ -10,7 +10,7 @@ import UIKit
 import CoreBluetooth
 import FirebaseStorage
 class TIOADViewController: UIViewController{
-
+    
     var perip : CBPeripheral!
     var oadImage: TIOADToadImageReader!
     var client: TIOADClient!
@@ -34,13 +34,13 @@ class TIOADViewController: UIViewController{
     @IBOutlet weak var  deviceCircularView: CircularProgress!
     @IBOutlet weak var lblUpdateFirmware: UILabel!
     var prevVal: Float = 0.0
-
-//    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2Ffirmware_v0.00.bin?alt=media&token=14c90409-fdc0-4712-96c8-83fca595fb10"
+    
+    //    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2Ffirmware_v0.00.bin?alt=media&token=14c90409-fdc0-4712-96c8-83fca595fb10"
     let fileName = "Golfication_L96_FW00.00.bin"
     
     //let urlStr1 = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad1_merged.bin?alt=media&token=31ee2200-82e3-4214-8c44-e335f91b2488"
-//    let fileName1 = "Khelfie_project2_FlashROM_oad1_merged.bin"
-
+    //    let fileName1 = "Khelfie_project2_FlashROM_oad1_merged.bin"
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +56,7 @@ class TIOADViewController: UIViewController{
         deviceCircularView.progressColor = UIColor.glfBluegreen
         deviceCircularView.trackColor = UIColor.clear
         deviceCircularView.progressLayer.lineWidth = 3.0
-
+        self.lblUpdateFirmware.text = "Updating Firmware 0%"
         let storage = Storage.storage(url:"gs://golfication-4f97b.appspot.com")
         let pathReference = storage.reference(withPath:"OADUpdates/\(self.fileName)")
         pathReference.downloadURL { url, error in
@@ -67,10 +67,8 @@ class TIOADViewController: UIViewController{
                 let action = UIAlertAction(title: "ok", style: UIAlertAction.Style.default, handler: nil)
                 alertVC.addAction(action)
                 self.present(alertVC, animated: true, completion: nil)
-
-                // Handle any errors
             } else {
-//                let fileUrl = url!
+                self.deviceSelected = false
                 DispatchQueue.global().async {
                     if let data = try? Data(contentsOf: url!){
                         DispatchQueue.main.async {
@@ -85,19 +83,7 @@ class TIOADViewController: UIViewController{
                             self.TIOADProgress.isHidden = false
                             
                             self.TIOADStartScanButton.isEnabled = true
-                            
-                            for s:CBService in Constants.deviceGolficationX.services! where s.uuid.uuidString == TI_OAD_SERVICE{
-                                debugPrint("Start OAD, we are ready",s)
-                                DispatchQueue.main.async {
-                                    self.client = TIOADClient(peripheral: Constants.deviceGolficationX, andImageData: self.oadImage, andDelegate: self)
-                                    self.TIOADMTUSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
-                                    self.TIOADBlockSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse)-4)"
-                                    self.TIOADStartScanButton.setTitle("Start Updating", for: .normal)
-                                    self.client.startOAD()
-                                    self.TIOADActivityIndicator.startAnimating()
-                                    self.TIOADProgress.isHidden = true
-                                }
-                            }
+                            self.startUpdate()
                         }
                     }
                     else{
@@ -115,12 +101,14 @@ class TIOADViewController: UIViewController{
         if (!deviceSelected!) {
             for s:CBService in Constants.deviceGolficationX.services! where s.uuid.uuidString == TI_OAD_SERVICE{
                 debugPrint("Start OAD, we are ready",s)
+                NotificationCenter.default.addObserver(self, selector: #selector(self.callAgain(_:)), name: NSNotification.Name(rawValue: "getSwingInside"), object: nil)
                 DispatchQueue.main.async {
                     self.client = TIOADClient(peripheral: Constants.deviceGolficationX, andImageData: self.oadImage, andDelegate: self)
                     self.TIOADMTUSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
                     self.TIOADBlockSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse)-4)"
                     self.deviceSelected = true
                     self.TIOADStartScanButton.setTitle("Start Updating", for: .normal)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwingInside"),object: nil)
                 }
             }
         }
@@ -128,13 +116,16 @@ class TIOADViewController: UIViewController{
             client.startOAD()
             self.TIOADActivityIndicator.startAnimating()
             self.TIOADProgress.isHidden = true
+            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "getSwingInside"))
         }
     }
-    
+    @objc func callAgain(_ notification:NSNotification){
+        self.startUpdate()
+    }
     @IBAction func TIOADStartScanButtonTouched(_ sender: Any) {
         if (!deviceSelected!) {
             for s:CBService in Constants.deviceGolficationX.services! where s.uuid.uuidString == TI_OAD_SERVICE{
-                    debugPrint("Start OAD, we are ready",s)
+                debugPrint("Start OAD, we are ready",s)
                 DispatchQueue.main.async {
                     self.client = TIOADClient(peripheral: Constants.deviceGolficationX, andImageData: self.oadImage, andDelegate: self)
                     self.TIOADMTUSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
@@ -155,21 +146,21 @@ class TIOADViewController: UIViewController{
 extension TIOADViewController: TIOADClientProgressDelegate{
     func client(_ client: TIOADClient!, oadProgressUpdated progress: TIOADClientProgressValues_t) {
         DispatchQueue.main.async {
-        debugPrint("Progress update: ")
-        debugPrint("Block \(progress.currentBlock) of  \(progress.totalBlocks)")
-        debugPrint("Byte \(progress.currentByte) og  \(progress.totalBytes)")
-
-        debugPrint("Progress:",String(format: "%.1f", (Float(progress.currentByte)/Float(progress.totalBytes))))
+            debugPrint("Progress update: ")
+            debugPrint("Block \(progress.currentBlock) of  \(progress.totalBlocks)")
+            debugPrint("Byte \(progress.currentByte) og  \(progress.totalBytes)")
             
-        self.TIOADActivityIndicator.stopAnimating()
-        self.TIOADProgress.isHidden = false
-
-        self.TIOADTotalBlock.text = "\(progress.totalBlocks)"
-        self.TIOADCurrentBlock.text = "\(progress.currentBlock)"
-        self.TIOADTotalBytes.text = "\(progress.totalBytes)"
-        self.TIOADCurrentByte.text = "\(progress.currentByte)"
-
-        self.TIOADProgress.progress = Float(progress.currentByte)/Float(progress.totalBytes)
+            debugPrint("Progress:",String(format: "%.1f", (Float(progress.currentByte)/Float(progress.totalBytes))))
+            
+            self.TIOADActivityIndicator.stopAnimating()
+            self.TIOADProgress.isHidden = false
+            
+            self.TIOADTotalBlock.text = "\(progress.totalBlocks)"
+            self.TIOADCurrentBlock.text = "\(progress.currentBlock)"
+            self.TIOADTotalBytes.text = "\(progress.totalBytes)"
+            self.TIOADCurrentByte.text = "\(progress.currentByte)"
+            
+            self.TIOADProgress.progress = Float(progress.currentByte)/Float(progress.totalBytes)
             
             if self.prevVal < (Float(progress.currentByte)/Float(progress.totalBytes)){
                 self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: self.prevVal, toValue: Float(progress.currentByte)/Float(progress.totalBytes))
@@ -183,16 +174,14 @@ extension TIOADViewController: TIOADClientProgressDelegate{
         debugPrint("State changed :",Int(Float(state.rawValue)))
         debugPrint("Error: ",error);
         DispatchQueue.main.async {
-
-        if ((state == tiOADClientGetDeviceTypeResponseRecieved) && error == nil) {
-            self.TIOADStartScanButton.isEnabled = true
-            self.TIOADChipID.text = client.getChipId()
-        }
+            
+            if ((state == tiOADClientGetDeviceTypeResponseRecieved) && error == nil) {
+                self.TIOADStartScanButton.isEnabled = true
+                self.TIOADChipID.text = client.getChipId()
+            }
             if let status = TIOADClient.getStateString(from: state){
                 if status.contains("Feedback complete OK"){
-//                    self.navigationController?.popToRootViewController(animated: true)
-                    Constants.ble = nil
-                    Constants.deviceGolficationX = nil
+                    Constants.OADFeedback = true
                     let alertVC = UIAlertController(title: "Alert", message: "Firmware Updated Successfully.", preferredStyle: UIAlertControllerStyle.alert)
                     let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
                         self.dismiss(animated: true, completion: nil)
@@ -202,14 +191,16 @@ extension TIOADViewController: TIOADClientProgressDelegate{
                     self.present(alertVC, animated: true, completion: nil)
                 }
             }
-        self.TIOADCurrentStatus.text = TIOADClient.getStateString(from: state)
-        
-        if ((error) != nil) {
-            debugPrint("EOAD_Process_failed",(error.localizedDescription))
-            let alertVC = UIAlertController(title: "Error", message: "EOAD Process failed with error: \(error.localizedDescription)", preferredStyle: UIAlertController.Style.alert)
-            let action = UIAlertAction(title: "ok", style: UIAlertAction.Style.default, handler: nil)
-            alertVC.addAction(action)
-          self.present(alertVC, animated: true, completion: nil)
+            self.TIOADCurrentStatus.text = TIOADClient.getStateString(from: state)
+            
+            if ((error) != nil){
+                debugPrint("EOAD_Process_failed",(error.localizedDescription))
+                if !error.localizedDescription.contains("Unknown error code during"){
+                    let alertVC = UIAlertController(title: "Error", message: "EOAD Process failed with error: \(error.localizedDescription)", preferredStyle: UIAlertController.Style.alert)
+                    let action = UIAlertAction(title: "ok", style: UIAlertAction.Style.default, handler: nil)
+                    alertVC.addAction(action)
+                    self.present(alertVC, animated: true, completion: nil)
+                }
             }
         }
     }

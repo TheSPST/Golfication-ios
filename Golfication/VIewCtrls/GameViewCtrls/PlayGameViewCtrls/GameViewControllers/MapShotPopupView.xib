@@ -31,7 +31,7 @@
                     <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="TPP-5f-AaK">
-                            <rect key="frame" x="0.0" y="5" width="375" height="462.5"/>
+                            <rect key="frame" x="0.0" y="5" width="375" height="459.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" tag="500" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shot " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QUf-Zc-e8B">
                                     <rect key="frame" x="169" y="0.0" width="37" height="20.5"/>
@@ -40,10 +40,10 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="8xZ-0K-tia">
-                                    <rect key="frame" x="16" y="28.5" width="343" height="220"/>
+                                    <rect key="frame" x="16" y="28.5" width="343" height="217"/>
                                     <subviews>
                                         <view hidden="YES" tag="30" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D5T-qk-p3j" userLabel="SwingScore">
-                                            <rect key="frame" x="-200" y="1.5" width="200" height="217"/>
+                                            <rect key="frame" x="-200" y="0.0" width="200" height="217"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="-50" translatesAutoresizingMaskIntoConstraints="NO" id="O44-YV-NOq">
                                                     <rect key="frame" x="0.0" y="10" width="200" height="185"/>
@@ -139,7 +139,7 @@
                                             </constraints>
                                         </view>
                                         <view hidden="YES" tag="31" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BAH-1b-BDW" userLabel="ClubSpeed">
-                                            <rect key="frame" x="0.0" y="1.5" width="0.0" height="217"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="217"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Mgh-xI-Et4">
                                                     <rect key="frame" x="-71" y="10" width="61" height="15"/>
@@ -206,58 +206,57 @@
                                                 <constraint firstAttribute="trailing" secondItem="Mgh-xI-Et4" secondAttribute="trailing" constant="10" id="zC1-x8-uRO"/>
                                             </constraints>
                                         </view>
-                                        <view hidden="YES" tag="32" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rPx-9t-muO" userLabel="Club Plane">
-                                            <rect key="frame" x="-57" y="1.5" width="57" height="217"/>
+                                        <view tag="32" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rPx-9t-muO" userLabel="Club Plane">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="217"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FQl-95-Oeh">
-                                                    <rect key="frame" x="20" y="0.0" width="17" height="195"/>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" tag="202" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xqw-L8-gAt">
+                                                    <rect key="frame" x="150" y="97.5" width="42" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="golfer_swing" translatesAutoresizingMaskIntoConstraints="NO" id="V1L-Ml-PF1">
+                                                    <rect key="frame" x="140" y="8" width="63" height="180"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="180" id="2jc-JH-rkY"/>
+                                                        <constraint firstAttribute="width" constant="63" id="GlH-b3-qcr"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="swing 1" translatesAutoresizingMaskIntoConstraints="NO" id="EdP-jR-krr">
+                                                    <rect key="frame" x="124.5" y="3" width="130" height="171"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="171" id="6D1-M3-9Ue"/>
+                                                        <constraint firstAttribute="width" constant="130" id="JBm-CT-9Eq"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="UyT-wZ-5Y2">
+                                                    <rect key="frame" x="129" y="188" width="85" height="35"/>
                                                     <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="iQE-yL-8DZ">
-                                                            <rect key="frame" x="0.0" y="0.0" width="17" height="150"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CLUB PLANE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ee6-jt-Gk0">
+                                                            <rect key="frame" x="0.0" y="0.0" width="85" height="18"/>
+                                                            <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="ENx-qU-aMT">
+                                                            <rect key="frame" x="12" y="20" width="61" height="15"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="device1" translatesAutoresizingMaskIntoConstraints="NO" id="V1L-Ml-PF1">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="8.5" height="150"/>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4yf-KS-E7F">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="150" id="2jc-JH-rkY"/>
+                                                                        <constraint firstAttribute="width" constant="15" id="Cdw-LD-Wsx"/>
+                                                                        <constraint firstAttribute="height" constant="15" id="u2Z-ub-pHf"/>
                                                                     </constraints>
-                                                                </imageView>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="202" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-5%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fdW-HZ-iam">
-                                                                    <rect key="frame" x="8.5" y="39" width="8.5" height="72"/>
-                                                                    <fontDescription key="fontDescription" name="SFProDisplay-Thin" family="SF Pro Display" pointSize="60"/>
-                                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                            </subviews>
-                                                        </stackView>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="UyT-wZ-5Y2">
-                                                            <rect key="frame" x="0.0" y="160" width="17" height="35"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CLUB PLANE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ee6-jt-Gk0">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="17" height="18"/>
-                                                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
-                                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="ENx-qU-aMT">
-                                                                    <rect key="frame" x="0.0" y="20" width="17" height="15"/>
-                                                                    <subviews>
-                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4yf-KS-E7F">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
-                                                                            <constraints>
-                                                                                <constraint firstAttribute="width" constant="15" id="Cdw-LD-Wsx"/>
-                                                                                <constraint firstAttribute="height" constant="15" id="u2Z-ub-pHf"/>
-                                                                            </constraints>
-                                                                            <state key="normal" backgroundImage="golfBag"/>
-                                                                        </button>
-                                                                        <button opaque="NO" tag="-5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="24u-em-wFo">
-                                                                            <rect key="frame" x="17" y="0.0" width="0.0" height="15"/>
-                                                                            <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="13"/>
-                                                                            <state key="normal" title="DRIVER">
-                                                                                <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                            </state>
-                                                                        </button>
-                                                                    </subviews>
-                                                                </stackView>
+                                                                    <state key="normal" backgroundImage="golfBag"/>
+                                                                </button>
+                                                                <button opaque="NO" tag="-5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="24u-em-wFo">
+                                                                    <rect key="frame" x="17" y="0.0" width="44" height="15"/>
+                                                                    <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="13"/>
+                                                                    <state key="normal" title="DRIVER">
+                                                                        <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    </state>
+                                                                </button>
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>
@@ -265,15 +264,17 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstItem="FQl-95-Oeh" firstAttribute="top" secondItem="rPx-9t-muO" secondAttribute="top" id="LGm-qT-9qb"/>
+                                                <constraint firstItem="EdP-jR-krr" firstAttribute="top" secondItem="V1L-Ml-PF1" secondAttribute="top" constant="-5" id="FfL-yr-ahK"/>
+                                                <constraint firstItem="UyT-wZ-5Y2" firstAttribute="centerX" secondItem="rPx-9t-muO" secondAttribute="centerX" id="KUn-wG-ow2"/>
+                                                <constraint firstItem="EdP-jR-krr" firstAttribute="centerX" secondItem="rPx-9t-muO" secondAttribute="centerX" constant="18" id="OQ6-yd-CuM"/>
+                                                <constraint firstItem="UyT-wZ-5Y2" firstAttribute="top" secondItem="V1L-Ml-PF1" secondAttribute="bottom" id="b6i-Mo-LRY"/>
+                                                <constraint firstItem="V1L-Ml-PF1" firstAttribute="top" secondItem="rPx-9t-muO" secondAttribute="top" constant="8" id="dpo-if-58w"/>
                                                 <constraint firstAttribute="height" constant="217" id="f6W-0e-4SX"/>
-                                                <constraint firstItem="FQl-95-Oeh" firstAttribute="centerX" secondItem="rPx-9t-muO" secondAttribute="centerX" id="g0i-eW-UqO"/>
-                                                <constraint firstItem="FQl-95-Oeh" firstAttribute="leading" secondItem="rPx-9t-muO" secondAttribute="leading" constant="20" id="rmm-Rk-OOF"/>
-                                                <constraint firstAttribute="trailing" secondItem="FQl-95-Oeh" secondAttribute="trailing" constant="20" id="xak-eh-8qk"/>
+                                                <constraint firstItem="V1L-Ml-PF1" firstAttribute="centerX" secondItem="rPx-9t-muO" secondAttribute="centerX" id="zYK-Zf-N6U"/>
                                             </constraints>
                                         </view>
                                         <view hidden="YES" tag="33" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ahg-K2-tmY" userLabel="SwingTempo">
-                                            <rect key="frame" x="-50" y="1.5" width="50" height="217"/>
+                                            <rect key="frame" x="343" y="0.0" width="50" height="217"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="L3X-j0-IFI">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="141"/>
@@ -410,14 +411,14 @@
                                                 <constraint firstAttribute="height" constant="217" id="rAa-xX-6mZ"/>
                                             </constraints>
                                         </view>
-                                        <view tag="34" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bZN-jY-TxT" userLabel="Back Swing">
-                                            <rect key="frame" x="0.0" y="0.0" width="343" height="220"/>
+                                        <view hidden="YES" tag="34" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bZN-jY-TxT" userLabel="Back Swing">
+                                            <rect key="frame" x="343" y="-1.5" width="212" height="220"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fQY-P6-FJk">
-                                                    <rect key="frame" x="0.0" y="4" width="343" height="210"/>
+                                                    <rect key="frame" x="0.0" y="4" width="212" height="210"/>
                                                     <subviews>
                                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tLS-0P-f3O" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
-                                                            <rect key="frame" x="101.5" y="0.0" width="140" height="140"/>
+                                                            <rect key="frame" x="36" y="0.0" width="140" height="140"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="140" id="vH1-f4-c7o"/>
@@ -449,7 +450,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
                                                         <view tag="140" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bek-38-K1S" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
-                                                            <rect key="frame" x="66.5" y="0.0" width="210" height="210"/>
+                                                            <rect key="frame" x="1" y="0.0" width="210" height="210"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" tag="4002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="backswing_image_0_100" translatesAutoresizingMaskIntoConstraints="NO" id="mdr-Nn-CwI">
                                                                     <rect key="frame" x="57" y="26" width="96" height="176"/>
@@ -533,7 +534,7 @@
                                                     </subviews>
                                                 </stackView>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" tag="204" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="194°" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zqN-2F-3wR">
-                                                    <rect key="frame" x="121.5" y="24" width="100" height="100"/>
+                                                    <rect key="frame" x="56" y="24" width="100" height="100"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="4MV-XB-dyQ"/>
@@ -544,10 +545,10 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ihH-gs-mQP">
-                                                    <rect key="frame" x="252.5" y="8" width="82.5" height="15"/>
+                                                    <rect key="frame" x="187" y="8" width="17" height="15"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="NXz-Vz-bSh">
-                                                            <rect key="frame" x="11" y="0.0" width="61" height="15"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="17" height="15"/>
                                                             <subviews>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ce6-jw-Bcs">
                                                                     <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
@@ -558,7 +559,7 @@
                                                                     <state key="normal" backgroundImage="golfBag"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="-6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tWj-Uk-pW9">
-                                                                    <rect key="frame" x="17" y="0.0" width="44" height="15"/>
+                                                                    <rect key="frame" x="17" y="0.0" width="0.0" height="15"/>
                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="13"/>
                                                                     <state key="normal" title="DRIVER">
                                                                         <color key="titleColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -585,7 +586,7 @@
                                             </constraints>
                                         </view>
                                         <view hidden="YES" tag="35" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lh8-7q-1hZ" userLabel="Hand Speed">
-                                            <rect key="frame" x="343" y="1.5" width="300" height="217"/>
+                                            <rect key="frame" x="343" y="0.0" width="300" height="217"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="KPH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nMS-gU-SVh">
                                                     <rect key="frame" x="135.5" y="153.5" width="28.5" height="18"/>
@@ -670,7 +671,7 @@
                                     </subviews>
                                 </stackView>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Byg-8d-tnW">
-                                    <rect key="frame" x="10" y="256.5" width="355" height="206"/>
+                                    <rect key="frame" x="10" y="253.5" width="355" height="206"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="QDN-ov-UV5">
                                             <rect key="frame" x="0.0" y="0.0" width="355" height="95"/>
@@ -748,9 +749,9 @@
                                                 <view tag="12" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wYW-wv-CzP">
                                                     <rect key="frame" x="246.5" y="0.0" width="108.5" height="95"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="42" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfL-4e-TRU">
-                                                            <rect key="frame" x="47.5" y="29.5" width="13.5" height="36"/>
-                                                            <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="30"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="42" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coming Soon" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hfL-4e-TRU">
+                                                            <rect key="frame" x="15" y="24.5" width="78.5" height="36"/>
+                                                            <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
                                                             <color key="textColor" white="1" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -766,13 +767,15 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
+                                                        <constraint firstItem="hfL-4e-TRU" firstAttribute="leading" secondItem="wYW-wv-CzP" secondAttribute="leading" constant="15" id="9bg-qB-Owo"/>
+                                                        <constraint firstAttribute="trailing" secondItem="hfL-4e-TRU" secondAttribute="trailing" constant="15" id="Czr-Ps-o9K"/>
                                                         <constraint firstAttribute="bottom" secondItem="xP1-T5-Jis" secondAttribute="bottom" id="DgF-MT-TD7"/>
                                                         <constraint firstItem="YPd-cJ-tSW" firstAttribute="centerX" secondItem="wYW-wv-CzP" secondAttribute="centerX" id="HiK-37-6Dp"/>
                                                         <constraint firstItem="hfL-4e-TRU" firstAttribute="centerX" secondItem="wYW-wv-CzP" secondAttribute="centerX" id="WPR-0K-kH0"/>
                                                         <constraint firstAttribute="trailing" secondItem="xP1-T5-Jis" secondAttribute="trailing" id="fh3-Zw-mEb"/>
                                                         <constraint firstItem="xP1-T5-Jis" firstAttribute="top" secondItem="wYW-wv-CzP" secondAttribute="top" id="kdd-b1-Si5"/>
                                                         <constraint firstAttribute="bottom" secondItem="YPd-cJ-tSW" secondAttribute="bottom" constant="10" id="rRd-QK-v3r"/>
-                                                        <constraint firstItem="hfL-4e-TRU" firstAttribute="centerY" secondItem="wYW-wv-CzP" secondAttribute="centerY" id="y65-D5-g0J"/>
+                                                        <constraint firstItem="hfL-4e-TRU" firstAttribute="centerY" secondItem="wYW-wv-CzP" secondAttribute="centerY" constant="-5" id="y65-D5-g0J"/>
                                                         <constraint firstItem="xP1-T5-Jis" firstAttribute="leading" secondItem="wYW-wv-CzP" secondAttribute="leading" id="zX0-hr-fBA"/>
                                                     </constraints>
                                                 </view>
@@ -921,7 +924,8 @@
     </objects>
     <resources>
         <image name="backswing_image_0_100" width="96" height="176"/>
-        <image name="device1" width="450" height="603"/>
         <image name="golfBag" width="51.200000762939453" height="51.200000762939453"/>
+        <image name="golfer_swing" width="134" height="380"/>
+        <image name="swing 1" width="260" height="382"/>
     </resources>
 </document>
