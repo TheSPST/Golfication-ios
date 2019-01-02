@@ -144,8 +144,9 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             //            self.setInitialDeviceData()
         }
         else{
-            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-//            Constants.ble.stopScanning()
+            if self.barBtnBLE != nil{
+                self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+            }
         }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
     }

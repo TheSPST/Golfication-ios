@@ -36,7 +36,7 @@ class TIOADViewController: UIViewController{
     var prevVal: Float = 0.0
     
     //    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2Ffirmware_v0.00.bin?alt=media&token=14c90409-fdc0-4712-96c8-83fca595fb10"
-    let fileName = "Golfication_L96_FW00.00.bin"
+    let fileName = "z_PF6_GT100.bin"
     
     //let urlStr1 = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad1_merged.bin?alt=media&token=31ee2200-82e3-4214-8c44-e335f91b2488"
     //    let fileName1 = "Khelfie_project2_FlashROM_oad1_merged.bin"

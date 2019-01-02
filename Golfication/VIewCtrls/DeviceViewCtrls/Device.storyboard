@@ -567,12 +567,20 @@
                                                                             </stackView>
                                                                         </subviews>
                                                                     </stackView>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coming Soon" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I7x-e0-hgE">
+                                                                        <rect key="frame" x="100.5" y="76" width="119.5" height="25.5"/>
+                                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="21"/>
+                                                                        <color key="textColor" red="0.52941176469999995" green="0.63921568630000003" blue="0.60392156860000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
+                                                                    <constraint firstItem="I7x-e0-hgE" firstAttribute="centerX" secondItem="UiA-ce-jbv" secondAttribute="centerX" id="1Wf-l4-3Yu"/>
                                                                     <constraint firstItem="gpx-m0-Pw3" firstAttribute="centerX" secondItem="UiA-ce-jbv" secondAttribute="centerX" id="4wX-lg-oSh"/>
                                                                     <constraint firstItem="cLH-m2-zaV" firstAttribute="centerX" secondItem="UiA-ce-jbv" secondAttribute="centerX" id="AVz-1K-okY"/>
                                                                     <constraint firstItem="rBS-AI-BIe" firstAttribute="top" secondItem="gpx-m0-Pw3" secondAttribute="top" constant="-5" id="G8Y-Xk-rgW"/>
+                                                                    <constraint firstItem="I7x-e0-hgE" firstAttribute="centerY" secondItem="rBS-AI-BIe" secondAttribute="centerY" id="WO4-Lc-Hfs"/>
                                                                     <constraint firstItem="gpx-m0-Pw3" firstAttribute="top" secondItem="UiA-ce-jbv" secondAttribute="top" constant="8" id="Wfm-1K-Rj6"/>
                                                                     <constraint firstItem="rBS-AI-BIe" firstAttribute="centerX" secondItem="UiA-ce-jbv" secondAttribute="centerX" constant="18" id="bQ8-tH-CFU"/>
                                                                     <constraint firstItem="cLH-m2-zaV" firstAttribute="top" secondItem="gpx-m0-Pw3" secondAttribute="bottom" id="eUg-7f-69Q"/>
