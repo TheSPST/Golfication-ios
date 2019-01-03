@@ -10,7 +10,7 @@ import UIKit
 import XLPagerTabStrip
 import ActionSheetPicker_3_0
 import FirebaseAuth
-class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewDelegate,UITableViewDataSource {
+class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewDelegate,UITableViewDataSource, DemoFooterViewDelegate, BluetoothDelegate {
     @IBOutlet weak var shadowView: UIView!
     var shotsArray = [String]()
     @IBOutlet weak var barBtnBLE: UIBarButtonItem!
@@ -26,7 +26,9 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     var parStrokesG = [(hole:Int,par:Int,strkG:String)]()
     var holeParStrokesG = [(hole:Int,par:Int,strkG:[String])]()
     var holeInSection = [Int]()
-    
+    var isDemoStats = Bool()
+    var sharedInstance: BluetoothSync!
+
     @IBAction func backAction(_ sender: Any) {
         if(swingDetailsView.isHidden){
             if superClassName == "SwingSessionVC"{
@@ -81,8 +83,65 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         debugPrint("tempArray1==",tempArray1)
         self.reloadTableWithStrokesGained()
         NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
-
+        
+        if isDemoStats{
+            setDemoFotter()
+        }
     }
+    func setDemoFotter(){
+        let demoView = DemoFooterView()
+        demoView.frame = CGRect(x: 0.0, y: self.view.frame.height-55.0, width: self.view.frame.width, height: 55.0)
+        demoView.delegate = self
+        demoView.backgroundColor = UIColor.glfFlatBlue
+        demoView.label.frame = CGRect(x: 10, y: demoView.frame.size.height/2-22, width: demoView.frame.width * 0.7, height: 44.0)
+        demoView.btnPlayGame.frame = CGRect(x:demoView.frame.width - demoView.frame.width * 0.25 - 10, y: demoView.frame.size.height/2-15, width: demoView.frame.width * 0.25, height: 30.0)
+        self.view.addSubview(demoView)
+        
+        demoView.label.text = "Get your swing stats with Golfication X"
+        demoView.label.textAlignment = .left
+        demoView.label.textColor = UIColor.white
+        demoView.btnPlayGame.setTitle("Connect Now", for: .normal)
+    }
+    
+    func playGameButton(button: UIButton) {
+        self.sharedInstance = BluetoothSync.getInstance()
+        self.sharedInstance.delegate = self
+        self.sharedInstance.initCBCentralManager()
+    }
+    
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            self.sharedInstance.delegate = nil
+            return
+            
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
+        }
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+    }
+    
     func reloadTableWithStrokesGained(){
         let group = DispatchGroup()
         for data in self.holeShot{
@@ -136,6 +195,13 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             }
             debugPrint(self.holeParStrokesG)
             self.swingTableView.reloadData()
+            
+            if self.fromRoundsPlayed{
+                let imgView = UIImageView()
+                self.expandedSectionHeaderNumber = 0
+                self.tableViewExpandSection(0, imageView: imgView)
+            }
+
         }
     }
     @objc func chkBluetoothStatus(_ notification: NSNotification) {
@@ -388,7 +454,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
                 cell.lblSubtitle.attributedText = attributedText
             }
             else{
-                cell.lblTitle.text = "Session \(indexPath.item+1)"
+                cell.lblTitle.text = "Swing \(indexPath.item+1)"
                 if let club = swingDetails.value(forKey: "club") as? String{
                     cell.lblSubtitle.text = BackgroundMapStats.getClubName(club: club)
                 }
@@ -480,9 +546,9 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             return
         }
         else {
-            UIView.animate(withDuration: 0.4, animations: {
-                imageView.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
-            })
+//            UIView.animate(withDuration: 0.4, animations: {
+//                imageView.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
+//            })
             var indexesPath = [IndexPath]()
             for i in 0 ..< sectionData.count {
                 let index = IndexPath(row: i, section: section)
@@ -502,9 +568,9 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             return
         }
         else {
-            UIView.animate(withDuration: 0.4, animations: {
-                imageView.transform = CGAffineTransform(rotationAngle: (180.0 * CGFloat(Double.pi)) / 180.0)
-            })
+//            UIView.animate(withDuration: 0.4, animations: {
+//                imageView.transform = CGAffineTransform(rotationAngle: (180.0 * CGFloat(Double.pi)) / 180.0)
+//            })
             var indexesPath = [IndexPath]()
             for i in 0 ..< sectionData.count {
                 let index = IndexPath(row: i, section: section)

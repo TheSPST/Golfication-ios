@@ -152,7 +152,7 @@
 "Hi"="안녕하세요";
 "Rounds Played"="라운드 하기";
 "Choose from 30000+ Golf Courses"="30000+ 골프 코스 중에서 선택";
-"Play Golf"="골프 치기";
+"PLAY GOLF"="골프 치기";//should be captalised
 "Recent Games"="최근 게임";
 "Continue"="계속";
 "You"="당신";

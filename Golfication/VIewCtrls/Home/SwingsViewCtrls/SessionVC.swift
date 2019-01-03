@@ -26,7 +26,8 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
     
     var parVal = Int()
     var strokesGainedVal = Double()
-    
+    var isDemoStats = Bool()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -107,6 +108,10 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             sectionItems = [matchMArray]
         }
         
+        let imgView = UIImageView()
+        self.expandedSectionHeaderNumber = 0
+        self.tableViewExpandSection(0, imageView: imgView)
+
         self.sessionTableView.delegate = self
         self.sessionTableView.dataSource = self
         self.sessionTableView.reloadData()
@@ -237,15 +242,19 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         let swingArr = (array[indexPath.row] as AnyObject).value(forKey:"swingArray") as! NSArray
         viewCtrl.count = swingArr.count
         for i in 0..<swingArr.count{
-            shotsAr.append("Shot \(i+1)")
+            shotsAr.append("Swing \(i+1)")
         }
         viewCtrl.shotsArray = shotsAr
         viewCtrl.tempArray1 = swingArr
+        viewCtrl.isDemoStats = isDemoStats
         
         if sectionNames.count == 2{
             if indexPath.section == 0{
                 viewCtrl.fromRoundsPlayed = false
-                viewCtrl.title = "Practice Session \(indexPath.row+1)"
+                viewCtrl.title = "Session \(indexPath.row+1)"
+                if isDemoStats{
+                    viewCtrl.title = "Demo Session \(indexPath.row+1)"
+                }
             }
             else{
                 viewCtrl.fromRoundsPlayed = true
@@ -282,7 +291,10 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             
             if dropFirst16 == "Practise Session"{
                 viewCtrl.fromRoundsPlayed = false
-                viewCtrl.title = "Practice Session \(indexPath.row+1)"
+                viewCtrl.title = "Session \(indexPath.row+1)"
+                if isDemoStats{
+                    viewCtrl.title = "Demo Session \(indexPath.row+1)"
+                }
             }
             else{
                 viewCtrl.fromRoundsPlayed = true
@@ -350,9 +362,9 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             return
         }
         else {
-            UIView.animate(withDuration: 0.4, animations: {
-                imageView.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
-            })
+//            UIView.animate(withDuration: 0.4, animations: {
+//                imageView.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
+//            })
             var indexesPath = [IndexPath]()
             for i in 0 ..< sectionData.count {
                 let index = IndexPath(row: i, section: section)
@@ -372,9 +384,9 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             return
         }
         else {
-            UIView.animate(withDuration: 0.4, animations: {
-                imageView.transform = CGAffineTransform(rotationAngle: (180.0 * CGFloat(Double.pi)) / 180.0)
-            })
+//            UIView.animate(withDuration: 0.4, animations: {
+//                imageView.transform = CGAffineTransform(rotationAngle: (180.0 * CGFloat(Double.pi)) / 180.0)
+//            })
             var indexesPath = [IndexPath]()
             for i in 0 ..< sectionData.count {
                 let index = IndexPath(row: i, section: section)

@@ -123,6 +123,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     var totalSwingCount = 0
     var swingMArray = NSMutableArray()
+    var isDemoStats = false
     
     // MARK: - inviteAction
     @IBAction func inviteAction(_ sender: Any) {
@@ -201,9 +202,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         //        playButton.floatButton.isHidden = true
         
         if swingMArray.count>0{
+            
             let storyboard = UIStoryboard(name: "Home", bundle: nil)
             let viewCtrl = storyboard.instantiateViewController(withIdentifier: "SwingSessionVC") as! SwingSessionVC
             viewCtrl.dataMArray = self.swingMArray
+            viewCtrl.isDemoStats = isDemoStats
             self.navigationController?.pushViewController(viewCtrl, animated: true)
         }
     }
@@ -571,8 +574,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let demolbl = DemoLabel()
         demolbl.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
         demolbl.center = ((self.SGBarChartView.superview)?.center)!
+        
+        let demoClublbl = DemoLabel()
+        demoClublbl.frame = CGRect(x: 10, y: 0, width: 200, height: 40)
+        demoClublbl.textAlignment = .left
+        
         if(isShow){
             self.SGBarChartView.addSubview(demolbl)
+            self.viewClubTab.addSubview(demoClublbl)
         }
         self.progressView.hide(navItem: self.navigationItem)
         SGBarChartView.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: SGBarChartView, color: UIColor.glfSeafoamBlue, barWidth: 0.4,valueColor: UIColor.glfWarmGrey.withAlphaComponent(0.5))
@@ -773,7 +782,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         viewPreviousGame.layer.borderColor = UIColor(rgb:0xE6E6E6).cgColor
         viewPreviousGame.layer.cornerRadius = 3.0
         
-        btnPlayFriends.setTitle("  " + "Play Golf".localized(), for: .normal)
+        btnPlayFriends.setTitle("  " + "PLAY GOLF".localized(), for: .normal)
         let gradient = CAGradientLayer()
         gradient.frame = btnPlayFriends.bounds
         gradient.colors = [UIColor(rgb: 0x2E6594).cgColor, UIColor(rgb: 0x2C4094).cgColor]
@@ -1093,6 +1102,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             }
                         }
                         group.notify(queue: .main, execute: {
+                            self.isDemoStats = false
+
                             self.progressView.hide(navItem: self.navigationItem)
                             
                             let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
@@ -1104,6 +1115,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             self.setSwingSessionUI()
                         })
                     }
+                }
+                else{
+                    self.isDemoStats = true
                 }
                 if let homeCourseDic = userData["homeCourseDetails"] as? NSDictionary{
                     if let courseName = homeCourseDic.object(forKey: "name"){
@@ -1210,6 +1224,61 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }else{
                     self.getClubDataFromFirebase(isShow:false)
                 }
+                if self.isDemoStats{
+
+                    FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user1") { (snapshot) in
+                        if(snapshot.childrenCount > 0){
+                            var userData = NSDictionary()
+                            userData = snapshot.value as! NSDictionary
+                            if let swingKeys = userData.value(forKey: "swingSession") as? NSDictionary{
+                                self.totalSwingCount = 0
+                                self.swingMArray = NSMutableArray()
+                                if let dataDic = swingKeys as? [String:Bool]{
+                                    let group = DispatchGroup()
+                                    for (key, value) in dataDic{
+                                        group.enter()
+                                        
+                                        if !value{
+                                            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
+                                                if(snapshot.value != nil){
+                                                    if let data = snapshot.value as? NSDictionary{
+                                                        //debugPrint(data.value(forKey: "matchKey"))
+                                                        if let swing = data.value(forKey: "swings") as? NSMutableArray{
+                                                            self.totalSwingCount = self.totalSwingCount + swing.count
+                                                            self.swingMArray.add(data)
+                                                        }
+                                                    }
+                                                }
+                                                group.leave()
+                                            }
+                                        }
+                                        else{
+                                            group.leave()
+                                        }
+                                    }
+                                    group.notify(queue: .main, execute: {
+                                        
+                                        let demoClublbl = DemoLabel()
+                                        demoClublbl.frame = CGRect(x: 10, y: 0, width: 200, height: 40)
+                                        demoClublbl.textAlignment = .left
+                                        self.viewSGTab.addSubview(demoClublbl)
+
+                                        self.progressView.hide(navItem: self.navigationItem)
+                                        
+                                        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+                                        let array: NSArray = self.swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
+                                        self.swingMArray.removeAllObjects()
+                                        self.swingMArray = NSMutableArray()
+                                        self.swingMArray = array.mutableCopy() as! NSMutableArray
+                                        
+                                        self.setSwingSessionUI()
+                                    })
+                                }
+                            }
+                        }
+                    }
+                }
+                
                 self.getBenchmarkKey()
             })
         }

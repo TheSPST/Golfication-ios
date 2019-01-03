@@ -149,7 +149,8 @@
 "Hi"="Salut";
 "Rounds Played"="Les Rounds Joués";
 "Choose from 30000+ Golf Courses"="Choisissez parmi de 30000 + terrains de golf";
-"Play Golf"="Jouez le Golf";
+"PLAY GOLF"="Jouez le Golf";//should be captalised
+
 "Recent Games"="Les Jeux Récents";
 "Continue"="Continuez";
 "You"="Vous";

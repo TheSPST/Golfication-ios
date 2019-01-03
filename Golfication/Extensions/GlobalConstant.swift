@@ -31,7 +31,7 @@ struct Constants{
     // MARK: GolfBagTabsVC
     static var syncdArray = NSMutableArray()
     static var tagClubNum = [(tag:Int, club: Int, clubName: String)]()
-    
+    static var back9 = false
     // MARK: BLE
     static var ResponseData : Data!
     static var deviceGolficationX: CBPeripheral!

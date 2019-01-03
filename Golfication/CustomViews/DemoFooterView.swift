@@ -20,6 +20,7 @@ class DemoFooterView: UIView {
 //        get { return label?.text }
 //        set { label.text = newValue }
 //    }
+    
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         initSubviews()

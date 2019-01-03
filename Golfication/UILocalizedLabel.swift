@@ -45,6 +45,7 @@ final class UILocalizedTextField: UITextField {
 extension String {
     
     func localized() -> String {
-        return NSLocalizedString(self, comment: "")
+        //return NSLocalizedString(self, comment: "")
+        return self
     }
 }

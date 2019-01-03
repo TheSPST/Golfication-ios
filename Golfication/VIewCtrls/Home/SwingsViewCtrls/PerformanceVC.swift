@@ -41,7 +41,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
     var performanceMArray = NSMutableArray()
     var swingArray = NSMutableArray()
     var clubArray = [String]()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         avgSwingCircularVw.fontColor = UIColor.clear
@@ -350,8 +350,9 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
 //        let avgVh3 = (vH3Sum/(Double(numOfItems)))
         if numOfItems > 0{
             let avgHandSpeed = (handSpeedSum/(Double(numOfItems)))
-            lblHandSpeed.text = "\((avgHandSpeed).rounded(toPlaces: 2))"
-            
+//            lblHandSpeed.text = "\((avgHandSpeed).rounded(toPlaces: 2))"
+            lblHandSpeed.text = "\(Int(avgHandSpeed))"
+
             let finalAvgSwingTempo = (avgSwingTempo/(Double(numOfItems)))
             self.lblBackSwingTempo.text = String(format: "%.01f", finalAvgSwingTempo)
             self.lblDownSwingTempo.text = "1"
@@ -440,27 +441,27 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             backSwingClub.layoutIfNeeded()
             BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
             backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(-90)) / 180.0 * CGFloat(Double.pi))
-            UIView.animate(withDuration: 1) {
+            //UIView.animate(withDuration: 1) {
                 self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(self.backSwingAngleAvg-90)) / 180.0 * CGFloat(Double.pi))
-            }
+            //}
         }else if self.backSwingAngleAvg >= 100 && self.backSwingAngleAvg < 200{
             self.backSwingUserImg.image = UIImage(named: "backswing_image_100_200")
             backSwingClub.frame.origin.y = self.backSwingUserImg.frame.maxY*0.285
             backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width
             backSwingClub.layoutIfNeeded()
             BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
-            UIView.animate(withDuration: 1) {
+            //UIView.animate(withDuration: 1) {
                 self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
-            }
+            //}
         }else if self.backSwingAngleAvg >= 200 && self.backSwingAngleAvg < 350{
             self.backSwingUserImg.image = UIImage(named: "backswing_image_190_290")
             backSwingClub.frame.origin.y = self.backSwingUserImg.frame.minY-backSwingClub.frame.height*0.5
             backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width*0.8
             backSwingClub.layoutIfNeeded()
             BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
-            UIView.animate(withDuration: 1) {
+            //UIView.animate(withDuration: 1) {
                 self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
-            }
+            //}
         }
         self.swingAngleCircular_Red.addSubview(backSwingClub)
         swingAngleCircular_Red.addSubview(backSwingUserImg)

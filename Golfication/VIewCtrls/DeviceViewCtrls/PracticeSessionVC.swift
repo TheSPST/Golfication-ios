@@ -435,27 +435,29 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             backSwingClub.layoutIfNeeded()
             BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
             backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(-90)) / 180.0 * CGFloat(Double.pi))
-            UIView.animate(withDuration: 1) {
+            //UIView.animate(withDuration: 1) {
                 self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(backSwingAngle-90)) / 180.0 * CGFloat(Double.pi))
-            }
+            //}
         }else if backSwingAngle >= 100 && backSwingAngle < 200{
             self.backSwingUserImg.image = UIImage(named: "backswing_image_100_200")
             backSwingClub.frame.origin.y = self.backSwingUserImg.frame.maxY*0.285
             backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width
             backSwingClub.layoutIfNeeded()
             BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
-            UIView.animate(withDuration: 1) {
+            //UIView.animate(withDuration: 1) {
                 self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
-            }
+            //}
         }else if backSwingAngle >= 200 && backSwingAngle < 350{
             self.backSwingUserImg.image = UIImage(named: "backswing_image_190_290")
             backSwingClub.frame.origin.y = self.backSwingUserImg.frame.minY-backSwingClub.frame.height*0.5
             backSwingClub.frame.origin.x = self.backSwingUserImg.frame.minX-backSwingClub.frame.width*0.8
             backSwingClub.layoutIfNeeded()
             BackgroundMapStats.setAnchorPoint(anchorPoint: CGPoint(x: 1, y: 1), view: backSwingClub)
-            UIView.animate(withDuration: 1) {
-                self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
-            }
+
+            debugPrint("newSwing-100",newSwing-100)
+            //UIView.animate(withDuration: 1) {
+            self.backSwingClub.transform = CGAffineTransform(rotationAngle: (CGFloat(newSwing-100)) / 180.0 * CGFloat(Double.pi))
+            //}
         }
         self.swingAngleCircular_Red.addSubview(backSwingClub)
         swingAngleCircular_Red.addSubview(backSwingUserImg)

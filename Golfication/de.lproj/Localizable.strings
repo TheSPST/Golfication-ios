@@ -153,7 +153,7 @@
 "Rounds Played"="Runden gespielte";
 "Handicap"="Golfbehinderungen";
 "Choose from 30000+ Golf Courses"="Wählen Sie aus 30000+ Golplätzen";
-"Play Golf"="Golf spielen";
+"PLAY GOLF"="Golf spielen";//should be captalised
 "Recent Games"="Kürzliche Spiele";
 "Continue"="Weitergehen";
 "You"="Sie";

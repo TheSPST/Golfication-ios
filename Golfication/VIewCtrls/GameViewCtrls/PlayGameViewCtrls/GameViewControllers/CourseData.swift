@@ -24,7 +24,7 @@ class CourseData:NSObject{
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     func getGolfCourseDataFromFirebase(courseId:String){
 //        courseId = "course_9999999"
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:"course_9999999") { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
             var rangeFinderHoles = NSArray()
@@ -233,10 +233,15 @@ class CourseData:NSObject{
                         self.centerPointOfTeeNGreen = tempHoleArr
                         self.holeHcpWithTee = temp
                     }else if (self.numberOfHoles.count > self.gameTypeIndex){
+                        Constants.back9 = false
                         if (self.startingIndex > self.gameTypeIndex){
                             self.numberOfHoles.removeFirst(9)
                             self.centerPointOfTeeNGreen.removeFirst(9)
-                            self.holeHcpWithTee.removeFirst(9)
+                            if !self.holeHcpWithTee.isEmpty{
+                                self.holeHcpWithTee.removeFirst(9)
+                            }
+
+                            Constants.back9 = true
                             for i in 0..<9{
                                 for j in 0..<self.propertyArray.count{
                                     if self.propertyArray[j].hole == i+1{
@@ -244,10 +249,12 @@ class CourseData:NSObject{
                                     }
                                 }
                             }
-                        }else if (self.startingIndex < self.gameTypeIndex){
+                        }else{
                             self.numberOfHoles.removeLast(9)
                             self.centerPointOfTeeNGreen.removeLast(9)
-                            self.holeHcpWithTee.removeLast(9)
+                            if !self.holeHcpWithTee.isEmpty{
+                                self.holeHcpWithTee.removeLast(9)
+                            }
                             for i in 9..<18{
                                 for j in 0..<self.propertyArray.count{
                                     if self.propertyArray[j].hole == i+1{

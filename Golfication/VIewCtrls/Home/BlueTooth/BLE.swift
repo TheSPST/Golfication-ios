@@ -106,10 +106,11 @@ class BLE: NSObject {
         if Constants.bleObserver == 0{
             self.setupObserver()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(sendSecondCommand(_:)), name: NSNotification.Name(rawValue: "command2"), object: nil)
+
     }
     
     private func setupObserver(){
-        NotificationCenter.default.addObserver(self, selector: #selector(sendSecondCommand(_:)), name: NSNotification.Name(rawValue: "command2"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendEightCommand(_:)), name: NSNotification.Name(rawValue: "command8"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendThirdCommandFromMap(_:)), name: NSNotification.Name(rawValue: "command3"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startMatchCalling(_:)), name: NSNotification.Name(rawValue: "startMatchCalling"), object: nil)
@@ -430,6 +431,7 @@ class BLE: NSObject {
     }
     func sendFourthCommand(param:[UInt8]?){
         if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3{
+            self.centerPointOfTeeNGreen.removeAll()
             var writeData = Data()
             self.currentCommandData = param!
             writeData =  Data(bytes:param!)
@@ -465,9 +467,16 @@ class BLE: NSObject {
                 param.append(0)
             }
         }
-        param.append(UInt8(Int(Constants.startingHole)!))
+        if Constants.back9{
+            param.append(UInt8((Int(Constants.startingHole)!%9)))
+            param.append(UInt8(2))
+        }else{
+            param.append(UInt8(Int(Constants.startingHole)!))
+            param.append(UInt8(1))
+        }
         self.invalidateAllTimers()
         let writeData =  Data(bytes: param)
+        debugPrint("Parameter in 6th Command Packet1 : ",param)
         Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
         self.currentCommandData = param
         timerForWriteCommand61 = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
@@ -802,14 +811,12 @@ extension BLE: CBCentralManagerDelegate {
         }
     }
     func endAllActiveSessions(){
-        if self.swingMatchId.count > 1{
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
-                if(snapshot.value != nil){
-                    if let dataDic = snapshot.value as? [String:Bool]{
-                        for (key, value) in dataDic{
-                            if(value) && key != self.swingMatchId{
-                                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false])
-                            }
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
+            if(snapshot.value != nil){
+                if let dataDic = snapshot.value as? [String:Bool]{
+                    for (key, value) in dataDic{
+                        if(value) && key != self.swingMatchId{
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false])
                         }
                     }
                 }
@@ -1275,7 +1282,6 @@ extension BLE: CBPeripheralDelegate {
                                     let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
                                     gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
                                         ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-                                        self.swingMatchId = ""
                                         self.randomGenerator()
                                         self.swingDetails.removeAll()
                                         self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
@@ -1296,6 +1302,20 @@ extension BLE: CBPeripheralDelegate {
                     self.currentGameId = responseInIntFirst4
                     DispatchQueue.main.async(execute: {
                         self.endAllActiveSessions()
+                        if let playerData = Constants.matchDataDic.value(forKey: "player") as? [String:NSMutableDictionary]{
+                            for (key,value) in playerData{
+                                if key == Auth.auth().currentUser!.uid{
+                                    if let swingK = value.value(forKeyPath: "swingKey") as? String{
+                                        if swingK == self.swingMatchId{
+                                            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
+                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(Constants.matchId)").removeValue()
+                                        }
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                        self.swingMatchId = ""
                         UIApplication.shared.keyWindow?.makeToast("Game Discarded Successfully.")
                     })
 

@@ -9,10 +9,12 @@
 import UIKit
 import XLPagerTabStrip
 
-class SwingSessionVC: ButtonBarPagerTabStripViewController {
+class SwingSessionVC: ButtonBarPagerTabStripViewController, DemoFooterViewDelegate, BluetoothDelegate {
     @IBOutlet weak var shadowView: UIView!
 
     var dataMArray = NSMutableArray()
+    var isDemoStats = Bool()
+    var sharedInstance: BluetoothSync!
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -45,6 +47,64 @@ class SwingSessionVC: ButtonBarPagerTabStripViewController {
         settings.style.buttonBarRightContentInset = 0
         super.viewDidLoad()
         
+        if isDemoStats{
+            self.title = "My Swings Demo"
+            setDemoFotter()
+        }
+    }
+    
+    func setDemoFotter(){
+        let demoView = DemoFooterView()
+        demoView.frame = CGRect(x: 0.0, y: self.view.frame.height-55.0, width: self.view.frame.width, height: 55.0)
+        demoView.delegate = self
+        demoView.backgroundColor = UIColor.glfFlatBlue
+        demoView.label.frame = CGRect(x: 10, y: demoView.frame.size.height/2-22, width: demoView.frame.width * 0.7, height: 44.0)
+        demoView.btnPlayGame.frame = CGRect(x:demoView.frame.width - demoView.frame.width * 0.25 - 10, y: demoView.frame.size.height/2-15, width: demoView.frame.width * 0.25, height: 30.0)
+        self.view.addSubview(demoView)
+        
+        demoView.label.text = "Get your swing stats with Golfication X"
+        demoView.label.textAlignment = .left
+        demoView.label.textColor = UIColor.white
+        demoView.btnPlayGame.setTitle("Connect Now", for: .normal)
+    }
+    
+    func playGameButton(button: UIButton) {
+        self.sharedInstance = BluetoothSync.getInstance()
+        self.sharedInstance.delegate = self
+        self.sharedInstance.initCBCentralManager()
+    }
+    
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            self.sharedInstance.delegate = nil
+            return
+            
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
+        }
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
     }
     
     @IBAction func backButtonAction(_ sender: Any) {
@@ -78,6 +138,7 @@ class SwingSessionVC: ButtonBarPagerTabStripViewController {
         
         let childOneVC = storyboard.instantiateViewController(withIdentifier: "SessionVC") as! SessionVC
         childOneVC.sessionMArray = dataMArray
+        childOneVC.isDemoStats = isDemoStats
         
         let childTwoVC = storyboard.instantiateViewController(withIdentifier: "PerformanceVC") as! PerformanceVC
         childTwoVC.performanceMArray = dataMArray

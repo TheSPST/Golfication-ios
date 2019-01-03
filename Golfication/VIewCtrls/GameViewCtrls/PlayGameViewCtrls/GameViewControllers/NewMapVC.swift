@@ -1180,7 +1180,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if(!isHoleByHole){
             self.updateMap(indexToUpdate: holeIndex)
-            self.updateCurrentHole(index: self.scoring[holeIndex].hole)
+            self.updateCurrentHole(index: holeIndex)
         }else{
             var playerId : String!
             var totalShots = 0
@@ -1212,7 +1212,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if(!isHoleByHole){
             self.updateMap(indexToUpdate: holeIndex)
-            self.updateCurrentHole(index: self.scoring[holeIndex].hole)
+            self.updateCurrentHole(index: holeIndex)
         }else{
             var playerId : String!
             var totalShots = 0
@@ -6740,11 +6740,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: false)
         }
         let currentHoleWhilePlaying = NSMutableDictionary()
-        currentHoleWhilePlaying.setObject("\(index)", forKey: "currentHole" as NSCopying)
+        currentHoleWhilePlaying.setObject("\(self.scoring[index].hole)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
         if(isOnCourse){
-            let headTeeToGreen = GMSGeometryHeading(courseData.centerPointOfTeeNGreen[index-1].tee,courseData.centerPointOfTeeNGreen[index-1].green)
-            let HeadUserToGreen = GMSGeometryHeading(self.userLocationForClub!,courseData.centerPointOfTeeNGreen[index-1].green)
+            let headTeeToGreen = GMSGeometryHeading(courseData.centerPointOfTeeNGreen[index].tee,courseData.centerPointOfTeeNGreen[index].green)
+            let HeadUserToGreen = GMSGeometryHeading(self.userLocationForClub!,courseData.centerPointOfTeeNGreen[index].green)
             
             let rotationAngle = headTeeToGreen - self.windHeading
             let anotherRoationAngle = HeadUserToGreen - self.windHeading
