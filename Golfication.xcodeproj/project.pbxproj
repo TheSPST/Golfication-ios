@@ -140,6 +140,7 @@
 		4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */; };
 		4B4ED1A820BD453E00D9C6DC /* SessionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A720BD453E00D9C6DC /* SessionVC.swift */; };
 		4B4ED1AA20BD74AD00D9C6DC /* PerformanceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A920BD74AD00D9C6DC /* PerformanceVC.swift */; };
+		4B53F27A21DE5426004AFDDD /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B53F27921DE5426004AFDDD /* GoogleService-Info-demo.plist */; };
 		4B54A9E020C91838004285AF /* BluetoothSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54A9DF20C91838004285AF /* BluetoothSync.swift */; };
 		4B54A9E520C94B9B004285AF /* BluetoothDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54A9E420C94B9B004285AF /* BluetoothDelegate.swift */; };
 		4B5B265F204540A000BE3940 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5B265D20453F8D00BE3940 /* WebKit.framework */; };
@@ -242,7 +243,6 @@
 		4BB26D451FF77EED001E9556 /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26D431FF77EED001E9556 /* ServerHandler.swift */; };
 		4BB7C428208DB584006CCAFF /* MyFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB7C427208DB584006CCAFF /* MyFeedVC.swift */; };
 		4BBEA024206E2F7A00EA2783 /* FeedPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */; };
-		4BC2464221C142640041F326 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BC2464121C142640041F326 /* GoogleService-Info-live.plist */; };
 		4BC879BA20C517EF00A3B2BB /* PracticeGameViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */; };
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
 		4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4BCF8E2B21B502F70015338F /* swing_beep.mp3 */; };
@@ -408,6 +408,7 @@
 		4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MySwing.storyboard; sourceTree = "<group>"; };
 		4B4ED1A720BD453E00D9C6DC /* SessionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionVC.swift; sourceTree = "<group>"; };
 		4B4ED1A920BD74AD00D9C6DC /* PerformanceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceVC.swift; sourceTree = "<group>"; };
+		4B53F27921DE5426004AFDDD /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		4B54A9DF20C91838004285AF /* BluetoothSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSync.swift; sourceTree = "<group>"; };
 		4B54A9E420C94B9B004285AF /* BluetoothDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDelegate.swift; sourceTree = "<group>"; };
 		4B5B265D20453F8D00BE3940 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -529,7 +530,6 @@
 		4BB26D4B1FF780A4001E9556 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BB7C427208DB584006CCAFF /* MyFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedVC.swift; sourceTree = "<group>"; };
 		4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPostVC.swift; sourceTree = "<group>"; };
-		4BC2464121C142640041F326 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticeGameViewCtrl.swift; sourceTree = "<group>"; };
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
 		4BCF8E2B21B502F70015338F /* swing_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = swing_beep.mp3; sourceTree = "<group>"; };
@@ -1265,7 +1265,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4BC2464121C142640041F326 /* GoogleService-Info-live.plist */,
+				4B53F27921DE5426004AFDDD /* GoogleService-Info-demo.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1344,7 +1344,7 @@
 					0D5D4A361F94D382004621C7 = {
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1404,7 +1404,6 @@
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
 				3EAE867F2125573F0081857B /* Device.storyboard in Resources */,
 				4B8C8D3D1FF674D0001F5D01 /* SF-Pro-Display-Thin.otf in Resources */,
-				4BC2464221C142640041F326 /* GoogleService-Info-live.plist in Resources */,
 				4B17C4722195BCF7004CA13C /* Localizable.strings in Resources */,
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
@@ -1416,6 +1415,7 @@
 				4B8C8D361FF674D0001F5D01 /* SF-Pro-Display-HeavyItalic.otf in Resources */,
 				3E27BA5C20FF4D7700DC14AB /* Main.storyboard in Resources */,
 				4B7E2A7F2175C20B00DFC3EB /* Default-568h@2x.png in Resources */,
+				4B53F27A21DE5426004AFDDD /* GoogleService-Info-demo.plist in Resources */,
 				3EDC6BBB2109E97A009B6F49 /* ExitGamePopUpView.xib in Resources */,
 				3E4CDC6F211C56B700C2C1C6 /* Assets.xcassets in Resources */,
 				4B8C8D3F1FF674D0001F5D01 /* SF-Pro-Display-ThinItalic.otf in Resources */,
@@ -1931,9 +1931,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FE7D783SLH;
@@ -1944,7 +1944,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1957,9 +1957,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FE7D783SLH;
@@ -1970,7 +1970,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;

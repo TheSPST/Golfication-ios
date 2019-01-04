@@ -22,6 +22,7 @@ struct Constants{
     static var isDevice = Bool()
     static var isProMode = Bool()
     static var firmwareVersion : Int!
+    static var canSkip : Bool!
     static var gender = ""
     static var handed = ""
     static var handicap = ""

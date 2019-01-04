@@ -340,7 +340,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.setInitialUI()
         
         self.getStrokesGainedFirebaseData()
-        self.getGolficationXVersion()
+        
         //        let promocodeArr = ["GOLFYKQ98","GOLFYKR34","GOLFYKS56","GOLFYKT20","GOLFYKT41","GOLFYKT52","GOLFYKU29","GOLFYKU32","GOLFYKU34","GOLFYKU45","GOLFYKZ2","GOLFYLA37","GOLFYLA91","GOLFYLB40","GOLFYLB42","GOLFYLB80","GOLFYLC72","GOLFYLC94","GOLFYLC96","GOLFYLD14","GOLFYLD17","GOLFYLE33","GOLFYLF77","GOLFYLG22","GOLFYLG39","GOLFYLH65","GOLFYLH92","GOLFYLI84","GOLFYLJ0","GOLFYLJ28","GOLFYLK27","GOLFYLK45","GOLFYLK51","GOLFYLM17","GOLFYLM20","GOLFYLN12","GOLFYLN28","GOLFYLN43","GOLFYLN75","GOLFYLQ71","GOLFYLR65","GOLFYLT0","GOLFYLT62","GOLFYLU37","GOLFYLU97","GOLFYLV61","GOLFYLW8","GOLFYLX20","GOLFYLX46","GOLFYLY18"]
         //        for data in promocodeArr{
         //            BackgroundMapStats.getDynamicLinkFromPromocode(code: data)
@@ -376,11 +376,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     //    }
     
     func getGolficationXVersion(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion/version") { (snapshot) in
-            let vNumber = snapshot.value as? Int
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion") { (snapshot) in
+            let firmware = snapshot.value as! NSMutableDictionary
             DispatchQueue.main.async(execute: {
-                if(vNumber != nil){
+                if let vNumber = firmware.value(forKey: "version") as? Int{
                     Constants.firmwareVersion = vNumber
+                }
+                if let canSkip = firmware.value(forKey: "canSkip") as? Bool{
+                    Constants.canSkip = canSkip
                 }
             })
         }
@@ -865,6 +868,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         tracker.send(builder.build() as [NSObject : AnyObject])
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         getUserDataFromFireBase()
+        self.getGolficationXVersion()
     }
     // MARK: getStrokesGainedFirebaseData
     func getStrokesGainedFirebaseData(){
@@ -915,6 +919,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 if let handed = userData.value(forKey: "handed") as? String{
                     Constants.handed = handed
                 }
+//                if let deviceInfo = userData.value(forKey: "deviceInfo") as? NSMutableDictionary{
+//
+//                }
                 if let proMode = userData.value(forKey: "proMode") as? Bool{
                     Constants.isProMode = proMode
                     self.btnUpgrade.isHidden = false
@@ -1257,12 +1264,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                         }
                                     }
                                     group.notify(queue: .main, execute: {
-                                        
-                                        let demoClublbl = DemoLabel()
-                                        demoClublbl.frame = CGRect(x: 10, y: 0, width: 200, height: 40)
-                                        demoClublbl.textAlignment = .left
-                                        self.viewSGTab.addSubview(demoClublbl)
-
+                                        if (Constants.isProMode && Constants.isDevice){
+                                            let demoClublbl = DemoLabel()
+                                            demoClublbl.frame = CGRect(x: 10, y: 0, width: 200, height: 40)
+                                            demoClublbl.textAlignment = .left
+                                            self.viewSGTab.addSubview(demoClublbl)
+                                        }
                                         self.progressView.hide(navItem: self.navigationItem)
                                         
                                         let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)

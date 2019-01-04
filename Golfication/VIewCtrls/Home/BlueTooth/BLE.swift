@@ -60,9 +60,10 @@ class BLE: NSObject {
     var shotCount = Int()
     let golficationXServiceCBUUID_Write = CBUUID(string: "0000BABE-0000-1000-8000-00805F9B34FB")
     let golficationXCharacteristicCBUUIDWrite = CBUUID(string: "0000BEEF-0000-1000-8000-00805F9B34FB")
-    
+    let golficationMACAddressService = CBUUID(string: "0000FFF0-0000-1000-8000-00805F9B34FB")
+    let golficationMACAddressCharacteristic = CBUUID(string: "0000FFF5-0000-1000-8000-00805F9B34FB")
     let golficationXCharacteristicCBUUIDOAD = CBUUID(string: TI_OAD_SERVICE)
-
+    var macAddress = String()
     var totalHoleNumber = Int()
     var isPracticeMatch = false
     var currentGameId = Int()
@@ -746,6 +747,7 @@ extension BLE: CBCentralManagerDelegate {
                             let data = self.peripheralDevicesIn5Sec.allKeys as! [String]
                             let ordered = data.sorted()
                             debugPrint(data,ordered)
+                            debugPrint((self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
                             Constants.deviceGolficationX = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral)
                             Constants.deviceGolficationX.delegate = self
                             self.centralManager.stopScan()
@@ -843,7 +845,7 @@ extension BLE: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
 
-        Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD])
+        Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD,self.golficationMACAddressService])
         DispatchQueue.main.async(execute: {
             var i = 0
             self.timerForService = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
@@ -892,6 +894,10 @@ extension BLE: CBPeripheralDelegate {
                     debugPrint("OAD UUID  :\(service.uuid)")
                     Constants.deviceGolficationX.discoverCharacteristics(nil, for: service)
                 }
+                if(service.uuid == golficationMACAddressService){
+                    debugPrint("MAC Address UUID  :\(service.uuid)")
+                    Constants.deviceGolficationX.discoverCharacteristics(nil, for: service)
+                }
             }
             if(service_Write != nil) && (service_Read != nil){
                 
@@ -917,6 +923,16 @@ extension BLE: CBPeripheralDelegate {
                 self.charctersticsRead = characteristic
                 Constants.charctersticsGlobalForRead = characteristic
                 Constants.deviceGolficationX.setNotifyValue(true, for: self.charctersticsRead)
+            }else if(characteristic.uuid == golficationMACAddressCharacteristic){
+                debugPrint(characteristic.value!)
+                self.macAddress = String()
+                for i in characteristic.value!.reversed(){
+                    macAddress.append(String(i, radix: 16))
+                    macAddress.append(":")
+                }
+                macAddress.removeLast()
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/deviceAddress/0").updateChildValues(["address":macAddress])
+
             }
         }
         
@@ -1240,6 +1256,7 @@ extension BLE: CBPeripheralDelegate {
                     debugPrint("RecviedResult 2.1")
                     if(self.tagClubNumber.count == 0){
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/deviceAddress/0").updateChildValues(["setup":true])
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
                     }else{
@@ -1253,6 +1270,7 @@ extension BLE: CBPeripheralDelegate {
                     timerForWriteCommand22.invalidate()
                     debugPrint("RecviedResult 2.2   ----  \(self.totalClub!)")
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/deviceAddress/0").updateChildValues(["setup":true])
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
                     //                    self.startMatch()
@@ -1375,15 +1393,6 @@ extension BLE: CBPeripheralDelegate {
                                 matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
                                 matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
                                 UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
-//                                let gameAlert = UIAlertController(title: "Device GPS", message: "Which GPS you want to use?", preferredStyle: UIAlertControllerStyle.alert)
-//                                gameAlert.addAction(UIAlertAction(title: "Phone GPS", style: .default, handler: { (action: UIAlertAction!) in
-//                                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"phone"])
-//                                }))
-//                                gameAlert.addAction(UIAlertAction(title: "Device GPS", style: .default, handler: { (action: UIAlertAction!) in
-//                                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gpsMode":"device"])
-//
-//                                }))
-//                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
                             }
                             ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
                         })
@@ -1635,11 +1644,13 @@ extension BLE: CBPeripheralDelegate {
                         let version = self.byteArrayToInt32(value: [dataArray[1],dataArray[2]])
                         self.invalidateAllTimers()
                         if(version < Constants.firmwareVersion){
-                            let gameAlert = UIAlertController(title: "Firmware Update", message: "New version \(version) found for GolficationX", preferredStyle: UIAlertControllerStyle.alert)
-                            gameAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
-                                debugPrint("Cancel")
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-                            }))
+                            let gameAlert = UIAlertController(title: "Firmware Update", message: "New version found for GolficationX", preferredStyle: UIAlertControllerStyle.alert)
+                            if Constants.canSkip {
+                                gameAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+                                    debugPrint("Cancel")
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+                                }))
+                            }
                             gameAlert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (action: UIAlertAction!) in
                                 debugPrint("Updating")
                                 self.randomGenerator()
