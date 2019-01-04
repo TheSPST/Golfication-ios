@@ -924,14 +924,14 @@ extension BLE: CBPeripheralDelegate {
                 Constants.charctersticsGlobalForRead = characteristic
                 Constants.deviceGolficationX.setNotifyValue(true, for: self.charctersticsRead)
             }else if(characteristic.uuid == golficationMACAddressCharacteristic){
-                debugPrint(characteristic.value!)
-                self.macAddress = String()
-                for i in characteristic.value!.reversed(){
-                    macAddress.append(String(i, radix: 16))
-                    macAddress.append(":")
-                }
-                macAddress.removeLast()
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/deviceAddress/0").updateChildValues(["address":macAddress])
+//                debugPrint(characteristic.value)
+//                self.macAddress = String()
+//                for i in characteristic.value?.reversed(){
+//                    macAddress.append(String(i, radix: 16))
+//                    macAddress.append(":")
+//                }
+//                macAddress.removeLast()
+//                ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/deviceAddress/0").updateChildValues(["address":macAddress])
 
             }
         }
