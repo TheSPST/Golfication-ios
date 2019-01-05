@@ -61,7 +61,7 @@ class TIOADViewController: UIViewController{
         deviceCircularView.trackColor = UIColor.clear
         deviceCircularView.progressLayer.lineWidth = 3.0
         self.lblUpdateFirmware.text = "Updating Firmware 0%"
-        let storage = Storage.storage(url:"gs://golfication-4f97b.appspot.com")
+        let storage = Storage.storage(url:"gs://golficationtest.appspot.com")
         let pathReference = storage.reference(withPath:"OADUpdates/\(self.fileName)")
         pathReference.downloadURL { url, error in
             if let error = error {

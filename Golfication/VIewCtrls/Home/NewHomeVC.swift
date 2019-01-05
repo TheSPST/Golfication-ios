@@ -37,11 +37,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBOutlet weak var btnStatsTab: UILocalizedButton!
     @IBOutlet weak var btnGoPRO: UIButton!
     @IBOutlet weak var btnStartGame: UILocalizedButton!
-    @IBOutlet weak var btnPreOrder: UILocalizedButton!
+//    @IBOutlet weak var btnPreOrder: UILocalizedButton!
     @IBOutlet weak var btnInvite: UILocalizedButton!
     
+    @IBOutlet weak var ifDemolblLine: UILabel!
+    @IBOutlet weak var ifDemoShowStackView: UIStackView!
+    @IBOutlet weak var lblDemoStatsMySwing: UILabel!
     @IBOutlet weak var viewScoreStats: UIView!
-    @IBOutlet weak var viewMySwing: UIView!
+//    @IBOutlet weak var viewMySwing: UIView!
     @IBOutlet weak var viewRecentGame: UIView!
     @IBOutlet weak var viewPreviousGame: UIView!
     @IBOutlet weak var viewNewGame: UIView!
@@ -184,6 +187,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
     }
     
+    @IBAction func btnBuyNow(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "https://www.golfication.com/product/golfication-x/"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
     // MARK: - myScoreClick
     @IBAction func myScoreClick(_ sender: UIButton!) {
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
@@ -314,8 +325,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let gestureViewProfile = UITapGestureRecognizer(target: self, action:  #selector (self.profileAction (_:)))
         viewProfile.addGestureRecognizer(gestureViewProfile)
         
-        let gestureMySwing = UITapGestureRecognizer(target: self, action:  #selector (self.mySwingAction (_:)))
-        viewMySwing.addGestureRecognizer(gestureMySwing)
+//        let gestureMySwing = UITapGestureRecognizer(target: self, action:  #selector (self.mySwingAction (_:)))
+//        viewMySwing.addGestureRecognizer(gestureMySwing)
         
         let gestureMyScoreTab = UITapGestureRecognizer(target: self, action:  #selector (self.myScoreClick (_:)))
         viewMoreStatScore.addGestureRecognizer(gestureMyScoreTab)
@@ -714,6 +725,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
         viewCtrl.linkStr = "https://www.indiegogo.com/projects/golfication-x-ai-powered-golf-super-wearable/x/17803765#/"
         viewCtrl.fromIndiegogo = false
+        viewCtrl.title = "Golfication X"
         viewCtrl.fromNotification = false
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
@@ -722,8 +734,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     func setInitialUI(){
         swingSessionTabImgVw.setCircleWithColor(frame: swingSessionTabImgVw.frame, color: UIColor.glfBluegreen.cgColor)
         
-        btnPreOrder.layer.cornerRadius = 3.0
-        btnPreOrder.setTitle(" " + "Pre order Now!".localized() + " ", for: .normal)
+//        btnPreOrder.layer.cornerRadius = 3.0
+//        btnPreOrder.setTitle(" " + "Pre order Now!".localized() + " ", for: .normal)
         //        viewOnCourse.layer.cornerRadius = 3.0
         
         lblAvgRound.setCorner(color: UIColor(rgb:0x939393).cgColor)
@@ -1114,8 +1126,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             }
                         }
                         group.notify(queue: .main, execute: {
-                            self.isDemoStats = false
-
+//                            self.isDemoStats =
+                            self.lblDemoStatsMySwing.isHidden = true
                             self.progressView.hide(navItem: self.navigationItem)
                             
                             let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
@@ -1129,7 +1141,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                 }
                 else{
-                    self.isDemoStats = true
+                    self.lblDemoStatsMySwing.isHidden = false
+//                    self.isDemoStats = true
                 }
                 if let homeCourseDic = userData["homeCourseDetails"] as? NSDictionary{
                     if let courseName = homeCourseDic.object(forKey: "name"){
@@ -1236,8 +1249,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }else{
                     self.getClubDataFromFirebase(isShow:false)
                 }
-                if self.isDemoStats{
-
+                if !self.lblDemoStatsMySwing.isHidden{
                     FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user1") { (snapshot) in
                         if(snapshot.childrenCount > 0){
                             var userData = NSDictionary()
@@ -1269,12 +1281,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                         }
                                     }
                                     group.notify(queue: .main, execute: {
-                                        if (Constants.isProMode && Constants.isDevice){
-                                            let demoClublbl = DemoLabel()
-                                            demoClublbl.frame = CGRect(x: 10, y: 0, width: 200, height: 40)
-                                            demoClublbl.textAlignment = .left
-                                            self.viewSGTab.addSubview(demoClublbl)
-                                        }
+//                                        if (Constants.isProMode && Constants.isDevice){
+//                                            let demoClublbl = DemoLabel()
+//                                            demoClublbl.frame = CGRect(x: 10, y: 0, width: 200, height: 40)
+//                                            demoClublbl.textAlignment = .left
+//                                            self.viewSGTab.addSubview(demoClublbl)
+//                                        }
                                         self.progressView.hide(navItem: self.navigationItem)
                                         
                                         let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
@@ -1490,19 +1502,23 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         if !Constants.isProMode {
             self.setProLockedUI(targetView: self.viewSGTab)
         }
-        else if !Constants.isDevice {
-            self.viewSGTab.makeBlurView(targetView: self.viewSGTab)
-            self.setDeviceLockedUI(targetView: self.viewSGTab, title: "Swing Sessions")
-        }
-        else if !Constants.isProMode && !Constants.isDevice {
-            self.setProLockedUI(targetView: self.viewSGTab)
-        }
-        else if Constants.isProMode && !Constants.isDevice {
-            self.setDeviceLockedUI(targetView: self.viewSGTab, title: "Swing Sessions")
-        }
-        else if !Constants.isProMode && Constants.isDevice {
-            self.setProLockedUI(targetView: self.viewSGTab)
-        }
+        self.ifDemolblLine.isHidden = Constants.isDevice
+        self.ifDemoShowStackView.isHidden = Constants.isDevice
+//        self.lblDemoStatsMySwing.isHidden = Constants.isDevice
+//        else if Constants.isProMode{
+//            self.setDeviceLockedUI(targetView: self.viewSGTab, title: "My Swings")
+//        }
+//        else if !Constants.isDevice {
+//            self.viewSGTab.makeBlurView(targetView: self.viewSGTab)
+//            self.setDeviceLockedUI(targetView: self.viewSGTab, title: "My Swings")
+//        }
+//        else if !Constants.isProMode{
+//            self.setProLockedUI(targetView: self.viewSGTab)
+//        }
+
+//        else if !Constants.isProMode{
+//            self.setProLockedUI(targetView: self.viewSGTab)
+//        }
 
         lblProfileHomeCourse.text = self.profileHomeCourse ?? "-"
         lblProfileHandicap.text = Constants.handicap
