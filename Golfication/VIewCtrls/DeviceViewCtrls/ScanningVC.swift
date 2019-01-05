@@ -43,8 +43,10 @@ class ScanningVC: UIViewController, BluetoothDelegate {
     var timeOutTimer = Timer()
 
     @IBAction func barBtnBLEAction(_ sender: Any) {
-        if (self.barBtnBLE.image == #imageLiteral(resourceName: "golficationBarG")){
+        if (self.barBtnBLE.image == #imageLiteral(resourceName: "golficationBarG")) && (Constants.macAddress != nil){
             self.getSwingData()
+        }else{
+            self.view.makeToast("Please Do Setup first from Profile section.")
         }
     }
     override func viewDidLoad() {

@@ -317,30 +317,31 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                         
                         //---------------- Set Color -------------
                         let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
-                        let clubSpeedTemp:Double = Double(self.benchMarkVal)!
-                        if(clubSpeedTemp*0.9<clubSpeed){
-                            lblBottomClubSpeedKPH.textColor = UIColor.glfGreenish
-                            lblBottomClubSpeedCHS.textColor = UIColor.glfGreenish
-                            
-                            shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
-                            self.lbl2ClubheadV.textColor = UIColor.glfGreenish
-                            self.lbl2ClubheadB.textColor = UIColor.glfGreenish
-                            
-                        }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
-                            lblBottomClubSpeedKPH.textColor = UIColor.glfYellow
-                            lblBottomClubSpeedCHS.textColor = UIColor.glfYellow
-                            
-                            shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
-                            self.lbl2ClubheadV.textColor = UIColor.glfYellow
-                            self.lbl2ClubheadB.textColor = UIColor.glfYellow
-                            
-                        }else if(clubSpeedTemp*0.8>clubSpeed){
-                            lblBottomClubSpeedKPH.textColor = UIColor.glfRed
-                            lblBottomClubSpeedCHS.textColor = UIColor.glfRed
-                            
-                            shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
-                            self.lbl2ClubheadV.textColor = UIColor.glfRed
-                            self.lbl2ClubheadB.textColor = UIColor.glfRed
+                        if let clubSpeedTemp:Double = Double(self.benchMarkVal){
+                            if(clubSpeedTemp*0.9<clubSpeed){
+                                lblBottomClubSpeedKPH.textColor = UIColor.glfGreenish
+                                lblBottomClubSpeedCHS.textColor = UIColor.glfGreenish
+                                
+                                shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                                self.lbl2ClubheadV.textColor = UIColor.glfGreenish
+                                self.lbl2ClubheadB.textColor = UIColor.glfGreenish
+                                
+                            }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
+                                lblBottomClubSpeedKPH.textColor = UIColor.glfYellow
+                                lblBottomClubSpeedCHS.textColor = UIColor.glfYellow
+                                
+                                shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                                self.lbl2ClubheadV.textColor = UIColor.glfYellow
+                                self.lbl2ClubheadB.textColor = UIColor.glfYellow
+                                
+                            }else if(clubSpeedTemp*0.8>clubSpeed){
+                                lblBottomClubSpeedKPH.textColor = UIColor.glfRed
+                                lblBottomClubSpeedCHS.textColor = UIColor.glfRed
+                                
+                                shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                                self.lbl2ClubheadV.textColor = UIColor.glfRed
+                                self.lbl2ClubheadB.textColor = UIColor.glfRed
+                            }
                         }
                     }
                     else if tagVal == 3{

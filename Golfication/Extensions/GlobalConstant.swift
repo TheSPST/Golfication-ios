@@ -11,7 +11,6 @@ import Foundation
 struct Constants{
     
     // MARK: NewHomeVC
-//    static let DEVICEDATA = DeviceData()
     static var baselineDict: NSDictionary!
     static var strokesGainedDict = [NSMutableDictionary]()
     static var isUpdateInfo = false
@@ -33,6 +32,7 @@ struct Constants{
     static var syncdArray = NSMutableArray()
     static var tagClubNum = [(tag:Int, club: Int, clubName: String)]()
     static var back9 = false
+    static var macAddress : String!
     // MARK: BLE
     static var ResponseData : Data!
     static var deviceGolficationX: CBPeripheral!

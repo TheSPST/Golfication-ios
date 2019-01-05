@@ -471,6 +471,17 @@ class BackgroundMapStats: NSObject {
         view.layer.position = position;
         view.layer.anchorPoint = anchorPoint;
     }
+    static func getDataInTermOf5(data:Int)->Int{
+        var avg = data
+        if (avg%10) != 5{
+            if (avg%10) % 5 < 3{
+                avg -= (avg%10) % 5
+            }else{
+                avg += (5-((avg%10) % 5))
+            }
+        }
+        return avg
+    }
     static func getDynamicLinkFromPromocode(code:String){
         let link = URL(string: "https://p5h99.app.goo.gl/mVFa?promocode=\(code)")
         let referralLink = DynamicLinkComponents(link: link!, domain: "p5h99.app.goo.gl")

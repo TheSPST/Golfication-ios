@@ -38,7 +38,7 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
             viewCtrl.golfBagHybridArray = golfBagHybridArray
             viewCtrl.golfBagPuttArray = golfBagPuttArray
             viewCtrl.clubs = clubs
-            viewCtrl.golfBagArr = golfBagArr
+            viewCtrl.golfBagArr = self.golfBagArr
             array.append(viewCtrl)
         }
         return array
@@ -105,11 +105,11 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
     @objc func chkBluetoothStatus(_ notification: NSNotification) {
         let notifBleStatus = notification.object as! String
         if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
-            //            self.setInitialDeviceData()
+            
         }
         else{
             self.navigationController?.popViewController(animated: false)
-            //            Constants.ble.stopScanning()
+            
         }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
     }

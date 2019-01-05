@@ -46,8 +46,7 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.automaticallyAdjustsScrollViewInsets = false
-
+        scrollView.contentInsetAdjustmentBehavior = .automatic
         if let providerData = Auth.auth().currentUser?.providerData {
             for item in providerData {
                 fbId = item.providerID

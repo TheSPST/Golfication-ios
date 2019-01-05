@@ -207,7 +207,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     @objc func chkBluetoothStatus(_ notification: NSNotification) {
         let notifBleStatus = notification.object as! String
         if  !(notifBleStatus == "") && (notifBleStatus == "Bluetooth_ON"){
-            //            self.setInitialDeviceData()
+            
         }
         else{
             if self.barBtnBLE != nil{
@@ -431,7 +431,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         }
         if let swingDetails = tempArray1[index] as? NSMutableDictionary{
             if fromRoundsPlayed{
-                cell.lblTitle.text = "Shot \(swingDetails.value(forKey: "shotNum") as! Int)"
+                cell.lblTitle.text = "Swing \(swingDetails.value(forKey: "shotNum") as! Int)"
                 let strkGain = holeParStrokesG[indexPath.section].strkG[indexPath.row]
                 var color = UIColor.glfRosyPink
                 if strkGain.contains("+"){

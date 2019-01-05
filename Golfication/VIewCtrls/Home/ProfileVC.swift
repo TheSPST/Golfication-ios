@@ -55,7 +55,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     @IBOutlet weak var viewYearlyBtn: UIView!
     @IBOutlet weak var viewTopWhatIsPro: UIView!
     @IBOutlet weak var viewProMembership: UIView!
-
+    var golfBagArray = NSMutableArray()
     @IBOutlet weak var actvtIndView: UIActivityIndicatorView!
     var progressView = SDLoader()
     @IBOutlet weak var  whatISProHeightConstraint: NSLayoutConstraint!
@@ -103,6 +103,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             debugPrint("State : Powered On")
             
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
+            viewCtrl.golfBagArr = self.golfBagArray
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.sharedInstance.delegate = nil
             return
@@ -700,12 +701,25 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             DispatchQueue.main.async(execute: {
                 FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
                     if(snapshot.value != nil){
-                        let golfBagArray = snapshot.value as! NSMutableArray
-                        if golfBagArray.count > 0{
+                        self.golfBagArray = snapshot.value as! NSMutableArray
+                        if self.golfBagArray.count > 0{
                             self.selectedClubs = NSMutableArray()
-                            for i in 0..<golfBagArray.count{
-                                if let dict = golfBagArray[i] as? NSDictionary{
+                            for i in 0..<self.golfBagArray.count{
+                                if let dict = self.golfBagArray[i] as? NSDictionary{
                                     self.selectedClubs.add(dict)
+                                    for data in Constants.clubWithMaxMin where data.name == dict.value(forKey: "clubName") as! String{
+                                        if (data.name).contains("Pu"){
+                                            dict.setValue(30, forKey: "avgDistance")
+                                            self.golfBagArray[i] = dict
+                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":30])
+                                        }else if(dict.value(forKey: "avgDistance") == nil){
+                                            let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                                            dict.setValue(avgDistance, forKey: "avgDistance")
+                                            self.golfBagArray[i] = dict
+                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":avgDistance])
+                                        }
+
+                                    }
                                 }
                                 else{
                                     let tempArray = snapshot.value as! NSMutableArray
@@ -719,9 +733,16 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                                         golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                                         golfBagDict.setObject("", forKey: "tagName" as NSCopying)
                                         golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
-
-                                        golfBagArray.replaceObject(at: i, with: golfBagDict)
-                                        golfBagData = ["golfBag": golfBagArray]
+                                        for data in Constants.clubWithMaxMin where data.name == tempArray[i] as! String{
+                                            if (data.name).contains("Pu"){
+                                                golfBagDict.setObject(30, forKey: "avgDistance" as NSCopying)
+                                            }else{
+                                                let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                                                golfBagDict.setObject(avgDistance, forKey: "avgDistance" as NSCopying)
+                                            }
+                                        }
+                                        self.golfBagArray.replaceObject(at: i, with: golfBagDict)
+                                        golfBagData = ["golfBag": self.golfBagArray]
                                         
                                         self.selectedClubs.add(golfBagDict)
                                     }

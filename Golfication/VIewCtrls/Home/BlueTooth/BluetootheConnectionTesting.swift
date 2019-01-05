@@ -333,11 +333,11 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         }
     }
     func getGolfBagData(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
-            self.progressView.show(atView: self.view, navItem: self.navigationItem)
-            if let tempArray = snapshot.value as? NSMutableArray{
-                self.golfBagArr = tempArray
-                for data in tempArray{
+//        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+//            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+//            if let tempArray = snapshot.value as? NSMutableArray{
+//                self.golfBagArr = tempArray
+                for data in self.golfBagArr{
                     if let clubDict = data as? NSMutableDictionary{
                         self.clubs.addEntries(from: [clubDict.value(forKey: "clubName") as! String : clubDict.value(forKey: "tag") as! Bool])
                         if let tag = clubDict.value(forKey: "tag") as? Bool {
@@ -345,8 +345,8 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
                         }
                     }
                 }
-            }
-            DispatchQueue.main.async(execute: {
+//            }
+//            DispatchQueue.main.async(execute: {
                 var newGolfBagDriverArray = [String]()
                 var newGolfBagWoodArray = [String]()
                 var newGolfBagHybridArray = [String]()
@@ -405,11 +405,11 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
                 self.lblAssignedTag.text = "\(self.totalAssigned) assigned"
                 self.lblRemainingTag.text = "\(14 - self.totalAssigned) remaining"
                 self.getIsDeviceAlreadySetup()
-            })
-        }
+//            })
+//        }
     }
     func getIsDeviceAlreadySetup(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "deviceSetup") { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "deviceInfo/setup") { (snapshot) in
             var isSetup = false
             if (snapshot.value as? Bool) != nil{
                 isSetup = snapshot.value as! Bool
@@ -460,7 +460,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         viewCtrl.golfBagPuttArray = golfBagPuttArray
         viewCtrl.golfBag = golfBag
         viewCtrl.clubs = clubs
-        viewCtrl.golfBagArr = golfBagArr
+        viewCtrl.golfBagArr = self.golfBagArr
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
 }

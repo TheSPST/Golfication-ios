@@ -60,10 +60,10 @@ class BLE: NSObject {
     var shotCount = Int()
     let golficationXServiceCBUUID_Write = CBUUID(string: "0000BABE-0000-1000-8000-00805F9B34FB")
     let golficationXCharacteristicCBUUIDWrite = CBUUID(string: "0000BEEF-0000-1000-8000-00805F9B34FB")
-    let golficationMACAddressService = CBUUID(string: "0000FFF0-0000-1000-8000-00805F9B34FB")
-    let golficationMACAddressCharacteristic = CBUUID(string: "0000FFF5-0000-1000-8000-00805F9B34FB")
+//    let golficationMACAddressService = CBUUID(string: "0000FFF0-0000-1000-8000-00805F9B34FB")
+//    let golficationMACAddressCharacteristic = CBUUID(string: "0000FFF5-0000-1000-8000-00805F9B34FB")
     let golficationXCharacteristicCBUUIDOAD = CBUUID(string: TI_OAD_SERVICE)
-    var macAddress = String()
+    var macAddressss = String()
     var totalHoleNumber = Int()
     var isPracticeMatch = false
     var currentGameId = Int()
@@ -75,14 +75,18 @@ class BLE: NSObject {
     var service_Write: CBService!
     var currentCommandData = [UInt8]()
     var totalNumberOfClubSend : UInt8!
-    var clubData = [(name:String,max:Int,min:Int)]()
+    var clubData = [(name:String,max:Int,min:Int,avg:Int)]()
     var tempFor7th = Int()
     var peripheralDevicesIn5Sec = NSMutableDictionary()
+    var advertiseDataDevicesIn5Sec = NSMutableDictionary()
     var isSetupScreen = false
     var isContinue = false
     var player: AVAudioPlayer?
     var gameIDArr : [UInt8]!
     var oldLatLng = CLLocationCoordinate2D()
+    var deviceIndex = 0
+    var orderedAdv = [String]()
+    var golfBagArray = NSMutableArray()
     var isProperConnected:Bool!{
         var isTrue = false
         if(Constants.deviceGolficationX != nil) && self.service_Read != nil && self.service_Write != nil{
@@ -332,7 +336,7 @@ class BLE: NSObject {
                 }
                 debugPrint(tagClubNumber)
                 self.totalClub = UInt8(myDict.count)
-                self.updateMaxMin()
+//                self.updateMaxMin()
                 var paramData : [UInt8] = [2,UInt8(200+myDict.count)]
                 self.invalidateAllTimers()
                 let writeData =  Data(bytes: paramData)
@@ -731,8 +735,8 @@ extension BLE: CBCentralManagerDelegate {
                 
                 if lastPeripherals.count > 0{
                     let device = lastPeripherals.last! as CBPeripheral;
-                    Constants.deviceGolficationX = device;
-                    self.centralManager.connect(Constants.deviceGolficationX, options: nil)
+//                    Constants.deviceGolficationX = device;
+                    self.centralManager.connect(device, options: nil)
                     if(device.state == .disconnected){
                         UIApplication.shared.keyWindow?.makeToast("Device is disconnected restart the device and connect again.")
                         bluetoothStatus = "Device_Disconnected"
@@ -744,14 +748,59 @@ extension BLE: CBCentralManagerDelegate {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5){
                         if self.peripheralDevicesIn5Sec.count > 0{
                             debugPrint(self.peripheralDevicesIn5Sec)
+                            debugPrint(self.advertiseDataDevicesIn5Sec)
                             let data = self.peripheralDevicesIn5Sec.allKeys as! [String]
                             let ordered = data.sorted()
+                            let advData = self.advertiseDataDevicesIn5Sec.allKeys as! [String]
+                            self.orderedAdv = advData.sorted()
                             debugPrint(data,ordered)
-                            debugPrint((self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
-                            Constants.deviceGolficationX = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral)
-                            Constants.deviceGolficationX.delegate = self
-                            self.centralManager.stopScan()
-                            self.centralManager.connect(Constants.deviceGolficationX)
+                            debugPrint(advData,self.orderedAdv)
+                            var isTrue = false
+                            var indexArr = [Int]()
+                            for j in 0..<self.orderedAdv.count{
+                                if let advData = self.advertiseDataDevicesIn5Sec.value(forKey: "\(self.orderedAdv[j])") as? [String : Any]{
+                                    if let name = advData["kCBAdvDataLocalName"] as? String{
+                                        
+                                        if name.count >= 16{
+                                            indexArr.append(j)
+                                            var newMacAddress = String()
+                                            var i = 0
+                                            while i < 11{
+                                                newMacAddress.append(name[4+i])
+                                                newMacAddress.append(name[5+i])
+                                                newMacAddress.append(":")
+                                                i += 2
+                                            }
+                                            newMacAddress.removeLast()
+                                            if Constants.macAddress != nil && newMacAddress.contains(Constants.macAddress!){
+                                                self.deviceIndex = j
+                                                debugPrint((self.peripheralDevicesIn5Sec.value(forKey: "\(ordered[j])") as! CBPeripheral))
+                                                let peripheral = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered[j])") as! CBPeripheral)
+                                                peripheral.delegate = self
+                                                self.centralManager.stopScan()
+                                                self.centralManager.connect(peripheral)
+                                                isTrue = true
+                                                break
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if !isTrue && indexArr.isEmpty && (Constants.macAddress == nil){
+                                debugPrint((self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
+                                let peripheral = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral)
+                                peripheral.delegate = self
+                                self.centralManager.stopScan()
+                                self.centralManager.connect(peripheral)
+                            }else if !indexArr.isEmpty && (Constants.macAddress == nil){
+                                let peripheral = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered[indexArr.first!])") as! CBPeripheral)
+                                peripheral.delegate = self
+                                self.centralManager.stopScan()
+                                self.centralManager.connect(peripheral)
+                                isTrue = true
+                            }else if !isTrue && (Constants.macAddress != nil){
+                                   UIApplication.shared.keyWindow?.makeToast("Please connect your GolficationX which you have previously setup.")
+                            }
                         }
                     }
                 }
@@ -803,13 +852,17 @@ extension BLE: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         debugPrint(peripheral)
         debugPrint("advertisementData :\(advertisementData)")
-        //        let dict = NSMutableDictionary()
-        //        dict.setValue(peripheral, forKey: "peripheral")
-        //        dict.setValue(RSSI, forKey: "rssi")
-        
-        let name = advertisementData["kCBAdvDataLocalName"] as? String
-        if (peripheral.name == "Golfication X") || (name == "Golfication X") || (peripheral.name == "Holfication X") || (name == "Holfication X") /*|| (peripheral.name == "CC2650 SensorTag") || (peripheral.name == "PeripheralObserver") || (peripheral.name == "SBP OAD off-chip")*/{
+        var names = ""
+        if let name = advertisementData["kCBAdvDataLocalName"] as? String{
+            names = name
+        }
+        var names1 = ""
+        if let name = peripheral.name{
+            names1 = name
+        }
+        if (names1 == "Golfication X") || (names == "Golfication X") || names.containsIgnoringCase(find: "Golf") || names1.containsIgnoringCase(find: "Golf"){
             peripheralDevicesIn5Sec.setValue(peripheral, forKey: "\(RSSI)")
+            advertiseDataDevicesIn5Sec.setValue(advertisementData, forKey: "\(RSSI)")
         }
     }
     func endAllActiveSessions(){
@@ -845,26 +898,24 @@ extension BLE: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
 
-        Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD,self.golficationMACAddressService])
+        peripheral.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD])
         DispatchQueue.main.async(execute: {
             var i = 0
             self.timerForService = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: { (timer) in
                 if(self.service_Read == nil) && (self.service_Write == nil){
                     i += 1
                     debugPrint("loop0")
-                    Constants.deviceGolficationX!.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD])
+                    peripheral.discoverServices([self.golficationXServiceCBUUID_READ, self.golficationXServiceCBUUID_Write,self.golficationXCharacteristicCBUUIDOAD])
                     if(i > 3){
                         self.alertShowing(msg: "Scanning Time out try again")
                         self.timerForService.invalidate()
                         self.centralManager.stopScan()
-                        self.centralManager.cancelPeripheralConnection(Constants.deviceGolficationX)
+                        self.centralManager.cancelPeripheralConnection(peripheral)
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
                     }
                 }
                 else{
-//                    if self.isSetupScreen{
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-//                    }
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                     self.isDeviceStillConnected = true
                     self.timerForService.invalidate()
                 }
@@ -883,24 +934,44 @@ extension BLE: CBPeripheralDelegate {
                 if(service.uuid == golficationXServiceCBUUID_READ){
                     service_Read = service
                     debugPrint("Read UUID :\(service_Read!.uuid)")
-                    Constants.deviceGolficationX.discoverCharacteristics(nil, for: service_Read)
+                    peripheral.discoverCharacteristics(nil, for: service_Read)
                 }
                 if(service.uuid == golficationXServiceCBUUID_Write){
                     service_Write = service
                     debugPrint("Write UUID  :\(service_Write!.uuid)")
-                    Constants.deviceGolficationX.discoverCharacteristics(nil, for: service_Write)
+                    peripheral.discoverCharacteristics(nil, for: service_Write)
                 }
                 if(service.uuid == golficationXCharacteristicCBUUIDOAD){
                     debugPrint("OAD UUID  :\(service.uuid)")
-                    Constants.deviceGolficationX.discoverCharacteristics(nil, for: service)
-                }
-                if(service.uuid == golficationMACAddressService){
-                    debugPrint("MAC Address UUID  :\(service.uuid)")
-                    Constants.deviceGolficationX.discoverCharacteristics(nil, for: service)
+                    peripheral.discoverCharacteristics(nil, for: service)
                 }
             }
             if(service_Write != nil) && (service_Read != nil){
-                
+                Constants.deviceGolficationX = peripheral
+                var macAddress = String()
+                var newMacAddress = String()
+                if let advData = self.advertiseDataDevicesIn5Sec.value(forKey: "\(self.orderedAdv[self.deviceIndex])") as? [String : Any]{
+                    if let name = advData["kCBAdvDataLocalName"] as? String{
+                        if name.count >= 16{
+                            macAddress = name
+                        }
+                    }
+                }
+                if peripheral.name!.count >= 16{
+                    macAddress = peripheral.name ?? ""
+                }
+                if !macAddress.isEmpty && Constants.macAddress == nil{
+                    var i = 0
+                    while i < 11{
+                        newMacAddress.append(macAddress[4+i])
+                        newMacAddress.append(macAddress[5+i])
+                        newMacAddress.append(":")
+                        i += 2
+                    }
+                    newMacAddress.removeLast()
+                    self.macAddressss = newMacAddress
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo").updateChildValues(["macAddress":newMacAddress])
+                }
             }
         } else {
             service_Read = nil
@@ -915,24 +986,14 @@ extension BLE: CBPeripheralDelegate {
             if(characteristic.uuid == golficationXCharacteristicCBUUIDWrite){
                 self.charctersticsWrite = characteristic
                 Constants.charctersticsGlobalForWrite = characteristic
-                debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
+                debugPrint(peripheral.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
                     self.sendEleventhCommand()
                 }
             }else if (characteristic.uuid == golficationXCharacteristicCBUUIDRead){
                 self.charctersticsRead = characteristic
                 Constants.charctersticsGlobalForRead = characteristic
-                Constants.deviceGolficationX.setNotifyValue(true, for: self.charctersticsRead)
-            }else if(characteristic.uuid == golficationMACAddressCharacteristic){
-//                debugPrint(characteristic.value)
-//                self.macAddress = String()
-//                for i in characteristic.value?.reversed(){
-//                    macAddress.append(String(i, radix: 16))
-//                    macAddress.append(":")
-//                }
-//                macAddress.removeLast()
-//                ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/deviceAddress/0").updateChildValues(["address":macAddress])
-
+                peripheral.setNotifyValue(true, for: self.charctersticsRead)
             }
         }
         
@@ -962,13 +1023,6 @@ extension BLE: CBPeripheralDelegate {
                             if !self.isPracticeMatch{
                                 swingDict.setValue(data.hole, forKey: "holeNum")
                             }
-                            //                            swingDict.setValue(self.randomIntVelocity(max: 90,min: 60),forKey:"VC1")
-                            //                            swingDict.setValue(self.randomIntVelocity(max: 55,min: 30),forKey:"VC2")
-                            //                            swingDict.setValue(self.randomIntVelocity(max: 140,min: 120),forKey:"VC3")
-                            //                            swingDict.setValue(self.randomIntVelocity(max: 15,min: 10),forKey:"VH1")
-                            //                            swingDict.setValue(self.randomIntVelocity(max: 6,min: 2),forKey:"VH2")
-                            //                            swingDict.setValue(self.randomIntVelocity(max: 40,min: 30),forKey:"VH3")
-                            
                             var d = 0.0
                             if(data.tempo > 3){
                                 d = data.tempo - 3
@@ -1000,13 +1054,6 @@ extension BLE: CBPeripheralDelegate {
                                     swingDict.setValue(data.cv, forKey: "clubSpeed")
                                     swingDict.setValue(data.time, forKey: "timestamp")
                                     swingDict.setValue(data.ba, forKey: "backSwingAngle")
-                                    //                                swingDict.setValue(self.randomIntVelocity(max: 90,min: 60),forKey:"VC1")
-                                    //                                swingDict.setValue(self.randomIntVelocity(max: 55,min: 30),forKey:"VC2")
-                                    //                                swingDict.setValue(self.randomIntVelocity(max: 140,min: 120),forKey:"VC3")
-                                    //                                swingDict.setValue(self.randomIntVelocity(max: 15,min: 10),forKey:"VH1")
-                                    //                                swingDict.setValue(self.randomIntVelocity(max: 6,min: 2),forKey:"VH2")
-                                    //                                swingDict.setValue(self.randomIntVelocity(max: 40,min: 30),forKey:"VH3")
-                                    
                                     var d = 0.0
                                     if(data.tempo > 3){
                                         d = data.tempo - 3
@@ -1195,34 +1242,38 @@ extension BLE: CBPeripheralDelegate {
         }
     }
     func updateSingleSwing(data:(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64,hole:Int),hole:Int){
-        let swingDict = NSMutableDictionary()
-        swingDict.setValue(data.club, forKey: "club")
-        swingDict.setValue(data.bs, forKey: "backSwing")
-        swingDict.setValue(data.ds, forKey: "downSwing")
-        swingDict.setValue(data.hv, forKey: "handSpeed")
-        swingDict.setValue(data.tempo, forKey: "tempo")
-        swingDict.setValue(data.shotNo, forKey: "shotNum")
-        swingDict.setValue(hole, forKey: "holeNum")
-        swingDict.setValue(data.cv, forKey: "clubSpeed")
-        swingDict.setValue(data.time, forKey: "timestamp")
-        swingDict.setValue(data.ba, forKey: "backSwingAngle")
-//        swingDict.setValue(self.randomIntVelocity(max: 90,min: 60),forKey:"VC1")
-//        swingDict.setValue(self.randomIntVelocity(max: 55,min: 30),forKey:"VC2")
-//        swingDict.setValue(self.randomIntVelocity(max: 140,min: 120),forKey:"VC3")
-//        swingDict.setValue(self.randomIntVelocity(max: 15,min: 10),forKey:"VH1")
-//        swingDict.setValue(self.randomIntVelocity(max: 6,min: 2),forKey:"VH2")
-//        swingDict.setValue(self.randomIntVelocity(max: 40,min: 30),forKey:"VH3")
-        
-        var d = 0.0
-        if(data.tempo > 3){
-            d = data.tempo - 3
-        }else{
-            d = 3 - data.tempo
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(self.swingMatchId)/swings") { (snapshot) in
+            var shotArr = [NSMutableDictionary]()
+            if(snapshot.value != nil){
+                if let data = snapshot.value as? [NSMutableDictionary]{
+                    shotArr = data
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                let swingDict = NSMutableDictionary()
+                swingDict.setValue(data.club, forKey: "club")
+                swingDict.setValue(data.bs, forKey: "backSwing")
+                swingDict.setValue(data.ds, forKey: "downSwing")
+                swingDict.setValue(data.hv, forKey: "handSpeed")
+                swingDict.setValue(data.tempo, forKey: "tempo")
+                swingDict.setValue(data.shotNo, forKey: "shotNum")
+                swingDict.setValue(hole, forKey: "holeNum")
+                swingDict.setValue(data.cv, forKey: "clubSpeed")
+                swingDict.setValue(data.time, forKey: "timestamp")
+                swingDict.setValue(data.ba, forKey: "backSwingAngle")
+                var d = 0.0
+                if(data.tempo > 3){
+                    d = data.tempo - 3
+                }else{
+                    d = 3 - data.tempo
+                }
+                let swingScore = 95 - (d/3)*55
+                swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                shotArr.append(swingDict)
+                ref.child("swingSessions/\(self.swingMatchId)/").updateChildValues(["swings":shotArr])
+            })
         }
-        let swingScore = 95 - (d/3)*55
-        swingDict.setValue(Int(swingScore), forKey: "swingScore")
-        
-        ref.child("swingSessions/\(self.swingMatchId)/swings/\(data.shotNo-1)/").updateChildValues(swingDict as! [AnyHashable : Any])
+
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -1255,8 +1306,10 @@ extension BLE: CBPeripheralDelegate {
                     timerForWriteCommand21.invalidate()
                     debugPrint("RecviedResult 2.1")
                     if(self.tagClubNumber.count == 0){
-                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
-                        ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/deviceAddress/0").updateChildValues(["setup":true])
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo").updateChildValues(["setup":true])
+                        if Constants.macAddress == nil{
+                            ref.child("golficationX").updateChildValues(["\(self.macAddressss)":"\(Auth.auth().currentUser!.uid)"])
+                        }
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
                     }else{
@@ -1269,8 +1322,10 @@ extension BLE: CBPeripheralDelegate {
                 }else if dataArray[0] == UInt8(2) && (dataArray[1] == UInt8(self.totalClub)){
                     timerForWriteCommand22.invalidate()
                     debugPrint("RecviedResult 2.2   ----  \(self.totalClub!)")
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":true])
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/deviceAddress/0").updateChildValues(["setup":true])
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo").updateChildValues(["setup":true])
+                    if Constants.macAddress == nil{
+                        ref.child("golficationX").updateChildValues(["\(self.macAddressss)":"\(Auth.auth().currentUser!.uid)"])
+                    }
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":true])
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
                     //                    self.startMatch()
@@ -1636,8 +1691,6 @@ extension BLE: CBPeripheralDelegate {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "setupDevice"), object: false)
                     self.alertShowing(msg: "Please Complete Golfiction X setup first.")
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "noSetup"), object: nil)
-                    //                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["deviceSetup":false])
-                    //                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["device":false])
                     self.invalidateAllTimers()
                 }else if (dataArray[0] == UInt8(11)){
                     DispatchQueue.main.async(execute: {
@@ -1695,24 +1748,48 @@ extension BLE: CBPeripheralDelegate {
         return shotNm
     }
     func updateMaxMin(){
+        debugPrint(self.golfBagArray)
         self.clubData.removeAll()
         for data in Constants.clubWithMaxMin{
             if clubsArr.contains(data.name){
-                self.clubData.append((name: data.name, max: data.max, min: data.min))
-            }
-        }
-        self.clubData.sort{($0).max > ($1).max}
-        if (!self.clubData.isEmpty){
-            for i in 0..<self.clubData.count-1{
-                if !(self.clubData[i].min == self.clubData[i+1].max+1) && (self.clubData[i].min>Constants.clubWithMaxMin[i+1].max+1){
-                    let diff = self.clubData[i].min - self.clubData[i+1].max+1
-                    self.clubData[i].max += diff/2
-                    self.clubData[i+1].min -= diff/2
-                    if(self.clubData[i+1].min < 0){
-                        self.clubData[i+1].min = 0
+                for golfDict in golfBagArray{
+                    if data.name.contains((golfDict as! NSMutableDictionary).value(forKey: "clubName") as! String){
+                        self.clubData.append((name: data.name, max: data.max, min: data.min,avg:(golfDict as! NSMutableDictionary).value(forKey: "avgDistance") as! Int))
                     }
                 }
             }
+        }
+        self.clubData.sort{($0).avg > ($1).avg}
+        if (!self.clubData.isEmpty){
+            for i in 0..<self.clubData.count{
+                if(i+1<self.clubData.count){
+                    if(self.clubData[i+1].name.contains(find: "Pu")){
+                        self.clubData[i+1].max = 10
+                        self.clubData[i+1].min = 0
+                    }else{
+                        let first = self.clubData[i].avg
+                        let second = self.clubData[i+1].avg
+                        let minfirstmaxSecond = Int(first+second)/2
+                        let minLast = 30
+                        if(i == 0){
+                            self.clubData[i].max = 500
+                        }
+                        self.clubData[i].min = minfirstmaxSecond
+                        self.clubData[i+1].max = minfirstmaxSecond
+                        self.clubData[i+1].min = minLast
+                    }
+                }
+            }
+//            for i in 0..<self.clubData.count{
+//                if !(self.clubData[i].min == self.clubData[i+1].max+1) && (self.clubData[i].min>Constants.clubWithMaxMin[i+1].max+1){
+//                    let diff = self.clubData[i].min - self.clubData[i+1].max+1
+//                    self.clubData[i].max += diff/2
+//                    self.clubData[i+1].min -= diff/2
+//                    if(self.clubData[i+1].min < 0){
+//                        self.clubData[i+1].min = 0
+//                    }
+//                }
+//            }
             debugPrint("clubs \(self.clubData)")
         }
     }
@@ -1735,14 +1812,13 @@ extension BLE: CBPeripheralDelegate {
         if let peripheralsObject = dict[CBCentralManagerRestoredStatePeripheralsKey] {
             let peripherals = peripheralsObject as! Array<CBPeripheral>
             if peripherals.count > 0 {
-                Constants.deviceGolficationX = peripherals[0]
-                Constants.deviceGolficationX?.delegate = self
+                peripherals[0].delegate = self
             }
         }
     }
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         DispatchQueue.main.async {
-            debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
+            debugPrint(peripheral.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
             self.invalidateAllTimers()
             UIApplication.shared.keyWindow?.makeToast("Device Disconnected.....")
             Constants.deviceGolficationX = nil
@@ -1753,8 +1829,9 @@ extension BLE: CBPeripheralDelegate {
             if Constants.OADFeedback{
                Constants.OADFeedback = false
                Constants.ble = nil
+                Constants.bleObserver = 0
             }else{
-                Constants.deviceGolficationX = peripheral
+//                Constants.deviceGolficationX = peripheral
                 self.centralManager.connect(peripheral, options: nil)
             }
         }

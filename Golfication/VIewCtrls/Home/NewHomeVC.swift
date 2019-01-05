@@ -265,7 +265,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        DEVICEDATA.getDeviceData()
         if (InstanceID.instanceID().token() != nil){
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :InstanceID.instanceID().token()!] as [AnyHashable:String])
         }
@@ -919,9 +918,15 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 if let handed = userData.value(forKey: "handed") as? String{
                     Constants.handed = handed
                 }
-//                if let deviceInfo = userData.value(forKey: "deviceInfo") as? NSMutableDictionary{
-//
-//                }
+                if let deviceInfo = userData.value(forKey: "deviceInfo") as? NSMutableDictionary{
+                    if let setup = deviceInfo.value(forKey: "setup") as? Bool{
+                        if setup{
+                            if let macAdd = deviceInfo.value(forKey: "macAddress") as? String{
+                                Constants.macAddress = macAdd
+                            }
+                        }
+                    }
+                }
                 if let proMode = userData.value(forKey: "proMode") as? Bool{
                     Constants.isProMode = proMode
                     self.btnUpgrade.isHidden = false

@@ -63,7 +63,6 @@
 		3E7861882111C45200CDD63F /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7861872111C45200CDD63F /* Toast.swift */; };
 		3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E832329201A1ABC0015A5D3 /* Together.storyboard */; };
 		3E89BC9920F62C4B00D47590 /* RFMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E89BC9820F62C4B00D47590 /* RFMapVC.swift */; };
-		3E987133217DA8F600A49F62 /* DeviceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E987132217DA8F600A49F62 /* DeviceData.swift */; };
 		3EA0E268212AEC19009D7405 /* SwingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA0E267212AEC19009D7405 /* SwingTableViewCell.swift */; };
 		3EA43D032015D80E0077B14A /* ExploreDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43CFE2015D80E0077B14A /* ExploreDetailPageVC.swift */; };
 		3EA43D042015D80E0077B14A /* ExploreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA43CFF2015D80E0077B14A /* ExploreVC.swift */; };
@@ -140,7 +139,6 @@
 		4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */; };
 		4B4ED1A820BD453E00D9C6DC /* SessionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A720BD453E00D9C6DC /* SessionVC.swift */; };
 		4B4ED1AA20BD74AD00D9C6DC /* PerformanceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A920BD74AD00D9C6DC /* PerformanceVC.swift */; };
-		4B53F27A21DE5426004AFDDD /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B53F27921DE5426004AFDDD /* GoogleService-Info-demo.plist */; };
 		4B54A9E020C91838004285AF /* BluetoothSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54A9DF20C91838004285AF /* BluetoothSync.swift */; };
 		4B54A9E520C94B9B004285AF /* BluetoothDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B54A9E420C94B9B004285AF /* BluetoothDelegate.swift */; };
 		4B5B265F204540A000BE3940 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B5B265D20453F8D00BE3940 /* WebKit.framework */; };
@@ -198,6 +196,7 @@
 		4B9E7BD52196D889008B6181 /* UILocalizedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */; };
 		4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */; };
 		4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */; };
+		4BA4C43621DF632A0058FAFC /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BA4C43521DF63290058FAFC /* GoogleService-Info-live.plist */; };
 		4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA64E452000A54400C8C03F /* Chatlogo.swift */; };
 		4BB26CC71FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC01FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m */; };
 		4BB26CC81FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC21FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.m */; };
@@ -328,7 +327,6 @@
 		3E7861872111C45200CDD63F /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		3E832329201A1ABC0015A5D3 /* Together.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Together.storyboard; sourceTree = "<group>"; };
 		3E89BC9820F62C4B00D47590 /* RFMapVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RFMapVC.swift; sourceTree = "<group>"; };
-		3E987132217DA8F600A49F62 /* DeviceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceData.swift; sourceTree = "<group>"; };
 		3EA0E267212AEC19009D7405 /* SwingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwingTableViewCell.swift; sourceTree = "<group>"; };
 		3EA43CFE2015D80E0077B14A /* ExploreDetailPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreDetailPageVC.swift; sourceTree = "<group>"; };
 		3EA43CFF2015D80E0077B14A /* ExploreVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreVC.swift; sourceTree = "<group>"; };
@@ -408,7 +406,6 @@
 		4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MySwing.storyboard; sourceTree = "<group>"; };
 		4B4ED1A720BD453E00D9C6DC /* SessionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionVC.swift; sourceTree = "<group>"; };
 		4B4ED1A920BD74AD00D9C6DC /* PerformanceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceVC.swift; sourceTree = "<group>"; };
-		4B53F27921DE5426004AFDDD /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		4B54A9DF20C91838004285AF /* BluetoothSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSync.swift; sourceTree = "<group>"; };
 		4B54A9E420C94B9B004285AF /* BluetoothDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDelegate.swift; sourceTree = "<group>"; };
 		4B5B265D20453F8D00BE3940 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -480,6 +477,7 @@
 		4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILocalizedLabel.swift; sourceTree = "<group>"; };
 		4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigation+CustomAnimation.swift"; sourceTree = "<group>"; };
 		4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array + RemoveDuplicate.swift"; sourceTree = "<group>"; };
+		4BA4C43521DF63290058FAFC /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		4BA64E452000A54400C8C03F /* Chatlogo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chatlogo.swift; sourceTree = "<group>"; };
 		4BB26CBF1FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingCollectionView.h; sourceTree = "<group>"; };
 		4BB26CC01FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingCollectionView.m; sourceTree = "<group>"; };
@@ -1020,7 +1018,6 @@
 				4B9578DD20B4409E008B2C61 /* BluetootheConnectionTesting.swift */,
 				3E63509620D3A150005BF851 /* BLE.swift */,
 				3EB5D2F8215F78CD007C55E3 /* GolficationXFirmware.swift */,
-				3E987132217DA8F600A49F62 /* DeviceData.swift */,
 			);
 			path = BlueTooth;
 			sourceTree = "<group>";
@@ -1265,7 +1262,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4B53F27921DE5426004AFDDD /* GoogleService-Info-demo.plist */,
+				4BA4C43521DF63290058FAFC /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1404,6 +1401,7 @@
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
 				3EAE867F2125573F0081857B /* Device.storyboard in Resources */,
 				4B8C8D3D1FF674D0001F5D01 /* SF-Pro-Display-Thin.otf in Resources */,
+				4BA4C43621DF632A0058FAFC /* GoogleService-Info-live.plist in Resources */,
 				4B17C4722195BCF7004CA13C /* Localizable.strings in Resources */,
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
@@ -1415,7 +1413,6 @@
 				4B8C8D361FF674D0001F5D01 /* SF-Pro-Display-HeavyItalic.otf in Resources */,
 				3E27BA5C20FF4D7700DC14AB /* Main.storyboard in Resources */,
 				4B7E2A7F2175C20B00DFC3EB /* Default-568h@2x.png in Resources */,
-				4B53F27A21DE5426004AFDDD /* GoogleService-Info-demo.plist in Resources */,
 				3EDC6BBB2109E97A009B6F49 /* ExitGamePopUpView.xib in Resources */,
 				3E4CDC6F211C56B700C2C1C6 /* Assets.xcassets in Resources */,
 				4B8C8D3F1FF674D0001F5D01 /* SF-Pro-Display-ThinItalic.otf in Resources */,
@@ -1687,7 +1684,6 @@
 				3E5E2694216BADFE004388BB /* CustomARViewController.swift in Sources */,
 				4B9578E020B4409E008B2C61 /* BluetootheConnectionTesting.swift in Sources */,
 				3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */,
-				3E987133217DA8F600A49F62 /* DeviceData.swift in Sources */,
 				4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */,
 				4B0788F920A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift in Sources */,
 				4BB26D3F1FF77EDB001E9556 /* TogetherVC.swift in Sources */,

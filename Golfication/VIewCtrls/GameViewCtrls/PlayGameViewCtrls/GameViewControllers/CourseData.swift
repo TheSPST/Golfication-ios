@@ -424,6 +424,7 @@ class CourseData:NSObject{
         debugPrint("clubs \(clubData)")
         if Constants.deviceGolficationX != nil{
             Constants.ble.isPracticeMatch = false
+            Constants.ble.golfBagArray = self.golfBagArray
             var centerPointOfTeeNGreenWithPar = [(tee:CLLocationCoordinate2D,fairway:CLLocationCoordinate2D,green:CLLocationCoordinate2D,par:Int)]()
             for i in 0..<centerPointOfTeeNGreen.count{
                 centerPointOfTeeNGreenWithPar.append((tee: centerPointOfTeeNGreen[i].tee, fairway: centerPointOfTeeNGreen[i].fairway, green: centerPointOfTeeNGreen[i].green, par: numberOfHoles[i].par))

@@ -33,10 +33,13 @@ class TIOADViewController: UIViewController{
     @IBOutlet weak var golfXPopupView: UIView!
     @IBOutlet weak var  deviceCircularView: CircularProgress!
     @IBOutlet weak var lblUpdateFirmware: UILabel!
+    @IBOutlet weak var lblBottomInfo: UILabel!
+    @IBOutlet weak var btnProceed: UIButton!
+
     var prevVal: Float = 0.0
     
     //    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2Ffirmware_v0.00.bin?alt=media&token=14c90409-fdc0-4712-96c8-83fca595fb10"
-    let fileName = "z_PF6_GT100.bin"
+    let fileName = "Khelfie_project2_FlashROM_oad_merged-2.bin"
     
     //let urlStr1 = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad1_merged.bin?alt=media&token=31ee2200-82e3-4214-8c44-e335f91b2488"
     //    let fileName1 = "Khelfie_project2_FlashROM_oad1_merged.bin"
@@ -50,9 +53,10 @@ class TIOADViewController: UIViewController{
         TIOADStartScanButton.setTitle("Downoad File", for: .normal)
         self.TIOADActivityIndicator.startAnimating()
         self.TIOADProgress.isHidden = true
-        
         self.TIOADStartScanButton.isEnabled = false
         
+        btnProceed.isHidden = true
+        btnProceed.setCorner(color: UIColor.clear.cgColor)
         deviceCircularView.progressColor = UIColor.glfBluegreen
         deviceCircularView.trackColor = UIColor.clear
         deviceCircularView.progressLayer.lineWidth = 3.0
@@ -141,6 +145,11 @@ class TIOADViewController: UIViewController{
             self.TIOADProgress.isHidden = true
         }
     }
+    @IBAction func proceedAction(_ sender: Any) {
+        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.rootViewController = tabBarCtrl
+    }
 }
 
 extension TIOADViewController: TIOADClientProgressDelegate{
@@ -182,13 +191,16 @@ extension TIOADViewController: TIOADClientProgressDelegate{
             if let status = TIOADClient.getStateString(from: state){
                 if status.contains("Feedback complete OK"){
                     Constants.OADFeedback = true
-                    let alertVC = UIAlertController(title: "Alert", message: "Firmware Updated Successfully.", preferredStyle: UIAlertControllerStyle.alert)
+                    self.lblBottomInfo.text = "Firmware Update Complete."
+                    self.btnProceed.isHidden = false
+
+                    /*let alertVC = UIAlertController(title: "Alert", message: "Firmware Updated Successfully.", preferredStyle: UIAlertControllerStyle.alert)
                     let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
                         self.dismiss(animated: true, completion: nil)
                         self.navigationController?.dismiss(animated: true, completion: nil)
                     })
                     alertVC.addAction(action)
-                    self.present(alertVC, animated: true, completion: nil)
+                    self.present(alertVC, animated: true, completion: nil)*/
                 }
             }
             self.TIOADCurrentStatus.text = TIOADClient.getStateString(from: state)

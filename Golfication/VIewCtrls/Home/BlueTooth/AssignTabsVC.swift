@@ -48,7 +48,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     var indexOfCellBeforeDragging = 0
     var sharedInstance: BluetoothSync!
     var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
-    var golfBagArray = NSMutableArray()
+//    var golfBagArr = NSMutableArray()
 
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: golfBagStr)
@@ -98,7 +98,16 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             self.btnAvgDistance.isHidden = true
         }
         for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
-            self.btnAvgDistance.setTitle("\(getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
+            for i in 0..<self.golfBagArr.count{
+                if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                    let avg = dict.value(forKey: "avgDistance") as! Int
+                    self.btnAvgDistance.setTitle("\(avg)", for: .normal)
+                    //                        self.btnAvgDistance.setTitle("\(BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
+                    
+                    break
+                }
+            }
+//            self.btnAvgDistance.setTitle("\(BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
         }
         
         pageControl.numberOfPages = commanBagArray.count
@@ -118,7 +127,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             self.tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
             scanProgressView.removeFromSuperview()
         }
-        setUpData()
+        setUpTagData()
     }
     
     func setupScanUI(){
@@ -188,77 +197,77 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBAction func selectAvdDistance(_ sender: Any) {
         var rangeArr = [Int]()
         var avg = 0
-        for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
-            avg = getDataInTermOf5(data:Int((data.max + data.min)/2))
+        for i in 0..<self.golfBagArr.count{
+            if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                avg = dict.value(forKey: "avgDistance") as! Int
+                break
+            }
         }
+//        for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+//            avg = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+//        }
         debugPrint("avg:",avg)
         if avg > 0{
-            let min = getDataInTermOf5(data:Int((avg * 50)/100))
-            let max = getDataInTermOf5(data:Int((avg * 150)/100))
+            let min = BackgroundMapStats.getDataInTermOf5(data:Int((avg * 50)/100))
+            let max = BackgroundMapStats.getDataInTermOf5(data:Int((avg * 150)/100))
             var i = min
             while i < max{
                 rangeArr.append(i)
                 i += 5
             }
-            ActionSheetStringPicker.show(withTitle: "Choose Average Distance", rows: rangeArr.reversed(), initialSelection: rangeArr.reversed().firstIndex(of: avg) ?? rangeArr.count/2, doneBlock: {
+            ActionSheetStringPicker.show(withTitle: "Choose Average Distance", rows: rangeArr.reversed(), initialSelection: rangeArr.reversed().firstIndex(of: avg)!, doneBlock: {
                 picker, value, index in
                 self.btnAvgDistance.setTitle("\(index!)", for: .normal)
+                for i in 0..<self.golfBagArr.count{
+                    if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                        for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":index!])
+                            dict.setValue(index!, forKey: "avgDistance")
+                        }
+                    }
+                }
                 return
             }, cancel: { ActionStringCancelBlock in
-                
                 return
-                
             }, origin: sender)
         }
 
         
     }
-    func getDataInTermOf5(data:Int)->Int{
-        var avg = data
-        if (avg%10) != 5{
-            if (avg%10) % 5 < 3{
-                avg -= (avg%10) % 5
-            }else{
-                avg += (5-((avg%10) % 5))
-            }
-        }
-        return avg
-    }
-    func setUpData(){
-        
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
-            self.progressView.hide(navItem: self.navigationItem)
-            
-            if(snapshot.value != nil){
-                self.golfBagArray = NSMutableArray()
-                self.golfBagArray = snapshot.value as! NSMutableArray
-                self.setUpTagData()
-            }
-        }
-    }
+//    func setUpData(){
+//
+//        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+//        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+//            self.progressView.hide(navItem: self.navigationItem)
+//
+//            if(snapshot.value != nil){
+//                self.golfBagArr = NSMutableArray()
+//                self.golfBagArr = snapshot.value as! NSMutableArray
+//                self.setUpTagData()
+//            }
+//        }
+//    }
     
     func setUpTagData(){
-        if self.golfBagArray.count > 0{
-            for i in 0..<self.golfBagArray.count{
-                if let dict = self.golfBagArray[i] as? NSDictionary{
+        if self.golfBagArr.count > 0{
+            for i in 0..<self.golfBagArr.count{
+                if let dict = self.golfBagArr[i] as? NSDictionary{
                     if let tag = dict.value(forKey: "tag") as? Bool{
                         self.lblTagName.text = "None"
                         self.lblTagName.textColor = UIColor.black.withAlphaComponent(0.5)
                         self.btnSyncTag.setTitle("Sync Tag", for: .normal)
-
                         for j in 0..<self.commanBagArray.count{
                             if self.selectedBagStr == self.commanBagArray[j] {
                                 
                                 let indexPath = IndexPath(row: j, section: 0)
                                 guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
-                                    else{return}
+                                    else{break}
                                 cell.golfImage.layer.borderWidth = 0.0
                                 cell.golfImage.layer.borderColor = UIColor.clear.cgColor
                                 cell.golfImage.layer.cornerRadius = cell.golfImage.frame.size.height/2
                             }
                         }
-                        if tag == true{
+                        if tag{
                             if let tagName = dict.value(forKey: "tagName") as? String{
                                 if self.selectedBagStr == dict.value(forKey: "clubName") as? String{
                                     self.lblTagName.text = tagName
@@ -364,7 +373,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 golfBagArr[index] = bagDict
                 
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag":golfBagArr]) { (error, ref) in
-                    self.setUpData()
+                    self.setUpTagData()
                 }
             }
         }
@@ -456,12 +465,17 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         let didUseSwipeToSkipCell = majorCellIsTheCellBeforeDragging && (hasEnoughVelocityToSlideToTheNextCell || hasEnoughVelocityToSlideToThePreviousCell)
         
         if didUseSwipeToSkipCell {
-            
             let snapToIndex = indexOfCellBeforeDragging + (hasEnoughVelocityToSlideToTheNextCell ? 1 : -1)
             pageControl.currentPage = snapToIndex
             selectedBagStr = commanBagArray[snapToIndex]
             for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
-                self.btnAvgDistance.setTitle("\(getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
+                for i in 0..<self.golfBagArr.count{
+                    if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                        let avg = dict.value(forKey: "avgDistance") as! Int
+                        self.btnAvgDistance.setTitle("\(avg)", for: .normal)
+                        break
+                    }
+                }
             }
             if let isSync = clubs.value(forKey: selectedBagStr) as? Bool{
             updateSyncBtnWithout(isSync:isSync)
@@ -484,7 +498,13 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 pageControl.currentPage = indexPath.row
                 selectedBagStr = commanBagArray[indexPath.row]
                 for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
-                    self.btnAvgDistance.setTitle("\(getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
+                    for i in 0..<self.golfBagArr.count{
+                        if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                            let avg = dict.value(forKey: "avgDistance") as! Int
+                            self.btnAvgDistance.setTitle("\(avg)", for: .normal)
+                            break
+                        }
+                    }
                 }
                 if let isSync = clubs.value(forKey: selectedBagStr) as? Bool{
                 updateSyncBtnWithout(isSync:isSync)
@@ -557,6 +577,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                         golfBagDict.setObject(true, forKey: "tag" as NSCopying)
                         golfBagDict.setObject("Tag \(tagNameInt)", forKey: "tagName" as NSCopying)
                         golfBagDict.setObject(dropFirst3, forKey: "tagNum" as NSCopying)
+                        golfBagDict.setObject(dict.value(forKey: "avgDistance") as! Int, forKey: "avgDistance" as NSCopying)
                         
                         self.golfBagArr.replaceObject(at: i, with: golfBagDict)
                         
@@ -609,7 +630,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         self.sharedInstance.connectedPeripheral = peripheral
         self.sharedInstance.stopScanPeripheral()
         //self.sharedInstance.connectPeripheral(peripheral)
-        self.setUpData()
+        self.setUpTagData()
     }
     
     // MARK: Bluetooth Delegates
