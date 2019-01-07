@@ -136,6 +136,8 @@
 		4B1F6BE92090A29F00312EA7 /* SelectCourseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */; };
 		4B1F6BEA2090A29F00312EA7 /* NewGameScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */; };
 		4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */; };
+		4B4BD77221E366B00067460A /* CesPopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B4BD77121E366B00067460A /* CesPopUpView.xib */; };
+		4B4BD77621E3899C0067460A /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B4BD77521E3899C0067460A /* GoogleService-Info-demo.plist */; };
 		4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */; };
 		4B4ED1A820BD453E00D9C6DC /* SessionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A720BD453E00D9C6DC /* SessionVC.swift */; };
 		4B4ED1AA20BD74AD00D9C6DC /* PerformanceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A920BD74AD00D9C6DC /* PerformanceVC.swift */; };
@@ -196,7 +198,6 @@
 		4B9E7BD52196D889008B6181 /* UILocalizedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */; };
 		4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */; };
 		4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */; };
-		4BA4C43821E0CFFE0058FAFC /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BA4C43721E0CFFD0058FAFC /* GoogleService-Info-demo.plist */; };
 		4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA64E452000A54400C8C03F /* Chatlogo.swift */; };
 		4BB26CC71FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC01FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m */; };
 		4BB26CC81FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC21FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.m */; };
@@ -403,6 +404,8 @@
 		4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCourseData.swift; sourceTree = "<group>"; };
 		4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameScoreTableViewCell.swift; sourceTree = "<group>"; };
 		4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProMemberPopUPVC.swift; sourceTree = "<group>"; };
+		4B4BD77121E366B00067460A /* CesPopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CesPopUpView.xib; sourceTree = "<group>"; };
+		4B4BD77521E3899C0067460A /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MySwing.storyboard; sourceTree = "<group>"; };
 		4B4ED1A720BD453E00D9C6DC /* SessionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionVC.swift; sourceTree = "<group>"; };
 		4B4ED1A920BD74AD00D9C6DC /* PerformanceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceVC.swift; sourceTree = "<group>"; };
@@ -477,7 +480,6 @@
 		4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILocalizedLabel.swift; sourceTree = "<group>"; };
 		4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigation+CustomAnimation.swift"; sourceTree = "<group>"; };
 		4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array + RemoveDuplicate.swift"; sourceTree = "<group>"; };
-		4BA4C43721E0CFFD0058FAFC /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		4BA64E452000A54400C8C03F /* Chatlogo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chatlogo.swift; sourceTree = "<group>"; };
 		4BB26CBF1FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingCollectionView.h; sourceTree = "<group>"; };
 		4BB26CC01FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingCollectionView.m; sourceTree = "<group>"; };
@@ -609,6 +611,7 @@
 		0DB732FF1FA077D60078F08B /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				4B4BD77121E366B00067460A /* CesPopUpView.xib */,
 				4BE4196821B29A6100C49AB6 /* CircularProgress.swift */,
 				3EDC6BB82109E979009B6F49 /* ExitGamePopUpView.swift */,
 				3EDC6BB92109E97A009B6F49 /* ExitGamePopUpView.xib */,
@@ -1262,7 +1265,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4BA4C43721E0CFFD0058FAFC /* GoogleService-Info-demo.plist */,
+				4B4BD77521E3899C0067460A /* GoogleService-Info-demo.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1406,13 +1409,13 @@
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
+				4B4BD77621E3899C0067460A /* GoogleService-Info-demo.plist in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
 				4B8C8D3C1FF674D0001F5D01 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
 				4B8C8D3B1FF674D0001F5D01 /* SF-Pro-Display-MediumItalic.otf in Resources */,
 				4B8C8D361FF674D0001F5D01 /* SF-Pro-Display-HeavyItalic.otf in Resources */,
 				3E27BA5C20FF4D7700DC14AB /* Main.storyboard in Resources */,
 				4B7E2A7F2175C20B00DFC3EB /* Default-568h@2x.png in Resources */,
-				4BA4C43821E0CFFE0058FAFC /* GoogleService-Info-demo.plist in Resources */,
 				3EDC6BBB2109E97A009B6F49 /* ExitGamePopUpView.xib in Resources */,
 				3E4CDC6F211C56B700C2C1C6 /* Assets.xcassets in Resources */,
 				4B8C8D3F1FF674D0001F5D01 /* SF-Pro-Display-ThinItalic.otf in Resources */,
@@ -1430,6 +1433,7 @@
 				3E035F87215293F000019014 /* OAD.storyboard in Resources */,
 				3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */,
 				4B7E2A7C2175C20B00DFC3EB /* radar.png in Resources */,
+				4B4BD77221E366B00067460A /* CesPopUpView.xib in Resources */,
 				4B8C8D401FF674D0001F5D01 /* SF-Pro-Display-BlackItalic.otf in Resources */,
 				4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */,
 				4B8C8D331FF674D0001F5D01 /* SF-Pro-Display-Bold.otf in Resources */,

@@ -128,6 +128,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var swingMArray = NSMutableArray()
     var isDemoStats = false
     
+    var cesPopUpView: UIView!
+    var btnCesBuyNow: UIButton!
+    var btnCancel:UIButton!
+
     // MARK: - inviteAction
     @IBAction func inviteAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Profile", bundle: nil)
@@ -357,7 +361,67 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         //        }
         
         //        self.FindUser()
+        setCesPopupCount()
     }
+    
+    func setCesPopupCount(){
+        var cesPopupCount = 0
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "cesPopupCount") { (snapshot) in
+            if(snapshot.value != nil){
+                cesPopupCount = snapshot.value as! Int
+                if cesPopupCount == 1{
+                    cesPopupCount = 2
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["cesPopupCount":2] as [AnyHashable:Any])
+                }
+                else{
+                    cesPopupCount = 0
+                }
+            }
+            else{
+                cesPopupCount = 1
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["cesPopupCount":1] as [AnyHashable:Any])
+            }
+            
+            DispatchQueue.main.async(execute: {
+                if UserDefaults.standard.object(forKey: "isNewUser") as? Bool != nil{
+                    let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
+                    if (newUser && (cesPopupCount == 1 || cesPopupCount == 2)){
+                        self.setupCesUI()
+                    }
+                }
+            })
+        }
+    }
+    func setupCesUI(){
+        if cesPopUpView != nil{
+            cesPopUpView.removeFromSuperview()
+        }
+        self.cesPopUpView = (Bundle.main.loadNibNamed("CesPopUpView", owner: self, options: nil)![0] as! UIView)
+        self.cesPopUpView.frame = self.view.bounds
+        UIApplication.shared.keyWindow?.rootViewController?.view.addSubview(self.cesPopUpView)
+
+        btnCesBuyNow = (cesPopUpView.viewWithTag(222) as! UIButton)
+        btnCesBuyNow.addTarget(self, action: #selector(self.buyCesAction(_:)), for: .touchUpInside)
+        btnCesBuyNow.layer.cornerRadius = 3.0
+        
+        btnCancel = (cesPopUpView.viewWithTag(333) as! UIButton)
+        btnCancel.addTarget(self, action: #selector(self.cancelCesAction(_:)), for: .touchUpInside)
+    }
+    @objc func cancelCesAction(_ sender: UIButton!) {
+        cesPopUpView.removeFromSuperview()
+    }
+    @objc func buyCesAction(_ sender: UIButton) {
+        cesPopUpView.removeFromSuperview()
+
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "https://www.golfication.com/product/golfication-x/"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.title = ""
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+
     // Get user details which have Pro membership
     //    func FindUser(){
     //        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
@@ -1127,16 +1191,62 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                         }
                         group.notify(queue: .main, execute: {
 //                            self.isDemoStats =
-                            self.lblDemoStatsMySwing.isHidden = true
-                            self.progressView.hide(navItem: self.navigationItem)
-                            
-                            let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
-                            let array: NSArray = self.swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
-                            self.swingMArray.removeAllObjects()
-                            self.swingMArray = NSMutableArray()
-                            self.swingMArray = array.mutableCopy() as! NSMutableArray
-                            
-                            self.setSwingSessionUI()
+                            if self.swingMArray.count == 0{
+                                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user1") { (snapshot) in
+                                    if(snapshot.childrenCount > 0){
+                                        var userData = NSDictionary()
+                                        userData = snapshot.value as! NSDictionary
+                                        if let swingKeys = userData.value(forKey: "swingSession") as? NSDictionary{
+                                            self.totalSwingCount = 0
+                                            self.swingMArray = NSMutableArray()
+                                            if let dataDic = swingKeys as? [String:Bool]{
+                                                let group = DispatchGroup()
+                                                for (key, value) in dataDic{
+                                                    group.enter()
+                                                    
+                                                    if !value{
+                                                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
+                                                            if(snapshot.value != nil){
+                                                                if let data = snapshot.value as? NSDictionary{
+                                                                    //debugPrint(data.value(forKey: "matchKey"))
+                                                                    if let swing = data.value(forKey: "swings") as? NSMutableArray{
+                                                                        self.totalSwingCount = self.totalSwingCount + swing.count
+                                                                        self.swingMArray.add(data)
+                                                                    }
+                                                                }
+                                                            }
+                                                            group.leave()
+                                                        }
+                                                    }
+                                                    else{
+                                                        group.leave()
+                                                    }
+                                                }
+                                                group.notify(queue: .main, execute: {
+                                                    self.progressView.hide(navItem: self.navigationItem)
+                                                    self.lblDemoStatsMySwing.isHidden = false
+                                                    let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+                                                    let array: NSArray = self.swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
+                                                    self.swingMArray.removeAllObjects()
+                                                    self.swingMArray = NSMutableArray()
+                                                    self.swingMArray = array.mutableCopy() as! NSMutableArray
+                                                    
+                                                    self.setSwingSessionUI()
+                                                })
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{
+                                self.lblDemoStatsMySwing.isHidden = true
+                                self.progressView.hide(navItem: self.navigationItem)
+                                let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+                                let array: NSArray = self.swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
+                                self.swingMArray.removeAllObjects()
+                                self.swingMArray = NSMutableArray()
+                                self.swingMArray = array.mutableCopy() as! NSMutableArray
+                                self.setSwingSessionUI()
+                            }
                         })
                     }
                 }
@@ -1249,60 +1359,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }else{
                     self.getClubDataFromFirebase(isShow:false)
                 }
-                if !self.lblDemoStatsMySwing.isHidden{
-                    FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user1") { (snapshot) in
-                        if(snapshot.childrenCount > 0){
-                            var userData = NSDictionary()
-                            userData = snapshot.value as! NSDictionary
-                            if let swingKeys = userData.value(forKey: "swingSession") as? NSDictionary{
-                                self.totalSwingCount = 0
-                                self.swingMArray = NSMutableArray()
-                                if let dataDic = swingKeys as? [String:Bool]{
-                                    let group = DispatchGroup()
-                                    for (key, value) in dataDic{
-                                        group.enter()
-                                        
-                                        if !value{
-                                            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
-                                                if(snapshot.value != nil){
-                                                    if let data = snapshot.value as? NSDictionary{
-                                                        //debugPrint(data.value(forKey: "matchKey"))
-                                                        if let swing = data.value(forKey: "swings") as? NSMutableArray{
-                                                            self.totalSwingCount = self.totalSwingCount + swing.count
-                                                            self.swingMArray.add(data)
-                                                        }
-                                                    }
-                                                }
-                                                group.leave()
-                                            }
-                                        }
-                                        else{
-                                            group.leave()
-                                        }
-                                    }
-                                    group.notify(queue: .main, execute: {
-//                                        if (Constants.isProMode && Constants.isDevice){
-//                                            let demoClublbl = DemoLabel()
-//                                            demoClublbl.frame = CGRect(x: 10, y: 0, width: 200, height: 40)
-//                                            demoClublbl.textAlignment = .left
-//                                            self.viewSGTab.addSubview(demoClublbl)
-//                                        }
-                                        self.progressView.hide(navItem: self.navigationItem)
-                                        
-                                        let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
-                                        let array: NSArray = self.swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
-                                        self.swingMArray.removeAllObjects()
-                                        self.swingMArray = NSMutableArray()
-                                        self.swingMArray = array.mutableCopy() as! NSMutableArray
-                                        
-                                        self.setSwingSessionUI()
-                                    })
-                                }
-                            }
-                        }
-                    }
-                }
-                
                 self.getBenchmarkKey()
             })
         }

@@ -672,7 +672,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                     }
                     var handicapOfP = Double()
                     if let hcp = (v as! NSMutableDictionary).value(forKeyPath: "handicap") as? String{
-                        handicapOfP = Double(hcp)!
+                        if hcp.contains(find: "-"){
+                            handicapOfP = 0
+                        }else{
+                            handicapOfP = Double(hcp)!
+                        }
                     }
                     if(teeOfP != ""){
                         self.teeTypeArr.append((tee: teeOfP,color:teeColorOfP,handicap: handicapOfP))

@@ -404,7 +404,6 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                                     left += 1
                                 }
                             }
-                            
                         }
                     }
                     else{
@@ -555,7 +554,12 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         chippingProximityScatterLineView.leftAxis.valueFormatter = DefaultAxisValueFormatter(formatter:formatter)
         chipUpDownBarChartView.setStackedBarChart(dataPoints: newDateForStacked, value1: newChipAttemp, value2: newChipAchieved, chartView:chipUpDownBarChartView,color:[UIColor.glfBluegreen.withAlphaComponent(0.50),UIColor.glfBluegreen], barWidth:0.2)
         chipUpDownBarChartView.leftAxis.axisMinimum = 0.0
-        chipUpDownBarChartView.leftAxis.axisMaximum = newChipAttemp.max()!+1.0
+        if let newMax = newChipAttemp.max(){
+            chipUpDownBarChartView.leftAxis.axisMaximum = newMax+1.0
+        }else{
+            chipUpDownBarChartView.leftAxis.axisMaximum = 3.0
+        }
+        
         chipUpDownBarChartView.leftAxis.labelCount = 5
         if Constants.baselineDict != nil{
             debugPrint("baselineDict==",Constants.baselineDict)
