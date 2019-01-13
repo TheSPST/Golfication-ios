@@ -72,6 +72,10 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         sharedInstance.delegate = self
         sharedInstance.initCBCentralManager()
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
+    }
     var sharedInstance: BluetoothSync!
 
     func didUpdateState(_ state: CBManagerState) {

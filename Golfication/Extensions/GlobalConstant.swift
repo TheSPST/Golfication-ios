@@ -28,6 +28,7 @@ struct Constants{
     static var trial = false
     static let catagoryWise = ["Off the Tee","Approach","Around The Green","Putting"]
     static let YARD:Double = 1.09361
+    static var tagClubNumber = [(tag:Int ,club:Int,clubName:String)]()
     // MARK: GolfBagTabsVC
     static var syncdArray = NSMutableArray()
     static var tagClubNum = [(tag:Int, club: Int, clubName: String)]()
@@ -42,7 +43,8 @@ struct Constants{
     static var OADFeedback = false
     // MARK: BLESCANNING
     static var bleObserver = 0
-    
+    static var fileName = String()
+    static var swingSessionKey = String()
     // MARK: FeedPostVC
     static var fromStatsPost = false
     

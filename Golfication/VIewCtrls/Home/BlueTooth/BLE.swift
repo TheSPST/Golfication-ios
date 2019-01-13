@@ -111,11 +111,17 @@ class BLE: NSObject {
         if Constants.bleObserver == 0{
             self.setupObserver()
         }
+//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
         NotificationCenter.default.addObserver(self, selector: #selector(sendSecondCommand(_:)), name: NSNotification.Name(rawValue: "command2"), object: nil)
 
     }
     
     private func setupObserver(){
+        
+//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command8"))
+//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command3"))
+//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "startMatchCalling"))
+
         NotificationCenter.default.addObserver(self, selector: #selector(sendEightCommand(_:)), name: NSNotification.Name(rawValue: "command8"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendThirdCommandFromMap(_:)), name: NSNotification.Name(rawValue: "command3"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startMatchCalling(_:)), name: NSNotification.Name(rawValue: "startMatchCalling"), object: nil)
@@ -363,6 +369,7 @@ class BLE: NSObject {
         if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3{
             var paramData : [UInt8] = [2,packet]
             var i = 0
+            debugPrint(tagClubNumber)
             for data in tagClubNumber{
                 paramData.append(UInt8(data.club))
                 var tagNum = toByteArray(data.tag)
@@ -666,14 +673,20 @@ class BLE: NSObject {
             if(index+3 == i){
                 break
             }else{
-                param.append(UInt8(i+1))
-                let minByte = toByteArray(clubData[i].min)
-                let maxByte = toByteArray(clubData[i].max)
-                param.append(minByte[0])
-                param.append(minByte[1])
-                
-                param.append(maxByte[0])
-                param.append(maxByte[1])
+                let allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
+
+                if let index = allClubs.firstIndex(of: clubData[i].name){
+                    debugPrint(clubData[i].name,index)
+                    param.append(UInt8(Int(index)+1))
+                    debugPrint(UInt8(Int(index)+1))
+                    let minByte = toByteArray(clubData[i].min)
+                    let maxByte = toByteArray(clubData[i].max)
+                    param.append(minByte[0])
+                    param.append(minByte[1])
+                    
+                    param.append(maxByte[0])
+                    param.append(maxByte[1])
+                }
             }
         }
         if(param.count < 18){
@@ -716,8 +729,8 @@ class BLE: NSObject {
                 let param = [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]]
                 sendFourthCommand(param: param)
             }
-
         }
+        Constants.swingSessionKey = String()
     }
 }
 
@@ -822,6 +835,7 @@ extension BLE: CBCentralManagerDelegate {
             Constants.charctersticsGlobalForWrite = nil
             Constants.charctersticsGlobalForRead = nil
             Constants.ble = nil
+            Constants.bleObserver = 0
 
         }
         else if(central.state == CBManagerState.unsupported) {
@@ -1029,8 +1043,12 @@ extension BLE: CBPeripheralDelegate {
                             }else{
                                 d = 3 - data.tempo
                             }
-                            let swingScore = 95 - (d/3)*55
-                            swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                            if d == 0.0{
+                                swingDict.setValue(95, forKey: "swingScore")
+                            }else{
+                                let swingScore = 95 - (d/3)*55
+                                swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                            }
                             var isAvailable = false
                             for shot in shotArr{
                                 if(shot.value(forKey: "shotNum") as! Int) == data.shotNo{
@@ -1060,8 +1078,13 @@ extension BLE: CBPeripheralDelegate {
                                     }else{
                                         d = 3 - data.tempo
                                     }
-                                    let swingScore = 95 - (d/3)*55
-                                    swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                    
+                                    if d == 0{
+                                        swingDict.setValue(95, forKey: "swingScore")
+                                    }else{
+                                        let swingScore = 95 - (d/3)*55
+                                        swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                    }
                                     shotArr.append(swingDict)
                                 }
                             }else{
@@ -1083,8 +1106,12 @@ extension BLE: CBPeripheralDelegate {
                                     }else{
                                         d = 3 - data.tempo
                                     }
-                                    let swingScore = 95 - (d/3)*55
-                                    swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                    if d == 0{
+                                        swingDict.setValue(95, forKey: "swingScore")
+                                    }else{
+                                        let swingScore = 95 - (d/3)*55
+                                        swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                    }
                                     var isAvailable = false
                                     for shot in shotArr{
                                         if(shot.value(forKey: "shotNum") as! Int) == data.shotNo && (shot.value(forKey: "holeNum") as! Int) == data.hole{
@@ -1267,8 +1294,12 @@ extension BLE: CBPeripheralDelegate {
                 }else{
                     d = 3 - data.tempo
                 }
-                let swingScore = 95 - (d/3)*55
-                swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                if d == 0.0{
+                    swingDict.setValue(95, forKey: "swingScore")
+                }else{
+                    let swingScore = 95 - (d/3)*55
+                    swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                }
                 shotArr.append(swingDict)
                 ref.child("swingSessions/\(self.swingMatchId)/").updateChildValues(["swings":shotArr])
             })
@@ -1332,7 +1363,7 @@ extension BLE: CBPeripheralDelegate {
                 }else if dataArray[0] == UInt8(3){
                     self.invalidateAllTimers()
                     debugPrint("gameID Response from Third Command  : \(responseInIntFirst4)")
-                    debugPrint("gameID Response from Third Command  : \(byteArrayToInt(value: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]]))")
+                    debugPrint("Current Game ID : \(self.currentGameId)")
                     self.gameIDArr = [dataArray[2],dataArray[3],dataArray[4],dataArray[5]]
                     if (responseInIntFirst4 == 1){
                         if(self.isPracticeMatch){
@@ -1390,6 +1421,8 @@ extension BLE: CBPeripheralDelegate {
                         }
                         self.swingMatchId = ""
                         UIApplication.shared.keyWindow?.makeToast("Game Discarded Successfully.")
+                        // changed by Amit
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
                     })
 
                 }else if (dataArray[0] == UInt8(6)){
@@ -1564,7 +1597,9 @@ extension BLE: CBPeripheralDelegate {
                     }
                     
                     if(self.isFinished){
-                        self.sendNinthCommand(par: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+                        self.randomGenerator()
+                        // changed by Amit
+                        self.sendFourthCommand(param: [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]])
                     }
                 }else if(dataArray[0] == UInt8(9)){
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
@@ -1713,6 +1748,8 @@ extension BLE: CBPeripheralDelegate {
                                 Constants.deviceGolficationX.writeValue(Data(bytes: param), for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
                             }))
                             UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                        }else{
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                         }
                     })
                 }else if (dataArray[0] == UInt8(12)){
@@ -1780,16 +1817,6 @@ extension BLE: CBPeripheralDelegate {
                     }
                 }
             }
-//            for i in 0..<self.clubData.count{
-//                if !(self.clubData[i].min == self.clubData[i+1].max+1) && (self.clubData[i].min>Constants.clubWithMaxMin[i+1].max+1){
-//                    let diff = self.clubData[i].min - self.clubData[i+1].max+1
-//                    self.clubData[i].max += diff/2
-//                    self.clubData[i+1].min -= diff/2
-//                    if(self.clubData[i+1].min < 0){
-//                        self.clubData[i+1].min = 0
-//                    }
-//                }
-//            }
             debugPrint("clubs \(self.clubData)")
         }
     }

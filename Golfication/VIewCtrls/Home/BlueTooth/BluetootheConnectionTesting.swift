@@ -34,7 +34,9 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     @IBOutlet weak var handiRightView: UIView!
     @IBOutlet weak var btnDeviceAfterConnected: UIButton!
     @IBOutlet weak var lblToDiffer: UILabel!
-    
+    @IBOutlet weak var buyNowSV: UIStackView!
+    @IBOutlet weak var btnBuyNow: UIButton!
+
     
     var isFinishGame = false
     var isDeviceSetup = false
@@ -65,8 +67,21 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     var deviceCircularView: CircularProgress!
     var timeOutTimer = Timer()
     var sharedInstance: BluetoothSync!
+    //        SGBarChartView.xAxis.labelFont = UIFont(name: "SFProDisplay-Regular", size: 10.0)!
+
+    var attrs = [
+        NSAttributedStringKey.font : UIFont(name: "SFProDisplay-Medium", size: 12.0)!,
+        NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x007AFF),
+        NSAttributedStringKey.underlineStyle : 1] as [NSAttributedStringKey : Any]
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let attributedString = NSMutableAttributedString(string:"")
+        let buttonTitleStr = NSMutableAttributedString(string: "Buy Now", attributes:attrs)
+        attributedString.append(buttonTitleStr)
+        btnBuyNow.setAttributedTitle(attributedString, for: .normal)
+
         btnSetupTags.setCorner(color: UIColor.clear.cgColor)
         btnScanForDevice.setCorner(color: UIColor.clear.cgColor)
         btnDevice.setCircle(frame: self.btnDevice.frame)
@@ -75,7 +90,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         backBtn.tintColor = UIColor.glfBluegreen
         self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
         
-        self.getGolfBagData()
+//        self.getGolfBagData()
         NotificationCenter.default.addObserver(self, selector: #selector(self.setupFinished(_:)), name: NSNotification.Name(rawValue:"command2Finished"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.responseFirstCommand(_:)), name: NSNotification.Name(rawValue: "responseFirstCommand"), object: nil)
         barBtnBLE = UIBarButtonItem(image:  UIImage(named: "golficationBarG"), style: .plain, target: self, action: #selector(self.btnActionConnectBL(_:)))
@@ -86,6 +101,19 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         else{
             self.navigationItem.rightBarButtonItem = nil
         }
+        self.buyNowSV.isHidden = true
+        if !Constants.isDevice{
+            self.buyNowSV.isHidden = false
+        }
+    }
+    @IBAction func buyNowAction(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "https://www.golfication.com/product/golfication-x/"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.title = ""
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     @objc func backAction(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
@@ -107,6 +135,10 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         self.stackViewHowToConnect.isHidden = false
         self.stackViewChooseDetails.isHidden = true
         self.btnScanForDevice.isHidden = false
+        self.buyNowSV.isHidden = true
+        if !Constants.isDevice{
+            self.buyNowSV.isHidden = false
+        }
         self.stackViewForSetupTag.isHidden = true
         self.stackViewDeviceConnected.isHidden = true
         self.btnDevice.isHidden = false
@@ -268,16 +300,20 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
         self.golfXPopupView.removeFromSuperview()
-        Constants.ble.stopScanning()
+        if Constants.ble != nil{
+            Constants.ble.stopScanning()
+        }
+
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         updateScreenBLE()
     }
     func updateScreenBLE(){
         self.barBtnBLE.image =  UIImage(named: "golficationBar")
-        self.lblDeviceName.text = "\(Constants.deviceGolficationX.name ?? "No Name")"
+        self.lblDeviceName.text = "Golficaion X"
         self.stackViewHowToConnect.isHidden = true
         self.stackViewChooseDetails.isHidden = false
         self.btnScanForDevice.isHidden = true
+        self.buyNowSV.isHidden = true
         self.btnDevice.frame.origin.x = self.btnDevice.frame.origin.x + 25
         self.btnDevice.frame.origin.y = self.btnDevice.frame.origin.y + 25
         self.stackViewForSetupTag.isHidden = false
@@ -327,16 +363,19 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        self.navigationController?.navigationBar.isHidden = false
+        self.getGolfBagData()
         if(Constants.deviceGolficationX != nil){
             Constants.ble.currentGameId = 0
             updateScreenBLE()
         }
     }
     func getGolfBagData(){
-//        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
-//            self.progressView.show(atView: self.view, navItem: self.navigationItem)
-//            if let tempArray = snapshot.value as? NSMutableArray{
-//                self.golfBagArr = tempArray
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+            self.totalAssigned = 0
+            if let tempArray = snapshot.value as? NSMutableArray{
+                self.golfBagArr = tempArray
                 for data in self.golfBagArr{
                     if let clubDict = data as? NSMutableDictionary{
                         self.clubs.addEntries(from: [clubDict.value(forKey: "clubName") as! String : clubDict.value(forKey: "tag") as! Bool])
@@ -345,8 +384,8 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
                         }
                     }
                 }
-//            }
-//            DispatchQueue.main.async(execute: {
+            }
+            DispatchQueue.main.async(execute: {
                 var newGolfBagDriverArray = [String]()
                 var newGolfBagWoodArray = [String]()
                 var newGolfBagHybridArray = [String]()
@@ -405,8 +444,8 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
                 self.lblAssignedTag.text = "\(self.totalAssigned) assigned"
                 self.lblRemainingTag.text = "\(14 - self.totalAssigned) remaining"
                 self.getIsDeviceAlreadySetup()
-//            })
-//        }
+            })
+        }
     }
     func getIsDeviceAlreadySetup(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "deviceInfo/setup") { (snapshot) in

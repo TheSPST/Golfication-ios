@@ -106,6 +106,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             viewCtrl.golfBagArr = self.golfBagArray
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.sharedInstance.delegate = nil
+            
             return
             
         case .unsupported:
@@ -585,9 +586,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     // MARK: getData
     func getData()  {
         btnUpdradeNow.isEnabled = false
-        progressView.show(atView: self.view, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "proMembership") { (snapshot) in
-            self.progressView.hide(navItem: self.navigationItem)
 
             if(snapshot.value != nil){
                 var proData = NSDictionary()
@@ -713,6 +712,11 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                                             self.golfBagArray[i] = dict
                                             ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":30])
                                         }else if(dict.value(forKey: "avgDistance") == nil){
+                                            if (data.name).contains("4i"){
+                                                debugPrint((data.max + data.min)/2)
+                                                debugPrint(data.max)
+                                                debugPrint(data.min)
+                                            }
                                             let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
                                             dict.setValue(avgDistance, forKey: "avgDistance")
                                             self.golfBagArray[i] = dict

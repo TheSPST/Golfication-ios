@@ -34,7 +34,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     var selectedBagStr = String()
     var clubs = NSMutableDictionary()
     var golfBagArr = NSMutableArray()
-    var tagClubNumber = [(tag:Int ,club:Int,clubName:String)]()
+    
     var beconArray = [NSMutableDictionary]()
     var golfBagDriverArray = [String]()
     var golfBagWoodArray = [String]()
@@ -47,28 +47,25 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     var golfBagStr = String()
     var indexOfCellBeforeDragging = 0
     var sharedInstance: BluetoothSync!
-    var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
 //    var golfBagArr = NSMutableArray()
 
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: golfBagStr)
     }
     @objc func btnContinueAction(){
-        debugPrint("Continue")
-        self.calculateTagWithClubNumber()
-        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command"))
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command2"), object: tagClubNumber)
+//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command"))
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         btnSyncTag.layer.cornerRadius = 3.0
         self.btnSyncTag.backgroundColor = UIColor.glfBluegreen
-
-        NotificationCenter.default.addObserver(self, selector: #selector(btnContinueAction), name: NSNotification.Name(rawValue: "command"), object: nil)
+        
+//        NotificationCenter.default.addObserver(self, selector: #selector(btnContinueAction), name: NSNotification.Name(rawValue: "command"), object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command"))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -291,26 +288,6 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-    
-    func calculateTagWithClubNumber(){
-        tagClubNumber.removeAll()
-        for j in 0..<self.golfBagArr.count{
-            if let club = self.golfBagArr[j] as? NSMutableDictionary{
-                if club.value(forKey: "tag") as! Bool{
-                    let tagNumber = club.value(forKey: "tagNum") as! String
-                    var num = 0
-                    if tagNumber.contains("a") || tagNumber.contains("A") || tagNumber.contains("b") || tagNumber.contains("B") || tagNumber.contains("c") || tagNumber.contains("C") || tagNumber.contains("d") || tagNumber.contains("D") || tagNumber.contains("e") || tagNumber.contains("E") || tagNumber.contains("f") || tagNumber.contains("F"){
-                        num = Int(tagNumber, radix: 16)!
-                    }else{
-                        num = Int(tagNumber)!
-                    }
-                    let clubName = club.value(forKey: "clubName") as! String
-                    let clubNumber = self.allClubs.index(of: clubName)! + 1
-                    tagClubNumber.append((tag: num, club: clubNumber,clubName:clubName))
                 }
             }
         }

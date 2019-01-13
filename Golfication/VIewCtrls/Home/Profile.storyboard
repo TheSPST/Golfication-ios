@@ -1460,7 +1460,7 @@
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KKf-bt-SHl">
-                                                <rect key="frame" x="114.5" y="446" width="91" height="27"/>
+                                                <rect key="frame" x="114.5" y="386" width="91" height="27"/>
                                                 <color key="backgroundColor" red="0.0" green="0.6705882353" blue="0.53333333329999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="12"/>
                                                 <state key="normal" title="  Scan for Device  ">
@@ -1470,6 +1470,27 @@
                                                     <action selector="btnActionScanForDevice:" destination="0Ib-50-Mgf" eventType="touchUpInside" id="MDo-Un-aeV"/>
                                                 </connections>
                                             </button>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="3MX-no-oUp">
+                                                <rect key="frame" x="100" y="433" width="120.5" height="42.5"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don't have Golfication X" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uo0-CQ-13F">
+                                                        <rect key="frame" x="0.0" y="0.0" width="120.5" height="14.5"/>
+                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5tg-eR-klA">
+                                                        <rect key="frame" x="0.0" y="15.5" width="120.5" height="27"/>
+                                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="12"/>
+                                                        <state key="normal" title="Buy Now">
+                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="buyNowAction:" destination="0Ib-50-Mgf" eventType="touchUpInside" id="9pS-Ed-QTx"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itO-Jb-8Um">
                                                 <rect key="frame" x="37" y="16" width="105" height="140"/>
                                                 <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1690,17 +1711,19 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="CJv-NJ-wiQ" firstAttribute="centerX" secondItem="thU-Bs-cva" secondAttribute="centerX" id="36S-cB-UTQ"/>
+                                            <constraint firstItem="3MX-no-oUp" firstAttribute="top" secondItem="KKf-bt-SHl" secondAttribute="bottom" constant="20" id="89u-c3-wWP"/>
                                             <constraint firstItem="itO-Jb-8Um" firstAttribute="top" secondItem="QNr-pd-ojO" secondAttribute="top" constant="16" id="8Iu-fr-FsP"/>
                                             <constraint firstItem="KKf-bt-SHl" firstAttribute="centerX" secondItem="fra-x1-nFf" secondAttribute="centerX" id="94h-rW-RK0"/>
                                             <constraint firstItem="thU-Bs-cva" firstAttribute="top" secondItem="8O7-3h-ltT" secondAttribute="bottom" constant="16" id="95b-6C-dGl"/>
                                             <constraint firstItem="CJv-NJ-wiQ" firstAttribute="centerX" secondItem="8O7-3h-ltT" secondAttribute="centerX" id="A5W-yQ-42K"/>
                                             <constraint firstItem="UR2-34-Wr9" firstAttribute="leading" secondItem="itO-Jb-8Um" secondAttribute="trailing" constant="16" id="Bb0-J9-QJj"/>
-                                            <constraint firstItem="KKf-bt-SHl" firstAttribute="top" secondItem="fra-x1-nFf" secondAttribute="bottom" constant="100" id="Dcr-yU-ry8"/>
+                                            <constraint firstItem="KKf-bt-SHl" firstAttribute="top" secondItem="fra-x1-nFf" secondAttribute="bottom" constant="40" id="Dcr-yU-ry8"/>
                                             <constraint firstItem="CJv-NJ-wiQ" firstAttribute="centerX" secondItem="fra-x1-nFf" secondAttribute="centerX" id="Dnv-IF-2Fq"/>
                                             <constraint firstItem="CJv-NJ-wiQ" firstAttribute="centerX" secondItem="QNr-pd-ojO" secondAttribute="centerX" id="HAz-GI-5nE"/>
                                             <constraint firstItem="UR2-34-Wr9" firstAttribute="centerY" secondItem="itO-Jb-8Um" secondAttribute="centerY" id="JfN-ix-jN5"/>
                                             <constraint firstItem="fra-x1-nFf" firstAttribute="top" secondItem="CJv-NJ-wiQ" secondAttribute="bottom" constant="48" id="LUY-Cm-pCh"/>
                                             <constraint firstAttribute="bottom" secondItem="CJv-NJ-wiQ" secondAttribute="bottom" constant="343.5" id="Om1-Nr-yg7"/>
+                                            <constraint firstItem="3MX-no-oUp" firstAttribute="centerX" secondItem="QNr-pd-ojO" secondAttribute="centerX" id="Sm3-B5-MRE"/>
                                             <constraint firstItem="CJv-NJ-wiQ" firstAttribute="centerX" secondItem="WJo-HI-iAQ" secondAttribute="centerX" id="VzE-2Q-Ije"/>
                                             <constraint firstItem="itO-Jb-8Um" firstAttribute="leading" secondItem="QNr-pd-ojO" secondAttribute="leading" constant="37" id="WMy-7l-4YI"/>
                                             <constraint firstItem="CJv-NJ-wiQ" firstAttribute="top" secondItem="QNr-pd-ojO" secondAttribute="topMargin" constant="20" id="Wa5-Q5-5us"/>
@@ -1731,6 +1754,7 @@
                         <viewLayoutGuide key="safeArea" id="idS-D3-D1R"/>
                     </view>
                     <connections>
+                        <outlet property="btnBuyNow" destination="5tg-eR-klA" id="Zkx-58-gvF"/>
                         <outlet property="btnDevice" destination="CJv-NJ-wiQ" id="cov-AM-KjW"/>
                         <outlet property="btnDeviceAfterConnected" destination="itO-Jb-8Um" id="6im-S4-srU"/>
                         <outlet property="btnHandiLeft" destination="oDD-XY-eqh" id="Pln-xf-uK4"/>
@@ -1738,6 +1762,7 @@
                         <outlet property="btnScanForDevice" destination="KKf-bt-SHl" id="fiv-BY-STT"/>
                         <outlet property="btnSetupTags" destination="n33-hx-nxI" id="332-ct-F5K"/>
                         <outlet property="btnTagImage" destination="73b-jd-rec" id="zCH-NG-1IS"/>
+                        <outlet property="buyNowSV" destination="3MX-no-oUp" id="aWz-rC-dn1"/>
                         <outlet property="handiLeftView" destination="NYF-hg-M5K" id="7YV-5f-dec"/>
                         <outlet property="handiRightView" destination="mZv-wv-Sys" id="3b7-7I-TWi"/>
                         <outlet property="lblAssignedTag" destination="8we-eF-zJf" id="dhD-Jm-h2D"/>

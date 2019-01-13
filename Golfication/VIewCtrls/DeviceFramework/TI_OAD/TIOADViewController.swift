@@ -39,7 +39,7 @@ class TIOADViewController: UIViewController{
     var prevVal: Float = 0.0
     
     //    let urlStr = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2Ffirmware_v0.00.bin?alt=media&token=14c90409-fdc0-4712-96c8-83fca595fb10"
-    let fileName = "Khelfie_project2_FlashROM_oad_merged-2.bin"
+//    let fileName = "Khelfie_project2_FlashROM_oad_merged-2.bin"
     
     //let urlStr1 = "https://firebasestorage.googleapis.com/v0/b/golfication-4f97b.appspot.com/o/OADUpdates%2FKhelfie_project2_FlashROM_oad1_merged.bin?alt=media&token=31ee2200-82e3-4214-8c44-e335f91b2488"
     //    let fileName1 = "Khelfie_project2_FlashROM_oad1_merged.bin"
@@ -62,7 +62,8 @@ class TIOADViewController: UIViewController{
         deviceCircularView.progressLayer.lineWidth = 3.0
         self.lblUpdateFirmware.text = "Updating Firmware 0%"
         let storage = Storage.storage(url:"gs://golficationtest.appspot.com")
-        let pathReference = storage.reference(withPath:"OADUpdates/\(self.fileName)")
+//        let storage = Storage.storage(url:"gs://golfication-4f97b.appspot.com")
+        let pathReference = storage.reference(withPath:"OADUpdates/\(Constants.fileName)")
         pathReference.downloadURL { url, error in
             if let error = error {
                 debugPrint(error)
@@ -78,8 +79,8 @@ class TIOADViewController: UIViewController{
                         DispatchQueue.main.async {
                             debugPrint(data)
                             
-                            self.oadImage = TIOADToadImageReader(imageData: data, fileName: self.fileName)
-                            self.TIOADOADImage.text = self.fileName
+                            self.oadImage = TIOADToadImageReader(imageData: data, fileName: Constants.fileName)
+                            self.TIOADOADImage.text = Constants.fileName
                             
                             self.TIOADImageInfo.text = self.oadImage.description
                             

@@ -387,7 +387,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if (selectClubDropper != nil) && (selectClubDropper.status != .hidden){
             selectClubDropper.hide()
         }
-        if(isOnCourse){
+        if self.mapTimer.isValid{
             self.mapTimer.invalidate()
         }
         NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidBecomeActive)
@@ -1278,25 +1278,40 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // MARK: - btnActionFinishRound
     
     @IBAction func btnActionEndRound(_ sender: Any) {
-        var playerIndex = 0
-        var i = 0
-        for data in self.playersButton{
-            self.holeOutforAppsFlyer[i] = self.checkHoleOutZero(playerId: data.id)
-            if(data.id == Auth.auth().currentUser!.uid){
-                playerIndex = i
+        if !self.swingMatchId.isEmpty{
+            //changed by Amit
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "EndRound"), object: nil)
+
+            let alertVC = UIAlertController(title: "Alert", message: "Please End this round from previous screen.", preferredStyle: UIAlertControllerStyle.alert)
+            let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+                self.navigationController!.popViewController(animated: true)
+            })
+            let cancelOption = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { action in
+                debugPrint("Cancelled")
+            })
+            alertVC.addAction(cancelOption)
+            alertVC.addAction(action)
+            self.present(alertVC, animated: true, completion: nil)
+        }else{
+            var playerIndex = 0
+            var i = 0
+            for data in self.playersButton{
+                self.holeOutforAppsFlyer[i] = self.checkHoleOutZero(playerId: data.id)
+                if(data.id == Auth.auth().currentUser!.uid){
+                    playerIndex = i
+                }
+                i += 1
             }
-            i += 1
+            self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) " + "holes completed".localized()
+            if Constants.isEdited{
+                self.exitGamePopUpView.btnDiscardText = "Delete Round"
+            }
+            self.exitGamePopUpView.isHidden = false
         }
-        self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) " + "holes completed".localized()
-        if Constants.isEdited{
-            self.exitGamePopUpView.btnDiscardText = "Delete Round"
-        }
-        self.exitGamePopUpView.isHidden = false
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+//        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
     }
     func exitWithoutSave(){
         self.updateFeedNode()
-        
         if(Constants.matchId.count > 1){
             if(Auth.auth().currentUser!.uid.count > 1){
                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])

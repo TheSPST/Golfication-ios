@@ -459,6 +459,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 if let canSkip = firmware.value(forKey: "canSkip") as? Bool{
                     Constants.canSkip = canSkip
                 }
+                if let fileName = firmware.value(forKey: "fileName") as? String{
+                    Constants.fileName = fileName
+                }
             })
         }
     }
@@ -1186,6 +1189,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                 }
                             }
                             else{
+                                Constants.swingSessionKey = key
                                 group.leave()
                             }
                         }

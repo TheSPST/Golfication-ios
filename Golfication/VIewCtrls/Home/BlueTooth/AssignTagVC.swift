@@ -23,7 +23,8 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
     var golfBagIronArray = [String]()
     var golfBagWageArray = [String]()
     var golfBagPuttArray = [String]()
-    
+    var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
+
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         var array = [UIViewController]()
@@ -55,7 +56,36 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
     }
     @objc func btnContinueAction(){
         debugPrint("Continue")
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command"), object: nil)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+            if let tempArray = snapshot.value as? NSMutableArray{
+                self.golfBagArr = tempArray
+            }
+            
+            DispatchQueue.main.async(execute: {
+                self.calculateTagWithClubNumber()
+            })
+        }
+    }
+    func calculateTagWithClubNumber(){
+        Constants.tagClubNumber.removeAll()
+        for j in 0..<self.golfBagArr.count{
+            if let club = self.golfBagArr[j] as? NSMutableDictionary{
+                if club.value(forKey: "tag") as! Bool{
+                    let tagNumber = club.value(forKey: "tagNum") as! String
+                    var num = 0
+                    if tagNumber.contains("a") || tagNumber.contains("A") || tagNumber.contains("b") || tagNumber.contains("B") || tagNumber.contains("c") || tagNumber.contains("C") || tagNumber.contains("d") || tagNumber.contains("D") || tagNumber.contains("e") || tagNumber.contains("E") || tagNumber.contains("f") || tagNumber.contains("F"){
+                        num = Int(tagNumber, radix: 16)!
+                    }else{
+                        num = Int(tagNumber)!
+                    }
+                    let clubName = club.value(forKey: "clubName") as! String
+                    let clubNumber = self.allClubs.index(of: clubName)! + 1
+                    Constants.tagClubNumber.append((tag: num, club: clubNumber,clubName:clubName))
+                }
+            }
+        }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command2"), object: Constants.tagClubNumber)
     }
     @objc func startMatch(_ notification:NSNotification){
         if let game = notification.object as? String{
@@ -74,6 +104,7 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
     }
     
     override func viewDidLoad() {
+//        NotificationCenter.default.addObserver(self, selector: #selector(btnContinueAction), name: NSNotification.Name(rawValue: "command"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.startMatch(_:)), name: NSNotification.Name(rawValue: "startMatch"), object: nil)
         self.tabBarController?.tabBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
