@@ -1734,7 +1734,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     playerDict.setObject(dict, forKey: self.selectedUserId as NSCopying)
                     self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
                     if let shots = dict.value(forKey: "shots") as? NSArray{
-                        wantToDrag = shots.count > 1 ? true:false
+                        wantToDrag = shots.count > 0 ? true:false
                     }
                     holeOut = dict.value(forKey: "holeOut") as! Bool
                     if(holeOut){

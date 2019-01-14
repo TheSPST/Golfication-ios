@@ -66,6 +66,8 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     @IBOutlet weak var golfBagHConstraint: NSLayoutConstraint!
 
     @IBOutlet weak var btnWhatIsPro:UIButton!
+    @IBOutlet weak var btnConnectGolfX: UIButton!
+
     // MARK: - Initialize Variables
     let imagePicker = UIImagePickerController()
 //    var clubs = ["Dr","3w","4w","5w","7w","1h","2h","3h","4h","5h","6h","7h","1i","2i","3i","4i","5i","6i","7i","8i","9i", "Pw","Gw","Sw","Lw","Pu"]
@@ -80,15 +82,32 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         NSAttributedStringKey.underlineStyle : 1] as [NSAttributedStringKey : Any]
     var attributedString = NSMutableAttributedString(string:"")
     
+    var connectAttrs = [
+        NSAttributedStringKey.font : UIFont(name: "SFProDisplay-Medium", size: 15.0)!,
+        NSAttributedStringKey.foregroundColor : UIColor.glfBluegreen,
+        NSAttributedStringKey.underlineStyle : 1] as [NSAttributedStringKey : Any]
+
     var cropVC: PKCCropViewController!
 
     var sharedInstance: BluetoothSync!
-    
+    var bluetoothStatus: Bool!
+    var bluetoothMessage = String()
+
     // MARK: connectBluetoothAction
     @IBAction func connectBluetoothAction(_ sender: Any) {
-        self.sharedInstance = BluetoothSync.getInstance()
-        self.sharedInstance.delegate = self
-        self.sharedInstance.initCBCentralManager()
+        if bluetoothStatus{
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
+            viewCtrl.golfBagArr = self.golfBagArray
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+        }
+        else{
+            let alertVC = UIAlertController(title: "Alert", message: bluetoothMessage, preferredStyle: UIAlertControllerStyle.alert)
+            let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+                self.dismiss(animated: true, completion: nil)
+            })
+            alertVC.addAction(action)
+            self.present(alertVC, animated: true, completion: nil)
+        }
     }
     
     func didUpdateState(_ state: CBManagerState) {
@@ -101,12 +120,19 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             break
         case .poweredOn:
             debugPrint("State : Powered On")
+            bluetoothStatus = true
             
-            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
-            viewCtrl.golfBagArr = self.golfBagArray
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-            self.sharedInstance.delegate = nil
-            
+            let atrString = NSMutableAttributedString(string:"")
+            let buttonTitleStr = NSMutableAttributedString(string: "Connect Now", attributes:connectAttrs)
+            atrString.append(buttonTitleStr)
+            btnConnectGolfX.setAttributedTitle(atrString, for: .normal)
+
+            if(Constants.deviceGolficationX != nil){
+                let atrString = NSMutableAttributedString(string:"")
+                let buttonTitleStr = NSMutableAttributedString(string: "Paired", attributes:connectAttrs)
+                atrString.append(buttonTitleStr)
+                btnConnectGolfX.setAttributedTitle(atrString, for: .normal)
+            }
             return
             
         case .unsupported:
@@ -116,14 +142,13 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             alert = "Try again after restarting the device."
             break
         }
+        self.bluetoothStatus = false
+        bluetoothMessage = alert
         
-        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
-        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-            self.dismiss(animated: true, completion: nil)
-            self.sharedInstance.delegate = nil
-        })
-        alertVC.addAction(action)
-        self.present(alertVC, animated: true, completion: nil)
+        let atrString = NSMutableAttributedString(string:"")
+        let buttonTitleStr = NSMutableAttributedString(string: "Connect Now", attributes:connectAttrs)
+        atrString.append(buttonTitleStr)
+        btnConnectGolfX.setAttributedTitle(atrString, for: .normal)
     }
     
     // MARK: inviteNowAction
@@ -685,6 +710,10 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
         
+        self.sharedInstance = BluetoothSync.getInstance()
+        self.sharedInstance.delegate = self
+        self.sharedInstance.initCBCentralManager()
+
         self.automaticallyAdjustsScrollViewInsets = false
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails/name") { (snapshot) in
@@ -712,11 +741,6 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                                             self.golfBagArray[i] = dict
                                             ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":30])
                                         }else if(dict.value(forKey: "avgDistance") == nil){
-                                            if (data.name).contains("4i"){
-                                                debugPrint((data.max + data.min)/2)
-                                                debugPrint(data.max)
-                                                debugPrint(data.min)
-                                            }
                                             let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
                                             dict.setValue(avgDistance, forKey: "avgDistance")
                                             self.golfBagArray[i] = dict

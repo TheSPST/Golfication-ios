@@ -1526,6 +1526,11 @@ extension BLE: CBPeripheralDelegate {
                         memccpy(&backSwing, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
                         memccpy(&downSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&handVelocity, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
+                        if [dataArray[10],dataArray[11],dataArray[12],dataArray[13]] == [255,255,255,255] || [dataArray[6],dataArray[7],dataArray[8],dataArray[9]] == [255,255,255,255] || [dataArray[2],dataArray[3],dataArray[4],dataArray[5]] == [255,255,255,255]{
+                            memccpy(&backSwing, [0,0,0,0], 4, 4)
+                            memccpy(&downSwing, [0,0,0,0], 4, 4)
+                            memccpy(&handVelocity, [0,0,0,0], 4, 4)
+                        }
                         var clubIndex = 0
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
                             clubIndex = (Int(dataArray[14]))-1
@@ -1556,6 +1561,12 @@ extension BLE: CBPeripheralDelegate {
                         memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&lat, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
                         memccpy(&lng, [dataArray[14],dataArray[15],dataArray[16],dataArray[17]], 4, 4)
+                        if [dataArray[10],dataArray[11],dataArray[12],dataArray[13]] == [255,255,255,255] || [dataArray[14],dataArray[15],dataArray[16],dataArray[17]] == [255,255,255,255] || [dataArray[6],dataArray[7],dataArray[8],dataArray[9]] == [255,255,255,255] || [dataArray[2],dataArray[3],dataArray[4],dataArray[5]] == [255,255,255,255]{
+                            memccpy(&clubVelocity, [0,0,0,0], 4, 4)
+                            memccpy(&backAngle, [0,0,0,0], 4, 4)
+                            memccpy(&lat, [0,0,0,0], 4, 4)
+                            memccpy(&lng, [0,0,0,0], 4, 4)
+                        }
                         oldLatLng = CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng))
                         if (oldLatLng.latitude == Double(lat)) && (oldLatLng.longitude == Double(lng)){
                             let newPoint = GMSGeometryOffset(CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng)), 1,CLLocationDirection(arc4random_uniform(360)))

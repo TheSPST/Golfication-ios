@@ -436,13 +436,22 @@ class BackgroundMapStats: NSObject {
         for data in searchArr{
             let latt = data.value(forKey: "Latitude") as! String
             let lng = data.value(forKey: "Longitude") as! String
-            if (Double(latt) != nil) || (Double(lng) != nil){
-                let coord = CLLocation(latitude: Double(latt)!, longitude: Double(lng)!)
-                data.setValue(myLocation.distance(from: coord), forKey: "Distance")
+            if let latti = Double(latt){
+                if let lngg = Double(lng){
+                    let coord = CLLocation(latitude: latti, longitude: lngg)
+                    data.setValue(myLocation.distance(from: coord), forKey: "Distance")
+                }else{
+                    indexArr.append(i)
+                }
             }else{
                 indexArr.append(i)
-                ref.child("invalidCourses").updateChildValues([data.value(forKey: "Id") as! String:true])
             }
+//            if (Double(latt) != nil) && (Double(lng) != nil){
+//
+//            }else{
+//                indexArr.append(i)
+//                ref.child("invalidCourses").updateChildValues([data.value(forKey: "Id") as! String:true])
+//            }
             i += 1
         }
         for ind in indexArr{

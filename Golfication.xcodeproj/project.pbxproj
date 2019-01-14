@@ -258,7 +258,7 @@
 		4BE11A6B21353568008E529A /* CustomColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE11A6A21353568008E529A /* CustomColorSlider.swift */; };
 		4BE1E2C5206CC74B00A32845 /* ShareStatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */; };
 		4BE4196921B29A6100C49AB6 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE4196821B29A6100C49AB6 /* CircularProgress.swift */; };
-		4BEA7D6D21EB274400B211C0 /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEA7D6C21EB274300B211C0 /* GoogleService-Info-demo.plist */; };
+		4BEA7D7121EC7E9E00B211C0 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEA7D7021EC7E9E00B211C0 /* GoogleService-Info-live.plist */; };
 		4BF564EF1FD2AA03006BDB0E /* String+Width.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF564EE1FD2AA03006BDB0E /* String+Width.swift */; };
 /* End PBXBuildFile section */
 
@@ -545,7 +545,7 @@
 		4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareStatsVC.swift; sourceTree = "<group>"; };
 		4BE1E2C7206CFA7000A32845 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		4BE4196821B29A6100C49AB6 /* CircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
-		4BEA7D6C21EB274300B211C0 /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
+		4BEA7D7021EC7E9E00B211C0 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		4BF564EE1FD2AA03006BDB0E /* String+Width.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Width.swift"; sourceTree = "<group>"; };
 		74C4161709B89182A1A47152 /* Pods-Golfication.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.debug.xcconfig"; sourceTree = "<group>"; };
 		BAEB7E85ED122E864139FDF9 /* Pods-Golfication.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.release.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.release.xcconfig"; sourceTree = "<group>"; };
@@ -1265,7 +1265,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4BEA7D6C21EB274300B211C0 /* GoogleService-Info-demo.plist */,
+				4BEA7D7021EC7E9E00B211C0 /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1344,7 +1344,7 @@
 					0D5D4A361F94D382004621C7 = {
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1396,6 +1396,7 @@
 				0D5D4A451F94D382004621C7 /* LaunchScreen.storyboard in Resources */,
 				4B1F6BE62090A29F00312EA7 /* DebugMapViewController.xib in Resources */,
 				4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */,
+				4BEA7D7121EC7E9E00B211C0 /* GoogleService-Info-live.plist in Resources */,
 				3E59234A20A991C60056D446 /* Home.storyboard in Resources */,
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
@@ -1409,7 +1410,6 @@
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
-				4BEA7D6D21EB274400B211C0 /* GoogleService-Info-demo.plist in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
 				4B8C8D3C1FF674D0001F5D01 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
 				4B8C8D3B1FF674D0001F5D01 /* SF-Pro-Display-MediumItalic.otf in Resources */,
@@ -1931,9 +1931,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FE7D783SLH;
@@ -1944,7 +1944,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_7_Jan_2020;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1957,9 +1957,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FE7D783SLH;
@@ -1970,7 +1970,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_7_Jan_2020;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
