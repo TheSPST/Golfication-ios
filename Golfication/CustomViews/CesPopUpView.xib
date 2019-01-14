@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="SF-Pro-Display-BlackItalic.otf">
+            <string>SFProDisplay-BlackItalic</string>
+        </array>
+        <array key="SF-Pro-Display-Bold.otf">
+            <string>SFProDisplay-Bold</string>
+        </array>
+        <array key="SF-Pro-Display-Medium.otf">
+            <string>SFProDisplay-Medium</string>
+        </array>
+        <array key="SF-Pro-Display-Regular.otf">
+            <string>SFProDisplay-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTk-du-S40" customClass="CardView" customModule="Golfication" customModuleProvider="target">
+                    <rect key="frame" x="20" y="130.5" width="335" height="426.5"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="axe-tV-TjP">
+                            <rect key="frame" x="20" y="20" width="295" height="386.5"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="aVW-ak-zUH">
+                                    <rect key="frame" x="5" y="0.0" width="285" height="170"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" tag="666" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CES1" translatesAutoresizingMaskIntoConstraints="NO" id="shl-Uq-idn">
+                                            <rect key="frame" x="0.0" y="0.0" width="170" height="170"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="170" id="EvQ-g3-l5x"/>
+                                                <constraint firstAttribute="height" constant="170" id="R0O-kq-YFl"/>
+                                            </constraints>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" tag="666" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CES2" translatesAutoresizingMaskIntoConstraints="NO" id="m4e-v5-0fB">
+                                            <rect key="frame" x="175" y="50" width="110" height="70"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="110" id="AsZ-q2-rd4"/>
+                                                <constraint firstAttribute="height" constant="70" id="Nyq-hp-W3f"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                </stackView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We're at CES Las Vegas 2019!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1j3-JN-BPu">
+                                    <rect key="frame" x="5" y="190" width="285" height="25.5"/>
+                                    <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="21"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use the code below to get 20 instant discount on Golfication X" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ENY-Q7-9LN">
+                                    <rect key="frame" x="5" y="235.5" width="285" height="41"/>
+                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CES2019" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="79u-rd-cmu">
+                                    <rect key="frame" x="5" y="296.5" width="285" height="30"/>
+                                    <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="25"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" tag="222" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Li-bR-BeV">
+                                    <rect key="frame" x="0.0" y="346.5" width="295" height="40"/>
+                                    <color key="backgroundColor" red="0.22352941179999999" green="0.56470588239999997" blue="0.41568627450000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="40" id="Lkw-bX-VfJ"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="SFProDisplay-BlackItalic" family="SF Pro Display" pointSize="21"/>
+                                    <state key="normal" title="Buy Now">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="1j3-JN-BPu" firstAttribute="leading" secondItem="axe-tV-TjP" secondAttribute="leading" constant="5" id="GK0-LL-DZj"/>
+                                <constraint firstItem="2Li-bR-BeV" firstAttribute="leading" secondItem="axe-tV-TjP" secondAttribute="leading" id="J97-cA-ebO"/>
+                                <constraint firstItem="ENY-Q7-9LN" firstAttribute="leading" secondItem="1j3-JN-BPu" secondAttribute="leading" id="Jtn-gu-fKm"/>
+                                <constraint firstItem="79u-rd-cmu" firstAttribute="leading" secondItem="1j3-JN-BPu" secondAttribute="leading" id="P5V-Qc-FOT"/>
+                                <constraint firstAttribute="trailing" secondItem="2Li-bR-BeV" secondAttribute="trailing" id="X94-NE-kwK"/>
+                            </constraints>
+                        </stackView>
+                        <button opaque="NO" tag="333" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mhc-Ya-8v9">
+                            <rect key="frame" x="315" y="5" width="20" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="20" id="F4n-gc-pQD"/>
+                                <constraint firstAttribute="height" constant="20" id="M2O-yb-cTZ"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="17"/>
+                            <state key="normal" title="X">
+                                <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="axe-tV-TjP" secondAttribute="trailing" constant="20" id="Ibh-EB-hXA"/>
+                        <constraint firstItem="axe-tV-TjP" firstAttribute="top" secondItem="fTk-du-S40" secondAttribute="top" constant="20" id="NNc-lL-def"/>
+                        <constraint firstAttribute="trailing" secondItem="Mhc-Ya-8v9" secondAttribute="trailing" id="PoN-fy-gJc"/>
+                        <constraint firstItem="Mhc-Ya-8v9" firstAttribute="top" secondItem="fTk-du-S40" secondAttribute="top" constant="5" id="Rai-wQ-2yw"/>
+                        <constraint firstItem="axe-tV-TjP" firstAttribute="centerX" secondItem="fTk-du-S40" secondAttribute="centerX" id="ZEn-bf-HmB"/>
+                        <constraint firstItem="axe-tV-TjP" firstAttribute="leading" secondItem="fTk-du-S40" secondAttribute="leading" constant="20" id="oej-mD-jnG"/>
+                        <constraint firstAttribute="bottom" secondItem="axe-tV-TjP" secondAttribute="bottom" constant="20" id="rdD-A3-2re"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="fTk-du-S40" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="8cm-M0-Vtz"/>
+                <constraint firstItem="fTk-du-S40" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Gux-8F-Izv"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="fTk-du-S40" secondAttribute="trailing" constant="20" id="eA2-0b-Gta"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="CES1" width="238" height="238"/>
+        <image name="CES2" width="201" height="118"/>
+    </resources>
+</document>
