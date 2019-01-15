@@ -641,39 +641,54 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                 expiryDF.locale = Locale(identifier: "en")
                 expiryDF.dateFormat = "dd-MMM-yyyy HH:mm:ss"
                 
-                let expDate = expiryDF.date(from: proData.value(forKey: "expiryDate") as! String)
+//                let expDate = expiryDF.date(from: proData.value(forKey: "expiryDate") as! String)
                 //let expDateStr = formatter.string(from: expDate!)
                 
                 if (proData.value(forKey: "expiryDate") != nil){
-                    let locale = NSLocale.current.identifier
-                    expiryDF.locale = Locale(identifier: locale)
-                    let myDateStr = expiryDF.string(from: expDate!)
+//                    let locale = NSLocale.current.identifier
+//                    expiryDF.locale = Locale(identifier: locale)
+//                    let myDateStr = expiryDF.string(from: expDate!)
                     
-                    self.lblNextBilling.text = "Next Billing " + myDateStr
+                    self.lblNextBilling.text = "Next Billing " + (proData.value(forKey: "expiryDate") as! String)
                 }
                 if (proData.value(forKey: "transactionDate") != nil){
-                    let df = DateFormatter()
-                    df.locale = Locale(identifier: "en")
-                    df.dateFormat = "dd-MMM-yyyy HH:mm:ss"
-                    let myDate = df.date(from: proData.value(forKey: "transactionDate") as! String)
-                    df.dateFormat = "dd-MMM-yyyy"
+//                    let df = DateFormatter()
+//                    df.locale = Locale(identifier: "en")
+//                    df.dateFormat = "dd-MMM-yyyy HH:mm:ss"
+//                    let myDate = df.date(from: proData.value(forKey: "transactionDate") as! String)
+//                    df.dateFormat = "dd-MMM-yyyy"
+                    var trnDateStr = proData.value(forKey: "transactionDate") as! String
+                    trnDateStr.removeLast(8)
+//                    let locale = NSLocale.current.identifier
+//                    df.locale = Locale(identifier: locale)
+//                    let myDateStr = df.string(from: myDate!)
                     
-                    let locale = NSLocale.current.identifier
-                    df.locale = Locale(identifier: locale)
-                    let myDateStr = df.string(from: myDate!)
-                    
-                    self.lblLastBilling.text = "Member since " + " \(myDateStr)"
+                    self.lblLastBilling.text = "Member since " + " \(trnDateStr)"
                 }
                 
-                switch currentDate?.compare(expDate!) {
-                case .orderedAscending?     :   debugPrint("currentDate is earlier than expDate")
+                var timeEnd: Date!
+                if let expTimestamp = proData.value(forKey: "timestamp") as? Int{
                     
+                    let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(expTimestamp/1000)))
+                    
+                     timeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
+                    if proData.value(forKey: "productID") as? String != nil{
+                        if (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID){
+                            
+                            timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
+                        }
+                    }
+                }
+                
+                switch currentDate?.compare(timeEnd!) {
+                case .orderedAscending?    :   debugPrint("currentDate is earlier than expDate")
+
                 case .orderedDescending?    :   debugPrint("currentDate is later than expDate")
                 self.viewUpgradeInactive.isHidden = false
                 self.viewUpgradeFreeActive.isHidden = true
                 self.viewUpgradeActive.isHidden = true
                 self.lblInactivePrice.text = "Your Pro Membership has been expired"
-                case .orderedSame?          :   debugPrint("Both dates are same")
+                case .orderedSame?         :   debugPrint("Both dates are same")
                 self.viewUpgradeInactive.isHidden = false
                 self.viewUpgradeFreeActive.isHidden = true
                 self.viewUpgradeActive.isHidden = true

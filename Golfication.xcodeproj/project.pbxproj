@@ -135,6 +135,7 @@
 		4B1F6BE82090A29F00312EA7 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC02090A29F00312EA7 /* AnnotationView.swift */; };
 		4B1F6BE92090A29F00312EA7 /* SelectCourseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */; };
 		4B1F6BEA2090A29F00312EA7 /* NewGameScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */; };
+		4B35352021EE2438007DECB8 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B35351F21EE2438007DECB8 /* GoogleService-Info-live.plist */; };
 		4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */; };
 		4B4BD77221E366B00067460A /* CesPopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B4BD77121E366B00067460A /* CesPopUpView.xib */; };
 		4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */; };
@@ -258,7 +259,6 @@
 		4BE11A6B21353568008E529A /* CustomColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE11A6A21353568008E529A /* CustomColorSlider.swift */; };
 		4BE1E2C5206CC74B00A32845 /* ShareStatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */; };
 		4BE4196921B29A6100C49AB6 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE4196821B29A6100C49AB6 /* CircularProgress.swift */; };
-		4BEA7D7121EC7E9E00B211C0 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BEA7D7021EC7E9E00B211C0 /* GoogleService-Info-live.plist */; };
 		4BF564EF1FD2AA03006BDB0E /* String+Width.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF564EE1FD2AA03006BDB0E /* String+Width.swift */; };
 /* End PBXBuildFile section */
 
@@ -403,6 +403,7 @@
 		4B1F6BC02090A29F00312EA7 /* AnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCourseData.swift; sourceTree = "<group>"; };
 		4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameScoreTableViewCell.swift; sourceTree = "<group>"; };
+		4B35351F21EE2438007DECB8 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProMemberPopUPVC.swift; sourceTree = "<group>"; };
 		4B4BD77121E366B00067460A /* CesPopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CesPopUpView.xib; sourceTree = "<group>"; };
 		4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MySwing.storyboard; sourceTree = "<group>"; };
@@ -545,7 +546,6 @@
 		4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareStatsVC.swift; sourceTree = "<group>"; };
 		4BE1E2C7206CFA7000A32845 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		4BE4196821B29A6100C49AB6 /* CircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
-		4BEA7D7021EC7E9E00B211C0 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		4BF564EE1FD2AA03006BDB0E /* String+Width.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Width.swift"; sourceTree = "<group>"; };
 		74C4161709B89182A1A47152 /* Pods-Golfication.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.debug.xcconfig"; sourceTree = "<group>"; };
 		BAEB7E85ED122E864139FDF9 /* Pods-Golfication.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.release.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.release.xcconfig"; sourceTree = "<group>"; };
@@ -1265,7 +1265,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4BEA7D7021EC7E9E00B211C0 /* GoogleService-Info-live.plist */,
+				4B35351F21EE2438007DECB8 /* GoogleService-Info-live.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1396,10 +1396,10 @@
 				0D5D4A451F94D382004621C7 /* LaunchScreen.storyboard in Resources */,
 				4B1F6BE62090A29F00312EA7 /* DebugMapViewController.xib in Resources */,
 				4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */,
-				4BEA7D7121EC7E9E00B211C0 /* GoogleService-Info-live.plist in Resources */,
 				3E59234A20A991C60056D446 /* Home.storyboard in Resources */,
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
+				4B35352021EE2438007DECB8 /* GoogleService-Info-live.plist in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,

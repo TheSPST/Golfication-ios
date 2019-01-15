@@ -1493,9 +1493,14 @@ extension BLE: CBPeripheralDelegate {
                         memccpy(&downSwing, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&handVelocity, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
                         swingDetails[shotNo-1].bs = Double(backSwing)
-                        swingDetails[shotNo-1].ds = Double(downSwing)
+                        if downSwing > 0.23 && downSwing < 1.0{
+                            swingDetails[shotNo-1].ds = Double(downSwing)
+                            swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
+                        }else{
+                            swingDetails[shotNo-1].ds = Double(0.3)
+                            swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/0.3))
+                        }
                         swingDetails[shotNo-1].hv = Double(handVelocity)
-                        swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
                         swingDetails[shotNo-1].time = Timestamp
                         var clubIndex = 0
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
@@ -1539,9 +1544,15 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[swingDetails.count-1].club = self.allClubs[clubIndex]
                         swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
                         swingDetails[swingDetails.count-1].bs = Double(backSwing)
-                        swingDetails[swingDetails.count-1].ds = Double(downSwing)
+                        if downSwing > 0.23 && downSwing < 1.0{
+                            swingDetails[shotNo-1].ds = Double(downSwing)
+                            swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
+                        }else{
+                            swingDetails[shotNo-1].ds = Double(0.3)
+                            swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/0.3))
+                        }
                         swingDetails[swingDetails.count-1].hv = Double(handVelocity)
-                        swingDetails[swingDetails.count-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
+//                        swingDetails[swingDetails.count-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
                         swingDetails[swingDetails.count-1].time = Timestamp
                         swingDetails[swingDetails.count-1].hole = Int(dataArray[16])
                     }
@@ -1602,15 +1613,20 @@ extension BLE: CBPeripheralDelegate {
                                 self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false))
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                             }else{
+                                if(self.isFinished){
+                                    self.randomGenerator()
+                                    // changed by Amit
+                                    self.sendFourthCommand(param: [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]])
+                                }
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             }
                         }
-                    }
-                    
-                    if(self.isFinished){
-                        self.randomGenerator()
-                        // changed by Amit
-                        self.sendFourthCommand(param: [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]])
+                    }else{
+                        if(self.isFinished){
+                            self.randomGenerator()
+                            // changed by Amit
+                            self.sendFourthCommand(param: [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]])
+                        }
                     }
                 }else if(dataArray[0] == UInt8(9)){
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
@@ -1741,6 +1757,7 @@ extension BLE: CBPeripheralDelegate {
                 }else if (dataArray[0] == UInt8(11)){
                     DispatchQueue.main.async(execute: {
                         let version = self.byteArrayToInt32(value: [dataArray[1],dataArray[2]])
+                        Constants.oldFirmwareVersion = Int(version)
                         self.invalidateAllTimers()
                         if(version < Constants.firmwareVersion){
                             let gameAlert = UIAlertController(title: "Firmware Update", message: "New version found for GolficationX", preferredStyle: UIAlertControllerStyle.alert)

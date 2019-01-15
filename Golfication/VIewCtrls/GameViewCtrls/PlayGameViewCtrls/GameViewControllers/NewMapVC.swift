@@ -1308,7 +1308,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             self.exitGamePopUpView.isHidden = false
         }
-//        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
     }
     func exitWithoutSave(){
         self.updateFeedNode()
@@ -1342,6 +1341,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         if(self.swingMatchId.count > 0){
             ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
         }
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         let generateStats = GenerateStats()
@@ -1775,7 +1775,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     playerArrayWithDetails.setObject(strokesGainedDistance, forKey: "strokesGainedOfAllShots" as NSCopying)
                     ref.child("matchData/\(self.currentMatchId)/scoring/\(holeIndex)/\(playerId)/").updateChildValues(["strokesGainedOfAllShots":strokesGainedDistance] as [AnyHashable : Any])
                 }
-                
             }
         }
     }
@@ -7216,12 +7215,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             break
                         }
                     }
+                if swingData.count > index{
                     let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "MapShotPopupVC") as! MapShotPopupVC
                     viewCtrl.modalPresentationStyle = .overCurrentContext
                     viewCtrl.testStr = "Shubham"
                     viewCtrl.shotsDetails = self.swingData
                     viewCtrl.pageIndex = index
                     self.present(viewCtrl, animated: true, completion: nil)
+                }else{
+                    self.view.makeToast("No Swing")
+                }
+
                 }
         }else{
             tappedMarker = (tappedMarker == nil) ? nil : tappedMarker

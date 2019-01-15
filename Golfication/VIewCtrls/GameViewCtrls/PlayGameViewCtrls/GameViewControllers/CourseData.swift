@@ -236,7 +236,9 @@ class CourseData:NSObject{
                         Constants.back9 = false
                         if (self.startingIndex > self.gameTypeIndex){
                             self.numberOfHoles.removeFirst(9)
-                            self.centerPointOfTeeNGreen.removeFirst(9)
+                            if !self.centerPointOfTeeNGreen.isEmpty{
+                                self.centerPointOfTeeNGreen.removeFirst(9)
+                            }
                             if !self.holeHcpWithTee.isEmpty{
                                 self.holeHcpWithTee.removeFirst(9)
                             }
@@ -251,7 +253,9 @@ class CourseData:NSObject{
                             }
                         }else{
                             self.numberOfHoles.removeLast(9)
-                            self.centerPointOfTeeNGreen.removeLast(9)
+                            if !self.centerPointOfTeeNGreen.isEmpty{
+                                self.centerPointOfTeeNGreen.removeLast(9)
+                            }
                             if !self.holeHcpWithTee.isEmpty{
                                 self.holeHcpWithTee.removeLast(9)
                             }

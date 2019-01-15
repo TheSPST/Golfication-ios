@@ -9,6 +9,7 @@
 import UIKit
 import CoreBluetooth
 import FirebaseStorage
+import FirebaseAuth
 class TIOADViewController: UIViewController{
     
     var perip : CBPeripheral!
@@ -194,7 +195,7 @@ extension TIOADViewController: TIOADClientProgressDelegate{
                     Constants.OADFeedback = true
                     self.lblBottomInfo.text = "Firmware Update Complete."
                     self.btnProceed.isHidden = false
-
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/OAD").updateChildValues(["\(Timestamp)":Constants.oldFirmwareVersion])
                     /*let alertVC = UIAlertController(title: "Alert", message: "Firmware Updated Successfully.", preferredStyle: UIAlertControllerStyle.alert)
                     let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
                         self.dismiss(animated: true, completion: nil)
