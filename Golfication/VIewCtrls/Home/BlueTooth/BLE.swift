@@ -898,33 +898,55 @@ extension BLE: CBCentralManagerDelegate {
         }
     }
     func endAllActiveSessions(){
+        self.swingDetails.removeAll()
+        self.holeWithSwing.removeAll()
+        self.shotNo = 1
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
             if(snapshot.value != nil){
+                var dataDiction = [String:Bool]()
                 if let dataDic = snapshot.value as? [String:Bool]{
-                    for (key, value) in dataDic{
+                    dataDiction = dataDic
+                }
+                DispatchQueue.main.async(execute: {
+                    for (key, value) in dataDiction{
                         if(value){
                             ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false])
                         }
                     }
-                }
+                })
             }
         }
     }
     func startMatch(isPractice:Bool){
-        self.currentGameId = Int(Timestamp%100000000) //87554701
-        if(isPractice){
-            self.swingMatchId = ref!.child("swingSession").childByAutoId().key
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
-            let matchDataDic = NSMutableDictionary()
-            matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
-            matchDataDic.setObject("practice", forKey: "playType" as NSCopying)
-            matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-            
-            matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
-            ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
-            self.sendFifthCommand()
-        }else{
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
+        self.swingDetails.removeAll()
+        self.holeWithSwing.removeAll()
+        self.shotNo = 1
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
+            if(snapshot.value != nil){
+                var dataDiction = [String:Bool]()
+                if let dataDic = snapshot.value as? [String:Bool]{
+                    dataDiction = dataDic
+                }
+                DispatchQueue.main.async(execute: {
+                    let group = DispatchGroup()
+                    for (key, value) in dataDiction{
+                        if(value){
+                            group.enter()
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false], withCompletionBlock:{ (error, ref) in
+                                group.leave()
+                            })
+                        }
+                    }
+                    group.notify(queue: .main, execute: {
+//                        self.currentGameId = Int(Timestamp%100000000) //87554701
+                        if(isPractice){
+                            self.sendFifthCommand()
+                        }else{
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
+                        }
+                    })
+                })
+            }
         }
     }
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -1407,10 +1429,10 @@ extension BLE: CBPeripheralDelegate {
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                         }else{
                             DispatchQueue.main.async(execute: {
-                                if !self.isSetupScreen{
+//                                if !self.isSetupScreen{
                                     let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
                                     gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+//                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
                                         self.randomGenerator()
                                         self.swingDetails.removeAll()
                                         self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
@@ -1421,9 +1443,10 @@ extension BLE: CBPeripheralDelegate {
                                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
                                     }))
                                     UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-                                }else{
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-                                }
+//                                }
+//                                else{
+//                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+//                                }
                             })
                         }
                     }
@@ -1448,6 +1471,7 @@ extension BLE: CBPeripheralDelegate {
                         self.swingMatchId = ""
                         UIApplication.shared.keyWindow?.makeToast("Game Discarded Successfully.")
                         // changed by Amit
+                        self.isPracticeMatch = false
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
                     })
 
@@ -1486,6 +1510,15 @@ extension BLE: CBPeripheralDelegate {
                         self.isFinished = false
                         self.isFirst = false
                         DispatchQueue.main.async(execute: {
+                            self.swingMatchId = ref!.child("swingSession").childByAutoId().key
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
+                            let matchDataDic = NSMutableDictionary()
+                            matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
+                            matchDataDic.setObject("practice", forKey: "playType" as NSCopying)
+                            matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+                            
+                            matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
+                            ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
                             UIApplication.shared.keyWindow?.makeToast("Ready to take swing...")
 //                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "readyToTakeSwing"), object: nil)
@@ -1493,22 +1526,47 @@ extension BLE: CBPeripheralDelegate {
                         
                     }else{
                         DispatchQueue.main.async(execute: {
-                            self.swingMatchId = ref!.child("swingSession").childByAutoId().key
-                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
-                            let matchDataDic = NSMutableDictionary()
-                            matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
-                            matchDataDic.setObject("match", forKey: "playType" as NSCopying)
-                            matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-                            matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
-                            
-                            if(!self.isPracticeMatch){
-                                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
-                                matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
-                                matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
-                                UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
+                            self.swingDetails.removeAll()
+                            self.holeWithSwing.removeAll()
+                            self.shotNo = 1
+                            FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
+                                if(snapshot.value != nil){
+                                    var dataDiction = [String:Bool]()
+                                    if let dataDic = snapshot.value as? [String:Bool]{
+                                        dataDiction = dataDic
+                                    }
+                                    DispatchQueue.main.async(execute: {
+                                        let group = DispatchGroup()
+                                        for (key, value) in dataDiction{
+                                            if(value){
+                                                group.enter()
+                                                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false], withCompletionBlock:{ (error, ref) in
+                                                    group.leave()
+                                                })
+                                            }
+                                        }
+                                        group.notify(queue: .main, execute: {
+                                            self.swingMatchId = ref!.child("swingSession").childByAutoId().key
+                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
+                                            let matchDataDic = NSMutableDictionary()
+                                            matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
+                                            matchDataDic.setObject("match", forKey: "playType" as NSCopying)
+                                            matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+                                            matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
+                                            
+                                            if(!self.isPracticeMatch){
+                                                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
+                                                matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
+                                                matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
+                                                UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
+                                            }
+                                            ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
+                                        })
+                                    })
+                                }
                             }
-                            ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
+                            //////////////////////////////////////////////////////////////////////
                         })
                     }
                 }else if (dataArray[0] == UInt8(81)) && (currentCommandData[1] == dataArray[1]){

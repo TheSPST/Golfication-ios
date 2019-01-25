@@ -479,6 +479,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
 //                self.golfBagWageArray = newGolfBagWageArray
 //                self.golfBagPuttArray = newGolfBagPuttArray
                 
+                self.golfBag.removeAll()
                 if(self.golfBagDriverArray.count != 0){
                     self.golfBag.append("Drivers")
                 }
