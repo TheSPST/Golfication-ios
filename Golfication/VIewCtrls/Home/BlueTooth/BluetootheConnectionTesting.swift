@@ -231,6 +231,8 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.ScanningTimeOut(_:)), name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.restartPhone(_:)), name: NSNotification.Name(rawValue: "RestartPhone"), object: nil)
+
         self.barBtnBLE.image =  UIImage(named: "golficationBarG")
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
@@ -240,6 +242,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     }
     @objc func timerAction() {
         self.timeOutTimer.invalidate()
+        Constants.ble.textInfo = "Device not found. Please turn on and turn off your device or app."
         self.noDeviceAvailable()
     }
     
@@ -269,6 +272,12 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         }
     }
     
+    @objc func restartPhone(_ notification: NSNotification){
+        DispatchQueue.main.async(execute: {
+            self.noDeviceAvailable()
+            NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "RestartPhone"))
+        })
+    }
     @objc func ScanningTimeOut(_ notification: NSNotification){
         DispatchQueue.main.async(execute: {
             self.noDeviceAvailable()
@@ -278,7 +287,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     
     func noDeviceAvailable() {
         self.navigationItem.rightBarButtonItem?.isEnabled = false
-        self.lblScanStatus.text = "Couldn't find your device"
+        self.lblScanStatus.text = Constants.ble.textInfo
         self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
         self.btnRetry.isHidden = false
         self.btnNoDevice.isHidden = false
@@ -342,7 +351,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     @objc func setupFinished(_ notification: NSNotification){
         DispatchQueue.main.async {
             Constants.ble.isDeviceSetup = true
-            UIApplication.shared.keyWindow?.makeToast("Golfication X setup successfull completed.")
+            UIApplication.shared.keyWindow?.makeToast("Golfication X setup complete.")
             self.navigationController?.popToRootViewController(animated: true)
             NotificationCenter.default.removeObserver(NSNotification.Name(rawValue:"command2Finished"))
         }
@@ -416,12 +425,59 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
                 self.golfBagWageArray.removeAll()
                 self.golfBagPuttArray.removeAll()
                 
-                self.golfBagDriverArray = newGolfBagDriverArray
-                self.golfBagWoodArray = newGolfBagWoodArray
-                self.golfBagHybridArray = newGolfBagHybridArray
-                self.golfBagIronArray = newGolfBagIronArray
-                self.golfBagWageArray = newGolfBagWageArray
-                self.golfBagPuttArray = newGolfBagPuttArray
+                var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
+                for j in 0..<allClubs.count{
+                    for i in 0..<newGolfBagDriverArray.count{
+                        let clubName = newGolfBagDriverArray[i]
+                        if allClubs[j] == clubName{
+                            self.golfBagDriverArray.append(clubName)
+                        }
+                    }
+                    for i in 0..<newGolfBagWoodArray.count{
+                        let clubName = newGolfBagWoodArray[i]
+                        if allClubs[j] == clubName{
+                            self.golfBagWoodArray.append(clubName)
+                        }
+                    }
+                    for i in 0..<newGolfBagHybridArray.count{
+                        let clubName = newGolfBagHybridArray[i]
+                        if allClubs[j] == clubName{
+                            self.golfBagHybridArray.append(clubName)
+                        }
+                    }
+                    for i in 0..<newGolfBagIronArray.count{
+                        let clubName = newGolfBagIronArray[i]
+                        if allClubs[j] == clubName{
+                            self.golfBagIronArray.append(clubName)
+                        }
+                    }
+                    for i in 0..<newGolfBagWageArray.count{
+                        let clubName = newGolfBagWageArray[i]
+                        if allClubs[j] == clubName{
+                            self.golfBagWageArray.append(clubName)
+                        }
+                    }
+                    for i in 0..<newGolfBagPuttArray.count{
+                        let clubName = newGolfBagPuttArray[i]
+                        if allClubs[j] == clubName{
+                            self.golfBagPuttArray.append(clubName)
+                        }
+                    }
+                }
+
+                debugPrint("golfBagDriverArray",self.golfBagDriverArray)
+                debugPrint("golfBagWoodArray",self.golfBagWoodArray)
+                debugPrint("golfBagHybridArray",self.golfBagHybridArray)
+                debugPrint("golfBagIronArray",self.golfBagIronArray)
+                debugPrint("golfBagWageArray",self.golfBagWageArray)
+                debugPrint("golfBagPuttArray",self.golfBagPuttArray)
+
+//                self.golfBagDriverArray = newGolfBagDriverArray
+//                self.golfBagWoodArray = newGolfBagWoodArray
+//                self.golfBagHybridArray = newGolfBagHybridArray
+//                self.golfBagIronArray = newGolfBagIronArray
+//                self.golfBagWageArray = newGolfBagWageArray
+//                self.golfBagPuttArray = newGolfBagPuttArray
                 
                 if(self.golfBagDriverArray.count != 0){
                     self.golfBag.append("Drivers")

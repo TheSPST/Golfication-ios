@@ -252,6 +252,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var deviceCircularView: CircularProgress!
     var isDeviceSetup = false
     var swingShotArr = NSArray()
+    var isNextPrevBtn = false
 
     func checkDeviceStatus() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.golficationXDisconnected(_:)), name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
@@ -699,7 +700,74 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func saveNExitPressed(button:UIButton) {
+        if(self.swingMatchId.count > 0){
+            checkScoringData()
+        }
+        else{
+            saveData()
+        }
+    }
+    
+    var isSyncd = false
+    var unSyncdIndex = 0
+    
+    func checkScoringData(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring") { (snapshot) in
+            
+            var scoringArray =  NSArray()
+            if snapshot.value != nil{
+                scoringArray = snapshot.value as! NSArray
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                if scoringArray.count>0{
+                    for i in 0..<scoringArray.count{
+                        let dic = scoringArray[i] as! NSDictionary
+                        for (key,value) in dic{
+                            if key as! String == Auth.auth().currentUser!.uid{
+                                let keyVal = value as! NSDictionary
+                                if keyVal.value(forKey: "holeOut") as! Bool == true{
+                                    if let shotsArray = keyVal.value(forKey: "shots") as? NSMutableArray{
+                                        for j in 0..<shotsArray.count{
+                                            let myDic = shotsArray[j] as! NSDictionary
+                                            if let distance = myDic.value(forKey: "distance") as? Double
+                                            {
+                                                debugPrint("distance",distance)
+                                                self.isSyncd = true
+                                            }
+                                            else{
+                                                self.unSyncdIndex = i+1
+                                                self.isSyncd = false
+                                                break
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if self.unSyncdIndex>0 && !self.isSyncd{
+                    self.exitGamePopUpView.hide(navItem: self.navigationItem)
+                    let emptyAlert = UIAlertController(title: "Alert", message: "Please sync hole \(self.unSyncdIndex)", preferredStyle: UIAlertControllerStyle.alert)
+                    emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    self.present(emptyAlert, animated: true, completion: nil)
+                }
+                else{
+                    self.saveData()
+                }
+            })
+        }
+    }
+    
+    func saveData(){
         var playerIndex = Int()
+        if(self.swingMatchId.count > 0){
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+        }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.statsCompleted(_:)), name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         
         for data in self.playersButton{
@@ -716,8 +784,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         debugPrint("SaveNExit Tapped")
         self.exitGamePopUpView.hide(navItem: self.navigationItem)
+
     }
-    
     func discardPressed(button:UIButton) {
         debugPrint("discard Tapped")
         self.exitGamePopUpView.hide(navItem: self.navigationItem)
@@ -1174,6 +1242,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     // MARK:- btnActionPrevHole
     @IBAction func btnActionPrevHole(_ sender: Any) {
+        isNextPrevBtn = true
+        
         holeIndex -= 1
         if(holeIndex == -1){
             holeIndex = self.scoring.count - 1
@@ -1206,6 +1276,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     // MARK:- btnActionNextHole
     @IBAction func btnActionNextHole(_ sender: Any) {
+        isNextPrevBtn = true
         holeIndex += 1
         if(holeIndex == self.scoring.count){
             holeIndex = 0
@@ -1278,7 +1349,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // MARK: - btnActionFinishRound
     
     @IBAction func btnActionEndRound(_ sender: Any) {
-        if !self.swingMatchId.isEmpty{
+        /*if !self.swingMatchId.isEmpty{
             //changed by Amit
 //            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "EndRound"), object: nil)
 
@@ -1292,7 +1363,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             alertVC.addAction(cancelOption)
             alertVC.addAction(action)
             self.present(alertVC, animated: true, completion: nil)
-        }else{
+        }else{*/
             var playerIndex = 0
             var i = 0
             for data in self.playersButton{
@@ -1307,7 +1378,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.exitGamePopUpView.btnDiscardText = "Delete Round"
             }
             self.exitGamePopUpView.isHidden = false
-        }
+        //}
     }
     func exitWithoutSave(){
         self.updateFeedNode()
@@ -1324,7 +1395,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             Constants.addPlayersArray.removeAllObjects()
             if(self.swingMatchId.count > 0){
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-                Constants.ble.discardGameFromDevice()
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+                //Constants.ble.discardGameFromDevice()
             }
             if Constants.mode>0{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
@@ -1339,10 +1411,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func saveAndviewScore(){
         
-        if(self.swingMatchId.count > 0){
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
-        }
+//        if(self.swingMatchId.count > 0){
+//            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+//        }
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         let generateStats = GenerateStats()
         generateStats.matchKey = Constants.matchId
@@ -1546,7 +1618,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         UIApplication.shared.endBackgroundTask(backgroundTask)
         backgroundTask = UIBackgroundTaskInvalid
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
@@ -1755,7 +1827,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
                         self.uploadTotalStrokesGained(playerId: self.selectedUserId)
                         if holeOut {
-                            self.btnActionPlayerStats(self.btnPlayersStats)
+                            if self.isNextPrevBtn{
+                                self.isNextPrevBtn = false
+                            }
+                            else{
+                                self.btnActionPlayerStats(self.btnPlayersStats)
+                            }
                         }
                     })
                 })
@@ -6192,7 +6269,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     if !self.swingMatchId.isEmpty{
                         self.hideWhenDeviceConnected()
                     }
-                    ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                    if self.swingMatchId.count>2{
+                        ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                    }
+                    else{
+                        ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":NSNull()])
+                    }
                     ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["courseName":(self.matchDataDict.value(forKey: "courseName") as! String)])
                     ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["matchKey":"\(self.currentMatchId)"])
                 }
@@ -6228,6 +6310,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             DispatchQueue.main.async(execute: {
                 if(self.isContinue){
+                    self.isNextPrevBtn = true
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: false)
                 }
             })

@@ -238,9 +238,14 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             
         }, cancel: { ActionMultipleStringCancelBlock in return }, origin:sender)
     }
+    var practiceFinished = false
     //MARK: PracticeMatchFinished
     @objc func finishedPopUp(_ notification:NSNotification){
         self.backAction(Any.self)
+        practiceFinished = true
+        shotsArray.removeAll()
+        tempArray1 = NSArray()
+        swingKey = String()
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "practiceFinished"))
     }
     //MARK: showShotsAfterSwing
@@ -282,7 +287,9 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         }
     }
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
+        if !practiceFinished{
         superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
+        }
         if !isFirst{
             isFirst = true
             shotsArray.append("Shot \(shotsArray.count+1)")
@@ -318,6 +325,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             array.append(viewCtrl)
         }
         return array
+        
     }
     
     // MARK: - Tableview Methods

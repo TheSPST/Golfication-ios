@@ -22,8 +22,9 @@ class CourseData:NSObject{
     var startingIndex : Int!
     var gameTypeIndex = 18
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
+
     func getGolfCourseDataFromFirebase(courseId:String){
-//        courseId = "course_9999999"
+//        let courseId = "course_99999999"
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
@@ -433,7 +434,10 @@ class CourseData:NSObject{
             for i in 0..<centerPointOfTeeNGreen.count{
                 centerPointOfTeeNGreenWithPar.append((tee: centerPointOfTeeNGreen[i].tee, fairway: centerPointOfTeeNGreen[i].fairway, green: centerPointOfTeeNGreen[i].green, par: numberOfHoles[i].par))
             }
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreenWithPar)
+            if Constants.fromDeviceMatch{
+               Constants.fromDeviceMatch = false
+               NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreenWithPar)
+            }
         }
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
     }

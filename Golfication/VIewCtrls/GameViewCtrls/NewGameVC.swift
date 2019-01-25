@@ -62,7 +62,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var swingGameId = Int()
     var swingKey = String()
     @IBOutlet weak var btnStartContinue: UIButton!
-    
+    @IBOutlet weak var btnPlayGolfX: UIButton!
+    var fromSetup = false
     @IBOutlet weak var classicScoringSV: UIStackView!
     //    @IBOutlet weak var newGameSV: UIStackView!
     
@@ -203,6 +204,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }
                 Constants.ble.isPracticeMatch = false
                 Constants.ble.currentGameId = self.swingGameId
+                Constants.ble.isSetupScreen = self.fromSetup
                 Constants.ble.startScanning()
                 showPopUp()
             }
@@ -392,6 +394,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         else if (!fromGolfBarBtn) && (fromStartContinueBtn) && (isContinueClicked) && (!fromEndRound){
             fromStartContinueBtn = false
+            Constants.fromDeviceMatch = true
             setActiveMatchUI()
         }
         else if (!fromGolfBarBtn) && (!fromStartContinueBtn) && (!isContinueClicked) && (fromEndRound){
@@ -408,6 +411,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             Constants.ble = BLE()
             Constants.ble.isPracticeMatch = false
         }
+        Constants.ble.isSetupScreen = self.fromSetup
         Constants.ble.startScanning()
         self.golfXPopupView.removeFromSuperview()
         showPopUp()
@@ -777,7 +781,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblLegacyAppMode.isHidden = true
         golficationXView.isHidden = true
         
-        playOnCourseAction(btnPlayOnCourse)
+        //playOnCourseAction(btnPlayOnCourse)
     }
     
     func deselectGOlfXView() {
@@ -1267,8 +1271,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             
             continueGameView.isHidden = true
             newGamescrollView.isHidden = false
+            btnStartContinue.isHidden = false
         }
-        btnStartContinue.isHidden = false
     }
     func checkRangeFinderHoleData() {
         if  !(Constants.selectedGolfID == "") {
@@ -1463,6 +1467,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                             if self.scoringMode == "rangeFinder" || self.scoringMode == "classic"{
                                 self.playGolfXView.isHidden = true
                                 self.mappingGolfXView.isHidden = false
+                                self.lblLegacyAppMode.isHidden = true
+                                self.navigationItem.rightBarButtonItem = nil
                                 self.playOnCourseAction(self.btnPlayOnCourse)
                                 FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourseRequest/\(Auth.auth().currentUser!.uid)") { (snapshot) in
                                     var dataDic = NSDictionary()
@@ -1484,14 +1490,31 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 }
                             }
                             else{
-                                self.playGolfXView.isHidden = false
+                                if Constants.macAddress != nil{
+                                    self.lblLegacyAppMode.isHidden = false
+                                    self.golficationXView.isHidden = false
+                                    self.playGolfXAction(self.btnPlayGolfX)
+                                    self.playGolfXView.isHidden = false
+                                    self.navigationItem.rightBarButtonItem = self.barBtnBLE
+                                }
+                                else{
+                                    self.lblLegacyAppMode.isHidden = true
+                                    self.golficationXView.isHidden = true
+                                    self.playGolfXView.isHidden = true
+                                    self.navigationItem.rightBarButtonItem = nil
+                                    self.playOnCourseAction(self.btnPlayOnCourse)
+                                }
                                 self.mappingGolfXView.isHidden = true
                             }
-                            self.deselectGOlfXView()
+                            //self.deselectGOlfXView()
+                        }
+                        else{
+                            self.playOnCourseAction(self.btnPlayOnCourse)
                         }
                     })
                 }
                 else{
+                    self.progressView.hide()
                     self.lblLegacyAppMode.isHidden = true
                     self.golficationXView.isHidden = true
                     self.playOnCourseAction(self.btnPlayOnCourse)
@@ -1613,6 +1636,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
             DispatchQueue.main.async(execute: {
 
+                self.btnStartContinue.isHidden = false
                 self.continueGameView.isHidden = false
                 self.newGamescrollView.isHidden = true
                 self.btnStartContinue.setTitle("Continue Round".localized(), for: .normal)
@@ -1813,7 +1837,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         imagePrevRound.image = #imageLiteral(resourceName: "score_prev_0")
         lblSubPrevRound.textColor = UIColor.lightGray
         
-        btnStartContinue.setTitle("Start".localized(), for: .normal)
+        if(Constants.matchId.count == 0){
+            btnStartContinue.setTitle("Start".localized(), for: .normal)
+        }
     }
     
     @IBAction func playOnCourseAction(_ sender: Any) {
@@ -1829,8 +1855,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         imagePrevRound.image = #imageLiteral(resourceName: "score_prev_0")
         lblSubPrevRound.textColor = UIColor.lightGray
         
-        btnStartContinue.setTitle("Next".localized(), for: .normal)
-        
+        if(Constants.matchId.count == 0){
+            btnStartContinue.setTitle("Next".localized(), for: .normal)
+        }
         deselectGOlfXView()
     }
     @IBAction func prevRoundAction(_ sender: Any) {
@@ -1846,8 +1873,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         imagePrevRound.image = #imageLiteral(resourceName: "score_prev_1")
         lblSubPrevRound.textColor = UIColor.glfBluegreen
         
-        btnStartContinue.setTitle("Next".localized(), for: .normal)
-        
+        if(Constants.matchId.count == 0){
+            btnStartContinue.setTitle("Next".localized(), for: .normal)
+        }
         deselectGOlfXView()
     }
     
@@ -1872,6 +1900,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 setActiveMatchUI()
             }else if !swingK.isEmpty && Constants.deviceGolficationX != nil{
                 isContinueClicked = true
+                Constants.fromDeviceMatch = true
                 setActiveMatchUI()
             }else{
                 isContinueClicked = true
@@ -1891,6 +1920,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     self.sharedInstance.initCBCentralManager()
                 }
                 else{
+                    if Constants.ble == nil{
+                       Constants.ble = BLE()
+                    }
+                    Constants.ble.isPracticeMatch = false
+                    Constants.ble.swingMatchId = String()
+                    Constants.ble.currentGameId = 0
+                    Constants.ble.isSetupScreen = self.fromSetup
+                    Constants.ble.sendThirdCommand()
                     playGolfX()
                 }
 //            }
@@ -1968,8 +2005,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         popUpContainerView.isHidden = true
         let gameCompleted = StartGameModeObj()
-        self.progressView.show()
-        
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
         // setup ultimate short tracking
         NotificationCenter.default.addObserver(self, selector: #selector(self.defaultMapApiCompleted(_:)), name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
         gameCompleted.showDefaultMap(onCourse:modeInt)
@@ -1984,11 +2020,12 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @objc func defaultMapApiCompleted(_ notification: NSNotification) {
         notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
         if Constants.deviceGolficationX != nil{
+            Constants.fromDeviceMatch = true
             self.courseData.startingIndex = Constants.startingHole == "" ? 1:Int(Constants.startingHole)
             self.courseData.gameTypeIndex = Constants.gameType == "9 holes" ? 9:18
             self.courseData.getGolfCourseDataFromFirebase(courseId: "course_\(Constants.selectedGolfID)")
         }else{
-            self.progressView.hide()
+            self.progressView.hide(navItem: self.navigationItem)
             let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "NewMapVC") as! NewMapVC
             viewCtrl.matchDataDict = Constants.matchDataDic
             viewCtrl.isContinue = false
@@ -2357,7 +2394,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func exitWithoutSave(){
-        
         if(Constants.matchId.count > 1){
             if(Auth.auth().currentUser!.uid.count > 1){
                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
@@ -2370,7 +2406,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                     if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
-                        Constants.ble.discardGameFromDevice()
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+//                        Constants.ble.discardGameFromDevice()
                         break
                     }
                 }
@@ -2391,6 +2428,79 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func saveAndviewScore(){
+        var swingVal = false
+        for data in self.players{
+            if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                    swingVal = true
+                    break
+                }
+            }
+        }
+        if swingVal{
+           checkScoringData()
+        }
+        else{
+            saveData()
+        }
+    }
+    
+    var isSyncd = false
+    var unSyncdIndex = 0
+    
+    func checkScoringData(){
+        self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring") { (snapshot) in
+            
+            var scoringArray =  NSArray()
+            if snapshot.value != nil{
+                scoringArray = snapshot.value as! NSArray
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                if scoringArray.count>0{
+                    for i in 0..<scoringArray.count{
+                        let dic = scoringArray[i] as! NSDictionary
+                        for (key,value) in dic{
+                            if key as! String == Auth.auth().currentUser!.uid{
+                                let keyVal = value as! NSDictionary
+                                if keyVal.value(forKey: "holeOut") as! Bool == true{
+                                    if let shotsArray = keyVal.value(forKey: "shots") as? NSMutableArray{
+                                        for j in 0..<shotsArray.count{
+                                            let myDic = shotsArray[j] as! NSDictionary
+                                            if let distance = myDic.value(forKey: "distance") as? Double
+                                            {
+                                                debugPrint("distance",distance)
+                                                self.isSyncd = true
+                                            }
+                                            else{
+                                                self.unSyncdIndex = i+1
+                                                self.isSyncd = false
+                                                break
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if self.unSyncdIndex>0 && !self.isSyncd{
+                    let emptyAlert = UIAlertController(title: "Alert", message: "Please sync hole \(self.unSyncdIndex)", preferredStyle: UIAlertControllerStyle.alert)
+                    emptyAlert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action: UIAlertAction!) in
+                        self.startContinueAction(Any.self)
+                    }))
+                    self.present(emptyAlert, animated: true, completion: nil)
+                }
+                else{
+                    self.saveData()
+                }
+            })
+        }
+    }
+    
+    func saveData(){
+        
         // ------------------ changed by Amit -----------
         for data in self.players{
             if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
@@ -2405,15 +2515,15 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         var holIndex = -1
         let totalThru: Int = self.checkHoleOutZero()
         FBSomeEvents.shared.logGameEndedEvent(holesPlayed: totalThru, valueToSum: Double(Constants.mode))
-        for i in 0..<detailedScore.count{
-            let dic = detailedScore[i] as! NSMutableDictionary
+        for i in 0..<self.detailedScore.count{
+            let dic = self.detailedScore[i] as! NSMutableDictionary
             if (dic.value(forKey: "DetailCount") as! Int == 2){
                 holIndex = dic.value(forKey: "HoleIndex") as! Int
                 break
             }
         }
         if (totalThru >= 9) && !(Constants.mode == 1) && (holIndex > -1){
-            //        if (totalThru >= 6) && !(mode == 1) && (holIndex>0){
+            //if (totalThru >= 6) && !(mode == 1) && (holIndex>0){
             let emptyAlert = UIAlertController(title: "Alert", message: "Would you like to complete Detailed Scoring to get better stats?", preferredStyle: UIAlertControllerStyle.alert)
             emptyAlert.addAction(UIAlertAction(title: "Add Detailed Scores", style: .default, handler: { (action: UIAlertAction!) in
                 
@@ -2439,6 +2549,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
     }
+    
     func generateStatsData(){
         // ------------------ Commented by Amit -----------
 

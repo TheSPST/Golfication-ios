@@ -135,7 +135,6 @@
 		4B1F6BE82090A29F00312EA7 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC02090A29F00312EA7 /* AnnotationView.swift */; };
 		4B1F6BE92090A29F00312EA7 /* SelectCourseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */; };
 		4B1F6BEA2090A29F00312EA7 /* NewGameScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */; };
-		4B35352021EE2438007DECB8 /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B35351F21EE2438007DECB8 /* GoogleService-Info-live.plist */; };
 		4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */; };
 		4B4BD77221E366B00067460A /* CesPopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B4BD77121E366B00067460A /* CesPopUpView.xib */; };
 		4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */; };
@@ -260,6 +259,7 @@
 		4BE1E2C5206CC74B00A32845 /* ShareStatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */; };
 		4BE4196921B29A6100C49AB6 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE4196821B29A6100C49AB6 /* CircularProgress.swift */; };
 		4BF564EF1FD2AA03006BDB0E /* String+Width.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF564EE1FD2AA03006BDB0E /* String+Width.swift */; };
+		4BFE408B21F71688009D221A /* GoogleService-Info-Dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BFE408A21F71688009D221A /* GoogleService-Info-Dev.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -403,7 +403,6 @@
 		4B1F6BC02090A29F00312EA7 /* AnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCourseData.swift; sourceTree = "<group>"; };
 		4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameScoreTableViewCell.swift; sourceTree = "<group>"; };
-		4B35351F21EE2438007DECB8 /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProMemberPopUPVC.swift; sourceTree = "<group>"; };
 		4B4BD77121E366B00067460A /* CesPopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CesPopUpView.xib; sourceTree = "<group>"; };
 		4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MySwing.storyboard; sourceTree = "<group>"; };
@@ -547,6 +546,7 @@
 		4BE1E2C7206CFA7000A32845 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		4BE4196821B29A6100C49AB6 /* CircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
 		4BF564EE1FD2AA03006BDB0E /* String+Width.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Width.swift"; sourceTree = "<group>"; };
+		4BFE408A21F71688009D221A /* GoogleService-Info-Dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-Dev.plist"; sourceTree = "<group>"; };
 		74C4161709B89182A1A47152 /* Pods-Golfication.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.debug.xcconfig"; sourceTree = "<group>"; };
 		BAEB7E85ED122E864139FDF9 /* Pods-Golfication.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.release.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1265,7 +1265,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4B35351F21EE2438007DECB8 /* GoogleService-Info-live.plist */,
+				4BFE408A21F71688009D221A /* GoogleService-Info-Dev.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1399,7 +1399,6 @@
 				3E59234A20A991C60056D446 /* Home.storyboard in Resources */,
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
-				4B35352021EE2438007DECB8 /* GoogleService-Info-live.plist in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
@@ -1408,6 +1407,7 @@
 				4B17C4722195BCF7004CA13C /* Localizable.strings in Resources */,
 				4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */,
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
+				4BFE408B21F71688009D221A /* GoogleService-Info-Dev.plist in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
@@ -1484,6 +1484,8 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlaces.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

@@ -28,7 +28,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
     var currentGameId = Int()
     var activeMatchId = String()
     var swingMatchId = String()
-    var isPracticeMatch = Bool()
+    var fromSetup = false
     var swingDetails = [(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64,hole:Int)]()
     @IBAction func backAction(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
@@ -55,7 +55,8 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(self.noSetup(_:)), name: NSNotification.Name(rawValue: "noSetup"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.takeSwing(_:)), name: NSNotification.Name(rawValue: "readyToTakeSwing"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.reloadData(_:)), name: NSNotification.Name(rawValue: "DeviceConnected"), object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(self.discardGame(_:)), name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
+        
         setInitialUI()
         
         if Constants.isDevice{
@@ -74,6 +75,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
     }
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DiscardCancel"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
     }
     var sharedInstance: BluetoothSync!
@@ -176,7 +178,10 @@ class ScanningVC: UIViewController, BluetoothDelegate {
             NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
         })
     }
-    
+    @objc func discardGame(_ notification: NSNotification){
+        self.navigationController?.popViewController(animated: true)
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DiscardCancel"))
+    }
     @objc func updateScreen(_ notification: NSNotification){
         self.timeOutTimer.invalidate()
         DispatchQueue.main.async(execute: {
@@ -206,14 +211,8 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         Constants.ble.stopScanning()
         Constants.ble.isPracticeMatch = true
-//        Constants.ble.isDeviceSetup = false
-//        Constants.ble.swingMatchId = self.swingMatchId
-//        Constants.ble.currentGameId = self.currentGameId
-//        Constants.ble.swingDetails = self.swingDetails
-        
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         Constants.ble.sendThirdCommand()
-
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
         self.navigationItem.rightBarButtonItem?.isEnabled = true
     }
@@ -272,6 +271,9 @@ class ScanningVC: UIViewController, BluetoothDelegate {
                                         if let playType = data.value(forKey: "playType") as? String{
                                             if(playType != "match") && self.swingDetails.count != 0{
                                                 swingMArray.add(data)
+                                            }else if playType == "match"{
+                                                self.currentGameId = 0
+                                                self.fromSetup = true
                                             }
                                         }
                                     }
@@ -299,30 +301,22 @@ class ScanningVC: UIViewController, BluetoothDelegate {
                             
                             if Constants.ble == nil{
                                 Constants.ble = BLE()
-
                             }else{
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwing"), object: dict)
                             }
-                            Constants.ble.startScanning()
-                            Constants.ble.isSetupScreen = true
-                            Constants.ble.isPracticeMatch = true
-                            Constants.ble.isDeviceSetup = false
-                            Constants.ble.swingMatchId = self.swingMatchId
-                            Constants.ble.currentGameId = self.currentGameId
-                            self.showPopUp()
-                            
                         }else{
                             if Constants.ble == nil{
                                 Constants.ble = BLE()
                             }
-                            Constants.ble.startScanning()
-                            Constants.ble.isSetupScreen = true
-                            Constants.ble.isPracticeMatch = true
-                            Constants.ble.isDeviceSetup = false
-                            Constants.ble.swingMatchId = self.swingMatchId
-                            Constants.ble.currentGameId = self.currentGameId
-                            self.showPopUp()
                         }
+                        Constants.ble.startScanning()
+                        Constants.ble.isSetupScreen = !self.fromSetup
+                        Constants.ble.isPracticeMatch = true
+                        Constants.ble.isDeviceSetup = false
+                        Constants.ble.swingMatchId = self.swingMatchId
+                        Constants.ble.currentGameId = self.currentGameId
+                        self.showPopUp()
+
                     })
                 })
                 
@@ -422,10 +416,10 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        
+
         if(Constants.deviceGolficationX != nil){
             Constants.ble.isPracticeMatch = true
-            Constants.ble.sendThirdCommand()
+//            Constants.ble.sendThirdCommand()
         }
     }
     
@@ -436,7 +430,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         if Constants.ble == nil{
             Constants.ble = BLE()
         }
-        Constants.ble.isSetupScreen = true
+        Constants.ble.isSetupScreen = !self.fromSetup
         Constants.ble.startScanning()
         self.golfXPopupView.removeFromSuperview()
         showPopUp()

@@ -27,6 +27,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     weak var tagCircularView: CircularProgress!
     var lblScanStatus: UILabel!
+    var lblScanInfo: UILabel!
     var clubImageView:UIImageView!
     
     let progressView = SDLoader()
@@ -153,6 +154,8 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         
         clubImageView = (scanProgressView.viewWithTag(666) as! UIImageView)
         clubImageView.image =  UIImage(named: selectedBagStr)
+        
+        lblScanInfo = (scanProgressView.viewWithTag(777) as! UILabel)
     }
     
     func enableSubViews(){
@@ -328,14 +331,15 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             
             DispatchQueue.main.async {
                 self.lblScanStatus.text = "Waiting for tag..."
+                self.lblScanInfo.text = "Press the tag button\nfor 2 seconds and release."
                 self.btnRetry.isHidden = true
                 self.btnNoTag.isHidden = true
                 
                 self.disableSubViews()
             }
             DispatchQueue.main.async(execute: {
-                self.tagCircularView.setProgressWithAnimation(duration: 5.0, value: 1.0)
-                self.perform(#selector(self.animateProgress), with: nil, afterDelay: 5.0)
+                self.tagCircularView.setProgressWithAnimation(duration: 7.0, value: 1.0)
+                self.perform(#selector(self.animateProgress), with: nil, afterDelay: 7.0)
             })
         }else{
             self.btnSyncTag.setTitle("Sync Tag", for: .normal)
@@ -370,7 +374,8 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     self.syncTag(tagName: name, peripheral: (self.tagsIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
                     
                 }else{
-                    self.lblScanStatus.text = "No Tag Found"
+                    self.lblScanStatus.text = "Sync Failed"
+                    self.lblScanInfo.text = "Unable to detect tag.\nPlease try again."
                     tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
                     self.btnRetry.isHidden = false
                     self.btnNoTag.isHidden = false
@@ -379,7 +384,8 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                     enableSubViews()
                 }
             }else{
-                self.lblScanStatus.text = "No Tag Found"
+                self.lblScanStatus.text = "Sync Failed"
+                self.lblScanInfo.text = "Unable to detect tag.\nPlease try again."
                 tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
                 self.btnRetry.isHidden = false
                 self.btnNoTag.isHidden = false
@@ -570,7 +576,17 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 }
             }
             else{
-                self.lblScanStatus.text = "Tag is already used."
+                var clubName = String()
+                for i in 0..<self.golfBagArr.count{
+                    let dict = self.golfBagArr[i] as! NSDictionary
+                    if (dict.value(forKey: "tagNum") as! String == dropFirst3){
+                        clubName = dict.value(forKey: "clubName") as! String
+                        break
+                    }
+                }
+                self.lblScanStatus.text = "Sync Failed"
+                let fullClubName = getFullClubName(clubName:clubName)
+                self.lblScanInfo.text = "This tag is already used\nwith \(fullClubName)."
                 self.tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
 
                 self.btnRetry.isHidden = false
@@ -584,6 +600,44 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         }else{
             view.makeToast("You can not sync more than 14 Tags.")
         }
+    }
+    
+    func getFullClubName(clubName: String) -> String{
+        var fullClubName = String()
+        
+        let lastChar = clubName.last!
+        let firstChar = clubName.first!
+        
+        if lastChar == "i"{
+            fullClubName = String(firstChar) + " Iron"
+        }
+        else if lastChar == "h"{
+            fullClubName = String(firstChar) + " Hybrid"
+        }
+        else if lastChar == "r"{
+            fullClubName = "Driver"
+        }
+        else if lastChar == "u"{
+            fullClubName = "Putter"
+        }
+        else if lastChar == "w"{
+            if clubName == "Pw"{
+                fullClubName =  "Pitching Wedge"
+            }
+            else if clubName == "Sw"{
+                fullClubName =  "Sand Wedge"
+            }
+            else if clubName == "Gw"{
+                fullClubName =  "Gap Wedge"
+            }
+            else if clubName == "Lw"{
+                fullClubName =  "Lob Wedge"
+            }
+            else{
+                fullClubName = String(firstChar) + " Woods"
+            }
+        }
+        return fullClubName
     }
     
     func setSyncData(tagName: String, peripheral: CBPeripheral){

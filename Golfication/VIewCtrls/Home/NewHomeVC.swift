@@ -900,9 +900,22 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         case .poweredOn:
             debugPrint("State : Powered On")
             
-            let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-            sharedInstance.delegate = nil
+            if Constants.macAddress != nil{
+                let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                sharedInstance.delegate = nil
+            }
+            else{
+                let alertVC = UIAlertController(title: "Alert", message: "Please finish the device setup first.", preferredStyle: UIAlertControllerStyle.alert)
+                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+                    let storyboard = UIStoryboard(name: "Home", bundle: nil)
+                    let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
+                    viewCtrl.fromPublicProfile = false
+                    self.navigationController?.pushViewController(viewCtrl, animated: true)
+                })
+                alertVC.addAction(action)
+                self.present(alertVC, animated: true, completion: nil)
+            }
             return
             
         case .unsupported:
@@ -933,13 +946,14 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRoundHome"))
     }
-    
+
     // MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = true
         self.tabBarController?.tabBar.isHidden = false
         
+        storeAllMacAddress()
         // ---------------- Google Analytics --------------------------------------
         guard let tracker = GAI.sharedInstance().defaultTracker else { return }
         tracker.set(kGAIScreenName, value: "Home Screen")
@@ -949,6 +963,21 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         getUserDataFromFireBase()
         self.getGolficationXVersion()
     }
+    
+    func storeAllMacAddress(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golficationX") { (snapshot) in
+            var golficationX = NSDictionary()
+            if snapshot.value != nil{
+                golficationX = snapshot.value as! NSDictionary
+            }
+            DispatchQueue.main.async(execute: {
+                if golficationX.count>0{
+                    Constants.allMacAdrsDic.addEntries(from: golficationX as! [AnyHashable : Any])
+                }
+            })
+        }
+    }
+    
     // MARK: getStrokesGainedFirebaseData
     func getStrokesGainedFirebaseData(){
         Constants.strokesGainedDict.removeAll()

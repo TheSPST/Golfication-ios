@@ -95,6 +95,8 @@ class BLE: NSObject {
         return isTrue
     }
     var allClubs = ["Dr","3w","4w","5w","7w","1i","2i","3i","4i","5i","6i","7i","8i","9i","1h","2h","3h","4h","5h","6h","7h","Pw","Gw","Sw","Lw","Pu"]
+    var textInfo = String()
+    var restartTimer = Timer()
 
     func startScanning(){
         self.isContinue = false
@@ -785,7 +787,9 @@ extension BLE: CBCentralManagerDelegate {
                                                 i += 2
                                             }
                                             newMacAddress.removeLast()
-                                            if Constants.macAddress != nil && newMacAddress.contains(Constants.macAddress!){
+                                            //if Constants.macAddress != nil && newMacAddress.contains(Constants.macAddress!){
+                                            //changed by Amit
+                                            if Constants.macAddress != nil && newMacAddress.containsIgnoringCase(find: Constants.macAddress!){
                                                 self.deviceIndex = j
                                                 debugPrint((self.peripheralDevicesIn5Sec.value(forKey: "\(ordered[j])") as! CBPeripheral))
                                                 let peripheral = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered[j])") as! CBPeripheral)
@@ -812,7 +816,21 @@ extension BLE: CBCentralManagerDelegate {
                                 self.centralManager.connect(peripheral)
                                 isTrue = true
                             }else if !isTrue && (Constants.macAddress != nil){
-                                   UIApplication.shared.keyWindow?.makeToast("Please connect your GolficationX which you have previously setup.")
+                                var isMyDevice = true
+                                for (key, _) in Constants.allMacAdrsDic{
+                                    if (key as! String) != Constants.macAddress{
+                                        isMyDevice = false
+                                        break
+                                    }
+                                }
+                                if !isMyDevice{
+                                    self.textInfo =  "This device is being used by someone else."
+                                    UIApplication.shared.keyWindow?.makeToast("This device is being used by someone else.")
+                                }
+                                else{
+                                    self.textInfo =  "Please connect to device which you had previously setup."
+                                    UIApplication.shared.keyWindow?.makeToast("Please connect your GolficationX which you have previously setup.")
+                                }
                             }
                         }
                     }
@@ -884,7 +902,7 @@ extension BLE: CBCentralManagerDelegate {
             if(snapshot.value != nil){
                 if let dataDic = snapshot.value as? [String:Bool]{
                     for (key, value) in dataDic{
-                        if(value) && key != self.swingMatchId{
+                        if(value){
                             ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false])
                         }
                     }
@@ -925,6 +943,7 @@ extension BLE: CBCentralManagerDelegate {
                         self.timerForService.invalidate()
                         self.centralManager.stopScan()
                         self.centralManager.cancelPeripheralConnection(peripheral)
+                        self.textInfo = "Device not found. Please turn on and turn off your device or app."
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
                     }
                 }
@@ -1008,10 +1027,16 @@ extension BLE: CBPeripheralDelegate {
                 self.charctersticsRead = characteristic
                 Constants.charctersticsGlobalForRead = characteristic
                 peripheral.setNotifyValue(true, for: self.charctersticsRead)
+                self.restartTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.restartTimerAction), userInfo: nil, repeats: false)
             }
         }
-        
     }
+    @objc func restartTimerAction() {
+        self.restartTimer.invalidate()
+        textInfo = "Connection error: Please restart the app or phone"
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "RestartPhone"), object: nil)
+    }
+
     func uploadSwingScore(){
         DispatchQueue.main.async(execute: {
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(self.swingMatchId)/swings") { (snapshot) in
@@ -1393,6 +1418,7 @@ extension BLE: CBPeripheralDelegate {
                                     }))
                                     gameAlert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { (action: UIAlertAction!) in
                                         debugPrint("Game Discard cancel Press")
+                                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
                                     }))
                                     UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
                                 }else{
@@ -1904,7 +1930,7 @@ extension BLE: CBPeripheralDelegate {
             print(e)
         } else {
             if charctersticsRead.isNotifying {
-                
+                self.restartTimer.invalidate()
                 print("notification updated: " + charctersticsRead.uuid.uuidString)
             }
             if charctersticsWrite.isNotifying {
