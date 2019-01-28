@@ -514,7 +514,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
                     self.golfBag.append("Putter")
                 }
                 self.lblAssignedTag.text = "\(self.totalAssigned) assigned"
-                self.lblRemainingTag.text = "\(14 - self.totalAssigned) remaining"
+                self.lblRemainingTag.text = "\(self.golfBagArr.count - self.totalAssigned) remaining"
                 self.getIsDeviceAlreadySetup()
             })
         }

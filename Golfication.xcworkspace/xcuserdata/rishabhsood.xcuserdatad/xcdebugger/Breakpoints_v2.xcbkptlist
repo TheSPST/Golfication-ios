@@ -9,22 +9,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/DeviceViewCtrls/ScanningVC.swift"
-            timestampString = "570189309.76182"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "275"
-            endingLineNumber = "275"
-            landmarkName = "getSwingData()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/GameViewCtrls/NewGameVC.swift"
             timestampString = "570198653.639717"
             startingColumnNumber = "9223372036854775807"
@@ -90,27 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "570350938.246884"
+            timestampString = "570357420.436141"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "815"
-            endingLineNumber = "815"
-            landmarkName = "centralManagerDidUpdateState(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "570350938.247979"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1594"
-            endingLineNumber = "1594"
+            startingLineNumber = "1645"
+            endingLineNumber = "1645"
             landmarkName = "peripheral(_:didUpdateValueFor:error:)"
             landmarkType = "7">
             <Locations>
@@ -122,11 +90,11 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/rishabhsood/Desktop/Golfication-26-Jan-3.2.0/Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-                  timestampString = "570350939.133759"
+                  timestampString = "570357421.079132"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1594"
-                  endingLineNumber = "1594"
+                  startingLineNumber = "1645"
+                  endingLineNumber = "1645"
                   offsetFromSymbolStart = "484">
                </Location>
                <Location
@@ -137,11 +105,11 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/rishabhsood/Desktop/Golfication-26-Jan-3.2.0/Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-                  timestampString = "570350939.136229"
+                  timestampString = "570357421.081592"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1595"
-                  endingLineNumber = "1595"
+                  startingLineNumber = "1646"
+                  endingLineNumber = "1646"
                   offsetFromSymbolStart = "40">
                </Location>
             </Locations>
@@ -154,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "570350938.248287"
+            timestampString = "570357420.436623"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1768"
-            endingLineNumber = "1768"
+            startingLineNumber = "1819"
+            endingLineNumber = "1819"
             landmarkName = "peripheral(_:didUpdateValueFor:error:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -170,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "570350938.248574"
+            timestampString = "570357420.436937"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "963"
-            endingLineNumber = "963"
+            startingLineNumber = "1015"
+            endingLineNumber = "1015"
             landmarkName = "startMatch(isPractice:)"
             landmarkType = "7">
             <Locations>
@@ -186,11 +154,11 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/rishabhsood/Desktop/Golfication-26-Jan-3.2.0/Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-                  timestampString = "570350939.147028"
+                  timestampString = "570357421.0924129"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "963"
-                  endingLineNumber = "963"
+                  startingLineNumber = "1015"
+                  endingLineNumber = "1015"
                   offsetFromSymbolStart = "496">
                </Location>
                <Location
@@ -201,11 +169,11 @@
                   moduleName = "Golfication"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/rishabhsood/Desktop/Golfication-26-Jan-3.2.0/Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-                  timestampString = "570350939.149457"
+                  timestampString = "570357421.094867"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "964"
-                  endingLineNumber = "964"
+                  startingLineNumber = "1016"
+                  endingLineNumber = "1016"
                   offsetFromSymbolStart = "40">
                </Location>
             </Locations>
@@ -218,7 +186,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/Home/BlueTooth/BLE.swift"
-            timestampString = "570350938.2488559"
+            timestampString = "570357420.437238"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "733"
@@ -234,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/DeviceViewCtrls/PracticePageContainerVC.swift"
-            timestampString = "570205839.782046"
+            timestampString = "570357420.437573"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "443"
-            endingLineNumber = "443"
+            startingLineNumber = "445"
+            endingLineNumber = "445"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -250,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/DeviceViewCtrls/PracticePageContainerVC.swift"
-            timestampString = "570205839.782144"
+            timestampString = "570357420.437637"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "451"
-            endingLineNumber = "451"
+            startingLineNumber = "453"
+            endingLineNumber = "453"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -266,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/DeviceViewCtrls/PracticePageContainerVC.swift"
-            timestampString = "570205839.782259"
+            timestampString = "570357420.437695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "457"
-            endingLineNumber = "457"
+            startingLineNumber = "459"
+            endingLineNumber = "459"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -282,12 +250,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Golfication/VIewCtrls/DeviceViewCtrls/PracticePageContainerVC.swift"
-            timestampString = "570205839.7823679"
+            timestampString = "570357420.4377511"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "462"
-            endingLineNumber = "462"
+            startingLineNumber = "464"
+            endingLineNumber = "464"
             landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/DeviceViewCtrls/PracticePageContainerVC.swift"
+            timestampString = "570357420.437807"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "273"
+            endingLineNumber = "273"
+            landmarkName = "showShotsAfterSwing(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

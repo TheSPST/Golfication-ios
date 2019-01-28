@@ -773,15 +773,13 @@ extension BLE: CBCentralManagerDelegate {
                             debugPrint(advData,self.orderedAdv)
                             var isTrue = false
                             var indexArr = [Int]()
-                            var newMacAddress = String()
                             for j in 0..<self.orderedAdv.count{
                                 if let advData = self.advertiseDataDevicesIn5Sec.value(forKey: "\(self.orderedAdv[j])") as? [String : Any]{
                                     if let name = advData["kCBAdvDataLocalName"] as? String{
-                                        
                                         if name.count >= 16{
                                             indexArr.append(j)
-//                                            var newMacAddress = String()
                                             var i = 0
+                                            var newMacAddress = String()
                                             while i < 11{
                                                 newMacAddress.append(name[4+i])
                                                 newMacAddress.append(name[5+i])
@@ -809,10 +807,37 @@ extension BLE: CBCentralManagerDelegate {
                             if !isTrue && indexArr.isEmpty && (Constants.macAddress == nil){
                                 debugPrint((self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral))
                                 let peripheral = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral)
+                                let advName = self.advertiseDataDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! [String : Any]
+                                var newMacAddress = String()
+                                if let name = advName["kCBAdvDataLocalName"] as? String{
+                                    if name.count >= 16{
+                                        var i = 0
+                                        while i < 11{
+                                            newMacAddress.append(name[4+i])
+                                            newMacAddress.append(name[5+i])
+                                            newMacAddress.append(":")
+                                            i += 2
+                                        }
+                                        newMacAddress.removeLast()
+                                        newMacAddress = newMacAddress.lowercased()
+                                    }else if let name = peripheral.name{
+                                        if name.count >= 16{
+                                            var i = 0
+                                            while i < 11{
+                                                newMacAddress.append(name[4+i])
+                                                newMacAddress.append(name[5+i])
+                                                newMacAddress.append(":")
+                                                i += 2
+                                            }
+                                            newMacAddress.removeLast()
+                                            newMacAddress = newMacAddress.lowercased()
+                                        }
+                                    }
+                                }
                                 peripheral.delegate = self
                                 self.centralManager.stopScan()
-                                
                                 var isMyDevice = true
+                                
                                 for (key, _) in Constants.allMacAdrsDic{
                                     if newMacAddress.containsIgnoringCase(find: key as! String){
                                         isMyDevice = false
@@ -826,6 +851,33 @@ extension BLE: CBCentralManagerDelegate {
                                 }
                             }else if !indexArr.isEmpty && (Constants.macAddress == nil){
                                 let peripheral = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered[indexArr.first!])") as! CBPeripheral)
+                                let advName = self.advertiseDataDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! [String : Any]
+                                var newMacAddress = String()
+                                if let name = advName["kCBAdvDataLocalName"] as? String{
+                                    if name.count >= 16{
+                                        var i = 0
+                                        while i < 11{
+                                            newMacAddress.append(name[4+i])
+                                            newMacAddress.append(name[5+i])
+                                            newMacAddress.append(":")
+                                            i += 2
+                                        }
+                                        newMacAddress.removeLast()
+                                        newMacAddress = newMacAddress.lowercased()
+                                    }else if let name = peripheral.name{
+                                        if name.count >= 16{
+                                            var i = 0
+                                            while i < 11{
+                                                newMacAddress.append(name[4+i])
+                                                newMacAddress.append(name[5+i])
+                                                newMacAddress.append(":")
+                                                i += 2
+                                            }
+                                            newMacAddress.removeLast()
+                                            newMacAddress = newMacAddress.lowercased()
+                                        }
+                                    }
+                                }
                                 peripheral.delegate = self
                                 self.centralManager.stopScan()
                                 var isMyDevice = true
@@ -1477,10 +1529,9 @@ extension BLE: CBPeripheralDelegate {
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                         }else{
                             DispatchQueue.main.async(execute: {
-//                                if !self.isSetupScreen{
+                                if !self.isSetupScreen{
                                     let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
                                     gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-//                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
                                         self.randomGenerator()
                                         self.swingDetails.removeAll()
                                         self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
@@ -1491,7 +1542,7 @@ extension BLE: CBPeripheralDelegate {
                                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
                                     }))
                                     UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-//                                }
+                                }
 //                                else{
 //                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
 //                                }
@@ -1673,9 +1724,9 @@ extension BLE: CBPeripheralDelegate {
                         var clubIndex = 0
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
                             clubIndex = (Int(dataArray[14]))-1
+                            holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubIndex]
+                            swingDetails[swingDetails.count-1].club = self.allClubs[clubIndex]
                         }
-                        holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubIndex]
-                        swingDetails[swingDetails.count-1].club = self.allClubs[clubIndex]
                         swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
                         swingDetails[swingDetails.count-1].bs = Double(backSwing)
                         if downSwing > 0.23 && downSwing < 1.0{
@@ -1815,9 +1866,9 @@ extension BLE: CBPeripheralDelegate {
                         var clubNumber = 0
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
                             clubNumber = (Int(dataArray[14]))-1
+                            holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubNumber]
+                            swingDetails[swingDetails.count-1].club = self.allClubs[clubNumber]
                         }
-                        holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubNumber]
-                        swingDetails[swingDetails.count-1].club = self.allClubs[clubNumber]
                         if(Int(dataArray[15]) == 0){
                             holeWithSwing[holeWithSwing.count-1].holeOut = true
                         }else{

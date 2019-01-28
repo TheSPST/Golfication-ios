@@ -384,7 +384,6 @@ class ScanningVC: UIViewController, BluetoothDelegate {
                             viewCtrl.tempArray1 = swingArr
                             viewCtrl.currentGameId = self.currentGameId
                             viewCtrl.swingId = self.swingMatchId
-                            viewCtrl.moveToViewController(at: shotsAr.count-1)
                             self.navigationController?.pushViewController(viewCtrl, animated: true)
                         })
                     }else{

@@ -72,13 +72,15 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         if superClassName == "SwingSessionVC"{
             self.swingDetailsView.isHidden = false
             self.navigationItem.rightBarButtonItems = nil
-            
         }else{
             UIApplication.shared.isIdleTimerDisabled = true
             self.swingDetailsView.isHidden = true
             NotificationCenter.default.addObserver(self, selector: #selector(self.showShotsAfterSwing(_:)), name: NSNotification.Name(rawValue: "getSwingInside"), object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(self.finishedPopUp(_:)), name: NSNotification.Name(rawValue: "practiceFinished"), object: nil)
-            self.moveToViewController(at: shotsArray.count-1)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                self.reloadPagerTabStripView()
+                self.moveToViewController(at: self.shotsArray.count-2)
+            })
         }
         debugPrint("tempArray1==",tempArray1)
         self.reloadTableWithStrokesGained()
