@@ -869,7 +869,7 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                     titleLbl.text =  "Lob Wedge"
                 }
                 else{
-                    titleLbl.text = String(firstChar) + " Woods"
+                    titleLbl.text = String(firstChar) + " Wood"
                 }
             }
             golfBagContainerView.addSubview(titleLbl)

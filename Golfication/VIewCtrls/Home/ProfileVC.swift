@@ -932,7 +932,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                     titleLbl.text =  "Lob Wedge"
                 }
                 else{
-                    titleLbl.text = String(firstChar) + " Woods"
+                    titleLbl.text = String(firstChar) + " Wood"
                 }
             }
             golfBagContainerView.addSubview(titleLbl)

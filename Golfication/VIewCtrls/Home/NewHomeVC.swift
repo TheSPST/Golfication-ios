@@ -361,7 +361,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         //        }
         
 //                self.FindUser()
-        setCesPopupCount()
+//        setCesPopupCount()
     }
     
     func setCesPopupCount(){
@@ -499,7 +499,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 fullClubName =  "Lob Wedge"
             }
             else{
-                fullClubName = String(firstChar) + " Woods"
+                fullClubName = String(firstChar) + " Wood"
             }
         }
         return fullClubName

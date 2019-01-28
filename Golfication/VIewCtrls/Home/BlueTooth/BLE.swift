@@ -113,9 +113,6 @@ class BLE: NSObject {
         if Constants.bleObserver == 0{
             self.setupObserver()
         }
-//        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
-        NotificationCenter.default.addObserver(self, selector: #selector(sendSecondCommand(_:)), name: NSNotification.Name(rawValue: "command2"), object: nil)
-
     }
     
     private func setupObserver(){
@@ -123,7 +120,8 @@ class BLE: NSObject {
 //        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command8"))
 //        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command3"))
 //        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "startMatchCalling"))
-
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(sendSecondCommand(_:)), name: NSNotification.Name(rawValue: "command2"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendEightCommand(_:)), name: NSNotification.Name(rawValue: "command8"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendThirdCommandFromMap(_:)), name: NSNotification.Name(rawValue: "command3"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startMatchCalling(_:)), name: NSNotification.Name(rawValue: "startMatchCalling"), object: nil)
@@ -246,7 +244,7 @@ class BLE: NSObject {
             self.leftOrRight = Int(leftOrRight)
             self.metric = Int(metric)
             currentCommandData = data
-            self.forPrintingServices()
+//            self.forPrintingServices()
             let writeData =  Data(bytes: data)
             Constants.deviceGolficationX.writeValue(writeData as Data, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
             self.timeOut += 1
@@ -334,6 +332,8 @@ class BLE: NSObject {
         }
     }
     @objc private func sendSecondCommand(_ notification: NSNotification){
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
+        self.totalTagInFirstPackate = 0
         timeOut = 0
         if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3{
             if let myDict = notification.object as? [(tag:Int ,club:Int,clubName:String)] {
@@ -611,7 +611,8 @@ class BLE: NSObject {
                 if(self.holeWithSwing.count == 0){
                     param.append(UInt8(self.shotNumFor8th(hole: 1)))
                 }else{
-                    if(holeWithSwing.last!.holeOut){
+                    if(holeWithSwing.last!.holeOut) && (holeWithSwing.last!.hole != (Constants.matchDataDic.value(forKey: "scoring") as! NSArray).count){
+                        debugPrint("holeWithSwing.last!.hole+1",holeWithSwing.last!.hole+1)
                         param.append(UInt8(self.shotNumFor8th(hole: holeWithSwing.last!.hole+1)))
                     }else{
                         param.append(UInt8(holeWithSwing.last!.shotNo))
@@ -772,13 +773,14 @@ extension BLE: CBCentralManagerDelegate {
                             debugPrint(advData,self.orderedAdv)
                             var isTrue = false
                             var indexArr = [Int]()
+                            var newMacAddress = String()
                             for j in 0..<self.orderedAdv.count{
                                 if let advData = self.advertiseDataDevicesIn5Sec.value(forKey: "\(self.orderedAdv[j])") as? [String : Any]{
                                     if let name = advData["kCBAdvDataLocalName"] as? String{
                                         
                                         if name.count >= 16{
                                             indexArr.append(j)
-                                            var newMacAddress = String()
+//                                            var newMacAddress = String()
                                             var i = 0
                                             while i < 11{
                                                 newMacAddress.append(name[4+i])
@@ -787,6 +789,7 @@ extension BLE: CBCentralManagerDelegate {
                                                 i += 2
                                             }
                                             newMacAddress.removeLast()
+                                            newMacAddress = newMacAddress.lowercased()
                                             //if Constants.macAddress != nil && newMacAddress.contains(Constants.macAddress!){
                                             //changed by Amit
                                             if Constants.macAddress != nil && newMacAddress.containsIgnoringCase(find: Constants.macAddress!){
@@ -808,12 +811,36 @@ extension BLE: CBCentralManagerDelegate {
                                 let peripheral = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered.first!)") as! CBPeripheral)
                                 peripheral.delegate = self
                                 self.centralManager.stopScan()
-                                self.centralManager.connect(peripheral)
+                                
+                                var isMyDevice = true
+                                for (key, _) in Constants.allMacAdrsDic{
+                                    if newMacAddress.containsIgnoringCase(find: key as! String){
+                                        isMyDevice = false
+                                        break
+                                    }
+                                }
+                                if !isMyDevice{
+                                    UIApplication.shared.keyWindow?.makeToast("This device is being used by someone else.")
+                                }else{
+                                    self.centralManager.connect(peripheral)
+                                }
                             }else if !indexArr.isEmpty && (Constants.macAddress == nil){
                                 let peripheral = (self.peripheralDevicesIn5Sec.value(forKey: "\(ordered[indexArr.first!])") as! CBPeripheral)
                                 peripheral.delegate = self
                                 self.centralManager.stopScan()
-                                self.centralManager.connect(peripheral)
+                                var isMyDevice = true
+                                for (key, _) in Constants.allMacAdrsDic{
+                                    if newMacAddress.containsIgnoringCase(find: key as! String){
+                                        isMyDevice = false
+                                        break
+                                    }
+                                }
+                                
+                                if !isMyDevice{
+                                    UIApplication.shared.keyWindow?.makeToast("This device is being used by someone else.")
+                                }else{
+                                    self.centralManager.connect(peripheral)
+                                }
                                 isTrue = true
                             }else if !isTrue && (Constants.macAddress != nil){
                                 var isMyDevice = true
@@ -902,19 +929,19 @@ extension BLE: CBCentralManagerDelegate {
         self.holeWithSwing.removeAll()
         self.shotNo = 1
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
+            var dataDiction = [String:Bool]()
             if(snapshot.value != nil){
-                var dataDiction = [String:Bool]()
                 if let dataDic = snapshot.value as? [String:Bool]{
                     dataDiction = dataDic
                 }
-                DispatchQueue.main.async(execute: {
-                    for (key, value) in dataDiction{
-                        if(value){
-                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false])
-                        }
-                    }
-                })
             }
+            DispatchQueue.main.async(execute: {
+                for (key, value) in dataDiction{
+                    if(value){
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false])
+                    }
+                }
+            })
         }
     }
     func startMatch(isPractice:Bool){
@@ -922,31 +949,31 @@ extension BLE: CBCentralManagerDelegate {
         self.holeWithSwing.removeAll()
         self.shotNo = 1
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
+            var dataDiction = [String:Bool]()
             if(snapshot.value != nil){
-                var dataDiction = [String:Bool]()
                 if let dataDic = snapshot.value as? [String:Bool]{
                     dataDiction = dataDic
                 }
-                DispatchQueue.main.async(execute: {
-                    let group = DispatchGroup()
-                    for (key, value) in dataDiction{
-                        if(value){
-                            group.enter()
-                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false], withCompletionBlock:{ (error, ref) in
-                                group.leave()
-                            })
-                        }
-                    }
-                    group.notify(queue: .main, execute: {
-//                        self.currentGameId = Int(Timestamp%100000000) //87554701
-                        if(isPractice){
-                            self.sendFifthCommand()
-                        }else{
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
-                        }
-                    })
-                })
             }
+            DispatchQueue.main.async(execute: {
+                let group = DispatchGroup()
+                for (key, value) in dataDiction{
+                    if(value){
+                        group.enter()
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false], withCompletionBlock:{ (error, ref) in
+                            group.leave()
+                        })
+                    }
+                }
+                group.notify(queue: .main, execute: {
+                    //                        self.currentGameId = Int(Timestamp%100000000) //87554701
+                    if(isPractice){
+                        self.sendFifthCommand()
+                    }else{
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "startMatch"), object: "New Match")
+                    }
+                })
+            })
         }
     }
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -965,7 +992,7 @@ extension BLE: CBCentralManagerDelegate {
                         self.timerForService.invalidate()
                         self.centralManager.stopScan()
                         self.centralManager.cancelPeripheralConnection(peripheral)
-                        self.textInfo = "Device not found. Please turn on and turn off your device or app."
+                        self.textInfo = "Device not found. Please try again."
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
                     }
                 }
@@ -1025,6 +1052,7 @@ extension BLE: CBPeripheralDelegate {
                     }
                     newMacAddress.removeLast()
                     self.macAddressss = newMacAddress
+                    
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo").updateChildValues(["macAddress":newMacAddress])
                 }
             }
@@ -1094,7 +1122,12 @@ extension BLE: CBPeripheralDelegate {
                                 swingDict.setValue(95, forKey: "swingScore")
                             }else{
                                 let swingScore = 95 - (d/3)*55
-                                swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                if swingScore < 0{
+                                    swingDict.setValue(Int(40), forKey: "swingScore")
+                                }else{
+                                    swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                }
+
                             }
                             var isAvailable = false
                             for shot in shotArr{
@@ -1130,7 +1163,12 @@ extension BLE: CBPeripheralDelegate {
                                         swingDict.setValue(95, forKey: "swingScore")
                                     }else{
                                         let swingScore = 95 - (d/3)*55
-                                        swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                        
+                                        if swingScore < 0{
+                                            swingDict.setValue(Int(40), forKey: "swingScore")
+                                        }else{
+                                            swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                        }
                                     }
                                     shotArr.append(swingDict)
                                 }
@@ -1157,7 +1195,11 @@ extension BLE: CBPeripheralDelegate {
                                         swingDict.setValue(95, forKey: "swingScore")
                                     }else{
                                         let swingScore = 95 - (d/3)*55
-                                        swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                        if swingScore < 0{
+                                            swingDict.setValue(Int(40), forKey: "swingScore")
+                                        }else{
+                                            swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                                        }
                                     }
                                     var isAvailable = false
                                     for shot in shotArr{
@@ -1174,6 +1216,7 @@ extension BLE: CBPeripheralDelegate {
                         }
                     }
                     if(shotArr.count > 0){
+                        debugPrint("totrlaCount : ",shotArr.count)
                         ref.child("swingSessions/\(self.swingMatchId)/").updateChildValues(["swings":shotArr], withCompletionBlock: { (error, ref) in
                             let dict = NSMutableDictionary()
                             dict.addEntries(from: ["id" : self.swingMatchId])
@@ -1345,7 +1388,11 @@ extension BLE: CBPeripheralDelegate {
                     swingDict.setValue(95, forKey: "swingScore")
                 }else{
                     let swingScore = 95 - (d/3)*55
-                    swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                    if swingScore < 0{
+                        swingDict.setValue(Int(40), forKey: "swingScore")
+                    }else{
+                        swingDict.setValue(Int(swingScore), forKey: "swingScore")
+                    }
                 }
                 shotArr.append(swingDict)
                 ref.child("swingSessions/\(self.swingMatchId)/").updateChildValues(["swings":shotArr])
@@ -1370,7 +1417,8 @@ extension BLE: CBPeripheralDelegate {
                 let responseInIntFirst4 = byteArrayToInt(value: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                 let responseInIntSecond4 = byteArrayToInt(value: [dataArray[3],dataArray[4],dataArray[5],dataArray[6]])
                 
-                debugPrint("\(totalTagInFirstPackate)")
+                debugPrint("totalTagInFirstPackate:",totalTagInFirstPackate)
+                debugPrint("TagNum",self.tagClubNumber.count)
                 if  dataArray[0] == UInt8(1) && (dataArray[0] == currentCommandData[0]) && (dataArray[1] == currentCommandData[1]){
                     timerForWriteCommand1.invalidate()
                     debugPrint("RecviedResult 1")
@@ -1505,9 +1553,10 @@ extension BLE: CBPeripheralDelegate {
                 }else if (dataArray[0] == UInt8(5)){
                     self.timerForWriteCommand5.invalidate()
                     self.currentGameId = responseInIntSecond4
+                    self.isFinished = false
                     if(dataArray[2] == UInt8(2)){
                         self.shotNo = 1
-                        self.isFinished = false
+                        self.isPracticeMatch = false
                         self.isFirst = false
                         DispatchQueue.main.async(execute: {
                             self.swingMatchId = ref!.child("swingSession").childByAutoId().key
@@ -1525,46 +1574,47 @@ extension BLE: CBPeripheralDelegate {
                         })
                         
                     }else{
+                        self.isPracticeMatch = false
                         DispatchQueue.main.async(execute: {
                             self.swingDetails.removeAll()
                             self.holeWithSwing.removeAll()
                             self.shotNo = 1
                             FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession") { (snapshot) in
+                                var dataDiction = [String:Bool]()
                                 if(snapshot.value != nil){
-                                    var dataDiction = [String:Bool]()
                                     if let dataDic = snapshot.value as? [String:Bool]{
                                         dataDiction = dataDic
                                     }
-                                    DispatchQueue.main.async(execute: {
-                                        let group = DispatchGroup()
-                                        for (key, value) in dataDiction{
-                                            if(value){
-                                                group.enter()
-                                                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false], withCompletionBlock:{ (error, ref) in
-                                                    group.leave()
-                                                })
-                                            }
-                                        }
-                                        group.notify(queue: .main, execute: {
-                                            self.swingMatchId = ref!.child("swingSession").childByAutoId().key
-                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
-                                            let matchDataDic = NSMutableDictionary()
-                                            matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
-                                            matchDataDic.setObject("match", forKey: "playType" as NSCopying)
-                                            matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
-                                            matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
-                                            
-                                            if(!self.isPracticeMatch){
-                                                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
-                                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
-                                                matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
-                                                matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
-                                                UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
-                                            }
-                                            ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
-                                        })
-                                    })
                                 }
+                                DispatchQueue.main.async(execute: {
+                                    let group = DispatchGroup()
+                                    for (key, value) in dataDiction{
+                                        if(value){
+                                            group.enter()
+                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([key:false], withCompletionBlock:{ (error, ref) in
+                                                group.leave()
+                                            })
+                                        }
+                                    }
+                                    group.notify(queue: .main, execute: {
+                                        self.swingMatchId = ref!.child("swingSession").childByAutoId().key
+                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
+                                        let matchDataDic = NSMutableDictionary()
+                                        matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
+                                        matchDataDic.setObject("match", forKey: "playType" as NSCopying)
+                                        matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+                                        matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
+                                        
+                                        if(!self.isPracticeMatch){
+                                            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
+                                            matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
+                                            matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
+                                            UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
+                                        }
+                                        ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
+                                    })
+                                })
                             }
                             //////////////////////////////////////////////////////////////////////
                         })
@@ -1687,12 +1737,12 @@ extension BLE: CBPeripheralDelegate {
                 }else if(dataArray[0] == UInt8(80)){
                     self.timerForWriteCommand8.invalidate()
                     self.isContinue = true
-                    self.uploadSwingScore()
                     if !isPracticeMatch{
                         if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
                             var holeNm = 1
                             if self.holeWithSwing.last?.hole != scoring.count{
                                 holeNm = Int(self.currentCommandData[6])
+                                debugPrint("HoleNum : ",holeNm)
                                 self.holeWithSwing.removeAll()
                                 self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false))
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
@@ -1702,10 +1752,12 @@ extension BLE: CBPeripheralDelegate {
                                     // changed by Amit
                                     self.sendFourthCommand(param: [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]])
                                 }
+                                self.uploadSwingScore()
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             }
                         }
                     }else{
+                        self.uploadSwingScore()
                         if(self.isFinished){
                             self.randomGenerator()
                             // changed by Amit
@@ -1831,7 +1883,6 @@ extension BLE: CBPeripheralDelegate {
                             self.updateHoleOutShot()
                         }
                     }
-                    self.endAllActiveSessions()
                 }else if(dataArray[0] == UInt8(10)){
                     self.isDeviceSetup = false
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "setupDevice"), object: false)
@@ -1888,6 +1939,8 @@ extension BLE: CBPeripheralDelegate {
     func shotNumFor8th(hole:Int)->Int{
         var shotNm = 0
         if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
+            debugPrint("hole scoring count",scoring.count)
+            debugPrint("hole Number",hole-1)
             if let holeData = (scoring[hole-1] as! NSMutableDictionary).value(forKey: Auth.auth().currentUser!.uid) as? NSMutableDictionary{
                 if let holeShotArr = holeData.value(forKey: "shots") as? NSArray{
                     shotNm = holeShotArr.count

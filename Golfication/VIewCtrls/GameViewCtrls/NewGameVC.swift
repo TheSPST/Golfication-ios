@@ -150,6 +150,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         present(myController, animated: true, completion: nil)
     }
     func getHandicap(){
+        debugPrint("handicap")
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "handicap") { (snapshot) in
             if let handic = snapshot.value as? String{
                 if handic.contains(find: "-"){
@@ -261,7 +262,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.view.addSubview(self.golfXPopupView)
         setGofXUISetup()
     }
-    
+    @objc func discardGame(_ notification: NSNotification){
+        popUpContainerView.isHidden = true
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DiscardCancel"))
+    }
+
     @objc func timerAction() {
         self.timeOutTimer.invalidate()
         self.noDeviceAvailable()
@@ -269,6 +274,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DiscardCancel"))
         if sharedInstance != nil{
             self.sharedInstance.delegate = nil
         }
@@ -423,6 +429,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     @IBAction func rangeFinderChanged(mySwitch: UISwitch) {
+        debugPrint("RangeFinderChanged")
         if mySwitch.isOn {
             scoringMode = "rangeFinder"
             lblRangeFinder.textColor = UIColor.glfBluegreen
@@ -469,27 +476,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     btnMoreInfo.isHidden = true
                     stackRequestInfo.isHidden = true
                     attributedStringArray = [String]()
-                    
-                    /*if scoringMode == "rangeFinder" || scoringMode == "classic"{
-                     moreInfoAction(btnMoreInfo)
-                     }
-                     else{
-                     if let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "CustomPopUpViewController") as? CustomPopUpViewController{
-                     viewCtrl.isInfo = false
-                     if scoringMode == "classic"{
-                     isAdvanced = false
-                     }
-                     else{
-                     isAdvanced = true
-                     }
-                     self.present(viewCtrl, animated: true, completion: nil)
-                     
-                     viewCtrl.btnCheckBox.isHidden = true
-                     viewCtrl.lblAlwaysChoose.isHidden = true
-                     viewCtrl.btnContinue.setTitle("Select", for: .normal)
-                     viewCtrl.btnContinue.addTarget(self, action: #selector(self.selectScoringAction(_:)), for: .touchUpInside)
-                     }
-                     }*/
                 }
             }
         }
@@ -498,7 +484,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        debugPrint("didLoad")
+        NotificationCenter.default.addObserver(self, selector: #selector(self.discardGame(_:)), name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
         if(Constants.deviceGolficationX != nil){
             self.sharedInstance = BluetoothSync.getInstance()
             self.sharedInstance.delegate = self
@@ -558,6 +545,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func getHomeCourse() {
+        debugPrint("HomeCourse")
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails") { (snapshot) in
             if(snapshot.childrenCount > 0){
                 self.btnHomeCourse.isHidden = false
@@ -743,6 +731,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: setInitialUi
     func setInitialUi() {
+        debugPrint("initialUI")
         let originalImage = #imageLiteral(resourceName: "gps_icon")
         let courseImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnNearestCourse.tintColor = UIColor.white
@@ -800,7 +789,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: homeCourseAction
     @IBAction func homeCourseAction(_ sender: Any) {
-        
+        debugPrint("HomeCourseAction")
         self.progressView.show()
 
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails") { (snapshot) in
@@ -831,6 +820,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: nearestCourseAction
     @IBAction func nearestCourseAction(_ sender: Any) {
+        debugPrint("NearestCourse")
         //        let locationManager = CLLocationManager()
         if(locationManager.location == nil){
             locationManager.requestAlwaysAuthorization()
@@ -990,6 +980,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: getActiveMatches
     func getActiveMatches(){
+        debugPrint("GetActiveMAthc")
         self.progressView.show()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "activeMatches") { (snapshot) in
             let group = DispatchGroup()
@@ -1036,7 +1027,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     // MARK: getStrokesGainedFirebaseData
     func getStrokesGainedFirebaseData(){
-        
+        debugPrint("StrokesGained")
         let group = DispatchGroup()
         for i in 0..<Constants.strkGainedString.count{
             group.enter()
@@ -1055,7 +1046,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let myLocation = CLLocation()
         
         self.progressView.show()
-
+        debugPrint("USERDATA FROM FIREBASE")
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "") { (snapshot) in
             
             if(snapshot.childrenCount > 0){
@@ -1176,6 +1167,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 if let gameTypeStatus = userData["gameTypePopUp"] as? Bool{
                     self.gameTypePopUp = gameTypeStatus
                 }
+                debugPrint("userData")
             }
             else{
                 debugPrint("There is no data.")
@@ -1335,7 +1327,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
     func selectedGameTypeFromFirebase() {
-        
+    
         if  !(Constants.selectedGolfID == "") {
             self.progressView.show()
             let golfId = "course_\(Constants.selectedGolfID)"
@@ -2864,6 +2856,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         return header
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        debugPrint("cellForRowIdnex")
         let  cell = tableView.dequeueReusableCell(withIdentifier: "PlayersCell") as! NewGameScoreTableViewCell!
         let userName = (players[indexPath.row] as AnyObject).value(forKey: "name") as! String
         let nameArray = userName.components(separatedBy: " ")

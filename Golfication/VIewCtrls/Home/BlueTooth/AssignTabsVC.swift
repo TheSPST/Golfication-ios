@@ -634,7 +634,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 fullClubName =  "Lob Wedge"
             }
             else{
-                fullClubName = String(firstChar) + " Woods"
+                fullClubName = String(firstChar) + " Wood"
             }
         }
         return fullClubName

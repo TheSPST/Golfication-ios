@@ -233,6 +233,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
             }else if(value == 1){
                 debugPrint("ViewALL")
+                self.swingTableView.reloadData()
                 self.swingDetailsView.isHidden = false
             }
             

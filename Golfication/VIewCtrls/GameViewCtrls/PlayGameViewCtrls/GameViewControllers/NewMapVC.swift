@@ -652,12 +652,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for players in playersButton{
             if(players.isSelected){
                 let playerId = players.id
-                for i in 0..<self.scoring[self.holeIndex].players.count{
-                    if((self.scoring[self.holeIndex].players[i].value(forKey: playerId)) != nil){
-                        inde = i
-                        break
+                if self.scoring.count != 0{
+                    for i in 0..<self.scoring[self.holeIndex].players.count{
+                        if((self.scoring[self.holeIndex].players[i].value(forKey: playerId)) != nil){
+                            inde = i
+                            break
+                        }
                     }
                 }
+
             }
         }
         return inde
@@ -1798,44 +1801,46 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     @objc func doAfterResponse(_ notification:NSNotification){
         if (notification.object as? Bool) != nil{
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(self.selectedUserId)") { (snapshot) in
-                let playerDict = NSMutableDictionary()
-                var wantToDrag = false
-                var holeOut = false
-                if let dict = snapshot.value as? NSMutableDictionary{
-                    playerDict.setObject(dict, forKey: self.selectedUserId as NSCopying)
-                    self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
-                    if let shots = dict.value(forKey: "shots") as? NSArray{
-                        wantToDrag = shots.count > 0 ? true:false
+            if self.scoring.count != 0{
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(self.selectedUserId)") { (snapshot) in
+                    let playerDict = NSMutableDictionary()
+                    var wantToDrag = false
+                    var holeOut = false
+                    if let dict = snapshot.value as? NSMutableDictionary{
+                        playerDict.setObject(dict, forKey: self.selectedUserId as NSCopying)
+                        self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
+                        if let shots = dict.value(forKey: "shots") as? NSArray{
+                            wantToDrag = shots.count > 0 ? true:false
+                        }
+                        holeOut = dict.value(forKey: "holeOut") as! Bool
+                        if(holeOut){
+                            self.uploadPutting(playerId: self.selectedUserId)
+                        }
                     }
-                    holeOut = dict.value(forKey: "holeOut") as! Bool
-                    if(holeOut){
-                        self.uploadPutting(playerId: self.selectedUserId)
-                    }
-                }
-                DispatchQueue.main.async(execute: {
-                    self.updateMap(indexToUpdate: self.holeIndex)
-                    self.getSwingData(swingKey: self.swingMatchId)
-                    if wantToDrag{
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
-                            for markers in self.markersForCurved{
-                                self.isDraggingMarker = true
-                                self.updateStateWhileDragging(marker:markers)
+                    DispatchQueue.main.async(execute: {
+                        self.updateMap(indexToUpdate: self.holeIndex)
+                        self.getSwingData(swingKey: self.swingMatchId)
+                        if wantToDrag{
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
+                                for markers in self.markersForCurved{
+                                    self.isDraggingMarker = true
+                                    self.updateStateWhileDragging(marker:markers)
+                                }
+                            })
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
+                            self.uploadTotalStrokesGained(playerId: self.selectedUserId)
+                            if holeOut {
+                                if self.isNextPrevBtn{
+                                    self.isNextPrevBtn = false
+                                }
+                                else{
+                                    self.btnActionPlayerStats(self.btnPlayersStats)
+                                }
                             }
                         })
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                        self.uploadTotalStrokesGained(playerId: self.selectedUserId)
-                        if holeOut {
-                            if self.isNextPrevBtn{
-                                self.isNextPrevBtn = false
-                            }
-                            else{
-                                self.btnActionPlayerStats(self.btnPlayersStats)
-                            }
-                        }
                     })
-                })
+                }
             }
         }
     }

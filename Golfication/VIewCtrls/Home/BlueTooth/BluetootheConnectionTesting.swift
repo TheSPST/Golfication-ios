@@ -106,6 +106,15 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
             self.buyNowSV.isHidden = false
         }
     }
+    @IBAction func metricChangeAction(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0{
+            Constants.distanceFilter = 1
+        }else{
+            Constants.distanceFilter = 0
+        }
+
+    }
+    
     @IBAction func buyNowAction(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
@@ -242,7 +251,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     }
     @objc func timerAction() {
         self.timeOutTimer.invalidate()
-        Constants.ble.textInfo = "Device not found. Please turn on and turn off your device or app."
+        Constants.ble.textInfo = "Device not found. Please try again."
         self.noDeviceAvailable()
     }
     
@@ -346,6 +355,12 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
             self.handiChangedAction(self.btnHandiLeft)
         }else{
             self.handiChangedAction(self.btnHandiRight)
+        }
+        
+        if Constants.distanceFilter == 1{
+            self.sgmntCtrlMetric.selectedSegmentIndex = 0
+        }else{
+            self.sgmntCtrlMetric.selectedSegmentIndex = 1
         }
     }
     @objc func setupFinished(_ notification: NSNotification){
