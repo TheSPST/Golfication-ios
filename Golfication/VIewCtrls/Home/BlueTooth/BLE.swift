@@ -1724,9 +1724,9 @@ extension BLE: CBPeripheralDelegate {
                         var clubIndex = 0
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
                             clubIndex = (Int(dataArray[14]))-1
-                            holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubIndex]
-                            swingDetails[swingDetails.count-1].club = self.allClubs[clubIndex]
                         }
+                        holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubIndex]
+                        swingDetails[swingDetails.count-1].club = self.allClubs[clubIndex]
                         swingDetails[swingDetails.count-1].shotNo = Int(dataArray[15])
                         swingDetails[swingDetails.count-1].bs = Double(backSwing)
                         if downSwing > 0.23 && downSwing < 1.0{
@@ -1866,9 +1866,9 @@ extension BLE: CBPeripheralDelegate {
                         var clubNumber = 0
                         if(Int(dataArray[14])) != 0 && (Int(dataArray[14])) <= 26{
                             clubNumber = (Int(dataArray[14]))-1
-                            holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubNumber]
-                            swingDetails[swingDetails.count-1].club = self.allClubs[clubNumber]
                         }
+                        holeWithSwing[holeWithSwing.count-1].club = self.allClubs[clubNumber]
+                        swingDetails[swingDetails.count-1].club = self.allClubs[clubNumber]
                         if(Int(dataArray[15]) == 0){
                             holeWithSwing[holeWithSwing.count-1].holeOut = true
                         }else{
