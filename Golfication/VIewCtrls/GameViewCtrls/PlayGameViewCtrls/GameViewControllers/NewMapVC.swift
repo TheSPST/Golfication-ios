@@ -1803,21 +1803,44 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if (notification.object as? Bool) != nil{
             if self.scoring.count != 0{
                 FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(self.selectedUserId)") { (snapshot) in
-                    let playerDict = NSMutableDictionary()
-                    var wantToDrag = false
-                    var holeOut = false
+                    var playersData = NSMutableDictionary()
                     if let dict = snapshot.value as? NSMutableDictionary{
-                        playerDict.setObject(dict, forKey: self.selectedUserId as NSCopying)
-                        self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
-                        if let shots = dict.value(forKey: "shots") as? NSArray{
-                            wantToDrag = shots.count > 0 ? true:false
+                        playersData = dict
+                    }
+                    DispatchQueue.main.async(execute: {
+                        var holeOut = false
+                        var wantToDrag = false
+                        var shots = [NSMutableDictionary]()
+                        if let sho = playersData.value(forKey: "shots") as? NSArray{
+                            wantToDrag = sho.count > 0 ? true:false
+                            for i in 0..<sho.count{
+                                let shot = sho[i] as! NSMutableDictionary
+                                if let dat = shot.value(forKey: "clubDetected") as? Bool{
+                                    if !dat{
+                                        let latLng = CLLocationCoordinate2D(latitude: shot.value(forKey: "lat1") as! Double, longitude: shot.value(forKey: "lng1") as! Double)
+                                        var lie = self.callFindPositionInsideFeature(position: latLng)
+                                        let distance = GMSGeometryDistance(latLng, self.courseData.centerPointOfTeeNGreen[self.holeIndex].green)
+                                        if i == 0{
+                                            lie = "T"
+                                        }
+                                        let recommendedClub = self.clubReco(dist: distance, lie: lie)
+                                        shot.setValue(recommendedClub, forKey: "club")
+                                        debugPrint(recommendedClub)
+                                    }
+                                    shots.append(shot)
+                                }else{
+                                    shots.append(shot)
+                                }
+                            }
                         }
-                        holeOut = dict.value(forKey: "holeOut") as! Bool
+                        playersData.setValue(shots, forKey: "shots")
+                        let playerDict = NSMutableDictionary()
+                        playerDict.setObject(playersData, forKey: self.selectedUserId as NSCopying)
+                        self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
+                        holeOut = playersData.value(forKey: "holeOut") as! Bool
                         if(holeOut){
                             self.uploadPutting(playerId: self.selectedUserId)
                         }
-                    }
-                    DispatchQueue.main.async(execute: {
                         self.updateMap(indexToUpdate: self.holeIndex)
                         self.getSwingData(swingKey: self.swingMatchId)
                         if wantToDrag{
@@ -6294,8 +6317,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnTrackShot.isHidden = true
         self.lblShotNumber.isHidden = true
         debugPrint("hiddenWhenDeviceConnected")
-        self.btnSelectClubs.isHidden = true
-        self.btnClubs.isHidden = true
+        self.btnSelectClubs.isHidden = false
+        self.btnClubs.isHidden = false
         self.btnHoleoutLbl.isHidden = true
         self.lblEditShotNumber.isHidden = true
         self.btnClose.isHidden = true
@@ -7297,12 +7320,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             }else if(tappedMarker.userData as! String == "Swing"){
                 var index = 0
-                    for i in 0..<self.shotViseCurve.count{
-                        index = i
-                        if(self.shotViseCurve[i].swingPosition.position == tappedMarker.position){
-                            break
-                        }
+                for i in 0..<self.shotViseCurve.count{
+                    index = i
+                    if(self.shotViseCurve[i].swingPosition.position == tappedMarker.position){
+                        break
                     }
+                }
                 if swingData.count > index{
                     let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "MapShotPopupVC") as! MapShotPopupVC
                     viewCtrl.modalPresentationStyle = .overCurrentContext
@@ -7313,8 +7336,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }else{
                     self.view.makeToast("No Swing")
                 }
-
-                }
+            }
         }else{
             tappedMarker = (tappedMarker == nil) ? nil : tappedMarker
         }

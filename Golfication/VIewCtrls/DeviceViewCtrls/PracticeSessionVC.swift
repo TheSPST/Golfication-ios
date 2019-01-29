@@ -90,7 +90,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     var progressValue = 0.0
     var count = Int()
     var superClassName = String()
-    
+    var unit : Int!
     var gender = String()
     var handicap = String()
     var benchMarkVal = String()
@@ -110,10 +110,18 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if Constants.distanceFilter == 0{
-            lblBottomClubSpeedKPH.text = "MPH"
-            lblBottomHandSpeedKPH.text = "MPH"
+        if self.unit != nil{
+            if self.unit == 0{
+                lblBottomClubSpeedKPH.text = "MPH"
+                lblBottomHandSpeedKPH.text = "MPH"
+            }
+        }else{
+            if Constants.distanceFilter == 0{
+                lblBottomClubSpeedKPH.text = "MPH"
+                lblBottomHandSpeedKPH.text = "MPH"
+            }
         }
+
         initTempArr()
         self.shotBtnViews = [view1SwingScore,view2Clubhead,view3ClubPlane,view4Tempo,view5BackSwing,view6HandSpeed]
         self.shotTopViews = [view1SwingV,view2ClubheadV,view3ClubPlaneV,view4TempoV,view5BackSwingV,view6HandSpeedV]

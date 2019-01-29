@@ -18,7 +18,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     
     @IBOutlet weak var swingDetailsView: UIView!
     @IBOutlet weak var swingTableView: UITableView!
-    
+    var unit : Int!
     var expandedSectionHeaderNumber: Int = -1
     var expandedSectionHeader: UITableViewHeaderFooterView!
     let kHeaderSectionTag: Int = 6900
@@ -322,6 +322,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             viewCtrl.shotsArray = finalArray as! [String]
             viewCtrl.count = self.count
             viewCtrl.superClassName = superClassName
+            viewCtrl.unit = self.unit
             if(i < tempArray1.count){
                 viewCtrl.swingDetails = tempArray1[i] as! NSMutableDictionary
             }
