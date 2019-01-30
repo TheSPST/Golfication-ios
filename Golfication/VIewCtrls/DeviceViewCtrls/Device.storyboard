@@ -438,7 +438,7 @@
                                                                     <constraint firstItem="VgM-Jo-FOU" firstAttribute="leading" secondItem="a8I-NV-IFq" secondAttribute="leading" id="y1T-fJ-DLO"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view hidden="YES" tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mFa-MN-Rvb" userLabel="ClubSpeed">
+                                                            <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mFa-MN-Rvb" userLabel="ClubSpeed">
                                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="233"/>
                                                                 <subviews>
                                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NDu-i1-j2m" customClass="LineChartView" customModule="Charts">
@@ -520,7 +520,7 @@
                                                                     <constraint firstItem="HEr-W4-dCA" firstAttribute="top" secondItem="mFa-MN-Rvb" secondAttribute="top" constant="10" id="u8y-Kv-46Y"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UiA-ce-jbv" userLabel="Club Plane">
+                                                            <view hidden="YES" tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UiA-ce-jbv" userLabel="Club Plane">
                                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="233"/>
                                                                 <subviews>
                                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="golfer_swing" translatesAutoresizingMaskIntoConstraints="NO" id="gpx-m0-Pw3">
@@ -1299,11 +1299,13 @@
                         <outlet property="lblBottomClubSpeedCHS" destination="D9u-ui-yJZ" id="dUq-eL-pHS"/>
                         <outlet property="lblBottomClubSpeedKPH" destination="OcI-Gc-YvP" id="caf-L7-F9e"/>
                         <outlet property="lblBottomHandSpeedKPH" destination="MaA-Nh-fQV" id="lbr-A1-qlC"/>
+                        <outlet property="lblClubHeadUnit" destination="iC9-KN-HQJ" id="b6R-1F-ZlL"/>
                         <outlet property="lblClubName" destination="aI2-uC-TYU" id="M34-9h-qWW"/>
                         <outlet property="lblClubName1" destination="d4S-Qo-DY7" id="BLE-an-NVu"/>
                         <outlet property="lblClubName2" destination="nis-ld-o50" id="nHt-9g-0VF"/>
                         <outlet property="lblClubName3" destination="NWd-Sp-X09" id="5Wh-ZA-Nm1"/>
                         <outlet property="lblClubName4" destination="YqS-Xd-oPh" id="Snk-XA-cNU"/>
+                        <outlet property="lblHandSpeedUnit" destination="9ZU-xU-kTi" id="RVf-aB-CLO"/>
                         <outlet property="lblSwingTempo" destination="8T0-nv-7oF" id="kTy-PK-8YW"/>
                         <outlet property="lblTempoColon" destination="Cda-eP-hdG" id="wBX-Ru-Oq6"/>
                         <outlet property="lblbackSwing" destination="uFW-il-61h" id="QAO-CJ-dmP"/>

@@ -13,6 +13,8 @@ import UICircularProgressRing
 
 class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDelegate {
     
+    @IBOutlet weak var lblClubHeadUnit: UILabel!
+    @IBOutlet weak var lblHandSpeedUnit: UILabel!
     @IBOutlet weak var btnContainerSV1: UIStackView!
     @IBOutlet weak var btnContainerSV2: UIStackView!
     @IBOutlet weak var startSwingingSV: UIStackView!
@@ -110,18 +112,12 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if self.unit != nil{
-            if self.unit == 0{
-                lblBottomClubSpeedKPH.text = "MPH"
-                lblBottomHandSpeedKPH.text = "MPH"
-            }
-        }else{
-            if Constants.distanceFilter == 0{
-                lblBottomClubSpeedKPH.text = "MPH"
-                lblBottomHandSpeedKPH.text = "MPH"
-            }
+        if Constants.distanceFilter == 0{
+            lblBottomClubSpeedKPH.text = "MPH"
+            lblBottomHandSpeedKPH.text = "MPH"
+            lblClubHeadUnit.text = "MPH"
+            lblHandSpeedUnit.text = "MPH"
         }
-
         initTempArr()
         self.shotBtnViews = [view1SwingScore,view2Clubhead,view3ClubPlane,view4Tempo,view5BackSwing,view6HandSpeed]
         self.shotTopViews = [view1SwingV,view2ClubheadV,view3ClubPlaneV,view4TempoV,view5BackSwingV,view6HandSpeedV]
@@ -130,8 +126,21 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         
         btnTapped(tagVal:0)
         for i in 0..<self.tempArray.count{
-            shotLbl[i].text = tempArray[i]
-            shotLblB[i].text = tempArray[i]
+            if (i == 1 || i == 5) && self.unit != nil{
+                if self.unit == 0 && Constants.distanceFilter == 1{
+                    shotLbl[i].text = "\(Int(Double(tempArray[i])!*1.60934))"
+                    shotLblB[i].text = "\(Int(Double(tempArray[i])!*1.60934))"
+                }else if self.unit == 1 && Constants.distanceFilter == 0{
+                    shotLbl[i].text = "\(Int(Double(tempArray[i])!*0.621371))"
+                    shotLblB[i].text = "\(Int(Double(tempArray[i])!*0.621371))"
+                }else{
+                    shotLbl[i].text = tempArray[i]
+                    shotLblB[i].text = tempArray[i]
+                }
+            }else{
+                shotLbl[i].text = tempArray[i]
+                shotLblB[i].text = tempArray[i]
+            }
         }
         self.title = "Practice Session \(count)"
         debugPrint(self)

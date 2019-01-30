@@ -77,7 +77,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             self.swingDetailsView.isHidden = true
             NotificationCenter.default.addObserver(self, selector: #selector(self.showShotsAfterSwing(_:)), name: NSNotification.Name(rawValue: "getSwingInside"), object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(self.finishedPopUp(_:)), name: NSNotification.Name(rawValue: "practiceFinished"), object: nil)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
                 self.reloadPagerTabStripView()
                 self.moveToViewController(at: self.shotsArray.count-2)
             })
@@ -254,7 +254,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
     //MARK: showShotsAfterSwing
     @objc func showShotsAfterSwing(_ notification:NSNotification){
         if let dict = notification.object as? NSMutableDictionary{
-            Constants.ble.playSound()
+//            Constants.ble.playSound()
             let swingKey = dict.value(forKey: "id") as! String
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(swingKey)/") { (snapshot) in
                 var dict = NSMutableDictionary()

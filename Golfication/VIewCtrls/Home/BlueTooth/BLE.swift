@@ -609,11 +609,7 @@ class BLE: NSObject {
                 if(self.holeWithSwing.count == 0){
                     param.append(UInt8(self.shotNumFor8th(hole: 1)))
                 }else{
-                    var totalHole = 18
-                    if Constants.gameType.contains("9"){
-                        totalHole = 9
-                    }
-                    if(holeWithSwing.last!.holeOut) && (holeWithSwing.last!.hole != totalHole){
+                    if(holeWithSwing.last!.holeOut) && (holeWithSwing.last!.hole != (Constants.matchDataDic.value(forKey: "scoring") as! NSArray).count){
                         debugPrint("holeWithSwing.last!.hole+1",holeWithSwing.last!.hole+1)
                         param.append(UInt8(self.shotNumFor8th(hole: holeWithSwing.last!.hole+1)))
                     }else{
@@ -1610,7 +1606,7 @@ extension BLE: CBPeripheralDelegate {
                     self.isFinished = false
                     if(dataArray[2] == UInt8(2)){
                         self.shotNo = 1
-                        self.isPracticeMatch = true
+                        self.isPracticeMatch = false
                         self.isFirst = false
                         DispatchQueue.main.async(execute: {
                             self.swingMatchId = ref!.child("swingSession").childByAutoId().key
@@ -1793,10 +1789,11 @@ extension BLE: CBPeripheralDelegate {
                     if !isPracticeMatch{
                         if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
                             var holeNm = 1
-                            if self.holeWithSwing.last?.hole != scoring.count{
+                            if self.holeWithSwing.last!.hole != scoring.count{
                                 holeNm = Int(self.currentCommandData[6])
                                 debugPrint("HoleNum : ",holeNm)
                                 self.holeWithSwing.removeAll()
+                                debugPrint(self.centerPointOfTeeNGreen)
                                 self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                             }else{
@@ -1900,6 +1897,7 @@ extension BLE: CBPeripheralDelegate {
                         shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])+1
                         debugPrint(swingDetails)
                         self.uploadSwingScore()
+                        self.playSound()
                     }else{
                         self.currentCommandData[0] = UInt8(92)
                         memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
