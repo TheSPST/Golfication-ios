@@ -238,13 +238,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     var totalTimer : TimeInterval = 1
-    var isGolfX : Bool{
+    /*var isGolfX : Bool{
         if Constants.ble == nil{
             return false
         }else{
             return !Constants.ble.isPracticeMatch
         }
-    }
+    }*/
     var golfXPopupView: UIView!
     var btnRetry: UIButton!
     var btnNoDevice: UIButton!
@@ -306,7 +306,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         if Constants.ble == nil{
                             Constants.ble = BLE()
                         }
-                        Constants.ble.isPracticeMatch = false
                         Constants.ble.swingMatchId = self.swingMatchId
                         Constants.ble.currentGameId = self.deviceGameID
                         Constants.ble.startScanning()
@@ -320,7 +319,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if Constants.ble == nil{
                     Constants.ble = BLE()
                 }
-                Constants.ble.isPracticeMatch = false
                 Constants.ble.swingMatchId = self.swingMatchId
                 Constants.ble.currentGameId = self.deviceGameID
                 Constants.ble.startScanning()
@@ -1836,6 +1834,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         playersData.setValue(shots, forKey: "shots")
                         let playerDict = NSMutableDictionary()
                         playerDict.setObject(playersData, forKey: self.selectedUserId as NSCopying)
+                        if let scoring = Constants.matchDataDic.value(forKey: "scoring") as? NSArray{
+                            let sco = scoring
+                            (sco[self.holeIndex] as! NSMutableDictionary).setValue(playersData, forKey: self.selectedUserId)
+                            Constants.matchDataDic.setValue(sco, forKey: "scoring")
+                        }
                         self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
                         holeOut = playersData.value(forKey: "holeOut") as! Bool
                         if(holeOut){
@@ -1867,6 +1870,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
     }
+
     func uploadTotalStrokesGained(playerId : String){
         for i in 0..<self.scoring[holeIndex].players.count{
             var strokesGainedDistance = Double()
@@ -6274,7 +6278,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
 
             }
-//            Constants.ble.isPracticeMatch = false
 //            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreen)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                 self.getActiveRound()

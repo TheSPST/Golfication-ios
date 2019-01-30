@@ -343,7 +343,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         }
         sandSaveStackedBarView.setStackedBarChart(dataPoints: newDateForStacked, value1: newSandAttemp , value2: newSandAchieved, chartView:sandSaveStackedBarView,color: [UIColor.glfBluegreen.withAlphaComponent(0.50),UIColor.glfBluegreen], barWidth:0.2)
         sandSaveStackedBarView.leftAxis.axisMinimum = 0.0
-        sandSaveStackedBarView.leftAxis.axisMaximum = newSandAttemp.max()! + 1.0
+        sandSaveStackedBarView.leftAxis.axisMaximum = (newSandAttemp.max() ?? 2.0) + 1.0
         sandSaveStackedBarView.leftAxis.labelCount = 5
         if Constants.baselineDict != nil{
             debugPrint("baselineDict==",Constants.baselineDict)

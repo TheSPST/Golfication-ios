@@ -203,9 +203,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 if Constants.ble == nil{
                     Constants.ble = BLE()
                 }
-                Constants.ble.isPracticeMatch = false
                 Constants.ble.currentGameId = self.swingGameId
                 Constants.ble.isSetupScreen = self.fromSetup
+
                 Constants.ble.startScanning()
                 showPopUp()
             }
@@ -234,10 +234,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         fromGolfBarBtn = false
         self.timeOutTimer.invalidate()
+
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
-        
+
         let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
             self.dismiss(animated: true, completion: nil)
@@ -252,7 +253,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         NotificationCenter.default.addObserver(self, selector: #selector(self.SeventyFivePercentUpdated(_:)), name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(self.ScanningTimeOut(_:)), name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
         
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
@@ -371,6 +372,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
         })
     }
+    
     @objc func updateScreen(_ notification: NSNotification){
         self.timeOutTimer.invalidate()
         DispatchQueue.main.async(execute: {
@@ -415,9 +417,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         if Constants.ble == nil{
             Constants.ble = BLE()
-            Constants.ble.isPracticeMatch = false
         }
-        Constants.ble.isSetupScreen = self.fromSetup
+        Constants.ble.isSetupScreen = !self.fromSetup
+
         Constants.ble.startScanning()
         self.golfXPopupView.removeFromSuperview()
         showPopUp()
@@ -1915,10 +1917,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     if Constants.ble == nil{
                        Constants.ble = BLE()
                     }
-                    Constants.ble.isPracticeMatch = false
                     Constants.ble.swingMatchId = String()
                     Constants.ble.currentGameId = 0
-                    Constants.ble.isSetupScreen = self.fromSetup
+                    Constants.ble.isSetupScreen = !self.fromSetup
+
+                    Constants.deviceGameType = 1
                     Constants.ble.sendThirdCommand()
                     playGolfX()
                 }

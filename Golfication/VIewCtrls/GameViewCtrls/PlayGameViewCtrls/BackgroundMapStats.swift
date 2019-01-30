@@ -454,8 +454,8 @@ class BackgroundMapStats: NSObject {
 //            }
             i += 1
         }
-        for ind in indexArr{
-            searchArr.remove(at: ind)
+        for ind in 0..<indexArr.count{
+            searchArr.remove(at: indexArr[ind]-ind)
         }
         let sortedArr = searchArr.sorted{
             ($1.value(forKey: "Distance")) as! Double > ($0.value(forKey: "Distance")) as! Double

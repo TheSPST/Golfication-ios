@@ -56,7 +56,6 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     var golfBagIronArray = ["1i", "2i", "3i", "4i", "5i", "6i", "7i", "8i", "9i"]
     var golfBagWageArray = ["Pw", "Sw", "Gw", "Lw"]
     var golfBagPuttArray = ["Pu"]
-    var isPracticeMatch = false
     var currentGameId = Int()
     var totalAssigned = Int()
     var barBtnBLE = UIBarButtonItem()
@@ -391,6 +390,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         self.getGolfBagData()
         if(Constants.deviceGolficationX != nil){
             Constants.ble.currentGameId = 0
+            Constants.ble.isSetupScreen = true
             updateScreenBLE()
         }
     }

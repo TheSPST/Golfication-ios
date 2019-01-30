@@ -1200,6 +1200,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     for (key, value) in dataDic{
                         group.enter()
                         if !value{
+                            Constants.deviceGameType = 0
                             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
                                 if(snapshot.value != nil){
                                     if let data = snapshot.value as? NSDictionary{
@@ -1214,8 +1215,26 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             }
                         }
                         else{
+//                            Constants.swingSessionKey = key
+//                            group.leave()
+                            
                             Constants.swingSessionKey = key
-                            group.leave()
+                            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
+                                if(snapshot.value != nil){
+                                    if let data = snapshot.value as? NSDictionary{
+                                        //debugPrint(data.value(forKey: "matchKey"))
+                                        if let playType = data.value(forKey: "playType") as? String{
+                                            if playType == "match"{
+                                                Constants.deviceGameType = 1
+                                            }
+                                            else{
+                                                Constants.deviceGameType = 2
+                                            }
+                                        }
+                                    }
+                                }
+                                group.leave()
+                            }
                         }
                     }
                     group.notify(queue: .main, execute: {

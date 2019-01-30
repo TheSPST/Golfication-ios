@@ -10,6 +10,8 @@ import Foundation
 
 struct Constants{
     
+    static var deviceGameType = 0
+
     // MARK: NewHomeVC
     static var baselineDict: NSDictionary!
     static var strokesGainedDict = [NSMutableDictionary]()

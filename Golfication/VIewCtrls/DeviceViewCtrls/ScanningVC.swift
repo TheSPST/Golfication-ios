@@ -110,7 +110,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
-        
+
         let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
             self.dismiss(animated: true, completion: nil)
@@ -210,13 +210,13 @@ class ScanningVC: UIViewController, BluetoothDelegate {
     @objc func animateProgress() {
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         Constants.ble.stopScanning()
-        Constants.ble.isPracticeMatch = true
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
+        Constants.deviceGameType = 2
         Constants.ble.sendThirdCommand()
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
         self.navigationItem.rightBarButtonItem?.isEnabled = true
     }
-
+    
     var totalPracticeSession = 1
     func getSwingData() {
         var swingMArray = NSMutableArray()
@@ -311,7 +311,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
                         }
                         Constants.ble.startScanning()
                         Constants.ble.isSetupScreen = !self.fromSetup
-                        Constants.ble.isPracticeMatch = true
+
                         Constants.ble.isDeviceSetup = false
                         Constants.ble.swingMatchId = self.swingMatchId
                         Constants.ble.currentGameId = self.currentGameId
@@ -415,7 +415,6 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         self.tabBarController?.tabBar.isHidden = true
 
         if(Constants.deviceGolficationX != nil){
-            Constants.ble.isPracticeMatch = true
 //            Constants.ble.sendThirdCommand()
         }
     }

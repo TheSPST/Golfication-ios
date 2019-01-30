@@ -224,7 +224,6 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
             Constants.ble.startScanning()
             Constants.ble.currentGameId = self.currentGameId
             Constants.ble.swingMatchId = self.swingId
-            Constants.ble.isPracticeMatch = true
         }
     }
     
