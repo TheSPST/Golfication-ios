@@ -1473,7 +1473,21 @@ extension BLE: CBPeripheralDelegate {
                         swingDict.setValue(Int(swingScore), forKey: "swingScore")
                     }
                 }
-                shotArr.append(swingDict)
+                var multiswing = false
+                for i in 0..<shotArr.count{
+                    if let hole = shotArr[i].value(forKey: "holeNum") as? Int{
+                        if let shot = shotArr[i].value(forKey: "shotNum") as? Int{
+                            if data.shotNo == shot && data.hole == hole{
+                                shotArr[i] = swingDict
+                                multiswing = true
+                                break
+                            }
+                        }
+                    }
+                }
+                if !multiswing{
+                    shotArr.append(swingDict)
+                }
                 ref.child("swingSessions/\(self.swingMatchId)/").updateChildValues(["swings":shotArr])
             })
         }
@@ -1568,6 +1582,8 @@ extension BLE: CBPeripheralDelegate {
                                         
                                         if !self.isSetupScreen{
                                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+                                        }else{
+                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SetupScreen"), object: nil)
                                         }
                                     }))
                                     gameAlert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { (action: UIAlertAction!) in
@@ -1591,7 +1607,7 @@ extension BLE: CBPeripheralDelegate {
                             for (key,value) in playerData{
                                 if key == Auth.auth().currentUser!.uid{
                                     if let swingK = value.value(forKeyPath: "swingKey") as? String{
-                                        if swingK == self.swingMatchId{
+                                        if swingK == Constants.swingSessionKey{
                                             ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
                                             ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(Constants.matchId)").removeValue()
                                             Constants.deviceGameType = 0
@@ -1601,7 +1617,7 @@ extension BLE: CBPeripheralDelegate {
                                 }
                             }
                         }
-                        self.swingMatchId = ""
+                        Constants.swingSessionKey = String()
                         if self.isFinished{
                             UIApplication.shared.keyWindow?.makeToast("Game finished Successfully.")
                         }
@@ -1649,6 +1665,7 @@ extension BLE: CBPeripheralDelegate {
                         DispatchQueue.main.async(execute: {
                             
                             self.swingMatchId = ref!.child("swingSession").childByAutoId().key
+                            Constants.swingSessionKey = self.swingMatchId
                             ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
                             let matchDataDic = NSMutableDictionary()
                             matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
@@ -1688,6 +1705,7 @@ extension BLE: CBPeripheralDelegate {
                                     }
                                     group.notify(queue: .main, execute: {
                                         self.swingMatchId = ref!.child("swingSession").childByAutoId().key
+                                        Constants.swingSessionKey = self.swingMatchId
                                         ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:true])
                                         let matchDataDic = NSMutableDictionary()
                                         matchDataDic.setObject(self.currentGameId, forKey: "gameId" as NSCopying)
@@ -1994,6 +2012,11 @@ extension BLE: CBPeripheralDelegate {
                                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                                     }
                                 }
+                            }else{
+                                debugPrint("hole last shot in 92 \(holeWithSwing.last!)")
+                                self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
+                                self.updateSingleShot(nextData: holeWithSwing.last!)
+                                self.swingDetails.removeAll()
                             }
                         }else if(holeWithSwing.last!.shotNo == 0){
                             self.swingDetails.removeAll()

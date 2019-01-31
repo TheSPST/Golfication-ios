@@ -194,6 +194,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "SetupScreen"))
 
         let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
@@ -237,6 +238,8 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.setupScreen(_:)), name: NSNotification.Name(rawValue: "SetupScreen"), object: nil)
+
         NotificationCenter.default.addObserver(self, selector: #selector(self.ScanningTimeOut(_:)), name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.restartPhone(_:)), name: NSNotification.Name(rawValue: "RestartPhone"), object: nil)
@@ -324,6 +327,18 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         updateScreenBLE()
     }
+    @objc func setupProgress() {
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
+        self.golfXPopupView.removeFromSuperview()
+        if Constants.ble != nil{
+            Constants.ble.stopScanning()
+        }
+        
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "SetupScreen"))
+        updateScreenBLE()
+    }
+
     func updateScreenBLE(){
         self.barBtnBLE.image =  UIImage(named: "golficationBar")
         self.lblDeviceName.text = "Golficaion X"
@@ -382,7 +397,15 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
             self.perform(#selector(self.animateProgress), with: nil, afterDelay: 1.0)
         })
     }
-    
+    @objc func setupScreen(_ notification: NSNotification){
+        self.timeOutTimer.invalidate()
+        
+        DispatchQueue.main.async(execute: {
+            self.deviceCircularView.setProgressWithAnimationGolfX(duration: 1.0, fromValue: 0.75, toValue: 1.0)
+            self.perform(#selector(self.setupProgress), with: nil, afterDelay: 1.0)
+        })
+    }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)

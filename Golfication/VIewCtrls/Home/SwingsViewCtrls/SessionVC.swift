@@ -55,7 +55,11 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                 practiceDic.setValue(avgSwingScore/Double(swingArray.count), forKey: "swingScoreAvg")
                 practiceDic.setValue(clubArray.count, forKey: "club")
                 practiceDic.setValue(swingArray, forKey: "swingArray")
-                
+                var unit = 0
+                if let uni = dataDic.value(forKey: "unit") as? Int{
+                    unit = uni
+                }
+                practiceDic.setValue(unit, forKey: "unit")
                 practiceMArray.add(practiceDic)
             }
             else{
@@ -85,6 +89,11 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
                 matchDic.setValue(swingArray, forKey: "swingArray")
                 matchDic.setValue(dataDic.value(forKey: "matchKey"), forKey: "matchKey")
                 matchDic.setValue(holeShot, forKey: "holeShot")
+                var unit = 0
+                if let uni = dataDic.value(forKey: "unit") as? Int{
+                    unit = uni
+                }
+                matchDic.setValue(unit, forKey: "unit")
                 matchMArray.add(matchDic)
             }
         }
@@ -247,7 +256,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         viewCtrl.shotsArray = shotsAr
         viewCtrl.tempArray1 = swingArr
         viewCtrl.isDemoStats = isDemoStats
-        
+        viewCtrl.unit = (array[indexPath.row] as AnyObject).value(forKey:"unit") as! Int
         if sectionNames.count == 2{
             if indexPath.section == 0{
                 viewCtrl.fromRoundsPlayed = false
