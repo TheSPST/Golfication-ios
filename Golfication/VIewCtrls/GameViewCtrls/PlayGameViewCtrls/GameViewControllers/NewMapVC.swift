@@ -1350,7 +1350,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // MARK: - btnActionFinishRound
     
     @IBAction func btnActionEndRound(_ sender: Any) {
-        /*if !self.swingMatchId.isEmpty{
+        if !self.swingMatchId.isEmpty{
             //changed by Amit
 //            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "EndRound"), object: nil)
 
@@ -1364,7 +1364,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             alertVC.addAction(cancelOption)
             alertVC.addAction(action)
             self.present(alertVC, animated: true, completion: nil)
-        }else{*/
+        }else{
             var playerIndex = 0
             var i = 0
             for data in self.playersButton{
@@ -1379,7 +1379,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.exitGamePopUpView.btnDiscardText = "Delete Round"
             }
             self.exitGamePopUpView.isHidden = false
-        //}
+        }
     }
     func exitWithoutSave(){
         self.updateFeedNode()
@@ -5317,7 +5317,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             
         }else{
-            self.letsRotateWithZoom(latLng1: positionsOfCurveLines.first!, latLng2: positionsOfCurveLines.last!)
+            if positionsOfCurveLines.count != 0{
+                self.letsRotateWithZoom(latLng1: positionsOfCurveLines.first!, latLng2: positionsOfCurveLines.last!)
+            }else{
+                self.letsRotateWithZoom(latLng1: positionsOfDotLine.first!, latLng2: positionsOfDotLine.last!)
+            }
+            
         }
         if(isOnCourse) && !holeOutFlag{
             plotSuggestedMarkers(position: positionsOfDotLine)
@@ -6320,8 +6325,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnTrackShot.isHidden = true
         self.lblShotNumber.isHidden = true
         debugPrint("hiddenWhenDeviceConnected")
-        self.btnSelectClubs.isHidden = false
-        self.btnClubs.isHidden = false
+        self.btnSelectClubs.isHidden = true
+        self.btnClubs.isHidden = true
         self.btnHoleoutLbl.isHidden = true
         self.lblEditShotNumber.isHidden = true
         self.btnClose.isHidden = true

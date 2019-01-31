@@ -608,6 +608,8 @@ class BLE: NSObject {
                                 }
                             }
                         }
+                    }else{
+                        holeN = 1
                     }
                     if holeN != 0{
                         param.append(UInt8(holeN))
@@ -635,7 +637,11 @@ class BLE: NSObject {
                 if(self.holeWithSwing.count == 0){
                     param.append(0)
                 }else{
-                    if(holeWithSwing.last!.holeOut) && (holeWithSwing.last!.hole != (Constants.matchDataDic.value(forKey: "scoring") as! NSArray).count){
+                    var totalH = 18
+                    if Constants.gameType.contains("9"){
+                        totalH = 9
+                    }
+                    if(holeWithSwing.last!.holeOut) && (holeWithSwing.last!.hole != totalH){
                         debugPrint("holeWithSwing.last!.hole+1",holeWithSwing.last!.hole+1)
                         param.append(0)
                     }else{
@@ -1070,6 +1076,8 @@ extension BLE: CBCentralManagerDelegate {
                         self.timerForService.invalidate()
                         self.centralManager.stopScan()
                         self.centralManager.cancelPeripheralConnection(peripheral)
+                        Constants.deviceGolficationX = nil
+                        self.timerForService.invalidate()
                         self.textInfo = "Device not found. Please try again."
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
                     }
@@ -1359,19 +1367,27 @@ extension BLE: CBPeripheralDelegate {
                         
                         if(i+1 == self.holeWithSwing.count-1){
                             group.enter()
-                            ref.child("matchData/\(Constants.matchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shotArr], withCompletionBlock: { (error, ref) in
-                                ref.child("matchData/\(Constants.matchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true], withCompletionBlock: { (error, ref) in
-                                    group.leave()
+                            if data.hole != 0{
+                                ref.child("matchData/\(Constants.matchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shotArr], withCompletionBlock: { (error, ref) in
+                                    ref.child("matchData/\(Constants.matchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true], withCompletionBlock: { (error, ref) in
+                                        group.leave()
+                                    })
                                 })
-                            })
+                            }else{
+                                group.leave()
+                            }
                             shotArr.removeAll()
                         }
                     }
                 }else{
                     group.enter()
-                    ref.child("matchData/\(Constants.matchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shotArr], withCompletionBlock: { (error, ref) in
+                    if data.hole != 0{
+                        ref.child("matchData/\(Constants.matchId)/scoring/\(data.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shotArr], withCompletionBlock: { (error, ref) in
+                            group.leave()
+                        })
+                    }else{
                         group.leave()
-                    })
+                    }
                     shotArr.removeAll()
                     if(nextData.shotNo != 0){
                         let shotDict = NSMutableDictionary()
@@ -1431,10 +1447,12 @@ extension BLE: CBPeripheralDelegate {
     }
     
     func updateHoleOutShot(){
-        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: true)
-        if self.currentCommandData.first != UInt8(92){
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+        if self.holeNo != 0{
+            ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: true)
+            if self.currentCommandData.first != UInt8(92){
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+            }
         }
     }
     func updateSingleSwing(data:(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64,hole:Int),hole:Int){
@@ -2083,12 +2101,8 @@ extension BLE: CBPeripheralDelegate {
             debugPrint("hole scoring count",scoring.count)
             debugPrint("hole Number",hole-1)
             if let holeData = (scoring[hole-1] as! NSMutableDictionary).value(forKey: Auth.auth().currentUser!.uid) as? NSMutableDictionary{
-                if let holeout = holeData.value(forKey: "holeOut") as? Bool{
-                    if holeout{
-                        if let holeShotArr = holeData.value(forKey: "shots") as? NSArray{
-                            shotNm = holeShotArr.count
-                        }
-                    }
+                if let holeShotArr = holeData.value(forKey: "shots") as? NSArray{
+                    shotNm = holeShotArr.count
                 }
             }
         }

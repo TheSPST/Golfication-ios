@@ -415,7 +415,8 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         self.tabBarController?.tabBar.isHidden = true
 
         if(Constants.deviceGolficationX != nil){
-//            Constants.ble.sendThirdCommand()
+            Constants.deviceGameType = 2
+            Constants.ble.sendThirdCommand()
         }
     }
     

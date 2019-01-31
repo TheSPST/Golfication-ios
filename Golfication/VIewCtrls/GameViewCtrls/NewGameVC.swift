@@ -388,6 +388,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             Constants.ble = BLE()
         }
         Constants.ble.stopScanning()
+        Constants.deviceGameType = 1
+//        Constants.ble.sendThirdCommand()
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         updateScreenBLE()
     }
@@ -2291,6 +2293,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                 if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                     swingK = swingKey
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
                     break
                 }
             }
