@@ -1936,6 +1936,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         else{
             isContinueClicked = false
+            Constants.deviceGolficationX = nil
+            Constants.ble = nil
             let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NextRoundVC") as! NextRoundVC
             viewCtrl.selectedMode = modeInt
             viewCtrl.scoringMode = self.scoringMode

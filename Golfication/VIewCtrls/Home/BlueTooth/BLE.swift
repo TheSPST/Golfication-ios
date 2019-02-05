@@ -1148,7 +1148,13 @@ extension BLE: CBPeripheralDelegate {
             debugPrint("No service Found")
         }
     }
-    
+
+    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        for invalidServices in invalidatedServices{
+            debugPrint("invalidServices:",invalidServices)
+        }
+    }
+
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         guard let characteristics = service.characteristics else { return }
         for characteristic in characteristics {

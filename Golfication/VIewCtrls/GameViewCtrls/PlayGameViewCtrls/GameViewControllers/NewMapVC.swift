@@ -6303,16 +6303,20 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
                 if(!self.isContinue){
                     if !self.swingMatchId.isEmpty{
-                        self.hideWhenDeviceConnected()
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(self.swingMatchId)/playType") { (snapshot) in
+                            var matchT = String()
+                            if let str = snapshot.value as? String{
+                                matchT = str
+                            }
+                            DispatchQueue.main.async(execute: {
+                                if matchT.contains(find: "practice"){
+                                    self.swingMatchId = String()
+                                }else{
+                                    self.hideWhenDeviceConnected()
+                                }
+                            })
+                        }
                     }
-                    if self.swingMatchId.count>2{
-                        ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
-                    }
-                    else{
-                        ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":NSNull()])
-                    }
-                    ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["courseName":(self.matchDataDict.value(forKey: "courseName") as! String)])
-                    ref.child("swingSessions/\(self.swingMatchId)").updateChildValues(["matchKey":"\(self.currentMatchId)"])
                 }
                 else{
                     self.getGameId(swingKey:self.swingMatchId)

@@ -934,18 +934,20 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 let dict = selectedClubs[i] as! NSDictionary
                 if (dict.value(forKey: "clubName") as? String == sender.titleLabel?.text){
                     
-                    selectedClubs.removeObject(at: i)
-                    let golfBagData = ["golfBag": selectedClubs]
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
-                    
-                    sender.isSelected = false
-                    sender.backgroundColor = UIColor.white
-                    sender.setTitleColor(UIColor.glfLightGreyBlue, for: .normal)
-                    break
+                    if (dict.value(forKey: "clubName") as! String != "Dr") && (dict.value(forKey: "clubName") as! String != "Pu"){
+                        selectedClubs.removeObject(at: i)
+                        let golfBagData = ["golfBag": selectedClubs]
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
+                        
+                        sender.isSelected = false
+                        sender.backgroundColor = UIColor.white
+                        sender.setTitleColor(UIColor.glfLightGreyBlue, for: .normal)
+                        break
+                    }
                 }
             }
         }
-        else{
+        else if !(sender.isSelected) && selectedClubs.count<14{
             let tempBagArray = NSMutableArray()
             for i in 0..<selectedClubs.count{
                 let dict = selectedClubs[i] as! NSDictionary
@@ -972,6 +974,14 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 sender.setTitleColor(UIColor.white, for: .normal)
             }
         }
+        else{
+            let alertVC = UIAlertController(title: "Alert", message: "You can not add more than 14 clubs.", preferredStyle: UIAlertControllerStyle.alert)
+            let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            })
+            alertVC.addAction(action)
+            self.present(alertVC, animated: true, completion: nil)
+        }
+        
         self.golfBagTblView.reloadData()
     }
     

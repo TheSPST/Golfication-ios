@@ -348,6 +348,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         self.getStrokesGainedFirebaseData()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+
         //        let promocodeArr = ["GOLFYKQ98","GOLFYKR34","GOLFYKS56","GOLFYKT20","GOLFYKT41","GOLFYKT52","GOLFYKU29","GOLFYKU32","GOLFYKU34","GOLFYKU45","GOLFYKZ2","GOLFYLA37","GOLFYLA91","GOLFYLB40","GOLFYLB42","GOLFYLB80","GOLFYLC72","GOLFYLC94","GOLFYLC96","GOLFYLD14","GOLFYLD17","GOLFYLE33","GOLFYLF77","GOLFYLG22","GOLFYLG39","GOLFYLH65","GOLFYLH92","GOLFYLI84","GOLFYLJ0","GOLFYLJ28","GOLFYLK27","GOLFYLK45","GOLFYLK51","GOLFYLM17","GOLFYLM20","GOLFYLN12","GOLFYLN28","GOLFYLN43","GOLFYLN75","GOLFYLQ71","GOLFYLR65","GOLFYLT0","GOLFYLT62","GOLFYLU37","GOLFYLU97","GOLFYLV61","GOLFYLW8","GOLFYLX20","GOLFYLX46","GOLFYLY18"]
         //        for data in promocodeArr{
         //            BackgroundMapStats.getDynamicLinkFromPromocode(code: data)
@@ -355,6 +357,35 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
 //                self.FindUser()
 //        setCesPopupCount()
+    }
+    
+    @objc func appDidEnterForeground(){
+          checkNewVersion()
+    }
+    
+    func checkNewVersion(){
+        _ = try? self.isUpdateAvailable { (newVersion, update, error) in
+            if let error = error {
+                debugPrint(error)
+            }
+            else if let update = update {
+                if update{
+                    if !(Auth.auth().currentUser!.email == "spsttomar@gmail.com"){
+                        self.showNewVersionPopup(newVersion:newVersion!)
+                        
+                        /*if UserDefaults.standard.object(forKey: "isNewVersion") as? Bool != nil{
+                         let isNewVersion = UserDefaults.standard.object(forKey: "isNewVersion") as! Bool
+                         if !isNewVersion{
+                         self.showNewVersionPopup(newVersion:newVersion!)
+                         }
+                         }
+                         else{
+                         self.showNewVersionPopup(newVersion:newVersion!)
+                         }*/
+                    }
+                }
+            }
+        }
     }
     
     func setCesPopupCount(){
@@ -1814,6 +1845,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.tableHeightConstraint.constant = CGFloat(height+35)
             self.view.layoutIfNeeded()
             self.setData()
+            
+            //--------- Check if new version available -------------------------
+            self.checkNewVersion()
+            //-------------------------------------------------------------------------
+
             if self.dataArray.count == 0{
                 self.feedTableView.isHidden = true
             }
@@ -1824,28 +1860,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 self.feedTableView.dataSource = self
                 self.feedTableView.reloadData()
                 //self.scrollView.scrollRectToVisible(CGRect(x: self.scrollView.frame.origin.x, y: self.feedTableView.frame.origin.y, width: self.scrollView.frame.size.width, height: self.scrollView.frame.size.height), animated: true)
-                
-                //--------- Check if new version available -------------------------
-                _ = try? self.isUpdateAvailable { (newVersion, update, error) in
-                    if let error = error {
-                        debugPrint(error)
-                    }
-                    else if let update = update {
-                        if update{
-                            if UserDefaults.standard.object(forKey: "isNewVersion") as? Bool != nil{
-                                let isNewVersion = UserDefaults.standard.object(forKey: "isNewVersion") as! Bool
-                                if !isNewVersion{
-                                    self.showNewVersionPopup(newVersion:newVersion!)
-                                }
-                            }
-                            else{
-                                self.showNewVersionPopup(newVersion:newVersion!)
-                            }
-                        }
-                    }
-                }
-                //-------------------------------------------------------------------------
-                
             }
             self.progressView.hide(navItem: self.navigationItem)
         }
@@ -1877,28 +1891,29 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     
     func showNewVersionPopup(newVersion: String) {
-        UserDefaults.standard.set(true, forKey: "isNewVersion")
-        UserDefaults.standard.synchronize()
-        
-        let alertMessage = "A new version of Golfication is available, Please update to version " + newVersion
-        
-        let alert = UIAlertController(title: "New Version Available", message: alertMessage, preferredStyle: .alert)
-        
-        let okBtn = UIAlertAction(title: "Update", style: .default, handler: {(_ action: UIAlertAction) -> Void in
-            if let url = URL(string: "itms-apps://itunes.apple.com/in/app/golfication/id1216612467?mt=8"),
-                UIApplication.shared.canOpenURL(url){
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                } else {
-                    UIApplication.shared.openURL(url)
+
+//            UserDefaults.standard.set(true, forKey: "isNewVersion")
+//            UserDefaults.standard.synchronize()
+            
+            let alertMessage = "A new version of Golfication is available, Please update to version " + newVersion
+            
+            let alert = UIAlertController(title: "New Version Available", message: alertMessage, preferredStyle: .alert)
+            
+            let okBtn = UIAlertAction(title: "Update", style: .default, handler: {(_ action: UIAlertAction) -> Void in
+                if let url = URL(string: "itms-apps://itunes.apple.com/in/app/golfication/id1216612467?mt=8"),
+                    UIApplication.shared.canOpenURL(url){
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    } else {
+                        UIApplication.shared.openURL(url)
+                    }
                 }
-            }
-        })
-        let skipBtn = UIAlertAction(title:"Skip this Version" , style: .destructive, handler: {(_ action: UIAlertAction) -> Void in
-        })
-        alert.addAction(okBtn)
-        alert.addAction(skipBtn)
-        self.present(alert, animated: true, completion: nil)
+            })
+//            let skipBtn = UIAlertAction(title:"Skip this Version" , style: .destructive, handler: {(_ action: UIAlertAction) -> Void in
+//            })
+            alert.addAction(okBtn)
+//            alert.addAction(skipBtn)
+            self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: - setData

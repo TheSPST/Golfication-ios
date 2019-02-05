@@ -32,7 +32,7 @@ class TIOADViewController: UIViewController{
     @IBOutlet weak var TIOADStartScanButton: UIButton!
     
     @IBOutlet weak var golfXPopupView: UIView!
-    @IBOutlet weak var  deviceCircularView: CircularProgress!
+    @IBOutlet weak var deviceCircularView: CircularProgress!
     @IBOutlet weak var lblUpdateFirmware: UILabel!
     @IBOutlet weak var lblBottomInfo: UILabel!
     @IBOutlet weak var btnProceed: UIButton!
@@ -195,7 +195,7 @@ extension TIOADViewController: TIOADClientProgressDelegate{
                     Constants.OADFeedback = true
                     self.lblBottomInfo.text = "Firmware Update Complete."
                     self.btnProceed.isHidden = false
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/OAD").updateChildValues(["\(Timestamp)":Constants.oldFirmwareVersion])
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/OAD").updateChildValues(["\(Timestamp)":Constants.firmwareVersion])
                     /*let alertVC = UIAlertController(title: "Alert", message: "Firmware Updated Successfully.", preferredStyle: UIAlertControllerStyle.alert)
                     let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
                         self.dismiss(animated: true, completion: nil)
