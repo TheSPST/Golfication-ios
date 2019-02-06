@@ -62,7 +62,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         if Constants.isDevice{
             viewHaveDevice.isHidden = true
             noDeviceSV.isHidden = true
-            getSwingData()
+//            getSwingData()
         }
         else{
             viewHaveDevice.isHidden = true
@@ -204,7 +204,9 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         self.btnRetry.isHidden = false
         self.btnNoDevice.isHidden = false
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-        Constants.ble.stopScanning()
+        if Constants.ble != nil{
+            Constants.ble.stopScanning()
+        }
     }
     
     @objc func animateProgress() {
@@ -311,11 +313,17 @@ class ScanningVC: UIViewController, BluetoothDelegate {
                         }
                         Constants.ble.startScanning()
                         Constants.ble.isSetupScreen = !self.fromSetup
-
                         Constants.ble.isDeviceSetup = false
                         Constants.ble.swingMatchId = self.swingMatchId
                         Constants.ble.currentGameId = self.currentGameId
-                        self.showPopUp()
+                        Constants.deviceGameType = 2
+//                        if self.isFromViewWillApp{
+//                            self.isFromViewWillApp = false
+//                        }else{
+                            self.showPopUp()
+//                        }
+
+
 
                     })
                 })
@@ -409,15 +417,16 @@ class ScanningVC: UIViewController, BluetoothDelegate {
             self.perform(#selector(updateProgress), with: nil, afterDelay: 0.1)
         }
     }
+//    var isFromViewWillApp = false
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-
-        if(Constants.deviceGolficationX != nil){
-            Constants.deviceGameType = 2
-            Constants.ble.sendThirdCommand()
-        }
+        
+//        if(Constants.deviceGolficationX != nil){
+//            self.isFromViewWillApp = true
+            self.getSwingData()
+//        }
     }
     
     @objc func retryAction(_ sender: UIButton) {

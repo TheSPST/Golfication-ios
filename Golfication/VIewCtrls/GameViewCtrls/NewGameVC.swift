@@ -421,7 +421,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             Constants.ble = BLE()
         }
         Constants.ble.isSetupScreen = !self.fromSetup
-
+        Constants.deviceGameType = 1
         Constants.ble.startScanning()
         self.golfXPopupView.removeFromSuperview()
         showPopUp()
@@ -645,7 +645,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(true)
-        
+        Constants.deviceGameType = 1
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true
@@ -1555,8 +1555,12 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                     if Constants.ble == nil{
                                         Constants.ble = BLE()
                                     }
-                                    self.swingKey = swingKey
-                                    Constants.ble.swingMatchId = swingKey
+                                    if let onCourse = Constants.matchDataDic.value(forKey: "onCourse") as? Bool{
+                                        if onCourse{
+                                            self.swingKey = swingKey
+                                            Constants.ble.swingMatchId = swingKey
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1889,6 +1893,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         swingK = swingKey
                         break
                     }
+                }
+            }
+            if let onCourse = Constants.matchDataDic.value(forKey: "onCourse") as? Bool{
+                if !onCourse{
+                    swingK = String()
                 }
             }
             if swingK.isEmpty{
@@ -2294,8 +2303,12 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         for data in self.players{
             if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                 if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
-                    swingK = swingKey
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
+                    if let onCOurse = Constants.matchDataDic.value(forKey: "onCourse") as? Bool{
+                        if onCOurse{
+                            swingK = swingKey
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: nil)
+                        }
+                    }
                     break
                 }
             }

@@ -107,6 +107,7 @@ class BLE: NSObject {
             let centralQueue = DispatchQueue(label: "bg_golficationX", attributes: [])
             self.centralManager = CBCentralManager(delegate: self, queue: centralQueue)
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(sendSecondCommand(_:)), name: NSNotification.Name(rawValue: "command2"), object: nil)
         if Constants.bleObserver == 0{
             self.setupObserver()
         }
@@ -118,7 +119,6 @@ class BLE: NSObject {
 //        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command3"))
 //        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "startMatchCalling"))
         
-        NotificationCenter.default.addObserver(self, selector: #selector(sendSecondCommand(_:)), name: NSNotification.Name(rawValue: "command2"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendEightCommand(_:)), name: NSNotification.Name(rawValue: "command8"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendThirdCommandFromMap(_:)), name: NSNotification.Name(rawValue: "command3"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startMatchCalling(_:)), name: NSNotification.Name(rawValue: "startMatchCalling"), object: nil)
@@ -1445,17 +1445,18 @@ extension BLE: CBPeripheralDelegate {
         dict.setValue(lng1, forKey: "lng1")
         shotDict.setValue(dict, forKey: "phoneLocation")
         ref.child("matchData/\(Constants.matchId)/scoring/\(nextData.hole-1)/\(Auth.auth().currentUser!.uid)/shots/\(nextData.shotNo-1)").updateChildValues(shotDict as! [AnyHashable : Any])
+        ref.child("matchData/\(Constants.matchId)/scoring/\(nextData.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":true] as [AnyHashable : Any])
         if self.currentCommandData.first != UInt8(92){
              NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
         }
 
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: false)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: nextData.shotNo-1)
     }
     
     func updateHoleOutShot(){
         if self.holeNo != 0{
             ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: true)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeNo-1)
             if self.currentCommandData.first != UInt8(92){
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
             }
@@ -1612,6 +1613,7 @@ extension BLE: CBPeripheralDelegate {
                                     }))
                                     gameAlert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { (action: UIAlertAction!) in
                                         debugPrint("Game Discard cancel Press")
+                                        self.invalidateAllTimers()
                                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
                                     }))
                                     UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)

@@ -127,7 +127,6 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         }
         setUpTagData()
     }
-    
     func setupScanUI(){
         self.scanProgressView = (Bundle.main.loadNibNamed("ScanProgressView", owner: self, options: nil)![0] as! UIView)
         self.scanProgressView.frame = self.view.bounds
@@ -249,6 +248,8 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
 //    }
     
     func setUpTagData(){
+        collectionView.reloadData()
+        collectionView.layoutIfNeeded()
         if self.golfBagArr.count > 0{
             for i in 0..<self.golfBagArr.count{
                 if let dict = self.golfBagArr[i] as? NSDictionary{
@@ -294,6 +295,72 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 }
             }
         }
+        /*collectionView.reloadData()
+        collectionView.layoutIfNeeded()
+        var tag = false
+        var tagName = String()
+        if self.golfBagArr.count > 0{
+            for i in 0..<self.golfBagArr.count{
+                if let dict = self.golfBagArr[i] as? NSDictionary{
+                    if self.selectedBagStr == dict.value(forKey: "clubName") as? String {
+                        tag = dict.value(forKey: "tag") as! Bool
+                        tagName = dict.value(forKey: "tagName") as! String
+                        break
+                    }
+                    //                    if let boolTag = dict.value(forKey: "tag") as? Bool{
+                    //                        tag = boolTag
+                    //                    }
+                }
+            }
+            
+            if tag{
+                //if let tagName = dict.value(forKey: "tagName") as? String{
+                //if self.selectedBagStr == dict.value(forKey: "clubName") as? String{
+                self.lblTagName.text = tagName
+                self.lblTagName.textColor = UIColor.glfBluegreen
+                self.btnSyncTag.setTitle("Unsync Tag", for: .normal)
+                
+                for j in 0..<self.commanBagArray.count{
+                if self.selectedBagStr == self.commanBagArray[j] {
+                
+                let indexPath = IndexPath(row: j, section: 0)
+                guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
+                else{
+                    return
+                    }
+                cell.golfImage.layer.borderWidth = 2.0
+                cell.golfImage.layer.borderColor = UIColor.glfBluegreen75.cgColor
+                cell.golfImage.layer.cornerRadius = cell.golfImage.frame.size.height/2
+                break
+                }
+                }
+                //break
+                //}
+                //}
+            }
+            else{
+                self.lblTagName.text = "None"
+                self.lblTagName.textColor = UIColor.black.withAlphaComponent(0.5)
+                self.btnSyncTag.setTitle("Sync Tag", for: .normal)
+                for j in 0..<self.commanBagArray.count{
+                if self.selectedBagStr == self.commanBagArray[j] {
+                
+                let indexPath = IndexPath(row: j, section: 0)
+                guard let cell = self.collectionView.cellForItem(at: indexPath) as? GolfBagCollectionCell
+                else{
+                    break
+                    }
+                cell.golfImage.layer.borderWidth = 0.0
+                cell.golfImage.layer.borderColor = UIColor.clear.cgColor
+                cell.golfImage.layer.cornerRadius = cell.golfImage.frame.size.height/2
+                 break
+                }
+                }
+            }
+            //}
+            //}
+            //}
+        }*/
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -464,7 +531,6 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             updateSyncBtnWithout(isSync:isSync)
             }
             setUpTagData()
-            
             let toValue = collectionViewFlowLayout.itemSize.width * CGFloat(snapToIndex)
             
             // Damping equal 1 => no oscillations => decay animation:
@@ -493,7 +559,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 updateSyncBtnWithout(isSync:isSync)
                 }
                 setUpTagData()
-                
+
                 collectionView.collectionViewLayout.collectionView!.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             }
         }
@@ -507,6 +573,11 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as! GolfBagCollectionCell
         cell.golfTitle.text = commanBagArray[indexPath.row]
         cell.golfImage.image = UIImage(named: commanBagArray[indexPath.row])
+        
+        cell.golfImage.layer.borderWidth = 0.0
+        cell.golfImage.layer.borderColor = UIColor.clear.cgColor
+        cell.golfImage.layer.cornerRadius = cell.golfImage.frame.size.height/2
+
         return cell
     }
     

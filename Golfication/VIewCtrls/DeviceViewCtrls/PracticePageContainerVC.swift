@@ -35,7 +35,10 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
                 swingDetailsView.isHidden = false
                 //                self.navigationController?.popViewController(animated: true)
             }else{
-                self.navigationController?.popToRootViewController(animated: true)
+                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.window?.rootViewController = tabBarCtrl
+//                self.navigationController?.popToRootViewController(animated: true)
             }
         }else{
             if superClassName == "SwingSessionVC"{
@@ -289,7 +292,7 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         }
     }
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        if !practiceFinished{
+        if !practiceFinished && self.navigationController!.viewControllers.count>2{
         superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
         }
         if !isFirst{

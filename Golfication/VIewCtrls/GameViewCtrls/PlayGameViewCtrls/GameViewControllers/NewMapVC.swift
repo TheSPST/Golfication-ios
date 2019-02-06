@@ -1669,8 +1669,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 for data in players{
                     if ((data.value as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                         if let swingKey = (data.value as! NSMutableDictionary).value(forKey: "swingKey") as? String{
-                            self.swingMatchId = swingKey
-                            self.getSwingData(swingKey: swingKey)
+                            if self.isOnCourse{
+                                self.swingMatchId = swingKey
+                                self.getSwingData(swingKey: swingKey)
+                            }
                             break
                         }
                     }
@@ -1798,9 +1800,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     @objc func doAfterResponse(_ notification:NSNotification){
-        if (notification.object as? Bool) != nil{
+        if let hole = notification.object as? Int{
             if self.scoring.count != 0{
-                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(self.selectedUserId)") { (snapshot) in
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(hole)/\(self.selectedUserId)") { (snapshot) in
                     var playersData = NSMutableDictionary()
                     if let dict = snapshot.value as? NSMutableDictionary{
                         playersData = dict
@@ -1817,7 +1819,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     if !dat{
                                         let latLng = CLLocationCoordinate2D(latitude: shot.value(forKey: "lat1") as! Double, longitude: shot.value(forKey: "lng1") as! Double)
                                         var lie = self.callFindPositionInsideFeature(position: latLng)
-                                        let distance = GMSGeometryDistance(latLng, self.courseData.centerPointOfTeeNGreen[self.holeIndex].green)
+                                        let distance = GMSGeometryDistance(latLng, self.courseData.centerPointOfTeeNGreen[hole].green)
                                         if i == 0{
                                             lie = "T"
                                         }
@@ -1836,35 +1838,39 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         playerDict.setObject(playersData, forKey: self.selectedUserId as NSCopying)
                         if let scoring = Constants.matchDataDic.value(forKey: "scoring") as? NSArray{
                             let sco = scoring
-                            (sco[self.holeIndex] as! NSMutableDictionary).setValue(playersData, forKey: self.selectedUserId)
+                            (sco[hole] as! NSMutableDictionary).setValue(playersData, forKey: self.selectedUserId)
                             Constants.matchDataDic.setValue(sco, forKey: "scoring")
                         }
-                        self.scoring[self.holeIndex].players[self.playerIndex] = playerDict
+                        self.scoring[hole].players[self.playerIndex] = playerDict
                         holeOut = playersData.value(forKey: "holeOut") as! Bool
                         if(holeOut){
                             self.uploadPutting(playerId: self.selectedUserId)
                         }
-                        self.updateMap(indexToUpdate: self.holeIndex)
-                        self.getSwingData(swingKey: self.swingMatchId)
-                        if wantToDrag{
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
-                                for markers in self.markersForCurved{
-                                    self.isDraggingMarker = true
-                                    self.updateStateWhileDragging(marker:markers)
+                        if self.holeIndex == hole{
+                            ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":false] as [AnyHashable : Any])
+                            self.updateMap(indexToUpdate: self.holeIndex)
+                            self.getSwingData(swingKey: self.swingMatchId)
+                            if wantToDrag{
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
+                                    for markers in self.markersForCurved{
+                                        self.isDraggingMarker = true
+                                        self.updateStateWhileDragging(marker:markers)
+                                    }
+                                })
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
+                                self.uploadTotalStrokesGained(playerId: self.selectedUserId)
+                                if holeOut {
+                                    if self.isNextPrevBtn{
+                                        self.isNextPrevBtn = false
+                                    }
+                                    else{
+                                        self.btnActionPlayerStats(self.btnPlayersStats)
+                                    }
                                 }
                             })
                         }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                            self.uploadTotalStrokesGained(playerId: self.selectedUserId)
-                            if holeOut {
-                                if self.isNextPrevBtn{
-                                    self.isNextPrevBtn = false
-                                }
-                                else{
-                                    self.btnActionPlayerStats(self.btnPlayersStats)
-                                }
-                            }
-                        })
+
                     })
                 }
             }
@@ -6205,9 +6211,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
                         if !isHoleByHole{
                             if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
-                                self.swingMatchId = swingKey
-                                if(swingKey != ""){
-                                    self.getGameId(swingKey:self.swingMatchId)
+                                if    self.isOnCourse{
+                                    self.swingMatchId = swingKey
+                                    if(swingKey != ""){
+                                        self.getGameId(swingKey:self.swingMatchId)
+                                    }
                                 }
                             }
                         }
@@ -6298,7 +6306,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             DispatchQueue.main.async(execute: {
                 for data in activeRoundKeysArray{
                     if(data.value){
-                        self.swingMatchId = data.key
+                        if self.isOnCourse{
+                            self.swingMatchId = data.key
+                        }
                     }
                 }
                 if(!self.isContinue){
@@ -6351,7 +6361,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             DispatchQueue.main.async(execute: {
                 if(self.isContinue){
                     self.isNextPrevBtn = true
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: false)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeIndex)
                 }
             })
         }
@@ -6403,9 +6413,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
                 tempArr.append("\(backSwing)")
                 tempArr.append("\(downSwing)")
-                let holeNum = swing.value(forKey: "holeNum") as! Int
-                if(holeNum == self.holeIndex+1){
-                    self.swingData.append(tempArr)
+                if let holeNum = swing.value(forKey: "holeNum") as? Int{
+                    if(holeNum == self.holeIndex+1){
+                        self.swingData.append(tempArr)
+                    }
                 }
             }
         }
@@ -6874,7 +6885,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func updateCurrentHole(index: Int){
         if !swingMatchId.isEmpty{
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: false)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeIndex)
         }
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.scoring[index].hole)", forKey: "currentHole" as NSCopying)
