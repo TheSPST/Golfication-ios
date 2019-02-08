@@ -99,8 +99,24 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
         }
     }
     
+    
     @objc func backAction(_ sender: UIBarButtonItem) {
-          self.navigationController?.popViewController(animated: true)
+        if Constants.isTagSetupModified{
+            let setUpAlert = UIAlertController(title: "Alert", message: "Do you want to save the changes you made just now?", preferredStyle: UIAlertControllerStyle.alert)
+            setUpAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
+                self.btnContinueAction()
+            }))
+            setUpAlert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
+                Constants.isTagSetupModified = false
+                self.navigationController?.popViewController(animated: true)
+            }))
+            setUpAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
+            }))
+            self.present(setUpAlert, animated: true, completion: nil)
+        }
+        else{
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     
     override func viewDidLoad() {
@@ -109,7 +125,7 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
         self.tabBarController?.tabBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
         
-        let btn = UIBarButtonItem(title: "Continue".localized(), style: .done, target: self, action: #selector(self.btnContinueAction))
+        let btn = UIBarButtonItem(title: "Finish".localized(), style: .done, target: self, action: #selector(self.btnContinueAction))
         btn.tintColor = UIColor.glfBluegreen
         self.navigationItem.setRightBarButtonItems([btn], animated: true)
         

@@ -1842,7 +1842,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             Constants.matchDataDic.setValue(sco, forKey: "scoring")
                         }
                         self.scoring[hole].players[self.playerIndex] = playerDict
-                        holeOut = playersData.value(forKey: "holeOut") as! Bool
+                        holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
                         if(holeOut){
                             self.uploadPutting(playerId: self.selectedUserId)
                         }
@@ -6335,6 +6335,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func hideWhenDeviceConnected(){
+        self.btnRestartLbl.isHidden = true
         self.btnClubs.isHidden = true
         self.btnTrackShot.isHidden = true
         self.lblShotNumber.isHidden = true
@@ -6348,6 +6349,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.stackViewSubBtn.isHidden = true
         self.btnAddPenaltyLbl.isHidden = true
         
+        self.btnEndRound.setTitle("", for: .normal)
+        self.btnEndRound.isUserInteractionEnabled = false
+        self.btnEndRound.layer.borderColor = UIColor.clear.cgColor
+        self.btnEndRound.backgroundColor = UIColor.clear
     }
     var deviceGameID = Int()
     func getGameId(swingKey:String){

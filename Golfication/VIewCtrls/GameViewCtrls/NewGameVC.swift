@@ -2463,6 +2463,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     func checkScoringData(){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        self.unSyncdIndex = 0
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring") { (snapshot) in
             
             var scoringArray =  NSArray()
@@ -2499,6 +2500,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     }
                 }
                 if self.unSyncdIndex>0 && !self.isSyncd{
+                    let currentHoleWhilePlaying = NSMutableDictionary()
+                    currentHoleWhilePlaying.setObject("\(self.unSyncdIndex)", forKey: "currentHole" as NSCopying)
+                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
+
                     let emptyAlert = UIAlertController(title: "Alert", message: "Please sync hole \(self.unSyncdIndex)", preferredStyle: UIAlertControllerStyle.alert)
                     emptyAlert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action: UIAlertAction!) in
                         self.startContinueAction(Any.self)

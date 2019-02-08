@@ -1450,7 +1450,7 @@ extension BLE: CBPeripheralDelegate {
              NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
         }
 
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: nextData.shotNo-1)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: nextData.hole-1)
     }
     
     func updateHoleOutShot(){
@@ -1568,6 +1568,7 @@ extension BLE: CBPeripheralDelegate {
                     timerForWriteCommand22.invalidate()
                     debugPrint("RecviedResult 2.2   ----  \(self.totalClub!)")
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo").updateChildValues(["setup":true])
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/deviceInfo/setupTime").updateChildValues(["\(Timestamp)":self.totalClub])
                     if Constants.macAddress == nil{
                         ref.child("golficationX").updateChildValues(["\(self.macAddressss)":"\(Auth.auth().currentUser!.uid)"])
                     }

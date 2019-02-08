@@ -632,6 +632,7 @@
                         <outlet property="lblDownSwingTempo" destination="b2r-YK-TdE" id="V7g-Bw-oY5"/>
                         <outlet property="lblDwnSwing" destination="NXh-Jd-Le3" id="yRO-yo-1K4"/>
                         <outlet property="lblHandSpeed" destination="igZ-R9-jWR" id="JbW-fo-cPu"/>
+                        <outlet property="lblKphHandSpeed" destination="kD5-0Q-S3W" id="7iC-YC-muj"/>
                         <outlet property="lblSwingScore" destination="0LH-as-5B8" id="ssn-O1-gbc"/>
                         <outlet property="lblTempoColon" destination="kmA-Ia-eo5" id="4lt-sm-pxi"/>
                         <outlet property="swingAngleCircular_Blue" destination="AJf-qV-4Rf" id="9Rt-0z-kmU"/>

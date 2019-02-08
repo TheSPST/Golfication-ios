@@ -220,6 +220,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 for i in 0..<self.golfBagArr.count{
                     if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
                         for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                            Constants.isTagSetupModified = true
                             ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":index!])
                             dict.setValue(index!, forKey: "avgDistance")
                         }
@@ -419,7 +420,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 bagDict.setValue("", forKey: "tagName")
                 bagDict.setValue("", forKey: "tagNum")
                 golfBagArr[index] = bagDict
-                
+                Constants.isTagSetupModified = true
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag":golfBagArr]) { (error, ref) in
                     self.setUpTagData()
                 }
@@ -634,7 +635,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                         golfBagDict.setObject(dict.value(forKey: "avgDistance") as! Int, forKey: "avgDistance" as NSCopying)
                         
                         self.golfBagArr.replaceObject(at: i, with: golfBagDict)
-                        
+                        Constants.isTagSetupModified = true
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag": self.golfBagArr], withCompletionBlock: { (error, ref) in
                             
                             self.tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)

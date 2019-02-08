@@ -380,6 +380,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     @objc func setupFinished(_ notification: NSNotification){
         DispatchQueue.main.async {
             Constants.ble.isDeviceSetup = true
+            Constants.isTagSetupModified = false
             UIApplication.shared.keyWindow?.makeToast("Golfication X setup complete.")
             self.navigationController?.popToRootViewController(animated: true)
             NotificationCenter.default.removeObserver(NSNotification.Name(rawValue:"command2Finished"))

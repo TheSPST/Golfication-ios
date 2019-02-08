@@ -23,7 +23,8 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
     @IBOutlet weak var lblSwingScore: UILabel!
     @IBOutlet weak var lblHandSpeed: UILabel!
     @IBOutlet weak var lblTempoColon: UILabel!
-
+    @IBOutlet weak var lblKphHandSpeed: UILabel!
+    
     @IBOutlet weak var customColorSlider: CustomColorSlider!
     @IBOutlet weak var headSpeedLineChart: LineChartView!
     @IBOutlet weak var avgSwingCircularVw: UICircularProgressRingView!
@@ -57,6 +58,7 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             for j in 0..<tempSwingArray.count{
                 if let dic = tempSwingArray[j] as? NSDictionary{
                     clubArray.append(dic.value(forKey: "club") as! String)
+                    dic.setValue(dataDic.value(forKey: "unit"), forKey: "unit")
                     swingArray.add(dic)
                 }
             }
@@ -140,34 +142,65 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             let clubName = commanArray[j]
                 for i in 0..<swingArray.count{
                     let dataDic = swingArray[i] as! NSDictionary
+                    let unit = dataDic.value(forKey: "unit") as? Int ?? 0
                     if clubName == "Iron(s)" && (dataDic.value(forKey: "club") as! String).last == "i"{
                         ironCount = ironCount + 1
-                        let clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        var clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        if unit == 0 && Constants.distanceFilter == 1{
+                            clubSpeed = clubSpeed*1.60934
+                        }else if unit == 1 && Constants.distanceFilter == 0{
+                            clubSpeed = clubSpeed*0.621371
+                        }
                         ironClubSpeedSum += clubSpeed
                     }
                     else if clubName == "Hybrid(s)" && (dataDic.value(forKey: "club") as! String).last == "h"{
                         hybridCount = hybridCount + 1
-                        let clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        var clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        if unit == 0 && Constants.distanceFilter == 1{
+                            clubSpeed = clubSpeed*1.60934
+                        }else if unit == 1 && Constants.distanceFilter == 0{
+                            clubSpeed = clubSpeed*0.621371
+                        }
                         hybridClubSpeedSum += clubSpeed
                     }
                     else if clubName == "Driver(s)" && (dataDic.value(forKey: "club") as! String).last == "r"{
                         driverCount = driverCount + 1
-                        let clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        var clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        if unit == 0 && Constants.distanceFilter == 1{
+                            clubSpeed = clubSpeed*1.60934
+                        }else if unit == 1 && Constants.distanceFilter == 0{
+                            clubSpeed = clubSpeed*0.621371
+                        }
                         driverClubSpeedSum += clubSpeed
                     }
                     else if clubName == "Putter(s)" && (dataDic.value(forKey: "club") as! String).last == "u"{
                         putterCount = putterCount + 1
-                        let clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        var clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        if unit == 0 && Constants.distanceFilter == 1{
+                            clubSpeed = clubSpeed*1.60934
+                        }else if unit == 1 && Constants.distanceFilter == 0{
+                            clubSpeed = clubSpeed*0.621371
+                        }
                         putterClubSpeedSum += clubSpeed
                     }
                     else if clubName == "Wedge(s)" && ((dataDic.value(forKey: "club") as! String) == "Pw" || (dataDic.value(forKey: "club") as! String) == "Sw" || (dataDic.value(forKey: "club") as! String) == "Gw" || (dataDic.value(forKey: "club") as! String) == "Lw"){
                         wedgeCount = wedgeCount + 1
-                        let clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        var clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        if unit == 0 && Constants.distanceFilter == 1{
+                            clubSpeed = clubSpeed*1.60934
+                        }else if unit == 1 && Constants.distanceFilter == 0{
+                            clubSpeed = clubSpeed*0.621371
+                        }
                         wedgeClubSpeedSum += clubSpeed
                     }
                     else if clubName == "Woods(s)" && ((dataDic.value(forKey: "club") as! String) == "3w" || (dataDic.value(forKey: "club") as! String) == "4w" || (dataDic.value(forKey: "club") as! String) == "5w" || (dataDic.value(forKey: "club") as! String) == "7w"){
                         woodCount = woodCount + 1
-                        let clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        var clubSpeed = (dataDic.value(forKey: "clubSpeed") as! Double)
+                        if unit == 0 && Constants.distanceFilter == 1{
+                            clubSpeed = clubSpeed*1.60934
+                        }else if unit == 1 && Constants.distanceFilter == 0{
+                            clubSpeed = clubSpeed*0.621371
+                        }
                         woodClubSpeedSum += clubSpeed
                     }
                 }
@@ -236,7 +269,13 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
             kphLbl.textColor = UIColor(rgb: 0xA0B5AF)
             kphLbl.textAlignment = .center
             kphLbl.font = UIFont(name: "SFProDisplay-Regular", size: 13.0)
-            kphLbl.text = "KPH"
+            if Constants.distanceFilter == 0{
+                kphLbl.text = "MPH"
+                self.lblKphHandSpeed.text = "MPH"
+            }else{
+                kphLbl.text = "KPH"
+                self.lblKphHandSpeed.text = "KPH"
+            }
             subView.addSubview(kphLbl)
             
             let clubLbl = UILabel()
@@ -264,10 +303,6 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         var avgSwingTempo = 0.0
         var numOfItems = 0
         var swingScoreSum = 0.0
-        
-        var vH1Sum = 0.0
-        var vH2Sum = 0.0
-        var vH3Sum = 0.0
         var handSpeedSum = 0.0
         var backSwingAngleSum = 0.0
         var clubNameSwingArray = [String]()
@@ -280,7 +315,6 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         if clubNameSwingArray.contains(clubArray[tag]){
             for i in 0..<swingArray.count{
                 let dataDic = swingArray[i] as! NSDictionary
-                
                 if clubArray[tag] == (dataDic.value(forKey: "club") as! String){
                     numOfItems = numOfItems + 1
                     let tempo = (dataDic.value(forKey: "tempo") as! Double)
@@ -292,17 +326,14 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
                     }
                     let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
                     
-//                    let vH1 = (dataDic.value(forKey: "VH1") as! Double)
-//                    let vH2 = (dataDic.value(forKey: "VH2") as! Double)
-//                    let vH3 = (dataDic.value(forKey: "VH3") as! Double)
-                    let handSpeed = (dataDic.value(forKey: "handSpeed") as! Double)
-                    
+                    var handSpeed = (dataDic.value(forKey: "handSpeed") as! Double)
+                    let unit = dataDic.value(forKey: "unit") as? Int ?? 0
+                    if unit == 0 && Constants.distanceFilter == 1{
+                        handSpeed = handSpeed*1.60934
+                    }else if unit == 1 && Constants.distanceFilter == 0{
+                        handSpeed = handSpeed*0.621371
+                    }
                     handSpeedSum += handSpeed
-                    
-//                    vH1Sum += vH1
-//                    vH2Sum += vH2
-//                    vH3Sum += vH3
-                    
                     avgSwingTempo += tempo
                     avgBackSwing += backSwing
                     avgDwnSwing += downSwing
@@ -314,40 +345,30 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         else{
             for i in 0..<swingArray.count{
                 let dataDic = swingArray[i] as! NSDictionary
-                
-                    numOfItems = numOfItems + 1
-                    let tempo = (dataDic.value(forKey: "tempo") as! Double)
-                    let backSwing = (dataDic.value(forKey: "backSwing") as! Double)
-                    let downSwing = (dataDic.value(forKey: "downSwing") as! Double)
-                    var backS = 0.0
-                    if let back = dataDic.value(forKey: "backSwingAngle") as? Double{
-                        backS = back
-                    }
-                
-                    let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
-                    
-//                    let vH1 = (dataDic.value(forKey: "VH1") as! Double)
-//                    let vH2 = (dataDic.value(forKey: "VH2") as! Double)
-//                    let vH3 = (dataDic.value(forKey: "VH3") as! Double)
-                    let handSpeed = (dataDic.value(forKey: "handSpeed") as! Double)
-                    
-                    handSpeedSum += handSpeed
-                    
-//                    vH1Sum += vH1
-//                    vH2Sum += vH2
-//                    vH3Sum += vH3
-                
-                    avgSwingTempo += tempo
-                    avgBackSwing += backSwing
-                    avgDwnSwing += downSwing
-                    swingScoreSum += swingScore
-                    backSwingAngleSum += backS
+                numOfItems = numOfItems + 1
+                let tempo = (dataDic.value(forKey: "tempo") as! Double)
+                let backSwing = (dataDic.value(forKey: "backSwing") as! Double)
+                let downSwing = (dataDic.value(forKey: "downSwing") as! Double)
+                var backS = 0.0
+                if let back = dataDic.value(forKey: "backSwingAngle") as? Double{
+                    backS = back
+                }
+                let swingScore = (dataDic.value(forKey: "swingScore") as! Double)
+                var handSpeed = (dataDic.value(forKey: "handSpeed") as! Double)
+                let unit = dataDic.value(forKey: "unit") as? Int ?? 0
+                if unit == 0 && Constants.distanceFilter == 1{
+                    handSpeed = handSpeed*1.60934
+                }else if unit == 1 && Constants.distanceFilter == 0{
+                    handSpeed = handSpeed*0.621371
+                }
+                handSpeedSum += handSpeed
+                avgSwingTempo += tempo
+                avgBackSwing += backSwing
+                avgDwnSwing += downSwing
+                swingScoreSum += swingScore
+                backSwingAngleSum += backS
             }
         }
-        
-//        let avgVh1 = (vH1Sum/(Double(numOfItems)))
-//        let avgVh2 = (vH2Sum/(Double(numOfItems)))
-//        let avgVh3 = (vH3Sum/(Double(numOfItems)))
         if numOfItems > 0{
             let avgHandSpeed = (handSpeedSum/(Double(numOfItems)))
 //            lblHandSpeed.text = "\((avgHandSpeed).rounded(toPlaces: 2))"

@@ -131,7 +131,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var cesPopUpView: UIView!
     var btnCesBuyNow: UIButton!
     var btnCancel:UIButton!
-
+    var minAppVersion = String()
+    
     // MARK: - inviteAction
     @IBAction func inviteAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Profile", bundle: nil)
@@ -348,8 +349,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         self.getStrokesGainedFirebaseData()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-
         //        let promocodeArr = ["GOLFYKQ98","GOLFYKR34","GOLFYKS56","GOLFYKT20","GOLFYKT41","GOLFYKT52","GOLFYKU29","GOLFYKU32","GOLFYKU34","GOLFYKU45","GOLFYKZ2","GOLFYLA37","GOLFYLA91","GOLFYLB40","GOLFYLB42","GOLFYLB80","GOLFYLC72","GOLFYLC94","GOLFYLC96","GOLFYLD14","GOLFYLD17","GOLFYLE33","GOLFYLF77","GOLFYLG22","GOLFYLG39","GOLFYLH65","GOLFYLH92","GOLFYLI84","GOLFYLJ0","GOLFYLJ28","GOLFYLK27","GOLFYLK45","GOLFYLK51","GOLFYLM17","GOLFYLM20","GOLFYLN12","GOLFYLN28","GOLFYLN43","GOLFYLN75","GOLFYLQ71","GOLFYLR65","GOLFYLT0","GOLFYLT62","GOLFYLU37","GOLFYLU97","GOLFYLV61","GOLFYLW8","GOLFYLX20","GOLFYLX46","GOLFYLY18"]
         //        for data in promocodeArr{
         //            BackgroundMapStats.getDynamicLinkFromPromocode(code: data)
@@ -357,6 +356,24 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
 //                self.FindUser()
 //        setCesPopupCount()
+        getMinIOSVersion()
+    }
+    func getMinIOSVersion(){
+        
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "appVersion/iOS/version") { (snapshot) in
+            if(snapshot.value != nil){
+                self.minAppVersion = snapshot.value as! String
+            }
+            DispatchQueue.main.async(execute: {
+                //--------- Check if new version available -------------------------
+                let currentAppVer =  Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+                if currentAppVer < self.minAppVersion{
+                   NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+                   self.checkNewVersion()
+                }
+                //-------------------------------------------------------------------------
+            })
+        }
     }
     
     @objc func appDidEnterForeground(){
@@ -386,6 +403,32 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
             }
         }
+    }
+    
+    func showNewVersionPopup(newVersion: String) {
+        
+        //UserDefaults.standard.set(true, forKey: "isNewVersion")
+        //UserDefaults.standard.synchronize()
+        
+        let alertMessage = "A new version of Golfication is available, Please update to version " + newVersion
+        
+        let alert = UIAlertController(title: "New Version Available", message: alertMessage, preferredStyle: .alert)
+        
+        let okBtn = UIAlertAction(title: "Update", style: .default, handler: {(_ action: UIAlertAction) -> Void in
+            if let url = URL(string: "itms-apps://itunes.apple.com/in/app/golfication/id1216612467?mt=8"),
+                UIApplication.shared.canOpenURL(url){
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(url)
+                }
+            }
+        })
+        //let skipBtn = UIAlertAction(title:"Skip this Version" , style: .destructive, handler: {(_ action: UIAlertAction) -> Void in
+        //})
+        alert.addAction(okBtn)
+        //alert.addAction(skipBtn)
+        self.present(alert, animated: true, completion: nil)
     }
     
     func setCesPopupCount(){
@@ -1846,10 +1889,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.view.layoutIfNeeded()
             self.setData()
             
-            //--------- Check if new version available -------------------------
-            self.checkNewVersion()
-            //-------------------------------------------------------------------------
-
             if self.dataArray.count == 0{
                 self.feedTableView.isHidden = true
             }
@@ -1888,32 +1927,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
         task.resume()
         return task
-    }
-    
-    func showNewVersionPopup(newVersion: String) {
-
-//            UserDefaults.standard.set(true, forKey: "isNewVersion")
-//            UserDefaults.standard.synchronize()
-            
-            let alertMessage = "A new version of Golfication is available, Please update to version " + newVersion
-            
-            let alert = UIAlertController(title: "New Version Available", message: alertMessage, preferredStyle: .alert)
-            
-            let okBtn = UIAlertAction(title: "Update", style: .default, handler: {(_ action: UIAlertAction) -> Void in
-                if let url = URL(string: "itms-apps://itunes.apple.com/in/app/golfication/id1216612467?mt=8"),
-                    UIApplication.shared.canOpenURL(url){
-                    if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                    } else {
-                        UIApplication.shared.openURL(url)
-                    }
-                }
-            })
-//            let skipBtn = UIAlertAction(title:"Skip this Version" , style: .destructive, handler: {(_ action: UIAlertAction) -> Void in
-//            })
-            alert.addAction(okBtn)
-//            alert.addAction(skipBtn)
-            self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: - setData

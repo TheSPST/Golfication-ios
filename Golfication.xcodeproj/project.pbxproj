@@ -88,7 +88,6 @@
 		3EF2A0A4200A2AF700089E9F /* DemoFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF2A0A3200A2AF700089E9F /* DemoFooterView.swift */; };
 		3EF459B7217F44570018AE37 /* ARKitEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF459B6217F44570018AE37 /* ARKitEngine.swift */; };
 		3EF459B9217F4C960018AE37 /* MatrixHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF459B8217F4C960018AE37 /* MatrixHelper.swift */; };
-		3EF55F5820E77A2200068C4B /* NewHomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF55F5720E77A2200068C4B /* NewHomeVC.swift */; };
 		3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF789ED201F1B69009CC3E3 /* AcceptInviteCell.swift */; };
 		3EF9B42520134FE9007B409A /* DemoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF9B42420134FE9007B409A /* DemoLabel.swift */; };
 		4B00679A1F9E151D0060E6BB /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0067991F9E151D0060E6BB /* CardView.swift */; };
@@ -249,6 +248,7 @@
 		4BCFF6D820453CBC00FCB10D /* MySwingWebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */; };
 		4BD5CF83214CE17E00BEBEED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */; };
 		4BD5CF85214D212500BEBEED /* RefreshSubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */; };
+		4BD60680220D956100E153D9 /* NewHomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD6067F220D956100E153D9 /* NewHomeVC.swift */; };
 		4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BD6AABA20A9AA0C00F1839C /* Profile.storyboard */; };
 		4BD6AABD20A9B0E300F1839C /* GolfBagTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD6AABC20A9B0E300F1839C /* GolfBagTabsVC.swift */; };
 		4BD98B582025DC3900535AF1 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BD98B572025DC3900535AF1 /* AdSupport.framework */; };
@@ -353,7 +353,6 @@
 		3EF2A0A3200A2AF700089E9F /* DemoFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoFooterView.swift; sourceTree = "<group>"; };
 		3EF459B6217F44570018AE37 /* ARKitEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARKitEngine.swift; sourceTree = "<group>"; };
 		3EF459B8217F4C960018AE37 /* MatrixHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixHelper.swift; sourceTree = "<group>"; };
-		3EF55F5720E77A2200068C4B /* NewHomeVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewHomeVC.swift; sourceTree = "<group>"; };
 		3EF789ED201F1B69009CC3E3 /* AcceptInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptInviteCell.swift; sourceTree = "<group>"; };
 		3EF9B42420134FE9007B409A /* DemoLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoLabel.swift; sourceTree = "<group>"; };
 		4B0067991F9E151D0060E6BB /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -535,6 +534,7 @@
 		4BCF8E2B21B502F70015338F /* swing_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = swing_beep.mp3; sourceTree = "<group>"; };
 		4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySwingWebViewVC.swift; sourceTree = "<group>"; };
 		4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSubscriptionManager.swift; sourceTree = "<group>"; };
+		4BD6067F220D956100E153D9 /* NewHomeVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewHomeVC.swift; sourceTree = "<group>"; };
 		4BD6AABA20A9AA0C00F1839C /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		4BD6AABC20A9B0E300F1839C /* GolfBagTabsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolfBagTabsVC.swift; sourceTree = "<group>"; };
 		4BD98B572025DC3900535AF1 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
@@ -1097,10 +1097,10 @@
 		4BB26CD51FF77EDB001E9556 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				4BD6067F220D956100E153D9 /* NewHomeVC.swift */,
 				3E638E262187058500DB08B9 /* PublicScore.swift */,
 				3E57646A215BDA5400658D78 /* ProfilePhotoDetailVC.swift */,
 				3E3367EF2130052D00AC238F /* HomeFreeProMemberVC.swift */,
-				3EF55F5720E77A2200068C4B /* NewHomeVC.swift */,
 				3E59234820A991C60056D446 /* Home.storyboard */,
 				4BD6AABA20A9AA0C00F1839C /* Profile.storyboard */,
 				3E59234620A991C50056D446 /* GolfBagViewCtrls */,
@@ -1344,7 +1344,7 @@
 					0D5D4A361F94D382004621C7 = {
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1706,7 +1706,6 @@
 				3E5EAB041FF7AD2B00F69661 /* AppDelegate.swift in Sources */,
 				3E03F107207C9D8B001DDC5F /* EnterFreeProCodeVC.swift in Sources */,
 				3E03F1202080B36A001DDC5F /* SettingVC.swift in Sources */,
-				3EF55F5820E77A2200068C4B /* NewHomeVC.swift in Sources */,
 				4B7E2A682175C0D900DFC3EB /* RadarView.m in Sources */,
 				4B7E2A6A2175C0D900DFC3EB /* ARKitConfig.m in Sources */,
 				4B9578DF20B4409E008B2C61 /* AssignTabsVC.swift in Sources */,
@@ -1729,6 +1728,7 @@
 				4B7E2A672175C0D900DFC3EB /* ARGeoCoordinate.m in Sources */,
 				4B7F52182158DC6F002E328A /* PKCCrop.swift in Sources */,
 				4BB26D121FF77EDB001E9556 /* SignUpVC.swift in Sources */,
+				4BD60680220D956100E153D9 /* NewHomeVC.swift in Sources */,
 				3E3D120C213D6A3F00B2978D /* MapShotPopupVC.swift in Sources */,
 				3E035F85215293F000019014 /* TIOADClient.m in Sources */,
 				4BB26D271FF77EDB001E9556 /* SessionReportTableViewCell.swift in Sources */,
@@ -1933,9 +1933,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FE7D783SLH;
@@ -1946,7 +1946,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_7_Jan_2020;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1959,9 +1959,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FE7D783SLH;
@@ -1972,7 +1972,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_7_Jan_2020;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
