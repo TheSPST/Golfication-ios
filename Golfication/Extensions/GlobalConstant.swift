@@ -11,6 +11,7 @@ import Foundation
 struct Constants{
     
     static var deviceGameType = 0
+    static var tempGolfBagArray = NSMutableArray()
 
     // MARK: NewHomeVC
     static var isTagSetupModified = false

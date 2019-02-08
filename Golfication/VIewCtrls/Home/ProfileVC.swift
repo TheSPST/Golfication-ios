@@ -96,6 +96,9 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     // MARK: connectBluetoothAction
     @IBAction func connectBluetoothAction(_ sender: Any) {
         if bluetoothStatus{
+            Constants.tempGolfBagArray = NSMutableArray()
+            Constants.tempGolfBagArray = NSMutableArray(array: self.golfBagArray)
+
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
             viewCtrl.golfBagArr = self.golfBagArray
             self.navigationController?.pushViewController(viewCtrl, animated: true)

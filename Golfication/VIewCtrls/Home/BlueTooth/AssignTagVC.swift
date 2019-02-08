@@ -9,6 +9,8 @@
 import UIKit
 import XLPagerTabStrip
 import CoreBluetooth
+import FirebaseAuth
+
 class AssignTagVC: ButtonBarPagerTabStripViewController {
     @IBOutlet weak var shadowView: UIView!
     var clubs = NSMutableDictionary()
@@ -107,6 +109,9 @@ class AssignTagVC: ButtonBarPagerTabStripViewController {
                 self.btnContinueAction()
             }))
             setUpAlert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
+                if Constants.tempGolfBagArray.count>0{
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag": Constants.tempGolfBagArray])
+                }
                 Constants.isTagSetupModified = false
                 self.navigationController?.popViewController(animated: true)
             }))
