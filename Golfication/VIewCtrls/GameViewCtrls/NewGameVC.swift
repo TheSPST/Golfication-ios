@@ -1675,7 +1675,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
 //    var isFirstSwingChk = true
-
+    var isCourseDataCount = 0
     func checkSwingKey(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession/\(self.swingKey)/") { (snapshot) in
             var isSwing = false
@@ -1694,6 +1694,15 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                             if let gameID = swingData.value(forKey: "gameId") as? Int{
                                 self.swingGameId = gameID
                                 Constants.ble.currentGameId = gameID
+                                if self.isCourseDataCount == 0{
+                                    NotificationCenter.default.addObserver(self, selector: #selector(self.continueCourseData(_:)), name: NSNotification.Name(rawValue: "continueCourseData"), object: nil)
+                                    self.courseData.startingIndex = Constants.startingHole == "" ? 1:Int(Constants.startingHole)
+                                    self.courseData.gameTypeIndex = Constants.gameType == "9 holes" ? 9:18
+                                    self.courseData.getGolfCourseDataFromFirebase(courseId: "course_\(Constants.selectedGolfID)")
+                                    self.courseData.isContinue = true
+                                    self.isCourseDataCount = 1
+                                }
+
                             }
                             if self.isContinueClicked{
                                 self.isContinueClicked = false
@@ -2024,6 +2033,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         if touch?.view != popUpSubView {
             popUpContainerView.isHidden = true
         }
+    }
+    @objc func continueCourseData(_ notification: NSNotification) {
+        Constants.ble.courseData = self.courseData
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "continueCourseData"), object: nil)
     }
     @objc func defaultMapApiCompleted(_ notification: NSNotification) {
         notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
@@ -2663,7 +2676,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             viewCtrl.finalScoreData = self.scoring
             viewCtrl.currentMatchId = mID
             viewCtrl.justFinishedTheMatch = true
-            viewCtrl.fromGameImprovement = true
+            viewCtrl.fromGameImprovement = false
             viewCtrl.isManualScoring = mode != 1 ? true:false
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             Constants.matchId.removeAll()

@@ -22,7 +22,7 @@ class CourseData:NSObject{
     var startingIndex : Int!
     var gameTypeIndex = 18
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
-
+    var isContinue = false
     func getGolfCourseDataFromFirebase(courseId:String){
 //        let courseId = "course_99999999"
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
@@ -435,9 +435,12 @@ class CourseData:NSObject{
             }
             if Constants.fromDeviceMatch{
                Constants.fromDeviceMatch = false
-               NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreenWithPar)
+                if !isContinue{
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreenWithPar)
+                }
             }
         }
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "continueCourseData"), object: nil)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
     }
     func calculateTagWithClubNumber(){

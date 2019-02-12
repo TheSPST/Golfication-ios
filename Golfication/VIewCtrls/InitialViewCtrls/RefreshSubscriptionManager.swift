@@ -75,7 +75,7 @@ class RefreshSubscriptionManager: NSObject {
 //        let AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID = "pro_subscription_trial_monthly"
 //        let AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID = "pro_subscription_trial_yearly"
         
-        let productIDarr = [Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID]
+        let productIDarr = [Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID,Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID]
         for data in productIDarr{
             SwiftyStoreKit.fetchReceipt(forceRefresh: false) { result in
                 switch result {
@@ -140,7 +140,13 @@ class RefreshSubscriptionManager: NSObject {
                                                 membershipDict.setObject(myTimestamp, forKey: "timestamp" as NSCopying)
                                                 membershipDict.setObject(expiryStr, forKey: "expiryDate" as NSCopying)
                                                 membershipDict.setObject(purchaseStr, forKey: "transactionDate" as NSCopying)
-                                                membershipDict.setObject(items.first!.productId, forKey: "productID" as NSCopying)
+                                                
+                                                if items.first!.productId == Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID || items.first!.productId == Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID{
+                                                    membershipDict.setObject(Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID, forKey: "productID" as NSCopying)
+                                                }
+                                                else{
+                                                    membershipDict.setObject(items.first!.productId, forKey: "productID" as NSCopying)
+                                                }
                                                 membershipDict.setObject("ios", forKey: "device" as NSCopying)
                                                 
                                                 let proMembership = ["proMembership":membershipDict]

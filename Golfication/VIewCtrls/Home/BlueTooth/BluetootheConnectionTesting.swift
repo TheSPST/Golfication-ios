@@ -412,7 +412,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = false
         self.getGolfBagData()
-        if(Constants.deviceGolficationX != nil){
+        if(Constants.deviceGolficationX != nil) && Constants.ble != nil{
             Constants.ble.currentGameId = 0
             Constants.ble.isSetupScreen = true
             updateScreenBLE()

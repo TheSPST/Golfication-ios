@@ -84,6 +84,8 @@ class BLE: NSObject {
     var deviceIndex = 0
     var orderedAdv = [String]()
     var golfBagArray = NSMutableArray()
+    var courseData = CourseData()
+    var holeData = [[CLLocationCoordinate2D]]()
     var isProperConnected:Bool!{
         var isTrue = false
         if(Constants.deviceGolficationX != nil) && self.service_Read != nil && self.service_Write != nil{
@@ -1423,14 +1425,29 @@ extension BLE: CBPeripheralDelegate {
     func updateSingleShot(nextData:(hole:Int,shotNo:Int,club:String,lat:Double,lng:Double,holeOut:Bool,clubDetected:Bool)){
         let shotDict = NSMutableDictionary()
         shotDict.setValue(nextData.club, forKey: "club")
+        debugPrint(self.holeData.count)
         if lat == 0{
-            if let userLocation = self.locationManager.location{
-                let newPoint = GMSGeometryOffset(userLocation.coordinate, 3,CLLocationDirection(arc4random_uniform(360)))
+            if nextData.shotNo == 1 {
+                let newPoint = self.courseData.centerPointOfTeeNGreen[nextData.hole-1].tee
+                self.holeData[nextData.hole-1].append(newPoint)
                 shotDict.setValue(newPoint.latitude, forKey: "lat1")
                 shotDict.setValue(newPoint.longitude, forKey: "lng1")
+            }else{
+                if self.holeData[nextData.hole-1].count != 0{
+                    let distance = GMSGeometryDistance(self.holeData[nextData.hole-1].last!, self.courseData.centerPointOfTeeNGreen[nextData.hole-1].green)
+                    let heading = GMSGeometryHeading(self.holeData[nextData.hole-1].last!, self.courseData.centerPointOfTeeNGreen[nextData.hole-1].green)
+                    let newPoint = GMSGeometryOffset(self.holeData[nextData.hole-1].last!, distance*0.6,heading)
+                    shotDict.setValue(newPoint.latitude, forKey: "lat1")
+                    shotDict.setValue(newPoint.longitude, forKey: "lng1")
+                    self.holeData[nextData.hole-1].append(newPoint)
+                }else if let userLocation = self.locationManager.location{
+                    let newPoint = GMSGeometryOffset(userLocation.coordinate, 3,CLLocationDirection(arc4random_uniform(360)))
+                    shotDict.setValue(newPoint.latitude, forKey: "lat1")
+                    shotDict.setValue(newPoint.longitude, forKey: "lng1")
+                }
             }
         }else{
-            
+            self.holeData[nextData.hole-1].append(CLLocationCoordinate2D(latitude: nextData.lat, longitude: nextData.lng))
             shotDict.setValue(nextData.lat, forKey: "lat1")
             shotDict.setValue(nextData.lng, forKey: "lng1")
         }
@@ -1592,6 +1609,12 @@ extension BLE: CBPeripheralDelegate {
                         if(Constants.deviceGameType == 1) && self.currentGameId/100 == responseInIntFirst4/100{
                             self.invalidateAllTimers()
                             debugPrint(self.swingMatchId)
+                            self.holeData = [[CLLocationCoordinate2D]]()
+                            let totalHole = Constants.gameType.contains(find: "9") ? 9:18
+                            for _ in 0..<totalHole{
+                                let arr = [CLLocationCoordinate2D]()
+                                self.holeData.append(arr)
+                            }
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                         }else if self.currentGameId/100 == responseInIntFirst4/100{
                             self.invalidateAllTimers()

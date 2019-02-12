@@ -6400,25 +6400,35 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             let handSpeed = swing.value(forKey: "handSpeed") as! Double
             let tempo = swing.value(forKey: "tempo") as! Double
             let swingScore = swing.value(forKey: "swingScore") as! Int
-            let club = swing.value(forKey: "club") as! String
+            var club = swing.value(forKey: "club") as! String
             let VCArr : [Int] = [(0),(0),(0),Int(clubSpeed)]
             let VHArr : [Int] = [(0),(0),(0),Int(handSpeed)]
-            if club != "Pu"{
-                tempArr.append("\(Int(swingScore))")
-                tempArr.append(VCArr)
-                tempArr.append("-")
-                tempArr.append("\(tempo.rounded(toPlaces: 1))")
-                tempArr.append("\(backSwingAngle)")
-                tempArr.append(VHArr)
-                if club == ""{
-                    tempArr.append("Dr")
-                }else{
-                    tempArr.append(club)
+            if let holeNum = swing.value(forKey: "holeNum") as? Int{
+                if(holeNum == self.holeIndex+1){
+                    if let pData = self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: self.selectedUserId) as? NSMutableDictionary{
+                        if let shotsArr = pData.value(forKeyPath: "shots") as? [NSMutableDictionary]{
+                            let shotNu = (swing.value(forKey: "shotNum") as! Int)
+                            if shotsArr.count >= (shotNu){
+                                club = (shotsArr[shotNu-1].value(forKeyPath: "club") as! String).trim()
+                            }
+                        }
+                    }
                 }
-                
-                tempArr.append("\(backSwing)")
-                tempArr.append("\(downSwing)")
-                if let holeNum = swing.value(forKey: "holeNum") as? Int{
+                if club != "Pu"{
+                    tempArr.append("\(Int(swingScore))")
+                    tempArr.append(VCArr)
+                    tempArr.append("-")
+                    tempArr.append("\(tempo.rounded(toPlaces: 1))")
+                    tempArr.append("\(backSwingAngle)")
+                    tempArr.append(VHArr)
+                    if club == ""{
+                        tempArr.append("Dr")
+                    }else{
+                        tempArr.append(club)
+                    }
+                    
+                    tempArr.append("\(backSwing)")
+                    tempArr.append("\(downSwing)")
                     if(holeNum == self.holeIndex+1){
                         self.swingData.append(tempArr)
                     }

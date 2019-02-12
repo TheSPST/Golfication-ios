@@ -80,10 +80,10 @@ class ProfileProMemberPopUPVC: UIViewController, UIScrollViewDelegate {
     }
     @IBAction func yearlyAction(_ sender: Any) {
         if isTrial == true{
-            IAPHandler.shared.purchaseMyProduct(index: 3)
+            IAPHandler.shared.purchaseMyProduct(index: 4)
         }
         else{
-            IAPHandler.shared.purchaseMyProduct(index: 2)
+            IAPHandler.shared.purchaseMyProduct(index: 5)
         }
     }
     

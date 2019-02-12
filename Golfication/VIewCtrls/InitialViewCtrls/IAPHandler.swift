@@ -76,7 +76,7 @@ class IAPHandler: NSObject {
     func fetchAvailableProducts(){
         
         // Put here your IAP Products ID's
-        let productIdentifiers = NSSet(objects: Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID)
+        let productIdentifiers = NSSet(objects: Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID,Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID)
         
         productsRequest = SKProductsRequest(productIdentifiers: productIdentifiers as! Set<String>)
         debugPrint("productIdentifiers==",productIdentifiers)
@@ -149,6 +149,10 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
                         let yourDate2 = formatter2.date(from: myString2)
                         formatter2.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
                         let trnStr = formatter2.string(from: yourDate2!)
+                        
+                        if productID == Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID || productID == Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID{
+                            productID = Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID
+                        }
                         
                         let membershipDict = NSMutableDictionary()
                         membershipDict.setObject(1, forKey: "isMembershipActive" as NSCopying)
