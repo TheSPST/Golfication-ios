@@ -35,6 +35,8 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
     var shotsDetails = [[Any]]()
     var pageIndex = 0
     var benchMarkVal = String()
+    var cardViewInfoArray = [(title:String,value:String)]()
+
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
         let currentPage = round(scrollView.contentOffset.x / scrollView.frame.size.width)
         pageIndex = Int(currentPage)
@@ -71,6 +73,14 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
         shotScrollView.scrollRectToVisible(CGRect(x: CGFloat(pageIndex) * (self.view.frame.size.width-20), y: shotScrollView.frame.origin.y, width: shotScrollView.frame.size.width, height: shotScrollView.frame.size.height), animated: true)
     }
     
+    // MARK: - infoClicked
+    @objc func infoClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = cardViewInfoArray[sender.tag].title
+        viewCtrl.desc = cardViewInfoArray[sender.tag].value
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+    
     func setCurrentScrollPage(i:Int) {
         let mapShotPopupView = Bundle.main.loadNibNamed("MapShotPopupView", owner: self, options: nil)![0] as! UIView
         mapShotPopupView.frame = CGRect(x: CGFloat(i) * (self.view.frame.size.width-20), y: 0, width: shotScrollView.frame.size.width, height: shotScrollView.frame.size.height)
@@ -87,6 +97,43 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
         let shotTopView6 = mapShotPopupView.viewWithTag(35)
         shotTopViews = [UIView]()
         shotTopViews = ([shotTopView1, shotTopView2, shotTopView3, shotTopView4, shotTopView5, shotTopView6] as! [UIView])
+
+        // -------------------------------Stats Info Button Functionality---------------------------------------
+        self.cardViewInfoArray = [(title:String,value:String)]()
+        let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+        let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        for i in 0..<shotTopViews.count{
+            //Stats Info Button
+            switch i{
+            case 0:
+                self.cardViewInfoArray.append((title:"Swing Score",value:StatsIntoConstants.swingScore))
+                break
+            case 1:
+                self.cardViewInfoArray.append((title:"Clubhead Speed",value:StatsIntoConstants.clubheadSpeed))
+                break
+            case 2:
+                self.cardViewInfoArray.append((title:"Club Plane",value:StatsIntoConstants.swingPath))
+                break
+            case 3:
+                self.cardViewInfoArray.append((title:"Swing Tempo",value:StatsIntoConstants.clubTempo))
+                break
+            case 4:
+                self.cardViewInfoArray.append((title:"Back Swing",value:StatsIntoConstants.backswingAngle))
+                break
+            case 5:
+                self.cardViewInfoArray.append((title:"Hand Speed",value:StatsIntoConstants.gripSpeed))
+                break
+            default: break
+            }
+            let statsInfoButton = StatsInfoButton()
+            statsInfoButton.frame = CGRect(x: self.view.frame.size.width-30, y: 16, width: 25, height: 25)
+            statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+            statsInfoButton.tintColor = UIColor.glfFlatBlue
+            statsInfoButton.tag = i
+            statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+            shotTopViews[i].addSubview(statsInfoButton)
+        }
+        // --------------------------------------------------------------------------------------------
 
         let shotTopLbl1 = mapShotPopupView.viewWithTag(200)
         let shotTopLbl2 = mapShotPopupView.viewWithTag(201)
