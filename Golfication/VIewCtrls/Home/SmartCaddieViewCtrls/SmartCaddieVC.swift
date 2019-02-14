@@ -296,10 +296,10 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                             self.cardViewInfoArray.append((title:"Club Usage",value:StatsIntoConstants.clubUsage))
                             break
                         case 4:
-                            self.cardViewInfoArray.append((title:"Strokes Gained per club",value:StatsIntoConstants.strokesGainedPerClub))
+                            self.cardViewInfoArray.append((title:"Strokes Gained Per Club",value:StatsIntoConstants.strokesGainedPerClub))
                             break
                         case 5:
-                            self.cardViewInfoArray.append((title:"Control",value:StatsIntoConstants.control))
+                            self.cardViewInfoArray.append((title:"Club Control",value:StatsIntoConstants.control))
                             break
                         default: break
                         }

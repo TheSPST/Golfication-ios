@@ -211,7 +211,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
                     cardViewMArray.add(v)
                     switch viewTag{
                     case 0:
-                        self.cardViewInfoArray.append((title:"Rounds",value:StatsIntoConstants.averageRoundScores))
+                        self.cardViewInfoArray.append((title:"Average Round Scores",value:StatsIntoConstants.averageRoundScores))
                         break
                     case 1:
                         self.cardViewInfoArray.append((title:"Score Distribution",value:StatsIntoConstants.scoreDistribution))
@@ -223,7 +223,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
                         self.cardViewInfoArray.append((title:"Par Average",value:StatsIntoConstants.parAverage))
                         break
                     case 4:
-                        self.cardViewInfoArray.append((title:"Strokes Gained per club",value:StatsIntoConstants.strokesGainedPerClub))
+                        self.cardViewInfoArray.append((title:"Strokes Gained",value:StatsIntoConstants.strokesGainedPerRound))
                         break
                     case 5:
                         self.cardViewInfoArray.append((title:"Penalities Trend",value:StatsIntoConstants.penalties))

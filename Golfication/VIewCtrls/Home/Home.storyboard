@@ -1287,13 +1287,13 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="398" height="300"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Strokes Gained Per Club" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fXy-Ob-iZH">
-                                                        <rect key="frame" x="16" y="16" width="177" height="19"/>
+                                                        <rect key="frame" x="16" y="16" width="167" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pBl-vg-ea7">
-                                                        <rect key="frame" x="203" y="18" width="50" height="15.5"/>
+                                                        <rect key="frame" x="193" y="18" width="50" height="16"/>
                                                         <color key="backgroundColor" red="1" green="0.78039215689999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="50" id="sgO-gG-Ghg"/>
@@ -1303,13 +1303,13 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average from last 10 rounds" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nom-rj-2u8">
-                                                        <rect key="frame" x="16" y="43" width="366" height="16.5"/>
+                                                        <rect key="frame" x="16" y="43.5" width="366" height="17"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GXG-LD-OoM" customClass="BarChartView" customModule="Charts">
-                                                        <rect key="frame" x="16" y="69.5" width="372" height="220.5"/>
+                                                        <rect key="frame" x="16" y="70.5" width="372" height="219.5"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </view>
                                                 </subviews>
@@ -1333,13 +1333,13 @@
                                                 <rect key="frame" x="0.0" y="310" width="398" height="300"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Off The Tee " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nYJ-8s-Vz1">
-                                                        <rect key="frame" x="16" y="16" width="86" height="19"/>
+                                                        <rect key="frame" x="16" y="16" width="83" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g5M-yO-J1z">
-                                                        <rect key="frame" x="112" y="18" width="50" height="15.5"/>
+                                                        <rect key="frame" x="109" y="18" width="50" height="16"/>
                                                         <color key="backgroundColor" red="1" green="0.78039215689999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="50" id="PUY-Ib-g81"/>
@@ -1349,13 +1349,13 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Strokes Gained" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dI5-1H-TEe" customClass="UILocalizedLabel" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="10" y="43" width="96.5" height="16"/>
+                                                        <rect key="frame" x="10" y="43.5" width="87" height="15"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                         <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Om5-j5-4kw">
-                                                        <rect key="frame" x="16" y="67" width="372" height="198"/>
+                                                        <rect key="frame" x="16" y="66.5" width="372" height="198"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Idl-ay-0oh" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
                                                                 <rect key="frame" x="0.0" y="0.0" width="181" height="198"/>
@@ -1368,13 +1368,13 @@
                                                         </subviews>
                                                     </stackView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your irons let you down!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xrr-ox-pfQ">
-                                                        <rect key="frame" x="113" y="273" width="172" height="19"/>
+                                                        <rect key="frame" x="117.5" y="272.5" width="163.5" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="83.8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QbH-Na-gTR">
-                                                        <rect key="frame" x="114.5" y="43" width="50" height="25"/>
+                                                        <rect key="frame" x="105" y="43.5" width="50" height="25"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="Vpr-UT-rqX"/>
@@ -1409,13 +1409,13 @@
                                                 <rect key="frame" x="0.0" y="620" width="398" height="300"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Approach The Green " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="30O-uS-Sb4">
-                                                        <rect key="frame" x="16" y="16" width="153" height="19"/>
+                                                        <rect key="frame" x="16" y="16" width="146" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cTM-fZ-fOf">
-                                                        <rect key="frame" x="179" y="18" width="50" height="15.5"/>
+                                                        <rect key="frame" x="172" y="18" width="50" height="16"/>
                                                         <color key="backgroundColor" red="1" green="0.78039215689999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="50" id="qrU-bx-WMr"/>
@@ -1425,13 +1425,13 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Strokes Gained" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8DF-5s-W7u" customClass="UILocalizedLabel" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="16" y="43" width="96.5" height="23"/>
+                                                        <rect key="frame" x="16" y="43.5" width="87" height="23"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                         <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="83.8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aph-S9-ufv">
-                                                        <rect key="frame" x="120.5" y="43" width="50" height="25"/>
+                                                        <rect key="frame" x="111" y="43.5" width="50" height="25"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="Rkz-h3-8xw"/>
@@ -1442,15 +1442,15 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fMT-lo-MUK" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
-                                                        <rect key="frame" x="16" y="76" width="180" height="186.5"/>
+                                                        <rect key="frame" x="16" y="76.5" width="180" height="186"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rgo-e8-6T2" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
-                                                        <rect key="frame" x="210" y="76" width="180" height="174"/>
+                                                        <rect key="frame" x="210" y="76.5" width="180" height="173.5"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your irons let you down!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XIC-iK-QKX">
-                                                        <rect key="frame" x="113" y="273" width="172" height="19"/>
+                                                        <rect key="frame" x="117.5" y="272.5" width="163.5" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
@@ -1485,13 +1485,13 @@
                                                 <rect key="frame" x="0.0" y="930" width="398" height="300"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Around The Green " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cw5-ix-lkH">
-                                                        <rect key="frame" x="16" y="16" width="135.5" height="19"/>
+                                                        <rect key="frame" x="16" y="16" width="129" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O8m-VC-Vqg">
-                                                        <rect key="frame" x="161.5" y="18" width="50" height="15.5"/>
+                                                        <rect key="frame" x="155" y="18" width="50" height="16"/>
                                                         <color key="backgroundColor" red="1" green="0.78039215689999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="50" id="en9-RV-s3k"/>
@@ -1501,13 +1501,13 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Strokes Gained" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p6V-44-7QI" customClass="UILocalizedLabel" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="16" y="43" width="96.5" height="23"/>
+                                                        <rect key="frame" x="16" y="43.5" width="87" height="23"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                         <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="83.8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWT-Qj-llh">
-                                                        <rect key="frame" x="120.5" y="43" width="50" height="25"/>
+                                                        <rect key="frame" x="111" y="43.5" width="50" height="25"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="1TB-mi-Jno"/>
@@ -1518,15 +1518,15 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BqG-aI-n2i" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
-                                                        <rect key="frame" x="10" y="76" width="183" height="187.5"/>
+                                                        <rect key="frame" x="10" y="76.5" width="183" height="187"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kzk-JN-mmw" customClass="UICircularProgressRingView" customModule="UICircularProgressRing">
-                                                        <rect key="frame" x="207" y="76" width="183" height="174"/>
+                                                        <rect key="frame" x="207" y="76.5" width="183" height="173.5"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your irons let you down!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EFh-Rg-mKi">
-                                                        <rect key="frame" x="113" y="273" width="172" height="19"/>
+                                                        <rect key="frame" x="117.5" y="272.5" width="163.5" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
@@ -1561,13 +1561,13 @@
                                                 <rect key="frame" x="0.0" y="1240" width="398" height="300"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Putting" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rFQ-c5-Otz" customClass="UILocalizedLabel" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="16" y="16" width="51" height="19"/>
+                                                        <rect key="frame" x="16" y="16" width="50" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kce-n9-w6I">
-                                                        <rect key="frame" x="77" y="18" width="50" height="15.5"/>
+                                                        <rect key="frame" x="76" y="18" width="50" height="16"/>
                                                         <color key="backgroundColor" red="1" green="0.78039215689999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="50" id="dMH-8Q-0fL"/>
@@ -1577,13 +1577,13 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Strokes Gained" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OZM-dZ-sDj" customClass="UILocalizedLabel" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="16" y="43" width="96.5" height="25"/>
+                                                        <rect key="frame" x="16" y="43.5" width="87" height="25"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="14"/>
                                                         <color key="textColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="83.8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TEn-2n-Ae7">
-                                                        <rect key="frame" x="120.5" y="43" width="50" height="25"/>
+                                                        <rect key="frame" x="111" y="43.5" width="50" height="25"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="UML-H7-55F"/>
@@ -1594,16 +1594,16 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Ep-FZ-n2s" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="10" y="105" width="182" height="128"/>
+                                                        <rect key="frame" x="10" y="105.5" width="182" height="127.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v5l-DM-4oI">
-                                                                <rect key="frame" x="69" y="53.5" width="44.5" height="21"/>
+                                                                <rect key="frame" x="69.5" y="53" width="43" height="21.5"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="18"/>
                                                                 <color key="textColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Putt Proximity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sgO-Ib-sZI">
-                                                                <rect key="frame" x="31.5" y="101.5" width="119.5" height="16.5"/>
+                                                                <rect key="frame" x="36.5" y="100.5" width="109" height="17"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                                 <color key="textColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                                                                 <nil key="highlightedColor"/>
@@ -1618,10 +1618,10 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FSe-zK-pav" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="208" y="105" width="182" height="128"/>
+                                                        <rect key="frame" x="208" y="105.5" width="182" height="127.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cNA-aB-Wui">
-                                                                <rect key="frame" x="69" y="53.5" width="44.5" height="21"/>
+                                                                <rect key="frame" x="69.5" y="53" width="43" height="21.5"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="18"/>
                                                                 <color key="textColor" red="0.45882352939999999" green="0.74117647060000003" blue="0.67450980390000004" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -1634,13 +1634,13 @@
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hole-Out Distance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S1T-Fc-QvG">
-                                                        <rect key="frame" x="241" y="203" width="116" height="16.5"/>
+                                                        <rect key="frame" x="244.5" y="203" width="109.5" height="17"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                         <color key="textColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your irons let you down!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QMs-3d-VvU">
-                                                        <rect key="frame" x="113" y="273" width="172" height="19"/>
+                                                        <rect key="frame" x="117.5" y="272.5" width="163.5" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
@@ -8425,9 +8425,9 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tvl-rm-goe">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CPP-fA-MUO">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CPP-fA-MUO">
                                                 <rect key="frame" x="10" y="10" width="300" height="0.0"/>
-                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="17"/>
+                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="21"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -8458,7 +8458,8 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="zqh-zN-UZW">
-                        <barButtonItem key="leftBarButtonItem" image="backArrow" id="RPV-Wi-xw1">
+                        <barButtonItem key="leftBarButtonItem" id="Bjg-tg-o6z"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="RPV-Wi-xw1">
                             <color key="tintColor" red="0.0" green="0.54117647059999996" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="backAction:" destination="U3A-sD-Cqv" id="kIj-FS-m1p"/>
