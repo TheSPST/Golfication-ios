@@ -19,3 +19,12 @@ class ShareStatsButton: UIButton {
         super.init(coder: aDecoder)
     }
 }
+class StatsInfoButton: UIButton {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setBackgroundImage(#imageLiteral(resourceName: "icon_info_grey"), for: .normal)
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+}

@@ -1910,6 +1910,7 @@ extension BLE: CBPeripheralDelegate {
                                 self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                             }else{
+                                self.courseData.processShots(hole: 0)
                                 if(self.isFinished){
                                     self.randomGenerator()
                                     // changed by Amit

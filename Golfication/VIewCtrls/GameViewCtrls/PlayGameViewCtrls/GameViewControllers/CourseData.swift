@@ -270,57 +270,29 @@ class CourseData:NSObject{
                         }
                     }
                     self.propertyArray = temp
-//                    let min = (self.startingIndex%self.gameTypeIndex)-1
-//                    let max = self.numberOfHoles.count-1
-                    
-//                    if(self.numberOfHoles.count > self.gameTypeIndex) && self.startingIndex+self.gameTypeIndex-1 <= self.numberOfHoles.count{
-//                        max = (self.startingIndex+self.gameTypeIndex) - 1
-//                    }else if self.startingIndex+self.gameTypeIndex-1 > self.numberOfHoles.count{
-//                        if(self.gameTypeIndex < self.numberOfHoles.count){
-//                            max =  (self.startingIndex+self.gameTypeIndex-1) - self.numberOfHoles.count
-//                        }
-//                    }
-//                    var temp = self.propertyArray
-//                    temp.removeAll()
-//                    var newTemp = self.centerPointOfTeeNGreen
-//                    newTemp.removeAll()
-//                    var tempholeGreenDataArr = [GreenData]()
-//                    var tempNumofHole = self.numberOfHoles
-//                    tempNumofHole.removeAll()
-//                    var hcpData = self.holeHcpWithTee
-//                    hcpData.removeAll()
-                    
-//                    for i in self.startingIndex-1..<self.gameTypeIndex+self.startingIndex-1{
-//                        debugPrint("index:",i)
-//                        debugPrint("validIndex:",self.getValidIndex(isNext: true, index: i, max: max, min: min))
-//                        let newIndex = self.getValidIndex(isNext: true, index: i, max: max, min: min)
-//                        for j in 0..<self.propertyArray.count{
-//                            if self.propertyArray[j].hole == newIndex+1{
-//                                temp.append(self.propertyArray[j])
-//                            }
-//                        }
-//                        if !self.centerPointOfTeeNGreen.isEmpty{
-//                            if newIndex < self.centerPointOfTeeNGreen.count{
-//                                newTemp.append(self.centerPointOfTeeNGreen[newIndex])
-//                            }
-//                        }
-//                        if(!self.holeGreenDataArr.isEmpty){
-//                            tempholeGreenDataArr.append(self.holeGreenDataArr[newIndex])
-//                        }
-//                        tempNumofHole.append(self.numberOfHoles[newIndex])
-//                        if(!self.holeHcpWithTee.isEmpty){
-//                            self.holeHcpWithTee[newIndex].hole = newIndex+1
-//                            hcpData.append(self.holeHcpWithTee[newIndex])
-//                        }
-//                    }
-//                    if(!newTemp.isEmpty){
-//                        self.centerPointOfTeeNGreen = newTemp
-//                        self.propertyArray = temp
-//
-//                        self.holeGreenDataArr = tempholeGreenDataArr
-//                        self.numberOfHoles = tempNumofHole
-//                        self.holeHcpWithTee = hcpData
-//                    }
+                }
+                for i in 0..<self.numberOfHoles.count{
+                    self.scoring.append((hole: self.numberOfHoles[i].hole, par: self.numberOfHoles[i].par,players:NSMutableDictionary()))
+                }
+                self.teeTypeArr.removeAll()
+                if let players = Constants.matchDataDic.value(forKey: "players") as? NSMutableDictionary{
+                    if let v = players.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
+                        var teeOfP = String()
+                        var teeColorOfP = String()
+                        var handicapOfP = Double()
+                        if let tee = v.value(forKeyPath: "tee") as? String{
+                            teeOfP = tee
+                        }
+                        if let teeColor = v.value(forKeyPath: "teeColor") as? String{
+                            teeColorOfP = teeColor
+                        }
+                        if let hcp = v.value(forKeyPath: "handicap") as? String{
+                            handicapOfP = Double(hcp)!
+                        }
+                        if(teeOfP != ""){
+                            self.teeTypeArr.append((tee: teeOfP,color:teeColorOfP, handicap: handicapOfP))
+                        }
+                    }
                 }
                 self.getGolfBagData()
             }
@@ -463,6 +435,547 @@ class CourseData:NSObject{
                 }
             }
         }
+    }
+    var penaltyShots = [Bool]()
+    var gir = Bool()
+    var positionsOfCurveLines = [CLLocationCoordinate2D]()
+    var positionsOfDotLine = [CLLocationCoordinate2D]()
+    var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
+    var shotsDetails = [(club: String, distance: Double, strokesGained: Double, swingScore: String,endingPoint:String,penalty:Bool)]()
+    var scoring = [(hole:Int,par:Int,players:NSMutableDictionary)]()
+    func processShots(hole:Int){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)") { (snapshot) in
+            var playersData = NSMutableDictionary()
+            self.shotsDetails.removeAll()
+            self.positionsOfCurveLines.removeAll()
+            self.positionsOfDotLine.removeAll()
+            self.positionsOfDotLine.append(self.centerPointOfTeeNGreen[hole].tee)
+            self.positionsOfDotLine.append(self.centerPointOfTeeNGreen[hole].green)
+            if let dict = snapshot.value as? NSMutableDictionary{
+                playersData = dict
+            }
+            DispatchQueue.main.async(execute: {
+                var wantToDrag = false
+                var shots = [NSMutableDictionary]()
+                let holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
+                if let sho = playersData.value(forKey: "shots") as? NSArray{
+                    wantToDrag = sho.count > 0 ? true:false
+                    for i in 0..<sho.count{
+                        let shot = sho[i] as! NSMutableDictionary
+                        if let dat = shot.value(forKey: "clubDetected") as? Bool{
+                            if !dat{
+                                let latLng = CLLocationCoordinate2D(latitude: shot.value(forKey: "lat1") as! Double, longitude: shot.value(forKey: "lng1") as! Double)
+                                var lie = self.callFindPositionInsideFeature(position: latLng, holeIndex: hole)
+                                let distance = GMSGeometryDistance(latLng, self.centerPointOfTeeNGreen[hole].green)
+                                if i == 0{
+                                    lie = "T"
+                                }
+                                let recommendedClub = self.clubReco(dist: distance, lie: lie)
+                                shot.setValue(recommendedClub, forKey: "club")
+                                debugPrint(recommendedClub)
+                            }
+                            shots.append(shot)
+                        }else{
+                            shots.append(shot)
+                        }
+                    }
+                    
+                    var i = 0
+                    self.penaltyShots.removeAll()
+                    for data in shots{
+                        let distance = data.value(forKey: "distance") as? Double
+                        let club = data.value(forKey: "club") as! String
+                        let strokGaind = data.value(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double
+                        let endingPoints = data.value(forKey: "end") as? String
+                        let penalty = data.value(forKey: "penalty") as! Bool
+                        self.penaltyShots.append(penalty)
+                        let startingPoint = data.value(forKey: "start") as? String
+                        self.shotsDetails.append((club: club, distance: distance ?? 0.0, strokesGained: strokGaind ?? 0.0, swingScore: startingPoint ?? "calculating",endingPoint:endingPoints ?? "calculationg ",penalty:penalty))
+                        self.positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: data.value(forKey: "lat1") as! CLLocationDegrees, longitude: data.value(forKey: "lng1") as! CLLocationDegrees))
+                        self.positionsOfDotLine[0] = (self.positionsOfCurveLines.last!)
+                        if(holeOut) && i == shots.count-1{
+                            debugPrint("shotsCount:",shots.count)
+                            if(data.value(forKey: "lat2") != nil){
+                                self.positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: data.value(forKey: "lat2") as! CLLocationDegrees, longitude: data.value(forKey: "lng2") as! CLLocationDegrees))
+                            }else{
+                                self.positionsOfCurveLines.append(self.centerPointOfTeeNGreen[hole].green)
+                            }
+                        }
+                        i += 1
+                    }
+                    
+                    playersData.setValue(shots, forKey: "shots")
+                    let playerDict = NSMutableDictionary()
+                    playerDict.setObject(playersData, forKey: Auth.auth().currentUser!.uid as NSCopying)
+                    if let scoring = Constants.matchDataDic.value(forKey: "scoring") as? NSArray{
+                        let sco = scoring
+                        (sco[hole] as! NSMutableDictionary).setValue(playersData, forKey: Auth.auth().currentUser!.uid)
+                        Constants.matchDataDic.setValue(sco, forKey: "scoring")
+                    }
+                    self.scoring[hole].players.setValue(playersData, forKey: Auth.auth().currentUser!.uid)
+                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":false] as [AnyHashable : Any])
+                    if wantToDrag{
+                        for k in 0..<shots.count{
+                            if(k == 0){
+                                self.uploadStatsWithDragging(shot: 1,playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
+                            }
+                            else if(k == self.positionsOfCurveLines.count-1){
+                                self.uploadStatsWithDragging(shot: k , playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
+                            }
+                            else{
+                                self.uploadStatsWithDragging(shot: k, playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
+                                self.uploadStatsWithDragging(shot: k + 1, playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
+                            }
+                        }
+                    }
+                }
+                if hole+1 == self.scoring.count{
+                    return
+                }else{
+                    self.processShots(hole: hole+1)
+                }
+            })
+        }
+    }
+    func uploadStatsWithDragging(shot:Int,playerId:String,holeIndex:Int,isDraggingMarker:Bool,holeOutFlag:Bool){
+        let girDict = NSMutableDictionary()
+        let faiDict = NSMutableDictionary()
+        if(shot==1) && (positionsOfCurveLines.count > 1){
+            gir = false
+            gir = callFindPositionInsideFeature(position:positionsOfCurveLines[shot], holeIndex: holeIndex) == "G" ? true:false
+            if(!isDraggingMarker) && shotsDetails.count > shot-1{
+                gir = shotsDetails[shot-1].endingPoint == "G" ? true:false
+            }
+            girDict.setObject(gir, forKey: "gir" as NSCopying)
+            if(self.scoring[holeIndex].par > 3){
+                var fairwayHitOrMiss = ""
+                if(callFindPositionInsideFeature(position:positionsOfCurveLines[shot], holeIndex: holeIndex) != "F"){
+                    fairwayHitOrMiss = isFairwayHitOrMiss(position: positionsOfCurveLines[shot], holeOutFlag: holeOutFlag,holeIndex: holeIndex)
+                }
+                else{
+                    fairwayHitOrMiss = "H"
+                }
+                faiDict.setObject(fairwayHitOrMiss, forKey: "fairway" as NSCopying)
+            }
+            ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/").updateChildValues(faiDict as! [AnyHashable : Any])
+            let drivDistDict = NSMutableDictionary()
+            if(self.scoring[holeIndex].par>3){
+                let drivingDistance = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines[shot])*Constants.YARD
+                drivDistDict.setObject(drivingDistance.rounded(toPlaces: 2), forKey: "drivingDistance" as NSCopying)
+            }
+            ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/").updateChildValues(drivDistDict as! [AnyHashable : Any])
+            
+        }
+        else if(shot == 2)&&(!gir)&&(self.scoring[holeIndex].par>3){
+            gir = callFindPositionInsideFeature(position:positionsOfCurveLines[shot], holeIndex: holeIndex) == "G" ? true:false
+            if(!isDraggingMarker) && shotsDetails.count > shot-1{
+                gir = shotsDetails[shot-1].endingPoint == "G" ? true:false
+            }
+            girDict.setObject(gir, forKey: "gir" as NSCopying)
+        }
+        else if(shot == 3)&&(!gir)&&(self.scoring[holeIndex].par>4){
+            gir = callFindPositionInsideFeature(position:positionsOfCurveLines[shot], holeIndex: holeIndex) == "G" ? true:false
+            if(!isDraggingMarker) && shotsDetails.count > shot-1{
+                gir = shotsDetails[shot-1].endingPoint == "G" ? true:false
+            }
+            girDict.setObject(gir, forKey: "gir" as NSCopying)
+        }
+        
+        
+        if(holeOutFlag) && shot == positionsOfCurveLines.count-1{
+            uploadChipUpNDown(playerId: playerId, holeIndex: holeIndex)
+            uploadSandUpNDown(playerId: playerId, holeIndex: holeIndex)
+            uploadPutting(playerId: playerId, holeIndex: holeIndex)
+            self.uploadPenalty(playerId: playerId,holeIndex:holeIndex)
+            if(!self.teeTypeArr.isEmpty){
+                self.uploadStableFordPints(playerId: playerId, holeIndex: holeIndex)
+            }
+        }
+        
+        uploadApproachAndApproachShots(playerId: playerId,holeIndex:holeIndex)
+        ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/").updateChildValues(girDict as! [AnyHashable : Any])
+        let shotsDict = self.scoring[holeIndex].players.value(forKey: playerId) as! NSMutableDictionary
+        if var shotsValue = shotsDict.value(forKey: "shots") as? [NSMutableDictionary]{
+            if(shot-1 < shotsValue.count){
+                let clubValue = shotsValue[shot-1].value(forKey: "club") as! String
+                let isPenaltyShot = shotsValue[shot-1].value(forKey: "penalty") as! Bool
+                debugPrint(shot)
+                shotsValue[shot-1] = self.getShotDetails(shot:shot,club:clubValue,isPenalty: isPenaltyShot, hole: holeIndex,isDraggingMarker:isDraggingMarker, holeOutFlag: holeOutFlag)
+                shotsDict.setValue(shotsValue, forKey: "shots")
+                self.scoring[holeIndex].players.setValue(shotsDict, forKey: playerId)
+                ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/shots/\(shot-1)").updateChildValues(shotsValue[shot-1] as! [AnyHashable : Any])
+            }
+        }
+    }
+    func uploadStableFordPints(playerId:String,holeIndex:Int){
+        var strokes = Int()
+        if let scoringDict = self.scoring[holeIndex].players.value(forKey: playerId) as? NSMutableDictionary{
+            if let scoreShots = (scoringDict.value(forKey: "shots") as? NSArray){
+                strokes = scoreShots.count
+            }
+        }
+        let par = scoring[holeIndex].par
+        let courseHCP = Int(self.calculateTotalExtraShots(playerID: playerId))
+        let temp = courseHCP/18
+        var totalShotsInThishole = temp+par
+        let hcp = self.getHCPValue(playerID: playerId, holeNo: self.scoring[holeIndex].hole)
+        if (courseHCP - temp*18 >= hcp) {
+            totalShotsInThishole += 1;
+        }
+        var sbPoint = totalShotsInThishole - strokes + 2
+        if sbPoint<0 {
+            sbPoint = 0
+        }
+        let netScore = strokes - (totalShotsInThishole - par)
+        ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/stableFordPoints").setValue(sbPoint)
+        ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/netScore").setValue(netScore)
+    }
+    private func getHCPValue(playerID:String,holeNo:Int)->Int{
+        var hcp = 0
+        for tee in self.holeHcpWithTee{
+            if tee.hole == holeNo{
+                for data in tee.teeBox {
+                    if (data.value(forKey: "teeType") as! String) == (self.teeTypeArr[0].tee).lowercased() && (data.value(forKey: "teeColorType") as! String) == (self.teeTypeArr[0].color).lowercased(){
+                        hcp = data.value(forKey:"hcp") as? Int ?? 0
+                        break
+                    }
+                }
+                break
+            }
+        }
+        return hcp
+    }
+    func calculateTotalExtraShots(playerID:String)->Double{
+        var slopeIndex = 0
+        for data in Constants.teeArr{
+            if(data.type.lowercased() == self.teeTypeArr[0].tee.lowercased()) && (data.name.lowercased() == self.teeTypeArr[0].color.lowercased()){
+                break
+            }
+            slopeIndex += 1
+        }
+        let data = (self.teeTypeArr[0].handicap * Double(Constants.teeArr[slopeIndex].slope)!)
+        return (Double(data / 113)).rounded()
+    }
+    func uploadApproachAndApproachShots(playerId:String,holeIndex:Int){
+        var approachDistance = 0.0
+        let appDistDict = NSMutableDictionary()
+        for i in 0..<positionsOfCurveLines.count{
+            approachDistance = GMSGeometryDistance(positionsOfCurveLines[i],self.centerPointOfTeeNGreen[holeIndex].green)*Constants.YARD
+            if(approachDistance<200 && approachDistance != 0){
+                appDistDict.setObject(approachDistance.rounded(toPlaces: 2), forKey: "approachDistance" as NSCopying)
+                break
+            }
+        }
+        ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/").updateChildValues(appDistDict as! [AnyHashable : Any])
+    }
+    
+    func uploadPenalty(playerId:String,holeIndex:Int){
+        var putting = Int()
+            if let scoringDict = self.scoring[holeIndex].players.value(forKey: playerId) as? NSMutableDictionary{
+                if let scoreShots = (scoringDict.value(forKey: "shots") as? NSArray){
+                    for data in scoreShots{
+                        let dataDict = data as! NSMutableDictionary
+                        if((dataDict.value(forKey: "penalty") as! Bool) == true){
+                            putting += 1
+                        }
+                    }
+                }
+            }
+        ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/penaltyCount").setValue(putting)
+    }
+    func isFairwayHitOrMiss(position:CLLocationCoordinate2D,holeOutFlag:Bool,holeIndex:Int)->String{
+        var fairwayDetails = ""
+        var headingAngleOfTeeToGreen = 0.0
+        if(holeOutFlag){
+            headingAngleOfTeeToGreen = getPointHeading(starting: positionsOfCurveLines.first!, position: position,holeIndex:holeIndex)
+        }
+        else{
+            if(positionsOfDotLine.count != 0){
+                if(positionsOfCurveLines.isEmpty){
+                    headingAngleOfTeeToGreen = getPointHeading(starting: positionsOfDotLine.first!, position: position, holeIndex: holeIndex)
+                }else{
+                    headingAngleOfTeeToGreen = getPointHeading(starting: positionsOfCurveLines.first!, position: position, holeIndex: holeIndex)
+                }
+            }
+        }
+        
+        var headingAngleOfTeeToFairway = 0.0
+        if(positionsOfCurveLines.isEmpty){
+            headingAngleOfTeeToFairway = GMSGeometryHeading(positionsOfDotLine.first!, position)
+        }
+        else{
+            headingAngleOfTeeToFairway = GMSGeometryHeading(positionsOfCurveLines.first!, position)
+        }
+        if(headingAngleOfTeeToFairway < headingAngleOfTeeToGreen){
+            fairwayDetails = "L"
+        }
+        else{
+            fairwayDetails = "R"
+        }
+        return fairwayDetails
+    }
+    func getPointHeading(starting:CLLocationCoordinate2D,position:CLLocationCoordinate2D,holeIndex:Int)->Double{
+        var heading = 0.0
+        if !((self.numberOfHoles[holeIndex]).fairway).isEmpty{
+            var nearPoint = [CLLocationCoordinate2D]()
+            var distance = [Double]()
+            for data in ((self.numberOfHoles[holeIndex]).fairway){
+                nearPoint.append(data[(BackgroundMapStats.nearByPoint(newPoint: position, array: data))])
+                distance.append(GMSGeometryDistance(position, nearPoint.last!))
+            }
+            let min = distance.min()!
+            let index = distance.firstIndex(of: min)!
+            let finalNearbyPoint = nearPoint[index]
+            heading = GMSGeometryHeading(starting, finalNearbyPoint)
+        }
+        return heading
+    }
+    func uploadChipUpNDown(playerId : String,holeIndex:Int){
+        var appDistance = Double()
+        var chipUpDown : Bool!
+        for i in 0..<positionsOfCurveLines.count-1{
+            appDistance = GMSGeometryDistance(positionsOfCurveLines[i], self.numberOfHoles[holeIndex].green[BackgroundMapStats.nearByPoint(newPoint: positionsOfCurveLines[i], array: self.numberOfHoles[holeIndex].green)])*Constants.YARD
+            if(appDistance<70){
+                if((positionsOfCurveLines.count-1 == i+2 || positionsOfCurveLines.count-1 == i+1) && callFindPositionInsideFeature(position:positionsOfCurveLines[i], holeIndex: holeIndex) != "GB" ){
+                    chipUpDown = true
+                }
+                else{
+                    chipUpDown = false
+                }
+                break
+            }
+            else{
+                chipUpDown = nil
+            }
+        }
+        ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/chipUpDown").setValue(chipUpDown)
+    }
+    func uploadSandUpNDown(playerId : String,holeIndex:Int){
+        var appDistance = Double()
+        var sandUpDown : Bool!
+        for i in 0..<positionsOfCurveLines.count-1{
+            appDistance = GMSGeometryDistance(positionsOfCurveLines[i], self.numberOfHoles[holeIndex].green[BackgroundMapStats.nearByPoint(newPoint: positionsOfCurveLines[i], array: self.numberOfHoles[holeIndex].green)])*Constants.YARD
+            if(appDistance<70){
+                if((positionsOfCurveLines.count-1 == i+2 || positionsOfCurveLines.count-1 == i+1) && callFindPositionInsideFeature(position:positionsOfCurveLines[i], holeIndex: holeIndex) == "GB" ){
+                    sandUpDown = true
+                }
+                else{
+                    sandUpDown = false
+                }
+                break
+            }
+            else{
+                sandUpDown = nil
+            }
+        }
+        ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/sandUpDown").setValue(sandUpDown)
+    }
+    func getShotDetails(shot:Int,club:String,isPenalty:Bool,hole:Int,isDraggingMarker:Bool,holeOutFlag:Bool)->NSMutableDictionary{
+        //        currentShotsDetails.removeAll()
+        let shotDictionary = NSMutableDictionary()
+        let shot = shot == 0 ? 1 : shot
+        var start = String()
+        var end = String()
+        shotDictionary.setObject(positionsOfCurveLines[shot-1].latitude, forKey: "lat1" as NSCopying)
+        shotDictionary.setObject(positionsOfCurveLines[shot-1].longitude, forKey: "lng1" as NSCopying)
+        shotDictionary.setObject(club.trim(), forKey: "club" as NSCopying)
+        shotDictionary.setObject(isPenalty, forKey: "penalty" as NSCopying)
+        shotDictionary.setObject(positionsOfCurveLines[shot].latitude, forKey: "lat2" as NSCopying)
+        shotDictionary.setObject(positionsOfCurveLines[shot].longitude, forKey: "lng2" as NSCopying)
+        if(shot == 1){
+            shotDictionary.setObject("T", forKey: "start" as NSCopying)
+            start = "T"
+        }
+        else{
+            shotDictionary.setObject(callFindPositionInsideFeature(position:positionsOfCurveLines[shot-1], holeIndex: hole), forKey: "start" as NSCopying)
+            start = callFindPositionInsideFeature(position:positionsOfCurveLines[shot-1], holeIndex: hole)
+            if(start == "WH"){
+                start = "R"
+                shotDictionary.setObject(start, forKey: "start" as NSCopying)
+            }
+        }
+        shotDictionary.setObject(callFindPositionInsideFeature(position:positionsOfCurveLines[shot], holeIndex: hole), forKey: "end" as NSCopying)
+        end = callFindPositionInsideFeature(position:positionsOfCurveLines[shot], holeIndex: hole)
+        if(end == "WH"){
+            end = "R"
+            shotDictionary.setObject(end, forKey: "end" as NSCopying)
+        }
+
+        let distanceBwShots = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines[shot])
+        var distanceBwHole0 = Double()
+        var distanceBwHole1 = Double()
+        if(holeOutFlag){
+            distanceBwHole1 = GMSGeometryDistance(positionsOfCurveLines[shot], positionsOfCurveLines.last!)
+            distanceBwHole0 = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfCurveLines.last!)
+        }
+        else{
+            distanceBwHole1 = GMSGeometryDistance(positionsOfCurveLines[shot], positionsOfDotLine.last!)
+            distanceBwHole0 = GMSGeometryDistance(positionsOfCurveLines[shot-1], positionsOfDotLine.last!)
+        }
+        shotDictionary.setObject((distanceBwShots*Constants.YARD).rounded(toPlaces:2), forKey: "distance" as NSCopying)
+        shotDictionary.setObject((distanceBwHole0*Constants.YARD).rounded(toPlaces:2), forKey: "distanceToHole0" as NSCopying)
+        shotDictionary.setObject((distanceBwHole1*Constants.YARD).rounded(toPlaces:2), forKey: "distanceToHole1" as NSCopying)
+        start = BackgroundMapStats.setStartingEndingChar(str:start)
+        end = BackgroundMapStats.setStartingEndingChar(str:end)
+        let shotCount = positionsOfCurveLines.count-1
+        if(end == "G"){
+            end = "G\(Int((distanceBwHole1*Constants.YARD*3).rounded()))"
+        }else{
+            end = "\(end)\(Int((distanceBwHole1*Constants.YARD).rounded()))"
+        }
+        if(start == "G"){
+            start = "G\(Int((distanceBwHole0*Constants.YARD*3).rounded()))"
+        }else{
+            start = "\(start)\(Int((distanceBwHole0*Constants.YARD).rounded()))"
+        }
+        if(Int((distanceBwHole0*Constants.YARD).rounded()) == 0){
+            start = "G1"
+        }else if(Int((distanceBwHole0*Constants.YARD).rounded()) > 600){
+            start = "\(start)600"
+        }else if (Int((distanceBwHole0*Constants.YARD).rounded()) < 100) && shotCount == 0{
+            start = "\(start)100"
+        }
+        var numberOfPenalty = 0
+        if(shot < penaltyShots.count){
+            for i in shot..<penaltyShots.count{
+                if (self.penaltyShots[i]){
+                    numberOfPenalty += 1
+                }else{
+                    break
+                }
+            }
+        }
+        for i in 0..<Constants.strkGainedString.count{
+                var strkGnd = Double()
+                var startGained = Double()
+                var endGained = Double()
+                if(Constants.strokesGainedDict[i].value(forKey: start) != nil){
+                    startGained = Constants.strokesGainedDict[i].value(forKey: start) as! Double
+                }
+                if(Constants.strokesGainedDict[i].value(forKey: end) != nil){
+                    endGained = Constants.strokesGainedDict[i].value(forKey: end) as! Double
+                }
+                strkGnd = startGained - endGained - 1
+            strkGnd = strkGnd - Double(numberOfPenalty)
+            shotDictionary.setObject(strkGnd, forKey: Constants.strkGainedString[i] as NSCopying)
+        }
+        shotDictionary.setObject(coordLeftOrRight(start:positionsOfCurveLines[shot-1],end:positionsOfCurveLines[shot], holeOutFlag: holeOutFlag), forKey: "heading" as NSCopying)
+        return shotDictionary
+    }
+    func coordLeftOrRight(start:CLLocationCoordinate2D,end:CLLocationCoordinate2D,holeOutFlag:Bool)->String{
+        let leftOrRight : String!
+        var headingAngleOfStartingToGreen = 0.0
+        if(holeOutFlag){
+            headingAngleOfStartingToGreen = GMSGeometryHeading(start, positionsOfCurveLines.last!)
+        }
+        else{
+            if(positionsOfDotLine.count != 0){
+                headingAngleOfStartingToGreen = GMSGeometryHeading(start, positionsOfDotLine.last!)
+            }
+            else{
+                headingAngleOfStartingToGreen = GMSGeometryHeading(start, positionsOfCurveLines[1])
+            }
+        }
+        let headingAngleOfStartToEnd = GMSGeometryHeading(start, end)
+        
+        if(headingAngleOfStartToEnd < headingAngleOfStartingToGreen){
+            leftOrRight = "L"
+        }
+        else{
+            leftOrRight = "R"
+        }
+        return leftOrRight
+    }
+    func callFindPositionInsideFeature(position:CLLocationCoordinate2D,holeIndex:Int)->String{
+        var featureName = "R"
+        for data in self.numberOfHoles[holeIndex].fairway{
+            if(BackgroundMapStats.findPositionOfPointInside(position: position, whichFeature: data)){
+                featureName = "F"
+                break
+            }
+        }
+        for data in self.numberOfHoles[holeIndex].gb{
+            if(BackgroundMapStats.findPositionOfPointInside(position: position, whichFeature: data)){
+                featureName = "GB"
+                break
+            }
+        }
+        for data in self.numberOfHoles[holeIndex].fb{
+            if(BackgroundMapStats.findPositionOfPointInside(position: position, whichFeature: data)){
+                featureName = "FB"
+                break
+            }
+        }
+        var allWaterHazard = [[CLLocationCoordinate2D]]()
+        for i in 0..<self.numberOfHoles.count{
+            for wh in self.numberOfHoles[i].wh{
+                allWaterHazard.append(wh)
+            }
+        }
+        for data in allWaterHazard{
+            if(BackgroundMapStats.findPositionOfPointInside(position: position, whichFeature: data)){
+                featureName = "WH"
+                break
+            }
+        }
+        for data in self.numberOfHoles[holeIndex].tee{
+            if(BackgroundMapStats.findPositionOfPointInside(position: position, whichFeature: data)){
+                featureName = "T"
+                break
+            }
+        }
+        if(BackgroundMapStats.findPositionOfPointInside(position: position, whichFeature:self.numberOfHoles[holeIndex].green)){
+            featureName = "G"
+        }
+        return featureName
+    }
+    func  clubReco(dist:Double,lie:String)->String {
+        if (lie.trim() == "G"){
+            return " Pu";
+        }else {
+            var index = 0
+            var i2 = 0
+            var minX = 1000000.0
+            var preferredClubs = [String]()
+            for i in 0..<self.clubData.count {
+                if (!self.clubs.contains(self.clubData[i].name)){ continue}
+                if (self.clubData[i].name == "Pu"){continue}
+                if (self.clubData[i].name == "Dr") &&
+                    (lie != "T"){continue}
+                let max = Double(self.clubData[i].max)
+                let min = Double(self.clubData[i].min)
+                var x = 0.0
+                if (dist >= max) {
+                    x = dist - max;
+                    preferredClubs.append(" \(self.clubData[i].name)")
+                } else if (dist <= min) {
+                    x = min - dist;
+                    preferredClubs.append(" \(self.clubData[i].name)")
+                } else if (dist >= min && dist <= max) {
+                    preferredClubs.append(" \(self.clubData[i].name)")
+                }
+                if (x < minX) {
+                    index = i2;
+                    minX = x;
+                }
+                i2 = i2+1
+            }
+            return preferredClubs[index]
+        }
+    }
+    func uploadPutting(playerId:String,holeIndex:Int){
+        var putting = Int()
+        if let scoringDict = self.scoring[holeIndex].players.value(forKeyPath: playerId) as? NSMutableDictionary{
+            if let scoreShots = (scoringDict.value(forKey: "shots") as? NSArray){
+                for data in scoreShots{
+                    let dataDict = data as! NSMutableDictionary
+                    if((dataDict.value(forKey: "club") as! String).trim() == "Pu"){
+                        putting += 1
+                    }
+                }
+            }
+        }
+        ref.child("matchData/\(Constants.matchId)/scoring/\(holeIndex)/\(playerId)/putting").setValue(putting)
     }
 }
 class clubTableViewCell : UITableViewCell{

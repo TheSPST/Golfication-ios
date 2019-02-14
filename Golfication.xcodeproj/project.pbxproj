@@ -242,6 +242,8 @@
 		4BB26D451FF77EED001E9556 /* ServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26D431FF77EED001E9556 /* ServerHandler.swift */; };
 		4BB7C428208DB584006CCAFF /* MyFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BB7C427208DB584006CCAFF /* MyFeedVC.swift */; };
 		4BBEA024206E2F7A00EA2783 /* FeedPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */; };
+		4BC051AE2214270C000A7B14 /* StatsIntoConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC051AD2214270C000A7B14 /* StatsIntoConstants.swift */; };
+		4BC051B222143B93000A7B14 /* StatsInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC051B122143B93000A7B14 /* StatsInfoVC.swift */; };
 		4BC879BA20C517EF00A3B2BB /* PracticeGameViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */; };
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
 		4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4BCF8E2B21B502F70015338F /* swing_beep.mp3 */; };
@@ -529,6 +531,8 @@
 		4BB26D4B1FF780A4001E9556 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BB7C427208DB584006CCAFF /* MyFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedVC.swift; sourceTree = "<group>"; };
 		4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPostVC.swift; sourceTree = "<group>"; };
+		4BC051AD2214270C000A7B14 /* StatsIntoConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsIntoConstants.swift; sourceTree = "<group>"; };
+		4BC051B122143B93000A7B14 /* StatsInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsInfoVC.swift; sourceTree = "<group>"; };
 		4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticeGameViewCtrl.swift; sourceTree = "<group>"; };
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
 		4BCF8E2B21B502F70015338F /* swing_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = swing_beep.mp3; sourceTree = "<group>"; };
@@ -634,6 +638,7 @@
 			isa = PBXGroup;
 			children = (
 				4BDE2FA3218ECC0F00065A9B /* GlobalConstant.swift */,
+				4BC051AD2214270C000A7B14 /* StatsIntoConstants.swift */,
 				4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */,
 				4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */,
 				4BF564EE1FD2AA03006BDB0E /* String+Width.swift */,
@@ -1126,6 +1131,7 @@
 				4BB26CDE1FF77EDB001E9556 /* HomeTopTableVIewCell.swift */,
 				3EBD0F4721198FE90074EC75 /* ReferalViewCtrls.swift */,
 				3E02E680211D6B7D00B0A520 /* NotificationForReferral.swift */,
+				4BC051B122143B93000A7B14 /* StatsInfoVC.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1651,6 +1657,7 @@
 				4BB26D1F1FF77EDB001E9556 /* OTTViewController.swift in Sources */,
 				4B1F6BE32090A29F00312EA7 /* DebugMapViewController.swift in Sources */,
 				4B1F6BD82090A29F00312EA7 /* SearchLocationVC.swift in Sources */,
+				4BC051B222143B93000A7B14 /* StatsInfoVC.swift in Sources */,
 				4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */,
 				3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */,
 				3EB5D2F9215F78CD007C55E3 /* GolficationXFirmware.swift in Sources */,
@@ -1698,6 +1705,7 @@
 				4BB26D161FF77EDB001E9556 /* FilterCollectionViewCell.swift in Sources */,
 				3E15C1202142B834002D43AF /* MultiplayerTeeSelectionTableViewCell.swift in Sources */,
 				4BB26D201FF77EDB001E9556 /* OverViewVC.swift in Sources */,
+				4BC051AE2214270C000A7B14 /* StatsIntoConstants.swift in Sources */,
 				3E15C1222142B86D002D43AF /* MultiplayerTeeSelectionVC.swift in Sources */,
 				3E380EEA1FFBB58000246865 /* customPieView.swift in Sources */,
 				4B7F4AE41FFD10A300191452 /* customPieViewRight.swift in Sources */,

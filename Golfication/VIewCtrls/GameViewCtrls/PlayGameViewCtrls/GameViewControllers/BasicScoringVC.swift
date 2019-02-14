@@ -409,7 +409,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             viewCtrl.finalScoreData = self.scoreData
             viewCtrl.currentMatchId = mID
             viewCtrl.justFinishedTheMatch = true
-            viewCtrl.fromGameImprovement = true
+            viewCtrl.fromGameImprovement = false
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoreData.removeAll()
             Constants.matchId.removeAll()

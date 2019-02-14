@@ -1508,7 +1508,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             viewCtrl.finalScoreData = self.scoring
             viewCtrl.currentMatchId = mID
             viewCtrl.justFinishedTheMatch = true
-            viewCtrl.fromGameImprovement = true
+            viewCtrl.fromGameImprovement = false
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoring.removeAll()
             Constants.matchId.removeAll()

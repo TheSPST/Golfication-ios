@@ -46,6 +46,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
     var myDataArray = NSMutableArray()
     var filteredArray = [NSDictionary]()
     var cardViewMArray = NSMutableArray()
+    var cardViewInfoArray = [(title:String,value:String)]()
 
     @IBAction func filterNavBarButtonClick(_ sender: Any) {
 //        IAPHandler.shared.purchaseMyProduct(index: 0)
@@ -273,10 +274,35 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                 let originalImage1 = #imageLiteral(resourceName: "share")
                 let sharBtnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                 
+                let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+                let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+
                 var viewTag = 0
+                self.cardViewInfoArray = [(title:String,value:String)]()
                 for v in self.smartCaddieStackView.subviews{
                     if v.isKind(of: CardView.self){
                         self.cardViewMArray.add(v)
+                        switch viewTag{
+                        case 0:
+                            self.cardViewInfoArray.append((title:"Club Distance",value:StatsIntoConstants.clubDistance))
+                            break
+                        case 1:
+                            self.cardViewInfoArray.append((title:"Club Range",value:StatsIntoConstants.clubRange))
+                            break
+                        case 2:
+                            self.cardViewInfoArray.append((title:"Short Game",value:StatsIntoConstants.shortGame))
+                            break
+                        case 3:
+                            self.cardViewInfoArray.append((title:"Club Usage",value:StatsIntoConstants.clubUsage))
+                            break
+                        case 4:
+                            self.cardViewInfoArray.append((title:"Strokes Gained per club",value:StatsIntoConstants.strokesGainedPerClub))
+                            break
+                        case 5:
+                            self.cardViewInfoArray.append((title:"Control",value:StatsIntoConstants.control))
+                            break
+                        default: break
+                        }
                         if (!Constants.isProMode && !((v == self.cardViewDistance))){
                             let shareStatsButton = ShareStatsButton()
                             shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
@@ -297,6 +323,18 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                             }
                             shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                             v.addSubview(shareStatsButton)
+                            
+                            //Stats Info Button
+                            let statsInfoButton = StatsInfoButton()
+                            statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                            statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                            statsInfoButton.tintColor = UIColor.glfFlatBlue
+                            statsInfoButton.tag = viewTag
+                            if (v == self.cardViewDistance){
+                                statsInfoButton.tintColor = UIColor.white
+                            }
+                            statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                            v.addSubview(statsInfoButton)
                         }
                         viewTag = viewTag+1
                     }
@@ -319,6 +357,14 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         }
     }
     
+    // MARK: - infoClicked
+    @objc func infoClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = cardViewInfoArray[sender.tag].title
+        viewCtrl.desc = cardViewInfoArray[sender.tag].value
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+
     // MARK: - shareClicked
     @objc func shareClicked(_ sender:UIButton){
         let tagVal = sender.tag

@@ -219,7 +219,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             if indexPath.section == 0{
                 var incr = array.count
                 incr = incr - indexPath.row
-                cell.lblSession.text = "Session" + "\(incr)"
+                cell.lblSession.text = "Session" + " \(incr)"
             }
             else{
                 cell.lblSession.text = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
@@ -231,7 +231,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             if dropFirst16 == "Practise Session"{
                 var incr = array.count
                 incr = incr - indexPath.row
-                cell.lblSession.text = "Session" + "\(incr)"
+                cell.lblSession.text = "Session" + " \(incr)"
             }
             else{
                 cell.lblSession.text = (array[indexPath.row] as AnyObject).value(forKey:"courseName") as? String
@@ -247,6 +247,9 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "PracticePageContainerVC") as! PracticePageContainerVC
         //viewCtrl.swingKey = swingKey
         let array = self.sectionItems[indexPath.section] as! NSArray
+        var incr = array.count
+        incr = incr - indexPath.row
+
         var shotsAr = [String]()
         let swingArr = (array[indexPath.row] as AnyObject).value(forKey:"swingArray") as! NSArray
         viewCtrl.count = swingArr.count
@@ -260,9 +263,9 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         if sectionNames.count == 2{
             if indexPath.section == 0{
                 viewCtrl.fromRoundsPlayed = false
-                viewCtrl.title = "Session \(indexPath.row+1)"
+                viewCtrl.title = "Session" + " \(incr)"
                 if isDemoStats{
-                    viewCtrl.title = "Demo Session \(indexPath.row+1)"
+                    viewCtrl.title = "Demo Session" + " \(incr)"
                 }
             }
             else{
@@ -300,9 +303,9 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
             
             if dropFirst16 == "Practise Session"{
                 viewCtrl.fromRoundsPlayed = false
-                viewCtrl.title = "Session \(indexPath.row+1)"
+                viewCtrl.title = "Session" + " \(incr)"
                 if isDemoStats{
-                    viewCtrl.title = "Demo Session \(indexPath.row+1)"
+                    viewCtrl.title = "Demo Session" + " \(incr)"
                 }
             }
             else{

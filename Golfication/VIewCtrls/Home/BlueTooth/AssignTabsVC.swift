@@ -399,7 +399,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
             
             DispatchQueue.main.async {
                 self.lblScanStatus.text = "Waiting for tag..."
-                self.lblScanInfo.text = "Press the tag button\nfor 2 seconds and release."
+                self.lblScanInfo.text = "Press the tag button\nfor 3 seconds and release."
                 self.btnRetry.isHidden = true
                 self.btnNoTag.isHidden = true
                 

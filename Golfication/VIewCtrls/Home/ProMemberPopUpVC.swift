@@ -91,7 +91,7 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
     }
     
     @IBAction func yearSubscriptionAction(_ sender: Any) {
-        //0->monthly , 1->trial monthly, 2-> trial yearly, 3->yearly, 4->yearly_3Days_39.9, 5->yearly_1Month_39.99
+        //0->monthly , 1->trial monthly, 2-> trial yearly, 3->yearly, 4->yearly_3Days_39.99, 5->yearly_1Month_39.99
 
         if Constants.trial == true{
             IAPHandler.shared.purchaseMyProduct(index: 4)

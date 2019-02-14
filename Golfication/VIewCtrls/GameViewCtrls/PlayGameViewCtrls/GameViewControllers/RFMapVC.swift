@@ -679,7 +679,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             viewCtrl.finalScoreData = self.scoring
             viewCtrl.currentMatchId = mID
             viewCtrl.justFinishedTheMatch = true
-            viewCtrl.fromGameImprovement = true
+            viewCtrl.fromGameImprovement = false
             self.navigationController?.pushViewController(viewCtrl, animated: true)
             self.scoring.removeAll()
             self.matchId.removeAll()
