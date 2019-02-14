@@ -622,13 +622,14 @@ class BLE: NSObject {
                     
                 }else{
                     if(holeWithSwing.last!.holeOut){
-                        var totalH = 18
-                        if Constants.gameType.contains("9"){
-                            totalH = 9
+                        var totalH = 9
+                        if let score = Constants.matchDataDic.value(forKey: "scoring") as? [NSMutableDictionary]{
+                            totalH = score.count
                         }
                         if totalH != holeWithSwing.last!.hole{
                             param.append(UInt8(holeWithSwing.last!.hole+1))
                         }else{
+                            self.courseData.processShots(hole: 0)
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             return
                         }
@@ -637,7 +638,7 @@ class BLE: NSObject {
                     }
                 }
                 if(self.holeWithSwing.count == 0){
-                    param.append(0)
+                    param.append((UInt8(self.shotNumFor8th(hole: Int(param.last!)))))
                 }else{
                     var totalH = 18
                     if Constants.gameType.contains("9"){
@@ -1762,14 +1763,19 @@ extension BLE: CBPeripheralDelegate {
                                         matchDataDic.setObject("match", forKey: "playType" as NSCopying)
                                         matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
                                         matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
-                                        
+                                        matchDataDic.setObject(Constants.distanceFilter, forKey: "unit" as NSCopying)
                                             ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
                                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
                                             matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
                                             matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
                                             UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
                                         ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
-                                        
+                                        self.holeData = [[CLLocationCoordinate2D]]()
+                                        let totalHole = Constants.gameType.contains(find: "9") ? 9:18
+                                        for _ in 0..<totalHole{
+                                            let arr = [CLLocationCoordinate2D]()
+                                            self.holeData.append(arr)
+                                        }
                                         Constants.deviceGameType = 1
                                     })
                                 })

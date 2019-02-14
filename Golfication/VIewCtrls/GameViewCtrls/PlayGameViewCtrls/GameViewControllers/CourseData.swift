@@ -408,6 +408,7 @@ class CourseData:NSObject{
             if Constants.fromDeviceMatch{
                Constants.fromDeviceMatch = false
                 if !isContinue{
+                    Constants.ble.courseData = self
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command3"), object: centerPointOfTeeNGreenWithPar)
                 }
             }
@@ -459,7 +460,10 @@ class CourseData:NSObject{
                 var shots = [NSMutableDictionary]()
                 let holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
                 if let sho = playersData.value(forKey: "shots") as? NSArray{
-                    wantToDrag = sho.count > 0 ? true:false
+                    wantToDrag = sho.count > 1 ? true:false
+                    if holeOut && sho.count == 1{
+                        wantToDrag = true
+                    }
                     for i in 0..<sho.count{
                         let shot = sho[i] as! NSMutableDictionary
                         if let dat = shot.value(forKey: "clubDetected") as? Bool{
@@ -529,6 +533,7 @@ class CourseData:NSObject{
                         }
                     }
                 }
+                UIApplication.shared.keyWindow?.makeToast("Processing Hole \(hole+1)")
                 if hole+1 == self.scoring.count{
                     return
                 }else{

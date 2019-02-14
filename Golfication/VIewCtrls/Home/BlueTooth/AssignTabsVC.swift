@@ -100,8 +100,7 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
                     let avg = dict.value(forKey: "avgDistance") as! Int
                     self.btnAvgDistance.setTitle("\(avg)", for: .normal)
-                    //                        self.btnAvgDistance.setTitle("\(BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
-                    
+                    //self.btnAvgDistance.setTitle("\(BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2)))", for: .normal)
                     break
                 }
             }

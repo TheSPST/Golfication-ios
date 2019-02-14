@@ -64,6 +64,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
     var cardViewMArray = NSMutableArray()
 
     var checkCaddie = Bool()
+    var cardViewInfoArray = [(title:String,value:String)]()
 
     @IBOutlet weak var sandAccuracyStackView: UIStackView!
     @IBOutlet weak var chippingAccuracyStackView: UIStackView!
@@ -149,10 +150,35 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             let originalImage1 = #imageLiteral(resourceName: "share")
             let sharBtnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
             
+            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+
             var viewTag = 0
+            self.cardViewInfoArray = [(title:String,value:String)]()
             for v in self.chippingStackView.subviews{
                 if v.isKind(of: CardView.self){
                     cardViewMArray.add(v)
+                    switch viewTag{
+                    case 0:
+                        self.cardViewInfoArray.append((title:"Chipping Accuracy",value:StatsIntoConstants.chippingAccuracy))
+                        break
+                    case 1:
+                        self.cardViewInfoArray.append((title:"Chip: Up and Down",value:StatsIntoConstants.chipUpDown))
+                        break
+                    case 2:
+                        self.cardViewInfoArray.append((title:"Chip Proximity",value:StatsIntoConstants.chipProximity))
+                        break
+                    case 3:
+                        self.cardViewInfoArray.append((title:"Sand: Up and Down",value:StatsIntoConstants.sandUpDown))
+                        break
+                    case 4:
+                        self.cardViewInfoArray.append((title:"Sand Accuracy",value:StatsIntoConstants.sandAccuracy))
+                        break
+                    case 5:
+                        self.cardViewInfoArray.append((title:"Sand Proximity",value:StatsIntoConstants.sandProximity))
+                        break
+                    default: break
+                    }
                     if (!Constants.isProMode && !((v == cardViewChippingAccuracy) || (v == cardViewChippingProximity) || (v == cardViewChippingSandAccuracy) || (v == cardViewChippingSandProximity))){
                         let shareStatsButton = ShareStatsButton()
                         shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
@@ -161,6 +187,15 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                         shareStatsButton.tag = viewTag
                         shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                         v.addSubview(shareStatsButton)
+                        
+                        //Stats Info Button
+                        let statsInfoButton = StatsInfoButton()
+                        statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                        statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                        statsInfoButton.tintColor = UIColor.glfFlatBlue
+                        statsInfoButton.tag = viewTag
+                        statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                        v.addSubview(statsInfoButton)
                     }
                     else if Constants.isProMode{
                         let shareStatsButton = ShareStatsButton()
@@ -173,6 +208,18 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                         }
                         shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                         v.addSubview(shareStatsButton)
+                        
+                        //Stats Info Button
+                        let statsInfoButton = StatsInfoButton()
+                        statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                        statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                        statsInfoButton.tintColor = UIColor.glfFlatBlue
+                        statsInfoButton.tag = viewTag
+                        if (v == cardViewChippingAccuracy){
+                            statsInfoButton.tintColor = UIColor.white
+                        }
+                        statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                        v.addSubview(statsInfoButton)
                     }
                     viewTag = viewTag+1
                 }
@@ -205,6 +252,14 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         self.lblAvgSandProximityValue.setCorner(color: UIColor.glfBlack50.cgColor)
     }
     
+    // MARK: - infoClicked
+    @objc func infoClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = cardViewInfoArray[sender.tag].title
+        viewCtrl.desc = cardViewInfoArray[sender.tag].value
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+
     // MARK: - shareClicked
     @objc func shareClicked(_ sender:UIButton){
         let tagVal = sender.tag

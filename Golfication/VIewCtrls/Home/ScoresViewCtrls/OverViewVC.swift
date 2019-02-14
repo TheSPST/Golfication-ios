@@ -46,7 +46,8 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
     var cardViewMArray = NSMutableArray()
     
     var checkCaddie = Bool()
-    
+    var cardViewInfoArray = [(title:String,value:String)]()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         Analytics.logEvent("my_scores_overview", parameters: [:])
@@ -200,24 +201,64 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             let originalImage1 = #imageLiteral(resourceName: "share")
             let sharBtnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
             
+            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            
             var viewTag = 0
+            self.cardViewInfoArray = [(title:String,value:String)]()
             for v in self.overviewStackView.subviews{
                 if v.isKind(of: CardView.self){
                     cardViewMArray.add(v)
-                    
-                        let shareStatsButton = ShareStatsButton()
-                        shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
-                        shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
-                        shareStatsButton.tintColor = UIColor.glfFlatBlue
-                        shareStatsButton.tag = viewTag
+                    switch viewTag{
+                    case 0:
+                        self.cardViewInfoArray.append((title:"Rounds",value:StatsIntoConstants.averageRoundScores))
+                        break
+                    case 1:
+                        self.cardViewInfoArray.append((title:"Score Distribution",value:StatsIntoConstants.scoreDistribution))
+                        break
+                    case 2:
+                        self.cardViewInfoArray.append((title:"Scoring",value:StatsIntoConstants.scoring))
+                        break
+                    case 3:
+                        self.cardViewInfoArray.append((title:"Par Average",value:StatsIntoConstants.parAverage))
+                        break
+                    case 4:
+                        self.cardViewInfoArray.append((title:"Strokes Gained per club",value:StatsIntoConstants.strokesGainedPerClub))
+                        break
+                    case 5:
+                        self.cardViewInfoArray.append((title:"Penalities Trend",value:StatsIntoConstants.penalties))
+                        break
+                    default: break
+                    }
+                    let shareStatsButton = ShareStatsButton()
+                    shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
+                    shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
+                    shareStatsButton.tintColor = UIColor.glfFlatBlue
+                    shareStatsButton.tag = viewTag
                     //------------- Amit's Changes -------------------------------
-                        if (v == roundCardView) || (v == self.strokeGainedChartView){
-                            shareStatsButton.tintColor = UIColor.white
-                        }
+                    if (v == roundCardView) || (v == self.strokeGainedChartView){
+                        shareStatsButton.tintColor = UIColor.white
+                    }
                     //-------------------------------------------------------------
-                        shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
-                        v.addSubview(shareStatsButton)
-                        viewTag = viewTag+1
+                    shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
+                    v.addSubview(shareStatsButton)
+                    
+                    //Stats Info Button
+                    let statsInfoButton = StatsInfoButton()
+                    statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                    if viewTag == 4{
+                    statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-60, y: 16, width: 25, height: 25)
+                    }
+                    statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                    statsInfoButton.tintColor = UIColor.glfFlatBlue
+                    statsInfoButton.tag = viewTag
+                    if (v == roundCardView) || (v == self.strokeGainedChartView){
+                        statsInfoButton.tintColor = UIColor.white
+                    }
+                    statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                    v.addSubview(statsInfoButton)
+                    
+                    viewTag = viewTag+1
                 }
             }
         }
@@ -235,6 +276,14 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
         self.lblAvgPenaltiesTrendsValue.setCorner(color: UIColor.glfBlack50.cgColor)
     }
     
+    // MARK: - infoClicked
+    @objc func infoClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = cardViewInfoArray[sender.tag].title
+        viewCtrl.desc = cardViewInfoArray[sender.tag].value
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+
     // MARK: - shareClicked
     @objc func shareClicked(_ sender:UIButton){
         let tagVal = sender.tag

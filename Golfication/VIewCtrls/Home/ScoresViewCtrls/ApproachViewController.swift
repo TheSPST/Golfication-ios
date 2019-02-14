@@ -51,6 +51,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     var cardViewMArray = NSMutableArray()
 
     var checkCaddie = Bool()
+    var cardViewInfoArray = [(title:String,value:String)]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,10 +122,32 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
             let originalImage1 = #imageLiteral(resourceName: "share")
             let sharBtnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
             
+            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+
             var viewTag = 0
+            self.cardViewInfoArray = [(title:String,value:String)]()
             for v in self.approachStackView.subviews{
                 if v.isKind(of: CardView.self){
                     cardViewMArray.add(v)
+                    switch viewTag{
+                    case 0:
+                        self.cardViewInfoArray.append((title:"Approach Accuracy",value:StatsIntoConstants.approachAccuracy))
+                        break
+                    case 1:
+                        self.cardViewInfoArray.append((title:"Greens in Regulation (GIR)",value:StatsIntoConstants.GIR))
+                        break
+                    case 2:
+                        self.cardViewInfoArray.append((title:"Hole Proximity",value:StatsIntoConstants.holeProximity))
+                        break
+                    case 3:
+                        self.cardViewInfoArray.append((title:"GIR Trend",value:StatsIntoConstants.girTrend))
+                        break
+                    case 4:
+                        self.cardViewInfoArray.append((title:"GIR Likeliness",value:StatsIntoConstants.girLikeliness))
+                        break
+                    default: break
+                    }
                     if (!Constants.isProMode && !((v == cardViewApproach) || (v == holeProximityCardView))){
                         let shareStatsButton = ShareStatsButton()
                         shareStatsButton.frame = CGRect(x: view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
@@ -133,6 +156,15 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                         shareStatsButton.tag = viewTag
                         shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                         v.addSubview(shareStatsButton)
+                        
+                        //Stats Info Button
+                        let statsInfoButton = StatsInfoButton()
+                        statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                        statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                        statsInfoButton.tintColor = UIColor.glfFlatBlue
+                        statsInfoButton.tag = viewTag
+                        statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                        v.addSubview(statsInfoButton)
                     }
                     else if Constants.isProMode{
                         let shareStatsButton = ShareStatsButton()
@@ -145,6 +177,18 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                         }
                         shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                         v.addSubview(shareStatsButton)
+                        
+                        //Stats Info Button
+                        let statsInfoButton = StatsInfoButton()
+                        statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                        statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                        statsInfoButton.tintColor = UIColor.glfFlatBlue
+                        statsInfoButton.tag = viewTag
+                        if (v == cardViewApproach){
+                            statsInfoButton.tintColor = UIColor.white
+                        }
+                        statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                        v.addSubview(statsInfoButton)
                     }
                     viewTag = viewTag+1
                 }
@@ -163,6 +207,14 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         
     }
     
+    // MARK: - infoClicked
+    @objc func infoClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = cardViewInfoArray[sender.tag].title
+        viewCtrl.desc = cardViewInfoArray[sender.tag].value
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+
     // MARK: - shareClicked
     @objc func shareClicked(_ sender:UIButton){
         let tagVal = sender.tag

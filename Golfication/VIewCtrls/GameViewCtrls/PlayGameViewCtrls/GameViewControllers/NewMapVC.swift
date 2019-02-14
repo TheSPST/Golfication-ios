@@ -1658,12 +1658,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.shareShotsDissmiss(_:)), name: NSNotification.Name(rawValue: "ShareShots"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
-
+        self.courseData.startingIndex = self.startingIndex
+        self.courseData.gameTypeIndex = self.gameTypeIndex
         if(!self.isHoleByHole){
             self.startingIndex = Int(self.matchDataDict.value(forKeyPath: "startingHole") as? String ?? "1") ?? 1
             self.gameTypeIndex = self.matchDataDict.value(forKey: "matchType") as! String == "9 holes" ? 9:18
-            self.courseData.startingIndex = self.startingIndex
-            self.courseData.gameTypeIndex = self.gameTypeIndex
         }else{
             if let players = self.matchDataDict.value(forKeyPath: "player") as? NSMutableDictionary{
                 for data in players{
@@ -6727,7 +6726,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func getScoreFromMatchData(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/") { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/") { (snapshot) in
             if  let score = (snapshot.value as? NSDictionary){
                 var playersArray = [NSMutableDictionary]()
                 for(key,value) in score{

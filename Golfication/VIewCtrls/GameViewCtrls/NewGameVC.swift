@@ -2537,7 +2537,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                 if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+//                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+                    Constants.ble.discardGameFromDevice()
                     break
                 }
             }

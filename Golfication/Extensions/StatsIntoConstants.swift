@@ -10,7 +10,8 @@ import Foundation
 
 struct StatsIntoConstants{
     
-    static let averageRoundScores = "While we're busy working on swing fixes, training aids, and that new tip from our YouTube Coach, we mustn't forget that the primary objective of golf is to shoot lower scores. Average Round Scores pronounce the verdict, and all other stats merely tell us how we arrived at it! In fact, data crunched from thousands of rounds played using the Golfication App tell us exactly how much you can expect to score, given your handicap. Tell us your handicap and average scores in the comments below."
+    // MARK: Overview
+    static let averageRoundScores = "While we're busy working on swing fixes, training aids, and that new tip from our YouTube Coach, we mustn't forget that the primary objective of golf is to shoot lower scores. Average Round Scores pronounce the verdict, and all other stats merely tell us how we arrived at it! In fact, data crunched from thousands of rounds played using the Golfication App tell us exactly how much you can expect to score, given your handicap. Tell us your handicap by updating it in the profile section."
     
     static let scoreDistribution = "Have you ever broken 100? Do you shoot in the 80s? Or are you going to challenge Par? Based on our handicap level, we have different objectives. This graph tells you the story of your progress, and your goal is to shift the graph towards the left! Seems easy enough, right?"
     
@@ -20,16 +21,18 @@ struct StatsIntoConstants{
     
     static let penalties = "This stat in the Golfication Overview section is a no-brainer. You want this number to be low. Hitting the ball into hazards and out of bounds really affects your scorecard, and you'll be delighted to see a downward trend here. We haven't yet set up benchmarks for Penalties based on Handicap, as this stat varies dramatically from one course to another. The best way to utilize this stat is to view its trend for a particular course. (Course with more water and Out of Bounds opportunities will see a higher number here)."
     
+    // MARK: OTT
     static let spreadOffTheTee = "Being long matters, but only if you can keep it straight. This is a powerful Golf Stat from Golfication, that visually shows you how good - or ugly - your Driving really is. In fact, you can also filter this by club - e.g. to see how well you drive the ball using driving irons. This stat considers only Par 4s and Par 5s, where your objective is to hit the ball long. It does not include Par 3 Tee-Shots, where distance-control becomes critical."
     
-    static let DriveAccuracy = "This is the traditional \"Fairways Hit\" stat, that we made more meaningful for our golfers - through benchmarks and insights. If you're hitting 8 fairways out of 14 as a 12-HCP golfer, you're much better than golfers like you. But the same Fairways Hit stat would make you just an average 5-HCP golfer. It's also really interesting to note that golfers tend to miss right more often than left. The misses become more significant for 20+ HCP golfers."
+    static let driveAccuracy = "This is the traditional \"Fairways Hit\" stat, that we made more meaningful for our golfers - through benchmarks and insights. If you're hitting 8 fairways out of 14 as a 12-HCP golfer, you're much better than golfers like you. But the same Fairways Hit stat would make you just an average 5-HCP golfer. It's also really interesting to note that golfers tend to miss right more often than left. The misses become more significant for 20+ HCP golfers."
     
     static let driveDistance = "This golf stat considers distance off the tee on Par 4s and Par 5s. The colours of the shots tell you if you have hit or missed the fairway, but it doesn't take into account the magnitude of your miss. So a red dot might indicate a shot in the first cut of rough, or deep in the trees. To understand your driving better, look at the Golfication Stat called \"Strokes Gained - Off The Tee\". A fully green chart that's moving upwards is indicative of great progress in this area."
     
-    static let fairwayHitTrend = "This golf stat is a snapshot of your Off The Tee performance. Are you hitting more fairways now than you were two weeks ago? The stat automatically shows you how many fairways you hit out of all the attempts you made. Example: Hitting 6 fairways out of 7 in a nine-hole round is remarkable; in contrast, hitting 6out of 14 is poor."
+    static let fairwayHitTrend = "This golf stat is a snapshot of your Off The Tee performance. Are you hitting more fairways now than you were two weeks ago? The stat automatically shows you how many fairways you hit out of all the attempts you made. Example: Hitting 6 fairways out of 7 in a nine-hole round is remarkable; in contrast, hitting 6 out of 14 is poor."
     
     static let fairwayHitLikeliness = "Is your driving accuracy lying? Can a few bad rounds (perhaps, at a new course) ruin your great Driving Accuracy stats? Consider this: a golfer who hits 10, 10, 11, 2, 4, 6, 7, 4, 5, 10 fairways in 10 rounds is qualitatively different from a golfer who hits 6, 7, 7, 7, 7, 6, 7, 7, 7, 7. But both golfers hit exactly 6.8 Fairways per Round. Why is this? The first golfer has great potential but has been very inconsistent over these ten rounds, but the second golfer is an average but consistent driver. I would be far happier as Golfer 2, but I have friends who seek the thrills of Golfer 1."
     
+    // MARK: Approach
     static let approachAccuracy = "In the good old days, we used to mark GIRs with a small check mark in our notes to keep a record of greens hit. Some of us went a step further to record our misses. Golfication now provides you with a Powerful Golf Stat, which visually represents your Approach Accuracy. White dots show balls that end up on the green; red dots indicate balls off the green. For the Approach stats, we only consider non-tee shots which are played with the objective of hitting the green. Our smart A.I. Caddie, Eddie, understands just which shots you play with the intent of \"going for the green\". This could be the second, third, or even the fourth shot in a Par 5; it almost certainly is the first shot on every Par 3."
     
     static let GIR = "Our traditions are rooted in meaning. At Golfication, our data scientists believe that Traditional Golf Stats hold the key to Golf Improvement. We go one step further to make a good ol' stat like GIR more useful, by showing you the difference between your GIR Chances with a Fairway Hit, and your GIR Chances with a Fairway Miss. Approach-Shots played from the rough tend to drag this stat down!"
@@ -40,6 +43,7 @@ struct StatsIntoConstants{
     
     static let girLikeliness = "Just like the Fairway Likeliness golf stat, this stat shows you the consistency of your GIR Performance. A high variance in this stat (if you hit different number of greens each time) means you're more inconsistent than a golfer who constantly hits the same number of greens every round."
     
+    // MARK: Chipping
     static let chippingAccuracy = "The scoring zones \"around the green\", are the places from where you can attack the pin directly with your wedges and shorter irons. This stat captures all those shots where you shouldn't just be trying to get on the green, you should be trying to get in the hole! This Chipping Accuracy visual golf stat captures your dominant miss direction e.g. you tend to chip it past the hole by 10 feet."
     
     static let chipUpDown =  "When you have a shot at the pin from the fairway or the rough around the green, it counts as a Chipping: Up & Down opportunity. This stat aims to improve your chipping / scrambling performance, and is independent of whether you make Par or not. Your fifth shot, taken from 30 yards from the pin, on a Par 4, will still count in this stat (although you can only make double-bogey in the best case scenario)."
@@ -52,12 +56,16 @@ struct StatsIntoConstants{
     
     static let sandProximity = "You ought to be attacking the pin, trying to hole out, or leaving yourself with the shortest putt possible after a greenside bunker shot. This stat captures the lengths of putts you leave after a sand shot. The lower this stat, the better your sand technique is."
     
+    // MARK: Putting
     static let puttsPerHole = "This is a traditional Golf Stat going back centuries! Golfication tells you the number of putts you make per hole, on average. You can filter this stat to see how you putt on any particular course. This stat also gives you a trend: are you getting better or worse?"
     
     static let puttsBreakup = "A regulation scorecard typically allows you two-putts to make Par on any hole. However, we don't always two putt. Sometimes, we 3-putt, and on the rarest of occassions, we chip in from the fairway. Our A.I. Caddie, Eddie, realized that golfers of each handicap have specific 0-, 1-, 2-, 3- and 4- Putt tendencies. This insight from the caddie tells you how different you are from other golfers of your HCP."
     
+    static let putting = "First Putt Proximity is the average distance to the hole after your first putt.. The aim is to reduce this number over time.  For PGA Tour golfers, this stat is almost always under 3 feet, which just goes to show how good they are. The lower this number is the lower is your probability of ending up with 3 putts.\n\nHole Out Distance is the average distance covered by your putt which sinks into the hole. A high value is indicative that you are doing a good job converting your 3 putts to 2 putts and 2 putts to 1."
+
     static let puttVersusHandicap = "If you compared your putting versus other golfers of your handicap, how would you fare? Do you putt better or worse than other golfers like you? And what does it take to improve your putting to a level where you can challenge better golfers? See for yourself in this useful golf putting stat from Golfication."
-    
+    // MARK: End Putting
+
     static let strokesGainedPerRound = "The PGA Tour breaks down the stats of its top professional golfers into four parts: Off-The-Tee, Approach, Around-The-Green, and Putting. At Golfication, we bring these stats from the Tour to the everyday golfer. Using this methodology, you can understand your performance in each segment of the game - each of which requires different skills and mindsets. The Strokes Gained Stat assesses your shots against statistical baselines. How does this work? Suppose you hit a 257 yd shot into the rough, then hit your approach shot 110 yards (10 yards short of the green), then chip up and two-putt for bogey, where did you go wrong? Was it your errant tee-shot, your short-approach which led to a missed GIR, poor chipping that landed too far from the hole, or the missed approach putt? Strokes Gained methodology uses data from other golfers to give each of your shots individual grades. So now you can evaluate your hole-performance as a sum of shots of differing qualities. You may have lost 0.3 strokes on your tee-shot and lost another 0.8 strokes on approach. Your stats may tell you that your chip shot actually gained you 0.1 strokes, but your putts let you down.  Golfication uses data from thousands of other golfers of different handicap categories to set up suitable baselines for your game. How does this help? This is useful because you need to compare yourself to a relevant skill level. Comparing an 18-Handicap golfer with a PGA Tour Professional would result in nonsensical insights. So Eddie, the A.I. Caddie, carefully groups you with other golfers of your skill level while delivering these insights."
     
     //Off the Tee: Swing & Consistency
@@ -80,8 +88,8 @@ struct StatsIntoConstants{
     static let strokesGainedPerClub = "What if you could know exactly how much better you are than your buddy with the Driver? But have a sneaky feeling he outplays you with a driving irons? Look at this stat to see how much better or worse you are with each club, as compared to other golfers of your handicap. Golfication uses data from thousands of rounds to help you focus on the right areas!"
     
     static let control = "Club Control is a powerful metric that measures the technique as well as stability of your golf swing. In short, it's a relative measure of how well you are swinging each of your golf clubs. This radial graph is designed to help amateurs understand the weakest links in their Golf Bag."
-    // MARK: End Smart Caddie
-
+    
+    // MARK: My Swings
     static let swingScore = "This composite metric measures the overall \"goodness\" of your Golf Swing. It takes into account a number of factors like your tempo, path, backswing angle, clubhead speed, sweetness of impact, and projected ball flight. This is a score out of 100, and is computed differently for each of your clubs. Scores in the 70s and 80s are average. 90+ scores indicate that your swing is really working for you!"
     
     static let clubheadSpeed = "PGA Tour Professionals generate average speeds of 112 mph with the driver, 100 mph with a 3-wood, 93 mph with a 7-iron and 82-mph with a sand wedge. Clubhead speeds vary between one handicap category and another, and also between men and women. For example, LPGA Tour Professionals generate 98 mph, 90 mph, 81 mph, and 72 mph respectively with the same clubs."

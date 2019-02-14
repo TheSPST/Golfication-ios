@@ -101,6 +101,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     @IBOutlet weak var lblBottomClubSpeedCHS: UILabel!
     @IBOutlet weak var lblTempoColon: UILabel!
     @IBOutlet weak var lblSwingTempo: UILabel!
+    var cardViewInfoArray = [(title:String,value:String)]()
 
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: shotNumStr)
@@ -110,6 +111,14 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         self.navigationController?.popViewController(animated: true)
     }
     
+    // MARK: - infoClicked
+    @objc func infoClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = cardViewInfoArray[sender.tag].title
+        viewCtrl.desc = cardViewInfoArray[sender.tag].value
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         if Constants.distanceFilter == 0{
@@ -125,6 +134,43 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
         self.shotLblB = [lbl1SwingB,lbl2ClubheadB,lbl3ClubPlaneB,lbl4TempoB,lbl5BackSwingB,lbl6HandSpeedB,lbldownSwing,lblbackSwing]
         
         btnTapped(tagVal:0)
+        
+        // -------------------------------Stats Info Button Functionality---------------------------------------
+        self.cardViewInfoArray = [(title:String,value:String)]()
+        let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+        let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        for i in 0..<shotTopViews.count{
+            //Stats Info Button
+            switch i{
+            case 0:
+                self.cardViewInfoArray.append((title:"Swing Score",value:StatsIntoConstants.swingScore))
+                break
+            case 1:
+                self.cardViewInfoArray.append((title:"Clubhead Speed",value:StatsIntoConstants.clubheadSpeed))
+                break
+            case 2:
+                self.cardViewInfoArray.append((title:"Club Plane",value:StatsIntoConstants.swingPath))
+                break
+            case 3:
+                self.cardViewInfoArray.append((title:"Swing Tempo",value:StatsIntoConstants.clubTempo))
+                break
+            case 4:
+                self.cardViewInfoArray.append((title:"Back Swing",value:StatsIntoConstants.backswingAngle))
+                break
+            case 5:
+                self.cardViewInfoArray.append((title:"Hand Speed",value:StatsIntoConstants.gripSpeed))
+                break
+            default: break
+            }
+            let statsInfoButton = StatsInfoButton()
+            statsInfoButton.frame = CGRect(x: self.view.frame.size.width-30, y: 16, width: 25, height: 25)
+            statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+            statsInfoButton.tintColor = UIColor.glfFlatBlue
+            statsInfoButton.tag = i
+            statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+            shotTopViews[i].addSubview(statsInfoButton)
+        }
+        // --------------------------------------------------------------------------------------------
         for i in 0..<self.tempArray.count{
             if (i == 1 || i == 5) && self.unit != nil{
                 if self.unit == 0 && Constants.distanceFilter == 1{
@@ -298,6 +344,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     
     func btnTapped(tagVal:Int) {
         
+
         //if tagVal != 2{
             //---------------------- default color ---------
             lblBottomClubSpeedKPH.textColor = UIColor(rgb: 0x87A39A)
@@ -314,6 +361,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                 }
             }
             for i in 0..<shotTopViews.count{
+
                 shotTopViews[i].isHidden = true
                 if shotTopViews[i].tag == tagVal{
                     shotTopViews[i].isHidden = false
@@ -363,7 +411,6 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                     }
                     else if tagVal == 3{
                         let tempo = self.swingDetails.value(forKey: "tempo") as! Double
-                        
                         if(tempo>=3.7 || tempo<=2.3){
                             lbl4TempoB.textColor = UIColor.glfRed
                             lbl4TempoV.textColor = UIColor.glfRed
@@ -418,6 +465,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             }
         //}
     }
+
     func setBackSwingAngleDesign(backSwingAngle:Double){
         swingAngleCircular_Red.shouldShowValueText = false
         swingAngleCircular_Blue.shouldShowValueText = false

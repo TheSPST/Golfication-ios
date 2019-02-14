@@ -311,6 +311,15 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                             shareStatsButton.tag = viewTag
                             shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
                             v.addSubview(shareStatsButton)
+                            
+                            //Stats Info Button
+                            let statsInfoButton = StatsInfoButton()
+                            statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                            statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                            statsInfoButton.tintColor = UIColor.glfFlatBlue
+                            statsInfoButton.tag = viewTag
+                            statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                            v.addSubview(statsInfoButton)
                         }
                         else if Constants.isProMode{
                             let shareStatsButton = ShareStatsButton()
