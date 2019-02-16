@@ -2675,7 +2675,7 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="1890"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="OqB-6j-o3t">
-                                        <rect key="frame" x="10" y="10" width="394" height="1850"/>
+                                        <rect key="frame" x="10" y="10" width="394" height="1540"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZCr-8F-BBR" customClass="CardView" customModule="Golfication" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="394" height="300"/>
@@ -2917,8 +2917,8 @@
                                                     <constraint firstItem="46c-ga-IS7" firstAttribute="leading" secondItem="fTf-mj-QzK" secondAttribute="leading" constant="16" id="mSj-UJ-o9o"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6wJ-lr-0Uy" customClass="CardView" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="1550" width="394" height="300"/>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6wJ-lr-0Uy" customClass="CardView" customModule="Golfication" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="1540" width="394" height="300"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Control" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8lI-G9-HWs">
                                                         <rect key="frame" x="16" y="16" width="51" height="19.5"/>
@@ -9183,14 +9183,14 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GFO-gD-CFf" customClass="CardView" customModule="Golfication" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="1240" width="394" height="300"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Strokes Gained Per Club" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KQD-Ce-SuD">
-                                                        <rect key="frame" x="16" y="16" width="167" height="19.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Strokes Gained Per Round" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KQD-Ce-SuD">
+                                                        <rect key="frame" x="16" y="16" width="179.5" height="19.5"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mIo-7p-xRu">
-                                                        <rect key="frame" x="184" y="18" width="50" height="16"/>
+                                                        <rect key="frame" x="196.5" y="18" width="50" height="16"/>
                                                         <color key="backgroundColor" red="1" green="0.78039215689999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="50" id="NzZ-SH-cax"/>

@@ -179,11 +179,43 @@ class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorI
         lblPutsVsHandicapAvg.isHidden = true
         lblAvgPuttsPHoleValue.isHidden = true
         if(isDemoUser){
+            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            var viewTag = 0
+            self.cardViewInfoArray = [(title:String,value:String)]()
             for v in self.puttingStackView.subviews{
                 if v.isKind(of: CardView.self){
                     let demoLabel = DemoLabel()
                     demoLabel.frame = CGRect(x: 0, y: v.frame.height/2-15, width: v.frame.width, height: 30)
                     v.addSubview(demoLabel)
+                    
+                    switch viewTag{
+                    case 0:
+                        self.cardViewInfoArray.append((title:"Putts Per Hole",value:StatsIntoConstants.puttsPerHole))
+                        break
+                    case 1:
+                        self.cardViewInfoArray.append((title:"Putts Breakup",value:StatsIntoConstants.puttsBreakup))
+                        break
+                    case 2:
+                        self.cardViewInfoArray.append((title:"Putting",value:StatsIntoConstants.putting))
+                        break
+                    case 3:
+                        self.cardViewInfoArray.append((title:"Putts Vs Handicap",value:StatsIntoConstants.puttVersusHandicap))
+                        break
+                    default: break
+                    }
+                    //Stats Info Button
+                    let statsInfoButton = StatsInfoButton()
+                    statsInfoButton.frame = CGRect(x: (self.view.frame.size.width)-50, y: 16, width: 25, height: 25)
+                    statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                    statsInfoButton.tintColor = UIColor.glfFlatBlue
+                    statsInfoButton.tag = viewTag
+                    if (v == cardViewPuttsPerHole){
+                        statsInfoButton.tintColor = UIColor.white
+                    }
+                    statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                    v.addSubview(statsInfoButton)
+                    viewTag = viewTag+1
                 }
             }
         }

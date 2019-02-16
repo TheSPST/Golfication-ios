@@ -1958,6 +1958,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             isContinueClicked = false
             Constants.deviceGolficationX = nil
             Constants.ble = nil
+            Constants.bleObserver = 0
             let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NextRoundVC") as! NextRoundVC
             viewCtrl.selectedMode = modeInt
             viewCtrl.scoringMode = self.scoringMode
@@ -2012,11 +2013,15 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     @IBAction func addFriendAction(sender: UIButton) {
-        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "SearchPlayerVC") as! SearchPlayerVC
-        viewCtrl.selectedMode = modeInt
-        viewCtrl.selectedTab = 2
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
-        popUpContainerView.isHidden = true
+        if Constants.deviceGameType == 1 && Constants.deviceGolficationX != nil{
+            self.view.makeToast("Multiplayer with GolficationX is Comming Soon.")
+        }else{
+            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "SearchPlayerVC") as! SearchPlayerVC
+            viewCtrl.selectedMode = modeInt
+            viewCtrl.selectedTab = 2
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            popUpContainerView.isHidden = true
+        }
     }
     
     @IBAction func skipAction(sender: UIButton) {

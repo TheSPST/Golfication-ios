@@ -29,6 +29,10 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
     @IBOutlet weak var headSpeedLineChart: LineChartView!
     @IBOutlet weak var avgSwingCircularVw: UICircularProgressRingView!
 
+    @IBOutlet weak var swingScoreView: UIView!
+    @IBOutlet weak var backSwingView: UIView!
+    @IBOutlet weak var tempoView: UIView!
+    @IBOutlet weak var handSpeedView: UIView!
     @IBOutlet weak var clubHeadSpeedView: UIView!
 
     @IBOutlet weak var backSwingUserImg: UIImageView!
@@ -42,9 +46,11 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
     var performanceMArray = NSMutableArray()
     var swingArray = NSMutableArray()
     var clubArray = [String]()
+    var cardViewInfoArray = [(title:String,value:String)]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setInfoButton()
         avgSwingCircularVw.fontColor = UIColor.clear
         self.avgSwingCircularVw.innerCapStyle = .square
         self.avgSwingCircularVw.outerCapStyle = .square
@@ -82,6 +88,51 @@ class PerformanceVC: UIViewController, IndicatorInfoProvider {
         setPerformanceData(tag: 0)
     }
     
+    func setInfoButton(){
+        let performanceSubViews = [swingScoreView,backSwingView,tempoView,handSpeedView,clubHeadSpeedView] as! [UIView]
+        self.cardViewInfoArray = [(title:String,value:String)]()
+        let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+        let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        for i in 0..<performanceSubViews.count{
+            switch i{
+            case 0:
+                self.cardViewInfoArray.append((title:"Swing Score",value:StatsIntoConstants.swingScore))
+                break
+            case 1:
+                self.cardViewInfoArray.append((title:"Back Swing",value:StatsIntoConstants.backswingAngle))
+                break
+            case 2:
+                self.cardViewInfoArray.append((title:"Swing Tempo",value:StatsIntoConstants.clubTempo))
+                break
+            case 3:
+                self.cardViewInfoArray.append((title:"Hand Speed",value:StatsIntoConstants.gripSpeed))
+                break
+            case 4:
+                self.cardViewInfoArray.append((title:"Clubhead Speed",value:StatsIntoConstants.clubheadSpeed))
+                break
+            default: break
+            }
+            let statsInfoButton = StatsInfoButton()
+            statsInfoButton.frame = CGRect(x: self.view.frame.size.width-50, y: 16, width: 25, height: 25)
+            if i == 4{
+            statsInfoButton.frame = CGRect(x: self.view.frame.size.width-50, y: 5, width: 25, height: 25)
+            }
+            statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+            statsInfoButton.tintColor = UIColor.glfFlatBlue
+            statsInfoButton.tag = i
+            statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+            performanceSubViews[i].addSubview(statsInfoButton)
+        }
+    }
+    
+    // MARK: - infoClicked
+    @objc func infoClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = cardViewInfoArray[sender.tag].title
+        viewCtrl.desc = cardViewInfoArray[sender.tag].value
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+
     func setClubHeadSpeed() {
         var ironCount = 0
         var hybridCount = 0

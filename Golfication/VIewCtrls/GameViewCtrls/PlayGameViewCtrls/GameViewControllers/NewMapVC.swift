@@ -6357,6 +6357,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnEndRound.isUserInteractionEnabled = false
         self.btnEndRound.layer.borderColor = UIColor.clear.cgColor
         self.btnEndRound.backgroundColor = UIColor.clear
+        if self.multiplayerButtons.count > 1{
+            self.stackViewForMultiplayer.isHidden = false
+        }
     }
     var deviceGameID = Int()
     func getGameId(swingKey:String){

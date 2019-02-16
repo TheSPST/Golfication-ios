@@ -44,16 +44,16 @@
                                                     <rect key="frame" x="10" y="12.5" width="75" height="75"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="OBM-RU-DJU">
-                                                            <rect key="frame" x="27" y="12.5" width="21" height="49.5"/>
+                                                            <rect key="frame" x="26.5" y="13" width="22.5" height="48.5"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Dg-ML-E9S">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="21" height="33.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="22.5" height="33"/>
                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="28"/>
                                                                     <color key="textColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Avg" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZaE-Bc-UBj">
-                                                                    <rect key="frame" x="0.0" y="33.5" width="21" height="16"/>
+                                                                    <rect key="frame" x="0.0" y="33" width="22.5" height="15.5"/>
                                                                     <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                                                                     <color key="textColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <nil key="highlightedColor"/>
@@ -70,19 +70,19 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XBs-Ah-ZQ3">
-                                                    <rect key="frame" x="95" y="12.5" width="153.5" height="20.5"/>
+                                                    <rect key="frame" x="95" y="12.5" width="153.5" height="20"/>
                                                     <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hrk-Ey-i7B">
-                                                    <rect key="frame" x="95" y="43" width="6" height="16"/>
+                                                    <rect key="frame" x="95" y="42.5" width="5.5" height="15.5"/>
                                                     <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                                                     <color key="textColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="meD-BY-WRG">
-                                                    <rect key="frame" x="256.5" y="12.5" width="108.5" height="18"/>
+                                                    <rect key="frame" x="256.5" y="12.5" width="108.5" height="17.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="108.5" id="w6n-h7-sLh"/>
                                                     </constraints>
@@ -622,10 +622,12 @@
                     <connections>
                         <outlet property="avgSwingCircularVw" destination="pn2-aj-qtp" id="qA3-Lh-Ewg"/>
                         <outlet property="backSwingUserImg" destination="79c-px-o0g" id="x24-SY-9BK"/>
+                        <outlet property="backSwingView" destination="lad-z1-GaU" id="a19-JS-Vbd"/>
                         <outlet property="clubHeadScrlView" destination="dop-t8-O9R" id="NJy-Cz-O0z"/>
                         <outlet property="clubHeadSpeedView" destination="tXZ-ck-lDq" id="yLu-Jc-PWd"/>
                         <outlet property="customColorSlider" destination="zuH-Jl-inB" id="M8d-J2-VZ7"/>
                         <outlet property="golfBagScrlView" destination="UEN-gn-TYQ" id="dLk-9l-3Fp"/>
+                        <outlet property="handSpeedView" destination="OVu-6A-F2h" id="MUE-h2-KrH"/>
                         <outlet property="headSpeedLineChart" destination="F1r-Ww-wJC" id="GDo-j9-5bY"/>
                         <outlet property="lblBackSwing" destination="jTB-kJ-5Zx" id="2Wo-lG-6ks"/>
                         <outlet property="lblBackSwingTempo" destination="5xs-LA-JyL" id="sZ0-Ah-1id"/>
@@ -637,6 +639,8 @@
                         <outlet property="lblTempoColon" destination="kmA-Ia-eo5" id="4lt-sm-pxi"/>
                         <outlet property="swingAngleCircular_Blue" destination="AJf-qV-4Rf" id="9Rt-0z-kmU"/>
                         <outlet property="swingAngleCircular_Red" destination="VPr-hC-gJe" id="DkD-ta-yca"/>
+                        <outlet property="swingScoreView" destination="xfi-VT-EHE" id="Ndq-2J-Vue"/>
+                        <outlet property="tempoView" destination="m4H-cm-AAY" id="IQv-lR-XLX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1ed-MG-v7c" userLabel="First Responder" sceneMemberID="firstResponder"/>

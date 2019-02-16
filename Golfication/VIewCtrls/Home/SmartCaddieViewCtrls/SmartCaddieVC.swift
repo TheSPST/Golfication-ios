@@ -427,11 +427,50 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         demoView.label.frame = CGRect(x: 0, y: 0, width: demoView.frame.width * 0.7, height: 44.0)
         demoView.btnPlayGame.frame = CGRect(x:demoView.frame.width * 0.75 , y: 10, width: demoView.frame.width * 0.2, height: 24.0)
         self.view.addSubview(demoView)
+        
+        let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+        let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        var viewTag = 0
+        self.cardViewInfoArray = [(title:String,value:String)]()
         for v in self.smartCaddieStackView.subviews{
             if v.isKind(of: CardView.self){
                 let demoLabel = DemoLabel()
                 demoLabel.frame = CGRect(x: 0, y: v.frame.height/2-15, width: v.frame.width, height: 30)
                 v.addSubview(demoLabel)
+                
+                switch viewTag{
+                case 0:
+                    self.cardViewInfoArray.append((title:"Club Distance",value:StatsIntoConstants.clubDistance))
+                    break
+                case 1:
+                    self.cardViewInfoArray.append((title:"Club Range",value:StatsIntoConstants.clubRange))
+                    break
+                case 2:
+                    self.cardViewInfoArray.append((title:"Short Game",value:StatsIntoConstants.shortGame))
+                    break
+                case 3:
+                    self.cardViewInfoArray.append((title:"Club Usage",value:StatsIntoConstants.clubUsage))
+                    break
+                case 4:
+                    self.cardViewInfoArray.append((title:"Strokes Gained Per Club",value:StatsIntoConstants.strokesGainedPerClub))
+                    break
+                case 5:
+                    self.cardViewInfoArray.append((title:"Club Control",value:StatsIntoConstants.control))
+                    break
+                default: break
+                }
+                //Stats Info Button
+                let statsInfoButton = StatsInfoButton()
+                statsInfoButton.frame = CGRect(x: (self.view.frame.size.width)-50, y: 16, width: 25, height: 25)
+                statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                statsInfoButton.tintColor = UIColor.glfFlatBlue
+                statsInfoButton.tag = viewTag
+                if (v == self.cardViewDistance){
+                    statsInfoButton.tintColor = UIColor.white
+                }
+                statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                v.addSubview(statsInfoButton)
+                viewTag = viewTag+1
             }
         }
     }

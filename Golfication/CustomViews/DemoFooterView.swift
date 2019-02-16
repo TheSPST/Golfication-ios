@@ -33,7 +33,7 @@ class DemoFooterView: UIView {
     func initSubviews() {
         
         label = UILabel()
-        label.textColor = UIColor.black
+        label.textColor = UIColor.glfWhite
         label.textAlignment = NSTextAlignment.center
         label.font = UIFont(name: "SFProDisplay-Regular", size: 15.0)
         label.numberOfLines = 2

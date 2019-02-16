@@ -91,11 +91,46 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         lblAvgGIRLikelinessValue.isHidden = true
         
         if(isDemoUser){
+            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            var viewTag = 0
+            self.cardViewInfoArray = [(title:String,value:String)]()
             for v in self.approachStackView.subviews{
                 if v.isKind(of: CardView.self){
                     let demoLabel = DemoLabel()
                     demoLabel.frame = CGRect(x: 0, y: v.frame.height/2-15, width: v.frame.width, height: 30)
                     v.addSubview(demoLabel)
+
+                    switch viewTag{
+                    case 0:
+                        self.cardViewInfoArray.append((title:"Approach Accuracy",value:StatsIntoConstants.approachAccuracy))
+                        break
+                    case 1:
+                        self.cardViewInfoArray.append((title:"Greens in Regulation (GIR)",value:StatsIntoConstants.GIR))
+                        break
+                    case 2:
+                        self.cardViewInfoArray.append((title:"Hole Proximity",value:StatsIntoConstants.holeProximity))
+                        break
+                    case 3:
+                        self.cardViewInfoArray.append((title:"GIR Trend",value:StatsIntoConstants.girTrend))
+                        break
+                    case 4:
+                        self.cardViewInfoArray.append((title:"GIR Likeliness",value:StatsIntoConstants.girLikeliness))
+                        break
+                    default: break
+                    }
+                    //Stats Info Button
+                    let statsInfoButton = StatsInfoButton()
+                    statsInfoButton.frame = CGRect(x: (self.view.frame.size.width)-50, y: 16, width: 25, height: 25)
+                    statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                    statsInfoButton.tintColor = UIColor.glfFlatBlue
+                    statsInfoButton.tag = viewTag
+                    if (v == cardViewApproach){
+                        statsInfoButton.tintColor = UIColor.white
+                    }
+                    statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                    v.addSubview(statsInfoButton)
+                    viewTag = viewTag+1
                 }
             }
         }else{

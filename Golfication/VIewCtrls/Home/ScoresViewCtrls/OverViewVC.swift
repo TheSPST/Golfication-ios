@@ -69,7 +69,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
         lblStrokesGainedPerClubAvg.isHidden = true
 
         if !Constants.isProMode {
-            self.setProLockedUI(targetView: self.strokeGainedChartView, title: "Strokes Gained Per Club")
+            self.setProLockedUI(targetView: self.strokeGainedChartView, title: "Strokes Gained Per Round")
             self.lblProSG.isHidden = true
 
         }
@@ -189,11 +189,51 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
         
         roundCardView.backgroundColor = UIColor.glfBluegreen
         if(isDemoUser){
+            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            var viewTag = 0
+            self.cardViewInfoArray = [(title:String,value:String)]()
             for v in self.overviewStackView.subviews{
                 if v.isKind(of: CardView.self){
                     let demoLabel = DemoLabel()
                     demoLabel.frame = CGRect(x: 0, y: v.frame.height/2-15, width: v.frame.width, height: 30)
                     v.addSubview(demoLabel)
+
+                    switch viewTag{
+                    case 0:
+                        self.cardViewInfoArray.append((title:"Average Round Scores",value:StatsIntoConstants.averageRoundScores))
+                        break
+                    case 1:
+                        self.cardViewInfoArray.append((title:"Score Distribution",value:StatsIntoConstants.scoreDistribution))
+                        break
+                    case 2:
+                        self.cardViewInfoArray.append((title:"Scoring",value:StatsIntoConstants.scoring))
+                        break
+                    case 3:
+                        self.cardViewInfoArray.append((title:"Par Average",value:StatsIntoConstants.parAverage))
+                        break
+                    case 4:
+                        self.cardViewInfoArray.append((title:"Strokes Gained",value:StatsIntoConstants.strokesGainedPerRound))
+                        break
+                    case 5:
+                        self.cardViewInfoArray.append((title:"Penalities Trend",value:StatsIntoConstants.penalties))
+                        break
+                    default: break
+                    }
+                    let statsInfoButton = StatsInfoButton()
+                    statsInfoButton.frame = CGRect(x: (self.view.frame.size.width)-50, y: 16, width: 25, height: 25)
+                    if viewTag == 4{
+                        statsInfoButton.frame = CGRect(x: (self.view.frame.size.width)-40, y: 16, width: 25, height: 25)
+                    }
+                    statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                    statsInfoButton.tintColor = UIColor.glfFlatBlue
+                    statsInfoButton.tag = viewTag
+                    if (v == roundCardView) || (v == self.strokeGainedChartView){
+                        statsInfoButton.tintColor = UIColor.white
+                    }
+                    statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                    v.addSubview(statsInfoButton)
+                    viewTag = viewTag+1
                 }
             }
         }

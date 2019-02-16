@@ -975,10 +975,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             else{
                 let alertVC = UIAlertController(title: "Alert", message: "Please finish the device setup first.", preferredStyle: UIAlertControllerStyle.alert)
                 let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-                    let storyboard = UIStoryboard(name: "Home", bundle: nil)
-                    let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
-                    viewCtrl.fromPublicProfile = false
-                    self.navigationController?.pushViewController(viewCtrl, animated: true)
+//                    let storyboard = UIStoryboard(name: "Home", bundle: nil)
+//                    let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
+//                    viewCtrl.fromPublicProfile = false
+//                    self.navigationController?.pushViewController(viewCtrl, animated: true)
+                    self.getGolfBagUpdate()
                 })
                 alertVC.addAction(action)
                 self.present(alertVC, animated: true, completion: nil)
@@ -1000,6 +1001,107 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         })
         alertVC.addAction(action)
         self.present(alertVC, animated: true, completion: nil)
+    }
+    // MARK: - golfBaagAction
+    func getGolfBagUpdate(){
+
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+            var golfBagArray = NSMutableArray()
+            var selectedClubs = NSMutableArray()
+            if let glfbag = snapshot.value as? NSMutableArray{
+                golfBagArray = glfbag
+                for i in 0..<golfBagArray.count{
+                    if let dict = golfBagArray[i] as? NSDictionary{
+                        selectedClubs.add(dict)
+                        for data in Constants.clubWithMaxMin where data.name == dict.value(forKey: "clubName") as! String{
+                            if (data.name).contains("Pu"){
+                                dict.setValue(30, forKey: "avgDistance")
+                                golfBagArray[i] = dict
+                                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":30])
+                            }else if(dict.value(forKey: "avgDistance") == nil){
+                                let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                                dict.setValue(avgDistance, forKey: "avgDistance")
+                                golfBagArray[i] = dict
+                                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":avgDistance])
+                            }
+                            
+                        }
+                    }
+                    else{
+                        let tempArray = snapshot.value as! NSMutableArray
+                        var golfBagData = [String: NSMutableArray]()
+                        for i in 0..<tempArray.count{
+                            let golfBagDict = NSMutableDictionary()
+                            golfBagDict.setObject("", forKey: "brand" as NSCopying)
+                            golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
+                            golfBagDict.setObject(tempArray[i], forKey: "clubName" as NSCopying)
+                            golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
+                            golfBagDict.setObject(false, forKey: "tag" as NSCopying)
+                            golfBagDict.setObject("", forKey: "tagName" as NSCopying)
+                            golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
+                            for data in Constants.clubWithMaxMin where data.name == tempArray[i] as! String{
+                                if (data.name).contains("Pu"){
+                                    golfBagDict.setObject(30, forKey: "avgDistance" as NSCopying)
+                                }else{
+                                    let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                                    golfBagDict.setObject(avgDistance, forKey: "avgDistance" as NSCopying)
+                                }
+                            }
+                            golfBagArray.replaceObject(at: i, with: golfBagDict)
+                            golfBagData = ["golfBag": golfBagArray]
+                            
+                            selectedClubs.add(golfBagDict)
+                        }
+                        if golfBagData.count>0{
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
+                        }
+                        break
+                    }
+                }
+            }
+            else{
+                let golfBagArray = NSMutableArray()
+                golfBagArray.addObjects(from: ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu"])
+                var golfBagData = [String: NSMutableArray]()
+                selectedClubs = NSMutableArray()
+                let tempArray = NSMutableArray()
+                
+                for i in 0..<golfBagArray.count{
+                    let golfBagDict = NSMutableDictionary()
+                    golfBagDict.setObject("", forKey: "brand" as NSCopying)
+                    golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
+                    golfBagDict.setObject(golfBagArray[i], forKey: "clubName" as NSCopying)
+                    golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
+                    golfBagDict.setObject(false, forKey: "tag" as NSCopying)
+                    golfBagDict.setObject("", forKey: "tagName" as NSCopying)
+                    golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
+                    for data in Constants.clubWithMaxMin where data.name == golfBagArray[i] as! String{
+                        if (data.name).contains("Pu"){
+                            golfBagDict.setObject(30, forKey: "avgDistance" as NSCopying)
+                        }else{
+                            let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                            golfBagDict.setObject(avgDistance, forKey: "avgDistance" as NSCopying)
+                        }
+                    }
+                    tempArray.insert(golfBagDict, at: i)
+                    golfBagData = ["golfBag": tempArray]
+                    
+                    selectedClubs.add(golfBagDict)
+                }
+                if golfBagData.count>0{
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                Constants.tempGolfBagArray = NSMutableArray()
+                Constants.tempGolfBagArray = NSMutableArray(array: golfBagArray)
+                let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
+                debugPrint("golfBagArray.count:",golfBagArray.count)
+                viewCtrl.golfBagArr = golfBagArray
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
+            })
+        }
     }
     // MARK: - mySwingAction
     @IBAction func mySwingBtnAction(_ sender: UIButton) {
@@ -1671,9 +1773,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     func setMyData() {
         
-        if !Constants.isProMode {
-            self.setProLockedUI(targetView: self.viewSGTab)
-        }
+//        if !Constants.isProMode {
+//            self.setProLockedUI(targetView: self.viewSGTab)
+//        }
         self.ifDemolblLine.isHidden = Constants.isDevice
         self.ifDemoShowStackView.isHidden = Constants.isDevice
 //        self.lblDemoStatsMySwing.isHidden = Constants.isDevice

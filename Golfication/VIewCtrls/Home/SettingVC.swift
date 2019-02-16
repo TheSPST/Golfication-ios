@@ -136,6 +136,39 @@ class SettingVC: UITableViewController {
                 Constants.skrokesGainedFilter = 0
                 Constants.distanceFilter = 0
                 Constants.onCourseNotification = 0
+                Constants.deviceGolficationX = nil
+                Constants.ble = nil
+                
+                Constants.deviceGameType = 0
+                Constants.tempGolfBagArray = NSMutableArray()
+                Constants.isTagSetupModified = false
+                Constants.baselineDict =  nil
+                Constants.strokesGainedDict = [NSMutableDictionary]()
+                Constants.isUpdateInfo = false
+                Constants.isProfileUpdated = false
+                Constants.clubWithMaxMin = [(name:String,max:Int,min:Int)]()
+                Constants.firmwareVersion = nil
+                Constants.oldFirmwareVersion = nil
+                Constants.canSkip = nil
+                Constants.gender = ""
+                Constants.handed = ""
+                Constants.handicap = ""
+                Constants.trial = false
+                Constants.tagClubNumber = [(tag:Int ,club:Int,clubName:String)]()
+                Constants.syncdArray = NSMutableArray()
+                Constants.tagClubNum = [(tag:Int, club: Int, clubName: String)]()
+                Constants.back9 = false
+                Constants.macAddress = nil
+                Constants.ResponseData = nil
+                Constants.charctersticsGlobalForWrite = nil
+                Constants.charctersticsGlobalForRead = nil
+                Constants.allMacAdrsDic = NSMutableDictionary()
+                Constants.OADFeedback = false
+                Constants.bleObserver = 0
+                Constants.fileName = String()
+                Constants.swingSessionKey = String()
+                Constants.fromStatsPost = false
+                Constants.benchmark_Key = String()
                 self.signOutCurrentUser()
             }
         }))

@@ -108,11 +108,49 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         lblSandAccuracyAvg.isHidden = true
         lblSandProximityAvg.isHidden = true
         if(isDemoUser){
+            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            var viewTag = 0
+            self.cardViewInfoArray = [(title:String,value:String)]()
             for v in self.chippingStackView.subviews{
                 if v.isKind(of: CardView.self){
                     let demoLabel = DemoLabel()
                     demoLabel.frame = CGRect(x: 0, y: v.frame.height/2-15, width: v.frame.width, height: 30)
                     v.addSubview(demoLabel)
+
+                    switch viewTag{
+                    case 0:
+                        self.cardViewInfoArray.append((title:"Chipping Accuracy",value:StatsIntoConstants.chippingAccuracy))
+                        break
+                    case 1:
+                        self.cardViewInfoArray.append((title:"Chip: Up and Down",value:StatsIntoConstants.chipUpDown))
+                        break
+                    case 2:
+                        self.cardViewInfoArray.append((title:"Chip Proximity",value:StatsIntoConstants.chipProximity))
+                        break
+                    case 3:
+                        self.cardViewInfoArray.append((title:"Sand: Up and Down",value:StatsIntoConstants.sandUpDown))
+                        break
+                    case 4:
+                        self.cardViewInfoArray.append((title:"Sand Accuracy",value:StatsIntoConstants.sandAccuracy))
+                        break
+                    case 5:
+                        self.cardViewInfoArray.append((title:"Sand Proximity",value:StatsIntoConstants.sandProximity))
+                        break
+                    default: break
+                    }
+                    //Stats Info Button
+                    let statsInfoButton = StatsInfoButton()
+                    statsInfoButton.frame = CGRect(x: (self.view.frame.size.width)-50, y: 16, width: 25, height: 25)
+                    statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                    statsInfoButton.tintColor = UIColor.glfFlatBlue
+                    statsInfoButton.tag = viewTag
+                    if (v == cardViewChippingAccuracy){
+                        statsInfoButton.tintColor = UIColor.white
+                    }
+                    statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                    v.addSubview(statsInfoButton)
+                    viewTag = viewTag+1
                 }
             }
         }
