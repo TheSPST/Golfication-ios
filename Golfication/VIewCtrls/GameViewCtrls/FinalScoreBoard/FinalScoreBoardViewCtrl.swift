@@ -175,7 +175,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     let label = UILabel()
     var myVal: Int = 0
     var shotMoreTan9 = false
-    
+    var cardViewInfoArray = [(title:String,value:String)]()
+
     @IBOutlet weak var timerLabel: UILabel!
     var countdownTimer: Timer!
 
@@ -209,7 +210,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         self.automaticallyAdjustsScrollViewInsets = false
         if fromGameImprovement{
             redirectToJoinFBGameImprovement()
-        }        
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRound"), object: nil)
 
         superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
@@ -1264,10 +1265,59 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         
         let originalImage1 = #imageLiteral(resourceName: "share")
         let sharBtnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        
+        let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+        let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         var viewTag = 0
+        self.cardViewInfoArray = [(title:String,value:String)]()
         for v in self.finalScoringStackView.subviews{
             if v.isKind(of: CardView.self){
                 self.cardViewMArray.add(v)
+                switch viewTag{
+                case 0:
+                    self.cardViewInfoArray.append((title:"Table View",value:""))
+                    break
+                case 1:
+                    self.cardViewInfoArray.append((title:"Score Trends",value:""))
+                    break
+                case 2:
+                    self.cardViewInfoArray.append((title:"Longest Drive",value:""))
+                    break
+                case 3:
+                    self.cardViewInfoArray.append((title:"Par Average",value:StatsIntoConstants.parAverage))
+                    break
+                case 4:
+                    self.cardViewInfoArray.append((title:"Monster Putt",value:""))
+                    break
+                case 5:
+                    self.cardViewInfoArray.append((title:"Scoring",value:StatsIntoConstants.scoring))
+                    break
+                case 6:
+                    self.cardViewInfoArray.append((title:"Drive Accuracy",value:StatsIntoConstants.driveAccuracy))
+                    break
+                case 7:
+                    self.cardViewInfoArray.append((title:"Closest to the hole",value:""))
+                    break
+                case 8:
+                    self.cardViewInfoArray.append((title:"Greens in Regulation (GIR)",value:StatsIntoConstants.GIR))
+                    break
+                case 9:
+                    self.cardViewInfoArray.append((title:"Strokes Gained",value:StatsIntoConstants.strokesGainedPerRound))
+                    break
+                case 10:
+                    self.cardViewInfoArray.append((title:"Chipping Accuracy",value:StatsIntoConstants.chippingAccuracy))
+                    break
+                case 11:
+                    self.cardViewInfoArray.append((title:"Approach Accuracy",value:StatsIntoConstants.approachAccuracy))
+                    break
+                case 12:
+                    self.cardViewInfoArray.append((title:"Sand Accuracy",value:StatsIntoConstants.sandAccuracy))
+                    break
+                case 13:
+                    self.cardViewInfoArray.append((title:"Spread Off The Tee",value:StatsIntoConstants.spreadOffTheTee))
+                    break
+                default: break
+                }
                 let shareStatsButton = ShareStatsButton()
                 shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
                 shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
@@ -1277,10 +1327,25 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 if (v == self.cardForStrokesGained) || (v == self.cardForChippingAccuracy1) || (v == self.cardForSandAccuracy) || (v == self.cardForOTT) || (v == self.cardForApproachAccuracy2){
                     shareStatsButton.tintColor = UIColor.white
                 }
-                viewTag = viewTag+1
+                //Stats Info Button
+                let statsInfoButton = StatsInfoButton()
+                statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                statsInfoButton.tintColor = UIColor.glfFlatBlue
+                statsInfoButton.tag = viewTag
+                if (v == self.cardForStrokesGained) || (v == self.cardForChippingAccuracy1) || (v == self.cardForSandAccuracy) || (v == self.cardForOTT) || (v == self.cardForApproachAccuracy2){
+                    statsInfoButton.tintColor = UIColor.white
+                }
+                statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+
                 if(v != self.card1TableView){
                     v.addSubview(shareStatsButton)
+                    if !(viewTag == 0 || viewTag == 1 || viewTag == 2 || viewTag == 4 || viewTag == 7){
+                        v.addSubview(statsInfoButton)
+                    }
                 }
+                viewTag = viewTag+1
+
                 if !Constants.isProMode {
                     
 //                    self.cardForChippingAccuracy1.makeBlurView(targetView: cardForChippingAccuracy1)
@@ -1306,6 +1371,27 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 }
             }
         }
+        // changes
+//        let cardPreimumArr = [cardForPremiumSG,cardForPremiumChippingAccuracy] as! [UIView]
+//        for i in 0..<cardPreimumArr.count{
+//            let j = 14+i
+//            switch j{
+//            case 14:
+//                self.cardViewInfoArray.append((title:"Strokes Gained",value:StatsIntoConstants.strokesGainedPerRound))
+//                break
+//            case 15:
+//                self.cardViewInfoArray.append((title:"Chipping Accuracy",value:StatsIntoConstants.chippingAccuracy))
+//                break
+//            default: break
+//            }
+//            let statsInfoButton = StatsInfoButton()
+//            statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-50), y: 16, width: 25, height: 25)
+//            statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+//            statsInfoButton.tintColor = UIColor.glfWhite
+//            statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+//            cardPreimumArr[i].addSubview(statsInfoButton)
+//        }
+        
         lblApproachPro.layer.cornerRadius = 3.0
         lblApproachPro.layer.masksToBounds = true
         lblChippingPro.layer.cornerRadius = 3.0
@@ -1358,6 +1444,14 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
 
     }
     
+    // MARK: - infoClicked
+    @objc func infoClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = cardViewInfoArray[sender.tag].title
+        viewCtrl.desc = cardViewInfoArray[sender.tag].value
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+
     @objc func handleSwipes(sender:UISwipeGestureRecognizer) {
         
         if (sender.direction == .right) {

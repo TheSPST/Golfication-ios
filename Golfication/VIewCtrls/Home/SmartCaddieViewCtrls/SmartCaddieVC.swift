@@ -795,7 +795,12 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
     }
     
     func deviceLockBtnPressed(button:UIButton) {
-        //print("deviceLockBtnPressed")
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "https://www.golfication.com/product/golfication-x/"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     func proLockBtnPressed(button:UIButton) {
 
@@ -804,10 +809,10 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
             self.navigationController?.pushViewController(mapViewController, animated: true)
         }
         else{
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
+            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            playButton.contentView.isHidden = true
+            playButton.floatButton.isHidden = true
         }
     }
 }

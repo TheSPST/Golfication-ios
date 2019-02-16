@@ -1366,10 +1366,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                 }
                 var swingKeys = NSDictionary()
+                self.totalSwingCount = 0
+                self.swingMArray = NSMutableArray()
                 if let swing = userData.value(forKey: "swingSession") as? NSDictionary{
                     swingKeys = swing
-                    self.totalSwingCount = 0
-                    self.swingMArray = NSMutableArray()
                 }
                 if let dataDic = swingKeys as? [String:Bool]{
                     let group = DispatchGroup()
@@ -1448,6 +1448,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                             group.notify(queue: .main, execute: {
                                                 self.progressView.hide(navItem: self.navigationItem)
                                                 self.lblDemoStatsMySwing.isHidden = false
+                                                self.isDemoStats = true
                                                 let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
                                                 let array: NSArray = self.swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
                                                 self.swingMArray.removeAllObjects()
@@ -1462,6 +1463,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             }
                         }else{
                             self.lblDemoStatsMySwing.isHidden = true
+                            self.isDemoStats = false
                             self.progressView.hide(navItem: self.navigationItem)
                             let sortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
                             let array: NSArray = self.swingMArray.sortedArray(using: [sortDescriptor]) as NSArray
@@ -1872,7 +1874,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     
     func deviceLockBtnPressed(button:UIButton) {
-        //print("deviceLockBtnPressed")
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "https://www.golfication.com/product/golfication-x/"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     //    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
     //        debugPrint("touched")

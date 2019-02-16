@@ -179,7 +179,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         sectionNames = ["Drivers", "Hybrids", "Woods", "Irons", "Wedges", "Putters"]
         sectionItems = [["Dr"],
                         ["1h","2h","3h","4h","5h","6h","7h"],
-                        ["3w","4w","5w","7W"],
+                        ["3w","4w","5w","7w"],
                         ["1i","2i","3i","4i","5i","6i","7i","8i","9i"],
                         ["Pw","Gw","Sw","Lw"],
                         ["Pu"]

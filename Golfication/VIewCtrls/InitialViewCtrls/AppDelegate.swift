@@ -54,7 +54,7 @@
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
         // Override point for customization after application launch.
-        Fabric.sharedSDK().debug = true
+        Fabric.sharedSDK().debug = false
         FirebaseOptions.defaultOptions()?.deepLinkURLScheme = "dlscheme"
         GMSServices.provideAPIKey("AIzaSyBiBmJwKydauA_8VfDlaYAg4C1FZImkAI8")
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
