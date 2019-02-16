@@ -78,7 +78,9 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
         viewCtrl.title = cardViewInfoArray[sender.tag].title
         viewCtrl.desc = cardViewInfoArray[sender.tag].value
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        viewCtrl.fromMap = true
+        let navCtrl = UINavigationController(rootViewController: viewCtrl)
+        self.present(navCtrl, animated: true, completion: nil)
     }
     
     func setCurrentScrollPage(i:Int) {
@@ -126,9 +128,9 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
             default: break
             }
             let statsInfoButton = StatsInfoButton()
-            statsInfoButton.frame = CGRect(x: self.view.frame.size.width-30, y: 16, width: 25, height: 25)
+            statsInfoButton.frame = CGRect(x: self.shotTopViews[5].superview!.frame.size.width-50, y: 25, width: 25, height: 25)
             statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
-            statsInfoButton.tintColor = UIColor.glfFlatBlue
+            statsInfoButton.tintColor = UIColor.white
             statsInfoButton.tag = i
             statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
             shotTopViews[i].addSubview(statsInfoButton)

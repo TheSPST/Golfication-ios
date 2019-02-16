@@ -444,104 +444,127 @@ class CourseData:NSObject{
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var shotsDetails = [(club: String, distance: Double, strokesGained: Double, swingScore: String,endingPoint:String,penalty:Bool)]()
     var scoring = [(hole:Int,par:Int,players:NSMutableDictionary)]()
-    func processShots(hole:Int){
+    func processShots(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring") { (snapshot) in
+            var scoringData = [NSMutableDictionary]()
+            if let dict = snapshot.value as? [NSMutableDictionary]{
+                scoringData = dict
+            }
+            DispatchQueue.main.async(execute: {
+                var i = 0
+                for data in scoringData{
+                    if let playersData = data.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
+                        if i == self.scoring.count{
+                            return
+                        }else{
+                            self.startProcessing(playersData: playersData, hole: i)
+                        }
+                    }
+                    i += 1
+                }
+
+            })
+        }
+    }
+    func processSingleShots(hole:Int){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)") { (snapshot) in
             var playersData = NSMutableDictionary()
-            self.shotsDetails.removeAll()
-            self.positionsOfCurveLines.removeAll()
-            self.positionsOfDotLine.removeAll()
-            self.positionsOfDotLine.append(self.centerPointOfTeeNGreen[hole].tee)
-            self.positionsOfDotLine.append(self.centerPointOfTeeNGreen[hole].green)
             if let dict = snapshot.value as? NSMutableDictionary{
                 playersData = dict
             }
             DispatchQueue.main.async(execute: {
-                var wantToDrag = false
-                var shots = [NSMutableDictionary]()
-                let holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
-                if let sho = playersData.value(forKey: "shots") as? NSArray{
-                    wantToDrag = sho.count > 1 ? true:false
-                    if holeOut && sho.count == 1{
-                        wantToDrag = true
-                    }
-                    for i in 0..<sho.count{
-                        let shot = sho[i] as! NSMutableDictionary
-                        if let dat = shot.value(forKey: "clubDetected") as? Bool{
-                            if !dat{
-                                let latLng = CLLocationCoordinate2D(latitude: shot.value(forKey: "lat1") as! Double, longitude: shot.value(forKey: "lng1") as! Double)
-                                var lie = self.callFindPositionInsideFeature(position: latLng, holeIndex: hole)
-                                let distance = GMSGeometryDistance(latLng, self.centerPointOfTeeNGreen[hole].green)
-                                if i == 0{
-                                    lie = "T"
-                                }
-                                let recommendedClub = self.clubReco(dist: distance, lie: lie)
-                                shot.setValue(recommendedClub, forKey: "club")
-                                debugPrint(recommendedClub)
-                            }
-                            shots.append(shot)
-                        }else{
-                            shots.append(shot)
-                        }
-                    }
-                    
-                    var i = 0
-                    self.penaltyShots.removeAll()
-                    for data in shots{
-                        let distance = data.value(forKey: "distance") as? Double
-                        let club = data.value(forKey: "club") as! String
-                        let strokGaind = data.value(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double
-                        let endingPoints = data.value(forKey: "end") as? String
-                        let penalty = data.value(forKey: "penalty") as! Bool
-                        self.penaltyShots.append(penalty)
-                        let startingPoint = data.value(forKey: "start") as? String
-                        self.shotsDetails.append((club: club, distance: distance ?? 0.0, strokesGained: strokGaind ?? 0.0, swingScore: startingPoint ?? "calculating",endingPoint:endingPoints ?? "calculationg ",penalty:penalty))
-                        self.positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: data.value(forKey: "lat1") as! CLLocationDegrees, longitude: data.value(forKey: "lng1") as! CLLocationDegrees))
-                        self.positionsOfDotLine[0] = (self.positionsOfCurveLines.last!)
-                        if(holeOut) && i == shots.count-1{
-                            debugPrint("shotsCount:",shots.count)
-                            if(data.value(forKey: "lat2") != nil){
-                                self.positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: data.value(forKey: "lat2") as! CLLocationDegrees, longitude: data.value(forKey: "lng2") as! CLLocationDegrees))
-                            }else{
-                                self.positionsOfCurveLines.append(self.centerPointOfTeeNGreen[hole].green)
-                            }
-                        }
-                        i += 1
-                    }
-                    
-                    playersData.setValue(shots, forKey: "shots")
-                    let playerDict = NSMutableDictionary()
-                    playerDict.setObject(playersData, forKey: Auth.auth().currentUser!.uid as NSCopying)
-                    if let scoring = Constants.matchDataDic.value(forKey: "scoring") as? NSArray{
-                        let sco = scoring
-                        (sco[hole] as! NSMutableDictionary).setValue(playersData, forKey: Auth.auth().currentUser!.uid)
-                        Constants.matchDataDic.setValue(sco, forKey: "scoring")
-                    }
-                    self.scoring[hole].players.setValue(playersData, forKey: Auth.auth().currentUser!.uid)
-                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":false] as [AnyHashable : Any])
-                    if wantToDrag{
-                        for k in 0..<shots.count{
-                            if(k == 0){
-                                self.uploadStatsWithDragging(shot: 1,playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
-                            }
-                            else if(k == self.positionsOfCurveLines.count-1){
-                                self.uploadStatsWithDragging(shot: k , playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
-                            }
-                            else{
-                                self.uploadStatsWithDragging(shot: k, playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
-                                self.uploadStatsWithDragging(shot: k + 1, playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
-                            }
-                        }
-                    }
-                }
-                UIApplication.shared.keyWindow?.makeToast("Processing Hole \(hole+1)")
-                if hole+1 == self.scoring.count{
-                    return
-                }else{
-                    self.processShots(hole: hole+1)
-                }
+                self.startProcessing(playersData:playersData,hole:hole)
             })
         }
     }
+
+    func startProcessing(playersData:NSMutableDictionary,hole:Int){
+        self.shotsDetails.removeAll()
+        self.positionsOfCurveLines.removeAll()
+        self.positionsOfDotLine.removeAll()
+        self.positionsOfDotLine.append(self.centerPointOfTeeNGreen[hole].tee)
+        self.positionsOfDotLine.append(self.centerPointOfTeeNGreen[hole].green)
+        debugPrint("hole:",hole)
+        var wantToDrag = false
+        var shots = [NSMutableDictionary]()
+        let holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
+        let isSwing = playersData.value(forKey: "swing") as? Bool ?? true
+        if let sho = playersData.value(forKey: "shots") as? NSArray, isSwing{
+            wantToDrag = sho.count > 1 ? true:false
+            if holeOut && sho.count == 1{
+                wantToDrag = true
+            }
+            for i in 0..<sho.count{
+                let shot = sho[i] as! NSMutableDictionary
+                if let dat = shot.value(forKey: "clubDetected") as? Bool{
+                    if !dat{
+                        let latLng = CLLocationCoordinate2D(latitude: shot.value(forKey: "lat1") as! Double, longitude: shot.value(forKey: "lng1") as! Double)
+                        var lie = self.callFindPositionInsideFeature(position: latLng, holeIndex: hole)
+                        let distance = GMSGeometryDistance(latLng, self.centerPointOfTeeNGreen[hole].green)
+                        if i == 0{
+                            lie = "T"
+                        }
+                        let recommendedClub = self.clubReco(dist: distance, lie: lie)
+                        shot.setValue(recommendedClub, forKey: "club")
+                    }
+                    shots.append(shot)
+                }else{
+                    shots.append(shot)
+                }
+            }
+            
+            var i = 0
+            self.penaltyShots.removeAll()
+            for data in shots{
+                let distance = data.value(forKey: "distance") as? Double
+                let club = data.value(forKey: "club") as! String
+                let strokGaind = data.value(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double
+                let endingPoints = data.value(forKey: "end") as? String
+                let penalty = data.value(forKey: "penalty") as! Bool
+                self.penaltyShots.append(penalty)
+                let startingPoint = data.value(forKey: "start") as? String
+                self.shotsDetails.append((club: club, distance: distance ?? 0.0, strokesGained: strokGaind ?? 0.0, swingScore: startingPoint ?? "calculating",endingPoint:endingPoints ?? "calculationg ",penalty:penalty))
+                self.positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: data.value(forKey: "lat1") as! CLLocationDegrees, longitude: data.value(forKey: "lng1") as! CLLocationDegrees))
+                self.positionsOfDotLine[0] = (self.positionsOfCurveLines.last!)
+                if(holeOut) && i == shots.count-1{
+                    if(data.value(forKey: "lat2") != nil){
+                        self.positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: data.value(forKey: "lat2") as! CLLocationDegrees, longitude: data.value(forKey: "lng2") as! CLLocationDegrees))
+                    }else{
+                        self.positionsOfCurveLines.append(self.centerPointOfTeeNGreen[hole].green)
+                    }
+                }
+                i += 1
+            }
+            
+            playersData.setValue(shots, forKey: "shots")
+            let playerDict = NSMutableDictionary()
+            playerDict.setObject(playersData, forKey: Auth.auth().currentUser!.uid as NSCopying)
+            if let scoring = Constants.matchDataDic.value(forKey: "scoring") as? NSArray{
+                let sco = scoring
+                (sco[hole] as! NSMutableDictionary).setValue(playersData, forKey: Auth.auth().currentUser!.uid)
+                Constants.matchDataDic.setValue(sco, forKey: "scoring")
+            }
+            self.scoring[hole].players.setValue(playersData, forKey: Auth.auth().currentUser!.uid)
+            ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":false] as [AnyHashable : Any])
+            if wantToDrag{
+                for k in 0..<shots.count{
+                    if(k == 0){
+                        self.uploadStatsWithDragging(shot: 1,playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
+                    }
+                    else if(k == self.positionsOfCurveLines.count-1){
+                        self.uploadStatsWithDragging(shot: k , playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
+                    }
+                    else{
+                        self.uploadStatsWithDragging(shot: k, playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
+                        self.uploadStatsWithDragging(shot: k + 1, playerId: Auth.auth().currentUser!.uid,holeIndex:hole,isDraggingMarker:true,holeOutFlag:holeOut)
+                    }
+                }
+            }
+            UIApplication.shared.keyWindow?.makeToast("Processing Hole \(hole+1)")
+        }
+    }
+    
+    
     func uploadStatsWithDragging(shot:Int,playerId:String,holeIndex:Int,isDraggingMarker:Bool,holeOutFlag:Bool){
         let girDict = NSMutableDictionary()
         let faiDict = NSMutableDictionary()
@@ -604,7 +627,6 @@ class CourseData:NSObject{
             if(shot-1 < shotsValue.count){
                 let clubValue = shotsValue[shot-1].value(forKey: "club") as! String
                 let isPenaltyShot = shotsValue[shot-1].value(forKey: "penalty") as! Bool
-                debugPrint(shot)
                 shotsValue[shot-1] = self.getShotDetails(shot:shot,club:clubValue,isPenalty: isPenaltyShot, hole: holeIndex,isDraggingMarker:isDraggingMarker, holeOutFlag: holeOutFlag)
                 shotsDict.setValue(shotsValue, forKey: "shots")
                 self.scoring[holeIndex].players.setValue(shotsDict, forKey: playerId)

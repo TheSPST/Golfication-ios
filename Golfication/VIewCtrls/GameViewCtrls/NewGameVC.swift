@@ -1698,7 +1698,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                     NotificationCenter.default.addObserver(self, selector: #selector(self.continueCourseData(_:)), name: NSNotification.Name(rawValue: "continueCourseData"), object: nil)
                                     self.courseData.startingIndex = Constants.startingHole == "" ? 1:Int(Constants.startingHole)
                                     self.courseData.gameTypeIndex = Constants.gameType == "9 holes" ? 9:18
-                                    self.courseData.getGolfCourseDataFromFirebase(courseId: "course_\(Constants.selectedGolfID)")
+                                    if self.courseData.centerPointOfTeeNGreen.isEmpty{
+                                        self.courseData.getGolfCourseDataFromFirebase(courseId: "course_\(Constants.selectedGolfID)")
+                                    }
                                     self.courseData.isContinue = true
                                     self.isCourseDataCount = 1
                                 }
@@ -2467,7 +2469,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
            checkScoringData()
         }
         else{
-            saveData()
+            saveData(totalThru: self.checkHoleOutZero())
         }
     }
     
@@ -2476,35 +2478,33 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     func checkScoringData(){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        self.unSyncdIndex = 0
+//        self.unSyncdIndex = 0
+        self.scoring.removeAll()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring") { (snapshot) in
-            
             var scoringArray =  NSArray()
             if snapshot.value != nil{
                 scoringArray = snapshot.value as! NSArray
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
+                var holeOutCount = 0
                 if scoringArray.count>0{
                     for i in 0..<scoringArray.count{
                         let dic = scoringArray[i] as! NSDictionary
                         for (key,value) in dic{
                             if key as! String == Auth.auth().currentUser!.uid{
                                 let keyVal = value as! NSDictionary
-                                if keyVal.value(forKey: "holeOut") as! Bool == true{
-                                    if let shotsArray = keyVal.value(forKey: "shots") as? NSMutableArray{
-                                        for j in 0..<shotsArray.count{
-                                            let myDic = shotsArray[j] as! NSDictionary
-                                            if let distance = myDic.value(forKey: "distance") as? Double
-                                            {
-                                                debugPrint("distance",distance)
-                                                self.isSyncd = true
-                                            }
-                                            else{
-                                                self.unSyncdIndex = i+1
-                                                self.isSyncd = false
-                                                break
-                                            }
+                                if let holeOut = keyVal.value(forKey: "holeOut") as? Bool,holeOut{
+                                    holeOutCount += 1
+                                }
+                                if let shotsArray = keyVal.value(forKey: "shots") as? NSMutableArray{
+                                    for j in 0..<shotsArray.count{
+                                        let myDic = shotsArray[j] as! NSDictionary
+                                        if let distance = myDic.value(forKey: "distance") as? Double{
+                                            debugPrint("distance",distance)
+                                        }else{
+                                            ref.child("matchData/\(Constants.matchId)/scoring/\(i)/\(Auth.auth().currentUser!.uid)/shotTracking").setValue(shotsArray[j])
+                                            ref.child("matchData/\(Constants.matchId)/scoring/\(i)/\(Auth.auth().currentUser!.uid)/shots/\(j)").setValue(nil)
                                         }
                                     }
                                 }
@@ -2512,25 +2512,12 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         }
                     }
                 }
-                if self.unSyncdIndex>0 && !self.isSyncd{
-                    let currentHoleWhilePlaying = NSMutableDictionary()
-                    currentHoleWhilePlaying.setObject("\(self.unSyncdIndex)", forKey: "currentHole" as NSCopying)
-                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
-
-                    let emptyAlert = UIAlertController(title: "Alert", message: "Please sync hole \(self.unSyncdIndex)", preferredStyle: UIAlertControllerStyle.alert)
-                    emptyAlert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { (action: UIAlertAction!) in
-                        self.startContinueAction(Any.self)
-                    }))
-                    self.present(emptyAlert, animated: true, completion: nil)
-                }
-                else{
-                    self.saveData()
-                }
+                self.saveData(totalThru: holeOutCount)
             })
         }
     }
     
-    func saveData(){
+    func saveData(totalThru:Int){
         
         // ------------------ changed by Amit -----------
         for data in self.players{
@@ -2545,7 +2532,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         //-----------------------------------
         var holIndex = -1
-        let totalThru: Int = self.checkHoleOutZero()
         FBSomeEvents.shared.logGameEndedEvent(holesPlayed: totalThru, valueToSum: Double(Constants.mode))
         for i in 0..<self.detailedScore.count{
             let dic = self.detailedScore[i] as! NSMutableDictionary
@@ -2597,7 +2583,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let generateStats = GenerateStats()
         generateStats.matchKey = Constants.matchId
         generateStats.generateStats()
-        let totalThru: Int = self.checkHoleOutZero()
+//        let totalThru: Int = self.checkHoleOutZero()
     }
     @objc func statsCompleted(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)

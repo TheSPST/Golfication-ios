@@ -9,29 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/InitialViewCtrls/RefreshSubscriptionManager.swift"
-            timestampString = "571739641.835785"
+            filePath = "Golfication/VIewCtrls/InitialViewCtrls/IAPHandler.swift"
+            timestampString = "571934842.323318"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
-            landmarkName = "receiptValidationUsingSwifty()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Golfication/VIewCtrls/InitialViewCtrls/RefreshSubscriptionManager.swift"
-            timestampString = "571739641.836117"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
-            landmarkName = "receiptValidationUsingSwifty()"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "restorePurchase()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

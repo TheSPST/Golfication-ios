@@ -629,7 +629,7 @@ class BLE: NSObject {
                         if totalH != holeWithSwing.last!.hole{
                             param.append(UInt8(holeWithSwing.last!.hole+1))
                         }else{
-                            self.courseData.processShots(hole: 0)
+                            self.courseData.processShots()
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             return
                         }
@@ -1466,17 +1466,21 @@ extension BLE: CBPeripheralDelegate {
         ref.child("matchData/\(Constants.matchId)/scoring/\(nextData.hole-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":true] as [AnyHashable : Any])
         if self.currentCommandData.first != UInt8(92){
              NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+        }else{
+            courseData.processSingleShots(hole: nextData.hole-1)
         }
-
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: nextData.hole-1)
     }
     
     func updateHoleOutShot(){
         if self.holeNo != 0{
             ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
+            ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":true])
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeNo-1)
             if self.currentCommandData.first != UInt8(92){
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+            }else{
+                courseData.processSingleShots(hole: self.holeNo-1)
             }
         }
     }
@@ -1916,7 +1920,7 @@ extension BLE: CBPeripheralDelegate {
                                 self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
                                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                             }else{
-                                self.courseData.processShots(hole: 0)
+                                self.courseData.processShots()
                                 if(self.isFinished){
                                     self.randomGenerator()
                                     // changed by Amit

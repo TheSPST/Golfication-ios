@@ -26,7 +26,7 @@ struct StatsIntoConstants{
     
     static let driveAccuracy = "This is the traditional \"Fairways Hit\" stat, that we made more meaningful for our golfers - through benchmarks and insights.\n\nIf you're hitting 8 fairways out of 14 as a 12-HCP golfer, you're much better than golfers like you. But the same Fairways Hit stat would make you just an average 5-HCP golfer. It's also really interesting to note that golfers tend to miss right more often than left. The misses become more significant for 20+ HCP golfers."
     
-    static let driveDistance = "This golf stat considers distance off the tee on Par 4s and Par 5s. The colours of the shots tell you if you have hit or missed the fairway, but it doesn't take into account the magnitude of your miss. So a red dot might indicate a shot in the first cut of rough, or deep in the trees.\n\nTo understand your driving better, look at the Golfication Stat called \"Strokes Gained - Off The Tee\". A fully green chart that's moving upwards is indicative of great progress in this area."
+    static let driveDistance = "This golf stat considers distance off the tee on Par 4s and Par 5s. The colours of the shots tell you if you hitting most of your drives above or below your average driving distance. If the trendline is going up it means you making progress and are hitting your drives longer on average.\n\nTo understand your driving better, look at the Golfication Stat called \"Strokes Gained - Off The Tee\". A fully green chart that\'s moving upwards is indicative of great progress in this area."
     
     static let fairwayHitTrend = "This golf stat is a snapshot of your Off The Tee performance. Are you hitting more fairways now than you were two weeks ago? The stat automatically shows you how many fairways you hit out of all the attempts you made.\n\nExample: Hitting 6 fairways out of 7 in a nine-hole round is remarkable; in contrast, hitting 6 out of 14 is poor."
     
@@ -52,7 +52,7 @@ struct StatsIntoConstants{
     
     static let sandUpDown = "Our A.I. Caddie, Eddie, feels that bunker-shots require specific, dedicated focus. They mustn't be clubbed with other stats. When you're in a greenside bunker, your skill level depends on whether you can get up and down in two strokes. This sand-save stat simply shows you the number of times you holed-out from a greenside bunker in two strokes, divided by the total number of opportunities you had."
     
-    static let sandAccuracy = "This is a scatter plot which helps you visualize your bunker-shot accuracy from the greenside bunker; it does not include chipping from the fairway or rough. The helpful insight from our A.I. Caddie, Eddie, tells you how long a putt you leave after a shot from the sand."
+    static let sandAccuracy = "This is a scatter plot which helps you visualize your bunker-shot accuracy from the greenside bunker; it does not include chipping from the fairway or rough. This stat tells you wether you are hitting your bunker shots long or short, and helps you make adjustments accordingly."
     
     static let sandProximity = "You ought to be attacking the pin, trying to hole out, or leaving yourself with the shortest putt possible after a greenside bunker shot. This stat captures the lengths of putts you leave after a sand shot. The lower this stat, the better your sand technique is."
     

@@ -24,6 +24,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var btnHandiLeft: UIButton!
     @IBOutlet weak var btnHandiRight: UIButton!
     @IBOutlet weak var btnSearch: UIButton!
+    @IBOutlet weak var btnHandiMinus: UIButton!
+    @IBOutlet weak var btnHandiPlus: UIButton!
+
     @IBOutlet weak var btnSkip: UILocalizedButton!
 
     @IBOutlet weak var searchContainerView: UIView!
@@ -63,6 +66,33 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     var clubsBtn = [UIButton]()
     var currentPageIndex = 0
 
+    @IBAction func handiPlusAction(_ sender: Any) {
+        if self.sliderHandicapNumber.value >= 0.0 && self.sliderHandicapNumber.value < 54.0{
+            self.btnCheckbox.isSelected = false
+            self.btnCheckbox.setBackgroundImage(nil, for: .normal)
+            self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
+
+            let plusVal = (((self.sliderHandicapNumber.value*10).rounded()/10) + 0.1)
+            self.sliderHandicapNumber.value = Float(Double(plusVal).rounded(toPlaces: 1))
+            self.lblHandicap.text = "\(Double(plusVal).rounded(toPlaces: 1))"
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\(Double(plusVal).rounded(toPlaces: 1))"] as [AnyHashable:Any])
+            Constants.handicap = "\(Double(plusVal).rounded(toPlaces: 1))"
+        }
+    }
+    
+    @IBAction func handiMinusAction(_ sender: Any) {
+        if self.sliderHandicapNumber.value > 0.0{
+            self.btnCheckbox.isSelected = false
+            self.btnCheckbox.setBackgroundImage(nil, for: .normal)
+            self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
+
+        let minusVal = (((self.sliderHandicapNumber.value*10).rounded()/10) - 0.1)
+            self.sliderHandicapNumber.value = Float(Double(minusVal).rounded(toPlaces: 1))
+        self.lblHandicap.text = "\(Double(minusVal).rounded(toPlaces: 1))"
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\(Double(minusVal).rounded(toPlaces: 1))"] as [AnyHashable:Any])
+        Constants.handicap = "\(Double(minusVal).rounded(toPlaces: 1))"
+        }
+    }
     // MARK: – ScrollViewDelegate
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
         
@@ -132,14 +162,13 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
         Constants.handed = "Right"
-        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"-"] as [AnyHashable:Any])
-        Constants.handicap = "-"
         
-        self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "check"), for: .normal)
-        self.btnCheckbox.imageView?.sizeToFit()
-        self.btnCheckbox.isSelected = true
-        self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
-//        self.sliderHandicapNumber.isEnabled = false
+        self.sliderHandicapNumber.value = 18.0
+        self.lblHandicap.text = "\((self.sliderHandicapNumber.value*10).rounded()/10)"//(value as! NSString).floatValue
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
+        Constants.handicap = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
+        self.btnCheckbox.isSelected = false
+        self.btnCheckbox.setBackgroundImage(nil, for: .normal)
         
         golfBagTblView.layer.cornerRadius = 3.0
         handiContainerView.layer.cornerRadius = 3.0
@@ -526,7 +555,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             self.btnCheckbox.setBackgroundImage(nil, for: .normal)
             self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
 //            self.sliderHandicapNumber.isEnabled = true
-            self.lblHandicap.text = "Handicap \((self.sliderHandicapNumber.value*10).rounded()/10)"//(value as! NSString).floatValue
+            self.lblHandicap.text = "\((self.sliderHandicapNumber.value*10).rounded()/10)"//(value as! NSString).floatValue
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
             Constants.handicap = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
         }
@@ -545,13 +574,13 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     // MARK: sliderChangedAction
     @IBAction func sliderChangedAction(_ sender: Any) {
-        self.lblHandicap.text = "\(Int(self.sliderHandicapNumber.value))"
-        
+        self.lblHandicap.text = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
+
         self.btnCheckbox.isSelected = false
         self.btnCheckbox.setBackgroundImage(nil, for: .normal)
         self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
 
-        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\(Int(self.sliderHandicapNumber.value))"] as [AnyHashable:Any])
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
         Constants.handicap = "\(Int(self.sliderHandicapNumber.value))"
     }
     

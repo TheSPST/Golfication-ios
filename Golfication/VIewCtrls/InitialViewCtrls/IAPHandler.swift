@@ -186,6 +186,8 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
                 case .failed:
                     //  print("failed")
                     SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
+                    NetworkActivityIndicatorManager.NetworkOperationFinished()
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PaymentCancelled"), object: nil)
                     break
                 case .restored:
                     //  print("restored")

@@ -237,7 +237,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             return false
         }
     }
-    var totalTimer : TimeInterval = 1
+    var totalTimer : TimeInterval = 2
     /*var isGolfX : Bool{
         if Constants.ble == nil{
             return false
@@ -1658,11 +1658,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.shareShotsDissmiss(_:)), name: NSNotification.Name(rawValue: "ShareShots"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
-        self.courseData.startingIndex = self.startingIndex
-        self.courseData.gameTypeIndex = self.gameTypeIndex
+
         if(!self.isHoleByHole){
-            self.startingIndex = Int(self.matchDataDict.value(forKeyPath: "startingHole") as? String ?? "1") ?? 1
-            self.gameTypeIndex = self.matchDataDict.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+
         }else{
             if let players = self.matchDataDict.value(forKeyPath: "player") as? NSMutableDictionary{
                 for data in players{
@@ -1678,12 +1676,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             }
         }
+        self.startingIndex = Int(self.matchDataDict.value(forKeyPath: "startingHole") as? String ?? "1") ?? 1
+        self.gameTypeIndex = self.matchDataDict.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+        self.courseData.startingIndex = self.startingIndex
+        self.courseData.gameTypeIndex = self.gameTypeIndex
         courseId = "course_\(self.matchDataDict.value(forKeyPath: "courseId") as! String)"
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
         if self.courseData.numberOfHoles.count != 0{
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
         }else{
+            self.courseData.isContinue = self.isContinue
             self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
         }
     }
@@ -5118,7 +5121,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                         clubInTrack = newDict.value(forKey: "club") as? String
                                         self.positionsOfDotLine[0].latitude = newDict.value(forKey: "lat1") as! CLLocationDegrees
                                         self.positionsOfDotLine[0].longitude = newDict.value(forKey: "lng1") as! CLLocationDegrees
-                                        self.isPintMarker = newDict.value(forKey: "hole") as! Bool
+                                        if let hole = newDict.value(forKey: "hole") as? Bool{
+                                            self.isPintMarker = hole
+                                        }
                                         self.isTracking = true
                                         self.btnNext.isHidden = isPintMarker
                                         self.btnPrev.isHidden = isPintMarker

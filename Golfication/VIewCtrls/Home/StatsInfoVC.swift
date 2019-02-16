@@ -12,27 +12,24 @@ class StatsInfoVC: UIViewController {
     @IBOutlet weak var lblDesc: UILabel!
 
     var desc = String()
-
+    var fromMap = Bool()
     @IBAction func backAction(_ sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
+        if fromMap{
+            fromMap = false
+            self.dismiss(animated: true, completion: nil)
+        }
+        else{
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        lblDesc.text = desc
         
         let attributedString = NSMutableAttributedString(string: desc)
-        
-        // *** Create instance of `NSMutableParagraphStyle`
         let paragraphStyle = NSMutableParagraphStyle()
-        
-        // *** set LineSpacing property in points ***
-        paragraphStyle.lineSpacing = 5 // Whatever line spacing you want in points
-        
-        // *** Apply attribute to string ***
+        paragraphStyle.lineSpacing = 5
         attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
-        
-        // *** Set Attributed String to your label ***
         lblDesc.attributedText = attributedString
     }
     
