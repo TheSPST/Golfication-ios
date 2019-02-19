@@ -184,9 +184,9 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         if(superClassName! == "MyFeedVC"){
             self.navigationController?.popViewController(animated: true)
         }else{
-//            let dashboardVC = navigationController!.viewControllers.filter { $0 is NewHomeVC }.first!
-//            navigationController!.popToViewController(dashboardVC, animated: true)
-            self.navigationController?.popToRootViewController(animated: true)
+            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = tabBarCtrl
         }
     }
     @IBAction func editRoundAction(_ sender: Any) {
@@ -388,6 +388,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                             else{
                                 viewMoreStats.isHidden = true
                                 viewProStatsUnlocked.isHidden = false
+                                self.cardForStrokesGained.isHidden = true
+                                self.cardForChippingAccuracy1.superview!.isHidden = true
                                 btnStatsBecomePro.setCornerWithRadius(color: UIColor.clear.cgColor, radius: 20.0)
                                 startTimer(totalTime: (components.second!))
                             }

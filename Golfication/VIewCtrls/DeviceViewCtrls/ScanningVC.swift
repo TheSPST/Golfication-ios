@@ -228,7 +228,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
             if(snapshot.value != nil){
                 if let dataDi = snapshot.value as? [String:Bool]{
                     dataDic = dataDi
-                    self.totalPracticeSession = dataDi.count+1
+//                    self.totalPracticeSession = dataDi.count+1
 //                    self.title = "Practice Session \(dataDi.count+1)"
                 }
             }
@@ -284,6 +284,14 @@ class ScanningVC: UIViewController, BluetoothDelegate {
                             }
                         }
                         else{
+                            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)/playType") { (snapshot) in
+                                if let data = snapshot.value as? String{
+                                    if data.contains(find: "practice"){
+                                        self.totalPracticeSession += 1
+                                    }
+                                }
+                                
+                            }
                             group.leave()
                         }
                     }
@@ -322,9 +330,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
 //                        }else{
                             self.showPopUp()
 //                        }
-
-
-
+//                        self.title = "Practice Sessions \(self.totalPracticeSession)"
                     })
                 })
                 
@@ -349,7 +355,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
             self.golfXPopupView.removeFromSuperview()
             self.startSwingingSV.isHidden = false
             self.viewHaveDevice.isHidden = false
-        
+            self.title = "Practice Sessions \(self.totalPracticeSession)"
         })
 //        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "readyToTakeSwing"))
     }

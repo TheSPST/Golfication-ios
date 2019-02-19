@@ -36,8 +36,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
     @IBOutlet weak var lblProSG: UILabel!
     @IBOutlet weak var lblStrokesGainedPerClubAvg: UILabel!
     @IBOutlet weak var strokesGainedPerClubBarChart: BarChartView!
-    var totalCaddie = Int()
-
+    
     var bestRound = Double()
     var avgScore = Double()
     var scores = [Scores]()
@@ -107,7 +106,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
 
         for data in strokesGainedData{
             dataPoints.append(data.clubType.localized())
-            dataValues.append((data.clubStrokesGained / Double(totalCaddie)).rounded(toPlaces: 1))
+            dataValues.append((data.clubStrokesGained / Double(scores.count)).rounded(toPlaces: 1))
             print(data)
         }
         self.strokesGainedPerClubBarChart.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: self.strokesGainedPerClubBarChart, color: UIColor.glfWhite, barWidth: 0.4,valueColor: UIColor.glfWhite.withAlphaComponent(0.5))

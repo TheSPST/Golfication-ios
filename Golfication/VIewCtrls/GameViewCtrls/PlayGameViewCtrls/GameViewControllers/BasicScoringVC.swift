@@ -114,7 +114,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }))
         var descardRound = "Discard Round".localized()
         if Constants.isEdited{
-            descardRound = "Delete Round"
+            descardRound = "Delete Round".localized()
         }
         let discardOption = (UIAlertAction(title: descardRound, style: UIAlertActionStyle.default, handler: { action in
             self.discardPressed(button: UIButton().self)
@@ -279,7 +279,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             Constants.matchId.removeAll()
             Constants.isUpdateInfo = true
-            self.navigationController?.popToRootViewController(animated: true)
             Constants.addPlayersArray.removeAllObjects()
             if Constants.mode>0{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
@@ -289,6 +288,9 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         self.scoreData.removeAll()
         scoreData.removeAll()
+        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.rootViewController = tabBarCtrl
     }
     func saveAndviewScore(){
 
@@ -313,10 +315,23 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 self.nextAction(self.btnNext)
             }))
             emptyAlert.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
-                self.progressView.show()
-                let generateStats = GenerateStats()
-                generateStats.matchKey = Constants.matchId
-                generateStats.generateStats()
+                var playerIndex = Int()
+                for data in self.playersButton{
+                    if(data.id == Auth.auth().currentUser!.uid){
+                        break
+                    }
+                    playerIndex += 1
+                }
+                if self.holeOutforAppsFlyer[playerIndex] == 0{
+                    self.exitWithoutSave()
+                }else if self.holeOutforAppsFlyer[playerIndex] > 8{
+                    self.progressView.show()
+                    let generateStats = GenerateStats()
+                    generateStats.matchKey = Constants.matchId
+                    generateStats.generateStats()
+                }else{
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
+                }
             }))
             self.present(emptyAlert, animated: true, completion: nil)
         }

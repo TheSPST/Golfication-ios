@@ -319,9 +319,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     @IBAction func btnMenuAction(_ sender: Any) {
         self.holeOutforAppsFlyer = self.checkHoleOutZero(playerId: Auth.auth().currentUser!.uid)
-        var descardRound = "Discard Round"
+        var descardRound = "Discard Round".localized()
         if Constants.isEdited{
-            descardRound = "Delete Round"
+            descardRound = "Delete Round".localized()
         }
         ActionSheetStringPicker.show(withTitle: "Menu", rows: ["Save Round","Restart Round","\(descardRound)"], initialSelection: 0, doneBlock: { (picker, value, index) in
             if value != 1{

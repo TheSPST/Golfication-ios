@@ -147,7 +147,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         
         if Constants.isEdited{
-            self.exitGamePopUpView.btnDiscardText = "Delete Round"
+            self.exitGamePopUpView.btnDiscardText = "Delete Round".localized()
         }
         self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) " + "holes completed".localized()
         self.exitGamePopUpView.isHidden = false
@@ -584,7 +584,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(matchId)").removeValue()
             matchId.removeAll()
             Constants.isUpdateInfo = true
-            self.navigationController?.popToRootViewController(animated:true)
             Constants.addPlayersArray.removeAllObjects()
             if Constants.mode>0{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
@@ -593,10 +592,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
         }
         scoring.removeAll()
-        
+        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.rootViewController = tabBarCtrl
     }
 
-    
     @objc func statsCompleted(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide()

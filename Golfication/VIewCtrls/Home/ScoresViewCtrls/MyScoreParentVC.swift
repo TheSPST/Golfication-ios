@@ -335,8 +335,6 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         child3.checkCaddie = self.checkCaddie
         child4.checkCaddie = self.checkCaddie
         child5.checkCaddie = self.checkCaddie
-
-        child1.totalCaddie = self.totalCaddie
         
         let index = self.buttonBarView.selectedIndex
         

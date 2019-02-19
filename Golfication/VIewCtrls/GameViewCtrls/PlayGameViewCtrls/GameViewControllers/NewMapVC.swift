@@ -1376,7 +1376,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             self.exitGamePopUpView.labelText = "\(self.holeOutforAppsFlyer[playerIndex])/\(scoring.count) " + "holes completed".localized()
             if Constants.isEdited{
-                self.exitGamePopUpView.btnDiscardText = "Delete Round"
+                self.exitGamePopUpView.btnDiscardText = "Delete Round".localized()
             }
             self.exitGamePopUpView.isHidden = false
         }
@@ -1392,7 +1392,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             Constants.matchId.removeAll()
             Constants.isUpdateInfo = true
-            self.navigationController!.popToRootViewController(animated: true)
             Constants.addPlayersArray.removeAllObjects()
             if(self.swingMatchId.count > 0){
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
@@ -1409,6 +1408,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         self.scoring.removeAll()
         scoring.removeAll()
+        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.rootViewController = tabBarCtrl
     }
     func saveAndviewScore(){
         
@@ -1435,6 +1437,18 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["summaryTimer":Timestamp])
             }
         }
+        let players = NSMutableDictionary()
+        if let tempArray = self.matchDataDict.object(forKey: "player")! as? NSMutableDictionary{
+            for (k,v) in tempArray{
+                let dict = v as! NSMutableDictionary
+                if(k as! String == Auth.auth().currentUser!.uid){
+                    dict.addEntries(from: ["status":4])
+                    dict.addEntries(from: ["summaryTimer":Timestamp])
+                }
+                players.setValue(dict, forKey: k as! String)
+            }
+        }
+        self.matchDataDict.setValue(players, forKey: "player")
         Constants.addPlayersArray = NSMutableArray()
         self.updateFeedNode()
         Constants.isUpdateInfo = true
@@ -7494,7 +7508,18 @@ extension NewMapVC : UITableViewDelegate,UITableViewDataSource{
             if (self.penaltyShots[indexPath.row]){
                 cell.initDesign(shot: "\(indexPath.row + 1)", club: "  ", distance: "   ", landedOn: "Penalty",color:UIColor.glfDustyRed ,sg: "    ")
             }else{
-                cell.initDesign(shot: "\(indexPath.row + 1)", club: "\(self.shotsDetails[indexPath.row].club)", distance: "\(Int(self.shotsDetails[indexPath.row].distance / (Constants.distanceFilter == 1 ? Constants.YARD:1))) \(suffix)", landedOn: endingPointWithColor.0.localized(),color:endingPointWithColor.1 ,sg: "\(prefix)\(self.shotsDetails[indexPath.row].strokesGained.rounded(toPlaces: 2))")
+                var distance = self.shotsDetails[indexPath.row].distance
+                if self.shotsDetails[indexPath.row].endingPoint == self.shotsDetails[indexPath.row].swingScore{
+                    if Constants.distanceFilter == 0{
+                        distance = distance * 3
+                        suffix = "ft"
+                    }else{
+                      distance = self.shotsDetails[indexPath.row].distance / (Constants.distanceFilter == 1 ? Constants.YARD:1)
+                    }
+                }else{
+                    distance = self.shotsDetails[indexPath.row].distance / (Constants.distanceFilter == 1 ? Constants.YARD:1)
+                }
+                cell.initDesign(shot: "\(indexPath.row + 1)", club: "\(self.shotsDetails[indexPath.row].club)", distance: "\(Int(distance)) \(suffix)", landedOn: endingPointWithColor.0.localized(),color:endingPointWithColor.1 ,sg: "\(prefix)\(self.shotsDetails[indexPath.row].strokesGained.rounded(toPlaces: 2))")
             }
         }
         self.btnTotalShotsNumber.isHidden = !holeOutFlag

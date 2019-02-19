@@ -2381,7 +2381,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }))
         var descardRound = "Discard Round".localized()
         if Constants.isEdited{
-            descardRound = "Delete Round"
+            descardRound = "Delete Round".localized()
         }
         let discardOption = (UIAlertAction(title: descardRound, style: UIAlertActionStyle.default, handler: { action in
             self.exitWithoutSave()
@@ -2447,7 +2447,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
             
             Constants.isUpdateInfo = true
-            self.navigationController?.popViewController(animated: true)
             Constants.addPlayersArray.removeAllObjects()
             if Constants.mode>0{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
@@ -2458,6 +2457,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         self.scoring.removeAll()
         scoring.removeAll()
+        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.rootViewController = tabBarCtrl
     }
     
     func saveAndviewScore(){
@@ -2568,7 +2570,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             if(totalThru > 8){
                 self.generateStatsData()
             }else{
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
+                if totalThru == 0{
+                    self.exitWithoutSave()
+                }else{
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
+                }
             }
         }
     }

@@ -68,7 +68,9 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         settings.style.buttonBarItemsShouldFillAvailableWidth = true
         settings.style.buttonBarLeftContentInset = 0
         settings.style.buttonBarRightContentInset = 0
-        
+        if self.count != nil{
+            self.title = "Practice Sessions \(self.count!)"
+        }
         super.viewDidLoad()
         
         superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!

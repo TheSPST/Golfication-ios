@@ -59,6 +59,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     @IBOutlet weak var actvtIndView: UIActivityIndicatorView!
     var progressView = SDLoader()
     @IBOutlet weak var  whatISProHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var  viewUpgradeNowHConstraint: NSLayoutConstraint!
 
     var fromPublicProfile = Bool()
     
@@ -624,6 +625,9 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                 self.whatISProHeightConstraint.constant = 0.0
                 self.view.layoutIfNeeded()
                 
+                self.viewProMembership.isHidden = false // Show only when user has subscription.
+                self.viewUpgradeNowHConstraint.constant = 0.0
+                
                 self.viewUpgradeInactive.isHidden = true
                 self.viewUpgradeFreeActive.isHidden = true
                 self.viewUpgradeActive.isHidden = false
@@ -687,11 +691,13 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                 case .orderedAscending?    :   debugPrint("currentDate is earlier than expDate")
 
                 case .orderedDescending?    :   debugPrint("currentDate is later than expDate")
+                self.viewUpgradeNowHConstraint.constant = 99.0
                 self.viewUpgradeInactive.isHidden = false
                 self.viewUpgradeFreeActive.isHidden = true
                 self.viewUpgradeActive.isHidden = true
                 self.lblInactivePrice.text = "Your Pro Membership has been expired"
                 case .orderedSame?         :   debugPrint("Both dates are same")
+                self.viewUpgradeNowHConstraint.constant = 99.0
                 self.viewUpgradeInactive.isHidden = false
                 self.viewUpgradeFreeActive.isHidden = true
                 self.viewUpgradeActive.isHidden = true
@@ -700,22 +706,24 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                 }
             }
             else{
-                self.viewTopWhatIsPro.isHidden = false
-                self.whatISProHeightConstraint.constant = 57.0
-                
+//                self.viewTopWhatIsPro.isHidden = false // Hide "what is pro" permanantly
+//                self.whatISProHeightConstraint.constant = 57.0 // Hide "what is pro" permanantly
+                self.viewTopWhatIsPro.isHidden = true
+                self.whatISProHeightConstraint.constant = 0.0
+
                 self.lblInactivePrice.text = "free for 30 days".localized()
                 if Constants.trial == true{
                     self.lblInactivePrice.text = "Your Pro Membership has been expired"
                     self.viewTopWhatIsPro.isHidden = true
                     self.whatISProHeightConstraint.constant = 0.0
                 }
+                self.viewUpgradeNowHConstraint.constant = 99.0
                 self.viewUpgradeInactive.isHidden = false
                 self.viewUpgradeFreeActive.isHidden = true
                 self.viewUpgradeActive.isHidden = true
             }
             self.btnUpdradeNow.isEnabled = true
             self.setupInitialUI()
-            self.viewProMembership.isHidden = false
         }
     }
     
