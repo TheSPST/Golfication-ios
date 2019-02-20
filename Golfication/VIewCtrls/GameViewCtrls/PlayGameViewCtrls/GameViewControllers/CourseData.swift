@@ -532,6 +532,13 @@ class CourseData:NSObject{
                     }else{
                         self.positionsOfCurveLines.append(self.centerPointOfTeeNGreen[hole].green)
                     }
+                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/shotTracking").removeValue()
+
+                }else if i == shots.count-1{
+                    playersData.setValue(shots[i], forKey: "shotTracking")
+                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shotTracking":shots.last!] as [AnyHashable : Any])
+                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/shots/\(i)").removeValue()
+                    shots.removeLast()
                 }
                 i += 1
             }
@@ -562,6 +569,7 @@ class CourseData:NSObject{
             }
             UIApplication.shared.keyWindow?.makeToast("Processing Hole \(hole+1)")
         }
+        
     }
     
     
