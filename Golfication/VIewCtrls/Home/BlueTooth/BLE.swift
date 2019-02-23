@@ -1312,21 +1312,20 @@ extension BLE: CBPeripheralDelegate {
                     }
                     if(shotArr.count > 0){
                         debugPrint("totrlaCount : ",shotArr.count)
-                        ref.child("swingSessions/\(self.swingMatchId)/").updateChildValues(["swings":shotArr], withCompletionBlock: { (error, ref) in
-                            let dict = NSMutableDictionary()
-                            dict.addEntries(from: ["id" : self.swingMatchId])
-                            dict.addEntries(from: ["gameId":self.currentGameId])
-                            if (Constants.deviceGameType == 2){
-                                if !self.isFirst{
-                                    if !self.isFinished{
-                                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwing"), object: dict)
-                                        self.isFirst = true
-                                    }
-                                }else{
-                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwingInside"), object: dict)
+                        ref.child("swingSessions/\(self.swingMatchId)/").updateChildValues(["swings":shotArr])
+                        let dict = NSMutableDictionary()
+                        dict.addEntries(from: ["id" : self.swingMatchId])
+                        dict.addEntries(from: ["gameId":self.currentGameId])
+                        if (Constants.deviceGameType == 2){
+                            if !self.isFirst{
+                                if !self.isFinished{
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwing"), object: dict)
+                                    self.isFirst = true
                                 }
+                            }else{
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwingInside"), object: dict)
                             }
-                        })
+                        }
                     }else{
                         let dict = NSMutableDictionary()
                         dict.addEntries(from: ["id" : self.swingMatchId])

@@ -46,7 +46,7 @@ class SwingSessionVC: ButtonBarPagerTabStripViewController, DemoFooterViewDelega
         settings.style.buttonBarLeftContentInset = 0
         settings.style.buttonBarRightContentInset = 0
         super.viewDidLoad()
-        
+        self.navigationItem.rightBarButtonItem = nil
         if isDemoStats{
             self.title = "My Swings Demo"
             setDemoFotter()

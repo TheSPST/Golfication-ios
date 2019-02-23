@@ -31,6 +31,7 @@
     var window: UIWindow?
     var locationManager = CLLocationManager()
     let notificationDelegate = UYLNotificationDelegate()
+    var isInternet = true
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
@@ -62,6 +63,7 @@
         Fabric.with([Crashlytics.self])
         self.logUser()
         DynamicLinks.performDiagnostics(completion: nil)
+        Database.database().isPersistenceEnabled = true
         // for bluetooth
         /*
         if let launchOptions = launchOptions {
@@ -206,10 +208,12 @@
     @objc func networkStatusChanged(_ notification: NSNotification) {
         let userInfo = (notification as NSNotification).userInfo
         if userInfo!["Status"] as? String == "Offline" {
-            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
-//            self.window?.makeToast("No internet connection..", duration: 1.0, position: .bottom)
+//            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+//            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+//            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+            self.isInternet = false
+        }else{
+            self.isInternet = true
         }
     }
     

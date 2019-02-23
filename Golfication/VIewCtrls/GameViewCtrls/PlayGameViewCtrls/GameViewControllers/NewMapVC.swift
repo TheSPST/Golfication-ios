@@ -228,7 +228,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var lblHCPHeader: UILabel!
     
     @IBOutlet weak var btnGolficationX: UIButton!
-    
+    @IBOutlet weak var btnAddNotes: UIButton!
+
     var isBackground : Bool{
         let state = UIApplication.shared.applicationState
         if state == .background {
@@ -1633,7 +1634,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         UIApplication.shared.endBackgroundTask(backgroundTask)
         backgroundTask = UIBackgroundTaskInvalid
     }
-    
+    var forTutorial = [Bool]()
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
@@ -1662,6 +1663,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             if Constants.onCourseNotification == 1{
                 self.registerBackgroundTask()
             }
+        }
+        self.forTutorial = [Bool]()
+        for _ in 0..<4{
+            self.forTutorial.append(false)
         }
         self.mapView.delegate = self
         self.initialSetup()
@@ -1827,10 +1832,19 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         var holeOut = false
                         var wantToDrag = false
                         var shots = [NSMutableDictionary]()
+                        var shotTracking = NSMutableDictionary()
+                        if let shotTrack = playersData.value(forKey: "shotTracking") as? NSMutableDictionary{
+                            shotTracking = shotTrack
+                        }
                         if let sho = playersData.value(forKey: "shots") as? NSArray{
                             wantToDrag = sho.count > 0 ? true:false
                             for i in 0..<sho.count{
-                                let shot = sho[i] as! NSMutableDictionary
+                                var shot = NSMutableDictionary()
+                                if let sh = sho[i] as? NSMutableDictionary{
+                                    shot = sh
+                                }else{
+                                    shot = shotTracking
+                                }
                                 if let dat = shot.value(forKey: "clubDetected") as? Bool{
                                     if !dat{
                                         let latLng = CLLocationCoordinate2D(latitude: shot.value(forKey: "lat1") as! Double, longitude: shot.value(forKey: "lng1") as! Double)
@@ -1860,7 +1874,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.scoring[hole].players[self.playerIndex] = playerDict
                         holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
                         if(holeOut){
+                            ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shotTracking":NSNull()] as [AnyHashable : Any])
                             self.uploadPutting(playerId: self.selectedUserId)
+                        }else{
+                            ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shotTracking":shots.last ?? NSNull()] as [AnyHashable : Any])
+                            if shots.count > 0 && shots.last!.count < 9{
+                               shots.removeLast()
+                            ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shots] as [AnyHashable : Any])
+                            }
                         }
                         if self.holeIndex == hole{
                             ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":false] as [AnyHashable : Any])
@@ -4987,6 +5008,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
 
     func updateMap(indexToUpdate:Int){
         self.calculateSwingDataForCurrentHole()
+        btnAddNotes.isHidden = true
+        if self.selectedUserId.contains(find: "\(Auth.auth().currentUser!.uid)"){
+            btnAddNotes.isHidden = false
+        }
         var indexToUpdate = indexToUpdate
         if courseData.centerPointOfTeeNGreen.count-1 < indexToUpdate{
             let c = courseData.centerPointOfTeeNGreen.count
@@ -6486,7 +6511,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
                         if let thePresenter = self.navigationController?.visibleViewController{
                             if (thePresenter.isKind(of:NewMapVC.self)){
-                                showCaseTargetLine.show()
+                                if !self.forTutorial[0]{
+                                    showCaseTargetLine.show()
+                                    self.forTutorial[0] = true
+                                }
                             }
                         }
                         timerForMiddleMarker.invalidate()
@@ -6513,7 +6541,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
                     if let thePresenter = self.navigationController?.visibleViewController{
                         if (thePresenter.isKind(of:NewMapVC.self)){
-                            showCaseSelectClub.show()
+                            if !self.forTutorial[1]{
+                                showCaseSelectClub.show()
+                                self.forTutorial[0] = true
+                                self.forTutorial[1] = true
+                            }
                         }
                     }
                     timerForMiddleMarker.invalidate()
@@ -6534,7 +6566,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
                     if let thePresenter = self.navigationController?.visibleViewController{
                         if (thePresenter.isKind(of:NewMapVC.self)){
-                            showcaseTrackShots.show()
+                            if !self.forTutorial[2]{
+                                showcaseTrackShots.show()
+                                self.forTutorial[0] = true
+                                self.forTutorial[1] = true
+                                self.forTutorial[2] = true
+                            }
                         }
                     }
                     timerForMiddleMarker.invalidate()
@@ -6555,7 +6592,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && self.shotCount != 0 && (self.dragMarkShowCase == nil){
                     if let thePresenter = self.navigationController?.visibleViewController{
                         if (thePresenter.isKind(of:NewMapVC.self)){
-                            showCaseHoleOut.show()
+                            if !self.forTutorial[3]{
+                                showCaseHoleOut.show()
+                                self.forTutorial[0] = true
+                                self.forTutorial[1] = true
+                                self.forTutorial[2] = true
+                                self.forTutorial[3] = true
+                            }
                         }
                     }
                     timerForMiddleMarker.invalidate()
@@ -6737,8 +6780,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
                 
                 self.lblPlayersName.text = "\(playersButton[i].name)'s Score"
+                self.btnAddNotes.isHidden = true
                 if(playersButton[i].id == Auth.auth().currentUser!.uid){
                     self.lblPlayersName.text = "Your Score".localized()
+                        self.btnAddNotes.isHidden = false
                 }
                 btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
             }
@@ -6746,6 +6791,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 btn1.setCornerWithCircle(color: UIColor.clear.cgColor)
             }
         }
+    }
+    
+    @IBAction func addNotesAction(_ sender: Any) {
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+        viewCtrl.notesCourseID = self.matchDataDict.value(forKeyPath: "courseId") as! String
+        viewCtrl.notesHoleNum = "hole\(self.scoring[self.holeIndex].hole)"
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     func getScoreFromMatchData(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/") { (snapshot) in

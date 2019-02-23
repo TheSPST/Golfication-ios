@@ -107,9 +107,23 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var first = false
 
     @IBOutlet weak var fairwayHitContainerSV: UIStackView!
-    
+    @IBOutlet weak var btnAddNotes: UIButton!
+
     // Menu
     var stackViewMenu : UIStackView!
+    @IBAction func addNotesAction(_ sender: Any) {
+        var matchDataDictionary = NSMutableDictionary()
+        if(self.isAcceptInvite){
+            matchDataDictionary = self.matchDataDic
+        }else{
+            matchDataDictionary = matchDataDic
+        }
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+        viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
+        viewCtrl.notesHoleNum = "hole\(self.scoring[self.holeIndex].hole)"
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+    
     @IBAction func btnActionMenu(_ sender: UIButton) {
         if(stackViewMenu.isHidden){
             stackViewMenu.isHidden = false
@@ -2460,6 +2474,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     // Update Map - removing all markers and features from map and reload map with new Features and details.
     func updateMap(indexToUpdate:Int){
+        btnAddNotes.isHidden = true
+        if self.playerId.contains(find: "\(Auth.auth().currentUser!.uid)"){
+            btnAddNotes.isHidden = false
+        }
         self.suggestedMarker1.map = nil
         self.suggestedMarker2.map = nil
         var indexToUpdate = indexToUpdate

@@ -158,7 +158,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }else{
                     Constants.handicap = handic
                 }
-
+                
             }
         }
     }
@@ -205,7 +205,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }
                 Constants.ble.currentGameId = self.swingGameId
                 Constants.ble.isSetupScreen = self.fromSetup
-
+                
                 Constants.ble.startScanning()
                 showPopUp()
             }
@@ -230,15 +230,15 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.golfXPopupView.removeFromSuperview()
         }
         if sharedInstance != nil{
-           self.sharedInstance.delegate = nil
+            self.sharedInstance.delegate = nil
         }
         fromGolfBarBtn = false
         self.timeOutTimer.invalidate()
-
+        
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "75_Percent_Updated"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "Scanning_Time_Out"))
-
+        
         let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
             self.dismiss(animated: true, completion: nil)
@@ -253,7 +253,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         NotificationCenter.default.addObserver(self, selector: #selector(self.SeventyFivePercentUpdated(_:)), name: NSNotification.Name(rawValue: "75_Percent_Updated"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateScreen(_:)), name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.ScanningTimeOut(_:)), name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
         
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
@@ -267,7 +267,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         popUpContainerView.isHidden = true
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DiscardCancel"))
     }
-
+    
     @objc func timerAction() {
         self.timeOutTimer.invalidate()
         self.noDeviceAvailable()
@@ -324,7 +324,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func noDeviceAvailable() {
-
+        
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         self.lblScanStatus.text = "Couldn't find your device"
         self.deviceCircularView.setProgressWithAnimationGolfX(duration: 0.0, fromValue: 0.0, toValue: 0.0)
@@ -389,7 +389,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         Constants.ble.stopScanning()
         Constants.deviceGameType = 1
-//        Constants.ble.sendThirdCommand()
+        //        Constants.ble.sendThirdCommand()
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "updateScreen"))
         updateScreenBLE()
     }
@@ -661,7 +661,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         isAccept += 1
         self.getActiveMatches()
         selectedGameTypeFromFirebase()
-
+        
         if(isShowCase) && Constants.matchId.count == 0{
             DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
                 //                self.startShowcase()
@@ -795,7 +795,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @IBAction func homeCourseAction(_ sender: Any) {
         debugPrint("HomeCourseAction")
         self.progressView.show()
-
+        
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails") { (snapshot) in
             
             if(snapshot.value != nil){
@@ -1331,17 +1331,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
     func selectedGameTypeFromFirebase() {
-    
         if  !(Constants.selectedGolfID == "") {
             self.progressView.show()
             let golfId = "course_\(Constants.selectedGolfID)"
             self.checkRangeFinderHoleData()
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)") { (snapshot) in
-                if snapshot.value != nil{
-                    
-                    DispatchQueue.main.async(execute: {
-                        let golfData = snapshot.value as! NSDictionary
-                        
+                var golfData = NSDictionary()
+                if let golf = snapshot.value as? NSDictionary{
+                    golfData = golf
+                }
+                DispatchQueue.main.async(execute: {
+                    if golfData.count != 0{
                         if let parArray = golfData.object(forKey: "par") as? NSArray{
                             
                             if parArray.count == 18{
@@ -1505,33 +1505,89 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                             //self.deselectGOlfXView()
                         }
                         else{
+                            if self.scoringMode == "rangeFinder" || self.scoringMode == "classic"{
+                                self.playGolfXView.isHidden = true
+                                self.mappingGolfXView.isHidden = false
+                                self.lblLegacyAppMode.isHidden = true
+                                self.golficationXView.isHidden = false
+                                self.navigationItem.rightBarButtonItem = nil
+                                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourseRequest/\(Auth.auth().currentUser!.uid)") { (snapshot) in
+                                    var dataDic = NSDictionary()
+                                    if(snapshot.childrenCount > 0){
+                                        dataDic = snapshot.value as! NSDictionary
+                                        for (key,_) in dataDic{
+                                            if let keyVal = key as? Int{
+                                                if keyVal == Int(Constants.selectedGolfID){
+                                                    self.btnRequestMapping.isHidden = true
+                                                }
+                                            }
+                                            else if let keyVal = key as? String{
+                                                if keyVal == Constants.selectedGolfID{
+                                                    self.btnRequestMapping.isHidden = true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                self.lblLegacyAppMode.isHidden = true
+                                self.golficationXView.isHidden = true
+                                self.playGolfXView.isHidden = true
+                                self.navigationItem.rightBarButtonItem = nil
+                                self.mappingGolfXView.isHidden = true
+                            }
                             self.playOnCourseAction(self.btnPlayOnCourse)
                         }
-                    })
-                }
-                else{
-                    self.progressView.hide()
-                    self.lblLegacyAppMode.isHidden = true
-                    self.golficationXView.isHidden = true
-                    self.playOnCourseAction(self.btnPlayOnCourse)
-                }
+                    }else{
+                        self.progressView.hide()
+                        self.lblLegacyAppMode.isHidden = true
+                        self.golficationXView.isHidden = true
+                        self.playOnCourseAction(self.btnPlayOnCourse)
+                    }
+                })
             }
         }
     }
     
     @IBAction func btnActionForRequestMapping(_ sender: UIButton) {
-        if(Auth.auth().currentUser!.uid.count > 1){
-            ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues([Constants.selectedGolfID:Timestamp] as [AnyHashable:Any])
+        var mappingCount = 0
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourse/\(Constants.selectedGolfID)") { (snapshot) in
+            var dataDic = NSDictionary()
+            if(snapshot.value != nil){
+                dataDic = snapshot.value as! NSDictionary
+                if let count = dataDic.value(forKey: "count") as? Int{
+                    mappingCount = count
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                if mappingCount >= 10{
+                    ref.child("unmappedCourse/\(Constants.selectedGolfID)/").updateChildValues(["count":mappingCount+1] as [AnyHashable:Any])
+                }
+                else{
+                    let mappingDic = NSMutableDictionary()
+                    mappingDic.setObject(mappingCount+1, forKey: "count" as NSCopying)
+                    mappingDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+                    ref.child("unmappedCourse/\(Constants.selectedGolfID)/").updateChildValues(mappingDic as! [AnyHashable:Any])
+                }
+                if(Auth.auth().currentUser!.uid.count > 1){
+                    let mappingDic = NSMutableDictionary()
+                    mappingDic.setObject(Timestamp, forKey: Constants.selectedGolfID as NSCopying)
+                    mappingDic.setObject(Auth.auth().currentUser!.displayName!, forKey: "name" as NSCopying)
+                    ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues(mappingDic as! [AnyHashable:Any])
+                }
+                self.btnRequestMapping.isHidden = true
+                self.lblOverlapping.text = "Thanks for your request. We will notify you when this course is mapped for advanced scoring."
+            })
         }
-        btnRequestMapping.isHidden = true
-        lblOverlapping.text = "Thanks for your request. We will notify you when this course is mapped for advanced scoring."
     }
+    
     // MARK: getScoreFromMatchDataFirebase
     func getScoreFromMatchDataFirebase(keyId:String){
         self.progressView.show()
-
+        
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(keyId)/") { (snapshot) in
-
+            
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
                 Constants.matchDataDic = matchDict as! NSMutableDictionary
@@ -1635,7 +1691,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }
             }
             DispatchQueue.main.async(execute: {
-
+                
                 self.btnStartContinue.isHidden = false
                 self.continueGameView.isHidden = false
                 self.newGamescrollView.isHidden = true
@@ -1674,7 +1730,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             })
         }
     }
-//    var isFirstSwingChk = true
+    //    var isFirstSwingChk = true
     var isCourseDataCount = 0
     func checkSwingKey(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingSession/\(self.swingKey)/") { (snapshot) in
@@ -1704,7 +1760,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                     self.courseData.isContinue = true
                                     self.isCourseDataCount = 1
                                 }
-
+                                
                             }
                             if self.isContinueClicked{
                                 self.isContinueClicked = false
@@ -1928,31 +1984,31 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
         else if btnStartContinue.titleLabel?.text == "Start".localized(){
-//            if Constants.swingSessionKey.isEmpty{
-                if(Constants.deviceGolficationX == nil){
-                    fromGolfBarBtn = false
-                    self.sharedInstance = BluetoothSync.getInstance()
-                    self.sharedInstance.delegate = self
-                    self.sharedInstance.initCBCentralManager()
+            //            if Constants.swingSessionKey.isEmpty{
+            if(Constants.deviceGolficationX == nil){
+                fromGolfBarBtn = false
+                self.sharedInstance = BluetoothSync.getInstance()
+                self.sharedInstance.delegate = self
+                self.sharedInstance.initCBCentralManager()
+            }
+            else{
+                if Constants.ble == nil{
+                    Constants.ble = BLE()
                 }
-                else{
-                    if Constants.ble == nil{
-                       Constants.ble = BLE()
-                    }
-                    Constants.ble.swingMatchId = String()
-                    Constants.ble.currentGameId = 0
-                    Constants.ble.isSetupScreen = !self.fromSetup
-
-                    Constants.deviceGameType = 1
-                    Constants.ble.sendThirdCommand()
-                    playGolfX()
-                }
-//            }
-//            else{
-//                let alert = UIAlertController(title: "Alert", message: "Please finish your Practice Session before starting new game.", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
-//            }
+                Constants.ble.swingMatchId = String()
+                Constants.ble.currentGameId = 0
+                Constants.ble.isSetupScreen = !self.fromSetup
+                
+                Constants.deviceGameType = 1
+                Constants.ble.sendThirdCommand()
+                playGolfX()
+            }
+            //            }
+            //            else{
+            //                let alert = UIAlertController(title: "Alert", message: "Please finish your Practice Session before starting new game.", preferredStyle: .alert)
+            //                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+            //                self.present(alert, animated: true, completion: nil)
+            //            }
         }
         else{
             isContinueClicked = false
@@ -2440,7 +2496,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
-//                        Constants.ble.discardGameFromDevice()
+                        //                        Constants.ble.discardGameFromDevice()
                         break
                     }
                 }
@@ -2473,7 +2529,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
         if swingVal{
-           checkScoringData()
+            checkScoringData()
         }
         else{
             saveData(totalThru: self.checkHoleOutZero())
@@ -2485,7 +2541,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     func checkScoringData(){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-//        self.unSyncdIndex = 0
+        //        self.unSyncdIndex = 0
         self.scoring.removeAll()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(Constants.matchId)/scoring") { (snapshot) in
             var scoringArray =  NSArray()
@@ -2531,7 +2587,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                 if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
-//                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+                    //                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
                     Constants.ble.discardGameFromDevice()
                     break
                 }
@@ -2581,25 +2637,25 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     func generateStatsData(){
         // ------------------ Commented by Amit -----------
-
-//        for data in self.players{
-//            if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
-//                if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
-//                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
-//                    break
-//                }
-//            }
-//        }
+        
+        //        for data in self.players{
+        //            if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+        //                if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+        //                    ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([swingKey:false])
+        //                    break
+        //                }
+        //            }
+        //        }
         self.progressView.show()
         let generateStats = GenerateStats()
         generateStats.matchKey = Constants.matchId
         generateStats.generateStats()
-//        let totalThru: Int = self.checkHoleOutZero()
+        //        let totalThru: Int = self.checkHoleOutZero()
     }
     @objc func statsCompleted(_ notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide()
-
+        
         if(Constants.matchId.count > 1){
             ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(Constants.matchId)").removeValue()
         }

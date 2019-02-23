@@ -68,7 +68,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var lblHole: UILabel!
     @IBOutlet weak var lblPar: UILabel!
     @IBOutlet weak var topView: UIView!
-    
+    @IBOutlet weak var btnAddNotes: UIButton!
+
     var courseData = CourseData()
     
     var progressView = SDLoader()
@@ -97,6 +98,20 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var startingIndex = Int()
     var gameTypeIndex = Int()
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
+    
+    @IBAction func addNotesAction(_ sender: Any) {
+        var matchDataDictionary = NSMutableDictionary()
+        if(isAccept){
+            matchDataDictionary = self.matchDataDict
+        }else{
+            matchDataDictionary = Constants.matchDataDic
+        }
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+        viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
+        viewCtrl.notesHoleNum = "hole\(scoreData[self.holeIndex].hole)"
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+    
     @IBAction func btnActionMenu(_ sender: Any) {
         var j = 0
         for player in playersButton{
@@ -925,6 +940,10 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     func updateData(indexToUpdate:Int){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
+        btnAddNotes.isHidden = true
+        if self.playerId.contains(find: "\(Auth.auth().currentUser!.uid)"){
+            btnAddNotes.isHidden = false
+        }
         var indexToUpdate = indexToUpdate
         indexToUpdate = indexToUpdate == -1 ? indexToUpdate+1 : indexToUpdate
         

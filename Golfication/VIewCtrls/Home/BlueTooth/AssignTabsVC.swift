@@ -635,14 +635,15 @@ class AssignTabsVC: UIViewController, UICollectionViewDelegate, UICollectionView
                         
                         self.golfBagArr.replaceObject(at: i, with: golfBagDict)
                         Constants.isTagSetupModified = true
-                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag": self.golfBagArr], withCompletionBlock: { (error, ref) in
-                            
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["golfBag": self.golfBagArr])
+//                        , withCompletionBlock: { (error, ref) in
+                        
                             self.tagCircularView.setProgressWithAnimation(duration: 0.0, value: 0.0)
                             self.scanProgressView.removeFromSuperview()
                             self.enableSubViews()
                             self.setSyncData(tagName: "Tag \(tagNameInt)", peripheral: peripheral)
                             return
-                        })
+//                        })
                     }
                 }
             }

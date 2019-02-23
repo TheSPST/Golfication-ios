@@ -91,6 +91,7 @@
 		3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF789ED201F1B69009CC3E3 /* AcceptInviteCell.swift */; };
 		3EF9B42520134FE9007B409A /* DemoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF9B42420134FE9007B409A /* DemoLabel.swift */; };
 		4B00679A1F9E151D0060E6BB /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0067991F9E151D0060E6BB /* CardView.swift */; };
+		4B0174E7222124E400A215E6 /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B0174E6222124E400A215E6 /* GoogleService-Info-demo.plist */; };
 		4B04C4C920C03930000D2C23 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C320C03930000D2C23 /* Spinner.swift */; };
 		4B04C4CA20C03930000D2C23 /* SDLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C420C03930000D2C23 /* SDLoader.swift */; };
 		4B04C4CB20C03930000D2C23 /* Sector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C520C03930000D2C23 /* Sector.swift */; };
@@ -134,7 +135,6 @@
 		4B1F6BE82090A29F00312EA7 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC02090A29F00312EA7 /* AnnotationView.swift */; };
 		4B1F6BE92090A29F00312EA7 /* SelectCourseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */; };
 		4B1F6BEA2090A29F00312EA7 /* NewGameScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */; };
-		4B3506E7221BE6D200814D4E /* GoogleService-Info-live.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B3506E6221BE6D200814D4E /* GoogleService-Info-live.plist */; };
 		4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */; };
 		4B4BD77221E366B00067460A /* CesPopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B4BD77121E366B00067460A /* CesPopUpView.xib */; };
 		4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */; };
@@ -362,6 +362,7 @@
 		3EF789ED201F1B69009CC3E3 /* AcceptInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptInviteCell.swift; sourceTree = "<group>"; };
 		3EF9B42420134FE9007B409A /* DemoLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoLabel.swift; sourceTree = "<group>"; };
 		4B0067991F9E151D0060E6BB /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		4B0174E6222124E400A215E6 /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		4B04C4C320C03930000D2C23 /* Spinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		4B04C4C420C03930000D2C23 /* SDLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDLoader.swift; sourceTree = "<group>"; };
 		4B04C4C520C03930000D2C23 /* Sector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sector.swift; sourceTree = "<group>"; };
@@ -408,7 +409,6 @@
 		4B1F6BC02090A29F00312EA7 /* AnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCourseData.swift; sourceTree = "<group>"; };
 		4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameScoreTableViewCell.swift; sourceTree = "<group>"; };
-		4B3506E6221BE6D200814D4E /* GoogleService-Info-live.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-live.plist"; sourceTree = "<group>"; };
 		4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProMemberPopUPVC.swift; sourceTree = "<group>"; };
 		4B4BD77121E366B00067460A /* CesPopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CesPopUpView.xib; sourceTree = "<group>"; };
 		4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MySwing.storyboard; sourceTree = "<group>"; };
@@ -1291,7 +1291,7 @@
 		4BB26D461FF77EFA001E9556 /* Supporting.Files */ = {
 			isa = PBXGroup;
 			children = (
-				4B3506E6221BE6D200814D4E /* GoogleService-Info-live.plist */,
+				4B0174E6222124E400A215E6 /* GoogleService-Info-demo.plist */,
 				3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */,
 			);
 			path = Supporting.Files;
@@ -1384,6 +1384,9 @@
 							com.apple.SafariKeychain = {
 								enabled = 1;
 							};
+							com.apple.Siri = {
+								enabled = 0;
+							};
 						};
 					};
 				};
@@ -1425,7 +1428,6 @@
 				3E59234A20A991C60056D446 /* Home.storyboard in Resources */,
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
-				4B3506E7221BE6D200814D4E /* GoogleService-Info-live.plist in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
 				4B1F6BE52090A29F00312EA7 /* hdar_close@2x.png in Resources */,
 				4B7E2A802175C20B00DFC3EB /* Default.png in Resources */,
@@ -1436,6 +1438,7 @@
 				4B8C8D351FF674D0001F5D01 /* SF-Pro-Display-Semibold.otf in Resources */,
 				4B8C8D421FF674D0001F5D01 /* SF-Pro-Display-Regular.otf in Resources */,
 				4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */,
+				4B0174E7222124E400A215E6 /* GoogleService-Info-demo.plist in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
 				4B8C8D3C1FF674D0001F5D01 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
 				4B8C8D3B1FF674D0001F5D01 /* SF-Pro-Display-MediumItalic.otf in Resources */,

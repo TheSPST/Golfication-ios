@@ -83,5 +83,293 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+            timestampString = "572516749.6366971"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6317"
+            endingLineNumber = "6317"
+            landmarkName = "setupMultiplayersButton()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+            timestampString = "572516749.636813"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6487"
+            endingLineNumber = "6487"
+            landmarkName = "showCaseMiddleMarker()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Golfication.NewMapVC.showCaseMiddleMarker() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.691812"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6487"
+                  endingLineNumber = "6487"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in Golfication.NewMapVC.showCaseMiddleMarker() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.695376"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6487"
+                  endingLineNumber = "6487"
+                  offsetFromSymbolStart = "28">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+            timestampString = "572516749.636878"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6627"
+            endingLineNumber = "6627"
+            landmarkName = "showCaseClubChangeOnCourse()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Golfication.NewMapVC.showCaseClubChangeOnCourse() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.703878"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6627"
+                  endingLineNumber = "6627"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in Golfication.NewMapVC.showCaseClubChangeOnCourse() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.707495"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6628"
+                  endingLineNumber = "6628"
+                  offsetFromSymbolStart = "28">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+            timestampString = "572516749.636938"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6320"
+            endingLineNumber = "6320"
+            landmarkName = "setupMultiplayersButton()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+            timestampString = "572516749.637006"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6652"
+            endingLineNumber = "6652"
+            landmarkName = "showCaseTrackShotsOnCourse()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Golfication.NewMapVC.showCaseTrackShotsOnCourse() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.722222"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6652"
+                  endingLineNumber = "6652"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in Golfication.NewMapVC.showCaseTrackShotsOnCourse() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.7258691"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6652"
+                  endingLineNumber = "6652"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+            timestampString = "572516749.637077"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6674"
+            endingLineNumber = "6674"
+            landmarkName = "showCaseStopShotsOnCourse()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Golfication.NewMapVC.showCaseStopShotsOnCourse() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.734836"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6674"
+                  endingLineNumber = "6674"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in Golfication.NewMapVC.showCaseStopShotsOnCourse() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.739078"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6674"
+                  endingLineNumber = "6674"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+            timestampString = "572516749.637154"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "6695"
+            endingLineNumber = "6695"
+            landmarkName = "showCaseHoleOutShotsOnCourse()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Golfication.NewMapVC.showCaseHoleOutShotsOnCourse() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.74894"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6695"
+                  endingLineNumber = "6695"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in Golfication.NewMapVC.showCaseHoleOutShotsOnCourse() -&gt; ()"
+                  moduleName = "Golfication"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rishabhsood/Desktop/Golfication-20-Feb-3.2.4/Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+                  timestampString = "572598444.7533391"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "6695"
+                  endingLineNumber = "6695"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Golfication/VIewCtrls/GameViewCtrls/PlayGameViewCtrls/GameViewControllers/NewMapVC.swift"
+            timestampString = "572516749.637244"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2573"
+            endingLineNumber = "2573"
+            landmarkName = "btnActionShots(fromHoleOut:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

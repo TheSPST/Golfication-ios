@@ -494,8 +494,17 @@ class CourseData:NSObject{
             if holeOut && sho.count == 1{
                 wantToDrag = true
             }
+            var shotTracking = NSMutableDictionary()
+            if let shotsTrac = playersData.value(forKey: "shotTracking") as? NSMutableDictionary{
+                shotTracking = shotsTrac
+            }
             for i in 0..<sho.count{
-                let shot = sho[i] as! NSMutableDictionary
+                var shot = NSMutableDictionary()
+                if let sh = sho[i] as? NSMutableDictionary{
+                    shot = sh
+                }else{
+                    shot = shotTracking
+                }
                 if let dat = shot.value(forKey: "clubDetected") as? Bool{
                     if !dat{
                         let latLng = CLLocationCoordinate2D(latitude: shot.value(forKey: "lat1") as! Double, longitude: shot.value(forKey: "lng1") as! Double)

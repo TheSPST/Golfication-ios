@@ -28,12 +28,15 @@ class BottomViewInScore:UIView{
 }
 class CellButton : UIButton{
     var userData:String?
+    var isNotes:Bool!
     override init(frame: CGRect) {
         self.userData = ""
+        self.isNotes = false
         super.init(frame: frame)
     }
     required init?(coder aDecoder: NSCoder) {
         self.userData = ""
+        self.isNotes = false
         super.init(coder: aDecoder)
     }
 }
@@ -219,11 +222,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         }
                     }
                 }
-                if !self.teeTypeArr.isEmpty{
+//                if !self.teeTypeArr.isEmpty{
                     self.loadStableFordData()
-                }else{
-                    
-                }
+//                }else{
+                
+//                }
             })
         }
     }
@@ -554,7 +557,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.view.backgroundColor = UIColor(rgb: 0xF8F8F7)
         //        self.navigationController?.navigationBar.backItem?.title = ""
         self.automaticallyAdjustsScrollViewInsets = false
-        
         self.setInitialUI()
         self.scoringView.layer.cornerRadius = 5
         
@@ -574,36 +576,35 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         debugPrint("sectionNames== ",self.sectionNames.count)
         
         //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
-        if !self.teeTypeArr.isEmpty{
-            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()]]
-            if Constants.mode == 1{
-                self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
-                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()]]
+            if !self.teeTypeArr.isEmpty{
+                self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
+                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
+                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
+                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
+                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"]]
+                if Constants.mode == 1{
+                    self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
+                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
+                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
+                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
+                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"]]
+                }
             }
-            
-        }
-        else{
-            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
-                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()]]
-            if Constants.mode == 1{
-                self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
-                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
-                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
-                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
-                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()]]
+            else{
+                self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
+                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
+                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
+                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
+                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"]]
+                if Constants.mode == 1{
+                    self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
+                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
+                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
+                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
+                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"]]
+                }
+                
             }
-            
-        }
         
         self.menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+10)), style: .plain)
         if self.isContinue{
@@ -708,7 +709,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     var courseData = CourseData()
     var isTouchEnable = true
     func loadStableFordData(){
-        if  self.holeHcpWithTee.isEmpty{
+//        if  self.holeHcpWithTee.isEmpty{
             var matchDataDictionary = NSMutableDictionary()
             if(isFinalSummary){
                 matchDataDictionary = self.matchDataDict
@@ -731,7 +732,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             self.progressView.show(atView: self.view, navItem: self.navigationItem)
             self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
             NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
-        }
+//        }
     }
     @objc func loadMap(_ notification:NSNotification){
         self.progressView.hide(navItem: navigationItem)
@@ -1183,57 +1184,70 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
     @objc func buttonAction(sender: CellButton!) {
-        var isActiveMatch = false
-        var isAdvanced = false
-        var swingK = String()
-
-        var matchDataDictionary = NSMutableDictionary()
-        if(isFinalSummary){
-            matchDataDictionary = self.matchDataDict
-        }else{
-            matchDataDictionary = Constants.matchDataDic
-        }
-        if let matchType = matchDataDictionary.value(forKeyPath: "scoringMode") as? String{
-            if matchType.contains("advanced"){
-            isAdvanced = true
+        if !sender.isNotes{
+            var isActiveMatch = false
+            var isAdvanced = false
+            var swingK = String()
+            
+            var matchDataDictionary = NSMutableDictionary()
+            if(isFinalSummary){
+                matchDataDictionary = self.matchDataDict
+            }else{
+                matchDataDictionary = Constants.matchDataDic
             }
-        }else if isFinalSummary{
-            isAdvanced = true
-        }
-        if Constants.matchId.count>0{
-            isActiveMatch = true
-        }
-        for data in self.playerData{
-            if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
-                if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
-                    swingK = swingKey
-                    break
+            if let matchType = matchDataDictionary.value(forKeyPath: "scoringMode") as? String{
+                if matchType.contains("advanced"){
+                    isAdvanced = true
+                }
+            }else if isFinalSummary{
+                isAdvanced = true
+            }
+            if Constants.matchId.count>0{
+                isActiveMatch = true
+            }
+            for data in self.playerData{
+                if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                    if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                        swingK = swingKey
+                        break
+                    }
                 }
             }
-        }
-        
-        if ((isActiveMatch) && (!isAdvanced) && (swingK.isEmpty)){
-        self.view.addSubview(self.scoringSuperView)
-        self.scoringSuperView.isHidden = false
-        self.scoringView.isHidden = false
-        self.scoringView.tag = 33
-        
-        self.fairwayHitStackView.superview?.isHidden = false
-        if(self.scoreData[self.index].par == 3){
-            self.fairwayHitStackView.superview?.isHidden = true
-        }
-        
-        var newI = self.scoreData[self.index].par - 2
-        for btn in self.stackViewStrokes1.arrangedSubviews{
-            (btn as! UIButton).setTitle("\(newI)", for: .normal)
-            updateStrokesButtonWithoutStrokes(strokes: (newI-self.scoreData[self.index].par), btn: btn as! UIButton,color: UIColor.white)
-            newI += 1
-        }
-        self.playerId = sender.userData
-        self.index = sender.tag
-        self.classicScoring = self.getScoreIntoClassicNode(hole: self.index,playerKey: self.playerId!)
-        self.updateValue()
-        lblHolePar.text = "Hole".localized() + " \(self.index+1) - " + "Par".localized() + " \(self.scoreData[self.index].par)"
+            
+            if ((isActiveMatch) && (!isAdvanced) && (swingK.isEmpty)){
+                self.view.addSubview(self.scoringSuperView)
+                self.scoringSuperView.isHidden = false
+                self.scoringView.isHidden = false
+                self.scoringView.tag = 33
+                
+                self.fairwayHitStackView.superview?.isHidden = false
+                if(self.scoreData[self.index].par == 3){
+                    self.fairwayHitStackView.superview?.isHidden = true
+                }
+                
+                var newI = self.scoreData[self.index].par - 2
+                for btn in self.stackViewStrokes1.arrangedSubviews{
+                    (btn as! UIButton).setTitle("\(newI)", for: .normal)
+                    updateStrokesButtonWithoutStrokes(strokes: (newI-self.scoreData[self.index].par), btn: btn as! UIButton,color: UIColor.white)
+                    newI += 1
+                }
+                self.playerId = sender.userData
+                self.index = sender.tag
+                self.classicScoring = self.getScoreIntoClassicNode(hole: self.index,playerKey: self.playerId!)
+                self.updateValue()
+                lblHolePar.text = "Hole".localized() + " \(self.index+1) - " + "Par".localized() + " \(self.scoreData[self.index].par)"
+            }
+        }else{
+            var matchDataDictionary = NSMutableDictionary()
+            if(isFinalSummary){
+                matchDataDictionary = self.matchDataDict
+            }else{
+                matchDataDictionary = Constants.matchDataDic
+            }
+            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+            viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
+            viewCtrl.notesHoleNum = "hole\(self.scoreData[sender.tag].hole)"
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
         }
     }
     
@@ -1775,7 +1789,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
         if indexPath.section > 1{
-            
+                if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
+                    if playerId != Auth.auth().currentUser!.uid{
+                        if indexPath.row == sectionItems.count-1{
+                            cell.isHidden = true
+                        }
+                    }
+                }
             if tableView.tag == 0 {
                 let section = self.sectionItems[indexPath.section] as! NSArray
                 cell.textLabel?.text = section[indexPath.row] as? String
@@ -1854,6 +1874,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     btn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
                     cell.contentView.addSubview(btn)
                     btn.isUserInteractionEnabled = self.isTouchEnable
+
                     //                    let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 40, height: 32))
                     //                    label.text = "-"
                     //                    label.textAlignment = .center
@@ -2138,6 +2159,19 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                             }
                         }
                     }
+                        if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
+                            if playerId == Auth.auth().currentUser!.uid{
+                                if indexPath.row == sectionItems.count-1{
+                                    let backBtnImage1 =  UIImage(named: "text_edit")!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                                    btn.setImage(backBtnImage1, for: .normal)
+                                    btn.tintColor = UIColor.glfFlatBlue
+                                    btn.setTitle("", for: .normal)
+                                    btn.isNotes = true
+                                    btn.isUserInteractionEnabled = true
+//                                    btn.setImage(UIImage(named:"text_edit"), for: .normal)
+                                }
+                            }
+                        }
                 }
                 let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(scoreData.count), y: 0, width: 40, height: 32))
                 label.text = "-"

@@ -48,7 +48,10 @@
         private func makeFirebaseRequest(route: String, onCompletion: @escaping ServiceResponse) {
             
             let error  = NSError()
-            
+//            if route.contains("swingSession"){
+//                debugPrint(route)
+                ref?.child(route).keepSynced(true)
+//            }
             ref?.child(route).observeSingleEvent(of: .value, with: { snapshot in
                 
                 let nullFlag = DataSnapshot()
