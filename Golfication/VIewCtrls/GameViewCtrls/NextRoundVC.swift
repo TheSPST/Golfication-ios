@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import FirebaseAuth
 import FirebaseAnalytics
-
+import FirebaseDynamicLinks
 class NextRoundVC: UIViewController {
     @IBOutlet weak var btnPrevClassic: UIButton!
     @IBOutlet weak var btnPrevRf: UIButton!
@@ -202,57 +202,63 @@ class NextRoundVC: UIViewController {
 
     @IBAction func startGameAction(sender: UIButton) {
         if selectedMode == 0 && (selectedTab == 1 || selectedTab == 2){
-            
-            switch CLLocationManager.authorizationStatus() {
-            case .notDetermined:
-                // Request when-in-use authorization initially
-                locationManager.requestAlwaysAuthorization()
-                locationManager.desiredAccuracy = kCLLocationAccuracyBest
-                break
-                
-            case .restricted, .denied:
-                // Disable location features
-                let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
-                    let url = URL(string: UIApplicationOpenSettingsURLString)!
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }))
-                self.present(alert, animated: true, completion: nil)
-                break
-                
-            case .authorizedWhenInUse, .authorizedAlways:
-                // Enable basic location features
-                if let currentLocation: CLLocation = locationManager.location{
+            if self.btnStartClassic.tag == 2{
+                switch CLLocationManager.authorizationStatus() {
+                case .notDetermined:
+                    // Request when-in-use authorization initially
+                    locationManager.requestAlwaysAuthorization()
+                    locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                    break
                     
-                    var currentCoord = CLLocationCoordinate2D()
-                    currentCoord = currentLocation.coordinate
+                case .restricted, .denied:
+                    // Disable location features
+                    let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                    alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+                        let url = URL(string: UIApplicationOpenSettingsURLString)!
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                    break
                     
-                    let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
-                    let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
-                    let distance : CLLocationDistance = location1.distance(from: location2)
-                    debugPrint("distance = \(distance) m")
-                    
-                    if(distance <= 15000.0){
-                        popUpContainerView.isHidden = false
-                        if self.btnStartClassic.tag != 0{
-                            self.btnSkip.tag = self.btnStartClassic.tag
+                case .authorizedWhenInUse, .authorizedAlways:
+                    // Enable basic location features
+                    if let currentLocation: CLLocation = locationManager.location{
+                        
+                        var currentCoord = CLLocationCoordinate2D()
+                        currentCoord = currentLocation.coordinate
+                        
+                        let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
+                        let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
+                        let distance : CLLocationDistance = location1.distance(from: location2)
+                        debugPrint("distance = \(distance) m")
+                        
+                        if(distance <= 15000.0){
+                            popUpContainerView.isHidden = false
+                            if self.btnStartClassic.tag != 0{
+                                self.btnSkip.tag = self.btnStartClassic.tag
+                            }
+                        }
+                        else{
+                            // show alert
+                            let emptyAlert = UIAlertController(title: "Alert", message: "You need to be near the course to play in On-Course mode.", preferredStyle: UIAlertControllerStyle.alert)
+                            emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                            self.present(emptyAlert, animated: true, completion: nil)
                         }
                     }
-                    else{
-                        // show alert
-                        let emptyAlert = UIAlertController(title: "Alert", message: "You need to be near the course to play in On-Course mode.", preferredStyle: UIAlertControllerStyle.alert)
-                        emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                        self.present(emptyAlert, animated: true, completion: nil)
-                    }
+                    break
                 }
-                break
+            }else{
+                popUpContainerView.isHidden = false
+                if self.btnStartClassic.tag != 0{
+                    self.btnSkip.tag = 1
+                }
             }
         }
         else{
             popUpContainerView.isHidden = false
             if self.btnStartClassic.tag != 0{
-                self.btnSkip.tag = self.btnStartClassic.tag
+                self.btnSkip.tag = 1
             }
         }
     }
@@ -634,6 +640,9 @@ class NextRoundVC: UIViewController {
                     
                     self.mappedProgressView.progress = Float(mappingCount)/Float(10)
                     self.lblRequestReceive.text = "Requests received: " + "\(mappingCount)" + "/" + "10"
+                    if self.selectedMode == 1{
+                        self.scoringMode = "classic"
+                    }
                     self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
                     
                     let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received. Invite your friends to get this course mapped sooner!")
@@ -656,9 +665,36 @@ class NextRoundVC: UIViewController {
         let inviteRange = (text as NSString).range(of: "Invite your friends")
         
         if tap.didTapAttributedTextInLabel(label: lblOverlapping, inRange: inviteRange) {
-            let storyboard = UIStoryboard(name: "Profile", bundle: nil)
-            let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ReferalViewCtrls") as! ReferalViewCtrls
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            let text = "Take your golf game further with Live Scoring, GPS, Shot Tracking, Advanced Stats and more. Download Golfication now!"
+            guard let uid = Auth.auth().currentUser?.uid else { return }
+            let link = URL(string: "https://p5h99.app.goo.gl/mVFa?invitedby=\(uid)")
+            let referralLink = DynamicLinkComponents(link: link!, domain: "p5h99.app.goo.gl")
+            referralLink.iOSParameters = DynamicLinkIOSParameters(bundleID: "com.khelfie.Khelfie")
+            referralLink.iOSParameters?.minimumAppVersion = "1.0.1"
+            referralLink.iOSParameters?.appStoreID = "1216612467"
+            referralLink.androidParameters = DynamicLinkAndroidParameters(packageName: "com.khelfiegolf")
+            referralLink.androidParameters?.minimumVersion = 1
+            
+            referralLink.shorten { (shortURL, warnings, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                let invitationUrl = shortURL
+                let invitationStr = invitationUrl?.absoluteString
+                let shareItems = [text, invitationStr] as! [String]
+                let activityViewController = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+                
+                // exclude some activity types from the list (optional)
+                activityViewController.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.postToFacebook, UIActivityType.postToTwitter, UIActivityType.message, UIActivityType.mail, UIActivityType.postToFlickr, UIActivityType.postToWeibo, UIActivityType.postToVimeo]
+                
+                // present the view controller
+                
+                //https://stackoverflow.com/questions/35931946/basic-example-for-sharing-text-or-image-with-uiactivityviewcontroller-in-swift
+                //http://www.rockhoppertech.com/blog/uiactivitycontroller-in-swift/
+                self.present(activityViewController, animated: true, completion: nil)
+            }
         }
     }
     
