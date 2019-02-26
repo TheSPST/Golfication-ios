@@ -576,7 +576,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         debugPrint("sectionNames== ",self.sectionNames.count)
         
         //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
-            if !self.teeTypeArr.isEmpty{
+/*            if !self.teeTypeArr.isEmpty{
                 self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                      ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                      ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
@@ -603,9 +603,35 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                          ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
                                          ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"]]
                 }
-                
+            }*/
+        if !self.teeTypeArr.isEmpty{
+            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()]]
+            if Constants.mode == 1{
+                self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()]]
             }
-        
+        }
+        else{
+            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized()]]
+            if Constants.mode == 1{
+                self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()]]
+            }
+        }
         self.menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+10)), style: .plain)
         if self.isContinue{
             self.menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+75+30+5)), style: .plain)
@@ -1789,13 +1815,13 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
         if indexPath.section > 1{
-                if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
+                /*if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
                     if playerId != Auth.auth().currentUser!.uid{
                         if indexPath.row == sectionItems.count-1{
                             cell.isHidden = true
                         }
                     }
-                }
+                }*/
             if tableView.tag == 0 {
                 let section = self.sectionItems[indexPath.section] as! NSArray
                 cell.textLabel?.text = section[indexPath.row] as? String
@@ -2159,7 +2185,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                             }
                         }
                     }
-                        if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
+                        /*if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
                             if playerId == Auth.auth().currentUser!.uid{
                                 if indexPath.row == sectionItems.count-1{
                                     let backBtnImage1 =  UIImage(named: "text_edit")!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
@@ -2171,7 +2197,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 //                                    btn.setImage(UIImage(named:"text_edit"), for: .normal)
                                 }
                             }
-                        }
+                        }*/
                 }
                 let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(scoreData.count), y: 0, width: 40, height: 32))
                 label.text = "-"

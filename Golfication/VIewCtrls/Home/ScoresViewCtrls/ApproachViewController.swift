@@ -551,7 +551,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         
         GIRTrendBarChart.setStackedBarChart(dataPoints: date, value1: girTotal, value2: girArray, chartView: GIRTrendBarChart, color: [UIColor.glfBluegreen.withAlphaComponent(0.50),UIColor.glfBluegreen], barWidth: 0.2)
         GIRTrendBarChart.leftAxis.axisMinimum = 0.0
-        GIRTrendBarChart.leftAxis.axisMaximum = girTotal.max()!+1
+        GIRTrendBarChart.leftAxis.axisMaximum = girTotal.max() ?? 1+1
         GIRTrendBarChart.leftAxis.labelCount = 5
         if girArray.count > 2 && Constants.baselineDict != nil{
             var attributedText = NSMutableAttributedString()

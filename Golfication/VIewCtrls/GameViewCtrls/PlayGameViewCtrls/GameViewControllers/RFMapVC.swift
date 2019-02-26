@@ -2476,7 +2476,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     func updateMap(indexToUpdate:Int){
         btnAddNotes.isHidden = true
         if self.playerId.contains(find: "\(Auth.auth().currentUser!.uid)"){
-            btnAddNotes.isHidden = false
+//            btnAddNotes.isHidden = false
+            btnAddNotes.isHidden = true
         }
         self.suggestedMarker1.map = nil
         self.suggestedMarker2.map = nil
@@ -2715,6 +2716,34 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
         self.updateNotificationFor30Minutes()
         setupMultiplayersButton()
+        if !isContinueMatch{
+            self.updateCoreData()
+        }
+    }
+    func updateCoreData(){
+        var greenModel = [GreenLatLngModel]()
+        var i = 0
+        for data in self.courseData.numberOfHoles{
+            for latLng in data.green{
+                let model = GreenLatLngModel()
+                model.greenNum = i
+                model.lat = latLng.latitude
+                model.lng = latLng.longitude
+                greenModel.append(model)
+            }
+            i += 1
+        }
+        var frontBackDistanceArr = [FrontBackDistance]()
+        for data in self.courseData.holeGreenDataArr{
+            let fbDistance = FrontBackDistance()
+            fbDistance.backLat = data.back.latitude
+            fbDistance.backLng = data.back.longitude
+            fbDistance.centerLat = data.center.latitude
+            fbDistance.centerLng = data.center.longitude
+            fbDistance.frontLat = data.front.latitude
+            fbDistance.frontLng = data.front.longitude
+            frontBackDistanceArr.append(fbDistance)
+        }
     }
     func clubReco(dist:Double,lie:String)->String {
         if (lie.trim() == "G"){

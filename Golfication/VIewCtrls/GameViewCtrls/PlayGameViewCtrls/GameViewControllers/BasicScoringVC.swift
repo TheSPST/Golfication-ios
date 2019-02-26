@@ -942,7 +942,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         btnAddNotes.isHidden = true
         if self.playerId.contains(find: "\(Auth.auth().currentUser!.uid)"){
-            btnAddNotes.isHidden = false
+//            btnAddNotes.isHidden = false
+            btnAddNotes.isHidden = true
         }
         var indexToUpdate = indexToUpdate
         indexToUpdate = indexToUpdate == -1 ? indexToUpdate+1 : indexToUpdate

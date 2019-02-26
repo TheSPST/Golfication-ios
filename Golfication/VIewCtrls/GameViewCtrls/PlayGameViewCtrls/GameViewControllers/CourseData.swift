@@ -213,6 +213,10 @@ class CourseData:NSObject{
                         var tempHoleArr = self.centerPointOfTeeNGreen
                         var tempNuOfHole = self.numberOfHoles
                         var temp = self.holeHcpWithTee
+                        var tempGreen = self.holeGreenDataArr
+                        for data in self.holeGreenDataArr{
+                            tempGreen.append(data)
+                        }
                         for data in self.holeHcpWithTee{
                             temp.append(data)
                         }
@@ -233,6 +237,7 @@ class CourseData:NSObject{
                         self.propertyArray = tempArr
                         self.centerPointOfTeeNGreen = tempHoleArr
                         self.holeHcpWithTee = temp
+                        self.holeGreenDataArr = tempGreen
                     }else if (self.numberOfHoles.count > self.gameTypeIndex){
                         Constants.back9 = false
                         if (self.startingIndex > self.gameTypeIndex){

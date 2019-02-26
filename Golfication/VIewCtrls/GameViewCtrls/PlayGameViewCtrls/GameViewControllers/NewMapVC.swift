@@ -1836,6 +1836,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         if let shotTrack = playersData.value(forKey: "shotTracking") as? NSMutableDictionary{
                             shotTracking = shotTrack
                         }
+                        var isShotTrack = false
+                        holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
                         if let sho = playersData.value(forKey: "shots") as? NSArray{
                             wantToDrag = sho.count > 0 ? true:false
                             for i in 0..<sho.count{
@@ -1844,6 +1846,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     shot = sh
                                 }else{
                                     shot = shotTracking
+                                    isShotTrack = true
                                 }
                                 if let dat = shot.value(forKey: "clubDetected") as? Bool{
                                     if !dat{
@@ -1862,8 +1865,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     shots.append(shot)
                                 }
                             }
+                            if !isShotTrack && shotTracking.count != 0 && holeOut{
+                                shots.append(shotTracking)
+                            }
                         }
                         playersData.setValue(shots, forKey: "shots")
+                        debugPrint("Count:",shots.count)
                         let playerDict = NSMutableDictionary()
                         playerDict.setObject(playersData, forKey: self.selectedUserId as NSCopying)
                         if let scoring = Constants.matchDataDic.value(forKey: "scoring") as? NSArray{
@@ -1872,7 +1879,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             Constants.matchDataDic.setValue(sco, forKey: "scoring")
                         }
                         self.scoring[hole].players[self.playerIndex] = playerDict
-                        holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
                         if(holeOut){
                             ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shotTracking":NSNull()] as [AnyHashable : Any])
                             self.uploadPutting(playerId: self.selectedUserId)
@@ -2273,6 +2279,20 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         scoring.setObject(holeArray, forKey: "scoring" as NSCopying)
         if(!self.isAcceptInvite){
             ref.child("matchData/\(self.currentMatchId)/").updateChildValues(scoring as! [AnyHashable : Any])
+        }
+        var greenModel = [GreenLatLngModel]()
+        if (isOnCourse || Constants.deviceGolficationX != nil) && !isHoleByHole{
+            var i = 0
+            for data in self.courseData.numberOfHoles{
+                for latLng in data.green{
+                    let model = GreenLatLngModel()
+                    model.greenNum = i
+                    model.lat = latLng.latitude
+                    model.lng = latLng.longitude
+                    greenModel.append(model)
+                }
+                i += 1
+            }
         }
         setupMultiplayersButton()
     }
@@ -3899,7 +3919,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 shotsDetails.append((club: club, distance: distance ?? 0.0, strokesGained: strokGaind ?? 0.0, swingScore: startingPoint ?? "calculating",endingPoint:endingPoints ?? "calculationg ",penalty:penalty))
             }
         }
-        if !self.holeOutFlag && !self.swingMatchId.isEmpty && !shotsDetails.isEmpty{
+        if !self.holeOutFlag && !self.swingMatchId.isEmpty && shotsDetails.count != 0{
             shotsDetails.removeLast()
         }
         return shotsDetails
@@ -5010,7 +5030,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.calculateSwingDataForCurrentHole()
         btnAddNotes.isHidden = true
         if self.selectedUserId.contains(find: "\(Auth.auth().currentUser!.uid)"){
-            btnAddNotes.isHidden = false
+//            btnAddNotes.isHidden = false
+            btnAddNotes.isHidden = true
         }
         var indexToUpdate = indexToUpdate
         if courseData.centerPointOfTeeNGreen.count-1 < indexToUpdate{
@@ -6783,7 +6804,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnAddNotes.isHidden = true
                 if(playersButton[i].id == Auth.auth().currentUser!.uid){
                     self.lblPlayersName.text = "Your Score".localized()
-                        self.btnAddNotes.isHidden = false
+//                        self.btnAddNotes.isHidden = false
+                    btnAddNotes.isHidden = true
                 }
                 btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
             }
@@ -7213,9 +7235,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             if let scoringDict = (self.scoring[self.holeIndex].players[i].value(forKey: playerId) as? NSMutableDictionary){
                 if let scoreShots = (scoringDict.value(forKey: "shots") as? NSArray){
                     for data in scoreShots{
-                        let dataDict = data as! NSMutableDictionary
-                        if((dataDict.value(forKey: "club") as! String).trim() == "Pu"){
-                            putting += 1
+                        if let dataDict = data as? NSMutableDictionary{
+                            if let club = dataDict.value(forKey: "club") as? String, club == "Pu"{
+                                putting += 1
+                            }
                         }
                     }
                     break
@@ -7405,7 +7428,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         
-        if self.selectedUserId != "jpSgWiruZuOnWybYce55YDYGXP62" && !self.markers.contains(marker) && !isTracking && btnClose.isHidden{
+        if self.selectedUserId != "jpSgWiruZuOnWybYce55YDYGXP62" && !self.markers.contains(marker) && !isTracking && btnClose.isHidden && !self.isHoleByHole{
             tappedMarker = marker
             
             if (tappedMarker.iconView)?.tag != nil  && !isHoleByHole{

@@ -638,7 +638,7 @@ class BLE: NSObject {
                     }
                 }
                 if(self.holeWithSwing.count == 0){
-                    param.append((UInt8(self.shotNumFor8th(hole: Int(param.last!)))))
+                    param.append(0)
                 }else{
                     var totalH = 18
                     if Constants.gameType.contains("9"){

@@ -35,10 +35,11 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
                 swingDetailsView.isHidden = false
                 //                self.navigationController?.popViewController(animated: true)
             }else{
-                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                appDelegate.window?.rootViewController = tabBarCtrl
-//                self.navigationController?.popToRootViewController(animated: true)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                    let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                    appDelegate.window?.rootViewController = tabBarCtrl
+                })
             }
         }else{
             if superClassName == "SwingSessionVC"{

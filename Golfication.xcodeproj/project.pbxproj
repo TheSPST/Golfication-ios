@@ -92,6 +92,7 @@
 		3EF9B42520134FE9007B409A /* DemoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF9B42420134FE9007B409A /* DemoLabel.swift */; };
 		4B00679A1F9E151D0060E6BB /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0067991F9E151D0060E6BB /* CardView.swift */; };
 		4B0174E7222124E400A215E6 /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B0174E6222124E400A215E6 /* GoogleService-Info-demo.plist */; };
+		4B0174F32225255400A215E6 /* CoreDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0174F22225255400A215E6 /* CoreDataModels.swift */; };
 		4B04C4C920C03930000D2C23 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C320C03930000D2C23 /* Spinner.swift */; };
 		4B04C4CA20C03930000D2C23 /* SDLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C420C03930000D2C23 /* SDLoader.swift */; };
 		4B04C4CB20C03930000D2C23 /* Sector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C520C03930000D2C23 /* Sector.swift */; };
@@ -363,6 +364,7 @@
 		3EF9B42420134FE9007B409A /* DemoLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoLabel.swift; sourceTree = "<group>"; };
 		4B0067991F9E151D0060E6BB /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		4B0174E6222124E400A215E6 /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
+		4B0174F22225255400A215E6 /* CoreDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModels.swift; sourceTree = "<group>"; };
 		4B04C4C320C03930000D2C23 /* Spinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		4B04C4C420C03930000D2C23 /* SDLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDLoader.swift; sourceTree = "<group>"; };
 		4B04C4C520C03930000D2C23 /* Sector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sector.swift; sourceTree = "<group>"; };
@@ -711,6 +713,7 @@
 				3E40F97B20E604D600092170 /* Map.storyboard */,
 				3E40F98320E62E2A00092170 /* ShotDetailsTableViewCell.swift */,
 				3E13F3B7212E999C005D9B70 /* MapForInputViewController.swift */,
+				4B0174F22225255400A215E6 /* CoreDataModels.swift */,
 			);
 			path = GameViewControllers;
 			sourceTree = "<group>";
@@ -1710,6 +1713,7 @@
 				4B1F6BD52090A29F00312EA7 /* FinalScoreBoardTopCell.swift in Sources */,
 				4B1F6BC32090A29F00312EA7 /* FeedbackVC.swift in Sources */,
 				4B077D1720AC550000AFC9FC /* GolfBagCollectionCell.swift in Sources */,
+				4B0174F32225255400A215E6 /* CoreDataModels.swift in Sources */,
 				4B7F52202158DC6F002E328A /* PKCCropLineView.swift in Sources */,
 				0D2CA1C41FB4360900CE9D82 /* UIColor+GLFAdditions.swift in Sources */,
 				3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */,
