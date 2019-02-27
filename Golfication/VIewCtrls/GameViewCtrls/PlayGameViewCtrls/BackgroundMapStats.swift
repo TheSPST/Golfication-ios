@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 import GoogleMaps
-
+import Intents
 class BackgroundMapStats: NSObject {
     static var blockRecursionIssue = 0
     static let clubsFullForm = ["Dr":"Driver","w":"Wood","h":"Hybrid","i":"Iron","Pw":"P Wedge","Gw":"Gap Wedge","Sw":"Sand Wedge","Lw":"Lob Wedge","Pu":"Putter"]
@@ -490,6 +490,20 @@ class BackgroundMapStats: NSObject {
             }
         }
         return avg
+    }
+    static func donateInteraction() {
+        let intent = DistanceOfGreenIntent()
+        intent.suggestedInvocationPhrase = "Distance"
+        let interaction = INInteraction(intent: intent, response: nil)
+        interaction.donate { (error) in
+            if error != nil {
+                if let error = error as NSError? {
+                    debugPrint("Interaction donation failed:",error)
+                } else {
+                    debugPrint("Successfully donated interaction")
+                }
+            }
+        }
     }
     static func getDynamicLinkFromPromocode(code:String){
         let link = URL(string: "https://p5h99.app.goo.gl/mVFa?promocode=\(code)")

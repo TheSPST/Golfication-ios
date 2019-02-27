@@ -17,6 +17,7 @@ import UserNotifications
 import CTShowcase
 import GLKit
 import UICircularProgressRing
+import CoreData
 private enum State {
     case closed
     case open
@@ -254,7 +255,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var isDeviceSetup = false
     var swingShotArr = NSArray()
     var isNextPrevBtn = false
-
+    let context = CoreDataStorage.mainQueueContext()
+    var greenEntity : GreenDistanceEntity?
     func checkDeviceStatus() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.golficationXDisconnected(_:)), name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
         
@@ -2282,6 +2284,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         var greenModel = [GreenLatLngModel]()
         if (isOnCourse || Constants.deviceGolficationX != nil) && !isHoleByHole{
+            BackgroundMapStats.donateInteraction()
             var i = 0
             for data in self.courseData.numberOfHoles{
                 for latLng in data.green{
@@ -2291,6 +2294,35 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     model.lng = latLng.longitude
                     greenModel.append(model)
                 }
+                i += 1
+            }
+        }
+        self.context.performAndWait{ () -> Void in
+            if let counter = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context){
+                counter.forEach { counter in
+                    self.context.delete(counter as! NSManagedObject)
+                }
+            }
+
+            if let counter1 = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context){
+                counter1.forEach { counter in
+                    self.context.delete(counter as! NSManagedObject)
+                }
+            }
+            for data in greenModel{
+                self.greenEntity = (NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: self.context) as! GreenDistanceEntity)
+                self.greenEntity?.greeNum = Int16(data.greenNum)
+                self.greenEntity?.lat = data.lat
+                self.greenEntity?.lng = data.lng
+                CoreDataStorage.saveContext(self.context)
+            }
+            var i = 0
+            for data in self.courseData.centerPointOfTeeNGreen{
+                let teeEntity = (NSEntityDescription.insertNewObject(forEntityName: "TeeDistanceEntity", into: self.context) as! TeeDistanceEntity)
+                teeEntity.teeNum = Int16(i)
+                teeEntity.lat = data.tee.latitude
+                teeEntity.lng = data.tee.longitude
+                CoreDataStorage.saveContext(self.context)
                 i += 1
             }
         }

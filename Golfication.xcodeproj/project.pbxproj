@@ -93,6 +93,24 @@
 		4B00679A1F9E151D0060E6BB /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0067991F9E151D0060E6BB /* CardView.swift */; };
 		4B0174E7222124E400A215E6 /* GoogleService-Info-demo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B0174E6222124E400A215E6 /* GoogleService-Info-demo.plist */; };
 		4B0174F32225255400A215E6 /* CoreDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0174F22225255400A215E6 /* CoreDataModels.swift */; };
+		4B0174FB2225302600A215E6 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0174FA2225302600A215E6 /* IntentHandler.swift */; };
+		4B0175032225302700A215E6 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0175022225302700A215E6 /* IntentsUI.framework */; };
+		4B0175062225302700A215E6 /* IntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0175052225302700A215E6 /* IntentViewController.swift */; };
+		4B0175092225302700A215E6 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B0175072225302700A215E6 /* MainInterface.storyboard */; };
+		4B01750D2225302700A215E6 /* DistanceIntentsUI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4B0175012225302600A215E6 /* DistanceIntentsUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4B0175102225302700A215E6 /* DistanceIntents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4B0174F82225302600A215E6 /* DistanceIntents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4B01751B222531A500A215E6 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 4B01751A222531A500A215E6 /* Intents.intentdefinition */; };
+		4B01751C222531A500A215E6 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 4B01751A222531A500A215E6 /* Intents.intentdefinition */; };
+		4B01751D222531A500A215E6 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 4B01751A222531A500A215E6 /* Intents.intentdefinition */; };
+		4B01751F222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01751E222534B000A215E6 /* DistanceOfGreenIntentHandler.swift */; };
+		4B017520222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01751E222534B000A215E6 /* DistanceOfGreenIntentHandler.swift */; };
+		4B017521222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01751E222534B000A215E6 /* DistanceOfGreenIntentHandler.swift */; };
+		4B017524222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B017522222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld */; };
+		4B017525222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B017522222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld */; };
+		4B017526222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B017522222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld */; };
+		4B01799B22256D7200A215E6 /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01799A22256D7100A215E6 /* CoreDataStorage.swift */; };
+		4B01799C22256D7200A215E6 /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01799A22256D7100A215E6 /* CoreDataStorage.swift */; };
+		4B01799D22256D7200A215E6 /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01799A22256D7100A215E6 /* CoreDataStorage.swift */; };
 		4B04C4C920C03930000D2C23 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C320C03930000D2C23 /* Spinner.swift */; };
 		4B04C4CA20C03930000D2C23 /* SDLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C420C03930000D2C23 /* SDLoader.swift */; };
 		4B04C4CB20C03930000D2C23 /* Sector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C520C03930000D2C23 /* Sector.swift */; };
@@ -269,6 +287,38 @@
 		4BF564EF1FD2AA03006BDB0E /* String+Width.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF564EE1FD2AA03006BDB0E /* String+Width.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4B01750B2225302700A215E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D5D4A2F1F94D382004621C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B0175002225302600A215E6;
+			remoteInfo = DistanceIntentsUI;
+		};
+		4B01750E2225302700A215E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D5D4A2F1F94D382004621C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B0174F72225302600A215E6;
+			remoteInfo = DistanceIntents;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4B0175172225302700A215E6 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4B01750D2225302700A215E6 /* DistanceIntentsUI.appex in Embed App Extensions */,
+				4B0175102225302700A215E6 /* DistanceIntents.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		03AEE031B334C7493B9375BC /* Pods_Golfication.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Golfication.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D2CA1C31FB4360900CE9D82 /* UIColor+GLFAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+GLFAdditions.swift"; sourceTree = "<group>"; };
@@ -365,6 +415,20 @@
 		4B0067991F9E151D0060E6BB /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		4B0174E6222124E400A215E6 /* GoogleService-Info-demo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-demo.plist"; sourceTree = "<group>"; };
 		4B0174F22225255400A215E6 /* CoreDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModels.swift; sourceTree = "<group>"; };
+		4B0174F82225302600A215E6 /* DistanceIntents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DistanceIntents.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B0174FA2225302600A215E6 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		4B0174FC2225302600A215E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B0175012225302600A215E6 /* DistanceIntentsUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DistanceIntentsUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B0175022225302700A215E6 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
+		4B0175052225302700A215E6 /* IntentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentViewController.swift; sourceTree = "<group>"; };
+		4B0175082225302700A215E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		4B01750A2225302700A215E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B017518222530B100A215E6 /* DistanceIntents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DistanceIntents.entitlements; sourceTree = "<group>"; };
+		4B017519222530C200A215E6 /* DistanceIntentsUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DistanceIntentsUI.entitlements; sourceTree = "<group>"; };
+		4B01751A222531A500A215E6 /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
+		4B01751E222534B000A215E6 /* DistanceOfGreenIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceOfGreenIntentHandler.swift; sourceTree = "<group>"; };
+		4B017523222536E300A215E6 /* CoreDataDistanceModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataDistanceModel.xcdatamodel; sourceTree = "<group>"; };
+		4B01799A22256D7100A215E6 /* CoreDataStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStorage.swift; sourceTree = "<group>"; };
 		4B04C4C320C03930000D2C23 /* Spinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		4B04C4C420C03930000D2C23 /* SDLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDLoader.swift; sourceTree = "<group>"; };
 		4B04C4C520C03930000D2C23 /* Sector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sector.swift; sourceTree = "<group>"; };
@@ -578,14 +642,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B0174F52225302600A215E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0174FE2225302600A215E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B0175032225302700A215E6 /* IntentsUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0D5D4A2E1F94D382004621C7 = {
 			isa = PBXGroup;
 			children = (
+				4B01799A22256D7100A215E6 /* CoreDataStorage.swift */,
+				4B01751A222531A500A215E6 /* Intents.intentdefinition */,
+				4B017522222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld */,
 				3EC2B2712011C50200E9AF6A /* Keys */,
 				0D5D4A391F94D382004621C7 /* Golfication */,
+				4B0174F92225302600A215E6 /* DistanceIntents */,
+				4B0175042225302700A215E6 /* DistanceIntentsUI */,
 				0D5D4A381F94D382004621C7 /* Products */,
 				DB1FB1DD9AFC91304E29BD61 /* Pods */,
 				E5CF73F40FE57CA4A12729BD /* Frameworks */,
@@ -596,6 +680,8 @@
 			isa = PBXGroup;
 			children = (
 				0D5D4A371F94D382004621C7 /* Golfication.app */,
+				4B0174F82225302600A215E6 /* DistanceIntents.appex */,
+				4B0175012225302600A215E6 /* DistanceIntentsUI.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -765,6 +851,28 @@
 				3E035F78215293F000019014 /* TI_OAD */,
 			);
 			path = DeviceFramework;
+			sourceTree = "<group>";
+		};
+		4B0174F92225302600A215E6 /* DistanceIntents */ = {
+			isa = PBXGroup;
+			children = (
+				4B01751E222534B000A215E6 /* DistanceOfGreenIntentHandler.swift */,
+				4B017518222530B100A215E6 /* DistanceIntents.entitlements */,
+				4B0174FA2225302600A215E6 /* IntentHandler.swift */,
+				4B0174FC2225302600A215E6 /* Info.plist */,
+			);
+			path = DistanceIntents;
+			sourceTree = "<group>";
+		};
+		4B0175042225302700A215E6 /* DistanceIntentsUI */ = {
+			isa = PBXGroup;
+			children = (
+				4B017519222530C200A215E6 /* DistanceIntentsUI.entitlements */,
+				4B0175052225302700A215E6 /* IntentViewController.swift */,
+				4B0175072225302700A215E6 /* MainInterface.storyboard */,
+				4B01750A2225302700A215E6 /* Info.plist */,
+			);
+			path = DistanceIntentsUI;
 			sourceTree = "<group>";
 		};
 		4B04C4C220C03930000D2C23 /* SDLoader */ = {
@@ -1331,6 +1439,7 @@
 				3E70B69B201867730087738D /* StoreKit.framework */,
 				0D42F8731FC6B74A00A97389 /* MapKit.framework */,
 				03AEE031B334C7493B9375BC /* Pods_Golfication.framework */,
+				4B0175022225302700A215E6 /* IntentsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1350,15 +1459,52 @@
 				3C5A191B4829DC65924E33DF /* [CP] Copy Pods Resources */,
 				3EC2B2702011C31D00E9AF6A /* Upload Symbols for crash reporting */,
 				3E8323262019F2BA0015A5D3 /* ShellScript */,
+				4B0175172225302700A215E6 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4B01750C2225302700A215E6 /* PBXTargetDependency */,
+				4B01750F2225302700A215E6 /* PBXTargetDependency */,
 			);
 			name = Golfication;
 			productName = Golfication;
 			productReference = 0D5D4A371F94D382004621C7 /* Golfication.app */;
 			productType = "com.apple.product-type.application";
+		};
+		4B0174F72225302600A215E6 /* DistanceIntents */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B0175162225302700A215E6 /* Build configuration list for PBXNativeTarget "DistanceIntents" */;
+			buildPhases = (
+				4B0174F42225302600A215E6 /* Sources */,
+				4B0174F52225302600A215E6 /* Frameworks */,
+				4B0174F62225302600A215E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DistanceIntents;
+			productName = DistanceIntents;
+			productReference = 4B0174F82225302600A215E6 /* DistanceIntents.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		4B0175002225302600A215E6 /* DistanceIntentsUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B0175152225302700A215E6 /* Build configuration list for PBXNativeTarget "DistanceIntentsUI" */;
+			buildPhases = (
+				4B0174FD2225302600A215E6 /* Sources */,
+				4B0174FE2225302600A215E6 /* Frameworks */,
+				4B0174FF2225302600A215E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DistanceIntentsUI;
+			productName = DistanceIntentsUI;
+			productReference = 4B0175012225302600A215E6 /* DistanceIntentsUI.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -1366,7 +1512,7 @@
 		0D5D4A2F1F94D382004621C7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0900;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Khelfie;
 				TargetAttributes = {
@@ -1375,6 +1521,9 @@
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
@@ -1388,7 +1537,25 @@
 								enabled = 1;
 							};
 							com.apple.Siri = {
-								enabled = 0;
+								enabled = 1;
+							};
+						};
+					};
+					4B0174F72225302600A215E6 = {
+						CreatedOnToolsVersion = 10.1;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					4B0175002225302600A215E6 = {
+						CreatedOnToolsVersion = 10.1;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
 							};
 						};
 					};
@@ -1412,6 +1579,8 @@
 			projectRoot = "";
 			targets = (
 				0D5D4A361F94D382004621C7 /* Golfication */,
+				4B0174F72225302600A215E6 /* DistanceIntents */,
+				4B0175002225302600A215E6 /* DistanceIntentsUI */,
 			);
 		};
 /* End PBXProject section */
@@ -1480,6 +1649,21 @@
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
 				4B8C8D371FF674D0001F5D01 /* SF-Pro-Display-Black.otf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0174F62225302600A215E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0174FF2225302600A215E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B0175092225302700A215E6 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1622,6 +1806,7 @@
 				4B132F5C205A6D1900791656 /* NewUserProfileVC.swift in Sources */,
 				4B1F6BCE2090A29F00312EA7 /* CustomPopUpViewController.swift in Sources */,
 				4B54A9E520C94B9B004285AF /* BluetoothDelegate.swift in Sources */,
+				4B01751B222531A500A215E6 /* Intents.intentdefinition in Sources */,
 				4B7E2A692175C0D900DFC3EB /* ARObjectView.m in Sources */,
 				3EA43D042015D80E0077B14A /* ExploreVC.swift in Sources */,
 				4BD5CF85214D212500BEBEED /* RefreshSubscriptionManager.swift in Sources */,
@@ -1654,6 +1839,7 @@
 				3E59234920A991C60056D446 /* GolfBagVC.swift in Sources */,
 				3EA0E268212AEC19009D7405 /* SwingTableViewCell.swift in Sources */,
 				4B7F521F2158DC6F002E328A /* PKCCropHelper.swift in Sources */,
+				4B01799B22256D7200A215E6 /* CoreDataStorage.swift in Sources */,
 				4B1F6BDC2090A29F00312EA7 /* PlacesLoader.swift in Sources */,
 				3EF2A0A4200A2AF700089E9F /* DemoFooterView.swift in Sources */,
 				4BB26D2B1FF77EDB001E9556 /* Rounds.swift in Sources */,
@@ -1752,6 +1938,7 @@
 				3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */,
 				4B1F6BD62090A29F00312EA7 /* ScoreBoardVC.swift in Sources */,
 				3E380EED1FFCCD4A00246865 /* NotificationTableViewCell.swift in Sources */,
+				4B01751F222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */,
 				3E626A79201C4EB3002D6176 /* NotificationViewCell.swift in Sources */,
 				3EEC413E20E1031D0093D0CC /* StartGameModeObj.swift in Sources */,
 				3E03F11A207F593A001DDC5F /* ScrollableStackView.swift in Sources */,
@@ -1794,6 +1981,7 @@
 				4B7E2A842175DDA100DFC3EB /* DetailView.swift in Sources */,
 				3E70B69A201867590087738D /* IAPHandler.swift in Sources */,
 				4B7F4AE31FFD10A300191452 /* customPieViewCenter.swift in Sources */,
+				4B017524222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */,
 				4BB26D2A1FF77EDB001E9556 /* SessionViewController.swift in Sources */,
 				0DE6ACFA1FBF00D9004A5D9E /* UILabel+Corner.swift in Sources */,
 				4BF564EF1FD2AA03006BDB0E /* String+Width.swift in Sources */,
@@ -1814,7 +2002,44 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B0174F42225302600A215E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B01799C22256D7200A215E6 /* CoreDataStorage.swift in Sources */,
+				4B017520222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */,
+				4B017525222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */,
+				4B01751C222531A500A215E6 /* Intents.intentdefinition in Sources */,
+				4B0174FB2225302600A215E6 /* IntentHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0174FD2225302600A215E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B01799D22256D7200A215E6 /* CoreDataStorage.swift in Sources */,
+				4B017521222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */,
+				4B017526222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */,
+				4B01751D222531A500A215E6 /* Intents.intentdefinition in Sources */,
+				4B0175062225302700A215E6 /* IntentViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4B01750C2225302700A215E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B0175002225302600A215E6 /* DistanceIntentsUI */;
+			targetProxy = 4B01750B2225302700A215E6 /* PBXContainerItemProxy */;
+		};
+		4B01750F2225302700A215E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B0174F72225302600A215E6 /* DistanceIntents */;
+			targetProxy = 4B01750E2225302700A215E6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0D5D4A431F94D382004621C7 /* LaunchScreen.storyboard */ = {
@@ -1835,6 +2060,14 @@
 				3E27BA5B20FF4D7700DC14AB /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		4B0175072225302700A215E6 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4B0175082225302700A215E6 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 		4B17C4702195BCF7004CA13C /* Localizable.strings */ = {
@@ -1970,6 +2203,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 74C4161709B89182A1A47152 /* Pods-Golfication.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1980,7 +2214,8 @@
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Golfication/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				INTENTS_CODEGEN_LANGUAGE = Swift;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1996,6 +2231,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BAEB7E85ED122E864139FDF9 /* Pods-Golfication.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2006,7 +2242,8 @@
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				INFOPLIST_FILE = Golfication/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				INTENTS_CODEGEN_LANGUAGE = Swift;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2015,6 +2252,92 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		4B0175112225302700A215E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = DistanceIntents/DistanceIntents.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FE7D783SLH;
+				INFOPLIST_FILE = DistanceIntents/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie.DistanceIntents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4B0175122225302700A215E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = DistanceIntents/DistanceIntents.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FE7D783SLH;
+				INFOPLIST_FILE = DistanceIntents/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie.DistanceIntents;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4B0175132225302700A215E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = DistanceIntentsUI/DistanceIntentsUI.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FE7D783SLH;
+				INFOPLIST_FILE = DistanceIntentsUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie.DistanceIntentsUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4B0175142225302700A215E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = DistanceIntentsUI/DistanceIntentsUI.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FE7D783SLH;
+				INFOPLIST_FILE = DistanceIntentsUI/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie.DistanceIntentsUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -2039,7 +2362,38 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		4B0175152225302700A215E6 /* Build configuration list for PBXNativeTarget "DistanceIntentsUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B0175132225302700A215E6 /* Debug */,
+				4B0175142225302700A215E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B0175162225302700A215E6 /* Build configuration list for PBXNativeTarget "DistanceIntents" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B0175112225302700A215E6 /* Debug */,
+				4B0175122225302700A215E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4B017522222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4B017523222536E300A215E6 /* CoreDataDistanceModel.xcdatamodel */,
+			);
+			currentVersion = 4B017523222536E300A215E6 /* CoreDataDistanceModel.xcdatamodel */;
+			path = CoreDataDistanceModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 0D5D4A2F1F94D382004621C7 /* Project object */;
 }
