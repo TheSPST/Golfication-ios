@@ -2161,9 +2161,6 @@ extension BLE: CBPeripheralDelegate {
                 if let holeShotArr = holeData.value(forKey: "shots") as? NSArray{
                     shotNm = holeShotArr.count
                 }
-                if let _ = holeData.value(forKey: "shotTracking") as? NSMutableDictionary{
-                    shotNm += 1
-                }
             }
         }
         return shotNm
