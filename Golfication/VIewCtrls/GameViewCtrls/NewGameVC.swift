@@ -2547,6 +2547,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 //center.removePendingNotificationRequests(withIdentifiers: ["UYLLocalNotification"])
             }
         }
+        BackgroundMapStats.deleteCoreData()
         self.scoring.removeAll()
         scoring.removeAll()
         let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
@@ -2618,6 +2619,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }
             }
         }
+        BackgroundMapStats.deleteCoreData()
         //-----------------------------------
         var holIndex = -1
         FBSomeEvents.shared.logGameEndedEvent(holesPlayed: totalThru, valueToSum: Double(Constants.mode))

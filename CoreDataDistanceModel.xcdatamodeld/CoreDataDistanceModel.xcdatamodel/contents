@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18D32a" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CourseDetailsEntity" representedClassName="CourseDetailsEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="cName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imgUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uName" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="FrontBackDistanceEntity" representedClassName="FrontBackDistanceEntity" syncable="YES" codeGenerationType="class">
         <attribute name="backLat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="backLng" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
@@ -22,5 +27,6 @@
         <element name="FrontBackDistanceEntity" positionX="-36" positionY="9" width="128" height="135"/>
         <element name="GreenDistanceEntity" positionX="-54" positionY="-9" width="128" height="90"/>
         <element name="TeeDistanceEntity" positionX="-9" positionY="81" width="128" height="90"/>
+        <element name="CourseDetailsEntity" positionX="-18" positionY="72" width="128" height="90"/>
     </elements>
 </model>

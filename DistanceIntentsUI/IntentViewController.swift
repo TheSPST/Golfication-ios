@@ -75,7 +75,7 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
                         
                         // ----------------------------------------------------------------
                         
-                        let locationValue = [["name":"User","lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
+                        let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
                                              ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]
                             //,
 //                                             ["name":"Front\(Int(distanceUtil.distanceToFront))","lat":"\(distanceUtil.nearbuyPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.nearbuyPointOfGreen.coordinate.longitude)"],

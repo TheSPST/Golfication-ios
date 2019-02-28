@@ -788,7 +788,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         debugPrint("SaveNExit Tapped")
         self.exitGamePopUpView.hide(navItem: self.navigationItem)
-
+        BackgroundMapStats.deleteCoreData()
     }
     func discardPressed(button:UIButton) {
         debugPrint("discard Tapped")
@@ -1408,7 +1408,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 //center.removePendingNotificationRequests(withIdentifiers: ["UYLLocalNotification"])
             }
         }
-        
+        BackgroundMapStats.deleteCoreData()
         self.scoring.removeAll()
         scoring.removeAll()
         let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
@@ -1828,9 +1828,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.getScoreFromMatchDataFirebases()
             if self.holeIndex == hole{
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
-                    if !self.markersForCurved.isEmpty{
-                        self.updateStateWhileDragging(marker:self.markersForCurved.last!)
-                    }
                     self.updateMap(indexToUpdate: self.holeIndex)
                     self.getSwingData(swingKey: self.swingMatchId)
                 })
@@ -2237,6 +2234,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 teeEntity.lng = data.tee.longitude
                 CoreDataStorage.saveContext(self.context)
                 i += 1
+            }
+            if let courseDataEn = NSEntityDescription.insertNewObject(forEntityName: "CourseDetailsEntity", into: self.context) as? CourseDetailsEntity{
+                courseDataEn.cName = self.matchDataDict.value(forKey: "courseName") as? String
+                courseDataEn.uName = Auth.auth().currentUser!.displayName
+                courseDataEn.imgUrl = ""
+                CoreDataStorage.saveContext(self.context)
             }
         }
         setupMultiplayersButton()

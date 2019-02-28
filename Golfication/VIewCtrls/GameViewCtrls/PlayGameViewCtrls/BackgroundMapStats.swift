@@ -10,9 +10,11 @@ import UIKit
 import Firebase
 import GoogleMaps
 import Intents
+import CoreData
 class BackgroundMapStats: NSObject {
     static var blockRecursionIssue = 0
     static let clubsFullForm = ["Dr":"Driver","w":"Wood","h":"Hybrid","i":"Iron","Pw":"P Wedge","Gw":"Gap Wedge","Sw":"Sand Wedge","Lw":"Lob Wedge","Pu":"Putter"]
+    static let context = CoreDataStorage.mainQueueContext()
 
     static func getClubName(club:String)->String{
         var clubToShow = String()
@@ -503,6 +505,18 @@ class BackgroundMapStats: NSObject {
                     debugPrint("Successfully donated interaction")
                 }
             }
+        }
+    }
+    static func deleteCoreData(){
+        self.context.performAndWait{ () -> Void in
+            let arr = ["CourseDetailsEntity","TeeDistanceEntity","FrontBackDistanceEntity","GreenDistanceEntity"]
+            arr.forEach({ (string) in
+                if let counter1 = NSManagedObject.findAllForEntity(string, context: self.context){
+                    counter1.forEach { counter in
+                        self.context.delete(counter as! NSManagedObject)
+                    }
+                }
+            })
         }
     }
     static func getDynamicLinkFromPromocode(code:String){
