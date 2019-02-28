@@ -391,5 +391,4 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
     @IBAction func backAction(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
-    
 }

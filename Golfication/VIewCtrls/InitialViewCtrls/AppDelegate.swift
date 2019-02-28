@@ -32,6 +32,7 @@
     var locationManager = CLLocationManager()
     let notificationDelegate = UYLNotificationDelegate()
     var isInternet = true
+    var fromNewUserProfile = false
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
@@ -208,10 +209,10 @@
     @objc func networkStatusChanged(_ notification: NSNotification) {
         let userInfo = (notification as NSNotification).userInfo
         if userInfo!["Status"] as? String == "Offline" {
-//            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
-//            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-//            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
             self.isInternet = false
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
         }else{
             self.isInternet = true
         }
@@ -597,7 +598,7 @@
     @available(iOS 8.0, *)
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
         guard let dynamicLinks = DynamicLinks.dynamicLinks() else { return false }
-        let handled = dynamicLinks.handleUniversalLink(userActivity.webpageURL!) { (dynamicLink, error) in
+        let handled = dynamicLinks.handleUniversalLink(userActivity.webpageURL ?? URL(fileURLWithPath: "")) { (dynamicLink, error) in
             if (dynamicLink != nil) && !(error != nil) {
                 let _ = self.handleDynamicLink(dynamicLink)
             }

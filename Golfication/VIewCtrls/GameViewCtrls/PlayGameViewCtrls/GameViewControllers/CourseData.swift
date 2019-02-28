@@ -499,9 +499,11 @@ class CourseData:NSObject{
             if holeOut && sho.count == 1{
                 wantToDrag = true
             }
+            var isShotTrack = false
             var shotTracking = NSMutableDictionary()
             if let shotsTrac = playersData.value(forKey: "shotTracking") as? NSMutableDictionary{
                 shotTracking = shotsTrac
+                isShotTrack = true
             }
             for i in 0..<sho.count{
                 var shot = NSMutableDictionary()
@@ -524,6 +526,9 @@ class CourseData:NSObject{
                     shots.append(shot)
                 }else{
                     shots.append(shot)
+                }
+                if !isShotTrack && shotTracking.count != 0 && holeOut{
+                    shots.append(shotTracking)
                 }
             }
             
@@ -549,10 +554,12 @@ class CourseData:NSObject{
                     ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/shotTracking").removeValue()
 
                 }else if i == shots.count-1{
-                    playersData.setValue(shots[i], forKey: "shotTracking")
-                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shotTracking":shots.last!] as [AnyHashable : Any])
-                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/shots/\(i)").removeValue()
-                    shots.removeLast()
+                    if shots.last!.count < 8{
+                        playersData.setValue(shots[i], forKey: "shotTracking")
+                        ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shotTracking":shots.last!] as [AnyHashable : Any])
+                        ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/shots/\(i)").removeValue()
+                        shots.removeLast()
+                    }
                 }
                 i += 1
             }

@@ -132,7 +132,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var btnCesBuyNow: UIButton!
     var btnCancel:UIButton!
     var minAppVersion = String()
-    
+
     // MARK: - inviteAction
     @IBAction func inviteAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Profile", bundle: nil)
@@ -270,10 +270,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.btnProfileBasic.setTitleColor(UIColor.white, for: .normal)
     }
     
-    
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+
         if let iosToken = (InstanceID.instanceID().token()){
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :iosToken] as [AnyHashable:String])
         }
@@ -1115,13 +1115,38 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRoundHome"))
     }
-
+    
+    // MARK: - networkStatusChanged
+    @objc func networkStatusChanged(_ notification: NSNotification) {
+        let userInfo = (notification as NSNotification).userInfo
+        if userInfo!["Status"] as? String == "Offline"{
+            _ = Timer.scheduledTimer(withTimeInterval: 7, repeats: false, block: { (timer) in
+                let alert = UIAlertController(title: "Request Timeout.", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+                    debugPrint("OK Alert: \(alert?.title ?? "")")
+                    timer.invalidate()
+                }))
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
+    }
+    
     // MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = true
         self.tabBarController?.tabBar.isHidden = false
         
+        //----------------- Check Internet Connection ---------------------------------
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        if appDelegate.fromNewUserProfile{
+            appDelegate.fromNewUserProfile = false
+            NotificationCenter.default.addObserver(self, selector: #selector(self.networkStatusChanged(_:)), name: NSNotification.Name(rawValue: ReachabilityStatusChangedNotification), object: nil)
+            Reach().monitorReachabilityChanges()
+        }
+
+        // ------------------------------------------------------------
+
         storeAllMacAddress()
         // ---------------- Google Analytics --------------------------------------
         guard let tracker = GAI.sharedInstance().defaultTracker else { return }

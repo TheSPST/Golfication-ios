@@ -68,6 +68,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
 
     @IBOutlet weak var btnWhatIsPro:UIButton!
     @IBOutlet weak var btnConnectGolfX: UIButton!
+    var appDelegate: AppDelegate!
 
     // MARK: - Initialize Variables
     let imagePicker = UIImagePickerController()
@@ -459,9 +460,17 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         serverHandler.getLocations(urlString: urlStr, dataString: dataStr){(arg0, error)  in
             if (arg0 == nil) && (error != nil){
                 DispatchQueue.main.async(execute: {
-                    let alert = UIAlertController(title: "Error", message: error, preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
+                    self.progressView.hide(navItem: self.navigationItem)
+                    if !(self.appDelegate.isInternet){
+                        let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                    else{
+                        let alert = UIAlertController(title: "Error", message: error, preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
                 })
             }
             else{
@@ -730,7 +739,8 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
+        appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true

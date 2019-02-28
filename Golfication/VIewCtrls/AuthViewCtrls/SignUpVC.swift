@@ -28,89 +28,101 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
         
     @IBOutlet weak var btnFb: UILocalizedButton!
     @IBOutlet weak var btnSignUp: UILocalizedButton!
-    
+    var appDelegate: AppDelegate!
+
     @IBAction func fbLoginAction(_ sender: UIButton) {
-        //https://www.appcoda.com/firebase-facebook-login/
-        
-        let fbLoginManager = FBSDKLoginManager()
-        fbLoginManager.logIn(withReadPermissions: ["public_profile", "email", "user_friends"], from: self) { (result, error) in
-            if let error = error {
-                debugPrint("Failed to login: \(error.localizedDescription)")
-                return
-            }
+        if !(self.appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            //https://www.appcoda.com/firebase-facebook-login/
             
-            guard let accessToken = FBSDKAccessToken.current() else {
-                debugPrint("Failed to get access token")
-                return
-            }
-            
-            let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
-            
-            // Perform login by calling Firebase APIs
-            self.progressView.show()
-            Auth.auth().signIn(with: credential, completion: { (user, error) in
+            let fbLoginManager = FBSDKLoginManager()
+            fbLoginManager.logIn(withReadPermissions: ["public_profile", "email", "user_friends"], from: self) { (result, error) in
                 if let error = error {
-                    debugPrint("Login error: \(error.localizedDescription)")
-                    let alertController = UIAlertController(title: "Login Error", message: error.localizedDescription, preferredStyle: .alert)
-                    let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                    alertController.addAction(okayAction)
-                    self.present(alertController, animated: true, completion: nil)
-                    
+                    debugPrint("Failed to login: \(error.localizedDescription)")
                     return
                 }
                 
-                let params = ["fields": "id, first_name, last_name, name, email, picture,gender"]
-                var graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: params)
-                graphRequest.start(completionHandler: { (connection, result, error) -> Void in
-                    if ((error) != nil){
-                        debugPrint("Error: \(String(describing: error))")
-                    }else{
-                        let result = result as! NSDictionary
-                        let fbId = result.value(forKey: "id") as! String
-                        if let email = user?.email{
-                            self.userDetails.setObject(email, forKey: "email" as NSCopying)
-                        }
-                        self.userDetails.setObject((user?.displayName)!, forKey: "name" as NSCopying)
-                        self.userDetails.setObject((fbId), forKey: "fb_id" as NSCopying)
-                        if let gender = result.value(forKey: "gender") as? String{
-                            self.userDetails.setObject(gender, forKey: "gender" as NSCopying)
-                        }
-                        self.userDetails.setObject("\((user?.photoURL)!)", forKey: "image" as NSCopying)
-                        self.userDetails.setObject("\(InstanceID.instanceID().token()!)", forKey: "iosToken" as NSCopying)
+                guard let accessToken = FBSDKAccessToken.current() else {
+                    debugPrint("Failed to get access token")
+                    return
+                }
+                
+                let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
+                
+                // Perform login by calling Firebase APIs
+                self.progressView.show()
+                Auth.auth().signIn(with: credential, completion: { (user, error) in
+                    if let error = error {
+                        debugPrint("Login error: \(error.localizedDescription)")
+                        let alertController = UIAlertController(title: "Login Error", message: error.localizedDescription, preferredStyle: .alert)
+                        let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                        alertController.addAction(okayAction)
+                        self.present(alertController, animated: true, completion: nil)
                         
-                        self.userList.setObject("\((user?.photoURL)!)", forKey: "image" as NSCopying)
-                        self.userList.setObject((user?.displayName)!, forKey: "name" as NSCopying)
-                        self.userList.setObject(Int(NSDate().timeIntervalSince1970*1000), forKey: "timestamp" as NSCopying)
+                        return
                     }
-                })
-                
-                graphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: params)
-                let connection = FBSDKGraphRequestConnection()
-                connection.add(graphRequest, completionHandler: { (connection, result, error) in
-                    if error == nil {
-                        guard let userData = result as? [String : Any] else { return }
-                        guard let jsonData = userData["data"] as? [[String : Any]] else { return }
-                        debugPrint("facebook data", jsonData)
-                        do {
-                            _ = try JSONSerialization.data(withJSONObject: jsonData, options: JSONSerialization.WritingOptions.prettyPrinted)
-                            for friends in jsonData{
-                                //print(" Id : \(friends["id"]!)")
-                                self.friendsDetails.setObject(true, forKey: "\(friends["id"]!)" as NSCopying)
+                    
+                    let params = ["fields": "id, first_name, last_name, name, email, picture,gender"]
+                    var graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: params)
+                    graphRequest.start(completionHandler: { (connection, result, error) -> Void in
+                        if ((error) != nil){
+                            debugPrint("Error: \(String(describing: error))")
+                        }else{
+                            let result = result as! NSDictionary
+                            let fbId = result.value(forKey: "id") as! String
+                            if let email = user?.email{
+                                self.userDetails.setObject(email, forKey: "email" as NSCopying)
                             }
-                            self.friendsDetails.setObject(true, forKey: "jpSgWiruZuOnWybYce55YDYGXP62" as NSCopying)
-
-                        } catch {
-                            debugPrint(error.localizedDescription)
+                            self.userDetails.setObject((user?.displayName)!, forKey: "name" as NSCopying)
+                            self.userDetails.setObject((fbId), forKey: "fb_id" as NSCopying)
+                            if let gender = result.value(forKey: "gender") as? String{
+                                self.userDetails.setObject(gender, forKey: "gender" as NSCopying)
+                            }
+                            self.userDetails.setObject("\((user?.photoURL)!)", forKey: "image" as NSCopying)
+                            if let iosToken = (InstanceID.instanceID().token()){
+                                self.userDetails.setObject(iosToken,forKey: "iosToken" as NSCopying)
+                            }
+                            else{
+                                self.userDetails.setObject("",forKey: "iosToken" as NSCopying)
+                            }
+                            self.userList.setObject("\((user?.photoURL)!)", forKey: "image" as NSCopying)
+                            self.userList.setObject((user?.displayName)!, forKey: "name" as NSCopying)
+                            self.userList.setObject(Int(NSDate().timeIntervalSince1970*1000), forKey: "timestamp" as NSCopying)
                         }
-                    } else {
-                        debugPrint("Error Getting Friends \(String(describing: error))");
-                    }
+                    })
+                    
+                    graphRequest = FBSDKGraphRequest(graphPath: "/me/friends", parameters: params)
+                    let connection = FBSDKGraphRequestConnection()
+                    connection.add(graphRequest, completionHandler: { (connection, result, error) in
+                        if error == nil {
+                            guard let userData = result as? [String : Any] else { return }
+                            guard let jsonData = userData["data"] as? [[String : Any]] else { return }
+                            debugPrint("facebook data", jsonData)
+                            do {
+                                _ = try JSONSerialization.data(withJSONObject: jsonData, options: JSONSerialization.WritingOptions.prettyPrinted)
+                                for friends in jsonData{
+                                    //print(" Id : \(friends["id"]!)")
+                                    self.friendsDetails.setObject(true, forKey: "\(friends["id"]!)" as NSCopying)
+                                }
+                                self.friendsDetails.setObject(true, forKey: "jpSgWiruZuOnWybYce55YDYGXP62" as NSCopying)
+                                
+                            } catch {
+                                debugPrint(error.localizedDescription)
+                            }
+                        } else {
+                            debugPrint("Error Getting Friends \(String(describing: error))");
+                        }
+                    })
+                    
+                    connection.start()
+                    self.updateUserDataIntoFirebase(uid: (user?.uid)!, fbEmail: (user?.email)!, fbName: (user?.displayName)!)
+                    
                 })
-                
-                connection.start()
-                self.updateUserDataIntoFirebase(uid: (user?.uid)!, fbEmail: (user?.email)!, fbName: (user?.displayName)!)
-               
-            })
+            }
         }
     }
     
@@ -219,55 +231,62 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
     }
     
     @IBAction func signUpAction(_ sender: UIButton) {
-        
-        var valid: Bool  = true
-        
-        if ((valid) && (txtFieldName.text == "")) {
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please enter name", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        if((valid) && (txtFieldEmail.text == "")){
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please enter email", preferredStyle: UIAlertControllerStyle.alert)
+        if !(self.appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-            
         }
-        if((valid) && (!(txtFieldEmail.text == ""))) {
-            valid = self.validateEmail(usrEmail: txtFieldEmail.text!)
-        }
-        if ((valid) && (txtFieldPswd.text == "")) {
-            valid = false
+        else{
+            var valid: Bool  = true
             
-            let alert = UIAlertController(title: "Alert", message: "Please enter password", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        if ((valid) && (txtFieldCnfrmPswd.text == "")) {
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please enter confirm  password", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        if ((valid) && ((!(txtFieldPswd.text == ""))&&(!(txtFieldCnfrmPswd.text == ""))&&(!(txtFieldPswd.text == txtFieldCnfrmPswd.text)))) {
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Password and confirm password does not match", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        if(valid){
-            
-            self.sendRegistrationDetailToFirebase()
+            if ((valid) && (txtFieldName.text == "")) {
+                valid = false
+                
+                let alert = UIAlertController(title: "Alert", message: "Please enter name", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+            if((valid) && (txtFieldEmail.text == "")){
+                valid = false
+                
+                let alert = UIAlertController(title: "Alert", message: "Please enter email", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                
+            }
+            if((valid) && (!(txtFieldEmail.text == ""))) {
+                valid = self.validateEmail(usrEmail: txtFieldEmail.text!)
+            }
+            if ((valid) && (txtFieldPswd.text == "")) {
+                valid = false
+                
+                let alert = UIAlertController(title: "Alert", message: "Please enter password", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+            if ((valid) && (txtFieldCnfrmPswd.text == "")) {
+                valid = false
+                
+                let alert = UIAlertController(title: "Alert", message: "Please enter confirm  password", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+            if ((valid) && ((!(txtFieldPswd.text == ""))&&(!(txtFieldCnfrmPswd.text == ""))&&(!(txtFieldPswd.text == txtFieldCnfrmPswd.text)))) {
+                valid = false
+                
+                let alert = UIAlertController(title: "Alert", message: "Password and confirm password does not match", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+            if(valid){
+                
+                self.sendRegistrationDetailToFirebase()
+            }
+
         }
     }
     
@@ -352,7 +371,8 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+
         btnSignUp.backgroundColor = UIColor.clear
         btnSignUp.setTitleColor(UIColor(rgb: 0x008A64), for: .normal)
         btnSignUp.layer.cornerRadius = 3.0

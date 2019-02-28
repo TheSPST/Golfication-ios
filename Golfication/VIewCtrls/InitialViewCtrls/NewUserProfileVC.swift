@@ -65,6 +65,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     var selectedClubs = NSMutableArray()
     var clubsBtn = [UIButton]()
     var currentPageIndex = 0
+    var appDelegate: AppDelegate!
 
     @IBAction func handiPlusAction(_ sender: Any) {
         if self.sliderHandicapNumber.value >= 0.0 && self.sliderHandicapNumber.value < 54.0{
@@ -118,23 +119,30 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     // MARK: – TextFieldDelegate
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        textField.text = ""
-        
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.white.cgColor, UIColor.white.cgColor]
-        gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        gradient.frame = self.leftModeView.bounds
-        self.leftModeView.layer.addSublayer(gradient)
-        
-        let rectShape = CAShapeLayer()
-        rectShape.bounds = self.leftModeView.frame
-        rectShape.position = self.leftModeView.center
-        rectShape.path = UIBezierPath(roundedRect: self.leftModeView.bounds, byRoundingCorners: [.bottomLeft , .topLeft], cornerRadii: CGSize(width: 5, height: 5)).cgPath
-        self.leftModeView.layer.backgroundColor = UIColor.white.cgColor
-        self.leftModeView.layer.mask = rectShape
-        
-        return true
+        if !(self.appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return false
+        }
+        else{
+            textField.text = ""
+            
+            let gradient = CAGradientLayer()
+            gradient.colors = [UIColor.white.cgColor, UIColor.white.cgColor]
+            gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+            gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+            gradient.frame = self.leftModeView.bounds
+            self.leftModeView.layer.addSublayer(gradient)
+            
+            let rectShape = CAShapeLayer()
+            rectShape.bounds = self.leftModeView.frame
+            rectShape.position = self.leftModeView.center
+            rectShape.path = UIBezierPath(roundedRect: self.leftModeView.bounds, byRoundingCorners: [.bottomLeft , .topLeft], cornerRadii: CGSize(width: 5, height: 5)).cgPath
+            self.leftModeView.layer.backgroundColor = UIColor.white.cgColor
+            self.leftModeView.layer.mask = rectShape
+            return true
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
@@ -302,54 +310,68 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = true
+        appDelegate = (UIApplication.shared.delegate as! AppDelegate)
     }
     
     // MARK: nearestCourseAction
     let locationManager = CLLocationManager()
     @IBAction func nearestCourseAction(_ sender: Any) {
-        searchTxtField.resignFirstResponder()
-        
-        switch CLLocationManager.authorizationStatus() {
-        case .notDetermined:
-            // Request when-in-use authorization initially
-            locationManager.requestAlwaysAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            break
-            
-        case .restricted, .denied:
-            
-            // Disable location features
-            let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "Please enable GPS to get your nearest course.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
-                let url = URL(string: UIApplicationOpenSettingsURLString)!
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }))
+        if !(self.appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-            break
-            
-        case .authorizedWhenInUse, .authorizedAlways:
-            // Enable basic location features
-            if let currentLocation: CLLocation = locationManager.location{
+        }
+        else{
+            searchTxtField.resignFirstResponder()
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined:
+                // Request when-in-use authorization initially
+                locationManager.requestAlwaysAuthorization()
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                break
                 
-                self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
-            }
-            else{
-                let alert = UIAlertController(title: "Error", message: "Unable to get your current location. ", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            case .restricted, .denied:
+                
+                // Disable location features
+                let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "Please enable GPS to get your nearest course.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+                    let url = URL(string: UIApplicationOpenSettingsURLString)!
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }))
                 self.present(alert, animated: true, completion: nil)
+                break
+                
+            case .authorizedWhenInUse, .authorizedAlways:
+                // Enable basic location features
+                if let currentLocation: CLLocation = locationManager.location{
+                    
+                    self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
+                }
+                else{
+                    let alert = UIAlertController(title: "Error", message: "Unable to get your current location. ", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+                break
             }
-            break
         }
     }
     
     // MARK: searchBtnTapped
     @IBAction func searchBtnTapped(_ sender: Any) {
-        searchTxtField.resignFirstResponder()
-        tblViewHConstraint.constant = 0
-        nearMeContainerView.isHidden = false
-        if !(searchTxtField.text == "") {
-            self.searchGolfLocation(searchText: searchTxtField.text!)
+        if !(self.appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            searchTxtField.resignFirstResponder()
+            tblViewHConstraint.constant = 0
+            nearMeContainerView.isHidden = false
+            if !(searchTxtField.text == "") {
+                self.searchGolfLocation(searchText: searchTxtField.text!)
+            }
         }
     }
     
@@ -685,6 +707,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             currentPageIndex = 0
             let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.fromNewUserProfile = true
             appDelegate.window?.rootViewController = tabBarCtrl
         }
     }
@@ -706,6 +729,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             currentPageIndex = 0
             let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.fromNewUserProfile = true
             appDelegate.window?.rootViewController = tabBarCtrl
         }
     }

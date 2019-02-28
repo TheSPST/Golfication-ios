@@ -25,37 +25,53 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
     let context = CoreDataStorage.mainQueueContext()
     var counter : GreenDistanceEntity?
     var c : FrontBackDistanceEntity?
-    var locationManager = CLLocationManager()
-    
+//    var locationManager = CLLocationManager()
+    let userLocation = UserLocationManager()
+    let distanceUtil = DistanceUtil()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if(locationManager.location == nil){
-            locationManager.requestAlwaysAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        if(userLocation.locationManager.location == nil){
+            userLocation.locationManager.requestAlwaysAuthorization()
+            userLocation.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
         
-        if let currentLocation: CLLocation = self.locationManager.location{
-            self.mapView.mapType = MKMapType.standard
+        if let currentLocation: CLLocation = userLocation.locationManager.location{
+            self.mapView.mapType = MKMapType.satellite
+            
             self.context.performAndWait{ () -> Void in
-                let counter = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context)
-                if (counter?.last != nil) {
-                    self.counter = (counter?.last as! GreenDistanceEntity)
-                    let location = CLLocationCoordinate2D(latitude: (self.counter?.lat)!,longitude: (self.counter?.lng)!)
-                    let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-                    let region = MKCoordinateRegion(center: location, span: span)
-                    self.mapView.setRegion(region, animated: true)
-                    
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = location
-                    annotation.title = "Qutub Golf Course"
-                    //annotation.subtitle = "Qutub"
-                    self.mapView.addAnnotation(annotation)
-                    
-                    //self.mapView.showsUserLocation = true
-                    //let currentLocation = self.mapView.userLocation.location
-                    let distanceInMeters = currentLocation.distance(from: CLLocation(latitude: location.latitude, longitude: location.longitude))
-                    labl.text = "Distance To Hole : \(Int(distanceInMeters)) Meter"
+                if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity]{
+                    if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity]{
+                        let distanceInMeters =  distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
+                        
+                        let location = CLLocationCoordinate2D(latitude: distanceUtil.flagPointOfGreen.coordinate.latitude,longitude: distanceUtil.flagPointOfGreen.coordinate.longitude)
+                        let span = MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
+                        let region = MKCoordinateRegion(center: location, span: span)
+                        self.mapView.setRegion(region, animated: true)
+
+                        let annotationUser = MKPointAnnotation()
+                        annotationUser.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.currentLocation.coordinate.latitude,longitude: distanceUtil.currentLocation.coordinate.longitude)
+                        annotationUser.title = "User"
+
+                        let annotationFlag = MKPointAnnotation()
+                        annotationFlag.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.flagPointOfGreen.coordinate.latitude,longitude: distanceUtil.flagPointOfGreen.coordinate.longitude)
+                        annotationFlag.title = "Flag\(Int(distanceUtil.distanceToCenter))"
+
+                        let annotationFront = MKPointAnnotation()
+                        annotationFront.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.nearbuyPointOfGreen.coordinate.latitude,longitude: distanceUtil.nearbuyPointOfGreen.coordinate.longitude)
+                        annotationFront.title = "Front\(Int(distanceUtil.distanceToFront))"
+
+                        let annotationBack = MKPointAnnotation()
+                        annotationBack.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.endPointOfGreen.coordinate.latitude,longitude: distanceUtil.endPointOfGreen.coordinate.longitude)
+                        annotationBack.title = "Back\(Int(distanceUtil.distanceToBack))"
+
+                        self.mapView.addAnnotation(annotationUser)
+                        self.mapView.addAnnotation(annotationBack)
+                        self.mapView.addAnnotation(annotationFront)
+                        self.mapView.addAnnotation(annotationFlag)
+                        
+                        labl.text = distanceInMeters
+                    }
                 }
             }
         }

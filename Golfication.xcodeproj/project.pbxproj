@@ -120,6 +120,9 @@
 		4B0788F920A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */; };
 		4B132F5C205A6D1900791656 /* NewUserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B132F5B205A6D1900791656 /* NewUserProfileVC.swift */; };
 		4B17C4722195BCF7004CA13C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B17C4702195BCF7004CA13C /* Localizable.strings */; };
+		4B1B1C832226CE8B00FB569F /* DistanceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */; };
+		4B1B1C842226CE8B00FB569F /* DistanceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */; };
+		4B1B1C852226CE8B00FB569F /* DistanceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */; };
 		4B1F6BC32090A29F00312EA7 /* FeedbackVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B932090A29F00312EA7 /* FeedbackVC.swift */; };
 		4B1F6BC62090A29F00312EA7 /* CustomStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 4B1F6B972090A29F00312EA7 /* CustomStyle.json */; };
 		4B1F6BC72090A29F00312EA7 /* Bound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B982090A29F00312EA7 /* Bound.swift */; };
@@ -441,6 +444,7 @@
 		4B17C4712195BCF7004CA13C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4B17C4772195BE43004CA13C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4B17C4782195BF4C004CA13C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceUtil.swift; sourceTree = "<group>"; };
 		4B1F6B932090A29F00312EA7 /* FeedbackVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackVC.swift; sourceTree = "<group>"; };
 		4B1F6B972090A29F00312EA7 /* CustomStyle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CustomStyle.json; sourceTree = "<group>"; };
 		4B1F6B982090A29F00312EA7 /* Bound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bound.swift; sourceTree = "<group>"; };
@@ -856,9 +860,10 @@
 		4B0174F92225302600A215E6 /* DistanceIntents */ = {
 			isa = PBXGroup;
 			children = (
+				4B0174FA2225302600A215E6 /* IntentHandler.swift */,
+				4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */,
 				4B01751E222534B000A215E6 /* DistanceOfGreenIntentHandler.swift */,
 				4B017518222530B100A215E6 /* DistanceIntents.entitlements */,
-				4B0174FA2225302600A215E6 /* IntentHandler.swift */,
 				4B0174FC2225302600A215E6 /* Info.plist */,
 			);
 			path = DistanceIntents;
@@ -1859,6 +1864,7 @@
 				3E3367F02130052E00AC238F /* HomeFreeProMemberVC.swift in Sources */,
 				4B1F6BC92090A29F00312EA7 /* ShareMapScoreVC.swift in Sources */,
 				4BB26D211FF77EDB001E9556 /* PuttingViewController.swift in Sources */,
+				4B1B1C832226CE8B00FB569F /* DistanceUtil.swift in Sources */,
 				4B54A9E020C91838004285AF /* BluetoothSync.swift in Sources */,
 				4BB26CC71FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m in Sources */,
 				4BB26D281FF77EDB001E9556 /* SessionReportVC.swift in Sources */,
@@ -2006,6 +2012,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B1B1C842226CE8B00FB569F /* DistanceUtil.swift in Sources */,
 				4B01799C22256D7200A215E6 /* CoreDataStorage.swift in Sources */,
 				4B017520222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */,
 				4B017525222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */,
@@ -2018,6 +2025,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B1B1C852226CE8B00FB569F /* DistanceUtil.swift in Sources */,
 				4B01799D22256D7200A215E6 /* CoreDataStorage.swift in Sources */,
 				4B017521222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */,
 				4B017526222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */,

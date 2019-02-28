@@ -118,7 +118,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var detailedScore = NSMutableArray()
     var sharedInstance: BluetoothSync!
     var timeOutTimer = Timer()
-    
+    var appDelegate: AppDelegate!
+
     // Marke : StartingTee Action
     var courseData = CourseData()
     @IBAction func btnActionStartingTee(_ sender: UIButton) {
@@ -275,6 +276,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.reqTimeOutTimer.invalidate()
+
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DiscardCancel"))
         if sharedInstance != nil{
             self.sharedInstance.delegate = nil
@@ -545,7 +548,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             getStrokesGainedFirebaseData()
         }
         getHomeCourse()
-        
     }
     
     func getHomeCourse() {
@@ -642,9 +644,24 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
     
+    var reqTimeOutTimer = Timer()
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(true)
+        
+        appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        if !(appDelegate.isInternet){
+            reqTimeOutTimer = Timer.scheduledTimer(withTimeInterval: 7, repeats: false, block: { (timer) in
+                self.progressView.hide()
+                let alert = UIAlertController(title: "Request Timeout", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+                    debugPrint("OK Alert: \(alert?.title ?? "")")
+                }))
+                timer.invalidate()
+                self.reqTimeOutTimer.invalidate()
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
         Constants.deviceGameType = 1
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
@@ -794,62 +811,81 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: homeCourseAction
     @IBAction func homeCourseAction(_ sender: Any) {
         debugPrint("HomeCourseAction")
-        self.progressView.show()
-        
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails") { (snapshot) in
-            
-            if(snapshot.value != nil){
-                var homeCourseData = NSDictionary()
-                homeCourseData = snapshot.value as! NSDictionary
-                //// -------------------------------------------------
-                
-                self.homeCourseId = homeCourseData.object(forKey: "id") as! String
-                self.homeCourseName = homeCourseData.object(forKey: "name") as! String
-                self.homeCourseLng = homeCourseData.object(forKey: "lng") as! String
-                self.homeCourseLat = homeCourseData.object(forKey: "lat") as! String
-                
-                self.lblGolfName.text = self.homeCourseName
-                
-                Constants.selectedGolfName = self.homeCourseName
-                Constants.selectedGolfID = self.homeCourseId
-                Constants.selectedLat = self.homeCourseLat
-                Constants.selectedLong = self.homeCourseLng
+        if !(appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            self.progressView.show()
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails") { (snapshot) in
+                if(snapshot.value != nil){
+                    var homeCourseData = NSDictionary()
+                    homeCourseData = snapshot.value as! NSDictionary
+                    //// -------------------------------------------------
+                    
+                    self.homeCourseId = homeCourseData.object(forKey: "id") as! String
+                    self.homeCourseName = homeCourseData.object(forKey: "name") as! String
+                    self.homeCourseLng = homeCourseData.object(forKey: "lng") as! String
+                    self.homeCourseLat = homeCourseData.object(forKey: "lat") as! String
+                    
+                    self.lblGolfName.text = self.homeCourseName
+                    
+                    Constants.selectedGolfName = self.homeCourseName
+                    Constants.selectedGolfID = self.homeCourseId
+                    Constants.selectedLat = self.homeCourseLat
+                    Constants.selectedLong = self.homeCourseLng
+                }
+                DispatchQueue.main.async(execute: {
+                    self.progressView.hide()
+                    self.selectedGameTypeFromFirebase()
+                })
             }
-            DispatchQueue.main.async(execute: {
-                self.progressView.hide()
-                self.selectedGameTypeFromFirebase()
-            })
         }
     }
     
     // MARK: nearestCourseAction
     @IBAction func nearestCourseAction(_ sender: Any) {
         debugPrint("NearestCourse")
-        //        let locationManager = CLLocationManager()
-        if(locationManager.location == nil){
-            locationManager.requestAlwaysAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        }
-        if let currentLocation: CLLocation = locationManager.location{
-            self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
+        if !(appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
         else{
-            
-            let alert = UIAlertController(title: "Alert", message: "Please enable GPS to get your nearest course.", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
-                self.locationManager.requestAlwaysAuthorization()
-                self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            }))
-            self.present(alert, animated: true, completion: nil)
+            //let locationManager = CLLocationManager()
+            if(locationManager.location == nil){
+                locationManager.requestAlwaysAuthorization()
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            }
+            if let currentLocation: CLLocation = locationManager.location{
+                self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
+            }
+            else{
+                
+                let alert = UIAlertController(title: "Alert", message: "Please enable GPS to get your nearest course.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in
+                    self.locationManager.requestAlwaysAuthorization()
+                    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                }))
+                self.present(alert, animated: true, completion: nil)
+            }
         }
     }
     
     // MARK: searchLocationAction
     @IBAction func searchLocationAction(_ sender: Any) {
         
-        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "SearchLocationVC") as! SearchLocationVC
-        viewCtrl.fromNewGame = true
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        if !(appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "SearchLocationVC") as! SearchLocationVC
+            viewCtrl.fromNewGame = true
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+        }
     }
     
     // MARK: moreInfoAction
@@ -2559,17 +2595,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 let keyVal = value as! NSDictionary
                                 if let holeOut = keyVal.value(forKey: "holeOut") as? Bool,holeOut{
                                     holeOutCount += 1
-                                }
-                                if let shotsArray = keyVal.value(forKey: "shots") as? NSMutableArray{
-                                    for j in 0..<shotsArray.count{
-                                        let myDic = shotsArray[j] as! NSDictionary
-                                        if let distance = myDic.value(forKey: "distance") as? Double{
-                                            debugPrint("distance",distance)
-                                        }else{
-                                            ref.child("matchData/\(Constants.matchId)/scoring/\(i)/\(Auth.auth().currentUser!.uid)/shotTracking").setValue(shotsArray[j])
-                                            ref.child("matchData/\(Constants.matchId)/scoring/\(i)/\(Auth.auth().currentUser!.uid)/shots/\(j)").setValue(nil)
-                                        }
-                                    }
                                 }
                             }
                         }

@@ -143,6 +143,13 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
+        
+        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        if !(appDelegate.isInternet){
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     override func viewDidLoad() {

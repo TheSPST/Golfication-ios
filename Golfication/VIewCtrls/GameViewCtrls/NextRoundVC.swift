@@ -705,6 +705,11 @@ class NextRoundVC: UIViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.reqTimeOutTimer.invalidate()
+    }
+    var reqTimeOutTimer = Timer()
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(animated)
@@ -713,7 +718,20 @@ class NextRoundVC: UIViewController {
         self.tabBarController?.tabBar.isHidden = true
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
+        
+        if self.progressView.isAnimating!{
+        let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
+        if !(appDelegate.isInternet){
+            reqTimeOutTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { (timer) in
+                let alert = UIAlertController(title: "Request Timeout", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+                    debugPrint("OK Alert: \(alert?.title ?? "")")
+                }))
+                timer.invalidate()
+                self.reqTimeOutTimer.invalidate()
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
     }
+ }
 }
-
-
