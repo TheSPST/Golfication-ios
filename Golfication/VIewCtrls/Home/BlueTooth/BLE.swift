@@ -122,6 +122,7 @@ class BLE: NSObject {
 //        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "startMatchCalling"))
         
         NotificationCenter.default.addObserver(self, selector: #selector(sendEightCommand(_:)), name: NSNotification.Name(rawValue: "command8"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(sendThirteenCommand(_:)), name: NSNotification.Name(rawValue: "command13"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(sendThirdCommandFromMap(_:)), name: NSNotification.Name(rawValue: "command3"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startMatchCalling(_:)), name: NSNotification.Name(rawValue: "startMatchCalling"), object: nil)
         Constants.bleObserver += 1
@@ -545,6 +546,23 @@ class BLE: NSObject {
             self.currentCommandData = param
         })
     }
+    @objc private func sendThirteenCommand(_ notification: NSNotification){
+        if let holeNum = notification.object as? Int{
+            if(Constants.charctersticsGlobalForWrite != nil){
+                self.randomGenerator()
+                let param : [UInt8] = [13,counter,UInt8(holeNum)]
+                var writeData = Data()
+                self.currentCommandData = param
+                writeData =  Data(bytes:param)
+                Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
+            }else{
+                DispatchQueue.main.async {
+                    UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+                }
+            }
+        }
+        
+    }
     @objc private func sendEightCommand(_ notification: NSNotification){
         if(Constants.charctersticsGlobalForWrite != nil){
             var newByteArray = toByteArray(self.currentGameId)
@@ -638,7 +656,7 @@ class BLE: NSObject {
                     }
                 }
                 if(self.holeWithSwing.count == 0){
-                    param.append(0)
+                    param.append(UInt8(self.shotNumFor8th(hole: Int(param.last!))))
                 }else{
                     var totalH = 18
                     if Constants.gameType.contains("9"){
@@ -1468,14 +1486,14 @@ extension BLE: CBPeripheralDelegate {
         }else{
             courseData.processSingleShots(hole: nextData.hole-1)
         }
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: nextData.hole-1)
+//        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: nextData.hole-1)
     }
     
     func updateHoleOutShot(){
         if self.holeNo != 0{
             ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
             ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":true])
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeNo-1)
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeNo-1)
             if self.currentCommandData.first != UInt8(92){
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
             }else{
@@ -1980,7 +1998,7 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[shotNo-1].time = Timestamp
                         debugPrint(swingDetails)
                     }else{
-                        self.currentCommandData[0] = UInt8(91)
+                        self.currentCommandData.insert(UInt8(91), at: 0)
                         holeNo = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].shotNo = Int(dataArray[15])
@@ -2022,7 +2040,7 @@ extension BLE: CBPeripheralDelegate {
                         self.uploadSwingScore()
                         self.playSound()
                     }else{
-                        self.currentCommandData[0] = UInt8(92)
+                        self.currentCommandData.insert( UInt8(92), at: 0)
                         memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
                         memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&lat, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)

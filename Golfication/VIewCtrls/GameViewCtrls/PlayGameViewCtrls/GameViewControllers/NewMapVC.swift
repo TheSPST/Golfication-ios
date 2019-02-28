@@ -1825,105 +1825,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @objc func doAfterResponse(_ notification:NSNotification){
         if let hole = notification.object as? Int{
             debugPrint("HOLE NUMBER:",hole)
-            if self.scoring.count != 0{
-                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/scoring/\(hole)/\(self.selectedUserId)") { (snapshot) in
-                    var playersData = NSMutableDictionary()
-                    if let dict = snapshot.value as? NSMutableDictionary{
-                        playersData = dict
+            self.getScoreFromMatchDataFirebases()
+            if self.holeIndex == hole{
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
+                    if !self.markersForCurved.isEmpty{
+                        self.updateStateWhileDragging(marker:self.markersForCurved.last!)
                     }
-                    DispatchQueue.main.async(execute: {
-                        var holeOut = false
-                        var wantToDrag = false
-                        var shots = [NSMutableDictionary]()
-                        var shotTracking = NSMutableDictionary()
-                        if let shotTrack = playersData.value(forKey: "shotTracking") as? NSMutableDictionary{
-                            shotTracking = shotTrack
-                        }
-                        var isShotTrack = false
-                        holeOut = playersData.value(forKey: "holeOut") as? Bool ?? false
-                        var isSwingSync = playersData.value(forKey: "swing") as? Bool ?? false
-                        if isSwingSync{
-                            if let sho = playersData.value(forKey: "shots") as? NSArray{
-                                debugPrint("shots : ",sho)
-                                wantToDrag = sho.count > 0 ? true:false
-                                for i in 0..<sho.count{
-                                    var shot = NSMutableDictionary()
-                                    if let sh = sho[i] as? NSMutableDictionary{
-                                        shot = sh
-                                    }else{
-                                        shot = shotTracking
-                                        isShotTrack = true
-                                    }
-                                    if let dat = shot.value(forKey: "clubDetected") as? Bool{
-                                        if !dat{
-                                            let latLng = CLLocationCoordinate2D(latitude: shot.value(forKey: "lat1") as! Double, longitude: shot.value(forKey: "lng1") as! Double)
-                                            var lie = self.callFindPositionInsideFeature(position: latLng)
-                                            let distance = GMSGeometryDistance(latLng, self.courseData.centerPointOfTeeNGreen[hole].green)
-                                            if i == 0{
-                                                lie = "T"
-                                            }
-                                            let recommendedClub = self.clubReco(dist: distance, lie: lie)
-                                            shot.setValue(recommendedClub, forKey: "club")
-                                            debugPrint(recommendedClub)
-                                        }
-                                        shots.append(shot)
-                                    }else{
-                                        shots.append(shot)
-                                    }
-                                }
-                                if !isShotTrack && shotTracking.count != 0 && holeOut{
-                                    shots.append(shotTracking)
-                                }
-                            }
-                            playersData.setValue(shots, forKey: "shots")
-                            debugPrint("Count:",shots.count)
-                            let playerDict = NSMutableDictionary()
-                            playerDict.setObject(playersData, forKey: self.selectedUserId as NSCopying)
-                            if let scoring = Constants.matchDataDic.value(forKey: "scoring") as? NSArray{
-                                let sco = scoring
-                                (sco[hole] as! NSMutableDictionary).setValue(playersData, forKey: self.selectedUserId)
-                                Constants.matchDataDic.setValue(sco, forKey: "scoring")
-                            }
-                            self.scoring[hole].players[self.playerIndex] = playerDict
-                            if(holeOut){
-                                ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shotTracking":NSNull()] as [AnyHashable : Any])
-                                self.uploadPutting(playerId: self.selectedUserId)
-                            }else{
-                                debugPrint(shots)
-                                if shots.count > 0 && shots.last!.count < 9{
-                                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shotTracking":shots.last ?? NSNull()] as [AnyHashable : Any])
-                                    shots.removeLast()
-                                    ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["shots":shots] as [AnyHashable : Any])
-                                    debugPrint(shots)
-                                }
-                            }
-                            if self.holeIndex == hole{
-                                ref.child("matchData/\(Constants.matchId)/scoring/\(hole)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":false] as [AnyHashable : Any])
-                                self.updateMap(indexToUpdate: self.holeIndex)
-                                self.getSwingData(swingKey: self.swingMatchId)
-                                if wantToDrag{
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
-                                        for markers in self.markersForCurved{
-                                            self.isDraggingMarker = true
-                                            self.updateStateWhileDragging(marker:markers)
-                                        }
-                                    })
-                                }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                                    self.uploadTotalStrokesGained(playerId: self.selectedUserId)
-                                    if holeOut {
-                                        if self.isNextPrevBtn{
-                                            self.isNextPrevBtn = false
-                                        }
-                                        else{
-                                            self.btnActionPlayerStats(self.btnPlayersStats)
-                                        }
-                                    }
-                                })
-                            }
-                        }
-                    })
-                }
+                    self.updateMap(indexToUpdate: self.holeIndex)
+                    self.getSwingData(swingKey: self.swingMatchId)
+                })
             }
         }
     }
@@ -1961,9 +1871,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         fgViewPanGesture = UIPanGestureRecognizer(target: self, action: #selector(self.draggedFgView(_:)))
         btnMoveToMapGround.addGestureRecognizer(fgViewPanGesture)
         btnMoveToMapGround.addTarget(self, action: #selector(self.openContainer(_:)), for: .touchUpInside)
-        
-        //        btnCenter.addTarget(self, action: #selector(self.openContainer(_:)), for: .touchUpInside)
-        
         btnMoveToMapGround.isHidden = true
         popupFgOffset = self.view.frame.size.height - 64
         self.fgBConstraint.constant = popupFgOffset
@@ -5199,7 +5106,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         if(activePlay.isSelected && activePlay.id == key as! String){
                             let shots = value as! NSDictionary
                             var shotsArray = NSArray()
-//                            var isSwing = false
                             for(key,value)in shots{
                                 if(key as! String == "shots"){
                                     shotsArray = value as! NSArray
@@ -5231,34 +5137,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     }
                                 }
                             }
-                            if (self.swingMatchId.count != 0){
-                                for i in 0..<shotsArray.count {
-                                    let shotLatLng = shotsArray[i] as! NSDictionary
-                                    playerShotsArray.append(shotLatLng as! NSMutableDictionary)
-                                    self.penaltyShots.append(shotLatLng.value(forKey: "penalty") as! Bool)
+                            for i in 0..<shotsArray.count {
+                                let shotLatLng = shotsArray[i] as! NSDictionary
+                                playerShotsArray.append(shotLatLng as! NSMutableDictionary)
+                                self.penaltyShots.append(shotLatLng.value(forKey: "penalty") as! Bool)
+                                if (i == shotsArray.count-1){
                                     positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat1") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng1") as! CLLocationDegrees))
-                                    self.isTracking = true
-                                    if(holeOutFlag) && i == shotsArray.count-1{
-                                        if(shotLatLng.value(forKey: "lat2") != nil){
-                                              self.isTracking = false
-                                            positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat2") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng2") as! CLLocationDegrees))
-                                        }else{
-                                            self.isTracking = false
-                                            positionsOfCurveLines.append(self.positionsOfDotLine.last!)
-                                        }
-                                    }
-                                }
-                            }else{
-                                for i in 0..<shotsArray.count {
-                                    let shotLatLng = shotsArray[i] as! NSDictionary
-                                    playerShotsArray.append(shotLatLng as! NSMutableDictionary)
-                                    self.penaltyShots.append(shotLatLng.value(forKey: "penalty") as! Bool)
-                                    if (i == shotsArray.count-1){
-                                        positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat1") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng1") as! CLLocationDegrees))
-                                        positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat2") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng2") as! CLLocationDegrees))
-                                    }else{
-                                        positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat1") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng1") as! CLLocationDegrees))
-                                    }
+                                    positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat2") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng2") as! CLLocationDegrees))
+                                }else{
+                                    positionsOfCurveLines.append(CLLocationCoordinate2D.init(latitude: shotLatLng.value(forKey: "lat1") as! CLLocationDegrees, longitude: shotLatLng.value(forKey: "lng1") as! CLLocationDegrees))
                                 }
                             }
                         }
@@ -5266,18 +5153,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
             }
             if(isTracking){
-                if !self.swingMatchId.isEmpty && self.positionsOfCurveLines.count == 1{
-                    
-                }else{
-                    self.positionsOfCurveLines.append(self.positionsOfDotLine[0])
-                }
+                self.positionsOfCurveLines.append(self.positionsOfDotLine[0])
             }
             if(positionsOfCurveLines.count != 0){
                 self.shotsDetails = getShotDataOrdered(indexToUpdate: holeIndex,playerId:selectedUserId)
                 shotCount = 0
-                if(shotsDetails.count != 0) && isTracking{
-//                    positionsOfCurveLines.removeLast()
-                }
                 if(self.positionsOfCurveLines.count > 1){
                     positionsOfCurveLines = BackgroundMapStats.removeRepetedElement(curvedArray: positionsOfCurveLines)
                 }
@@ -7033,9 +6913,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func updateCurrentHole(index: Int){
-//        if !swingMatchId.isEmpty{
-//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeIndex)
-//        }
+        if !swingMatchId.isEmpty{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command13"), object: self.holeIndex)
+        }
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.scoring[index].hole)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])

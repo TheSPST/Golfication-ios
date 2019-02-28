@@ -463,6 +463,7 @@ class CourseData:NSObject{
                             return
                         }else{
                             self.startProcessing(playersData: playersData, hole: i)
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: i)
                         }
                     }
                     i += 1
@@ -479,6 +480,7 @@ class CourseData:NSObject{
             }
             DispatchQueue.main.async(execute: {
                 self.startProcessing(playersData:playersData,hole:hole)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: hole)
             })
         }
     }

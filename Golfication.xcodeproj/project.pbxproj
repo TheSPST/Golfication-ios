@@ -158,6 +158,12 @@
 		4B1F6BE92090A29F00312EA7 /* SelectCourseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */; };
 		4B1F6BEA2090A29F00312EA7 /* NewGameScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */; };
 		4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */; };
+		4B3A488C222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
+		4B3A488D222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
+		4B3A488E222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
+		4B3A488F222803080049C15F /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488B222803080049C15F /* LocationView.swift */; };
+		4B3A4890222803080049C15F /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488B222803080049C15F /* LocationView.swift */; };
+		4B3A4891222803080049C15F /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488B222803080049C15F /* LocationView.swift */; };
 		4B4BD77221E366B00067460A /* CesPopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B4BD77121E366B00067460A /* CesPopUpView.xib */; };
 		4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */; };
 		4B4ED1A820BD453E00D9C6DC /* SessionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B4ED1A720BD453E00D9C6DC /* SessionVC.swift */; };
@@ -480,6 +486,8 @@
 		4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCourseData.swift; sourceTree = "<group>"; };
 		4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameScoreTableViewCell.swift; sourceTree = "<group>"; };
 		4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProMemberPopUPVC.swift; sourceTree = "<group>"; };
+		4B3A488A222803070049C15F /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		4B3A488B222803080049C15F /* LocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		4B4BD77121E366B00067460A /* CesPopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CesPopUpView.xib; sourceTree = "<group>"; };
 		4B4ED1A520BD3AA300D9C6DC /* MySwing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MySwing.storyboard; sourceTree = "<group>"; };
 		4B4ED1A720BD453E00D9C6DC /* SessionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionVC.swift; sourceTree = "<group>"; };
@@ -872,6 +880,8 @@
 		4B0175042225302700A215E6 /* DistanceIntentsUI */ = {
 			isa = PBXGroup;
 			children = (
+				4B3A488A222803070049C15F /* Location.swift */,
+				4B3A488B222803080049C15F /* LocationView.swift */,
 				4B017519222530C200A215E6 /* DistanceIntentsUI.entitlements */,
 				4B0175052225302700A215E6 /* IntentViewController.swift */,
 				4B0175072225302700A215E6 /* MainInterface.storyboard */,
@@ -1913,6 +1923,7 @@
 				4BB26D151FF77EDB001E9556 /* FilterCollectionReusableView.swift in Sources */,
 				4B9D0A5B2069155800CE5D9F /* Reach.swift in Sources */,
 				3E380EF11FFCCD6000246865 /* CustomProModeView.swift in Sources */,
+				4B3A488F222803080049C15F /* LocationView.swift in Sources */,
 				3E13F3B8212E999C005D9B70 /* MapForInputViewController.swift in Sources */,
 				4B954302221D1627001128FC /* NotesVC.swift in Sources */,
 				4B1F6BD12090A29F00312EA7 /* PlayersTableViewCell.swift in Sources */,
@@ -1940,6 +1951,7 @@
 				4B7E2A682175C0D900DFC3EB /* RadarView.m in Sources */,
 				4B7E2A6A2175C0D900DFC3EB /* ARKitConfig.m in Sources */,
 				4B9578DF20B4409E008B2C61 /* AssignTabsVC.swift in Sources */,
+				4B3A488C222803080049C15F /* Location.swift in Sources */,
 				4B1F6BCF2090A29F00312EA7 /* ScoreTableViewCell.swift in Sources */,
 				3EBD0F4821198FE90074EC75 /* ReferalViewCtrls.swift in Sources */,
 				4B1F6BD62090A29F00312EA7 /* ScoreBoardVC.swift in Sources */,
@@ -2013,11 +2025,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B1B1C842226CE8B00FB569F /* DistanceUtil.swift in Sources */,
+				4B3A4890222803080049C15F /* LocationView.swift in Sources */,
 				4B01799C22256D7200A215E6 /* CoreDataStorage.swift in Sources */,
 				4B017520222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */,
 				4B017525222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */,
 				4B01751C222531A500A215E6 /* Intents.intentdefinition in Sources */,
 				4B0174FB2225302600A215E6 /* IntentHandler.swift in Sources */,
+				4B3A488D222803080049C15F /* Location.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2026,11 +2040,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B1B1C852226CE8B00FB569F /* DistanceUtil.swift in Sources */,
+				4B3A4891222803080049C15F /* LocationView.swift in Sources */,
 				4B01799D22256D7200A215E6 /* CoreDataStorage.swift in Sources */,
 				4B017521222534B000A215E6 /* DistanceOfGreenIntentHandler.swift in Sources */,
 				4B017526222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld in Sources */,
 				4B01751D222531A500A215E6 /* Intents.intentdefinition in Sources */,
 				4B0175062225302700A215E6 /* IntentViewController.swift in Sources */,
+				4B3A488E222803080049C15F /* Location.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
