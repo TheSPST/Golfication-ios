@@ -229,6 +229,8 @@
 		4B9E7BD52196D889008B6181 /* UILocalizedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */; };
 		4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */; };
 		4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */; };
+		4BA4793B2228334B00FC48AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E4CDC6E211C56B700C2C1C6 /* Assets.xcassets */; };
+		4BA4793C2228336600FC48AB /* IntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0175052225302700A215E6 /* IntentViewController.swift */; };
 		4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA64E452000A54400C8C03F /* Chatlogo.swift */; };
 		4BB26CC71FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC01FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m */; };
 		4BB26CC81FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC21FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.m */; };
@@ -1678,6 +1680,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BA4793B2228334B00FC48AB /* Assets.xcassets in Resources */,
 				4B0175092225302700A215E6 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1948,6 +1951,7 @@
 				3E5EAB041FF7AD2B00F69661 /* AppDelegate.swift in Sources */,
 				3E03F107207C9D8B001DDC5F /* EnterFreeProCodeVC.swift in Sources */,
 				3E03F1202080B36A001DDC5F /* SettingVC.swift in Sources */,
+				4BA4793C2228336600FC48AB /* IntentViewController.swift in Sources */,
 				4B7E2A682175C0D900DFC3EB /* RadarView.m in Sources */,
 				4B7E2A6A2175C0D900DFC3EB /* ARKitConfig.m in Sources */,
 				4B9578DF20B4409E008B2C61 /* AssignTabsVC.swift in Sources */,

@@ -1221,6 +1221,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 if let handed = userData.value(forKey: "handed") as? String{
                     Constants.handed = handed
                 }
+                if let isSiri = userData.value(forKey: "isSiri") as? Bool{
+                    Constants.isSiri = isSiri
+                }
                 if let deviceInfo = userData.value(forKey: "deviceInfo") as? NSMutableDictionary{
                     if let setup = deviceInfo.value(forKey: "setup") as? Bool{
                         if setup{

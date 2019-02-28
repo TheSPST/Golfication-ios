@@ -38,49 +38,15 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
         if let currentLocation: CLLocation = userLocation.locationManager.location{
             self.mapView.mapType = MKMapType.satellite
             self.context.performAndWait{ () -> Void in
+                if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity]{
+                    distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
+                }
                 if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity]{
                     if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity]{
-                        let distanceInMeters =  distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
-                        
-                        //let location = CLLocationCoordinate2D(latitude: distanceUtil.flagPointOfGreen.coordinate.latitude,longitude: distanceUtil.flagPointOfGreen.coordinate.longitude)
-                        //let span = MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
-                        //let region = MKCoordinateRegion(center: location, span: span)
-                        //self.mapView.setRegion(region, animated: true)
-                        
-                        /*let annotationUser = MKPointAnnotation()
-                         annotationUser.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.currentLocation.coordinate.latitude,longitude: distanceUtil.currentLocation.coordinate.longitude)
-                         annotationUser.title = "User"
-                         
-                         let annotationFlag = MKPointAnnotation()
-                         annotationFlag.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.flagPointOfGreen.coordinate.latitude,longitude: distanceUtil.flagPointOfGreen.coordinate.longitude)
-                         annotationFlag.title = "Flag\(Int(distanceUtil.distanceToCenter))"
-                         
-                         let annotationFront = MKPointAnnotation()
-                         annotationFront.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.nearbuyPointOfGreen.coordinate.latitude,longitude: distanceUtil.nearbuyPointOfGreen.coordinate.longitude)
-                         annotationFront.title = "Front\(Int(distanceUtil.distanceToFront))"
-                         
-                         let annotationBack = MKPointAnnotation()
-                         annotationBack.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.endPointOfGreen.coordinate.latitude,longitude: distanceUtil.endPointOfGreen.coordinate.longitude)
-                         annotationBack.title = "Back\(Int(distanceUtil.distanceToBack))"
-                         
-                         let viewRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 28.526066, longitude: 77.200176), latitudinalMeters: 1000, longitudinalMeters: 1000)
-                         let adjustedRegion = self.mapView.regionThatFits(viewRegion)
-                         self.mapView.setRegion(adjustedRegion, animated: true)
-                         self.mapView.removeAnnotations(self.mapView.annotations)
-                         
-                         self.mapView.addAnnotation(annotationUser)
-                         self.mapView.addAnnotation(annotationBack)
-                         self.mapView.addAnnotation(annotationFront)
-                         self.mapView.addAnnotation(annotationFlag)*/
-                        
-                        // ----------------------------------------------------------------
+                        let _ =  distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
                         
                         let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
-                                             ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]
-                            //,
-//                                             ["name":"Front\(Int(distanceUtil.distanceToFront))","lat":"\(distanceUtil.nearbuyPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.nearbuyPointOfGreen.coordinate.longitude)"],
-                                             //["name":"Back\(Int(distanceUtil.distanceToBack))","lat":"\(distanceUtil.endPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.endPointOfGreen.coordinate.longitude)"]
-                                              ]
+                                             ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
                         
                         mapView.delegate = self
                         mapView.register(LocationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
@@ -102,8 +68,26 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
         completion(true, parameters, desiredSize)
     }
 }
-
 extension IntentViewController: MKMapViewDelegate {
-    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation { return nil }
+        let identifier = "CustomAnnotation"
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView!.canShowCallout = true
+            
+            if !(annotationView!.annotation!.title!?.contains("Flag"))!{
+                annotationView!.image = UIImage(named: "nav")!
+            }
+            else{
+                annotationView!.image = UIImage(named: "holeflag")!
+            }
+        }
+        else {
+            annotationView!.annotation = annotation
+        }
+        return annotationView
+    }
 }
-

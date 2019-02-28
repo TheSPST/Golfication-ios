@@ -2193,7 +2193,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             ref.child("matchData/\(self.currentMatchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
         var greenModel = [GreenLatLngModel]()
-        if (isOnCourse || Constants.deviceGolficationX != nil) && !isHoleByHole{
+        if (isOnCourse || Constants.deviceGolficationX != nil) && !isHoleByHole && Constants.isSiri{
             BackgroundMapStats.donateInteraction()
             var i = 0
             for data in self.courseData.numberOfHoles{
@@ -7505,7 +7505,7 @@ extension NewMapVC : UITableViewDelegate,UITableViewDataSource{
                 cell.initDesign(shot: "\(indexPath.row + 1)", club: "  ", distance: "   ", landedOn: "Penalty",color:UIColor.glfDustyRed ,sg: "    ")
             }else{
                 var distance = self.shotsDetails[indexPath.row].distance
-                if self.shotsDetails[indexPath.row].endingPoint == self.shotsDetails[indexPath.row].swingScore{
+                if self.shotsDetails[indexPath.row].club == "Pu" && distance < 20{
                     if Constants.distanceFilter == 0{
                         distance = distance * 3
                         suffix = "ft"

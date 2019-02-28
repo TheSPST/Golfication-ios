@@ -32,8 +32,8 @@ class DistanceOfGreenIntentHandler: NSObject, DistanceOfGreenIntentHandling {
         
         if let currentLocation: CLLocation = userLocation.locationManager.location{
             self.context.performAndWait{ () -> Void in
-                if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? CourseDetailsEntity{
-                    distanceUtil.writeCourseDetails(cDetails: courseDetails)
+                if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity]{
+                    distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
                 }
                 if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity]{
                     if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity]{

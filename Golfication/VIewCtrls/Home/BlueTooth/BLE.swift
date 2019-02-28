@@ -664,7 +664,7 @@ class BLE: NSObject {
                     }
                     if(holeWithSwing.last!.holeOut) && (holeWithSwing.last!.hole != totalH){
                         debugPrint("holeWithSwing.last!.hole+1",holeWithSwing.last!.hole+1)
-                        param.append(0)
+                        param.append(UInt8(self.shotNumFor8th(hole: Int(holeWithSwing.last!.hole+1))))
                     }else{
                         param.append(UInt8(holeWithSwing.last!.shotNo))
                     }
@@ -1444,7 +1444,7 @@ extension BLE: CBPeripheralDelegate {
         let shotDict = NSMutableDictionary()
         shotDict.setValue(nextData.club, forKey: "club")
         debugPrint(self.holeData.count)
-        if lat == 0{
+        if nextData.lat == 0{
             if nextData.shotNo == 1 {
                 let newPoint = self.courseData.centerPointOfTeeNGreen[nextData.hole-1].tee
                 self.holeData[nextData.hole-1].append(newPoint)
@@ -1897,15 +1897,9 @@ extension BLE: CBPeripheralDelegate {
                             memccpy(&lat, [0,0,0,0], 4, 4)
                             memccpy(&lng, [0,0,0,0], 4, 4)
                         }
-                        oldLatLng = CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng))
-                        if (oldLatLng.latitude == Double(lat)) && (oldLatLng.longitude == Double(lng)){
-                            let newPoint = GMSGeometryOffset(CLLocationCoordinate2D(latitude: Double(lat), longitude: Double(lng)), 1,CLLocationDirection(arc4random_uniform(360)))
-                            holeWithSwing[holeWithSwing.count-1].lat = newPoint.latitude
-                            holeWithSwing[holeWithSwing.count-1].lng = newPoint.longitude
-                        }else{
-                            holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
-                            holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
-                        }
+                        holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
+                        holeWithSwing[holeWithSwing.count-1].lng = Double(lat)
+                        
                         swingDetails[swingDetails.count-1].cv = Double(clubVelocity)
                         swingDetails[swingDetails.count-1].ba = Double(backAngle)
                         
@@ -2074,6 +2068,9 @@ extension BLE: CBPeripheralDelegate {
                                     if let shotData = playerData.value(forKey: "shots") as? [NSMutableDictionary]{
                                         totalshots = shotData.count
                                     }
+                                    if let _ = playerData.value(forKey: "shotTracking")as? NSMutableDictionary{
+                                        totalshots += 1
+                                    }
                                     if totalshots == holeWithSwing.last!.shotNo || holeWithSwing.last!.shotNo == totalshots+1{
                                         debugPrint("hole last shot in 92 \(holeWithSwing.last!)")
                                         self.updateSingleSwing(data:swingDetails.last!,hole:holeNo)
@@ -2163,6 +2160,9 @@ extension BLE: CBPeripheralDelegate {
             if let holeData = (scoring[hole-1] as! NSMutableDictionary).value(forKey: Auth.auth().currentUser!.uid) as? NSMutableDictionary{
                 if let holeShotArr = holeData.value(forKey: "shots") as? NSArray{
                     shotNm = holeShotArr.count
+                }
+                if let _ = holeData.value(forKey: "shotTracking") as? NSMutableDictionary{
+                    shotNm += 1
                 }
             }
         }

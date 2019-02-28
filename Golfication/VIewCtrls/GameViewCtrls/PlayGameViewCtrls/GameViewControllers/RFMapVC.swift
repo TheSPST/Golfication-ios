@@ -2749,65 +2749,68 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             fbDistance.frontLng = data.front.longitude
             frontBackDistanceArr.append(fbDistance)
         }
-        
-        self.context.performAndWait{ () -> Void in
-            if let counter1 = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context){
-                counter1.forEach { counter in
-                    self.context.delete(counter as! NSManagedObject)
+        if Constants.isSiri{
+            BackgroundMapStats.donateInteraction()
+            self.context.performAndWait{ () -> Void in
+                if let counter1 = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context){
+                    counter1.forEach { counter in
+                        self.context.delete(counter as! NSManagedObject)
+                    }
                 }
-            }
-            if let counter1 = NSManagedObject.findAllForEntity("FrontBackDistanceEntity", context: self.context){
-                counter1.forEach { counter in
-                    self.context.delete(counter as! NSManagedObject)
+                if let counter1 = NSManagedObject.findAllForEntity("FrontBackDistanceEntity", context: self.context){
+                    counter1.forEach { counter in
+                        self.context.delete(counter as! NSManagedObject)
+                    }
                 }
-            }
-            if let counter = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context){
-                counter.forEach { counter in
-                    self.context.delete(counter as! NSManagedObject)
+                if let counter = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context){
+                    counter.forEach { counter in
+                        self.context.delete(counter as! NSManagedObject)
+                    }
                 }
-            }
-            for data in greenModel{
-                if let greenEntity = NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: self.context) as? GreenDistanceEntity{
-                    greenEntity.greeNum = Int16(data.greenNum)
-                    greenEntity.lat = data.lat
-                    greenEntity.lng = data.lng
+                for data in greenModel{
+                    if let greenEntity = NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: self.context) as? GreenDistanceEntity{
+                        greenEntity.greeNum = Int16(data.greenNum)
+                        greenEntity.lat = data.lat
+                        greenEntity.lng = data.lng
+                        CoreDataStorage.saveContext(self.context)
+                    }
+                }
+                var i = 0
+                for data in self.courseData.centerPointOfTeeNGreen{
+                    if let teeEntity = NSEntityDescription.insertNewObject(forEntityName: "TeeDistanceEntity", into: self.context) as? TeeDistanceEntity{
+                        teeEntity.teeNum = Int16(i)
+                        teeEntity.lat = data.tee.latitude
+                        teeEntity.lng = data.tee.longitude
+                        CoreDataStorage.saveContext(self.context)
+                        i += 1
+                    }
+                }
+                for data in frontBackDistanceArr{
+                    if let frontBackEntity = NSEntityDescription.insertNewObject(forEntityName: "FrontBackDistanceEntity", into: self.context) as? FrontBackDistanceEntity{
+                        frontBackEntity.backLat = data.backLat
+                        frontBackEntity.backLng = data.backLng
+                        frontBackEntity.frontLat = data.frontLat
+                        frontBackEntity.frontLng = data.frontLng
+                        frontBackEntity.centerLat = data.centerLat
+                        frontBackEntity.centerLng = data.centerLng
+                        CoreDataStorage.saveContext(self.context)
+                    }
+                }
+                if let courseDataEn = NSEntityDescription.insertNewObject(forEntityName: "CourseDetailsEntity", into: self.context) as? CourseDetailsEntity{
+                    var matchDataDictionary = NSMutableDictionary()
+                    if(self.isAcceptInvite){
+                        matchDataDictionary = self.matchDataDic
+                    }else{
+                        matchDataDictionary = matchDataDic
+                    }
+                    courseDataEn.cName = matchDataDictionary.value(forKey: "courseName") as? String
+                    courseDataEn.uName = Auth.auth().currentUser!.displayName
+                    courseDataEn.imgUrl = ""
                     CoreDataStorage.saveContext(self.context)
                 }
-            }
-            var i = 0
-            for data in self.courseData.centerPointOfTeeNGreen{
-                if let teeEntity = NSEntityDescription.insertNewObject(forEntityName: "TeeDistanceEntity", into: self.context) as? TeeDistanceEntity{
-                    teeEntity.teeNum = Int16(i)
-                    teeEntity.lat = data.tee.latitude
-                    teeEntity.lng = data.tee.longitude
-                    CoreDataStorage.saveContext(self.context)
-                    i += 1
-                }
-            }
-            for data in frontBackDistanceArr{
-                if let frontBackEntity = NSEntityDescription.insertNewObject(forEntityName: "FrontBackDistanceEntity", into: self.context) as? FrontBackDistanceEntity{
-                    frontBackEntity.backLat = data.backLat
-                    frontBackEntity.backLng = data.backLng
-                    frontBackEntity.frontLat = data.frontLat
-                    frontBackEntity.frontLng = data.frontLng
-                    frontBackEntity.centerLat = data.centerLat
-                    frontBackEntity.centerLng = data.centerLng
-                    CoreDataStorage.saveContext(self.context)
-                }
-            }
-            if let courseDataEn = NSEntityDescription.insertNewObject(forEntityName: "CourseDetailsEntity", into: self.context) as? CourseDetailsEntity{
-                var matchDataDictionary = NSMutableDictionary()
-                if(self.isAcceptInvite){
-                    matchDataDictionary = self.matchDataDic
-                }else{
-                    matchDataDictionary = matchDataDic
-                }
-                courseDataEn.cName = matchDataDictionary.value(forKey: "courseName") as? String
-                courseDataEn.uName = Auth.auth().currentUser!.displayName
-                courseDataEn.imgUrl = ""
-                CoreDataStorage.saveContext(self.context)
             }
         }
+        
     }
     func clubReco(dist:Double,lie:String)->String {
         if (lie.trim() == "G"){
