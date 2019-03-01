@@ -6915,9 +6915,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func updateCurrentHole(index: Int){
-        if !swingMatchId.isEmpty{
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command13"), object: self.holeIndex)
-        }
+//        if !swingMatchId.isEmpty{
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command13"), object: self.holeIndex)
+//        }
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.scoring[index].hole)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
