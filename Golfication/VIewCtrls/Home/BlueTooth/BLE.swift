@@ -1898,7 +1898,7 @@ extension BLE: CBPeripheralDelegate {
                             memccpy(&lng, [0,0,0,0], 4, 4)
                         }
                         holeWithSwing[holeWithSwing.count-1].lat = Double(lat)
-                        holeWithSwing[holeWithSwing.count-1].lng = Double(lat)
+                        holeWithSwing[holeWithSwing.count-1].lng = Double(lng)
                         
                         swingDetails[swingDetails.count-1].cv = Double(clubVelocity)
                         swingDetails[swingDetails.count-1].ba = Double(backAngle)

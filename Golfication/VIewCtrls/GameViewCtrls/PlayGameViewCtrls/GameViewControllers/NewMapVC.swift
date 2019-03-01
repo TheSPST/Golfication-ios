@@ -1827,7 +1827,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             debugPrint("HOLE NUMBER:",hole)
             self.getScoreFromMatchDataFirebases()
             if self.holeIndex == hole{
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 , execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25 , execute: {
                     self.updateMap(indexToUpdate: self.holeIndex)
                     self.getSwingData(swingKey: self.swingMatchId)
                 })
@@ -5354,7 +5354,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
 
                             }
                             let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
-                            if (distance < 15000.0){
+//                            if (distance < 15000.0){
                                 self.positionsOfDotLine.remove(at: 0)
                                 self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
                                 self.isUserInsideBound = true
@@ -5479,8 +5479,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                         }
                                     }
                                 }
-                                
-                                
                                 self.suggestedMarker1.map = !self.isTracking ? self.mapView : nil
                                 if(!self.isTracking){
                                     if !(!self.markers.isEmpty && self.markers[1].map == nil){
@@ -5497,13 +5495,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     self.markers.last?.icon = #imageLiteral(resourceName: "holeflag")
                                     self.markers.last?.groundAnchor = CGPoint(x:0,y:1)
                                 }
-                            }else{
-                                let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                                self.present(alert, animated: true, completion: nil)
-                                self.mapTimer.invalidate()
-                                self.isUserInsideBound = false
-                            }
+//                            }
+//                            else{
+//                                let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)
+//                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+//                                self.present(alert, animated: true, completion: nil)
+//                                self.mapTimer.invalidate()
+//                                self.isUserInsideBound = false
+//                            }
                             if !self.swingMatchId.isEmpty{
                                 self.hideWhenDeviceConnected()
                             }
