@@ -37,6 +37,7 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
         
         if let currentLocation: CLLocation = userLocation.locationManager.location{
             self.mapView.mapType = MKMapType.satellite
+            self.mapView.showsUserLocation = true
             self.context.performAndWait{ () -> Void in
                 if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity]{
                     distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
@@ -79,7 +80,7 @@ extension IntentViewController: MKMapViewDelegate {
             annotationView!.canShowCallout = true
             
             if !(annotationView!.annotation!.title!?.contains("Flag"))!{
-                annotationView!.image = UIImage(named: "nav")!
+//                annotationView!.image = UIImage(named: "nav")!
             }
             else{
                 annotationView!.image = UIImage(named: "holeflag")!

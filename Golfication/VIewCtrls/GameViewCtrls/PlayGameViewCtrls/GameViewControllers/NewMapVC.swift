@@ -230,7 +230,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     
     @IBOutlet weak var btnGolficationX: UIButton!
     @IBOutlet weak var btnAddNotes: UIButton!
-
+    @IBOutlet weak var cardViewGolficationMenu: CardView!
+    
+    @IBOutlet weak var btnChnageHoleGX: UIButton!
+    @IBOutlet weak var lblLastSync: UILabel!
+    @IBOutlet weak var lbljumpToHole: UILabel!
+    var syncTime = Double()
+    
     var isBackground : Bool{
         let state = UIApplication.shared.applicationState
         if state == .background {
@@ -262,18 +268,24 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         
         if(Constants.deviceGolficationX == nil){
             self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
-            self.btnGolficationX.isUserInteractionEnabled = true
+//            self.btnGolficationX.isUserInteractionEnabled = true
+            self.btnGolficationX.tag = 1
         }
         else{
             self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBar"),for:.normal)
-            self.btnGolficationX.isUserInteractionEnabled = false
+            self.btnGolficationX.tag = 0
+//            self.btnGolficationX.isUserInteractionEnabled = false
         }
     }
     @objc func golficationXDisconnected(_ notification: NSNotification) {
         self.btnGolficationX.setImage( #imageLiteral(resourceName: "golficationBarG"),for:.normal)
-        self.btnGolficationX.isUserInteractionEnabled = true
+        self.btnGolficationX.tag = 1
+//        self.btnGolficationX.isUserInteractionEnabled = true
     }
     
+    @IBAction func golfXMenuCloseAction(_ sender: UIButton) {
+        
+    }
     //----------------------------------- Amit's Changes -----------------------------
     var sharedInstance: BluetoothSync!
     var timeOutTimer = Timer()
@@ -286,6 +298,27 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
 
+    @IBAction func changeHoleActionGX(_ sender: UIButton) {
+        self.cardViewGolficationMenu.isHidden = true
+        if(!isHoleByHole){
+            if !self.swingMatchId.isEmpty{
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command13"), object: self.holeIndex)
+            }
+        }
+    }
+    
+    @IBAction func syncShotsActionGX(_ sender: UIButton) {
+    }
+    func getSyncTime(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)/syncTime") { (snapshot) in
+            if let tim = (snapshot.value as? Double){
+                self.syncTime = tim
+            }
+            DispatchQueue.main.async(execute: {
+                self.lblLastSync.text = "Last Synced \(NSDate(timeIntervalSince1970:(self.syncTime)/1000).timeAgoSinceNow)"
+            })
+        }
+    }
     func didUpdateState(_ state: CBManagerState) {
         debugPrint("state== ",state)
         var alert = String()
@@ -1190,7 +1223,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnPrevScrl.isHidden = false
                 self.btnNextScrl.isHidden = false
             }
-            if !self.swingMatchId.isEmpty{
+            if !self.swingMatchId.isEmpty && !holeOutFlag{
                 self.hideWhenDeviceConnected()
             }
         }else{
@@ -1247,7 +1280,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // MARK:- btnActionPrevHole
     @IBAction func btnActionPrevHole(_ sender: Any) {
         isNextPrevBtn = true
-        
         holeIndex -= 1
         if(holeIndex == -1){
             holeIndex = self.scoring.count - 1
@@ -1645,7 +1677,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if let onCourse = self.matchDataDict.value(forKeyPath: "onCourse") as? Bool{
             self.isOnCourse = onCourse
             if Constants.deviceGolficationX != nil && isDeviceConnected{
-                self.btnGolficationX.isHidden = false
+                self.btnGolficationX.isHidden = true
 //                self.btnGolficationX.isUserInteractionEnabled = false
             }else if isDeviceConnected{
                 if Constants.deviceGolficationX == nil{
@@ -1653,11 +1685,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
 //                    self.btnGolficationX.isUserInteractionEnabled = true
                 }
             }else if isContinue && Constants.deviceGolficationX != nil && !isDeviceConnected{
-                self.btnGolficationX.isHidden = false
+                self.btnGolficationX.isHidden = true
 //                self.btnGolficationX.isUserInteractionEnabled = false
             }
 //            self.checkDeviceStatus()
-        
         }
         // for BluetoothChecking
         // register background task
@@ -1689,6 +1720,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         if let swingKey = (data.value as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                             if self.isOnCourse{
                                 self.swingMatchId = swingKey
+                                self.syncTime = (data.value as! NSMutableDictionary).value(forKey: "syncTime") as? Double ?? 0.0
                                 self.getSwingData(swingKey: swingKey)
                             }
                             break
@@ -1830,6 +1862,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25 , execute: {
                     self.updateMap(indexToUpdate: self.holeIndex)
                     self.getSwingData(swingKey: self.swingMatchId)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.25 , execute: {
+                        if let playerSData = self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
+                            let holeOut = playerSData.value(forKey: "holeOut") as? Bool ?? false
+                            if holeOut && self.viewHoleStats.isHidden{
+                                self.btnActionPlayerStats(self.btnPlayersStats)
+                            }
+                        }
+                    })
                 })
             }
         }
@@ -2248,7 +2288,24 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let shotClub = courseData.clubs[self.btnSelectClubs.tag]
         if(!holeOutFlag) && (btnTrackShot.currentImage != #imageLiteral(resourceName: "edit_White")) && (self.btnTrackShot.currentImage != #imageLiteral(resourceName: "check_mark_fab")) && (!isPintMarker){
             if(isUserInsideBound){
+                if(self.btnTrackShot.currentImage! == #imageLiteral(resourceName: "SYNC")){
+                    debugPrint("Sync Shtos")
+                    if Constants.ble != nil{
+                        Constants.ble.holeWithSwing.removeAll()
+                        Constants.ble.swingDetails.removeAll()
+                    }
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "")
+                }else{
                 self.btnActionShots(fromHoleOut: false)
+                }
+            }else if(self.btnTrackShot.currentImage! == #imageLiteral(resourceName: "SYNC")){
+                debugPrint("Sync Shtos")
+                if Constants.ble != nil{
+                    Constants.ble.holeWithSwing.removeAll()
+                    Constants.ble.swingDetails.removeAll()
+                }
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "")
+                
             }else{
                 self.allMarkers.removeAll()
                 self.progressView.show(atView: self.view, navItem: self.navigationItem)
@@ -2353,6 +2410,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }else if(self.btnTrackShot.currentImage! == #imageLiteral(resourceName: "edit_White")){
             debugPrint("clicked on Edit Shots")
             self.editShotAction()
+        }else if(self.btnTrackShot.currentImage! == #imageLiteral(resourceName: "SYNC")){
+            debugPrint("Sync Shtos")
+            if Constants.ble != nil{
+                Constants.ble.holeWithSwing.removeAll()
+                Constants.ble.swingDetails.removeAll()
+            }
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "")
+            
         }else if (self.btnTrackShot.currentImage == #imageLiteral(resourceName: "check_mark_fab")){
             debugPrint("updating Moved Edited Shots")
             let landedOn = (self.btnLandedOnDropDown.titleLabel?.text)!.trim()
@@ -2708,10 +2773,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             let club = shotsDetails[tappedMarker.iconView!.tag].club
             let indexPath = IndexPath(row: courseData.clubs.index(of: club.trim())!, section: 0)
             self.btnSelectClubs.tag = indexPath.row
-//            if let cell = self.selectClubDropper.TableMenu.cellForRow(at: indexPath) as? DropperCell{
-//                cell.textLabel?.isHidden = false
-//                cell.textLabel?.backgroundColor = UIColor.glfBlack40
-//            }
+            //            if let cell = self.selectClubDropper.TableMenu.cellForRow(at: indexPath) as? DropperCell{
+            //                cell.textLabel?.isHidden = false
+            //                cell.textLabel?.backgroundColor = UIColor.glfBlack40
+            //            }
             self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
             self.btnLandedOnDropDown.setTitle("\(BackgroundMapStats.returnLandedOnFullName(data: lie).0)", for: .normal)
             self.setColorLandedOn(index:BackgroundMapStats.returnLandedOnFullName(data: lie).0)
@@ -3501,6 +3566,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         btnTrackShot.layer.shadowOpacity = 0.75
         btnTrackShot.layer.shadowRadius = 2
         btnTrackShot.layer.shadowOffset = CGSize(width:5.0, height:5.0)
+        
+        btnChnageHoleGX.layer.cornerRadius = CGFloat(35.0)
+        btnChnageHoleGX.layer.shadowColor = UIColor.black.cgColor
+        btnChnageHoleGX.layer.shadowOpacity = 0.75
+        btnChnageHoleGX.layer.shadowRadius = 2
+        btnChnageHoleGX.layer.shadowOffset = CGSize(width:5.0, height:5.0)
         
         
         for btn in stackViewSubBtn.subviews{
@@ -4988,7 +5059,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             indexToUpdate = indexToUpdate%c
         }
 
-
+        self.btnChnageHoleGX.isHidden = true
         mapView.clear()
         self.stableFordView.isHidden = true
         self.allMarkers.removeAll()
@@ -5172,7 +5243,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     shotCount = shotCount + 1
                 }
                 if(!holeOutFlag){
-                    
+                    if !self.swingMatchId.isEmpty{
+                        self.lbljumpToHole.isHidden = false
+                        self.lblLastSync.isHidden = false
+                        self.lbljumpToHole.text = "Jump GX to hole \(self.scoring[indexToUpdate].hole)"
+                        if self.syncTime > 0{
+                            self.lblLastSync.text = "Last Synced \(NSDate(timeIntervalSince1970:(self.syncTime)/1000).timeAgoSinceNow)"
+                        }else{
+                            self.lblLastSync.isHidden = true
+                        }
+                        
+                    }
                     positionsOfDotLine[0] = positionsOfCurveLines.last!
                     let dist = GMSGeometryDistance(positionsOfDotLine.first!, positionsOfDotLine.last!) * Constants.YARD
                     let heading = GMSGeometryHeading(positionsOfDotLine.first!, positionsOfDotLine.last!)
@@ -5215,6 +5296,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.allMarkers = markers
                     
                 }else{
+                    self.lblLastSync.isHidden = true
+                    self.lbljumpToHole.isHidden = true
                     self.plotMarkerForCurvedLine(position: positionsOfCurveLines.last!, userData: shotCount)
                     self.btnClubs.isHidden = true
                     self.btnSelectClubs.isHidden = true
@@ -5489,21 +5572,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 }else{
                                     self.suggestedMarker2.map = nil
                                 }
-                                
-                                
                                 if(!self.holeOutFlag){
                                     self.markers.last?.icon = #imageLiteral(resourceName: "holeflag")
                                     self.markers.last?.groundAnchor = CGPoint(x:0,y:1)
                                 }
-//                            }
-//                            else{
-//                                let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)
-//                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-//                                self.present(alert, animated: true, completion: nil)
-//                                self.mapTimer.invalidate()
-//                                self.isUserInsideBound = false
-//                            }
-                            if !self.swingMatchId.isEmpty{
+                            if !self.swingMatchId.isEmpty && !self.holeOutFlag{
                                 self.hideWhenDeviceConnected()
                             }
                         }
@@ -5552,8 +5625,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             self.updateMapWithColors()
         }
-        if !self.swingMatchId.isEmpty{
+        if !self.swingMatchId.isEmpty && !holeOutFlag{
             self.hideWhenDeviceConnected()
+        }else{
+            self.btnTrackShot.isHidden = false
         }
     }
     func plotDashedLine(positions:[CLLocationCoordinate2D]){
@@ -6198,6 +6273,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
                                 if    self.isOnCourse{
                                     self.swingMatchId = swingKey
+                                    self.syncTime = (v as! NSMutableDictionary).value(forKey: "syncTime") as? Double ?? 0.0
+
                                     if(swingKey != ""){
                                         self.getGameId(swingKey:self.swingMatchId)
                                     }
@@ -6306,7 +6383,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             DispatchQueue.main.async(execute: {
                                 if matchT.contains(find: "practice"){
                                     self.swingMatchId = String()
-                                }else{
+                                }else if !self.holeOutFlag{
                                     self.hideWhenDeviceConnected()
                                 }
                             })
@@ -6322,8 +6399,16 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     func hideWhenDeviceConnected(){
         self.btnRestartLbl.isHidden = true
         self.btnClubs.isHidden = true
-        self.btnTrackShot.isHidden = true
+        self.btnTrackShot.isHidden = false
+        self.btnChnageHoleGX.isHidden = false
+        self.lbljumpToHole.isHidden = false
+        self.lblLastSync.isHidden = false
+        self.lbljumpToHole.text = "Jump GX to hole \(self.scoring[self.holeIndex].hole)"
+        self.getSyncTime()
+        self.btnTrackShot.backgroundColor = UIColor.glfWhite
+        self.btnTrackShot.setImage(#imageLiteral(resourceName: "SYNC"), for: .normal)
         self.lblShotNumber.isHidden = true
+        self.btnPlayersStats.isHidden = true
         debugPrint("hiddenWhenDeviceConnected")
         self.btnSelectClubs.isHidden = true
         self.btnClubs.isHidden = true
@@ -6915,9 +7000,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func updateCurrentHole(index: Int){
-//        if !swingMatchId.isEmpty{
-//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command13"), object: self.holeIndex)
-//        }
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.scoring[index].hole)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(self.currentMatchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
@@ -7322,7 +7404,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(self.btnTrackShot.currentImage == #imageLiteral(resourceName: "edit_White")) && !holeOutFlag{
             self.btnActionClose(self.btnClose)
         }
-        if !self.swingMatchId.isEmpty{
+        if !self.swingMatchId.isEmpty && !self.holeOutFlag{
             self.hideWhenDeviceConnected()
         }
     }
@@ -7406,6 +7488,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnLandedOnEdit.isHidden = !hide
         self.btnDeleteShot.isHidden = !hide
         self.btnDeleteLbl.isHidden = !hide
+        self.stackViewSubBtn.isHidden = !hide
         if tappedMarker != nil && (tappedMarker.iconView!.tag+1 == self.shotViseCurve.count) && holeOutFlag{
             self.btnPenaltyShot.isHidden = true
             self.btnAddPenaltyLbl.isHidden = true
@@ -7461,7 +7544,7 @@ extension NewMapVC : DropperDelegate{
             self.btnSelectClubs.tag = path.row
             self.btnTrackShot.backgroundColor = UIColor.glfBluegreen
             if isOnCourse{
-                if self.isTracking{
+                if self.isTracking && self.swingMatchId.isEmpty{
                     self.btnTrackShot.backgroundColor = UIColor.glfWhite
                     self.btnTrackShot.setImage(#imageLiteral(resourceName: "stop"), for: .normal)
                 }else{
@@ -7504,7 +7587,7 @@ extension NewMapVC : UITableViewDelegate,UITableViewDataSource{
                 cell.initDesign(shot: "\(indexPath.row + 1)", club: "  ", distance: "   ", landedOn: "Penalty",color:UIColor.glfDustyRed ,sg: "    ")
             }else{
                 var distance = self.shotsDetails[indexPath.row].distance
-                if self.shotsDetails[indexPath.row].club == "Pu" && distance < 20{
+                if self.shotsDetails[indexPath.row].club == "Pu" && self.shotsDetails[indexPath.row].endingPoint == "G" && self.shotsDetails[indexPath.row].endingPoint == self.shotsDetails[indexPath.row].swingScore{
                     if Constants.distanceFilter == 0{
                         distance = distance * 3
                         suffix = "ft"

@@ -564,7 +564,7 @@ class BLE: NSObject {
         
     }
     @objc private func sendEightCommand(_ notification: NSNotification){
-        if(Constants.charctersticsGlobalForWrite != nil){
+        if(Constants.ble.charctersticsWrite != nil){
             var newByteArray = toByteArray(self.currentGameId)
             if let gameId = notification.object as? String{
                 if(gameId == "Finish"){
@@ -572,6 +572,7 @@ class BLE: NSObject {
                     isFinished = true
                 }
             }
+            newByteArray.removeLast(4)
             if let currentId = notification.object as? [UInt8]{
                 newByteArray = currentId
                 debugPrint(currentId)
@@ -637,7 +638,6 @@ class BLE: NSObject {
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                         return
                     }
-                    
                 }else{
                     if(holeWithSwing.last!.holeOut){
                         var totalH = 9
@@ -658,9 +658,9 @@ class BLE: NSObject {
                 if(self.holeWithSwing.count == 0){
                     param.append(UInt8(self.shotNumFor8th(hole: Int(param.last!))))
                 }else{
-                    var totalH = 18
-                    if Constants.gameType.contains("9"){
-                        totalH = 9
+                    var totalH = Constants.gameType.contains("9") ? 9:18
+                    if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
+                        totalH = scoring.count
                     }
                     if(holeWithSwing.last!.holeOut) && (holeWithSwing.last!.hole != totalH){
                         debugPrint("holeWithSwing.last!.hole+1",holeWithSwing.last!.hole+1)
@@ -1493,7 +1493,7 @@ extension BLE: CBPeripheralDelegate {
         if self.holeNo != 0{
             ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
             ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["swing":true])
-//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeNo-1)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: self.holeNo-1)
             if self.currentCommandData.first != UInt8(92){
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
             }else{
@@ -1632,7 +1632,11 @@ extension BLE: CBPeripheralDelegate {
                             self.invalidateAllTimers()
                             debugPrint(self.swingMatchId)
                             self.holeData = [[CLLocationCoordinate2D]]()
-                            let totalHole = Constants.gameType.contains(find: "9") ? 9:18
+                            
+                            var totalHole = Constants.gameType.contains("9") ? 9:18
+                            if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
+                                totalHole = scoring.count
+                            }
                             for _ in 0..<totalHole{
                                 let arr = [CLLocationCoordinate2D]()
                                 self.holeData.append(arr)
@@ -1786,13 +1790,17 @@ extension BLE: CBPeripheralDelegate {
                                         matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
                                         matchDataDic.setObject(Constants.distanceFilter, forKey: "unit" as NSCopying)
                                             ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                                        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["syncTime":Timestamp])
                                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
                                             matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
                                             matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
                                             UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
                                         ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
                                         self.holeData = [[CLLocationCoordinate2D]]()
-                                        let totalHole = Constants.gameType.contains(find: "9") ? 9:18
+                                        var totalHole = Constants.gameType.contains(find: "9") ? 9:18
+                                        if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
+                                            totalHole = scoring.count
+                                        }
                                         for _ in 0..<totalHole{
                                             let arr = [CLLocationCoordinate2D]()
                                             self.holeData.append(arr)
@@ -1905,9 +1913,10 @@ extension BLE: CBPeripheralDelegate {
                         
                         debugPrint("Lattitude From Device : ",Double(lat))
                         debugPrint("Longitude From Device : ",Double(lng))
-                        var totalHole = 18
-                        if Constants.gameType.contains("9"){
-                            totalHole = 9
+                        
+                        var totalHole = Constants.gameType.contains("9") ? 9:18
+                        if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
+                            totalHole = scoring.count
                         }
                         if (holeWithSwing[holeWithSwing.count-1].holeOut){
                             self.updateHoleOutShot()
@@ -1920,6 +1929,7 @@ extension BLE: CBPeripheralDelegate {
                 }else if(dataArray[0] == UInt8(80)){
                     self.timerForWriteCommand8.invalidate()
                     self.isContinue = true
+                    ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["syncTime":Timestamp])
                     if (Constants.deviceGameType == 1){
                         if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
                             var holeNm = 1
@@ -2094,9 +2104,11 @@ extension BLE: CBPeripheralDelegate {
                                 self.swingDetails.removeAll()
                             }
                         }else if(holeWithSwing.last!.shotNo == 0){
-                            self.swingDetails.removeAll()
-                            self.holeWithSwing.removeAll()
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+                            let getShotCount = self.shotNumFor8th(hole: holeWithSwing.last!.hole)
+                            debugPrint(getShotCount)
+                            debugPrint("in 92",holeWithSwing)
+                            self.updateSingleShot(nextData: (hole: self.holeWithSwing.last!.hole, shotNo: getShotCount+1, club: self.holeWithSwing.last!.club, lat: self.courseData.centerPointOfTeeNGreen[self.holeWithSwing.last!.hole-1].green.latitude, lng: self.courseData.centerPointOfTeeNGreen[self.holeWithSwing.last!.hole-1].green.longitude, holeOut: true, clubDetected: self.holeWithSwing.last!.clubDetected))
+                            ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeNo-1)/\(Auth.auth().currentUser!.uid)/").updateChildValues(["holeOut":true])
                         }
                     }
                 }else if(dataArray[0] == UInt8(10)){
@@ -2160,6 +2172,9 @@ extension BLE: CBPeripheralDelegate {
             if let holeData = (scoring[hole-1] as! NSMutableDictionary).value(forKey: Auth.auth().currentUser!.uid) as? NSMutableDictionary{
                 if let holeShotArr = holeData.value(forKey: "shots") as? NSArray{
                     shotNm = holeShotArr.count
+                }
+                if let _ = holeData.value(forKey: "shotTracking") as? NSMutableDictionary{
+                    shotNm += 1
                 }
             }
         }

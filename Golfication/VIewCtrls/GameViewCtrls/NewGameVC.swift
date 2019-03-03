@@ -1627,6 +1627,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
                 Constants.matchDataDic = matchDict as! NSMutableDictionary
+                Constants.gameType = matchDict.value(forKey: "matchType") as? String ?? Constants.gameType
                 var scoreArray = NSArray()
                 var keyData = String()
                 var playersKey = [String]()
@@ -1789,6 +1790,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 if self.isCourseDataCount == 0{
                                     NotificationCenter.default.addObserver(self, selector: #selector(self.continueCourseData(_:)), name: NSNotification.Name(rawValue: "continueCourseData"), object: nil)
                                     self.courseData.startingIndex = Constants.startingHole == "" ? 1:Int(Constants.startingHole)
+                                    Constants.gameType = Constants.matchDataDic.value(forKey: "matchType") as? String ?? Constants.gameType
                                     self.courseData.gameTypeIndex = Constants.gameType == "9 holes" ? 9:18
                                     if self.courseData.centerPointOfTeeNGreen.isEmpty{
                                         self.courseData.getGolfCourseDataFromFirebase(courseId: "course_\(Constants.selectedGolfID)")
@@ -1796,7 +1798,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                     self.courseData.isContinue = true
                                     self.isCourseDataCount = 1
                                 }
-                                
                             }
                             if self.isContinueClicked{
                                 self.isContinueClicked = false
@@ -2012,7 +2013,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 setActiveMatchUI()
             }else{
                 isContinueClicked = true
-                view.makeToast("Please Connect Device first...")
                 fromGolfBarBtn = false
                 self.sharedInstance = BluetoothSync.getInstance()
                 self.sharedInstance.delegate = self

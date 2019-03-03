@@ -495,7 +495,7 @@ class BackgroundMapStats: NSObject {
     }
     static func donateInteraction() {
         let intent = DistanceOfGreenIntent()
-        intent.suggestedInvocationPhrase = "Distance"
+        intent.suggestedInvocationPhrase = "What’s My Distance"
         let interaction = INInteraction(intent: intent, response: nil)
         interaction.donate { (error) in
             if error != nil {

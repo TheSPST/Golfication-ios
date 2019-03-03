@@ -57,7 +57,9 @@ class DistanceUtil: NSObject {
         distanceToFront = nearbuyPointOfGreen.distance(from: location)
         distanceToCenter = flagPointOfGreen.distance(from: location)
         distanceToBack = endPointOfGreen.distance(from: location)
-        textMsg = "Distance to Front is \(Int(distanceToFront*1.09361)) yard,                                       Distance to Center is \(Int(distanceToCenter*1.09361)) yard,                           Distance to Back is \(Int(distanceToBack*1.09361)) yard"
+        textMsg = "You are \(Int(distanceToCenter*1.09361)) yards from the green"
+
+//        textMsg = "Distance to Front is \(Int(distanceToFront*1.09361)) yard,                                       Distance to Center is \(Int(distanceToCenter*1.09361)) yard,                           Distance to Back is \(Int(distanceToBack*1.09361)) yard"
         return textMsg
     }
     func getHoleNumRF(location:CLLocation,rfHole:[FrontBackDistanceEntity],teeArr:[TeeDistanceEntity])->String{
@@ -98,7 +100,8 @@ class DistanceUtil: NSObject {
         distanceToFront = nearbuyPointOfGreen.distance(from: location)
         distanceToCenter = flagPointOfGreen.distance(from: location)
         distanceToBack = endPointOfGreen.distance(from: location)
-        textMsg = "Distance to Front is \(Int(distanceToFront*1.09361)) yard,                                       Distance to Center is \(Int(distanceToCenter*1.09361)) yard,                           Distance to Back is \(Int(distanceToBack*1.09361)) yard"
+        textMsg = "You are \(Int(distanceToCenter*1.09361)) yards from the green"
+//        textMsg = "Distance to Front is \(Int(distanceToFront*1.09361)) yard,                                       Distance to Center is \(Int(distanceToCenter*1.09361)) yard,                           Distance to Back is \(Int(distanceToBack*1.09361)) yard"
         return textMsg
     }
     func middlePointOfListMarkers(listCoords: [CLLocation]) -> CLLocation{

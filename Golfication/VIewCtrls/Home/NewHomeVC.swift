@@ -2182,6 +2182,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
                 Constants.matchDataDic = matchDict as! NSMutableDictionary
+                Constants.gameType = matchDict.value(forKey: "matchType") as? String ?? Constants.gameType
                 var scoreArray = NSArray()
                 var keyData = String()
                 var playersKey = [String]()
@@ -2307,6 +2308,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
                 Constants.matchDataDic = matchDict as! NSMutableDictionary
+                Constants.gameType = matchDict.value(forKey: "matchType") as? String ?? Constants.gameType
                 var scoreArray = NSArray()
                 var keyData = String()
                 var playersKey = [String]()

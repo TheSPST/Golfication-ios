@@ -457,6 +457,7 @@ class CourseData:NSObject{
             }
             DispatchQueue.main.async(execute: {
                 var i = 0
+                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["syncTime":Timestamp])
                 for data in scoringData{
                     if let playersData = data.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
                         if i == self.scoring.count{
@@ -479,6 +480,7 @@ class CourseData:NSObject{
                 playersData = dict
             }
             DispatchQueue.main.async(execute: {
+                ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["syncTime":Timestamp])
                 self.startProcessing(playersData:playersData,hole:hole)
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: hole)
             })
