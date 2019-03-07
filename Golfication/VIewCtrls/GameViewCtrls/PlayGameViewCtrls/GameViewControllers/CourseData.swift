@@ -593,8 +593,7 @@ class CourseData:NSObject{
                 }
             }
             UIApplication.shared.keyWindow?.makeToast("Processing Hole \(hole+1)")
-        }
-        
+        }        
     }
     
     

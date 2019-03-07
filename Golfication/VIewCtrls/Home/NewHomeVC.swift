@@ -2356,15 +2356,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     let score = scoreArray[i] as! NSDictionary
                     for(key,value) in score{
                         if(key as! String == "par"){
-                            par = value as! Int
+                            par = (value as! Int)
                         }
                         if(key as! String)==Auth.auth().currentUser!.uid{
                             let dict = NSMutableDictionary()
                             dict.setObject(value, forKey: key as! String as NSCopying)
-                            if((key as! String) == Auth.auth().currentUser!.uid){
-                                if(((value as! NSMutableDictionary).value(forKey: "holeOut")) as! Bool){
-                                }
-                            }
                             playersArray.append(dict)
                         }
                     }

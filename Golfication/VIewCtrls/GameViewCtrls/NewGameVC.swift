@@ -277,7 +277,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.reqTimeOutTimer.invalidate()
-
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DefaultMapApiCompleted"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DiscardCancel"))
         if sharedInstance != nil{
             self.sharedInstance.delegate = nil
@@ -1652,6 +1652,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                         if onCourse{
                                             self.swingKey = swingKey
                                             Constants.ble.swingMatchId = swingKey
+                                        }else{
+                                            self.swingKey = ""
                                         }
                                     }
                                 }
@@ -1789,10 +1791,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 Constants.ble.currentGameId = gameID
                                 if self.isCourseDataCount == 0{
                                     NotificationCenter.default.addObserver(self, selector: #selector(self.continueCourseData(_:)), name: NSNotification.Name(rawValue: "continueCourseData"), object: nil)
-                                    self.courseData.startingIndex = Constants.startingHole == "" ? 1:Int(Constants.startingHole)
                                     Constants.gameType = Constants.matchDataDic.value(forKey: "matchType") as? String ?? Constants.gameType
-                                    self.courseData.gameTypeIndex = Constants.gameType == "9 holes" ? 9:18
                                     if self.courseData.centerPointOfTeeNGreen.isEmpty{
+                                        self.courseData.startingIndex = Constants.startingHole == "" ? 1:Int(Constants.startingHole)
+                                        self.courseData.gameTypeIndex = Constants.gameType == "9 holes" ? 9:18
                                         self.courseData.getGolfCourseDataFromFirebase(courseId: "course_\(Constants.selectedGolfID)")
                                     }
                                     self.courseData.isContinue = true
@@ -2141,6 +2143,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
         if Constants.deviceGolficationX != nil{
             Constants.fromDeviceMatch = true
+            self.courseData = CourseData()
             self.courseData.startingIndex = Constants.startingHole == "" ? 1:Int(Constants.startingHole)
             self.courseData.gameTypeIndex = Constants.gameType == "9 holes" ? 9:18
             self.courseData.getGolfCourseDataFromFirebase(courseId: "course_\(Constants.selectedGolfID)")
@@ -2153,9 +2156,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             viewCtrl.scoring = notifScoring
             viewCtrl.courseId = "course_\(Constants.selectedGolfID)"
             self.navigationController?.pushViewController(viewCtrl, animated: true)
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "DefaultMapApiCompleted"), object: nil)
         }
-        
+        NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DefaultMapApiCompleted"))
     }
     @objc func loadMapWithBLECommands(_ notification: NSNotification) {
         var isDeviceConnected = false
@@ -2471,6 +2473,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let saveOption = (UIAlertAction(title: "Save Round", style: UIAlertActionStyle.default, handler: { action in
             self.saveAndviewScore()
         }))
+        let saveReviewOption = (UIAlertAction(title: "Save & Review", style: UIAlertActionStyle.default, handler: { action in
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
+            ref.child("matchData/\(Constants.matchId)").updateChildValues(["onCourse":false])
+            self.pushDefultMapVC()
+        }))
         var descardRound = "Discard Round".localized()
         if Constants.isEdited{
             descardRound = "Delete Round".localized()
@@ -2482,9 +2489,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             debugPrint("Cancelled")
         })
         discardOption.setValue(UIColor.red, forKey: "titleTextColor")
-        myController.addAction(saveOption)
+        if self.swingKey.isEmpty{
+            myController.addAction(saveOption)
+        }else{
+            myController.addAction(saveReviewOption)
+        }
         myController.addAction(discardOption)
         myController.addAction(cancelOption)
+        
         present(myController, animated: true, completion: nil)
     }
     

@@ -156,6 +156,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var btnMultiplayerLbl: UIButton!
     @IBOutlet weak var btnAddPenaltyLbl: UIButton!
     @IBOutlet weak var btnCloseLbl: UIButton!
+    @IBOutlet weak var btnCloseLblLeft: UIButton!
     @IBOutlet weak var btnRemovePenaltyLbl: UIButton!
     @IBOutlet weak var btnDeleteLbl: UIButton!
     @IBOutlet weak var btnHoleoutLbl: UIButton!
@@ -166,6 +167,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var btnDeleteShot: UIButton!
     @IBOutlet weak var btnShareShot: UIButton!
     @IBOutlet weak var btnClose: UIButton!
+    @IBOutlet weak var btnCloseLeft: UIButton!
     @IBOutlet weak var btnRemovePenalty: UIButton!
     
     @IBOutlet weak var stackViewForMultiplayer: UIStackView!
@@ -235,6 +237,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var btnChnageHoleGX: UIButton!
     @IBOutlet weak var lblLastSync: UILabel!
     @IBOutlet weak var lbljumpToHole: UILabel!
+    @IBOutlet weak var btnAddShot: UIButton!
+    @IBOutlet weak var btnAddShotLbl: UIButton!
+    
+    @IBOutlet weak var btnToastForAddShot: UIButton!
     var syncTime = Double()
     
     var isBackground : Bool{
@@ -259,7 +265,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var lblScanStatus: UILabel!
     var deviceCircularView: CircularProgress!
     var isDeviceSetup = false
-    var swingShotArr = NSArray()
+    var swingShotArr = [NSMutableDictionary]()
+    var swingShotArrForCurrentHole = [NSMutableDictionary]()
     var isNextPrevBtn = false
     let context = CoreDataStorage.mainQueueContext()
     var greenEntity : GreenDistanceEntity?
@@ -300,10 +307,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
 
     @IBAction func changeHoleActionGX(_ sender: UIButton) {
         self.cardViewGolficationMenu.isHidden = true
-        if(!isHoleByHole){
-            if !self.swingMatchId.isEmpty{
+        if(!isHoleByHole) && !self.swingMatchId.isEmpty{
+            let alertVC = UIAlertController(title: "Alert", message: "Are you sure you want to jump to hole \(self.scoring[self.holeIndex].hole) on Golfication X?", preferredStyle: UIAlertControllerStyle.alert)
+            let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command13"), object: self.holeIndex)
-            }
+            })
+            let cancelOption = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { action in
+                debugPrint("Cancelled")
+            })
+            alertVC.addAction(cancelOption)
+            alertVC.addAction(action)
+            self.present(alertVC, animated: true, completion: nil)
         }
     }
     
@@ -1115,7 +1129,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for i in 0..<self.scoring[self.holeIndex].players.count{
             if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
                 if let playerDict = self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) as? NSMutableDictionary{
-                    debugPrint(playerDict)
                     playerDict.removeObject(forKey: "shotTracking")
                     self.scoring[self.holeIndex].players[i].setValue(playerDict, forKey: self.selectedUserId)
                     
@@ -1860,7 +1873,23 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.getScoreFromMatchDataFirebases()
             if self.holeIndex == hole{
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25 , execute: {
+                    if let playerSData = self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
+                        let holeOut = playerSData.value(forKey: "holeOut") as? Bool ?? false
+                        if var shots = playerSData.value(forKey: "shots") as? [NSMutableDictionary]{
+                            if let lastShotLat1 = shots.last!.value(forKey: "lat1") as? Double{
+                                if let lastShotLat2 = shots.last!.value(forKey: "lat2") as? Double{
+                                    if (lastShotLat1 == lastShotLat2) && holeOut{
+                                        ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(Auth.auth().currentUser!.uid)/shots/\(shots.count-1)").removeValue()
+                                        shots.removeLast()
+                                        playerSData.setValue(shots, forKey: "shots")
+                                        (self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: "\(Auth.auth().currentUser!.uid)") as! NSMutableDictionary).setValue(playerSData, forKey: "\(Auth.auth().currentUser!.uid)")
+                                    }
+                                }
+                            }
+                        }
+                    }
                     self.updateMap(indexToUpdate: self.holeIndex)
+//                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "")
                     self.getSwingData(swingKey: self.swingMatchId)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.25 , execute: {
                         if let playerSData = self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
@@ -2121,7 +2150,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     subview.removeFromSuperview()
                 }
                 
-                debugPrint(positionsOfCurveLines)
                 greenStackViewHeight.constant = 0
                 if(isBotTurn){
                     for i in 1..<markersForCurved.count-1{
@@ -2184,7 +2212,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         for i in 0..<self.scoring[self.holeIndex].players.count{
                             if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
                                 if let playerDict = self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) as? NSMutableDictionary{
-                                    debugPrint(playerDict)
                                     playerDict.removeObject(forKey: "shotTracking")
                                     self.scoring[self.holeIndex].players[i].setValue(playerDict, forKey: self.selectedUserId)
                                     
@@ -2195,6 +2222,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                 })
             }
+            self.btnAddShot.isHidden = false
+            self.btnAddShotLbl.isHidden = false
         }
     }
     func setColorLandedOn(index:String){
@@ -2213,7 +2242,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     func initilizeScoreNode(playerData:NSMutableArray){
         self.scoring.removeAll()
         let scoring = NSMutableDictionary()
-        var holeArray = [NSMutableDictionary]()
+        let holeArray = NSMutableArray()
         for i in 0..<courseData.numberOfHoles.count{
             self.scoring.append((hole: courseData.numberOfHoles[i].hole, par: courseData.numberOfHoles[i].par,players:[NSMutableDictionary]()))
             let player = NSMutableDictionary()
@@ -2226,9 +2255,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.scoring[i].players.append(playerScore)
             }
             player.setObject(courseData.numberOfHoles[i].par, forKey: "par" as NSCopying)
-            holeArray.append(player)
+            holeArray.add(player)
         }
         scoring.setObject(holeArray, forKey: "scoring" as NSCopying)
+        Constants.matchDataDic.setValue(holeArray, forKey: "scoring")
         if(!self.isAcceptInvite){
             ref.child("matchData/\(self.currentMatchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
@@ -2285,6 +2315,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         setupMultiplayersButton()
     }
     @IBAction func btnActionTrackShots(_ sender: UIButton) {
+        self.btnAddShot.isHidden = true
+        self.btnAddShotLbl.isHidden = true
         let shotClub = courseData.clubs[self.btnSelectClubs.tag]
         if(!holeOutFlag) && (btnTrackShot.currentImage != #imageLiteral(resourceName: "edit_White")) && (self.btnTrackShot.currentImage != #imageLiteral(resourceName: "check_mark_fab")) && (!isPintMarker){
             if(isUserInsideBound){
@@ -2484,8 +2516,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             }
                             self.uploadApproachAndApproachShots(playerId: playerId)
                             self.playerArrayWithDetails.setObject(self.gir, forKey: "gir" as NSCopying)
-                            debugPrint(shotData.swingScore)
-                            debugPrint(shotData.endingPoint)
                             self.playerShotsArray.append(self.reCalculateStats(shot: shot, club: shotData.club, isPenalty: shotData.penalty, end: shotData.endingPoint, start: shotData.swingScore))
                             if(i == self.shotCount-2){
                                 self.holeOutFlag = localHoleOut
@@ -2702,7 +2732,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 for i in 0..<self.scoring[self.holeIndex].players.count{
                     if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
                         if let playerDict = self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) as? NSMutableDictionary{
-                            debugPrint(playerDict)
                             playerDict.removeObject(forKey: "shotTracking")
                             self.scoring[self.holeIndex].players[i].setValue(playerDict, forKey: self.selectedUserId)
                             
@@ -2741,10 +2770,25 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             })
         }
     }
-    
+
+    @IBAction func btnActionAddShotWhileTouch(_ sender: Any) {
+        if self.btnCloseLeft.isHidden{
+            self.btnAddShotLbl.isHidden = true
+            self.btnToastForAddShot.setTitle(" Tap on the start point of \n your missing shot ", for: .normal)
+            self.btnToastForAddShot.titleLabel?.textAlignment = .center
+            self.btnToastForAddShot.isHidden = false
+            self.btnAddShot.tag = 232
+            self.btnCloseLeft.isHidden = false
+            self.btnCloseLblLeft.isHidden = false
+            
+            debugPrint(self.swingShotArrForCurrentHole)
+        }
+    }
     func editShotAction(){
         self.shotsDetails = self.getShotDataOrdered(indexToUpdate: self.holeIndex,playerId: self.selectedUserId)
         if(tappedMarker != nil){
+            self.btnCloseLeft.isHidden = true
+            self.btnCloseLblLeft.isHidden = true
             self.letsRotateWithZoom(latLng1: self.positionsOfCurveLines[tappedMarker.iconView!.tag], latLng2: self.positionsOfCurveLines[tappedMarker.iconView!.tag+1])
             for mark in shotViseCurve{
                 mark.markerPosition.isTappable = false
@@ -2866,51 +2910,46 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 markersForCurved[tappedShot].icon = #imageLiteral(resourceName: "cross")
                 self.allMarkers.append(markersForCurved[tappedShot])
             }
-            for shots in shotViseCurve{
-                debugPrint(shots.markerPosition.iconView!.tag)
-            }
             if(!holeOutFlag){
-                self.view.makeToast("touch on marker to drag the shot.", duration: 1.5, position: .bottom)
+                self.view.makeToast("touch on marker to drag the shot.", duration: 2.5, position: .bottom)
             }else{
-                self.view.makeToast("Long press on marker to drag the shot.", duration: 1.5, position: .bottom)
+                self.view.makeToast("Long press on marker to drag the shot.", duration: 2.5, position: .bottom)
             }
             
         }
     }
     @IBAction func btnActionClose(_ sender: UIButton) {
-        self.showEditRelated(hide:false)
-        self.btnRemovePenaltyLbl.isHidden = true
-        self.btnRemovePenalty.isHidden = true
-        for marker in markersForCurved{
-            marker.isTappable = true
-            marker.isDraggable = true
-        }
-        
-        ref.child("matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(self.selectedUserId)/").updateChildValues(self.tempPlayerData as! [AnyHashable : Any])
-        for i in 0..<self.scoring[self.holeIndex].players.count{
-            if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
-                let dict = NSMutableDictionary()
-                dict.addEntries(from: [self.selectedUserId:tempPlayerData])
-                
-                self.scoring[self.holeIndex].players[i] = dict
-                self.updateMap(indexToUpdate: self.holeIndex)
-                break
+        if !btnCloseLblLeft.isHidden{
+            self.btnCloseLblLeft.isHidden = true
+            self.btnCloseLeft.isHidden = true
+            self.btnToastForAddShot.isHidden = true
+            self.btnAddShotLbl.isHidden = false
+        }else{
+            self.showEditRelated(hide:false)
+            self.btnRemovePenaltyLbl.isHidden = true
+            self.btnRemovePenalty.isHidden = true
+            for marker in markersForCurved{
+                marker.isTappable = true
+                marker.isDraggable = true
             }
+            ref.child("matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/\(self.selectedUserId)/").updateChildValues(self.tempPlayerData as! [AnyHashable : Any])
+            for i in 0..<self.scoring[self.holeIndex].players.count{
+                if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
+                    let dict = NSMutableDictionary()
+                    dict.addEntries(from: [self.selectedUserId:tempPlayerData])
+                    
+                    self.scoring[self.holeIndex].players[i] = dict
+                    self.updateMap(indexToUpdate: self.holeIndex)
+                    break
+                }
+            }
+            for mark in shotViseCurve{
+                mark.markerPosition.isTappable = true
+                mark.line.isTappable = true
+            }
+            self.getScoreFromMatchDataFirebases()
+            self.updateMap(indexToUpdate: self.holeIndex)
         }
-        for mark in shotViseCurve{
-            mark.markerPosition.isTappable = true
-            mark.line.isTappable = true
-        }
-        //        for btn in self.stackViewForGreenShots.subviews{
-        //            btn.isUserInteractionEnabled = true
-        //        }
-        //        for i in 0..<shotViseCurve.count{
-        //            self.removeLinesAndMarkers(index: i)
-        //        }
-        //        for i in 0..<shotViseCurve.count{
-        //            self.showLinesAndMarker(index: i)
-        //        }
-        self.updateMap(indexToUpdate: self.holeIndex)
     }
     
     @IBAction func btnActionPenaltyShot(_ sender: UIButton) {
@@ -3082,6 +3121,19 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     
     @IBAction func btnActionDeleteShot(_ sender: UIButton) {
         if(tappedMarker != nil){
+            var swingkeysForswing = String()
+            if let players = self.matchDataDict.value(forKeyPath: "player") as? NSMutableDictionary{
+                for data in players{
+                    if ((data.value as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                        if let swingKey = (data.value as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                            swingkeysForswing = swingKey
+                            self.getSwingData(swingKey: swingKey)
+                            break
+                        }
+                    }
+                }
+            }
+            
             var playerIndex = 0
             let playerShotsData = NSMutableDictionary()
             var indexOfMarker = tappedMarker.iconView!.tag
@@ -3159,7 +3211,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         break
                     }
                 }
-                debugPrint(indexOfMarker,nextIndex)
                 plotCurvedPolyline(latLng1: positionsOfCurveLines[indexOfMarker-1], latLng2: positionsOfCurveLines[nextIndex-1],whichLine: false,club:clubValue)
                 shotViseCurve[indexOfMarker-1] = (shot:indexOfMarker, line: curvedLines , markerPosition:markerInfo,swingPosition:swingMarker)
                 shotViseCurve.remove(at: indexOfMarker)
@@ -3252,7 +3303,28 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnRemovePenalty.isHidden = true
                 
                 self.updateMap(indexToUpdate: self.holeIndex)
+                var ind : Int!
+                if !swingkeysForswing.isEmpty{
+                    self.swingShotArr = self.swingShotArr.removeDuplicates()
+                    for i in 0..<self.swingShotArr.count{
+                        if (self.swingShotArr[i].value(forKey: "holeNum") as! Int) == self.scoring[self.holeIndex].hole{
+                            let shCou = (self.swingShotArr[i].value(forKey: "shotNum") as! Int)
+                            if shCou == indexOfMarker+1{
+                                ind = i
+                            }else{
+                                self.swingShotArr[i].setValue(shCou-1, forKey: "shotNum")
+                            }
+                        }
+                    }
+                    if ind != nil{
+                        self.swingShotArr.remove(at: ind)
+                        ref.child("swingSessions/\(swingkeysForswing)/").updateChildValues(["swings":self.swingShotArr], withCompletionBlock:{ (error, ref) in
+                            self.getSwingData(swingKey: swingkeysForswing)
+                        })
+                    }
+                }
             })
+
         }
     }
     func setupHoleByHole(){
@@ -3277,6 +3349,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnHoleoutLbl.isHidden = true
         self.btnBack.isEnabled = true
         self.btnShareShot.isHidden = true
+        self.btnAddShot.isHidden = true
+        self.btnAddShotLbl.isHidden = true
+        self.btnAddShot.tag = 0
     }
     @IBAction func btnActionShareShot(_ sender: UIButton) {
         
@@ -3573,17 +3648,25 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         btnChnageHoleGX.layer.shadowRadius = 2
         btnChnageHoleGX.layer.shadowOffset = CGSize(width:5.0, height:5.0)
         
+        btnAddShot.layer.cornerRadius = CGFloat(35.0)
+        btnAddShot.layer.shadowColor = UIColor.black.cgColor
+        btnAddShot.layer.shadowOpacity = 0.75
+        btnAddShot.layer.shadowRadius = 2
+        btnAddShot.layer.shadowOffset = CGSize(width:5.0, height:5.0)
         
         for btn in stackViewSubBtn.subviews{
             (btn as! UIButton).setCircle(frame: btn.frame)
         }
+        btnCloseLeft.setCircle(frame: btnCloseLeft.frame)
         btnMultiplayerLbl.layer.cornerRadius = 15.0
         btnCloseLbl.layer.cornerRadius = 15.0
+        btnCloseLblLeft.layer.cornerRadius = 15.0
+        btnAddShotLbl.layer.cornerRadius = 15.0
         btnDeleteLbl.layer.cornerRadius = 15.0
         btnAddPenaltyLbl.layer.cornerRadius = 15.0
         btnRemovePenaltyLbl.layer.cornerRadius = 15.0
         btnHoleoutLbl.layer.cornerRadius = 15.0
-        
+        btnToastForAddShot.setCorner(color: UIColor.clear.cgColor)
         btnLandedOnEdit.setCornerWithRadius(color: UIColor.clear.cgColor, radius: btnLandedOnEdit.frame.height/2)
         btnLandedOnDropDown.setCornerWithRadius(color: UIColor.clear.cgColor, radius: btnLandedOnDropDown.frame.height/2)
         
@@ -3920,7 +4003,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     for(key,value)in shots{
                         if(key as! String == "shots"){
                             shotsArr = value as! NSArray
-                            debugPrint(shotsArr)
                             break
                         }
                     }
@@ -4029,7 +4111,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }else if(marker.title == "PointWithCurved"){
             uploadStatsWithDragging(shot: self.shotCount, playerId: playerId, playerIndex: playerIndex)
         }
-        debugPrint(self.scoring[self.holeIndex].players)
         if(self.btnTrackShot.currentImage == #imageLiteral(resourceName: "check_mark_fab")){
             self.btnTrackShot.backgroundColor = UIColor.glfGreenBlue
         }
@@ -5048,11 +5129,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
 
     func updateMap(indexToUpdate:Int){
         self.calculateSwingDataForCurrentHole()
-        btnAddNotes.isHidden = true
-        if self.selectedUserId.contains(find: "\(Auth.auth().currentUser!.uid)"){
-//            btnAddNotes.isHidden = false
-            btnAddNotes.isHidden = true
-        }
+        self.btnAddNotes.isHidden = true
         var indexToUpdate = indexToUpdate
         if courseData.centerPointOfTeeNGreen.count-1 < indexToUpdate{
             let c = courseData.centerPointOfTeeNGreen.count
@@ -5185,6 +5262,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     shotsArray = value as! NSArray
                                 }else if(key as! String == "holeOut"){
                                     holeOutFlag = value as! Bool
+                                    self.btnAddShot.isHidden = !holeOutFlag
+                                    self.btnAddShotLbl.isHidden = !holeOutFlag
                                     self.stableFordView.isHidden = !holeOutFlag || chkStableford
                                     self.imgViewStableFordInfo.isHidden = !self.teeTypeArr.isEmpty
                                     self.lblStblScore.text = "n/a"
@@ -5393,6 +5472,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             
         }else{
             if positionsOfCurveLines.count != 0{
+                self.btnAddShot.isHidden = false
+                self.btnAddShotLbl.isHidden = false
                 self.letsRotateWithZoom(latLng1: positionsOfCurveLines.first!, latLng2: positionsOfCurveLines.last!)
             }else{
                 self.letsRotateWithZoom(latLng1: positionsOfDotLine.first!, latLng2: positionsOfDotLine.last!)
@@ -5406,7 +5487,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if let onCourse = self.matchDataDict.value(forKeyPath: "onCourse") as? Bool{
             if(onCourse) && !holeOutFlag && !isHoleByHole{
-                if(clubInTrack != nil){
+                if(clubInTrack != nil) && self.swingMatchId.isEmpty{
                     self.btnSelectClubs.setTitle(BackgroundMapStats.getClubName(club: clubInTrack.trim()).uppercased(), for: .normal)
                     let indexPath = IndexPath(row: courseData.clubs.index(of: clubInTrack.trim())!, section: 0)
                     self.btnSelectClubs.tag = indexPath.row
@@ -5430,14 +5511,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             }
                             
                             if let currentLocation: CLLocation = self.locationManager.location{
+                                debugPrint(currentLocation.altitude)
                                 self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
                                 let heading = GMSGeometryHeading(currentLocation.coordinate,self.courseData.centerPointOfTeeNGreen[self.holeIndex].green)
                                 let rotationAngle = heading - self.windHeading
                                 self.imgViewWind.transform = CGAffineTransform(rotationAngle: CGFloat(rotationAngle) / 180.0 * CGFloat(Double.pi))
 
                             }
-                            let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
-//                            if (distance < 15000.0){
                                 self.positionsOfDotLine.remove(at: 0)
                                 self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
                                 self.isUserInsideBound = true
@@ -5616,8 +5696,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(isHoleByHole){
             self.setupHoleByHole()
         }
-        debugPrint("Curved Lines",self.positionsOfCurveLines)
-        debugPrint("Dotted Lines",self.positionsOfDotLine)
         if(self.btnStylizedMapView.tag == 1){
             self.allPolygonOfOneHole.removeAll()
             for i in 0..<shotViseCurve.count{
@@ -5984,6 +6062,201 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     
+    func addFirstShot(touchPoint:CLLocationCoordinate2D){
+        for i in 0..<shotViseCurve.count{
+            removeLinesAndMarkers(index: i)
+        }
+        var playerDict = NSMutableDictionary()
+        var scoreArray = [NSMutableDictionary]()
+        let playerShotsData = NSMutableDictionary()
+        
+        for playerDetails in playersButton{
+            if(playerDetails.isSelected){
+                for i in 0..<self.scoring[self.holeIndex].players.count{
+                    if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
+                        if let dict = self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) as? NSMutableDictionary{
+                            scoreArray = dict.value(forKey: "shots") as! [NSMutableDictionary]
+                            playerDict = dict
+                        }
+                    }
+                }
+            }
+        }
+        for m in markersForCurved{
+            m.map = nil
+        }
+        positionsOfCurveLines.insert(touchPoint,at: 0)
+        let lie = callFindPositionInsideFeature(position: touchPoint)
+        let distacen = GMSGeometryDistance(touchPoint, positionsOfCurveLines[1])
+        let clubValue = clubReco(dist: distacen, lie: lie)
+        var swingkeysForswing = String()
+        if let players = self.matchDataDict.value(forKeyPath: "player") as? NSMutableDictionary{
+            for data in players{
+                if ((data.value as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                    if let swingKey = (data.value as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                        swingkeysForswing = swingKey
+                        self.getSwingData(swingKey: swingKey)
+                        break
+                    }
+                }
+            }
+        }
+
+        plotCurvedPolyline(latLng1: positionsOfCurveLines[0], latLng2: positionsOfCurveLines[1],whichLine: false, club: clubValue)
+        shotViseCurve.insert((shot:1, line: curvedLines , markerPosition:markerInfo, swingPosition:swingMarker), at: 0)
+
+        let dict = getShotDetails(shot:1,club:clubValue,isPenalty: false)
+        scoreArray.insert(dict, at: 0)
+        playerDict.setValue(scoreArray, forKey: "shots")
+        playerShotsData.setObject(playerDict, forKey: self.selectedUserId as NSCopying)
+        ref.child("matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/").updateChildValues(playerShotsData as! [AnyHashable : Any])
+        shotCount = shotCount+1
+        for i in 0..<self.scoring[self.holeIndex].players.count{
+            if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
+                self.scoring[self.holeIndex].players[i] = playerShotsData
+            }
+        }
+        for markers in markersForCurved{
+            self.mapView(self.mapView, didEndDragging: markers)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+            self.updateMap(indexToUpdate: self.holeIndex)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                self.tappedMarker = self.shotViseCurve[0].markerPosition
+                self.editShotAction()
+                self.btnClose.isHidden = true
+                self.btnCloseLbl.isHidden = true
+                self.btnAddShot.isHidden = true
+                self.btnAddShotLbl.isHidden = true
+                if !swingkeysForswing.isEmpty{
+                    self.uploadSingSwingForAddShotInCaseGolficationX(club: clubValue, shotNum: 1,swingKey:swingkeysForswing)
+                }
+            })
+        })
+    }
+    
+    func addShot(touchPoint:CLLocationCoordinate2D,shotNum:Int){
+        for i in 0..<shotViseCurve.count{
+            removeLinesAndMarkers(index: i)
+        }
+        var playerDict = NSMutableDictionary()
+        var scoreArray = [NSMutableDictionary]()
+        let playerShotsData = NSMutableDictionary()
+
+        for playerDetails in playersButton{
+            if(playerDetails.isSelected){
+                for i in 0..<self.scoring[self.holeIndex].players.count{
+                    if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
+                        if let dict = self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) as? NSMutableDictionary{
+                            scoreArray = dict.value(forKey: "shots") as! [NSMutableDictionary]
+                            playerDict = dict
+                        }
+                    }
+                }
+            }
+        }
+        for m in markersForCurved{
+            m.map = nil
+        }
+        positionsOfCurveLines.insert(touchPoint,at: shotNum)
+        let lie = callFindPositionInsideFeature(position: touchPoint)
+        let distacen = GMSGeometryDistance(positionsOfCurveLines[shotNum], positionsOfCurveLines[shotNum+1])
+        let clubValue = clubReco(dist: distacen, lie: lie)
+        var swingkeysForswing = String()
+        if let players = self.matchDataDict.value(forKeyPath: "player") as? NSMutableDictionary{
+            for data in players{
+                if ((data.value as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
+                    if let swingKey = (data.value as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                        swingkeysForswing = swingKey
+                        self.getSwingData(swingKey: swingKey)
+                        break
+                    }
+                }
+            }
+        }
+        plotCurvedPolyline(latLng1: positionsOfCurveLines[shotNum-1], latLng2: positionsOfCurveLines[shotNum],whichLine: false, club: clubValue)
+        shotViseCurve[shotNum-1] = (shot:shotNum, line: curvedLines , markerPosition:markerInfo, swingPosition:swingMarker)
+        plotCurvedPolyline(latLng1: positionsOfCurveLines[shotNum], latLng2: positionsOfCurveLines[shotNum+1], whichLine: false, club: clubValue)
+        shotViseCurve.insert((shot:  shotNum, line: curvedLines , markerPosition:markerInfo, swingPosition:swingMarker), at: shotNum)
+        
+        var dict = getShotDetails(shot:shotNum,club:clubValue,isPenalty: false)
+        scoreArray.insert(dict, at: shotNum-1)
+        dict = getShotDetails(shot:shotNum+1,club:clubValue,isPenalty: false)
+        scoreArray.insert(dict, at: shotNum)
+        scoreArray.remove(at: shotNum+1)
+        playerDict.setValue(scoreArray, forKey: "shots")
+        playerShotsData.setObject(playerDict, forKey: self.selectedUserId as NSCopying)
+        ref.child("matchData/\(self.currentMatchId)/scoring/\(self.holeIndex)/").updateChildValues(playerShotsData as! [AnyHashable : Any])
+        shotCount = shotCount+1
+        for i in 0..<self.scoring[self.holeIndex].players.count{
+            if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
+                self.scoring[self.holeIndex].players[i] = playerShotsData
+            }
+        }
+        for markers in markersForCurved{
+            self.mapView(self.mapView, didEndDragging: markers)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+            self.updateMap(indexToUpdate: self.holeIndex)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                self.tappedMarker = self.shotViseCurve[shotNum].markerPosition
+                self.editShotAction()
+                self.btnClose.isHidden = true
+                self.btnCloseLbl.isHidden = true
+                self.btnAddShot.isHidden = true
+                self.btnAddShotLbl.isHidden = true
+                if !swingkeysForswing.isEmpty{
+                    self.uploadSingSwingForAddShotInCaseGolficationX(club: clubValue, shotNum: shotNum+1,swingKey:swingkeysForswing)
+                }
+            })
+        })
+    }
+    func uploadSingSwingForAddShotInCaseGolficationX(club:String,shotNum:Int,swingKey:String){
+        var shotArr = self.swingShotArr
+        var i = 0
+        for shot in self.swingShotArr{
+            for data in swingShotArrForCurrentHole{
+                if(shot.value(forKey: "shotNum") as! Int) == ((data as AnyObject).value(forKey: "shotNum") as! Int) && (shot.value(forKey: "holeNum") as! Int) == ((data as AnyObject).value(forKey: "holeNum") as! Int){
+                    shotArr.remove(at: i)
+                    i -= 1
+                    break
+                }
+            }
+            i += 1
+        }
+        
+        let swingNew = NSMutableDictionary()
+        swingNew.setValue(0,forKey:"backSwing")
+        swingNew.setValue(0,forKey:"backSwingAngle")
+        swingNew.setValue(club.trim(),forKey:"club")
+        swingNew.setValue(true,forKey:"clubSpeed")
+        swingNew.setValue(0,forKey:"downSwing")
+        swingNew.setValue(self.scoring[self.holeIndex].hole,forKey:"holeNum")
+        swingNew.setValue(shotNum,forKey:"shotNum")
+        swingNew.setValue(0,forKey:"handSpeed")
+        swingNew.setValue(40,forKey:"swingScore")
+        swingNew.setValue(0,forKey:"tempo")
+        swingNew.setValue(Timestamp,forKey:"timestamp")
+        
+        var tempArr = [NSMutableDictionary]()
+        for data in swingShotArrForCurrentHole{
+            if let shtN = data.value(forKey: "shotNum") as? Int{
+                if shtN >= shotNum{
+                    data.setValue(shtN+1, forKey: "shotNum")
+                    tempArr.append(data)
+                }else if shtN < shotNum{
+                    tempArr.append(data)
+                }
+            }
+        }
+        tempArr.append(swingNew)
+        for shot in tempArr{
+            shotArr.append(shot)
+        }
+        ref.child("swingSessions/\(swingKey)/").updateChildValues(["swings":shotArr], withCompletionBlock:{ (error, ref) in
+            self.getSwingData(swingKey: swingKey)
+        })
+    }
     func getPuttsPoints(strkGained:Double,lastCoord:CLLocationCoordinate2D,holeCoord:CLLocationCoordinate2D){
         let distance = GMSGeometryDistance(lastCoord, holeCoord) * 3.28084
         if(distance <= 3){
@@ -6269,7 +6542,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.selectedUserId = k as! String
                         self.lblPlayersName.text = "Your Score".localized()
                         btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
-                        if !isHoleByHole{
+                        if !isHoleByHole && isOnCourse{
                             if let swingKey = (v as! NSMutableDictionary).value(forKeyPath: "swingKey") as? String{
                                 if    self.isOnCourse{
                                     self.swingMatchId = swingKey
@@ -6451,7 +6724,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 swingDa = snapshot.value as! NSMutableDictionary
             }
             DispatchQueue.main.async(execute: {
-                if let swingShotArr = swingDa.value(forKey: "swings") as? NSArray{
+                if let swingShotArr = swingDa.value(forKey: "swings") as? [NSMutableDictionary]{
                     self.swingShotArr = swingShotArr
                     self.calculateSwingDataForCurrentHole()
                 }
@@ -6460,6 +6733,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func calculateSwingDataForCurrentHole(){
         self.swingData.removeAll()
+        self.swingShotArrForCurrentHole.removeAll()
         for swing in swingShotArr{
             let swing = swing as! NSMutableDictionary
             var tempArr = [Any]()
@@ -6486,6 +6760,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             }
                         }
                     }
+                    swingShotArrForCurrentHole.append(swing)
                 }
                 if club != "Pu"{
                     tempArr.append("\(Int(swingScore))")
@@ -6810,7 +7085,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnAddNotes.isHidden = true
                 if(playersButton[i].id == Auth.auth().currentUser!.uid){
                     self.lblPlayersName.text = "Your Score".localized()
-//                        self.btnAddNotes.isHidden = false
                     btnAddNotes.isHidden = true
                 }
                 btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
@@ -7397,9 +7671,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         return heading
     }
+    var markerForTouchPointInAddShot = GMSMarker()
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-        debugPrint("Do Nothing")
-        debugPrint(coordinate)
         self.codeWhenClickToBackView()
         if(self.btnTrackShot.currentImage == #imageLiteral(resourceName: "edit_White")) && !holeOutFlag{
             self.btnActionClose(self.btnClose)
@@ -7407,6 +7680,65 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if !self.swingMatchId.isEmpty && !self.holeOutFlag{
             self.hideWhenDeviceConnected()
         }
+        if self.btnAddShot.tag == 232 && !self.btnCloseLeft.isHidden{
+            self.markerForTouchPointInAddShot.map = nil
+            self.shotsDetails = self.getShotDataOrdered(indexToUpdate: self.holeIndex, playerId: self.selectedUserId)
+            var pathArr = [[CLLocationCoordinate2D]]()
+            for data in self.shotViseCurve{
+                var arr = [CLLocationCoordinate2D]()
+                for i in 0..<data.line.path!.count(){
+                    arr.append((data.line.path!.coordinate(at: i)))
+                }
+                pathArr.append(arr)
+            }
+            self.btnToastForAddShot.isHidden = true
+            self.markerForTouchPointInAddShot = GMSMarker(position: coordinate)
+            self.markerForTouchPointInAddShot.icon = #imageLiteral(resourceName: "target")
+            self.markerForTouchPointInAddShot.map = self.mapView
+            self.mapView.animate(toLocation: coordinate)
+            let index = BackgroundMapStats.nearByPoint(newPoint: coordinate, array: self.positionsOfCurveLines)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 , execute: {
+                let alertVC = UIAlertController(title: "Add Shot", message: "Are you sure you want to add your shot at this location.", preferredStyle: UIAlertControllerStyle.alert)
+                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+                    if index == 0{
+                        let heading1 = GMSGeometryHeading(self.positionsOfCurveLines[0], coordinate)
+                        let heading2 = GMSGeometryHeading(self.positionsOfCurveLines[0], self.positionsOfCurveLines[1])
+                        if abs(heading1-heading2) > 90{
+                            self.addFirstShot(touchPoint: coordinate)
+                        }else{
+                            let shotNum = self.getNearbyPathPoint(coordinate: coordinate, shotsPath: pathArr)
+                            self.addShot(touchPoint: coordinate, shotNum: shotNum+1)
+                        }
+                    }else{
+                        let shotNum = self.getNearbyPathPoint(coordinate: coordinate, shotsPath: pathArr)
+                        self.addShot(touchPoint: coordinate, shotNum: shotNum+1)
+                    }
+                    self.btnAddShot.tag = 0
+                    self.markerForTouchPointInAddShot.map = nil
+                    self.dismiss(animated: true, completion: nil)
+                })
+                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler:{ (action: UIAlertAction) -> Void in
+                    self.markerForTouchPointInAddShot.map = nil
+                    self.btnCloseLblLeft.isHidden = true
+                    self.btnCloseLeft.isHidden = true
+                    self.btnAddShotLbl.isHidden = false
+                })
+                alertVC.addAction(cancelAction)
+                alertVC.addAction(action)
+                self.present(alertVC, animated: true, completion: nil)
+            })
+        }
+    }
+    func getNearbyPathPoint(coordinate:CLLocationCoordinate2D,shotsPath:[[CLLocationCoordinate2D]])->Int{
+        var distanceArr = [Double]()
+        for i in 0..<shotsPath.count{
+            var distance = [Double]()
+            for k in 0..<shotsPath[i].count{
+                distance.append(GMSGeometryDistance(shotsPath[i][k], coordinate))
+            }
+            distanceArr.append(distance.min()!)
+        }
+        return (distanceArr.index(of: distanceArr.min()!)!)
     }
     func checkHoleOutZero(playerId:String) -> Int{
         // --------------------------- Check If User has not played game at all ------------------------
@@ -7448,6 +7780,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.mapTimer.invalidate()
                     }
                 }
+                self.letsRotateWithZoom(latLng1: self.positionsOfCurveLines[tappedMarker.iconView!.tag], latLng2: self.positionsOfCurveLines[tappedMarker.iconView!.tag+1])
+                self.btnAddShot.tag = 0
                 for i in 0..<self.scoring[self.holeIndex].players.count{
                     if(self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) != nil){
                         self.tempPlayerData = (self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) as! NSDictionary).mutableCopy() as! NSDictionary
@@ -7518,7 +7852,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         debugPrint(overlay)
         setColorToPolyline(color:UIColor.glfBluegreen)
         if let line = overlay as? GMSPolyline {
-            debugPrint("Line Tag : \(line.userData ?? "jkfdals")")
             line.strokeColor = UIColor.glfWhite
         }
     }
