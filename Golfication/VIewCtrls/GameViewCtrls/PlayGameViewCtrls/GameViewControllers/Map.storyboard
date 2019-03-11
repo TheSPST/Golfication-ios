@@ -670,10 +670,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pbk-Wg-beB">
-                                <rect key="frame" x="0.0" y="82" width="320" height="486"/>
+                                <rect key="frame" x="0.0" y="-16" width="320" height="584"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="FI9-Xp-ihl">
-                                        <rect key="frame" x="8" y="8" width="304" height="420"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="FI9-Xp-ihl">
+                                        <rect key="frame" x="8" y="8" width="304" height="518"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="7GH-7m-qap">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="40"/>
@@ -694,10 +694,10 @@
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NoQ-RF-OnC">
-                                                        <rect key="frame" x="77" y="0.0" width="150" height="40"/>
+                                                        <rect key="frame" x="72" y="0.0" width="160" height="40"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="lfG-xk-h2Q">
-                                                                <rect key="frame" x="16" y="-5" width="118" height="50"/>
+                                                                <rect key="frame" x="21" y="-5" width="118" height="50"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mUr-vS-hgT">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -718,7 +718,7 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fTf-yC-PQm">
-                                                                <rect key="frame" x="0.0" y="0.0" width="150" height="40"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="160" height="40"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <connections>
                                                                     <action selector="btnActionChangeHole:" destination="gCh-bB-Yak" eventType="touchUpInside" id="hKY-ci-P3k"/>
@@ -733,11 +733,11 @@
                                                             <constraint firstItem="lfG-xk-h2Q" firstAttribute="centerX" secondItem="NoQ-RF-OnC" secondAttribute="centerX" id="dZC-eW-pbX"/>
                                                             <constraint firstItem="fTf-yC-PQm" firstAttribute="top" secondItem="NoQ-RF-OnC" secondAttribute="top" id="g4p-Ae-BnQ"/>
                                                             <constraint firstAttribute="bottom" secondItem="fTf-yC-PQm" secondAttribute="bottom" id="gln-XB-yh8"/>
-                                                            <constraint firstAttribute="width" constant="150" id="wpb-9r-x24"/>
+                                                            <constraint firstAttribute="width" constant="160" id="wpb-9r-x24"/>
                                                         </constraints>
                                                     </view>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RGc-bt-gwD">
-                                                        <rect key="frame" x="227" y="0.0" width="180" height="40"/>
+                                                        <rect key="frame" x="232" y="0.0" width="180" height="40"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Z8-LI-1TZ">
                                                                 <rect key="frame" x="4" y="9" width="50" height="22"/>
@@ -1175,8 +1175,18 @@
                                                     </stackView>
                                                 </subviews>
                                             </stackView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbE-CV-gNP" customClass="EddieView" customModule="Golfication" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="356" width="304" height="90"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isRFMap" value="YES"/>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="psG-us-gCV">
-                                                <rect key="frame" x="0.0" y="356" width="304" height="64"/>
+                                                <rect key="frame" x="0.0" y="454" width="304" height="64"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3WZ-dl-FGF" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="64"/>
@@ -1220,7 +1230,7 @@
                                                 </subviews>
                                             </stackView>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IQ6-fj-WZs">
-                                                <rect key="frame" x="0.0" y="420" width="304" height="25"/>
+                                                <rect key="frame" x="0.0" y="518" width="304" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="25" id="mrz-a3-oHb"/>
                                                 </constraints>
@@ -1235,7 +1245,7 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="28Q-Wj-sNT" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                        <rect key="frame" x="96" y="436" width="128" height="50"/>
+                                        <rect key="frame" x="96" y="534" width="128" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="MDx-Ld-hmq"/>
                                         </constraints>
@@ -1517,6 +1527,7 @@
                         <outlet property="centerSV" destination="AG6-la-bMo" id="Nah-wa-zFW"/>
                         <outlet property="centerSVWidthConstraints" destination="igw-bj-Rzt" id="m21-Px-joH"/>
                         <outlet property="constraintTableHeight" destination="U4A-V7-HQq" id="hZ7-BT-Wrw"/>
+                        <outlet property="eddieView" destination="qbE-CV-gNP" id="j1g-Jg-iTt"/>
                         <outlet property="exitGamePopUpView" destination="7VY-Zq-EkB" id="MDB-64-KYT"/>
                         <outlet property="fgBConstraint" destination="vx7-58-5Ny" id="xeW-TL-apj"/>
                         <outlet property="greenStackViewHeight" destination="teC-Hf-33E" id="VHF-gr-Ksi"/>
@@ -1579,10 +1590,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sko-23-9SZ">
-                                <rect key="frame" x="0.0" y="20" width="320" height="455"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="493"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Lt-l2-egR">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="555"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="653"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ck6-hF-9RO" userLabel="TopView">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="379"/>
@@ -1721,6 +1732,19 @@
                                                             <constraint firstItem="NT6-zq-VaB" firstAttribute="leading" secondItem="NWQ-8M-N4z" secondAttribute="leading" constant="4" id="smL-3A-I4s"/>
                                                         </constraints>
                                                     </view>
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QAK-j5-cwJ">
+                                                        <rect key="frame" x="237" y="49" width="67" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="SmM-jf-ivH"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
+                                                        <state key="normal" title="Add Notes">
+                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="addNotesAction:" destination="l6N-0K-2bQ" eventType="touchUpInside" id="ZDJ-aE-uEM"/>
+                                                        </connections>
+                                                    </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bYx-j6-wr3">
                                                         <rect key="frame" x="100" y="44" width="120" height="30"/>
                                                         <subviews>
@@ -2307,20 +2331,22 @@
                                                     <constraint firstItem="i21-BD-xkV" firstAttribute="top" secondItem="m4p-dj-dzn" secondAttribute="bottom" constant="10" id="L4x-bN-V80"/>
                                                     <constraint firstAttribute="trailing" secondItem="i21-BD-xkV" secondAttribute="trailing" constant="20" id="QGD-Nm-GI1"/>
                                                     <constraint firstItem="bYx-j6-wr3" firstAttribute="top" secondItem="Dev-He-gcV" secondAttribute="bottom" id="Vw5-Oe-dOe"/>
+                                                    <constraint firstAttribute="trailing" secondItem="QAK-j5-cwJ" secondAttribute="trailing" constant="16" id="baM-BS-m3B"/>
                                                     <constraint firstItem="i21-BD-xkV" firstAttribute="leading" secondItem="Ck6-hF-9RO" secondAttribute="leading" constant="20" id="ccV-Xm-T9F"/>
                                                     <constraint firstItem="Dev-He-gcV" firstAttribute="top" secondItem="Ck6-hF-9RO" secondAttribute="top" id="daW-Tn-vI7"/>
                                                     <constraint firstItem="m4p-dj-dzn" firstAttribute="leading" secondItem="Ck6-hF-9RO" secondAttribute="leading" constant="20" id="fqe-xL-wnm"/>
                                                     <constraint firstItem="xLd-iP-ddi" firstAttribute="top" secondItem="Ck6-hF-9RO" secondAttribute="top" constant="-8" id="icZ-BC-qOB"/>
                                                     <constraint firstAttribute="trailing" secondItem="xLd-iP-ddi" secondAttribute="trailing" id="oFA-Fd-261"/>
+                                                    <constraint firstItem="QAK-j5-cwJ" firstAttribute="centerY" secondItem="NWQ-8M-N4z" secondAttribute="centerY" id="qkL-Q3-Pg8"/>
                                                     <constraint firstItem="NWQ-8M-N4z" firstAttribute="top" secondItem="Dev-He-gcV" secondAttribute="bottom" id="ryI-h1-aZx"/>
                                                     <constraint firstAttribute="bottom" secondItem="xLd-iP-ddi" secondAttribute="bottom" id="sfA-Tv-8QM"/>
                                                     <constraint firstItem="xLd-iP-ddi" firstAttribute="leading" secondItem="Ck6-hF-9RO" secondAttribute="leading" id="wZa-iJ-iR7"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XIo-Od-kM5">
-                                                <rect key="frame" x="20" y="306" width="280" height="239"/>
+                                                <rect key="frame" x="20" y="306" width="280" height="337"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="CrC-6H-rGs">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="CrC-6H-rGs">
                                                         <rect key="frame" x="10" y="10" width="260" height="219"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="Fp4-S9-ffW">
@@ -2715,12 +2741,25 @@
                                                             </stackView>
                                                         </subviews>
                                                     </stackView>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JXN-8d-h4b" customClass="EddieView" customModule="Golfication" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="239" width="280" height="90"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="90" id="kUY-J9-aWz"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isRFMap" value="NO"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
+                                                    <constraint firstItem="JXN-8d-h4b" firstAttribute="top" secondItem="CrC-6H-rGs" secondAttribute="bottom" constant="10" id="HeE-tj-WeI"/>
                                                     <constraint firstItem="CrC-6H-rGs" firstAttribute="top" secondItem="XIo-Od-kM5" secondAttribute="top" constant="10" id="OBs-RK-Cx4"/>
                                                     <constraint firstItem="CrC-6H-rGs" firstAttribute="leading" secondItem="XIo-Od-kM5" secondAttribute="leading" constant="10" id="b5g-0Y-fu4"/>
-                                                    <constraint firstAttribute="bottom" secondItem="CrC-6H-rGs" secondAttribute="bottom" constant="10" id="txe-tc-oHo"/>
+                                                    <constraint firstAttribute="bottom" secondItem="JXN-8d-h4b" secondAttribute="bottom" constant="8" id="c0p-wG-8we"/>
+                                                    <constraint firstItem="JXN-8d-h4b" firstAttribute="leading" secondItem="XIo-Od-kM5" secondAttribute="leading" id="j34-QR-Znt"/>
+                                                    <constraint firstAttribute="trailing" secondItem="JXN-8d-h4b" secondAttribute="trailing" id="s92-SX-t7n"/>
                                                     <constraint firstAttribute="trailing" secondItem="CrC-6H-rGs" secondAttribute="trailing" constant="10" id="xeA-18-iJi"/>
                                                 </constraints>
                                             </view>
@@ -2745,55 +2784,38 @@
                                     <constraint firstItem="5Lt-l2-egR" firstAttribute="width" secondItem="Sko-23-9SZ" secondAttribute="width" id="ti1-EW-LRy"/>
                                 </constraints>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YKm-aq-6qb" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                <rect key="frame" x="100" y="485" width="120" height="35"/>
-                                <color key="backgroundColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="XmR-5F-WeD"/>
-                                    <constraint firstAttribute="width" constant="120" id="gvP-jm-HwC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="15"/>
-                                <state key="normal" title="View Scorecard">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="btnActionViewScorecard:" destination="l6N-0K-2bQ" eventType="touchUpInside" id="als-Qm-pBx"/>
-                                </connections>
-                            </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QAK-j5-cwJ">
-                                <rect key="frame" x="243" y="485" width="67" height="25"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="SmM-jf-ivH"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
-                                <state key="normal" title="Add Notes">
-                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="addNotesAction:" destination="l6N-0K-2bQ" eventType="touchUpInside" id="ZDJ-aE-uEM"/>
-                                </connections>
-                            </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="QPG-mY-dwD">
-                                <rect key="frame" x="10" y="530" width="300" height="28"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="QPG-mY-dwD">
+                                <rect key="frame" x="4" y="523" width="312" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lc3-CI-l1U" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="113" height="28"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="113" id="Fs4-5j-wkz"/>
-                                        </constraints>
+                                        <rect key="frame" x="0.0" y="0.0" width="22" height="35"/>
                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
-                                        <state key="normal" title="  Previous Hole" image="prev">
+                                        <state key="normal" image="prev">
                                             <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="prevAction:" destination="l6N-0K-2bQ" eventType="touchUpInside" id="nzU-Ma-x1q"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YKm-aq-6qb" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
+                                        <rect key="frame" x="96" y="0.0" width="120" height="35"/>
+                                        <color key="backgroundColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="35" id="XmR-5F-WeD"/>
+                                            <constraint firstAttribute="width" constant="120" id="gvP-jm-HwC"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="15"/>
+                                        <state key="normal" title="View Scorecard">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="btnActionViewScorecard:" destination="l6N-0K-2bQ" eventType="touchUpInside" id="als-Qm-pBx"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Pr-3m-a7W" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                        <rect key="frame" x="187" y="0.0" width="113" height="28"/>
+                                        <rect key="frame" x="290" y="0.0" width="22" height="35"/>
                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
-                                        <inset key="imageEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        <state key="normal" title="  Next Hole" image="next">
+                                        <state key="normal" image="next">
                                             <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -2801,11 +2823,11 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1p4-bP-QIY" userLabel="End Round">
-                                        <rect key="frame" x="300" y="0.0" width="0.0" height="28"/>
+                                        <rect key="frame" x="312" y="0.0" width="0.0" height="35"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                                         <inset key="imageEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        <state key="normal" title="  Finish Round  ">
+                                        <state key="normal" title=" Finish Round ">
                                             <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -2813,9 +2835,6 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstItem="4Pr-3m-a7W" firstAttribute="width" secondItem="lc3-CI-l1U" secondAttribute="width" id="PF4-Lj-hmf"/>
-                                </constraints>
                             </stackView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M07-jE-eLq" customClass="ExitGamePopUpView" customModule="Golfication" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
@@ -2879,19 +2898,15 @@
                         </subviews>
                         <color key="backgroundColor" red="0.96078431369999995" green="0.96078431369999995" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="QPG-mY-dwD" firstAttribute="leading" secondItem="ccJ-rT-fNH" secondAttribute="leading" constant="10" id="080-mV-5Ta"/>
+                            <constraint firstItem="QPG-mY-dwD" firstAttribute="leading" secondItem="ccJ-rT-fNH" secondAttribute="leading" constant="4" id="080-mV-5Ta"/>
                             <constraint firstItem="Sko-23-9SZ" firstAttribute="top" secondItem="ccJ-rT-fNH" secondAttribute="top" id="3c1-fR-Bo5"/>
-                            <constraint firstItem="QAK-j5-cwJ" firstAttribute="top" secondItem="YKm-aq-6qb" secondAttribute="top" id="6bm-Xl-Cz6"/>
                             <constraint firstItem="ccJ-rT-fNH" firstAttribute="trailing" secondItem="lf3-vh-D3u" secondAttribute="trailing" constant="16" id="9l8-Ms-TPt"/>
                             <constraint firstItem="Sko-23-9SZ" firstAttribute="leading" secondItem="ccJ-rT-fNH" secondAttribute="leading" id="IGt-Gq-wRo"/>
                             <constraint firstItem="ccJ-rT-fNH" firstAttribute="bottom" secondItem="M07-jE-eLq" secondAttribute="bottom" id="SbC-Bg-DYl"/>
-                            <constraint firstItem="QPG-mY-dwD" firstAttribute="top" secondItem="YKm-aq-6qb" secondAttribute="bottom" constant="10" id="XNt-mE-mc0"/>
-                            <constraint firstItem="ccJ-rT-fNH" firstAttribute="trailing" secondItem="QAK-j5-cwJ" secondAttribute="trailing" constant="10" id="Y3L-sZ-wD6"/>
-                            <constraint firstItem="YKm-aq-6qb" firstAttribute="top" secondItem="Sko-23-9SZ" secondAttribute="bottom" constant="10" id="YkC-kK-yWv"/>
+                            <constraint firstItem="QPG-mY-dwD" firstAttribute="top" secondItem="Sko-23-9SZ" secondAttribute="bottom" constant="10" id="YkC-kK-yWv"/>
                             <constraint firstItem="ccJ-rT-fNH" firstAttribute="trailing" secondItem="Sko-23-9SZ" secondAttribute="trailing" id="a0r-DX-8Lu"/>
-                            <constraint firstItem="YKm-aq-6qb" firstAttribute="centerX" secondItem="ccJ-rT-fNH" secondAttribute="centerX" id="bad-Jt-pXa"/>
                             <constraint firstItem="ccJ-rT-fNH" firstAttribute="trailing" secondItem="M07-jE-eLq" secondAttribute="trailing" id="f7C-8K-OZt"/>
-                            <constraint firstItem="ccJ-rT-fNH" firstAttribute="trailing" secondItem="QPG-mY-dwD" secondAttribute="trailing" constant="10" id="nKd-T0-caU"/>
+                            <constraint firstItem="ccJ-rT-fNH" firstAttribute="trailing" secondItem="QPG-mY-dwD" secondAttribute="trailing" constant="4" id="nKd-T0-caU"/>
                             <constraint firstItem="M07-jE-eLq" firstAttribute="leading" secondItem="ccJ-rT-fNH" secondAttribute="leading" id="uAM-Zb-eOg"/>
                             <constraint firstItem="ccJ-rT-fNH" firstAttribute="bottom" secondItem="QPG-mY-dwD" secondAttribute="bottom" constant="10" id="vLJ-qQ-G1L"/>
                             <constraint firstItem="M07-jE-eLq" firstAttribute="top" secondItem="ccJ-rT-fNH" secondAttribute="top" id="yfT-av-vHn"/>
@@ -2922,6 +2937,7 @@
                         <outlet property="chipShotStackView" destination="XZO-bH-Edm" id="yV0-Q1-4gY"/>
                         <outlet property="containerView" destination="5Lt-l2-egR" id="iiD-pu-fcG"/>
                         <outlet property="detailScoreSV" destination="MXY-BK-mP0" id="D1W-nk-NbT"/>
+                        <outlet property="eddieView" destination="JXN-8d-h4b" id="WmC-0s-urs"/>
                         <outlet property="exitGamePopUpView" destination="M07-jE-eLq" id="WOM-PH-wne"/>
                         <outlet property="fairwayHitStackView" destination="RhP-QK-J9r" id="QHt-i2-SfY"/>
                         <outlet property="girStackView" destination="y4e-vl-D9S" id="egC-Or-lvE"/>
@@ -3281,7 +3297,7 @@
                                 <rect key="frame" x="0.0" y="191.5" width="320" height="376.5"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Ze-IF-n2p" userLabel="BottomView">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="544"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="642"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="8jG-Ry-SGX">
                                                 <rect key="frame" x="10" y="10" width="300" height="40"/>
@@ -3459,7 +3475,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8R8-pZ-Y3R">
-                                                <rect key="frame" x="20" y="57" width="280" height="375"/>
+                                                <rect key="frame" x="20" y="57" width="280" height="473"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ERz-bb-YpK">
                                                         <rect key="frame" x="0.0" y="0.0" width="280" height="147"/>
@@ -4006,8 +4022,8 @@
                                                             </view>
                                                         </subviews>
                                                     </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="epn-KK-AiI">
-                                                        <rect key="frame" x="0.0" y="155" width="280" height="220"/>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="epn-KK-AiI">
+                                                        <rect key="frame" x="0.0" y="155" width="280" height="318"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="hlt-z8-C3k">
                                                                 <rect key="frame" x="0.0" y="0.0" width="280" height="30"/>
@@ -4399,6 +4415,16 @@
                                                                     </stackView>
                                                                 </subviews>
                                                             </stackView>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z1o-lh-cod" customClass="EddieView" customModule="Golfication" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="228" width="280" height="90"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isRFMap" value="YES"/>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                        <real key="value" value="5"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
                                                         </subviews>
                                                     </stackView>
                                                 </subviews>
@@ -4409,7 +4435,7 @@
                                                 </constraints>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T3g-WI-48k" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="442" width="280" height="40"/>
+                                                <rect key="frame" x="20" y="540" width="280" height="40"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="dPT-2z-jsK"/>
@@ -4424,7 +4450,7 @@
                                                 </connections>
                                             </button>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="1z0-Me-HS9">
-                                                <rect key="frame" x="8" y="498" width="304" height="30"/>
+                                                <rect key="frame" x="8" y="596" width="304" height="30"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fnw-Fk-tp5" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="90" height="30"/>
@@ -4459,7 +4485,7 @@
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hxg-Pd-YsZ" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                                <rect key="frame" x="96" y="486" width="128" height="50"/>
+                                                <rect key="frame" x="96" y="584" width="128" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="Ktn-JM-zyd"/>
                                                 </constraints>
@@ -4624,6 +4650,7 @@
                         <outlet property="btnViewScoreCard" destination="gqH-O6-zEy" id="p0a-Ph-RUe"/>
                         <outlet property="chipShotStackView" destination="xhb-5j-tv7" id="Rzl-eC-AHJ"/>
                         <outlet property="detailScoreSV" destination="epn-KK-AiI" id="yNe-id-x5V"/>
+                        <outlet property="eddieView" destination="Z1o-lh-cod" id="bco-Af-HJr"/>
                         <outlet property="exitGamePopUpView" destination="pAM-FE-VKd" id="1oK-Dz-cW7"/>
                         <outlet property="fairwayHitContainerSV" destination="hlt-z8-C3k" id="dYu-gx-DO6"/>
                         <outlet property="fairwayHitStackView" destination="xsc-Rg-ZCM" id="J2a-SI-W9w"/>

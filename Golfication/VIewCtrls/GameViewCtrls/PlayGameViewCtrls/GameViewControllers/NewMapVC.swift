@@ -240,6 +240,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var btnAddShot: UIButton!
     @IBOutlet weak var btnAddShotLbl: UIButton!
     
+    @IBOutlet weak var eddieView: EddieView!
     @IBOutlet weak var btnToastForAddShot: UIButton!
     var syncTime = Double()
     
@@ -1191,7 +1192,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBAction func btnActionPlayerStats(_ sender: Any) {
         
         if(self.viewHoleStats.isHidden){
-            
+            self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: targetGoal)
+            self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: targetGoal)
             self.btnPlayersStats.isHidden = true
             self.lblShotNumber.isHidden = true
             self.lblEditShotNumber.isHidden = true
@@ -1682,8 +1684,19 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         backgroundTask = UIBackgroundTaskInvalid
     }
     var forTutorial = [Bool]()
+    var achievedGoal = Goal()
+    var targetGoal = Goal()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.eddieView.isRFMap = true
+        self.eddieView.setup()
+        if self.scoring.count == 9{
+            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
+            self.targetGoal.par = Constants.targetGoal.par/2
+            self.targetGoal.gir = Constants.targetGoal.gir/2
+            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+        }
         UIApplication.shared.isIdleTimerDisabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
 
@@ -5126,7 +5139,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     
     // Update Map - removing all markers and features from map and reload map with new Features and details.         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "response9"), object: false)
-
     func updateMap(indexToUpdate:Int){
         self.calculateSwingDataForCurrentHole()
         self.btnAddNotes.isHidden = true

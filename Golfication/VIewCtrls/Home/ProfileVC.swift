@@ -323,6 +323,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     
     @IBAction func settingAction(_ sender: Any) {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "SettingVC") as! SettingVC
+        viewCtrl.golfBagArray = self.golfBagArray
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     

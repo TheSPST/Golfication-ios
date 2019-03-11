@@ -14,6 +14,8 @@ struct Constants{
     static var tempGolfBagArray = NSMutableArray()
     
     // MARK: NewHomeVC
+    static var targetGoal = Goal()
+    static var isEddie = true
     static var isSiri = false
     static var isTagSetupModified = false
     static var baselineDict: NSDictionary!

@@ -65,6 +65,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var hcpView: UIView!
     @IBOutlet weak var parView: UIView!
     
+    @IBOutlet weak var eddieView: EddieView!
     @IBOutlet weak var lblHole: UILabel!
     @IBOutlet weak var lblPar: UILabel!
     @IBOutlet weak var topView: UIView!
@@ -616,11 +617,22 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.updateData(indexToUpdate:self.holeIndex)
         
     }
+    var achievedGoal = Goal()
+    var targetGoal = Goal()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if self.scoreData.count == 9{
+            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
+            self.targetGoal.par = Constants.targetGoal.par/2
+            self.targetGoal.gir = Constants.targetGoal.gir/2
+            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+        }else{
+            self.targetGoal = Constants.targetGoal
+        }
+        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
         setInitialUI()
-        btnPrev.setTitle("  " + "Previous Hole".localized(), for: .normal)
-        btnNext.setTitle("  " + "Next Hole".localized(), for: .normal)
+        setHoleNum()
         imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
         imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
         topView.layer.cornerRadius = topView.frame.height/2
@@ -774,6 +786,22 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.progressView.show(atView: self.view, navItem: navigationItem)
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
+    }
+    func setHoleNum(){
+        var prev = Int()
+        var next = Int()
+        if self.holeIndex == 0{
+            prev = self.scoreData.count-1
+            next = self.holeIndex+1
+        }else if self.holeIndex == self.scoreData.count-1{
+            prev = self.holeIndex-1
+            next = ((self.holeIndex+1)%self.scoreData.count)
+        }else{
+            prev = self.holeIndex-1
+            next = self.holeIndex+1
+        }
+        btnPrev.setTitle("  " + "Hole \(self.scoreData[prev].hole)".localized(), for: .normal)
+        btnNext.setTitle("Hole \(self.scoreData[next].hole)" + "  ".localized(), for: .normal)
     }
     @objc func loadMap(_ notification: NSNotification) {
         self.progressView.hide(navItem: navigationItem)
@@ -939,11 +967,12 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         scoreSV.isHidden = false
     }
     func updateData(indexToUpdate:Int){
+        setHoleNum()
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         btnAddNotes.isHidden = true
         if self.playerId.contains(find: "\(Auth.auth().currentUser!.uid)"){
-//            btnAddNotes.isHidden = false
-            btnAddNotes.isHidden = true
+            btnAddNotes.isHidden = false
+//            btnAddNotes.isHidden = true
         }
         var indexToUpdate = indexToUpdate
         indexToUpdate = indexToUpdate == -1 ? indexToUpdate+1 : indexToUpdate
@@ -1001,6 +1030,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
             i += 1
         }
+        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoreData, targetGoal: self.targetGoal)
+        self.eddieView.updateGoalView(achievedGoal: achievedGoal, targetGoal: targetGoal)
     }
     func updateValue(){
         for i in 0..<buttonsArrayForChipShot.count{
@@ -1145,6 +1176,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         self.progressView.hide(navItem: self.navigationItem)
         
+        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoreData, targetGoal: self.targetGoal)
+        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
     }
     
     func updateStrokesButtonWithoutStrokes(strokes:Int,btn:UIButton,color:UIColor){

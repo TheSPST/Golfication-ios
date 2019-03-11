@@ -554,5 +554,42 @@ class BackgroundMapStats: NSObject {
 //            self.present(activityViewController, animated: true, completion: nil)
         }
     }
+    static func calculateGoal(scoreData:[(hole:Int,par:Int,players:[NSMutableDictionary])],targetGoal:Goal)->Goal{
+        let achievedGoal = Goal()
+        for data in scoreData{
+            for pla in data.players{
+                if let playerData = pla.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
+                    let holeOut = playerData.value(forKey: "holeOut") as! Bool
+                    if holeOut{
+                        var strokes = playerData.value(forKey: "strokes") as? Int ?? 0
+                        if let shots = playerData.value(forKey: "strokes") as? NSMutableArray{
+                            strokes = shots.count
+                        }
+                        let gir = playerData.value(forKey: "gir") as? Bool ?? false
+                        let fairwayHit = playerData.value(forKey: "fairway") as? String ?? ""
+                        if (strokes - data.par) == 0{
+                            achievedGoal.par += 1
+                        }else if (strokes - data.par) < 0{
+                            achievedGoal.par += 1
+                            achievedGoal.Birdie += 1
+                        }
+                        if gir{
+                            achievedGoal.gir += 1
+                        }
+                        if fairwayHit.trim() == "H"{
+                            achievedGoal.fairwayHit += 1
+                        }
+                    }
+                }
+            }
+        }
+        return achievedGoal
+    }
+}
+class Goal{
+    var par = Int()
+    var gir = Int()
+    var Birdie = Int()
+    var fairwayHit = Int()
 }
 

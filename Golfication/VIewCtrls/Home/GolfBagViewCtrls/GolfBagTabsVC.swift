@@ -18,8 +18,11 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var brandView: UIView!
-    @IBOutlet weak var loftAngleView: UIView!
+    @IBOutlet weak var avgDistView: UIView!
     @IBOutlet weak var clubLengthView: UIView!
+    @IBOutlet weak var loftAngleView: UIView!
+    @IBOutlet weak var shaftView: UIView!
+    @IBOutlet weak var flexView: UIView!
     @IBOutlet weak var tableContainerView: UIView!
     @IBOutlet weak var tagTableView: UITableView!
 
@@ -29,7 +32,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     @IBOutlet weak var btnRemove: UIButton!
     @IBOutlet weak var btnEdit: UILocalizedButton!
     @IBOutlet weak var btnSyncTag: UIButton!
-    @IBOutlet weak var btnAddToBag: UIButton!
+    @IBOutlet weak var btnSave: UIButton!
     
     @IBOutlet weak var btnTempAddBag: UIButton!
     @IBOutlet weak var btnTempRemoveBag: UIButton!
@@ -37,6 +40,19 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
 //    @IBOutlet weak var scanProgressView: ScanProgressView!
     @IBOutlet weak var syncStackView: UIStackView!
     @IBOutlet weak var scrlView: UIScrollView!
+    
+    @IBOutlet weak var lblEdit: UILabel!
+    @IBOutlet weak var lblBrand: UILabel!
+    @IBOutlet weak var lblAvgDistance: UILabel!
+    @IBOutlet weak var lblLength: UILabel!
+    @IBOutlet weak var lblLoft: UILabel!
+    @IBOutlet weak var lblShaft: UILabel!
+    @IBOutlet weak var lblFlex: UILabel!
+
+    @IBOutlet weak var lblTagAssignedValue: UILabel!
+    @IBOutlet weak var lblBrandValue: UILabel!
+    @IBOutlet weak var lblAvgDistanceValue: UILabel!
+    @IBOutlet weak var lblLengthValue: UILabel!
 
     let progressView = SDLoader()
     
@@ -59,12 +75,58 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     var tagNameArray = NSMutableArray()
 
     var sharedInstance: BluetoothSync!
-    
+    var golfBagTabMArray = NSMutableArray()
+
     var timer = Timer()
 //    var periName = ""
     
     var collectionViewFlowLayout: UICollectionViewFlowLayout {
         return collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+    }
+    
+    @IBAction func dismissEditPopUp(_ sender: Any){
+        editView.isHidden = true
+        defaultView.isHidden = false
+        btnTempAddBag.isHidden = true
+    }
+    @IBAction func saveAction(_ sender: Any){
+        for i in 0..<golfBagTabMArray.count{
+            let dic = golfBagTabMArray[i] as! NSDictionary
+            if (dic.value(forKey: "clubName") as! String == selectedBagStr){
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["brand":selectedBrand])
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":Int(selectedAvgDistance)!])
+                if Constants.distanceFilter == 1{
+//                    ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["clubLength":"\((Double(selectedLength)! / 2.54).rounded(toPlaces: 2))"])
+                    var val = (Double(selectedLength)! / 2.54).rounded(toPlaces: 2)
+                    let decVal = Int(val*100)%100
+                    let rem = decVal%25
+                    if rem < 12{
+                        val = val - (Double(rem)/100.0)
+                    }
+                    else{
+                        val = val + (Double(25-rem)/100.0)
+                    }
+                    if val < 22.0{
+                       val = 22.0
+                    }
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["clubLength":"\(val)"])
+                }
+                else{
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["clubLength":selectedLength])
+                }
+                
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["loftAngle":selectedLoft])
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["shaft":selectedShaft])
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["flex":selectedFlex])
+                
+                fromEdit = false
+                editView.isHidden = true
+                defaultView.isHidden = false
+                btnTempAddBag.isHidden = true
+                getGolfBagData()
+                break
+            }
+        }
     }
     
     override func viewDidLoad() {
@@ -79,10 +141,19 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         clubLengthView.layer.borderWidth = 1.0
         clubLengthView.layer.borderColor = UIColor.glfBlack40.cgColor
         
+        avgDistView.layer.borderWidth = 1.0
+        avgDistView.layer.borderColor = UIColor.glfBlack40.cgColor
+        
+        shaftView.layer.borderWidth = 1.0
+        shaftView.layer.borderColor = UIColor.glfBlack40.cgColor
+
+        flexView.layer.borderWidth = 1.0
+        flexView.layer.borderColor = UIColor.glfBlack40.cgColor
+
         btnRemove.layer.cornerRadius = 3.0
         btnEdit.layer.cornerRadius = 3.0
         btnSyncTag.layer.cornerRadius = 3.0
-        btnAddToBag.layer.cornerRadius = 3.0
+        btnSave.layer.cornerRadius = 3.0
         
         btnTempAddBag.layer.cornerRadius = 3.0
         btnTempRemoveBag.layer.cornerRadius = 3.0
@@ -176,15 +247,25 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         fromEdit = false
     }
     
+    var selectedLoft = String()
+    var selectedLoftArr = [String]()
+
+    var selectedLengthArr = [String]()
+    var selectedLength = String()
+    var selectedAvgDistance = String()
+    var selectedBrand = String()
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
         editView.isHidden = true
         defaultView.isHidden = true
-        
+        btnTempAddBag.isHidden = true
+
         if golfBagStr == "Drivers"{
             commanBagArray = golfBagDriverArray
             btnTempRemoveBag.isEnabled = false
+            btnRemove.isHidden = true
         }
         else if golfBagStr == "Woods"{
             commanBagArray = golfBagWoodArray
@@ -201,6 +282,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         else if golfBagStr == "Putter"{
             commanBagArray = golfBagPuttArray
             btnTempRemoveBag.isEnabled = false
+            btnRemove.isHidden = true
+            btnEdit.isHidden = true
         }
         selectedBagStr = commanBagArray[pageControl.currentPage]
         pageControl.numberOfPages = commanBagArray.count
@@ -220,6 +303,44 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         tableContainerView.addGestureRecognizer(tblContainerGesture)
     }
     
+    func getFullClubName(clubName: String) -> String{
+        var fullClubName = String()
+        
+        let lastChar = clubName.last!
+        let firstChar = clubName.first!
+        
+        if lastChar == "i"{
+            fullClubName = String(firstChar) + " Iron"
+        }
+        else if lastChar == "h"{
+            fullClubName = String(firstChar) + " Hybrid"
+        }
+        else if lastChar == "r"{
+            fullClubName = "Driver"
+        }
+        else if lastChar == "u"{
+            fullClubName = "Putter"
+        }
+        else if lastChar == "w"{
+            if clubName == "Pw"{
+                fullClubName =  "Pitching Wedge"
+            }
+            else if clubName == "Sw"{
+                fullClubName =  "Sand Wedge"
+            }
+            else if clubName == "Gw"{
+                fullClubName =  "Gap Wedge"
+            }
+            else if clubName == "Lw"{
+                fullClubName =  "Lob Wedge"
+            }
+            else{
+                fullClubName = String(firstChar) + " Wood"
+            }
+        }
+        return fullClubName
+    }
+    
     @objc func tblContainerTapped(_ sender:UITapGestureRecognizer){
         for tblVIew in tableContainerView.subviews{
             if !(tblVIew.isKind(of: UITableView.self)){
@@ -229,6 +350,36 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     func getGolfBagData() {
+        golfBagTabMArray = NSMutableArray()
+        lblBrand.text = ""
+        lblAvgDistance.text = ""
+        lblLength.text = ""
+        
+        selectedShaft = "Steel"
+        self.lblShaft.text = selectedShaft
+        
+        selectedFlex = "Extra Stiff"
+        self.lblFlex.text = selectedFlex
+
+        let golfBagEditPopUpData = GolfBagEditPopUpData()
+        selectedLoftArr = golfBagEditPopUpData.getLoftAngleArray(clubName: self.selectedBagStr)
+        selectedLoft = golfBagEditPopUpData.selectedLoft
+        lblLoft.text = selectedLoft
+        debugPrint("selectedLoftArr", selectedLoftArr)
+
+        selectedLengthArr = golfBagEditPopUpData.getClubLengthArray(clubName: self.selectedBagStr)
+        selectedLength = golfBagEditPopUpData.selectedLength
+        lblLength.text = selectedLength + " Inches"
+        if Constants.distanceFilter == 1{
+            lblLength.text = selectedLength + " cms"
+        }
+        debugPrint("selectedLengthArr", selectedLengthArr)
+
+        self.lblLengthValue.text = "-"
+        self.lblAvgDistanceValue.text = "-"
+        self.lblBrandValue.text = "-"
+        self.lblTagAssignedValue.text = "-"
+
         Constants.syncdArray = NSMutableArray()
         bagMArray = NSMutableArray()
         
@@ -241,29 +392,70 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             
             var golfBagArray = NSMutableArray()
             if(snapshot.value != nil){
-                
+                self.golfBagTabMArray = snapshot.value as! NSMutableArray
                 golfBagArray = snapshot.value as! NSMutableArray
                 for i in 0..<golfBagArray.count{
-                    let dict = golfBagArray[i] as! NSDictionary
+                    if let dict = golfBagArray[i] as? NSDictionary{
                     self.bagMArray.add(dict.value(forKey: "clubName") as! String)
                     if (dict.value(forKey: "tag") as! Bool == true){
                         Constants.syncdArray.add(dict.value(forKey: "clubName") as! String)
                     }
+                    // -------------------- New Code ammended by Amit ----------------------
+                    if let avgDistance = dict.value(forKey: "avgDistance") as? Int{
+                        if (dict.value(forKey: "clubName") as! String == self.selectedBagStr){
+                            self.selectedAvgDistance = "\(avgDistance)"
+                            self.lblAvgDistance.text = self.selectedAvgDistance
+                        }
+                    }
+                    else{
+                        for data in Constants.clubWithMaxMin where data.name == dict.value(forKey: "clubName") as! String{
+                            if (data.name).contains("Pu"){
+                                dict.setValue(30, forKey: "avgDistance")
+                                golfBagArray[i] = dict
+                                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":30])
+                                if (dict.value(forKey: "clubName") as! String == self.selectedBagStr){
+                                    self.selectedAvgDistance = "\(30)"
+                                    self.lblAvgDistance.text = self.selectedAvgDistance
+                                }
+                            }else if(dict.value(forKey: "avgDistance") == nil){
+                                let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                                dict.setValue(avgDistance, forKey: "avgDistance")
+                                golfBagArray[i] = dict
+                                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":avgDistance])
+                                if (dict.value(forKey: "clubName") as! String == self.selectedBagStr){
+                                    self.selectedAvgDistance = "\(avgDistance)"
+                                    self.lblAvgDistance.text = self.selectedAvgDistance
+                                }
+                            }
+                      }
+                }
+                    // -----------------------------------------------------------
+                }
                 }
                 if (self.bagMArray.contains(self.selectedBagStr)){
-                    self.btnAddToBag.isHidden = true
-                    self.btnRemove.isHidden = false
+//                    self.btnAddToBag.isHidden = true
+//                    self.btnRemove.isHidden = false
+                    self.selectedBrand = "Generic " + self.getFullClubName(clubName:self.selectedBagStr)
+                    self.lblBrand.text = self.selectedBrand
 
-                    if !self.fromEdit{
+                    if self.fromEdit{
+                        self.lblEdit.text = "Edit " + self.getFullClubName(clubName:self.selectedBagStr)
+                        self.editView.isHidden = false
+                        self.defaultView.isHidden = true
+                        self.btnTempAddBag.isHidden = true
+                    }
+                    else{
                         self.editView.isHidden = true
                         self.defaultView.isHidden = false
+                        self.btnTempAddBag.isHidden = true
                     }
                 }
                 else{
-                    self.btnAddToBag.isHidden = false
-                    self.btnRemove.isHidden = true
-                    self.editView.isHidden = false
+//                    self.btnAddToBag.isHidden = false
+//                    self.btnRemove.isHidden = true
+                    self.editView.isHidden = true
                     self.defaultView.isHidden = true
+                    self.btnTempAddBag.isHidden = false
                 }
                 /*if Constants.syncdArray.count>0{
                     for j in 0..<Constants.syncdArray.count{
@@ -290,11 +482,61 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     }
                 }*/
                 // -------------------------------------------------
-                
+
                 for i in 0..<golfBagArray.count{
                     let dict = golfBagArray[i] as! NSDictionary
                     if (dict.value(forKey: "clubName") as! String == self.selectedBagStr){
-                        //self.syncStackView.isHidden = false //commented by Amit
+//                        self.syncStackView.isHidden = false //commented by Amit
+                        if let tagName = dict.value(forKey: "tagName") as? String{
+                            if tagName != ""{
+                                self.lblTagAssignedValue.text = tagName
+                            }
+                        }
+                        if let avgDistance = dict.value(forKey: "avgDistance") as? Int{
+                            if avgDistance != 0{
+                                self.lblAvgDistanceValue.text = "\(avgDistance)"
+                            }
+                        }
+                        if let clubLength = dict.value(forKey: "clubLength") as? String{
+                            if clubLength != ""{
+                                self.lblLengthValue.text = clubLength + " Inches"
+                                if Constants.distanceFilter == 1{
+                                    self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cms"
+                                }
+                            }
+                        }
+                        if let shaft = dict.value(forKey: "shaft") as? String{
+                            self.selectedShaft = shaft
+                            self.lblShaft.text = self.selectedShaft
+                        }
+                        if let brand = dict.value(forKey: "brand") as? String{
+                            if brand != "" && brand != "Titleiest"{
+
+                            self.selectedBrand = brand
+                            self.lblBrand.text = self.selectedBrand
+                            self.lblBrandValue.text = self.selectedBrand
+                            }
+                        }
+                        if let flex = dict.value(forKey: "flex") as? String{
+                            self.selectedFlex = flex
+                            self.lblFlex.text = self.selectedFlex
+                        }
+                        if let loftAngle = dict.value(forKey: "loftAngle") as? String{
+                            if loftAngle != "" && loftAngle != "2.3"{
+                                self.selectedLoft = loftAngle
+                                self.lblLoft.text = self.selectedLoft
+                            }
+                        }
+                        if let clubLength = dict.value(forKey: "clubLength") as? String{
+                            if clubLength != "" && clubLength != "43"{
+                            self.selectedLength = clubLength
+                            self.lblLength.text = self.selectedLength + " Inches"
+                            if Constants.distanceFilter == 1{
+                                self.selectedLength = "\((Double(clubLength)! * 2.54).rounded())"
+                                self.lblLength.text = self.selectedLength + " cms"
+                            }
+                            }
+                        }
                         if (dict.value(forKey: "tag") as! Bool == true){
                             self.btnSyncTag.backgroundColor = UIColor.glfWarmGrey
                             self.btnSyncTag.setTitle("Desync Tags", for: .normal)
@@ -310,6 +552,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 for i in 0..<golfBagArray.count{
                     let dict = golfBagArray[i] as! NSDictionary
                     if !(dict.value(forKey: "clubName") as! String == self.selectedBagStr){
+
                         self.btnSyncTag.backgroundColor = UIColor.glfBluegreen75
                         self.btnSyncTag.setTitle("Sync Tags", for: .normal)
                         self.syncStackView.isHidden = true
@@ -319,27 +562,40 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             }
         }
     }
-    
-    @IBAction func clubLengthAction(_ sender: Any){
-        ActionSheetStringPicker.show(withTitle: "Select Club Length", rows: ["5", "6"], initialSelection: 0, doneBlock: {
-            picker, value, index in
-            
-            if value == 0 {
-                //self.saveAndviewScore()
+    var selectedFlex = String()
+    var selectedFlexArr = ["Extra Stiff", "Stiff", "Senior", "Regular", "Ladies"]
+    @IBAction func flexAction(_ sender: Any){
+        for i in 0..<selectedFlexArr.count{
+            if selectedFlexArr[i] == selectedFlex{
+                ActionSheetStringPicker.show(withTitle: "Flex", rows: selectedFlexArr, initialSelection: i, doneBlock: {
+                    picker, value, index in
+                    self.selectedFlex = "\(index!)"
+                    self.lblFlex.text = self.selectedFlex
+                    if value == 0 {
+                        //self.saveAndviewScore()
+                    }
+                    else{
+                        //self.exitWithoutSave()
+                    }
+                    return
+                }, cancel: { ActionStringCancelBlock in
+                    return
+                }, origin: sender)
+                
+                break
             }
-            else{
-                //self.exitWithoutSave()
-            }
-            return
-        }, cancel: { ActionStringCancelBlock in
-            return
-        }, origin: sender)
+        }
     }
-    
-    @IBAction func loftAngleAction(_ sender: Any){
-        ActionSheetStringPicker.show(withTitle: "Select Loft Angle", rows: ["3", "4"], initialSelection: 0, doneBlock: {
+    var selectedShaft = String()
+    var selectedShaftArr = ["Steel", "Graphite"]
+    @IBAction func shaftAction(_ sender: Any){
+        for i in 0..<selectedShaftArr.count{
+            if selectedShaftArr[i] == selectedShaft{
+        ActionSheetStringPicker.show(withTitle: "Shaft", rows: selectedShaftArr, initialSelection: i, doneBlock: {
             picker, value, index in
             
+            self.selectedShaft = "\(index!)"
+            self.lblShaft.text = self.selectedShaft
             if value == 0 {
                 //self.saveAndviewScore()
             }
@@ -350,12 +606,111 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         }, cancel: { ActionStringCancelBlock in
             return
         }, origin: sender)
+                break
+            }
+        }
+    }
+    @IBAction func loftAngleAction(_ sender: Any){
+        for i in 0..<selectedLoftArr.count{
+            if selectedLoftArr[i] == selectedLoft{
+
+        ActionSheetStringPicker.show(withTitle: "Loft Angle", rows: selectedLoftArr, initialSelection: i, doneBlock: {
+            picker, value, index in
+            
+            self.selectedLoft = "\(index!)"
+            self.lblLoft.text = self.selectedLoft
+
+            if value == 0 {
+                //self.saveAndviewScore()
+            }
+            else{
+                //self.exitWithoutSave()
+            }
+            return
+        }, cancel: { ActionStringCancelBlock in
+            return
+        }, origin: sender)
+                
+            break
+            }
+        }
+    }
+    @IBAction func clubLengthAction(_ sender: Any){
+        for i in 0..<selectedLengthArr.count{
+            if selectedLengthArr[i] == selectedLength{
+                
+            var unit = " Inches"
+            if Constants.distanceFilter == 1{
+                unit = " cms"
+            }
+        ActionSheetStringPicker.show(withTitle: "Club Length in\(unit)", rows: selectedLengthArr, initialSelection: i, doneBlock: {
+            picker, value, index in
+            
+            self.selectedLength = "\(index!)"
+            self.lblLength.text = self.selectedLength + unit
+
+            if value == 0 {
+                //self.saveAndviewScore()
+            }
+            else{
+                //self.exitWithoutSave()
+            }
+            return
+        }, cancel: { ActionStringCancelBlock in
+            return
+        }, origin: sender)
+            break
+        }
+    }
+}
+    @IBAction func avgDistanceAction(_ sender: Any) {
+        var rangeArr = [Int]()
+        let avg = Int(selectedAvgDistance)!
+//        for i in 0..<self.golfBagArr.count{
+//            if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+//                avg = dict.value(forKey: "avgDistance") as! Int
+//                break
+//            }
+//        }
+        debugPrint("avg:",avg)
+        if avg > 0{
+            let min = BackgroundMapStats.getDataInTermOf5(data:Int((avg * 50)/100))
+            let max = BackgroundMapStats.getDataInTermOf5(data:Int((avg * 150)/100))
+            var i = min
+            while i < max{
+                rangeArr.append(i)
+                i += 5
+            }
+            ActionSheetStringPicker.show(withTitle: "Average Distance", rows: rangeArr.reversed(), initialSelection: rangeArr.reversed().firstIndex(of: avg)!, doneBlock: {
+                picker, value, index in
+//                self.btnAvgDistance.setTitle("\(index!)", for: .normal)
+                self.selectedAvgDistance = "\(index!)"
+                self.lblAvgDistance.text = self.selectedAvgDistance
+
+                //commented by Amit
+                /*for i in 0..<self.golfBagArr.count{
+                    if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                        for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                            Constants.isTagSetupModified = true
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":index!])
+                            dict.setValue(index!, forKey: "avgDistance")
+                        }
+                    }
+                }*/
+                return
+            }, cancel: { ActionStringCancelBlock in
+                return
+            }, origin: sender)
+        }
     }
     
     @IBAction func chooseBrandAction(_ sender: Any){
-        ActionSheetStringPicker.show(withTitle: "Select Brand", rows: ["1", "2"], initialSelection: 0, doneBlock: {
+        ActionSheetStringPicker.show(withTitle: "Club Brand", rows: [selectedBrand], initialSelection: 0, doneBlock: {
             picker, value, index in
             
+            self.selectedBrand = "\(index!)"
+            self.lblBrand.text = self.selectedBrand
+
             if value == 0 {
                 //self.saveAndviewScore()
             }
@@ -375,8 +730,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             self.progressView.hide(navItem: self.navigationItem)
             
             var golfBagArray = NSMutableArray()
-            self.editView.isHidden = false
-            self.defaultView.isHidden = true
+//            self.editView.isHidden = true
+//            self.defaultView.isHidden = true
             
             if(snapshot.value != nil){
                 
@@ -426,6 +781,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             var golfBagArray = NSMutableArray()
             self.editView.isHidden = true
             self.defaultView.isHidden = false
+            self.btnTempAddBag.isHidden = true
             
             if(snapshot.value != nil){
                 golfBagArray = snapshot.value as! NSMutableArray
@@ -437,22 +793,53 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             DispatchQueue.main.async(execute: {
                 if golfBagArray.count<14{
                 if !(tempBagArray.contains(self.selectedBagStr)){
-                    
                     let golfBagDict = NSMutableDictionary()
-                    golfBagDict.setObject("Titleiest", forKey: "brand" as NSCopying)
-                    golfBagDict.setObject("43", forKey: "clubLength" as NSCopying)
+                    golfBagDict.setObject(self.selectedBrand, forKey: "brand" as NSCopying)
+                    if Constants.distanceFilter == 1{
+//                    golfBagDict.setObject("\((Double(self.selectedLength)! / 2.54).rounded(toPlaces: 2))", forKey: "clubLength" as NSCopying)
+                        var val = (Double(self.selectedLength)! / 2.54).rounded(toPlaces: 2)
+                        let decVal = Int(val*100)%100
+                        let rem = decVal%25
+                        if rem < 12{
+                            val = val - (Double(rem)/100.0)
+                        }
+                        else{
+                            val = val + (Double(25-rem)/100.0)
+                        }
+                        if val < 22.0{
+                            val = 22.0
+                        }
+                        golfBagDict.setObject("\(val)", forKey: "clubLength" as NSCopying)
+                    }
+                    else{
+                        golfBagDict.setObject(self.selectedLength, forKey: "clubLength" as NSCopying)
+                    }
                     golfBagDict.setObject(self.selectedBagStr, forKey: "clubName" as NSCopying)
-                    golfBagDict.setObject("2.3", forKey: "loftAngle" as NSCopying)
+                    golfBagDict.setObject(self.selectedLoft, forKey: "loftAngle" as NSCopying)
+                    golfBagDict.setObject(self.selectedShaft, forKey: "shaft" as NSCopying)
+                    golfBagDict.setObject(self.selectedFlex, forKey: "flex" as NSCopying)
                     golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                     golfBagDict.setObject("", forKey: "tagName" as NSCopying)
                     golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
                     
+                    // ------------------------- Calculate Avg Distance --------------------------------
+                    for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                        if (data.name).contains("Pu"){
+                            golfBagDict.setObject(30, forKey: "avgDistance" as NSCopying)
+                        }
+                        else{
+                            let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                            golfBagDict.setObject(avgDistance, forKey: "avgDistance" as NSCopying)
+                        }
+                    }
+                    // ----------------------------------------
+
                     golfBagArray.insert(golfBagDict, at: 0)
                     let golfBagData = ["golfBag": golfBagArray]
                     
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
                     
-                    //self.syncStackView.isHidden = false //commented by Amit
+//                    self.syncStackView.isHidden = false //commented by Amit
                     self.btnSyncTag.backgroundColor = UIColor.glfBluegreen75
                     self.btnSyncTag.setTitle("Sync Tags", for: .normal)
                     
@@ -460,8 +847,9 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 }
             }
                 else{
-                    self.editView.isHidden = false
+                    self.editView.isHidden = true
                     self.defaultView.isHidden = true
+                    self.btnTempAddBag.isHidden = false
 
                     let alertVC = UIAlertController(title: "Alert", message: "You can not add more than 14 clubs.", preferredStyle: UIAlertControllerStyle.alert)
                     let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
@@ -476,7 +864,6 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     @IBAction func syncTagAction(_ sender: Any) {
-        
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
             
             var golfBagArray = NSMutableArray()
@@ -504,10 +891,10 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
 //                        if (dict.value(forKey: "tag") as! Bool == true){
                         if Constants.syncdArray.contains(self.selectedBagStr){
                             let golfBagDict = NSMutableDictionary()
-                            golfBagDict.setObject("Titleiest", forKey: "brand" as NSCopying)
-                            golfBagDict.setObject("43", forKey: "clubLength" as NSCopying)
+                            golfBagDict.setObject("", forKey: "brand" as NSCopying)
+                            golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
                             golfBagDict.setObject(self.selectedBagStr, forKey: "clubName" as NSCopying)
-                            golfBagDict.setObject("2.3", forKey: "loftAngle" as NSCopying)
+                            golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
                             golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                             golfBagDict.setObject("", forKey: "tagName" as NSCopying)
                             golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
@@ -613,10 +1000,10 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         
                         if (dict.value(forKey: "tag") as! Bool == true){
                             let golfBagDict = NSMutableDictionary()
-                            golfBagDict.setObject("Titleiest", forKey: "brand" as NSCopying)
-                            golfBagDict.setObject("43", forKey: "clubLength" as NSCopying)
+                            golfBagDict.setObject("", forKey: "brand" as NSCopying)
+                            golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
                             golfBagDict.setObject(self.selectedBagStr, forKey: "clubName" as NSCopying)
-                            golfBagDict.setObject("2.3", forKey: "loftAngle" as NSCopying)
+                            golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
                             golfBagDict.setObject(false, forKey: "tag" as NSCopying)
                             golfBagDict.setObject("", forKey: "tagName" as NSCopying)
                             golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
@@ -648,10 +1035,10 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                                 let last2Char = Int(tagName.suffix(5))
                                 
                                 let golfBagDict = NSMutableDictionary()
-                                golfBagDict.setObject("Titleiest", forKey: "brand" as NSCopying)
-                                golfBagDict.setObject("43", forKey: "clubLength" as NSCopying)
+                                golfBagDict.setObject("", forKey: "brand" as NSCopying)
+                                golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
                                 golfBagDict.setObject(self.selectedBagStr, forKey: "clubName" as NSCopying)
-                                golfBagDict.setObject("2.3", forKey: "loftAngle" as NSCopying)
+                                golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
                                 golfBagDict.setObject(true, forKey: "tag" as NSCopying)
                                 golfBagDict.setObject(tagName, forKey: "tagName" as NSCopying)
                                 golfBagDict.setObject(last2Char!, forKey: "tagNum" as NSCopying)
@@ -751,20 +1138,69 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             pageControl.currentPage = snapToIndex
             selectedBagStr = commanBagArray[snapToIndex]
             
+            let golfBagEditPopUpData = GolfBagEditPopUpData()
+            selectedLoftArr = golfBagEditPopUpData.getLoftAngleArray(clubName: self.selectedBagStr)
+            debugPrint("selectedLoftArr", selectedLoftArr)
+            
+            selectedLengthArr = golfBagEditPopUpData.getClubLengthArray(clubName: self.selectedBagStr)
+            debugPrint("selectedLengthArr", selectedLengthArr)
+
+            self.lblEdit.text = "Edit " + self.getFullClubName(clubName:self.selectedBagStr)
+
+            for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                for i in 0..<self.golfBagTabMArray.count{
+                    if let dict = self.golfBagTabMArray[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                        let avg = dict.value(forKey: "avgDistance") as! Int
+                        selectedAvgDistance = "\(avg)"
+                        self.lblAvgDistance.text = selectedAvgDistance
+//                        self.btnAvgDistance.setTitle("\(avg)", for: .normal)
+                        break
+                    }
+                }
+            }
+            for i in 0..<self.golfBagTabMArray.count{
+                if let dict = self.golfBagTabMArray[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                    self.lblLengthValue.text = "-"
+                    self.lblAvgDistanceValue.text = "-"
+                    self.lblBrandValue.text = "-"
+                    self.lblTagAssignedValue.text = "-"
+
+                    if let tagName = dict.value(forKey: "tagName") as? String, dict.value(forKey: "tagName") as! String != "" {
+                        self.lblTagAssignedValue.text = tagName
+                    }
+                    if let brand = dict.value(forKey: "brand") as? String, dict.value(forKey: "brand") as! String != "", dict.value(forKey: "brand") as! String != "Titleiest"{
+                        self.lblBrandValue.text = brand
+                    }
+                    if let avgDistance = dict.value(forKey: "avgDistance") as? Int, dict.value(forKey: "avgDistance") as! Int != 0{
+                        self.lblAvgDistanceValue.text = "\(avgDistance)"
+                    }
+                    if let clubLength = dict.value(forKey: "clubLength") as? String, dict.value(forKey: "clubLength") as! String != ""{
+                        self.lblLengthValue.text = clubLength + " Inches"
+                        if Constants.distanceFilter == 1{
+                            self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cms"
+                        }
+                    }
+                    break
+                }
+            }
+
             if (self.bagMArray.contains(self.selectedBagStr)){
-                self.btnAddToBag.isHidden = true
-                self.btnRemove.isHidden = false
-                //syncStackView.isHidden = false //commented by Amit
-                editView.isHidden = true
-                defaultView.isHidden = false
+//                self.btnAddToBag.isHidden = true
+//                self.btnRemove.isHidden = false
+//                syncStackView.isHidden = false //commented by Amit
+                
+                self.editView.isHidden = true
+                self.defaultView.isHidden = false
+                self.btnTempAddBag.isHidden = true
             }
             else{
                 syncStackView.isHidden = true
-                self.btnAddToBag.isHidden = false
-                self.btnRemove.isHidden = true
-
-                editView.isHidden = false
-                defaultView.isHidden = true
+//                self.btnAddToBag.isHidden = false
+//                self.btnRemove.isHidden = true
+                
+                self.editView.isHidden = true
+                self.defaultView.isHidden = true
+                self.btnTempAddBag.isHidden = false
             }
             
             /*for j in 0..<Constants.syncdArray.count{
@@ -810,23 +1246,71 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             if indexPath.row >= 0 && commanBagArray.count > indexPath.row{
                 pageControl.currentPage = indexPath.row
                 selectedBagStr = commanBagArray[indexPath.row]
+                
+                let golfBagEditPopUpData = GolfBagEditPopUpData()
+                selectedLoftArr = golfBagEditPopUpData.getLoftAngleArray(clubName: self.selectedBagStr)
+                debugPrint("selectedLoftArr", selectedLoftArr)
+                
+                selectedLengthArr = golfBagEditPopUpData.getClubLengthArray(clubName: self.selectedBagStr)
+                debugPrint("selectedLengthArr", selectedLengthArr)
+
+                self.lblEdit.text = "Edit " + self.getFullClubName(clubName:self.selectedBagStr)
+
+                for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                    for i in 0..<self.golfBagTabMArray.count{
+                        if let dict = self.golfBagTabMArray[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                            let avg = dict.value(forKey: "avgDistance") as! Int
+//                            self.btnAvgDistance.setTitle("\(avg)", for: .normal)
+                            selectedAvgDistance = "\(avg)"
+                            self.lblAvgDistance.text = selectedAvgDistance
+                            break
+                        }
+                    }
+                }
+                for i in 0..<self.golfBagTabMArray.count{
+                    if let dict = self.golfBagTabMArray[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
+                        self.lblLengthValue.text = "-"
+                        self.lblAvgDistanceValue.text = "-"
+                        self.lblBrandValue.text = "-"
+                        self.lblTagAssignedValue.text = "-"
+                        
+                        if let tagName = dict.value(forKey: "tagName") as? String, dict.value(forKey: "tagName") as! String != "" {
+                            self.lblTagAssignedValue.text = tagName
+                        }
+                        if let brand = dict.value(forKey: "brand") as? String, dict.value(forKey: "brand") as! String != "", dict.value(forKey: "brand") as! String != "Titleiest"{
+                            self.lblBrandValue.text = brand
+                        }
+                        if let avgDistance = dict.value(forKey: "avgDistance") as? Int, dict.value(forKey: "avgDistance") as! Int != 0{
+                            self.lblAvgDistanceValue.text = "\(avgDistance)"
+                        }
+                        if let clubLength = dict.value(forKey: "clubLength") as? String, dict.value(forKey: "clubLength") as! String != ""{
+                            self.lblLengthValue.text = clubLength + " Inches"
+                            if Constants.distanceFilter == 1{
+                                self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cms"
+                            }
+                        }
+                        break
+                    }
+                }
                 collectionView.collectionViewLayout.collectionView!.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
                 if (self.bagMArray.contains(self.selectedBagStr)){
-                    self.btnAddToBag.isHidden = true
-                    self.btnRemove.isHidden = false
+//                    self.btnAddToBag.isHidden = true
+//                    self.btnRemove.isHidden = false
 
-                    //syncStackView.isHidden = false //commented by Amit
+//                    syncStackView.isHidden = false //commented by Amit
                     
-                    editView.isHidden = true
-                    defaultView.isHidden = false
+                    self.editView.isHidden = true
+                    self.defaultView.isHidden = false
+                    self.btnTempAddBag.isHidden = true
                 }
                 else{
                     syncStackView.isHidden = true
-                    self.btnAddToBag.isHidden = false
-                    self.btnRemove.isHidden = true
+//                    self.btnAddToBag.isHidden = false
+//                    self.btnRemove.isHidden = true
 
-                    editView.isHidden = false
-                    defaultView.isHidden = true
+                    self.editView.isHidden = true
+                    self.defaultView.isHidden = true
+                    self.btnTempAddBag.isHidden = false
                 }
                 
                 /*for j in 0..<Constants.syncdArray.count{

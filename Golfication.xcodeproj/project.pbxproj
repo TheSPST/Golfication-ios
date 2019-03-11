@@ -123,6 +123,8 @@
 		4B1B1C832226CE8B00FB569F /* DistanceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */; };
 		4B1B1C842226CE8B00FB569F /* DistanceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */; };
 		4B1B1C852226CE8B00FB569F /* DistanceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */; };
+		4B1E686522329BCE00B0F03E /* EddieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1E686322329BCD00B0F03E /* EddieView.swift */; };
+		4B1E686622329BCE00B0F03E /* EddieView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B1E686422329BCD00B0F03E /* EddieView.xib */; };
 		4B1F6BC32090A29F00312EA7 /* FeedbackVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B932090A29F00312EA7 /* FeedbackVC.swift */; };
 		4B1F6BC62090A29F00312EA7 /* CustomStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 4B1F6B972090A29F00312EA7 /* CustomStyle.json */; };
 		4B1F6BC72090A29F00312EA7 /* Bound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6B982090A29F00312EA7 /* Bound.swift */; };
@@ -295,6 +297,8 @@
 		4BE11A6B21353568008E529A /* CustomColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE11A6A21353568008E529A /* CustomColorSlider.swift */; };
 		4BE1E2C5206CC74B00A32845 /* ShareStatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */; };
 		4BE4196921B29A6100C49AB6 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE4196821B29A6100C49AB6 /* CircularProgress.swift */; };
+		4BEB41EB223662510090568F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEB41EA223662510090568F /* SettingCell.swift */; };
+		4BEB41ED2236632B0090568F /* GolfBagEditPopUpData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEB41EC2236632B0090568F /* GolfBagEditPopUpData.swift */; };
 		4BF564EF1FD2AA03006BDB0E /* String+Width.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF564EE1FD2AA03006BDB0E /* String+Width.swift */; };
 /* End PBXBuildFile section */
 
@@ -453,6 +457,8 @@
 		4B17C4772195BE43004CA13C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4B17C4782195BF4C004CA13C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceUtil.swift; sourceTree = "<group>"; };
+		4B1E686322329BCD00B0F03E /* EddieView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EddieView.swift; sourceTree = "<group>"; };
+		4B1E686422329BCD00B0F03E /* EddieView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EddieView.xib; sourceTree = "<group>"; };
 		4B1F6B932090A29F00312EA7 /* FeedbackVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackVC.swift; sourceTree = "<group>"; };
 		4B1F6B972090A29F00312EA7 /* CustomStyle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CustomStyle.json; sourceTree = "<group>"; };
 		4B1F6B982090A29F00312EA7 /* Bound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bound.swift; sourceTree = "<group>"; };
@@ -638,6 +644,8 @@
 		4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareStatsVC.swift; sourceTree = "<group>"; };
 		4BE1E2C7206CFA7000A32845 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		4BE4196821B29A6100C49AB6 /* CircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
+		4BEB41EA223662510090568F /* SettingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
+		4BEB41EC2236632B0090568F /* GolfBagEditPopUpData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GolfBagEditPopUpData.swift; sourceTree = "<group>"; };
 		4BF564EE1FD2AA03006BDB0E /* String+Width.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Width.swift"; sourceTree = "<group>"; };
 		74C4161709B89182A1A47152 /* Pods-Golfication.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.debug.xcconfig"; sourceTree = "<group>"; };
 		BAEB7E85ED122E864139FDF9 /* Pods-Golfication.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.release.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.release.xcconfig"; sourceTree = "<group>"; };
@@ -821,6 +829,7 @@
 		3E59234620A991C50056D446 /* GolfBagViewCtrls */ = {
 			isa = PBXGroup;
 			children = (
+				4BEB41EC2236632B0090568F /* GolfBagEditPopUpData.swift */,
 				3E59234720A991C50056D446 /* GolfBagVC.swift */,
 				4BD6AABC20A9B0E300F1839C /* GolfBagTabsVC.swift */,
 				4B077D1620AC550000AFC9FC /* GolfBagCollectionCell.swift */,
@@ -912,6 +921,15 @@
 			path = Animations;
 			sourceTree = "<group>";
 		};
+		4B1E686222329B9D00B0F03E /* EddieViews */ = {
+			isa = PBXGroup;
+			children = (
+				4B1E686322329BCD00B0F03E /* EddieView.swift */,
+				4B1E686422329BCD00B0F03E /* EddieView.xib */,
+			);
+			path = EddieViews;
+			sourceTree = "<group>";
+		};
 		4B1F6B922090A29F00312EA7 /* GameViewCtrls */ = {
 			isa = PBXGroup;
 			children = (
@@ -936,6 +954,7 @@
 				4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */,
 				4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */,
 				4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */,
+				4B1E686222329B9D00B0F03E /* EddieViews */,
 			);
 			path = GameViewCtrls;
 			sourceTree = "<group>";
@@ -1250,6 +1269,7 @@
 		4BB26CD51FF77EDB001E9556 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				4BEB41EA223662510090568F /* SettingCell.swift */,
 				4BD6067F220D956100E153D9 /* NewHomeVC.swift */,
 				3E638E262187058500DB08B9 /* PublicScore.swift */,
 				3E57646A215BDA5400658D78 /* ProfilePhotoDetailVC.swift */,
@@ -1649,6 +1669,7 @@
 				4B7E2A7D2175C20B00DFC3EB /* Default@2x.png in Resources */,
 				4B1F6BD72090A29F00312EA7 /* Game.storyboard in Resources */,
 				3E035F87215293F000019014 /* OAD.storyboard in Resources */,
+				4B1E686622329BCE00B0F03E /* EddieView.xib in Resources */,
 				3E3367F22130232000AC238F /* ScanningGolfX.xib in Resources */,
 				4B7E2A7C2175C20B00DFC3EB /* radar.png in Resources */,
 				4B4BD77221E366B00067460A /* CesPopUpView.xib in Resources */,
@@ -1827,6 +1848,7 @@
 				4B01751B222531A500A215E6 /* Intents.intentdefinition in Sources */,
 				4B7E2A692175C0D900DFC3EB /* ARObjectView.m in Sources */,
 				3EA43D042015D80E0077B14A /* ExploreVC.swift in Sources */,
+				4BEB41EB223662510090568F /* SettingCell.swift in Sources */,
 				4BD5CF85214D212500BEBEED /* RefreshSubscriptionManager.swift in Sources */,
 				4B954300221D1627001128FC /* NotesTableViewCell.swift in Sources */,
 				3E63509720D3A150005BF851 /* BLE.swift in Sources */,
@@ -1889,6 +1911,7 @@
 				4BB26D1F1FF77EDB001E9556 /* OTTViewController.swift in Sources */,
 				4B1F6BE32090A29F00312EA7 /* DebugMapViewController.swift in Sources */,
 				4B1F6BD82090A29F00312EA7 /* SearchLocationVC.swift in Sources */,
+				4B1E686522329BCE00B0F03E /* EddieView.swift in Sources */,
 				4BC051B222143B93000A7B14 /* StatsInfoVC.swift in Sources */,
 				4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */,
 				3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */,
@@ -2016,6 +2039,7 @@
 				3EAE867C2125573F0081857B /* PracticeSessionVC.swift in Sources */,
 				4BE4196921B29A6100C49AB6 /* CircularProgress.swift in Sources */,
 				0D7F3BF61F9E2AD900AE5301 /* Date+String.swift in Sources */,
+				4BEB41ED2236632B0090568F /* GolfBagEditPopUpData.swift in Sources */,
 				4BB26CCA1FF77E2B001E9556 /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				3E40F98420E62E2A00092170 /* ShotDetailsTableViewCell.swift in Sources */,
 				4BB26D111FF77EDB001E9556 /* SignInVC.swift in Sources */,

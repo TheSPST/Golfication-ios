@@ -84,6 +84,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var topHCPView: UIView!
     @IBOutlet weak var lblTopHCP: UILabel!
     @IBOutlet weak var btnTopHoleNo: UILocalizedButton!
+    @IBOutlet weak var eddieView: EddieView!
+    
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
     var buttonsArrayForGIR = [UIButton]()
@@ -1320,7 +1322,19 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             buttonsArrayForStrokes.append(btn as! UIButton)
         }
     }
-    func initalSetup(){        
+    var achievedGoal = Goal()
+    var targetGoal = Goal()
+    func initalSetup(){
+        self.eddieView.isRFMap = true
+        self.eddieView.setup()
+        if self.scoring.count == 9{
+            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
+            self.targetGoal.par = Constants.targetGoal.par/2
+            self.targetGoal.gir = Constants.targetGoal.gir/2
+            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+        }
+        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
+        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
         lblEditShotNumber.layer.cornerRadius = lblEditShotNumber.frame.size.height/2
         lblEditShotNumber.layer.masksToBounds = true
         
@@ -1944,6 +1958,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             i += 1
         }
+        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
+        self.eddieView.updateGoalView(achievedGoal: achievedGoal, targetGoal: targetGoal)
     }
     func updateHoleWiseShots(){
         var i = 0
@@ -2109,6 +2125,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             lblEditShotNumber.isHidden = true
         }
         updateColorToStrokes()
+        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
+        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
     }
     func updateStrokesButtonWithoutStrokes(strokes:Int,btn:UIButton){
         if strokes <= -2 || strokes <= -3{
@@ -2205,7 +2223,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
-        
         ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
     @objc func chipShotAction(sender: UIButton!) {

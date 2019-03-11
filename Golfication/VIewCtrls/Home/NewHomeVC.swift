@@ -273,7 +273,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        Constants.targetGoal = Goal()
+        Constants.targetGoal.Birdie = 10
+        Constants.targetGoal.par = 10
+        Constants.targetGoal.fairwayHit = 10
+        Constants.targetGoal.gir = 10
         if let iosToken = (InstanceID.instanceID().token()){
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :iosToken] as [AnyHashable:String])
         }
