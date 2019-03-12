@@ -102,6 +102,7 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
     @IBOutlet weak var lblTempoColon: UILabel!
     @IBOutlet weak var lblSwingTempo: UILabel!
     var cardViewInfoArray = [(title:String,value:String)]()
+    var swingGoalDic = NSMutableDictionary()
 
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: shotNumStr)
@@ -244,39 +245,98 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
             self.benchMarkVal = snapshot.value as! String
             
             DispatchQueue.main.async(execute: {
-                self.progressView.hide(navItem: self.navigationItem)
-
-                let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
-                let clubSpeedTemp:Double = Double(self.benchMarkVal)!
-                 if(clubSpeedTemp*0.9<clubSpeed){
-                    self.lbl2ClubheadB.textColor = UIColor.glfGreenish
-
-                 }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
-                    self.lbl2ClubheadB.textColor = UIColor.glfYellow
-
-                 }else if(clubSpeedTemp*0.8>clubSpeed){
-                    self.lbl2ClubheadB.textColor = UIColor.glfRed
-                 }
                 
-                let tempo = self.swingDetails.value(forKey: "tempo") as! Double
-                if(tempo>=3.7 || tempo<=2.3){
-                    self.lbl4TempoB.textColor = UIColor.glfRed
-                    
-                }else if(tempo>=2.7 || tempo<=3.3){
-                    self.lbl4TempoB.textColor = UIColor.glfGreenish
-                }else{
-                    self.lbl4TempoB.textColor = UIColor.glfYellow
-                }
-                if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
-                    if(Int(backSwing)>=260 && Int(backSwing)<=280){
-                        self.lbl5BackSwingB.textColor = UIColor.glfGreenish
-                    }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
-                        self.lbl5BackSwingB.textColor = UIColor.glfYellow
-                    }else{
-                        self.lbl5BackSwingB.textColor = UIColor.glfRed
+                self.swingGoalDic = NSMutableDictionary()
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingGoals") { (snapshot) in
+                    self.progressView.hide(navItem: self.navigationItem)
+                    if snapshot.value != nil{
+                        self.swingGoalDic = snapshot.value as! NSMutableDictionary
+                        
+                        let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
+                        let clubSpeedTemp:Double = Double(self.benchMarkVal)!
+                        if(clubSpeedTemp*0.9<clubSpeed){
+                            self.lbl2ClubheadB.textColor = UIColor.glfGreenish
+                        }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
+                            self.lbl2ClubheadB.textColor = UIColor.glfYellow
+                        }else if(clubSpeedTemp*0.8>clubSpeed){
+                            self.lbl2ClubheadB.textColor = UIColor.glfRed
+                        }
+                        
+                        for (key,value) in self.swingGoalDic{
+                            if key as! String == "backSwing"{
+                                let backVal = (value as! Int)
+                                if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
+                                    if(Int(backSwing)>=backVal-10 && Int(backSwing)<=backVal+10){
+                                        self.lbl5BackSwingB.textColor = UIColor.glfGreenish
+                                    }else if(Int(backSwing)>=backVal-25 && Int(backSwing)<=backVal+25){
+                                        self.lbl5BackSwingB.textColor = UIColor.glfYellow
+                                    }else{
+                                        self.lbl5BackSwingB.textColor = UIColor.glfRed
+                                    }
+                                }
+                            }
+                            if key as! String == "tempo"{
+                                let tempVal = Double(value as! Int)
+                                let tempo = self.swingDetails.value(forKey: "tempo") as! Double
+                                if(tempo>=tempVal+0.7 || tempo<=tempVal-0.7){
+                                    self.lbl4TempoB.textColor = UIColor.glfRed
+                                    
+                                }else if(tempo>=tempVal-0.3 || tempo<=tempVal+0.3){
+                                    self.lbl4TempoB.textColor = UIColor.glfGreenish
+                                }else{
+                                    self.lbl4TempoB.textColor = UIColor.glfYellow
+                                }
+                            }
+                            if key as! String == clubName{
+                                let tempVal = Double(value as! Int)
+
+                                let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
+//                                let clubSpeedTemp:Double = Double(self.benchMarkVal)!
+                                if(tempVal<clubSpeed){
+                                    self.lbl2ClubheadB.textColor = UIColor.glfGreenish
+                                    
+                                }else if(tempVal*0.9<clubSpeed && tempVal>clubSpeed){
+                                    self.lbl2ClubheadB.textColor = UIColor.glfYellow
+                                    
+                                }else if(tempVal*0.9>clubSpeed){
+                                    self.lbl2ClubheadB.textColor = UIColor.glfRed
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        let clubSpeed = self.swingDetails.value(forKey: "clubSpeed") as! Double
+                        let clubSpeedTemp:Double = Double(self.benchMarkVal)!
+                        if(clubSpeedTemp*0.9<clubSpeed){
+                            self.lbl2ClubheadB.textColor = UIColor.glfGreenish
+                            
+                        }else if(clubSpeedTemp*0.8<clubSpeed && clubSpeedTemp*0.9>clubSpeed){
+                            self.lbl2ClubheadB.textColor = UIColor.glfYellow
+                            
+                        }else if(clubSpeedTemp*0.8>clubSpeed){
+                            self.lbl2ClubheadB.textColor = UIColor.glfRed
+                        }
+                        
+                        let tempo = self.swingDetails.value(forKey: "tempo") as! Double
+                        if(tempo>=3.7 || tempo<=2.3){
+                            self.lbl4TempoB.textColor = UIColor.glfRed
+                            
+                        }else if(tempo>=2.7 || tempo<=3.3){
+                            self.lbl4TempoB.textColor = UIColor.glfGreenish
+                        }else{
+                            self.lbl4TempoB.textColor = UIColor.glfYellow
+                        }
+                        if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
+                            if(Int(backSwing)>=260 && Int(backSwing)<=280){
+                                self.lbl5BackSwingB.textColor = UIColor.glfGreenish
+                            }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
+                                self.lbl5BackSwingB.textColor = UIColor.glfYellow
+                            }else{
+                                self.lbl5BackSwingB.textColor = UIColor.glfRed
+                            }
+                        }
                     }
                 }
-                
             })
         }
     }
@@ -408,37 +468,121 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                                 self.lbl2ClubheadB.textColor = UIColor.glfRed
                             }
                         }
+                        let clubName = self.swingDetails.value(forKey: "club") as! String
+                        if swingGoalDic.count>0{
+                            for (key, value) in self.swingGoalDic{
+                                if key as! String == clubName{
+                                    let tempVal = Double(value as! Int)
+
+                                    //if let clubSpeedTemp:Double = Double(self.benchMarkVal){
+                                        if(tempVal<clubSpeed){
+                                            lblBottomClubSpeedKPH.textColor = UIColor.glfGreenish
+                                            lblBottomClubSpeedCHS.textColor = UIColor.glfGreenish
+                                            
+                                            shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                                            self.lbl2ClubheadV.textColor = UIColor.glfGreenish
+                                            self.lbl2ClubheadB.textColor = UIColor.glfGreenish
+                                            
+                                        }else if(tempVal*0.9<clubSpeed && tempVal>clubSpeed){
+                                            lblBottomClubSpeedKPH.textColor = UIColor.glfYellow
+                                            lblBottomClubSpeedCHS.textColor = UIColor.glfYellow
+                                            
+                                            shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                                            self.lbl2ClubheadV.textColor = UIColor.glfYellow
+                                            self.lbl2ClubheadB.textColor = UIColor.glfYellow
+                                            
+                                        }else if(tempVal*0.9>clubSpeed){
+                                            lblBottomClubSpeedKPH.textColor = UIColor.glfRed
+                                            lblBottomClubSpeedCHS.textColor = UIColor.glfRed
+                                            
+                                            shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                                            self.lbl2ClubheadV.textColor = UIColor.glfRed
+                                            self.lbl2ClubheadB.textColor = UIColor.glfRed
+                                        }
+                                    //}
+                                   break
+                                }
+                            }
+                        }
                     }
                     else if tagVal == 3{
-                        let tempo = self.swingDetails.value(forKey: "tempo") as! Double
-                        if(tempo>=3.7 || tempo<=2.3){
-                            lbl4TempoB.textColor = UIColor.glfRed
-                            lbl4TempoV.textColor = UIColor.glfRed
-                            lbl4Tempo1V.textColor = UIColor.glfRed
-                            lblTempoColon.textColor = UIColor.glfRed
-                            shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
-                            lblSwingTempo.textColor = UIColor.glfRed
-                            
-                        }else if(tempo>=2.7 || tempo<=3.3){
-                            lbl4TempoB.textColor = UIColor.glfGreenish
-                            lbl4TempoV.textColor = UIColor.glfGreenish
-                            lbl4Tempo1V.textColor = UIColor.glfGreenish
-                            lblTempoColon.textColor = UIColor.glfGreenish
-                            shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
-                            lblSwingTempo.textColor = UIColor.glfGreenish
-                        }else{
-                            lbl4TempoB.textColor = UIColor.glfYellow
-                            lbl4TempoV.textColor = UIColor.glfYellow
-                            lbl4Tempo1V.textColor = UIColor.glfYellow
-                            lblTempoColon.textColor = UIColor.glfYellow
-                            shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
-                            lblSwingTempo.textColor = UIColor.glfYellow
+                        if let tempoValue = swingGoalDic.value(forKey: "tempo") as? Int{
+                            let tempVal = Double(tempoValue)
+                            let tempo = self.swingDetails.value(forKey: "tempo") as! Double
+                            if(tempo>=tempVal+0.7 || tempo<=tempVal-0.7){
+                                lbl4TempoB.textColor = UIColor.glfRed
+                                lbl4TempoV.textColor = UIColor.glfRed
+                                lbl4Tempo1V.textColor = UIColor.glfRed
+                                lblTempoColon.textColor = UIColor.glfRed
+                                shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                                lblSwingTempo.textColor = UIColor.glfRed
+                                
+                            }else if(tempo>=tempVal-0.3 || tempo<=tempVal+0.3){
+                                lbl4TempoB.textColor = UIColor.glfGreenish
+                                lbl4TempoV.textColor = UIColor.glfGreenish
+                                lbl4Tempo1V.textColor = UIColor.glfGreenish
+                                lblTempoColon.textColor = UIColor.glfGreenish
+                                shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                                lblSwingTempo.textColor = UIColor.glfGreenish
+                            }else{
+                                lbl4TempoB.textColor = UIColor.glfYellow
+                                lbl4TempoV.textColor = UIColor.glfYellow
+                                lbl4Tempo1V.textColor = UIColor.glfYellow
+                                lblTempoColon.textColor = UIColor.glfYellow
+                                shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                                lblSwingTempo.textColor = UIColor.glfYellow
+                            }
+                        }
+                        else{
+                            let tempo = self.swingDetails.value(forKey: "tempo") as! Double
+                            if(tempo>=3.7 || tempo<=2.3){
+                                lbl4TempoB.textColor = UIColor.glfRed
+                                lbl4TempoV.textColor = UIColor.glfRed
+                                lbl4Tempo1V.textColor = UIColor.glfRed
+                                lblTempoColon.textColor = UIColor.glfRed
+                                shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                                lblSwingTempo.textColor = UIColor.glfRed
+                                
+                            }else if(tempo>=2.7 || tempo<=3.3){
+                                lbl4TempoB.textColor = UIColor.glfGreenish
+                                lbl4TempoV.textColor = UIColor.glfGreenish
+                                lbl4Tempo1V.textColor = UIColor.glfGreenish
+                                lblTempoColon.textColor = UIColor.glfGreenish
+                                shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                                lblSwingTempo.textColor = UIColor.glfGreenish
+                            }else{
+                                lbl4TempoB.textColor = UIColor.glfYellow
+                                lbl4TempoV.textColor = UIColor.glfYellow
+                                lbl4Tempo1V.textColor = UIColor.glfYellow
+                                lblTempoColon.textColor = UIColor.glfYellow
+                                shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                                lblSwingTempo.textColor = UIColor.glfYellow
+                            }
                         }
                     }
                     else if tagVal == 4{
-                        if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
+                        if let backVal = swingGoalDic.value(forKey: "backSwing") as? Int{
+                            if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
+                                if(Int(backSwing)>=backVal-10 && Int(backSwing)<=backVal+10){
+                                    lbl5BackSwingB.textColor = UIColor.glfGreenish
+                                    lblBackSwingTitle.textColor = UIColor.glfGreenish
+                                    shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
+                                }else if(Int(backSwing)>=backVal-25 && Int(backSwing)<=backVal+25){
+                                    lbl5BackSwingB.textColor = UIColor.glfYellow
+                                    lblBackSwingTitle.textColor = UIColor.glfYellow
+                                    shotBtnViews[i].layer.borderColor = UIColor.glfYellow.cgColor
+                                }else{
+                                    lbl5BackSwingB.textColor = UIColor.glfRed
+                                    lblBackSwingTitle.textColor = UIColor.glfRed
+                                    shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
+                                }
+                                self.setBackSwingAngleDesign(backSwingAngle: backSwing)
+                            }
+                        }
+                        else{
+                            if let backSwing = self.swingDetails.value(forKey: "backSwingAngle") as? Double{
                                 if(Int(backSwing)>=260 && Int(backSwing)<=280){
-                                   lbl5BackSwingB.textColor = UIColor.glfGreenish
+                                    lbl5BackSwingB.textColor = UIColor.glfGreenish
                                     lblBackSwingTitle.textColor = UIColor.glfGreenish
                                     shotBtnViews[i].layer.borderColor = UIColor.glfGreenish.cgColor
                                 }else if(Int(backSwing)>=245 && Int(backSwing)<=295){
@@ -450,7 +594,8 @@ class PracticeSessionVC: UIViewController, IndicatorInfoProvider, UIScrollViewDe
                                     lblBackSwingTitle.textColor = UIColor.glfRed
                                     shotBtnViews[i].layer.borderColor = UIColor.glfRed.cgColor
                                 }
-                            self.setBackSwingAngleDesign(backSwingAngle: backSwing)
+                                self.setBackSwingAngleDesign(backSwingAngle: backSwing)
+                            }
                         }
                     }
                     else if tagVal == 5{

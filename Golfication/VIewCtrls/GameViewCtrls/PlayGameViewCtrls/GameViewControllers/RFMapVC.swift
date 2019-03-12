@@ -84,7 +84,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var topHCPView: UIView!
     @IBOutlet weak var lblTopHCP: UILabel!
     @IBOutlet weak var btnTopHoleNo: UILocalizedButton!
-    @IBOutlet weak var eddieView: EddieView!
+    @IBOutlet weak var eddieView: EddieViewRFMap!
     
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
@@ -1325,13 +1325,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var achievedGoal = Goal()
     var targetGoal = Goal()
     func initalSetup(){
-        self.eddieView.isRFMap = true
         self.eddieView.setup()
         if self.scoring.count == 9{
             self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
             self.targetGoal.par = Constants.targetGoal.par/2
             self.targetGoal.gir = Constants.targetGoal.gir/2
             self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+        }else{
+            self.targetGoal = Constants.targetGoal
         }
         self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
         self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)

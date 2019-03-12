@@ -5733,6 +5733,12 @@
                                 <action selector="backAction:" destination="IBq-aL-Cx4" id="dRD-pl-fak"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Logout" id="9sI-Xd-Q6b">
+                            <color key="tintColor" red="0.0" green="0.54117647059999996" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="btnLogoutAction:" destination="IBq-aL-Cx4" id="mmB-RZ-T2d"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="ZqN-HT-aVS" id="Can-jS-UrL"/>
@@ -6035,13 +6041,13 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="27" minValue="0.0" maxValue="54" translatesAutoresizingMaskIntoConstraints="NO" id="5Uk-s7-g0n">
-                                                                        <rect key="frame" x="3" y="0.0" width="363" height="31"/>
+                                                                        <rect key="frame" x="3" y="0.0" width="371" height="31"/>
                                                                         <connections>
                                                                             <action selector="sliderChangedAction:" destination="cgE-BE-D7F" eventType="valueChanged" id="AUb-Qb-Yj0"/>
                                                                         </connections>
                                                                     </slider>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="54" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SKm-pG-G7p">
-                                                                        <rect key="frame" x="369" y="0.0" width="9" height="30"/>
+                                                                        <rect key="frame" x="377" y="0.0" width="1" height="30"/>
                                                                         <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>

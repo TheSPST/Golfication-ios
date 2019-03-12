@@ -124,7 +124,16 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
                         clubName = self.getShortClubName(clubName: dic.value(forKey: "clubName") as! String)
                     }
                     let defaultVal =  dic.value(forKey: "defaultVal") as! Int
-                    swingDict.setObject(defaultVal, forKey: clubName as NSCopying)
+                    
+                    if clubName == "Back Swing" {
+                        swingDict.setObject(defaultVal, forKey: "backSwing" as NSCopying)
+                    }
+                    else if clubName == "Swing Tempo" {
+                        swingDict.setObject(defaultVal, forKey: "tempo" as NSCopying)
+                    }
+                    else{
+                        swingDict.setObject(defaultVal, forKey: clubName as NSCopying)
+                    }
                 }
                 self.swingGoalsDic = swingDict
                 let golfFinalDic = ["swingGoals":swingDict]
@@ -442,7 +451,12 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
     // MARK: - Table View Delegate And DataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         tableView.backgroundView = nil
-        return 5
+        if Constants.isDevice{
+            return 6
+        }
+        else{
+            return 5
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -470,7 +484,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
                 return 2
             }
             else{
-                return 4
+                return 0
             }
         }
     }
@@ -536,7 +550,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
             headerTapGesture.addTarget(self, action: #selector(self.sectionHeaderWasTouched(_:)))
             header.addGestureRecognizer(headerTapGesture)
         }
-        else{
+        else if section == 4{
             label.frame = CGRect(x: 10, y: (35.0/2)-8, width: 270, height: 35.0)
             label.text = "Swing Goals"
             label.sizeToFit()
@@ -567,9 +581,42 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
             btnInfo.addTarget(self, action: #selector(self.headerInfoClicked(_:)), for: .touchUpInside)
             header.addSubview(btnInfo)
         }
+        else{
+            label.frame = CGRect(x: 10, y: (35.0/2)-8, width: 270, height: 35.0)
+            label.text = "Debug Golfication X"
+            label.sizeToFit()
+            
+            if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
+                viewWithTag.removeFromSuperview()
+            }
+            let headerFrame = self.tableView.frame.size
+            
+            let arrowImage = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 5, width: 25, height: 25))
+            arrowImage.image = UIImage(named: "forwardArrow")
+            header.addSubview(arrowImage)
+            
+            header.tag = section
+            let headerTapGesture = UITapGestureRecognizer()
+            headerTapGesture.addTarget(self, action: #selector(self.debugModeWasTouched(_:)))
+            header.addGestureRecognizer(headerTapGesture)
+            
+//            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+//            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+//
+//            let btnInfo = UIButton()
+//            btnInfo.frame = CGRect(x:label.frame.origin.x+label.frame.size.width+10, y:7, width:25, height:25)
+//            btnInfo.setBackgroundImage(infoBtnImage, for: .normal)
+//            btnInfo.tintColor = UIColor.glfFlatBlue
+//            btnInfo.addTarget(self, action: #selector(self.headerInfoClicked(_:)), for: .touchUpInside)
+//            header.addSubview(btnInfo)
+        }
         label.textColor = UIColor.black
         header.addSubview(label)
         return header
+    }
+    
+    @objc func debugModeWasTouched(_ sender: UITapGestureRecognizer){
+
     }
     
     @objc func headerInfoClicked(_ sender: UIButton){
@@ -801,8 +848,11 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
             var clubName = clubDic.value(forKey: "clubName") as! String
             let defaultVal  = Int((cell.goalSlider.value).rounded())
             
-            if clubName == "Back Swing" || clubName == "Swing Tempo"{
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingGoals/").updateChildValues([clubName:defaultVal])
+            if clubName == "Back Swing"{
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingGoals/").updateChildValues(["backSwing":defaultVal])
+            }
+            else if clubName == "Swing Tempo"{
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingGoals/").updateChildValues(["tempo":defaultVal])
             }
             else{
                 clubName  = getShortClubName(clubName: clubDic.value(forKey: "clubName") as! String)

@@ -240,7 +240,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var btnAddShot: UIButton!
     @IBOutlet weak var btnAddShotLbl: UIButton!
     
-    @IBOutlet weak var eddieView: EddieView!
+    @IBOutlet weak var eddieView: EddieViewRFMap!
     @IBOutlet weak var btnToastForAddShot: UIButton!
     var syncTime = Double()
     
@@ -1689,13 +1689,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.eddieView.isRFMap = true
         self.eddieView.setup()
         if self.scoring.count == 9{
             self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
             self.targetGoal.par = Constants.targetGoal.par/2
             self.targetGoal.gir = Constants.targetGoal.gir/2
             self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+        }else{
+            self.targetGoal = Constants.targetGoal
         }
         UIApplication.shared.isIdleTimerDisabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
@@ -7878,6 +7879,25 @@ extension NewMapVC : CLLocationManagerDelegate{
         self.mapView.isMyLocationEnabled = false
         let userLocation = locations.last
         userLocationForClub = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
+        
+        if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: self.context){
+            counter.forEach { counter in
+                self.context.delete(counter as! NSManagedObject)
+            }
+        }
+        var inde = self.holeIndex
+        if inde > 0 && inde < self.scoring.count-1{
+            let greenDistance = GMSGeometryDistance(userLocationForClub!, courseData.centerPointOfTeeNGreen[self.holeIndex].green)
+            let teeDistance = GMSGeometryDistance(userLocationForClub!, courseData.centerPointOfTeeNGreen[self.holeIndex+1].tee)
+            if teeDistance < greenDistance/3{
+                inde = self.holeIndex+1
+            }
+        }
+        if let curHoleEntity = NSEntityDescription.insertNewObject(forEntityName: "CurrentHoleEntity", into: self.context) as? CurrentHoleEntity{
+            curHoleEntity.timestamp = Timestamp
+            curHoleEntity.holeIndex = Int16(inde)
+            CoreDataStorage.saveContext(self.context)
+        }
         locationManager.stopUpdatingLocation()
     }
 }

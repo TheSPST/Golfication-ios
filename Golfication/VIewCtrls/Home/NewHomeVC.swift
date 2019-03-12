@@ -273,11 +273,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        Constants.targetGoal = Goal()
-        Constants.targetGoal.Birdie = 10
-        Constants.targetGoal.par = 10
-        Constants.targetGoal.fairwayHit = 10
-        Constants.targetGoal.gir = 10
         if let iosToken = (InstanceID.instanceID().token()){
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :iosToken] as [AnyHashable:String])
         }
@@ -1530,6 +1525,20 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     Constants.handicap = handicap
                     if handicap != "-"{
                         hcp = Double(handicap)?.rounded() ?? 0
+                    }
+                }
+                if let gameGoal = userData["goals"] as? NSMutableDictionary{
+                    if let value = gameGoal.value(forKey: "birdie") as? Int{
+                        Constants.targetGoal.Birdie = value
+                    }
+                    if let value = gameGoal.value(forKey: "fairway") as? Int{
+                        Constants.targetGoal.fairwayHit = value
+                    }
+                    if let value = gameGoal.value(forKey: "par") as? Int{
+                        Constants.targetGoal.par = value
+                    }
+                    if let value = gameGoal.value(forKey: "gir") as? Int{
+                        Constants.targetGoal.gir = value
                     }
                 }
                 if let gender = userData["gender"] as? String{

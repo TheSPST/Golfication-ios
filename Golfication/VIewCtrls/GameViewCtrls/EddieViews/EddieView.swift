@@ -17,7 +17,6 @@ import UIKit
     @IBInspectable var shadowOffsetHeight: Int = 1
     @IBInspectable var shadowColor: UIColor? = UIColor.black
     @IBInspectable var shadowOpacity: Float = 0.15
-    @IBInspectable var isRFMap: Bool = false
 
     @IBOutlet weak var stackViewLbls: UIStackView!
     @IBOutlet weak var lblGoals: UILabel!
@@ -49,9 +48,10 @@ import UIKit
         view = loadViewFromNib()
         view.frame = bounds
         view.autoresizingMask = [UIViewAutoresizing.flexibleWidth,UIViewAutoresizing.flexibleHeight]
-        self.layer.borderColor = UIColor.glfWarmGrey.cgColor
+        self.layer.borderColor = UIColor.glfBlack40.cgColor
         self.layer.cornerRadius = 5.0
         self.layer.borderWidth = 1.0
+        
         viewPar.setCornerView(color: UIColor.glfBlack5.cgColor)
         viewGIR.setCornerView(color: UIColor.glfBlack5.cgColor)
         viewBirdie.setCornerView(color: UIColor.glfBlack5.cgColor)
@@ -60,16 +60,22 @@ import UIKit
         viewGIR.layer.cornerRadius = 5.0
         viewBirdie.layer.cornerRadius = 5.0
         viewFH.layer.cornerRadius = 5.0
+        
         addSubview(view)
         viewUnlockEddie.layer.cornerRadius = 12.5
         imgViewLocked.isHidden = Constants.isEddie
         viewUnlockEddie.isHidden = Constants.isEddie
         viewEddieAvailable.isHidden = !Constants.isEddie
+        
         if !Constants.isEddie{
             self.lblPar.text = "-"
             self.lblBirdie.text = "-"
             self.lblGIR.text = "-"
             self.lblFH.text = "-"
+            viewPar.backgroundColor = UIColor.glfStackBackColor
+            viewGIR.backgroundColor = UIColor.glfStackBackColor
+            viewBirdie.backgroundColor = UIColor.glfStackBackColor
+            viewFH.backgroundColor = UIColor.glfStackBackColor
         }else{
             self.lblPar.textColor = UIColor.glfBlack
             self.lblBirdie.textColor = UIColor.glfBlack
@@ -79,27 +85,6 @@ import UIKit
                 if let label = lbl as? UILabel{
                     label.textColor = UIColor.glfBlack
                 }
-            }
-        }
-        if isRFMap{
-            for lbl in stackViewLbls.subviews{
-                if let label = lbl as? UILabel{
-                    label.textColor = UIColor.glfWhite
-                }
-            }
-            lblGoals.textColor = UIColor.glfWhite
-            viewPar.backgroundColor = UIColor.glfBlack40
-            viewGIR.backgroundColor = UIColor.glfBlack40
-            viewBirdie.backgroundColor = UIColor.glfBlack40
-            viewFH.backgroundColor = UIColor.glfBlack40
-            self.layer.borderColor = UIColor.glfWhite.cgColor
-        }else{
-            self.layer.borderColor = UIColor.glfBlack40.cgColor
-            if !Constants.isEddie{
-                viewPar.backgroundColor = UIColor.glfStackBackColor
-                viewGIR.backgroundColor = UIColor.glfStackBackColor
-                viewBirdie.backgroundColor = UIColor.glfStackBackColor
-                viewFH.backgroundColor = UIColor.glfStackBackColor
             }
         }
     }
@@ -139,10 +124,7 @@ import UIKit
         }
         let gradient = CAGradientLayer()
         gradient.frame = layer.bounds
-        var color = UIColor(red: 255.0/255.0, green: 166.0 / 255.0, blue: 0.0 / 255.0, alpha: 1.0).cgColor
-        if isRFMap{
-            color = UIColor.glfFlatBlue.cgColor
-        }
+        let color = UIColor(red: 255.0/255.0, green: 166.0 / 255.0, blue: 0.0 / 255.0, alpha: 1.0).cgColor
         gradient.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor, color, color]
         gradient.locations = [NSNumber(value: 0.0), NSNumber(value: per), NSNumber(value: per), NSNumber(value: 1.0)]
         layer.insertSublayer(gradient, at: 0)

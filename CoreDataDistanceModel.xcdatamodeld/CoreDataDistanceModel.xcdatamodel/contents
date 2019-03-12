@@ -5,6 +5,10 @@
         <attribute name="imgUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="CurrentHoleEntity" representedClassName="CurrentHoleEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="holeIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
     <entity name="FrontBackDistanceEntity" representedClassName="FrontBackDistanceEntity" syncable="YES" codeGenerationType="class">
         <attribute name="backLat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="backLng" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
@@ -24,9 +28,10 @@
         <attribute name="teeNum" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <elements>
+        <element name="CourseDetailsEntity" positionX="-18" positionY="72" width="128" height="90"/>
         <element name="FrontBackDistanceEntity" positionX="-36" positionY="9" width="128" height="135"/>
         <element name="GreenDistanceEntity" positionX="-54" positionY="-9" width="128" height="90"/>
         <element name="TeeDistanceEntity" positionX="-9" positionY="81" width="128" height="90"/>
-        <element name="CourseDetailsEntity" positionX="-18" positionY="72" width="128" height="90"/>
+        <element name="CurrentHoleEntity" positionX="-27" positionY="63" width="128" height="75"/>
     </elements>
 </model>

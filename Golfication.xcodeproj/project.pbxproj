@@ -160,6 +160,7 @@
 		4B1F6BE92090A29F00312EA7 /* SelectCourseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */; };
 		4B1F6BEA2090A29F00312EA7 /* NewGameScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */; };
 		4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */; };
+		4B39D2222237A2B200C7742F /* DebugModeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B39D2212237A2B100C7742F /* DebugModeVC.swift */; };
 		4B3A488C222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
 		4B3A488D222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
 		4B3A488E222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
@@ -297,6 +298,8 @@
 		4BE11A6B21353568008E529A /* CustomColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE11A6A21353568008E529A /* CustomColorSlider.swift */; };
 		4BE1E2C5206CC74B00A32845 /* ShareStatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */; };
 		4BE4196921B29A6100C49AB6 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE4196821B29A6100C49AB6 /* CircularProgress.swift */; };
+		4BE66A84223668A20057A22B /* EddieViewRFMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BE66A83223668A20057A22B /* EddieViewRFMap.xib */; };
+		4BE66A862236739B0057A22B /* EddieViewRFMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE66A852236739B0057A22B /* EddieViewRFMap.swift */; };
 		4BEB41EB223662510090568F /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEB41EA223662510090568F /* SettingCell.swift */; };
 		4BEB41ED2236632B0090568F /* GolfBagEditPopUpData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEB41EC2236632B0090568F /* GolfBagEditPopUpData.swift */; };
 		4BF564EF1FD2AA03006BDB0E /* String+Width.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF564EE1FD2AA03006BDB0E /* String+Width.swift */; };
@@ -494,6 +497,7 @@
 		4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCourseData.swift; sourceTree = "<group>"; };
 		4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameScoreTableViewCell.swift; sourceTree = "<group>"; };
 		4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProMemberPopUPVC.swift; sourceTree = "<group>"; };
+		4B39D2212237A2B100C7742F /* DebugModeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugModeVC.swift; sourceTree = "<group>"; };
 		4B3A488A222803070049C15F /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		4B3A488B222803080049C15F /* LocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		4B4BD77121E366B00067460A /* CesPopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CesPopUpView.xib; sourceTree = "<group>"; };
@@ -644,6 +648,8 @@
 		4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareStatsVC.swift; sourceTree = "<group>"; };
 		4BE1E2C7206CFA7000A32845 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		4BE4196821B29A6100C49AB6 /* CircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
+		4BE66A83223668A20057A22B /* EddieViewRFMap.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EddieViewRFMap.xib; sourceTree = "<group>"; };
+		4BE66A852236739B0057A22B /* EddieViewRFMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EddieViewRFMap.swift; sourceTree = "<group>"; };
 		4BEB41EA223662510090568F /* SettingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		4BEB41EC2236632B0090568F /* GolfBagEditPopUpData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GolfBagEditPopUpData.swift; sourceTree = "<group>"; };
 		4BF564EE1FD2AA03006BDB0E /* String+Width.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Width.swift"; sourceTree = "<group>"; };
@@ -856,6 +862,7 @@
 				3EAE867A2125573E0081857B /* PracticePageContainerVC.swift */,
 				3EAE867B2125573E0081857B /* Device.storyboard */,
 				3EA0E267212AEC19009D7405 /* SwingTableViewCell.swift */,
+				4B39D2212237A2B100C7742F /* DebugModeVC.swift */,
 			);
 			path = DeviceViewCtrls;
 			sourceTree = "<group>";
@@ -926,6 +933,8 @@
 			children = (
 				4B1E686322329BCD00B0F03E /* EddieView.swift */,
 				4B1E686422329BCD00B0F03E /* EddieView.xib */,
+				4BE66A83223668A20057A22B /* EddieViewRFMap.xib */,
+				4BE66A852236739B0057A22B /* EddieViewRFMap.swift */,
 			);
 			path = EddieViews;
 			sourceTree = "<group>";
@@ -1677,6 +1686,7 @@
 				4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */,
 				4B8C8D331FF674D0001F5D01 /* SF-Pro-Display-Bold.otf in Resources */,
 				4B1F6BC62090A29F00312EA7 /* CustomStyle.json in Resources */,
+				4BE66A84223668A20057A22B /* EddieViewRFMap.xib in Resources */,
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
 				4B7E2A792175C20B00DFC3EB /* DetailView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
@@ -1945,6 +1955,7 @@
 				4B7F52202158DC6F002E328A /* PKCCropLineView.swift in Sources */,
 				0D2CA1C41FB4360900CE9D82 /* UIColor+GLFAdditions.swift in Sources */,
 				3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */,
+				4BE66A862236739B0057A22B /* EddieViewRFMap.swift in Sources */,
 				4BB26D141FF77EDB001E9556 /* FeedTableViewCell.swift in Sources */,
 				4BB26D151FF77EDB001E9556 /* FilterCollectionReusableView.swift in Sources */,
 				4B9D0A5B2069155800CE5D9F /* Reach.swift in Sources */,
@@ -1954,6 +1965,7 @@
 				4B954302221D1627001128FC /* NotesVC.swift in Sources */,
 				4B1F6BD12090A29F00312EA7 /* PlayersTableViewCell.swift in Sources */,
 				4B954301221D1627001128FC /* String+Height.swift in Sources */,
+				4B39D2222237A2B200C7742F /* DebugModeVC.swift in Sources */,
 				3E5E2694216BADFE004388BB /* CustomARViewController.swift in Sources */,
 				4B9578E020B4409E008B2C61 /* BluetootheConnectionTesting.swift in Sources */,
 				3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */,

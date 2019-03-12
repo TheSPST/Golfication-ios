@@ -11,7 +11,30 @@ import CoreBluetooth
 import FirebaseAuth
 import GoogleMaps
 import AVFoundation
-
+class DebugData{
+    let x:Float!
+    let y:Float!
+    let z:Float!
+    let a:Float!
+    let b:Float!
+    let c:Float!
+    let g1:Float!
+    let g2:Float!
+    let g3:Float!
+    let time:Int64!
+    init(x:Float,y:Float,z:Float,a:Float,b:Float,c:Float,g1:Float,g2:Float,g3:Float,time:Int64){
+        self.x = x
+        self.y = y
+        self.z = z
+        self.a = a
+        self.b = b
+        self.c = c
+        self.g1 = g1
+        self.g2 = g2
+        self.g3 = g3
+        self.time = time
+    }
+}
 class BLE: NSObject {
     var locationManager = CLLocationManager()
     var isFinishGame = false
@@ -86,6 +109,8 @@ class BLE: NSObject {
     var golfBagArray = NSMutableArray()
     var courseData = CourseData()
     var holeData = [[CLLocationCoordinate2D]]()
+    var isDebugMode = false
+    var debugDataArray = [DebugData]()
     var isProperConnected:Bool!{
         var isTrue = false
         if(Constants.deviceGolficationX != nil) && self.service_Read != nil && self.service_Write != nil{
@@ -561,7 +586,20 @@ class BLE: NSObject {
                 }
             }
         }
-        
+    }
+    public func sendforteenCommand(){
+        if(Constants.charctersticsGlobalForWrite != nil){
+            self.randomGenerator()
+            let param : [UInt8] = [14,counter]
+            var writeData = Data()
+            self.currentCommandData = param
+            writeData =  Data(bytes:param)
+            Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
+        }else{
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+            }
+        }
     }
     @objc private func sendEightCommand(_ notification: NSNotification){
         if(Constants.ble.charctersticsWrite != nil){
@@ -1557,6 +1595,111 @@ extension BLE: CBPeripheralDelegate {
 
     }
     
+    public func convertAccel(value:[UInt8]) {
+        var x : Float = 0.0
+        var y : Float = 0.0
+        var z : Float = 0.0
+        var a : Float = 0.0
+        var b : Float = 0.0
+        var c : Float = 0.0
+        
+        if (Int(value[0])>50){
+            let val1 = Int(value[0])-255
+            let val2 : Float = Float(value[1])/100.0
+            x = Float(val1)-val2
+        }else {
+            var val1 = Int(value[0])
+            if (val1<0){
+                val1 = val1+256
+                val1 = val1-255
+            }
+            let val2 : Float = Float(value[1])/100.0
+            x = Float(val1)+val2
+        }
+        
+        if (Int(value[2])>50){
+            let val1 = Int(value[2])-255
+            let val2 : Float = Float(value[3])/100.0
+            y = Float(val1)-val2
+        }else {
+            var val1 = Int(value[2])
+            if (val1<0){
+                val1 = val1+256
+                val1 = val1-255
+            }
+            let val2 = Float(value[3])/100.0
+            y = Float(val1)+val2
+        }
+        
+        if (Int(value[4])>50){
+            let val1 = Float(value[4])-255.0
+            let val2 = Float(value[5])/100.0
+            z = val1-val2
+        }else {
+            var val1 = Int(value[4])
+            if (val1<0){
+                val1 = val1+256
+                val1 = val1-255
+            }
+            let val2 = Float(value[5])/100.0
+            z = Float(val1)+val2
+        }
+        
+        if (Int(value[6])>50){
+            let val1 = Float(value[6])-255.0
+            let val2 = Float(value[7])/100.0
+            a = val1-val2;
+        }else {
+            var val1 = Int(value[6])
+            if (val1<0){
+                val1 = val1+256
+                val1 = val1-255
+            }
+            let val2 = Float(value[7])/100.0
+            a = Float(val1)+val2
+        }
+        
+        if (Int(value[8])>50){
+            let val1 = Float(value[8])-255.0
+            let val2 = Float(value[9])/100.0
+            b = val1-val2
+        }else {
+            var val1 = Int(value[8])
+            if (val1<0){
+                val1 = val1+256
+                val1 = val1-255
+            }
+            let val2 = Float(value[9])/100.0
+            b = Float(val1)+val2
+        }
+        
+        if (Int(value[10])>50){
+            let val1 = Float(value[10])-255.0
+            let val2 = Float(value[11])/100.0
+            c = val1-val2
+        }else {
+            var val1 = Int(value[10])
+            if (val1<0){
+                val1 = val1+256
+                val1 = val1-255
+            }
+            let val2 = Float(value[11])/100.0
+            c = Float(val1)+val2
+        }
+        
+        let g1 : Float =  Float(value[12]) + (Float(value[13]) / 100.0)
+        let g2 : Float =  Float(value[14]) + (Float(value[15]) / 100.0)
+        let g3 : Float =  Float(value[16]) + (Float(value[17]) / 100.0)
+        
+        if (x.isNaN){ x=0}
+        if (y.isNaN){ y=0}
+        if (z.isNaN){ z=0}
+        if (a.isNaN){ a=0}
+        if (b.isNaN){ b=0}
+        if (c.isNaN){ c=0}
+        let debugDa = DebugData(x: x, y: y, z: z, a: a, b: b, c: c, g1: g1, g2: g2, g3: g3, time: Timestamp)
+        self.debugDataArray.append(debugDa)
+    }
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
         case golficationXCharacteristicCBUUIDRead:
@@ -1572,9 +1715,15 @@ extension BLE: CBPeripheralDelegate {
                 
                 let responseInIntFirst4 = byteArrayToInt(value: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                 let responseInIntSecond4 = byteArrayToInt(value: [dataArray[3],dataArray[4],dataArray[5],dataArray[6]])
-                
-                debugPrint("totalTagInFirstPackate:",totalTagInFirstPackate)
-                debugPrint("TagNum",self.tagClubNumber.count)
+                if (dataArray[0] == UInt8(14) && dataArray[1] == UInt8(14)) && self.isDebugMode{
+                    self.debugDataArray.removeAll()
+                    self.isDebugMode = false
+                    return
+                }
+                if self.isDebugMode{
+                    self.convertAccel(value: dataArray)
+                    return
+                }
                 if  dataArray[0] == UInt8(1) && (dataArray[0] == currentCommandData[0]) && (dataArray[1] == currentCommandData[1]){
                     timerForWriteCommand1.invalidate()
                     self.isSetupScreen = false
@@ -2163,6 +2312,8 @@ extension BLE: CBPeripheralDelegate {
                             }
                         }
                     })
+                }else if dataArray[0] == UInt8(14) && (currentCommandData[1] == dataArray[1]){
+                    self.isDebugMode = true
                 }
             }
             break

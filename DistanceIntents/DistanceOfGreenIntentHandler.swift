@@ -32,6 +32,9 @@ class DistanceOfGreenIntentHandler: NSObject, DistanceOfGreenIntentHandling {
         
         if let currentLocation: CLLocation = userLocation.locationManager.location{
             self.context.performAndWait{ () -> Void in
+                if let currentHoleEntity = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: self.context) as? [CurrentHoleEntity]{
+                    distanceUtil.writeHoleIndex(cDetails: currentHoleEntity.last!)
+                }
                 if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity]{
                     distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
                 }
@@ -47,6 +50,10 @@ class DistanceOfGreenIntentHandler: NSObject, DistanceOfGreenIntentHandling {
                     completion(DistanceOfGreenIntentResponse.success(distanceString: "Please Start a game"))
                 }
             }
+        }else{
+            debugPrint("Please enable your location")
+            completion(DistanceOfGreenIntentResponse.success(distanceString: "Please enable your location"))
+
         }
     }
 }

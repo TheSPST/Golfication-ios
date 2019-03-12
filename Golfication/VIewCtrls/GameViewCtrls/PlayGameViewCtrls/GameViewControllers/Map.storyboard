@@ -1175,7 +1175,7 @@
                                                     </stackView>
                                                 </subviews>
                                             </stackView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbE-CV-gNP" customClass="EddieView" customModule="Golfication" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qbE-CV-gNP" customClass="EddieViewRFMap" customModule="Golfication" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="356" width="304" height="90"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <userDefinedRuntimeAttributes>
@@ -1527,7 +1527,7 @@
                         <outlet property="centerSV" destination="AG6-la-bMo" id="Nah-wa-zFW"/>
                         <outlet property="centerSVWidthConstraints" destination="igw-bj-Rzt" id="m21-Px-joH"/>
                         <outlet property="constraintTableHeight" destination="U4A-V7-HQq" id="hZ7-BT-Wrw"/>
-                        <outlet property="eddieView" destination="qbE-CV-gNP" id="j1g-Jg-iTt"/>
+                        <outlet property="eddieView" destination="qbE-CV-gNP" id="DyC-Uw-hAQ"/>
                         <outlet property="exitGamePopUpView" destination="7VY-Zq-EkB" id="MDB-64-KYT"/>
                         <outlet property="fgBConstraint" destination="vx7-58-5Ny" id="xeW-TL-apj"/>
                         <outlet property="greenStackViewHeight" destination="teC-Hf-33E" id="VHF-gr-Ksi"/>
@@ -4415,7 +4415,7 @@
                                                                     </stackView>
                                                                 </subviews>
                                                             </stackView>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z1o-lh-cod" customClass="EddieView" customModule="Golfication" customModuleProvider="target">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z1o-lh-cod" customClass="EddieViewRFMap" customModule="Golfication" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="228" width="280" height="90"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <userDefinedRuntimeAttributes>
@@ -4650,7 +4650,7 @@
                         <outlet property="btnViewScoreCard" destination="gqH-O6-zEy" id="p0a-Ph-RUe"/>
                         <outlet property="chipShotStackView" destination="xhb-5j-tv7" id="Rzl-eC-AHJ"/>
                         <outlet property="detailScoreSV" destination="epn-KK-AiI" id="yNe-id-x5V"/>
-                        <outlet property="eddieView" destination="Z1o-lh-cod" id="bco-Af-HJr"/>
+                        <outlet property="eddieView" destination="Z1o-lh-cod" id="N0P-fg-cgN"/>
                         <outlet property="exitGamePopUpView" destination="pAM-FE-VKd" id="1oK-Dz-cW7"/>
                         <outlet property="fairwayHitContainerSV" destination="hlt-z8-C3k" id="dYu-gx-DO6"/>
                         <outlet property="fairwayHitStackView" destination="xsc-Rg-ZCM" id="J2a-SI-W9w"/>

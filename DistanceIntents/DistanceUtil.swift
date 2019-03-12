@@ -21,7 +21,16 @@ class DistanceUtil: NSObject {
     var courseName : String!
     var userName : String!
     var imageUrl : String!
-    
+    var holeIndex : Int!
+    var timesta : Int64!
+    var Timestamp: Int64 {
+        return Int64(NSDate().timeIntervalSince1970*1000)
+    }
+
+    func writeHoleIndex(cDetails:CurrentHoleEntity){
+        holeIndex = Int(cDetails.holeIndex)
+        timesta = cDetails.timestamp
+    }
     func writeCourseDetails(cDetails:CourseDetailsEntity){
         courseName = cDetails.cName
         userName = cDetails.uName
@@ -48,18 +57,20 @@ class DistanceUtil: NSObject {
             DistanceArr.append(holeWiseData[i].distance(from: location))
             DistanceArr.append(greenWiseData[i].first!.distance(from: location))
         }
-        var index = DistanceArr.firstIndex(of: DistanceArr.min()!)!
+        var index = self.holeIndex != nil ? self.holeIndex!*2 : DistanceArr.firstIndex(of: DistanceArr.min()!)!
         index = index/2
         debugPrint("\(index)")
+        let diff = (Timestamp/1000 - self.timesta!/1000)
         nearbuyPointOfGreen = greenWiseData[index][nearByPoint(newPoint: location, array: greenWiseData[index],isMin:true)]
         flagPointOfGreen = middlePointOfListMarkers(listCoords: greenWiseData[index])
         endPointOfGreen = greenWiseData[index][nearByPoint(newPoint: location, array: greenWiseData[index],isMin:false)]
         distanceToFront = nearbuyPointOfGreen.distance(from: location)
         distanceToCenter = flagPointOfGreen.distance(from: location)
         distanceToBack = endPointOfGreen.distance(from: location)
-        textMsg = "You are \(Int(distanceToCenter*1.09361)) yards from the green"
-
-//        textMsg = "Distance to Front is \(Int(distanceToFront*1.09361)) yard,                                       Distance to Center is \(Int(distanceToCenter*1.09361)) yard,                           Distance to Back is \(Int(distanceToBack*1.09361)) yard"
+        textMsg = "You are \(Int(distanceToCenter*1.09361)) yards from the green on hole \(index+1)"
+        if diff > 5*60{
+            textMsg = "please open app to update your current hole."
+        }
         return textMsg
     }
     func getHoleNumRF(location:CLLocation,rfHole:[FrontBackDistanceEntity],teeArr:[TeeDistanceEntity])->String{
@@ -91,17 +102,20 @@ class DistanceUtil: NSObject {
             DistanceArr.append(holeWiseData[i].distance(from: location))
             DistanceArr.append(greenWiseData[i].first!.distance(from: location))
         }
-        var index = DistanceArr.firstIndex(of: DistanceArr.min()!)!
+        var index = self.holeIndex != nil ? self.holeIndex!*2 : DistanceArr.firstIndex(of: DistanceArr.min()!)!
         index = index/2
         debugPrint("\(index)")
+        let diff = (Timestamp/1000 - self.timesta!/1000)
         nearbuyPointOfGreen = greenWiseData[index][nearByPoint(newPoint: location, array: greenWiseData[index],isMin:true)]
         flagPointOfGreen = middlePointOfListMarkers(listCoords: greenWiseData[index])
         endPointOfGreen = greenWiseData[index][nearByPoint(newPoint: location, array: greenWiseData[index],isMin:false)]
         distanceToFront = nearbuyPointOfGreen.distance(from: location)
         distanceToCenter = flagPointOfGreen.distance(from: location)
         distanceToBack = endPointOfGreen.distance(from: location)
-        textMsg = "You are \(Int(distanceToCenter*1.09361)) yards from the green"
-//        textMsg = "Distance to Front is \(Int(distanceToFront*1.09361)) yard,                                       Distance to Center is \(Int(distanceToCenter*1.09361)) yard,                           Distance to Back is \(Int(distanceToBack*1.09361)) yard"
+        textMsg = "You are \(Int(distanceToCenter*1.09361)) yards from the green on hole \(index+1)"
+        if diff > 5*60{
+            textMsg = "please open app to update your current hole."
+        }
         return textMsg
     }
     func middlePointOfListMarkers(listCoords: [CLLocation]) -> CLLocation{
