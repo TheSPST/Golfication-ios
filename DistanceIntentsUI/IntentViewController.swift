@@ -39,21 +39,26 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
             self.mapView.mapType = MKMapType.satellite
             self.mapView.showsUserLocation = true
             self.context.performAndWait{ () -> Void in
-                if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity]{
-                    distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
+                if let distanceUnitEntity = NSManagedObject.findAllForEntity("DistanceUnitEntity", context: self.context) as? [DistanceUnitEntity],!distanceUnitEntity.isEmpty{
+                    distanceUtil.writeDistanceUnit(cDetails: distanceUnitEntity.last!)
                 }
-                if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity]{
-                    if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity]{
-                        let _ =  distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
-                        
-                        let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
-                                             ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
-                        
-                        mapView.delegate = self
-                        mapView.register(LocationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
-                        let locationsList = Location.locations(fromDictionaries: locationValue)
-                        mapView.showAnnotations(locationsList, animated: true)
-                        mapView.addAnnotations(locationsList)
+                if let currentHoleEntity = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: self.context) as? [CurrentHoleEntity],!currentHoleEntity.isEmpty{
+                    distanceUtil.writeHoleIndex(cDetails: currentHoleEntity.last!)
+                    if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity],!courseDetails.isEmpty{
+                        distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
+                    }
+                    if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity],!counterGreen.isEmpty{
+                        if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity],!counterTee.isEmpty{
+                            let _ =  distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
+                            let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
+                                                 ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
+                            
+                            mapView.delegate = self
+                            mapView.register(LocationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+                            let locationsList = Location.locations(fromDictionaries: locationValue)
+                            mapView.showAnnotations(locationsList, animated: true)
+                            mapView.addAnnotations(locationsList)
+                        }
                     }
                 }
             }

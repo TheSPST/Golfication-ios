@@ -16,7 +16,7 @@ import CTShowcase
 import CoreBluetooth
 import UICircularProgressRing
 import FirebaseStorage
-
+import CoreData
 class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, BluetoothDelegate{
     
     // MARK: Set Outlets
@@ -493,16 +493,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        if self.scoring.count == 9{
-            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
-            self.targetGoal.par = Constants.targetGoal.par/2
-            self.targetGoal.gir = Constants.targetGoal.gir/2
-            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
-        }else{
-            self.targetGoal = Constants.targetGoal
-        }
-        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
-        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
         debugPrint("didLoad")
         NotificationCenter.default.addObserver(self, selector: #selector(self.discardGame(_:)), name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
         if(Constants.deviceGolficationX != nil){
@@ -1309,8 +1299,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
         else{
-            //self.progressView.hide(navItem: self.navigationItem)
-            //btnStartContinue.setTitle("Start Round", for: .normal) // Amit's Changes
+            if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
+                counter.forEach { counter in
+                    context.delete(counter as! NSManagedObject)
+                }
+            }
             btnStartContinue.setTitle("Next".localized(), for: .normal)
             
             continueGameView.isHidden = true
@@ -1635,7 +1628,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.progressView.show()
         
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(keyId)/") { (snapshot) in
-            
+            var isOnCourse = false
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
                 Constants.matchDataDic = matchDict as! NSMutableDictionary
@@ -1675,6 +1668,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     if(keyData == "courseId"){
                         Constants.selectedGolfID = value as! String
                         self.checkRangeFinderHoleData()
+                    }
+                    if(keyData == "onCourse"){
+                        isOnCourse = value as! Bool
                     }
                     if(keyData == "courseName"){
                         Constants.selectedGolfName = value as! String
@@ -1740,6 +1736,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     }
                     self.scoring.append((hole: i+1, par:par,players:playersArray))
                 }
+                if self.scoring.count == 9{
+                    self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
+                    self.targetGoal.par = Constants.targetGoal.par/2
+                    self.targetGoal.gir = Constants.targetGoal.gir/2
+                    self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+                }else{
+                    self.targetGoal = Constants.targetGoal
+                }
                 self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
                 self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
             }
@@ -1777,6 +1781,37 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     if self.isContinueClicked{
                         self.isContinueClicked = false
                         self.redirectToGameModeScreen()
+                    }
+                }
+                if isOnCourse{
+                    var inde = 0
+                    for data in self.scoring{
+                        for usr in data.players{
+                            if let play = usr.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
+                                let holeOut = play.value(forKey: "holeOut") as? Bool ?? false
+                                if !holeOut{
+                                    break
+                                }else{
+                                    inde += 1
+                                }
+                            }
+                        }
+                    }
+                    if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
+                        counter.forEach { counter in
+                            context.delete(counter as! NSManagedObject)
+                        }
+                    }
+                    if let curHoleEntity = NSEntityDescription.insertNewObject(forEntityName: "CurrentHoleEntity", into: context) as? CurrentHoleEntity{
+                        curHoleEntity.timestamp = Timestamp
+                        curHoleEntity.holeIndex = Int16(inde)
+                        CoreDataStorage.saveContext(context)
+                    }
+                }else{
+                    if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
+                        counter.forEach { counter in
+                            context.delete(counter as! NSManagedObject)
+                        }
                     }
                 }
                 

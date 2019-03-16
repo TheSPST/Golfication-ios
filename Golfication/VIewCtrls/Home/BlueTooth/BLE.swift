@@ -110,7 +110,6 @@ class BLE: NSObject {
     var courseData = CourseData()
     var holeData = [[CLLocationCoordinate2D]]()
     var isDebugMode = false
-    var debugDataArray = [DebugData]()
     var isProperConnected:Bool!{
         var isTrue = false
         if(Constants.deviceGolficationX != nil) && self.service_Read != nil && self.service_Write != nil{
@@ -323,7 +322,7 @@ class BLE: NSObject {
         }
         self.sendThirdCommand()
     }
-    private func sendEleventhCommand(){
+    public func sendEleventhCommand(){
         
         if(Constants.charctersticsGlobalForWrite != nil){
             self.randomGenerator()
@@ -1594,112 +1593,7 @@ extension BLE: CBPeripheralDelegate {
         }
 
     }
-    
-    public func convertAccel(value:[UInt8]) {
-        var x : Float = 0.0
-        var y : Float = 0.0
-        var z : Float = 0.0
-        var a : Float = 0.0
-        var b : Float = 0.0
-        var c : Float = 0.0
-        
-        if (Int(value[0])>50){
-            let val1 = Int(value[0])-255
-            let val2 : Float = Float(value[1])/100.0
-            x = Float(val1)-val2
-        }else {
-            var val1 = Int(value[0])
-            if (val1<0){
-                val1 = val1+256
-                val1 = val1-255
-            }
-            let val2 : Float = Float(value[1])/100.0
-            x = Float(val1)+val2
-        }
-        
-        if (Int(value[2])>50){
-            let val1 = Int(value[2])-255
-            let val2 : Float = Float(value[3])/100.0
-            y = Float(val1)-val2
-        }else {
-            var val1 = Int(value[2])
-            if (val1<0){
-                val1 = val1+256
-                val1 = val1-255
-            }
-            let val2 = Float(value[3])/100.0
-            y = Float(val1)+val2
-        }
-        
-        if (Int(value[4])>50){
-            let val1 = Float(value[4])-255.0
-            let val2 = Float(value[5])/100.0
-            z = val1-val2
-        }else {
-            var val1 = Int(value[4])
-            if (val1<0){
-                val1 = val1+256
-                val1 = val1-255
-            }
-            let val2 = Float(value[5])/100.0
-            z = Float(val1)+val2
-        }
-        
-        if (Int(value[6])>50){
-            let val1 = Float(value[6])-255.0
-            let val2 = Float(value[7])/100.0
-            a = val1-val2;
-        }else {
-            var val1 = Int(value[6])
-            if (val1<0){
-                val1 = val1+256
-                val1 = val1-255
-            }
-            let val2 = Float(value[7])/100.0
-            a = Float(val1)+val2
-        }
-        
-        if (Int(value[8])>50){
-            let val1 = Float(value[8])-255.0
-            let val2 = Float(value[9])/100.0
-            b = val1-val2
-        }else {
-            var val1 = Int(value[8])
-            if (val1<0){
-                val1 = val1+256
-                val1 = val1-255
-            }
-            let val2 = Float(value[9])/100.0
-            b = Float(val1)+val2
-        }
-        
-        if (Int(value[10])>50){
-            let val1 = Float(value[10])-255.0
-            let val2 = Float(value[11])/100.0
-            c = val1-val2
-        }else {
-            var val1 = Int(value[10])
-            if (val1<0){
-                val1 = val1+256
-                val1 = val1-255
-            }
-            let val2 = Float(value[11])/100.0
-            c = Float(val1)+val2
-        }
-        
-        let g1 : Float =  Float(value[12]) + (Float(value[13]) / 100.0)
-        let g2 : Float =  Float(value[14]) + (Float(value[15]) / 100.0)
-        let g3 : Float =  Float(value[16]) + (Float(value[17]) / 100.0)
-        
-        if (x.isNaN){ x=0}
-        if (y.isNaN){ y=0}
-        if (z.isNaN){ z=0}
-        if (a.isNaN){ a=0}
-        if (b.isNaN){ b=0}
-        if (c.isNaN){ c=0}
-        let debugDa = DebugData(x: x, y: y, z: z, a: a, b: b, c: c, g1: g1, g2: g2, g3: g3, time: Timestamp)
-        self.debugDataArray.append(debugDa)
-    }
+
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
         case golficationXCharacteristicCBUUIDRead:
@@ -1716,12 +1610,12 @@ extension BLE: CBPeripheralDelegate {
                 let responseInIntFirst4 = byteArrayToInt(value: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                 let responseInIntSecond4 = byteArrayToInt(value: [dataArray[3],dataArray[4],dataArray[5],dataArray[6]])
                 if (dataArray[0] == UInt8(14) && dataArray[1] == UInt8(14)) && self.isDebugMode{
-                    self.debugDataArray.removeAll()
+                    NotificationCenter.default.post(name:NSNotification.Name(rawValue: "DebugRunning"),object:"Finish")
                     self.isDebugMode = false
                     return
                 }
                 if self.isDebugMode{
-                    self.convertAccel(value: dataArray)
+                    NotificationCenter.default.post(name:NSNotification.Name(rawValue: "DebugRunning"),object:dataArray)
                     return
                 }
                 if  dataArray[0] == UInt8(1) && (dataArray[0] == currentCommandData[0]) && (dataArray[1] == currentCommandData[1]){
@@ -1764,6 +1658,7 @@ extension BLE: CBPeripheralDelegate {
                     //                    self.startMatch()
                 }else if dataArray[0] == UInt8(3){
                     self.invalidateAllTimers()
+                    NotificationCenter.default.post(name:NSNotification.Name(rawValue: "debugSetting"),object:nil)
                     debugPrint("gameID Response from Third Command  : \(responseInIntFirst4)")
                     debugPrint("Current Game ID : \(self.currentGameId)")
                     self.gameIDArr = [dataArray[2],dataArray[3],dataArray[4],dataArray[5]]
@@ -2277,7 +2172,21 @@ extension BLE: CBPeripheralDelegate {
                         let version = self.byteArrayToInt32(value: [dataArray[1],dataArray[2]])
                         Constants.oldFirmwareVersion = Int(version)
                         self.invalidateAllTimers()
-                        if(version < Constants.firmwareVersion){
+                        if version == 10{
+                            DispatchQueue.main.async(execute: {
+                                if let wd = UIApplication.shared.delegate?.window {
+                                    let vc = wd!.rootViewController
+                                    if(vc is UITabBarController){
+                                        if let viewC = (vc as! UITabBarController).selectedViewController as? UINavigationController{
+                                            let storyboard = UIStoryboard(name: "OAD", bundle: nil)
+                                            let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
+                                            viewCtrl.modalPresentationStyle = .overCurrentContext
+                                            viewC.topViewController?.present(viewCtrl, animated: true, completion: nil)
+                                        }
+                                    }
+                                }
+                            })
+                        }else if(version < Constants.firmwareVersion){
                             let gameAlert = UIAlertController(title: "Firmware Update", message: "New version found for GolficationX", preferredStyle: UIAlertControllerStyle.alert)
                             if Constants.canSkip {
                                 gameAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
@@ -2296,6 +2205,7 @@ extension BLE: CBPeripheralDelegate {
                             UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
                         }else{
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+                            NotificationCenter.default.post(name:NSNotification.Name(rawValue: "debugSetting"),object:nil)
                         }
                     })
                 }else if (dataArray[0] == UInt8(12)){

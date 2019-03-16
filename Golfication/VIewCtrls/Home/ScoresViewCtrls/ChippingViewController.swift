@@ -38,7 +38,9 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
     @IBOutlet weak var cardViewChippingProximity: CardView!
     @IBOutlet weak var cardViewChippingSandAccuracy: CardView!
     @IBOutlet weak var cardViewChippingSandProximity: CardView!
-    
+    @IBOutlet weak var cardViewChipUPnDown: CardView!
+    @IBOutlet weak var cardViewSandUPnDown: CardView!
+
     @IBOutlet weak var lblAvgChippAccValue: UILabel!
 //    @IBOutlet weak var lblAvgChiUNDValue: UILabel!
     @IBOutlet weak var lblAvgChippingProximityValue: UILabel!
@@ -157,16 +159,16 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         else{
             if !Constants.isProMode {
                 //cardViewChippingAccuracy.makeBlurView(targetView: cardViewChippingAccuracy)
-                self.setProLockedUI(targetView: cardViewChippingAccuracy, title: "Chipping Accuracy".localized())
+//                self.setProLockedUI(targetView: cardViewChippingAccuracy, title: "Chipping Accuracy".localized())
                 
                 //cardViewChippingProximity.makeBlurView(targetView: cardViewChippingProximity)
-                self.setProLockedUI(targetView: cardViewChippingProximity, title: "Chip Proximity".localized())
+//                self.setProLockedUI(targetView: cardViewChippingProximity, title: "Chip Proximity".localized())
                 
                 //cardViewChippingSandAccuracy.makeBlurView(targetView: cardViewChippingSandAccuracy)
-                self.setProLockedUI(targetView: cardViewChippingSandAccuracy, title: "Sand Accuracy".localized())
+//                self.setProLockedUI(targetView: cardViewChippingSandAccuracy, title: "Sand Accuracy".localized())
                 
                 //cardViewChippingSandProximity.makeBlurView(targetView: cardViewChippingSandProximity)
-                self.setProLockedUI(targetView: cardViewChippingSandProximity, title: "Sand Proximity".localized())
+//                self.setProLockedUI(targetView: cardViewChippingSandProximity, title: "Sand Proximity".localized())
                 
                 lblProChipAccu.isHidden = true
                 lblProChipProx.isHidden = true
@@ -288,8 +290,84 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
 //        self.lblAvgSandSavesValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgSandAccuracyValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgSandProximityValue.setCorner(color: UIColor.glfBlack50.cgColor)
+        
+        if !Constants.isProMode{
+            lblChippingProximityAvg.isHidden = true
+            lblAvgChippingProximityValue.isHidden = true
+            lblSandProximityAvg.isHidden = true
+            lblAvgSandProximityValue.isHidden = true
+            
+            let eddieStatsView = EddieStatsView()
+            eddieStatsView.backgroundColor = UIColor.clear
+            eddieStatsView.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+            eddieStatsView.lblTitle.text = "Unlock this stat with Eddie!"
+            eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            cardViewChippingAccuracy.addSubview(eddieStatsView)
+            
+            let eddieStatsView1 = EddieStatsView()
+            eddieStatsView1.backgroundColor = UIColor.clear
+            eddieStatsView1.frame = CGRect(x: 16, y: 35, width: self.view.frame.width-52, height: 30)
+            eddieStatsView1.eddieImageVIew.isHidden = true
+            eddieStatsView1.lblTitle.isHidden = true
+            eddieStatsView1.btnView.isHidden = true
+            eddieStatsView1.btnPlay.isHidden = false
+            eddieStatsView1.btnPlay.setTitle("Get this stat by playing in Shot tracking mode", for: .normal)
+            eddieStatsView1.btnPlay.addTarget(self, action: #selector(self.eddiePlayClicked(_:)), for: .touchUpInside)
+            cardViewChipUPnDown.addSubview(eddieStatsView1)
+            
+            let eddieStatsView2 = EddieStatsView()
+            eddieStatsView2.backgroundColor = UIColor.clear
+            eddieStatsView2.frame = CGRect(x: 16, y: 45, width: self.view.frame.width-52, height: 30)
+            eddieStatsView2.lblTitle.text = "Unlock this stat with Eddie!"
+            eddieStatsView2.lblTitle.textColor = UIColor(rgb:0xFFC700)
+            eddieStatsView2.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            cardViewChippingSandAccuracy.addSubview(eddieStatsView2)
+
+            let eddieStatsView3 = EddieStatsView()
+            eddieStatsView3.backgroundColor = UIColor.clear
+            eddieStatsView3.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+            eddieStatsView3.lblTitle.text = "Unlock this stat with Eddie!"
+            eddieStatsView3.lblTitle.textColor = UIColor(rgb:0xFFC700)
+            eddieStatsView3.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            cardViewChippingSandProximity.addSubview(eddieStatsView3)
+            
+            let eddieStatsView4 = EddieStatsView()
+            eddieStatsView4.backgroundColor = UIColor.clear
+            eddieStatsView4.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+            eddieStatsView4.lblTitle.text = "Eddie has some insights for you."
+            eddieStatsView4.lblTitle.textColor = UIColor(rgb:0xFFC700)
+            eddieStatsView4.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            cardViewChippingProximity.addSubview(eddieStatsView4)
+
+            let eddieStatsView5 = EddieStatsView()
+            eddieStatsView5.backgroundColor = UIColor.clear
+            eddieStatsView5.frame = CGRect(x: 16, y: 35, width: self.view.frame.width-52, height: 30)
+            eddieStatsView5.eddieImageVIew.isHidden = true
+            eddieStatsView5.lblTitle.isHidden = true
+            eddieStatsView5.btnView.isHidden = true
+            eddieStatsView5.btnPlay.isHidden = false
+            eddieStatsView5.btnPlay.setTitle("Get this stat by playing in Shot tracking mode", for: .normal)
+            eddieStatsView5.btnPlay.addTarget(self, action: #selector(self.eddiePlayClicked(_:)), for: .touchUpInside)
+            cardViewSandUPnDown.addSubview(eddieStatsView5)
+        }
+        else{
+            lblChippingProximityAvg.isHidden = false
+            lblAvgChippingProximityValue.isHidden = false
+            lblSandProximityAvg.isHidden = false
+            lblAvgSandProximityValue.isHidden = false
+        }
     }
     
+    @objc func eddiePlayClicked(_ sender:UIButton){
+        let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
+        self.navigationController?.pushViewController(mapViewController, animated: true)
+    }
+
+    @objc func eddieProClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+    }
+
     // MARK: - infoClicked
     @objc func infoClicked(_ sender:UIButton){
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
@@ -375,37 +453,89 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         var date = [String]()
         var sandAttempt = [Double]()
         var sandAchieved = [Double]()
+        
+        var noSand = false
         for score in scores{
-            var proximityXPoints = [Double]()
-            var proximityYPoints = [Double]()
-            for data in score.sand{
-                for i in 0..<data.count{
-                    if(clubFilter.count > 0){
-                        if(clubFilter.contains(data[i].club)){
+            if score.sand.count == 0{
+                noSand = true
+                break
+            }
+        }
+        if noSand{
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: cardViewSandUPnDown.frame.height/2-15, width: cardViewSandUPnDown.frame.width, height: 30)
+            cardViewSandUPnDown.addSubview(demoLabel)
+
+            let demoLabel1 = DemoLabel()
+            demoLabel1.frame = CGRect(x: 0, y: cardViewChippingSandProximity.frame.height/2-15, width: cardViewChippingSandProximity.frame.width, height: 30)
+            cardViewChippingSandProximity.addSubview(demoLabel1)
+
+            for score in Constants.classicScores{
+                var proximityXPoints = [Double]()
+                var proximityYPoints = [Double]()
+                for data in score.sand{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                proximityXPoints.append(data[i].proximityX)
+                                proximityYPoints.append(data[i].proximityY)
+                            }
+                        }
+                        else{
                             proximityXPoints.append(data[i].proximityX)
                             proximityYPoints.append(data[i].proximityY)
                         }
                     }
-                    else{
-                        proximityXPoints.append(data[i].proximityX)
-                        proximityYPoints.append(data[i].proximityY)
+                }
+                dataPoints.append(Double(proximityYPoints.count))
+                if(Constants.distanceFilter == 1){
+                    for i in 0..<proximityXPoints.count{
+                        dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])))
+                    }
+                }else{
+                    for i in 0..<proximityXPoints.count{
+                        dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])*3))
                     }
                 }
+                date.append(score.date)
+                sandAttempt.append(Double(score.sandUnD.attempts))
+                sandAchieved.append(Double(score.sandUnD.achieved))
             }
-            dataPoints.append(Double(proximityYPoints.count))
-            if(Constants.distanceFilter == 1){
-                for i in 0..<proximityXPoints.count{
-                    dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])))
-                }
-            }else{
-                for i in 0..<proximityXPoints.count{
-                    dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])*3))
-                }
-            }
-            date.append(score.date)
-            sandAttempt.append(Double(score.sandUnD.attempts))
-            sandAchieved.append(Double(score.sandUnD.achieved))
         }
+        else{
+            for score in scores{
+                var proximityXPoints = [Double]()
+                var proximityYPoints = [Double]()
+                for data in score.sand{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                proximityXPoints.append(data[i].proximityX)
+                                proximityYPoints.append(data[i].proximityY)
+                            }
+                        }
+                        else{
+                            proximityXPoints.append(data[i].proximityX)
+                            proximityYPoints.append(data[i].proximityY)
+                        }
+                    }
+                }
+                dataPoints.append(Double(proximityYPoints.count))
+                if(Constants.distanceFilter == 1){
+                    for i in 0..<proximityXPoints.count{
+                        dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])))
+                    }
+                }else{
+                    for i in 0..<proximityXPoints.count{
+                        dataValues.append((sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])*3))
+                    }
+                }
+                date.append(score.date)
+                sandAttempt.append(Double(score.sandUnD.attempts))
+                sandAchieved.append(Double(score.sandUnD.achieved))
+            }
+        }
+
         print(sandAttempt,sandAchieved)
         var newDataPoints = [Double]()
         var newDate = [String]()
@@ -417,8 +547,6 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         }
         sandProximityScatterWithLine.setScatterChartWithLine(valueX: newDataPoints, valueY: dataValues, xAxisValue: newDate, chartView: sandProximityScatterWithLine, color: UIColor.glfGreenBlue)
         if !dataValues.isEmpty{
-            self.lblSandProximityAvg.isHidden = false
-            self.lblAvgSandProximityValue.isHidden = false
             let sum = dataValues.reduce(0,+)
             self.lblSandProximityAvg.text = "Average Proximity to Hole after Bunker-Shot"
             let msg = String(format:"%.01f ",(sum/Double(dataValues.count)))
@@ -467,17 +595,58 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         var left = Int()
         var hit = Int()
         var color = [UIColor]()
+        
+        var noSand = false
         for score in scores{
-            for data in score.sand{
-                for i in 0..<data.count{
-                    if(clubFilter.count > 0){
-                        if(clubFilter.contains(data[i].club)){
+            if score.sand.count == 0{
+                noSand = true
+            }
+        }
+        if noSand{
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: cardViewChippingSandAccuracy.frame.height/2-15, width: cardViewChippingSandAccuracy.frame.width, height: 30)
+            cardViewChippingSandAccuracy.addSubview(demoLabel)
+
+            for score in Constants.classicScores{
+                for data in score.sand{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                if(Constants.distanceFilter == 1){
+                                    proximityXPoints.append(data[i].proximityX)
+                                    proximityYPoints.append(data[i].proximityY)
+                                }else{
+                                    proximityXPoints.append(data[i].proximityX * 3)
+                                    proximityYPoints.append(data[i].proximityY * 3)
+                                }
+                                if(data[i].green){
+                                    hit += 1
+                                    color.append(UIColor.glfGreenBlue)
+                                }else{
+                                    color.append(UIColor.glfRosyPink)
+                                    if(data[i].proximityY >= abs(data[i].proximityX)){
+                                        long += 1
+                                    }
+                                    else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                        short += 1
+                                    }
+                                    else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                        right += 1
+                                    }
+                                    else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                        left += 1
+                                    }
+                                }
+                            }
+                        }
+                        else{
                             if(Constants.distanceFilter == 1){
                                 proximityXPoints.append(data[i].proximityX)
                                 proximityYPoints.append(data[i].proximityY)
                             }else{
                                 proximityXPoints.append(data[i].proximityX * 3)
                                 proximityYPoints.append(data[i].proximityY * 3)
+                                
                             }
                             if(data[i].green){
                                 hit += 1
@@ -499,37 +668,75 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                             }
                         }
                     }
-                    else{
-                        if(Constants.distanceFilter == 1){
-                            proximityXPoints.append(data[i].proximityX)
-                            proximityYPoints.append(data[i].proximityY)
-                        }else{
-                            proximityXPoints.append(data[i].proximityX * 3)
-                            proximityYPoints.append(data[i].proximityY * 3)
-                            
+                }
+            }
+        }
+        else{
+            for score in scores{
+                for data in score.sand{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                if(Constants.distanceFilter == 1){
+                                    proximityXPoints.append(data[i].proximityX)
+                                    proximityYPoints.append(data[i].proximityY)
+                                }else{
+                                    proximityXPoints.append(data[i].proximityX * 3)
+                                    proximityYPoints.append(data[i].proximityY * 3)
+                                }
+                                if(data[i].green){
+                                    hit += 1
+                                    color.append(UIColor.glfGreenBlue)
+                                }else{
+                                    color.append(UIColor.glfRosyPink)
+                                    if(data[i].proximityY >= abs(data[i].proximityX)){
+                                        long += 1
+                                    }
+                                    else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                        short += 1
+                                    }
+                                    else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                        right += 1
+                                    }
+                                    else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                        left += 1
+                                    }
+                                }
+                            }
                         }
-                        if(data[i].green){
-                            hit += 1
-                            color.append(UIColor.glfGreenBlue)
-                        }else{
-                            color.append(UIColor.glfRosyPink)
-                            if(data[i].proximityY >= abs(data[i].proximityX)){
-                                long += 1
+                        else{
+                            if(Constants.distanceFilter == 1){
+                                proximityXPoints.append(data[i].proximityX)
+                                proximityYPoints.append(data[i].proximityY)
+                            }else{
+                                proximityXPoints.append(data[i].proximityX * 3)
+                                proximityYPoints.append(data[i].proximityY * 3)
+                                
                             }
-                            else if(data[i].proximityY <= -abs(data[i].proximityX)){
-                                short += 1
-                            }
-                            else if(data[i].proximityX >= abs(data[i].proximityY)){
-                                right += 1
-                            }
-                            else if(data[i].proximityX <= -abs(data[i].proximityY)){
-                                left += 1
+                            if(data[i].green){
+                                hit += 1
+                                color.append(UIColor.glfGreenBlue)
+                            }else{
+                                color.append(UIColor.glfRosyPink)
+                                if(data[i].proximityY >= abs(data[i].proximityX)){
+                                    long += 1
+                                }
+                                else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                    short += 1
+                                }
+                                else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                    right += 1
+                                }
+                                else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                    left += 1
+                                }
                             }
                         }
                     }
                 }
             }
         }
+        
         sandAccuracyScatterChart.setScatterChart(valueX: proximityXPoints, valueY: proximityYPoints, chartView: sandAccuracyScatterChart, color: color)
         
         sandAccuracyScatterChart.leftAxis.enabled = false
@@ -581,36 +788,86 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         var chipAchieved = [Double]()
         var date = [String]()
 
+        var noChipping = false
         for score in scores{
-            var chippingProximityX = [Double]()
-            var chippingProximityY = [Double]()
-            for data in score.chipping{
-                for i in 0..<data.count{
-                    if(clubFilter.count > 0){
-                        if(clubFilter.contains(data[i].club)){
-                            chippingProximityX.append(data[i].proximityX)
-                            chippingProximityY.append(data[i].proximityY)
-                        }
-                    }
-                    else{
-                            chippingProximityX.append(data[i].proximityX)
-                            chippingProximityY.append(data[i].proximityY)
-                        }
-                    }
+            if score.chipping.count == 0{
+                noChipping = true
+                break
             }
-            for i in 0..<chippingProximityX.count{
-                if(Constants.distanceFilter == 1){
-                    dataValues.append(sqrt(chippingProximityX[i]*chippingProximityX[i] + chippingProximityY[i]*chippingProximityY[i]))
-                }else{
-                    dataValues.append(sqrt(chippingProximityX[i]*chippingProximityX[i] + chippingProximityY[i]*chippingProximityY[i]) * 3)
-                }
-
-            }
-            dataPoints.append(Double(chippingProximityX.count))
-            date.append(score.date)
-            chipAttempt.append(score.chipUnD.attempts)
-            chipAchieved.append(score.chipUnD.achieved)
         }
+        if noChipping{
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: cardViewChipUPnDown.frame.height/2-15, width: cardViewChipUPnDown.frame.width, height: 30)
+            cardViewChipUPnDown.addSubview(demoLabel)
+
+            let demoLabel1 = DemoLabel()
+            demoLabel1.frame = CGRect(x: 0, y: cardViewChippingProximity.frame.height/2-15, width: cardViewChippingProximity.frame.width, height: 30)
+            cardViewChippingProximity.addSubview(demoLabel1)
+
+            for score in Constants.classicScores{
+                var chippingProximityX = [Double]()
+                var chippingProximityY = [Double]()
+                for data in score.chipping{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                chippingProximityX.append(data[i].proximityX)
+                                chippingProximityY.append(data[i].proximityY)
+                            }
+                        }
+                        else{
+                            chippingProximityX.append(data[i].proximityX)
+                            chippingProximityY.append(data[i].proximityY)
+                        }
+                    }
+                }
+                for i in 0..<chippingProximityX.count{
+                    if(Constants.distanceFilter == 1){
+                        dataValues.append(sqrt(chippingProximityX[i]*chippingProximityX[i] + chippingProximityY[i]*chippingProximityY[i]))
+                    }else{
+                        dataValues.append(sqrt(chippingProximityX[i]*chippingProximityX[i] + chippingProximityY[i]*chippingProximityY[i]) * 3)
+                    }
+                    
+                }
+                dataPoints.append(Double(chippingProximityX.count))
+                date.append(score.date)
+                chipAttempt.append(score.chipUnD.attempts)
+                chipAchieved.append(score.chipUnD.achieved)
+            }
+        }
+        else{
+            for score in scores{
+                var chippingProximityX = [Double]()
+                var chippingProximityY = [Double]()
+                for data in score.chipping{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                chippingProximityX.append(data[i].proximityX)
+                                chippingProximityY.append(data[i].proximityY)
+                            }
+                        }
+                        else{
+                            chippingProximityX.append(data[i].proximityX)
+                            chippingProximityY.append(data[i].proximityY)
+                        }
+                    }
+                }
+                for i in 0..<chippingProximityX.count{
+                    if(Constants.distanceFilter == 1){
+                        dataValues.append(sqrt(chippingProximityX[i]*chippingProximityX[i] + chippingProximityY[i]*chippingProximityY[i]))
+                    }else{
+                        dataValues.append(sqrt(chippingProximityX[i]*chippingProximityX[i] + chippingProximityY[i]*chippingProximityY[i]) * 3)
+                    }
+                    
+                }
+                dataPoints.append(Double(chippingProximityX.count))
+                date.append(score.date)
+                chipAttempt.append(score.chipUnD.attempts)
+                chipAchieved.append(score.chipUnD.achieved)
+            }
+        }
+
         var newDataPoints = [Double]()
         var newDate = [String]()
         for i in 0..<dataPoints.count{
@@ -627,8 +884,6 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             formatter.positiveSuffix = " m"
         }
         if !dataValues.isEmpty{
-            self.lblChippingProximityAvg.isHidden = false
-            self.lblAvgChippingProximityValue.isHidden = false
             let sum = dataValues.reduce(0, +)
             let msg = String(format:"%.01f ",(sum/Double(dataValues.count)))
             self.lblAvgChippingProximityValue.text = "\(msg) \(Constants.distanceFilter == 1 ? "m" : "ft")"
@@ -685,11 +940,53 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         var left = Int()
         var hit = Int()
         var color = [UIColor]()
+        
+        var noChipping = false
         for score in scores{
-            for data in score.chipping{
-                for i in 0..<data.count{
-                    if(clubFilter.count > 0){
-                        if(clubFilter.contains(data[i].club)){
+            if score.chipping.count == 0{
+                noChipping = true
+                break
+            }
+            }
+        if noChipping{
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: cardViewChippingAccuracy.frame.height/2-15, width: cardViewChippingAccuracy.frame.width, height: 30)
+            cardViewChippingAccuracy.addSubview(demoLabel)
+
+            for score in Constants.classicScores{
+                for data in score.chipping{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                if(Constants.distanceFilter == 1){
+                                    proximityXPoints.append(data[i].proximityX)
+                                    proximityYPoints.append(data[i].proximityY)
+                                }else{
+                                    proximityXPoints.append(data[i].proximityX * 3)
+                                    proximityYPoints.append(data[i].proximityY * 3)
+                                }
+                                if(data[i].green){
+                                    hit += 1
+                                    color.append(UIColor.glfWhite)
+                                }else{
+                                    color.append(UIColor.glfRosyPink)
+                                    if(data[i].proximityY >= abs(data[i].proximityX)){
+                                        long += 1
+                                    }
+                                    else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                        short += 1
+                                    }
+                                    else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                        right += 1
+                                    }
+                                    else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                        left += 1
+                                    }
+                                }
+                                
+                            }
+                        }
+                        else{
                             if(Constants.distanceFilter == 1){
                                 proximityXPoints.append(data[i].proximityX)
                                 proximityYPoints.append(data[i].proximityY)
@@ -697,7 +994,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                                 proximityXPoints.append(data[i].proximityX * 3)
                                 proximityYPoints.append(data[i].proximityY * 3)
                             }
-                            if(data[i].green){
+                            if(data[i].green) != nil && (data[i].green){
                                 hit += 1
                                 color.append(UIColor.glfWhite)
                             }else{
@@ -718,38 +1015,75 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
                             
                         }
                     }
-                    else{
-                        if(Constants.distanceFilter == 1){
-                            proximityXPoints.append(data[i].proximityX)
-                            proximityYPoints.append(data[i].proximityY)
-                        }else{
-                            proximityXPoints.append(data[i].proximityX * 3)
-                            proximityYPoints.append(data[i].proximityY * 3)
+                }
+            }
+        }
+        else{
+            for score in scores{
+                for data in score.chipping{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                if(Constants.distanceFilter == 1){
+                                    proximityXPoints.append(data[i].proximityX)
+                                    proximityYPoints.append(data[i].proximityY)
+                                }else{
+                                    proximityXPoints.append(data[i].proximityX * 3)
+                                    proximityYPoints.append(data[i].proximityY * 3)
+                                }
+                                if(data[i].green){
+                                    hit += 1
+                                    color.append(UIColor.glfWhite)
+                                }else{
+                                    color.append(UIColor.glfRosyPink)
+                                    if(data[i].proximityY >= abs(data[i].proximityX)){
+                                        long += 1
+                                    }
+                                    else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                        short += 1
+                                    }
+                                    else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                        right += 1
+                                    }
+                                    else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                        left += 1
+                                    }
+                                }
+                                
+                            }
                         }
-                        if(data[i].green) != nil && (data[i].green){
-                            hit += 1
-                            color.append(UIColor.glfWhite)
-                        }else{
-                            color.append(UIColor.glfRosyPink)
-                            if(data[i].proximityY >= abs(data[i].proximityX)){
-                                long += 1
+                        else{
+                            if(Constants.distanceFilter == 1){
+                                proximityXPoints.append(data[i].proximityX)
+                                proximityYPoints.append(data[i].proximityY)
+                            }else{
+                                proximityXPoints.append(data[i].proximityX * 3)
+                                proximityYPoints.append(data[i].proximityY * 3)
                             }
-                            else if(data[i].proximityY <= -abs(data[i].proximityX)){
-                                short += 1
+                            if(data[i].green) != nil && (data[i].green){
+                                hit += 1
+                                color.append(UIColor.glfWhite)
+                            }else{
+                                color.append(UIColor.glfRosyPink)
+                                if(data[i].proximityY >= abs(data[i].proximityX)){
+                                    long += 1
+                                }
+                                else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                    short += 1
+                                }
+                                else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                    right += 1
+                                }
+                                else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                    left += 1
+                                }
                             }
-                            else if(data[i].proximityX >= abs(data[i].proximityY)){
-                                right += 1
-                            }
-                            else if(data[i].proximityX <= -abs(data[i].proximityY)){
-                                left += 1
-                            }
+                            
                         }
-                        
                     }
                 }
             }
         }
-        
         chippingAccuracyScatterView.setScatterChart(valueX: proximityXPoints, valueY: proximityYPoints, chartView: chippingAccuracyScatterView, color: color)
         chippingAccuracyScatterView.leftAxis.enabled = false
         chippingAccuracyScatterView.xAxis.enabled = false

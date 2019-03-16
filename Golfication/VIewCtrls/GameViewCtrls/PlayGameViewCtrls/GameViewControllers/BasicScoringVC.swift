@@ -101,16 +101,21 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     
     @IBAction func addNotesAction(_ sender: Any) {
-        var matchDataDictionary = NSMutableDictionary()
-        if(isAccept){
-            matchDataDictionary = self.matchDataDict
+        if !Constants.isProMode{
+            self.view.makeToast("please update to pro membership")
         }else{
-            matchDataDictionary = Constants.matchDataDic
+            var matchDataDictionary = NSMutableDictionary()
+            if(isAccept){
+                matchDataDictionary = self.matchDataDict
+            }else{
+                matchDataDictionary = Constants.matchDataDic
+            }
+            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+            viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
+            viewCtrl.notesHoleNum = "hole\(scoreData[self.holeIndex].hole)"
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+
         }
-        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
-        viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
-        viewCtrl.notesHoleNum = "hole\(scoreData[self.holeIndex].hole)"
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     @IBAction func btnActionMenu(_ sender: Any) {
@@ -622,17 +627,10 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if self.scoreData.count == 9{
-            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
-            self.targetGoal.par = Constants.targetGoal.par/2
-            self.targetGoal.gir = Constants.targetGoal.gir/2
-            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
-        }else{
-            self.targetGoal = Constants.targetGoal
-        }
-        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
         setInitialUI()
         setHoleNum()
+        btnAddNotes.setCornerWithRadius(color: UIColor.clear.cgColor, radius: 12.5)
+        btnAddNotes.setImage(BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "note"), targetSize: CGSize(width:15,height:15)), for: .normal)
         imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
         imgViewInfo.tintImageColor(color: UIColor.glfFlatBlue)
         topView.layer.cornerRadius = topView.frame.height/2
@@ -683,6 +681,15 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                             btn = view as! UIButton
                             break
                         }
+                    }
+                    if (k as! String) == Auth.auth().currentUser!.uid{
+                        if let goal = (v as! NSMutableDictionary).value(forKey: "goal") as? NSMutableDictionary{
+                            self.targetGoal.Birdie = goal.value(forKey: "birdie") as! Int
+                            self.targetGoal.par = goal.value(forKey: "par") as! Int
+                            self.targetGoal.gir = goal.value(forKey: "gir") as! Int
+                            self.targetGoal.fairwayHit = goal.value(forKey: "fairwayHit") as! Int
+                        }
+                        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
                     }
                     btn.isHidden = false
                     btn.setCornerWithRadius(color: UIColor.clear.cgColor, radius: 25)
@@ -1833,6 +1840,21 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         if(!isAccept){
             ref.child("matchData/\(Constants.matchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
+        if self.scoreData.count == 9{
+            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
+            self.targetGoal.par = Constants.targetGoal.par/2
+            self.targetGoal.gir = Constants.targetGoal.gir/2
+            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+        }else{
+            self.targetGoal = Constants.targetGoal
+        }
+        let goal = NSMutableDictionary()
+        goal.setValue(self.targetGoal.Birdie, forKey: "birdie")
+        goal.setValue(self.targetGoal.par, forKey: "par")
+        goal.setValue(self.targetGoal.gir, forKey: "gir")
+        goal.setValue(self.targetGoal.fairwayHit, forKey: "fairwayHit")
+        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goal").updateChildValues(goal as! [AnyHashable : Any])
+        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
     }
     private func getHCPValue(playerID:String,holeNo:Int)->Int{
         var index = 0

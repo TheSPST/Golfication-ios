@@ -12,11 +12,10 @@ struct Constants{
     
     static var deviceGameType = 0
     static var tempGolfBagArray = NSMutableArray()
-    
     // MARK: NewHomeVC
+    static var classicScores = [Scores]()
+    static var userEmail = ""
     static var targetGoal = Goal()
-    static var isEddie = true
-    static var isSiri = false
     static var isTagSetupModified = false
     static var baselineDict: NSDictionary!
     static var strokesGainedDict = [NSMutableDictionary]()

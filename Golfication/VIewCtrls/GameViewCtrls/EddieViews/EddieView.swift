@@ -63,11 +63,12 @@ import UIKit
         
         addSubview(view)
         viewUnlockEddie.layer.cornerRadius = 12.5
-        imgViewLocked.isHidden = Constants.isEddie
-        viewUnlockEddie.isHidden = Constants.isEddie
-        viewEddieAvailable.isHidden = !Constants.isEddie
-        
-        if !Constants.isEddie{
+        imgViewLocked.isHidden = Constants.isProMode
+        viewUnlockEddie.isHidden = Constants.isProMode
+        viewEddieAvailable.isHidden = !Constants.isProMode
+        imgViewLocked.tintImageColor(color: UIColor.glfWarmGrey)
+        imgViewLocked.tintColor = UIColor.glfWarmGrey
+        if !Constants.isProMode{
             self.lblPar.text = "-"
             self.lblBirdie.text = "-"
             self.lblGIR.text = "-"
@@ -90,7 +91,7 @@ import UIKit
     }
     
     func updateGoalView(achievedGoal:Goal,targetGoal:Goal){
-        if Constants.isEddie{
+        if Constants.isProMode{
             var fhPer = Double(achievedGoal.fairwayHit)/Double(targetGoal.fairwayHit)
             var girPer = Double(achievedGoal.gir)/Double(targetGoal.gir)
             var birdiePer = Double(achievedGoal.Birdie)/Double(targetGoal.Birdie)

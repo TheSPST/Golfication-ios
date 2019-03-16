@@ -32,27 +32,34 @@ class DistanceOfGreenIntentHandler: NSObject, DistanceOfGreenIntentHandling {
         
         if let currentLocation: CLLocation = userLocation.locationManager.location{
             self.context.performAndWait{ () -> Void in
-                if let currentHoleEntity = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: self.context) as? [CurrentHoleEntity]{
+                if let distanceUnitEntity = NSManagedObject.findAllForEntity("DistanceUnitEntity", context: self.context) as? [DistanceUnitEntity],!distanceUnitEntity.isEmpty{
+                    distanceUtil.writeDistanceUnit(cDetails: distanceUnitEntity.last!)
+                }
+                if let currentHoleEntity = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: self.context) as? [CurrentHoleEntity],!currentHoleEntity.isEmpty{
                     distanceUtil.writeHoleIndex(cDetails: currentHoleEntity.last!)
-                }
-                if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity]{
-                    distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
-                }
-                if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity]{
-                    if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity]{
-                        let distanceInMeters = distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
-                        completion(DistanceOfGreenIntentResponse.success(distanceString: distanceInMeters))
-                    }else if let frontBackEnt = NSManagedObject.findAllForEntity("FrontBackDistanceEntity", context: self.context) as? [FrontBackDistanceEntity]{
-                        let distanceInMeters = distanceUtil.getHoleNumRF(location: currentLocation, rfHole: frontBackEnt, teeArr: counterTee)
-                        completion(DistanceOfGreenIntentResponse.success(distanceString: distanceInMeters))
+                    if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity],!courseDetails.isEmpty{
+                        distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
+                    }
+                    if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity],!counterTee.isEmpty{
+                        if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity],!counterGreen.isEmpty{
+                            let distanceInMeters = distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
+                            completion(DistanceOfGreenIntentResponse.success(distanceString: distanceInMeters))
+                        }else if let frontBackEnt = NSManagedObject.findAllForEntity("FrontBackDistanceEntity", context: self.context) as? [FrontBackDistanceEntity],!frontBackEnt.isEmpty{
+                            let distanceInMeters = distanceUtil.getHoleNumRF(location: currentLocation, rfHole: frontBackEnt, teeArr: counterTee)
+                            completion(DistanceOfGreenIntentResponse.success(distanceString: distanceInMeters))
+                        }else{
+                            completion(DistanceOfGreenIntentResponse.success(distanceString: "Please Start a game on course to get distances"))
+                        }
+                    }else{
+                        completion(DistanceOfGreenIntentResponse.success(distanceString: "Please Start a game on course to get distances"))
                     }
                 }else{
-                    completion(DistanceOfGreenIntentResponse.success(distanceString: "Please Start a game"))
+                    completion(DistanceOfGreenIntentResponse.success(distanceString: "Please Start a game on course to get distances"))
                 }
             }
         }else{
             debugPrint("Please enable your location")
-            completion(DistanceOfGreenIntentResponse.success(distanceString: "Please enable your location"))
+            completion(DistanceOfGreenIntentResponse.success(distanceString: "Please enable your location to get distances"))
 
         }
     }

@@ -19,7 +19,8 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
     var myDataArray = NSMutableArray()
     
     var filteredArray = [NSDictionary]()
-    
+//    var classicScores = [ClassicScores]()
+
     override func viewDidLoad() {
         self.tabBarController?.tabBar.isHidden = true
         self.automaticallyAdjustsScrollViewInsets = false
@@ -83,7 +84,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                 self.isDemoUser = false
             }
             else{
-                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user1/scores") { (snapshot) in
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user3/scores") { (snapshot) in
                     self.dataDic = (snapshot.value as? NSDictionary)!
                     self.setData(dataDic: self.dataDic)
                     self.isDemoUser = true
@@ -413,6 +414,212 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         }else{
             self.getScoreDataFromFirebase()
         }
+        getUser3Data()
+    }
+    
+    func getUser3Data(){
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user3/scores") { (snapshot) in
+            let dataDic = (snapshot.value as? NSDictionary)!
+            self.setDemoData(dataDic: dataDic)
+//            self.isDemoUser = true
+//            self.setDemoFotter()
+        }
+    }
+    
+    func setDemoData(dataDic:NSDictionary){
+        let demoDataArray = NSMutableArray()
+
+        self.actvtIndView.isHidden = false
+        self.actvtIndView.startAnimating()
+        buttonBarView.isHidden = true
+        let dataArray = dataDic.allValues
+        let group = DispatchGroup()
+        
+        // Remove Filter Score Data if Exist
+        Constants.section5 = [String]()
+        //--------------------------------
+        
+        for i in 0..<dataArray.count {
+            group.enter()
+            demoDataArray[i] = dataArray[i]
+            // Pass Score Data to filter screen
+            let course = ((demoDataArray[i] as AnyObject).object(forKey:"course") ?? "") as! String
+            Constants.section5.append(course)
+            //--------------------------------
+            group.leave()
+        }
+        group.notify(queue: .main){
+            
+//            self.buttonBarView.isHidden = false
+            self.actvtIndView.isHidden = true
+            self.actvtIndView.stopAnimating()
+            self.filteredArray = demoDataArray as! [NSDictionary]
+//            self.reloadPagerTabStripView()
+            Constants.classicScores = self.getData(demoDataArray: demoDataArray as! [NSDictionary])
+            
+        }
+    }
+    
+    func getData(demoDataArray:[NSDictionary])->[Scores]{
+        var scores = [Scores]()
+        for i in 0..<demoDataArray.count{
+            let score = Scores()
+            //            score.roundName = (demoDataArray[i] as AnyObject).object(forKey:"roundName") as! String
+            score.timestamp = ((demoDataArray[i] as AnyObject).object(forKey:"timestamp") as! NSNumber).doubleValue
+            let date = NSDate(timeIntervalSince1970:(score.timestamp)/1000)
+            score.date = date.toString(dateFormat: "dd MMM")
+            score.course = (demoDataArray[i] as AnyObject).object(forKey:"course") as? String
+            score.courseId = (demoDataArray[i] as AnyObject).object(forKey:"courseId") as? String
+            score.fairwayHit = (demoDataArray[i] as AnyObject).object(forKey:"fairwayHit") as? Double
+            score.fairwayMiss = (demoDataArray[i] as AnyObject).object(forKey:"fairwayMiss") as? Double
+            score.fairwayLeftValue = (demoDataArray[i] as AnyObject).object(forKey:"fairwayLeftValue") as? Double
+            score.fairwayRightValue = (demoDataArray[i] as AnyObject).object(forKey:"fairwayRightValue") as? Double
+            score.gir = (demoDataArray[i] as AnyObject).object(forKey:"gir") as? Double
+            score.girMiss = (demoDataArray[i] as AnyObject).object(forKey:"girMiss") as? Double
+            score.par = (demoDataArray[i] as AnyObject).object(forKey:"par") as? Int
+            score.penalty = (demoDataArray[i] as AnyObject).object(forKey:"penalty") as? Double
+            score.score = (demoDataArray[i] as AnyObject).object(forKey:"score") as? Double
+            score.type = (demoDataArray[i] as AnyObject).object(forKey:"type") as? String
+            score.parWise = (demoDataArray[i] as AnyObject).object(forKey:"parWise") as? Dictionary<String, Dictionary<String,Int>>
+            score.scoring = (demoDataArray[i] as AnyObject).object(forKey:"scoring") as? Dictionary<String, Int>
+            score.tees = (demoDataArray[i] as AnyObject).object(forKey:"tees") as? NSDictionary
+            score.putts = (demoDataArray[i] as AnyObject).object(forKey:"putts") as? Array<Double>
+            
+            score.girWithFairway = (demoDataArray[i] as AnyObject).object(forKey:"girWithFairway") as? Double
+            score.girWoFairway = (demoDataArray[i] as AnyObject).object(forKey:"girWoFairway") as? Double
+            if let chipping = ((demoDataArray[i] as AnyObject).object(forKey:"chipping") as? NSArray){
+                var chippingArray = [Chipping]()
+                for i in 0..<chipping.count{
+                    let chip = Chipping()
+                    chip.club = (chipping[i] as AnyObject).object(forKey:"club") as? String
+                    chip.distance = (chipping[i] as AnyObject).object(forKey:"distance") as? Double
+                    chip.hole = (chipping[i] as AnyObject).object(forKey:"hole") as? Int
+                    chip.proximityX = (chipping[i] as AnyObject).object(forKey:"proximityX") as? Double
+                    chip.proximityY = (chipping[i] as AnyObject).object(forKey:"proximityY") as? Double
+                    if(Constants.distanceFilter == 1){
+                        chip.proximityX = chip.proximityX/Constants.YARD
+                        chip.proximityY = chip.proximityY/Constants.YARD
+                        chip.distance = chip.distance/Constants.YARD
+                    }
+                    chip.und = (chipping[i] as AnyObject).object(forKey:"und") as? Int
+                    chip.green = (chipping[i] as AnyObject).object(forKey:"green") as? Bool
+                    chippingArray.append(chip)
+                    //print(chip)
+                }
+                if let chipUandD = ((demoDataArray[i] as AnyObject).object(forKey:"chipUnD") as? NSDictionary){
+                    score.chipUnD.achieved = chipUandD.value(forKey: "achieved") as? Double
+                    score.chipUnD.attempts = chipUandD.value(forKey: "attempts") as? Double
+                    score.chipping.append(chippingArray)
+                    // Set Model view to with data Sand
+                }
+            }
+            if let sand = ((demoDataArray[i] as AnyObject).object(forKey:"sand") as? NSArray){
+                var sandArray = [Chipping]()
+                for i in 0..<sand.count{
+                    let chip = Chipping()
+                    chip.club = (sand[i] as AnyObject).object(forKey:"club") as? String
+                    chip.distance = (sand[i] as AnyObject).object(forKey:"distance")as? Double
+                    chip.hole = (sand[i] as AnyObject).object(forKey:"hole") as? Int
+                    chip.proximityX = (sand[i] as AnyObject).object(forKey:"proximityX") as? Double
+                    chip.proximityY = (sand[i] as AnyObject).object(forKey:"proximityY") as? Double
+                    if(Constants.distanceFilter == 1){
+                        chip.proximityX = chip.proximityX/Constants.YARD
+                        chip.proximityY = chip.proximityY/Constants.YARD
+                        chip.distance = chip.distance/Constants.YARD
+                    }
+                    chip.green = (sand[i] as AnyObject).object(forKey:"green") as? Bool
+                    if let und = ((sand[i] as AnyObject).object(forKey:"und") as? Int){
+                        chip.und = und
+                    }
+                    sandArray.append(chip)
+                }
+                score.sand.append(sandArray)
+            }
+            if let sandUnD = ((demoDataArray[i] as AnyObject).object(forKey:"sandUnD") as? NSDictionary){
+                score.sandUnD.achieved = sandUnD.value(forKey: "achieved") as? Double
+                score.sandUnD.attempts = sandUnD.value(forKey: "attempts") as? Double
+            }
+            // Model View Set Approch Array
+            if let approach = ((demoDataArray[i] as AnyObject).object(forKey:"approach") as? NSArray){
+                var approachArray = [Chipping]()
+                for i in 0..<approach.count{
+                    let chip = Chipping()
+                    chip.club = (approach[i] as AnyObject).object(forKey:"club") as! String
+                    chip.distance = (approach[i] as AnyObject).object(forKey:"distance") as! Double
+                    chip.hole = (approach[i] as AnyObject).object(forKey:"hole") as! Int
+                    chip.proximityX = (approach[i] as AnyObject).object(forKey:"proximityX") as! Double
+                    chip.proximityY = (approach[i] as AnyObject).object(forKey:"proximityY") as! Double
+                    chip.green = (approach[i] as AnyObject).object(forKey:"green") as? Bool
+                    if(Constants.distanceFilter == 1){
+                        chip.proximityX = chip.proximityX/Constants.YARD
+                        chip.proximityY = chip.proximityY/Constants.YARD
+                        chip.distance = chip.distance/Constants.YARD
+                    }
+                    if let und = ((approach[i] as AnyObject).object(forKey:"und") as? Int){
+                        chip.und = und
+                    }
+                    approachArray.append(chip)
+                }
+                score.approach.append(approachArray)
+            }
+            if let smartCaddieDic = ((demoDataArray[i] as AnyObject).object(forKey:"smartCaddie") as? NSDictionary){
+                var clubWiseArray = [Club]()
+                for key in Constants.allClubs{
+                    var keysArray = smartCaddieDic.value(forKey: " \(key)")
+                    if(keysArray == nil){
+                        keysArray = smartCaddieDic.value(forKey: "\(key)")
+                    }
+                    if((keysArray) != nil){
+                        let valueArray = keysArray as! NSArray
+                        for j in 0..<valueArray.count{
+                            let clubData = Club()
+                            let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
+                            if((backSwing) != nil){
+                                clubData.backswing = backSwing as! Double
+                            }
+                            if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
+                                clubData.distance = distance
+                                if(Constants.distanceFilter == 1){
+                                    clubData.distance = distance/Constants.YARD
+                                }
+                            }
+                            var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
+                            if let strk = (valueArray[j] as AnyObject).object(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
+                                strokesGained = strk
+                            }
+                            clubData.strokesGained = strokesGained
+                            
+                            let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
+                            if((swingScore) != nil){
+                                clubData.swingScore = swingScore as! Double
+                            }
+                            let type = (valueArray[j] as AnyObject).object(forKey: "type")
+                            if((type) != nil){
+                                clubData.type = type as! Int
+                            }
+                            if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
+                                clubData.proximity = proximity
+                                if(Constants.distanceFilter == 1){
+                                    clubData.proximity = proximity/Constants.YARD
+                                }
+                                
+                            }
+                            let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut")
+                            if((holeout) != nil){
+                                clubData.holeout = holeout as! Double
+                            }
+                            
+                            clubWiseArray.append(clubData)
+                            score.clubDict.append((key,clubData))
+                        }
+                    }
+                }
+            }
+            scores.append(score)
+//            self.scoreArray.append(score.score)
+        }
+        scores = scores.sorted(by: { $0.timestamp < $1.timestamp })
+        return scores
     }
     
     func getFilteredValue(roundTimeArr: [String], clubTypeArr: [String], holeTypeArr: [String], coursesTypeArr: [String] ){

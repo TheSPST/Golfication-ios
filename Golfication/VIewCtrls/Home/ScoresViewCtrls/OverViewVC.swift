@@ -36,10 +36,12 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
     @IBOutlet weak var lblProSG: UILabel!
     @IBOutlet weak var lblStrokesGainedPerClubAvg: UILabel!
     @IBOutlet weak var strokesGainedPerClubBarChart: BarChartView!
-    
+    let progressView = SDLoader()
+
     var bestRound = Double()
     var avgScore = Double()
     var scores = [Scores]()
+    var classicScores = [Scores]()
     var isDemoUser :Bool!
     var groupDict = [String:Double]()
     var cardViewMArray = NSMutableArray()
@@ -68,9 +70,32 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
         lblStrokesGainedPerClubAvg.isHidden = true
 
         if !Constants.isProMode {
-            self.setProLockedUI(targetView: self.strokeGainedChartView, title: "Strokes Gained Per Round")
-            self.lblProSG.isHidden = true
+//            self.setProLockedUI(targetView: self.strokeGainedChartView, title: "Strokes Gained Per Round")
+//            self.lblProSG.isHidden = true
+              self.lblStrokesGainedPerClubAvg.isHidden = true
+            //--------------------------- for insights -------------------------------
+            let eddieStatsView = EddieStatsView()
+            eddieStatsView.backgroundColor = UIColor.clear
+            eddieStatsView.frame = CGRect(x: 16, y: 45, width: self.view.frame.width-52, height: 30)
+            eddieStatsView.lblTitle.text = "Eddie has some insights for you."
+            eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            roundCardView.addSubview(eddieStatsView)
 
+            let eddieStatsView1 = EddieStatsView()
+            eddieStatsView1.backgroundColor = UIColor.clear
+            eddieStatsView1.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+            eddieStatsView1.lblTitle.text = "Unlock this stat with Eddie!"
+            eddieStatsView1.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            strokeGainedChartView.addSubview(eddieStatsView1)
+
+            lblRoundsAvg.isHidden = true
+            lblAvgRoundsValue.isHidden = true
+            lblAvgScoreDistribution.isHidden = true
+            lblAvgScoreDistributionValue.isHidden = true
+            lblAvgPenaltiesTrendsValue.isHidden = true
+            lblPenaltyTrendsAvg.isHidden = true
+            lblScoringAvg.isHidden = true
+            lblParAvg.isHidden = true
         }
         else{
             self.lblProSG.backgroundColor = UIColor.clear
@@ -78,9 +103,48 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             self.lblProSG.layer.borderColor = UIColor(rgb: 0xFFC700).cgColor
             self.lblProSG.textColor = UIColor(rgb: 0xFFC700)
             self.lblProSG.isHidden = false
+            lblStrokesGainedPerClubAvg.isHidden = false
         }
         self.setStrokesGainedPerClubBarChart()
+
         //-----------------------------------------------------
+    }
+    
+    func setStrokesGainedClassicData(){
+        
+        var dataPoints = [String]()
+        var dataValues = [Double]()
+        var strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
+        
+        for data in Constants.catagoryWise{
+            strokesGainedData.append((data,0.0,0.0,0,0.0))
+        }
+        for score in classicScores{
+            for i in 0..<score.clubDict.count{
+                let clubClass = score.clubDict[i].1 as Club
+                if(clubClass.type >= 0 && clubClass.type < 4){
+                    strokesGainedData[clubClass.type].clubTotalDistance += clubClass.distance
+                    strokesGainedData[clubClass.type].clubStrokesGained += clubClass.strokesGained
+                    strokesGainedData[clubClass.type].clubSwingScore += clubClass.swingScore
+                    strokesGainedData[clubClass.type].clubCount += 1
+                }
+            }
+        }
+        debugPrint(strokesGainedData)
+        
+        for data in strokesGainedData{
+            dataPoints.append(data.clubType.localized())
+            dataValues.append((data.clubStrokesGained / Double(classicScores.count)).rounded(toPlaces: 1))
+            print(data)
+        }
+        self.strokesGainedPerClubBarChart.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: self.strokesGainedPerClubBarChart, color: UIColor.glfWhite, barWidth: 0.4,valueColor: UIColor.glfWhite.withAlphaComponent(0.5))
+        strokesGainedPerClubBarChart.leftAxis.gridColor = UIColor.glfWhite.withAlphaComponent(0.25)
+        strokesGainedPerClubBarChart.leftAxis.labelTextColor  = UIColor.glfWhite.withAlphaComponent(0.5)
+        strokesGainedPerClubBarChart.xAxis.labelTextColor = UIColor.glfWhite.withAlphaComponent(0.5)
+        
+        let publicScore  = PublicScore()
+        let publicScoreStr = publicScore.getSGPerClub(gainAvg: dataValues[0], gainAvg1: dataValues[1], gainAvg2: dataValues[2], gainAvg3: dataValues[3])
+        lblStrokesGainedPerClubAvg.text = publicScoreStr
     }
     
     func setStrokesGainedPerClubBarChart(){
@@ -103,21 +167,102 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             }
         }
         debugPrint(strokesGainedData)
-
+        var clubCou = 0
         for data in strokesGainedData{
             dataPoints.append(data.clubType.localized())
             dataValues.append((data.clubStrokesGained / Double(scores.count)).rounded(toPlaces: 1))
+            clubCou += data.clubCount
             print(data)
         }
-        self.strokesGainedPerClubBarChart.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: self.strokesGainedPerClubBarChart, color: UIColor.glfWhite, barWidth: 0.4,valueColor: UIColor.glfWhite.withAlphaComponent(0.5))
-        strokesGainedPerClubBarChart.leftAxis.gridColor = UIColor.glfWhite.withAlphaComponent(0.25)
-        strokesGainedPerClubBarChart.leftAxis.labelTextColor  = UIColor.glfWhite.withAlphaComponent(0.5)
-        strokesGainedPerClubBarChart.xAxis.labelTextColor = UIColor.glfWhite.withAlphaComponent(0.5)
-        
-        let publicScore  = PublicScore()
-        let publicScoreStr = publicScore.getSGPerClub(gainAvg: dataValues[0], gainAvg1: dataValues[1], gainAvg2: dataValues[2], gainAvg3: dataValues[3])
-        lblStrokesGainedPerClubAvg.isHidden = false
-        lblStrokesGainedPerClubAvg.text = publicScoreStr
+
+        if clubCou == 0{
+            lblStrokesGainedPerClubAvg .isHidden = true
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: strokeGainedChartView.frame.height/2-15, width: strokeGainedChartView.frame.width, height: 30)
+            strokeGainedChartView.addSubview(demoLabel)
+            
+            progressView.show(atView: self.view, navItem: self.navigationItem)
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user3/scores") { (snapshot) in
+                self.progressView.hide(navItem: self.navigationItem)
+                
+                let classicScore = Scores()
+                let dataDic = (snapshot.value as? NSDictionary)!
+                let dataArray = dataDic.allValues
+                for i in 0..<dataArray.count {
+                    if let smartCaddieDic = ((dataArray[i] as AnyObject).object(forKey:"smartCaddie") as? NSDictionary){
+                        var clubWiseArray = [Club]()
+                        for key in Constants.allClubs{
+                            var keysArray = smartCaddieDic.value(forKey: " \(key)")
+                            if(keysArray == nil){
+                                keysArray = smartCaddieDic.value(forKey: "\(key)")
+                            }
+                            if((keysArray) != nil){
+                                let valueArray = keysArray as! NSArray
+                                for j in 0..<valueArray.count{
+                                    let clubData = Club()
+                                    let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
+                                    if((backSwing) != nil){
+                                        clubData.backswing = backSwing as! Double
+                                    }
+                                    if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
+                                        clubData.distance = distance
+                                        if(Constants.distanceFilter == 1){
+                                            clubData.distance = distance/Constants.YARD
+                                        }
+                                    }
+                                    var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
+                                    if let strk = (valueArray[j] as AnyObject).object(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
+                                        strokesGained = strk
+                                    }
+                                    clubData.strokesGained = strokesGained
+                                    
+                                    let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
+                                    if((swingScore) != nil){
+                                        clubData.swingScore = swingScore as! Double
+                                    }
+                                    let type = (valueArray[j] as AnyObject).object(forKey: "type")
+                                    if((type) != nil){
+                                        clubData.type = type as! Int
+                                    }
+                                    if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
+                                        clubData.proximity = proximity
+                                        if(Constants.distanceFilter == 1){
+                                            clubData.proximity = proximity/Constants.YARD
+                                        }
+                                    }
+                                    let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut")
+                                    if((holeout) != nil){
+                                        clubData.holeout = holeout as! Double
+                                    }
+                                    
+                                    clubWiseArray.append(clubData)
+                                    classicScore.clubDict.append((key,clubData))
+                                }
+                            }
+                        }
+                    }
+                    self.classicScores.append(classicScore)
+                }
+                DispatchQueue.main.async {
+                    self.setStrokesGainedClassicData()
+                }
+            }
+        }else{
+            self.strokesGainedPerClubBarChart.setBarChartStrokesGained(dataPoints: dataPoints, values: dataValues, chartView: self.strokesGainedPerClubBarChart, color: UIColor.glfWhite, barWidth: 0.4,valueColor: UIColor.glfWhite.withAlphaComponent(0.5))
+            strokesGainedPerClubBarChart.leftAxis.gridColor = UIColor.glfWhite.withAlphaComponent(0.25)
+            strokesGainedPerClubBarChart.leftAxis.labelTextColor  = UIColor.glfWhite.withAlphaComponent(0.5)
+            strokesGainedPerClubBarChart.xAxis.labelTextColor = UIColor.glfWhite.withAlphaComponent(0.5)
+            
+            let publicScore  = PublicScore()
+            let publicScoreStr = publicScore.getSGPerClub(gainAvg: dataValues[0], gainAvg1: dataValues[1], gainAvg2: dataValues[2], gainAvg3: dataValues[3])
+            lblStrokesGainedPerClubAvg.text = publicScoreStr
+            
+        }
+    }
+    
+    @objc func eddieProClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     
     func setProLockedUI(targetView:UIView?, title:String) {

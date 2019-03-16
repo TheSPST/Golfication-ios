@@ -583,7 +583,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         debugPrint("sectionNames== ",self.sectionNames.count)
         
         //debugPrint("mode== ",mode) // mode 3 = classic, mode 1 = Advance, mode 3 = Rf
-/*            if !self.teeTypeArr.isEmpty{
+            if !self.teeTypeArr.isEmpty{
                 self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                      ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                      ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
@@ -610,8 +610,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                          ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
                                          ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"]]
                 }
-            }*/
-        if !self.teeTypeArr.isEmpty{
+            }
+        /*if !self.teeTypeArr.isEmpty{
             self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
                                  ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
                                  ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
@@ -638,7 +638,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()],
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized()]]
             }
-        }
+        }*/
         self.menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+10)), style: .plain)
         if self.isContinue{
             self.menueTableView =  UITableView(frame: CGRect(x: 0, y: 64, width: 180, height: self.view.frame.size.height-(64+75+30+5)), style: .plain)
@@ -1271,16 +1271,20 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 lblHolePar.text = "Hole".localized() + " \(self.index+1) - " + "Par".localized() + " \(self.scoreData[self.index].par)"
             }
         }else{
-            var matchDataDictionary = NSMutableDictionary()
-            if(isFinalSummary){
-                matchDataDictionary = self.matchDataDict
+            if !Constants.isProMode{
+                self.view.makeToast("You have to purchase pro membership")
             }else{
-                matchDataDictionary = Constants.matchDataDic
+                var matchDataDictionary = NSMutableDictionary()
+                if(isFinalSummary){
+                    matchDataDictionary = self.matchDataDict
+                }else{
+                    matchDataDictionary = Constants.matchDataDic
+                }
+                let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+                viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
+                viewCtrl.notesHoleNum = "hole\(self.scoreData[sender.tag].hole)"
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
             }
-            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
-            viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
-            viewCtrl.notesHoleNum = "hole\(self.scoreData[sender.tag].hole)"
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
         }
     }
     
@@ -2192,19 +2196,19 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                             }
                         }
                     }
-                        /*if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
-                            if playerId == Auth.auth().currentUser!.uid{
-                                if indexPath.row == sectionItems.count-1{
-                                    let backBtnImage1 =  UIImage(named: "text_edit")!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                    btn.setImage(backBtnImage1, for: .normal)
-                                    btn.tintColor = UIColor.glfFlatBlue
-                                    btn.setTitle("", for: .normal)
-                                    btn.isNotes = true
-                                    btn.isUserInteractionEnabled = true
-//                                    btn.setImage(UIImage(named:"text_edit"), for: .normal)
-                                }
+                    if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
+                        if playerId == Auth.auth().currentUser!.uid{
+                            if indexPath.row == sectionItems.count-1{
+                                let originalImage1 = BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "note"), targetSize: CGSize(width:15,height:15))
+                                let backBtnImage1 =  originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                                btn.setImage(backBtnImage1, for: .normal)
+                                btn.tintColor = UIColor.glfFlatBlue
+                                btn.setTitle("", for: .normal)
+                                btn.isNotes = true
+                                btn.isUserInteractionEnabled = true
                             }
-                        }*/
+                        }
+                    }
                 }
                 let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(scoreData.count), y: 0, width: 40, height: 32))
                 label.text = "-"

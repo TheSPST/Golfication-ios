@@ -29,7 +29,7 @@ open class CoreDataStorage {
     // MARK: - Notifications
     
 //    @objc func contextDidSavePrivateQueueContext(_ notification:Notification) {
-//        if let context = self.mainQueueCtxt{
+//        if let context = self.privateQueueCtxt{
 //            self.synced(self, closure: { () -> () in
 //                do{
 //                    context.perform({() -> Void in
@@ -45,6 +45,7 @@ open class CoreDataStorage {
 //            self.synced(self, closure: { () -> () in
 //                do{
 //                    context.perform({() -> Void in
+//                        context.mergeChanges(fromContextDidSave: <#T##Notification#>)
 //                        context.mergeChanges(fromContextDidSave: notification)
 //                    })
 //                }

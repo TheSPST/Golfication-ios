@@ -428,7 +428,7 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
     
     func checkEmailVerification(currentUser: User) {
         
-        if !(currentUser.isEmailVerified){
+        /*if !(currentUser.isEmailVerified){
             currentUser.sendEmailVerification { (error) in
                 self.progressView.hide(navItem: self.navigationItem)
 
@@ -446,7 +446,7 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
                 self.present(alert, animated: true, completion: nil)
             }
         }
-        else{
+        else{*/
 
             // -------------------------------- Check If New User ----------------------------
             FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "device") { (snapshot) in
@@ -526,11 +526,12 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
                                 }
                             self.txtFieldEmail.text = ""
                             self.txtFieldPswd.text = ""
+                            Constants.userEmail = ""
                         }
                     }
                 })
             }
-        }
+        //}
     }
     
     // MARK: - viewWillAppear
@@ -546,6 +547,9 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
         tracker.send(builder.build() as [NSObject : AnyObject])
         // ------------------------------------------------------------------
         
+        if Constants.userEmail != ""{
+            txtFieldEmail.text = Constants.userEmail
+        }
     }
     
     // MARK: - viewDidLoad

@@ -1503,46 +1503,108 @@
             <point key="canvasLocation" x="1239.375" y="225"/>
         </scene>
         <!--Debug ModeVC-->
-        <scene sceneID="w9t-1d-HCl">
+        <scene sceneID="8kh-vC-sEo">
             <objects>
-                <viewController storyboardIdentifier="debugModeVC" id="ARM-FI-YQ4" customClass="DebugModeVC" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="cuC-mQ-dc2">
+                <viewController storyboardIdentifier="debugModeVC" id="oNg-pG-d7z" customClass="DebugModeVC" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="51y-lH-cN6">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="1to-8v-hQ8">
-                                <rect key="frame" x="16" y="382" width="288" height="128"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="device1" translatesAutoresizingMaskIntoConstraints="NO" id="OZB-dv-rEx">
+                                <rect key="frame" x="85" y="28" width="150" height="201"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="hgP-Pu-pg4"/>
+                                    <constraint firstAttribute="height" constant="201" id="Qtc-TC-pVJ"/>
+                                    <constraint firstAttribute="width" constant="150" id="d9w-pd-Yz1"/>
                                 </constraints>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ley-nO-GxW">
-                                <rect key="frame" x="118" y="518" width="84" height="30"/>
-                                <state key="normal" title="Start Debug"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mic-Mc-W0H">
+                                <rect key="frame" x="16" y="245" width="288" height="67.5"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Step 1:">
+                                        <attributes>
+                                            <color key="NSColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <font key="NSFont" size="20" name="Arial-BoldMT"/>
+                                            <font key="NSOriginalFont" size="20" name="Arial-BoldMT"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content=" Wear the glove on your hand and mount Golfication X main unit on your glove.">
+                                        <attributes>
+                                            <color key="NSColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <font key="NSFont" size="20" name="ArialMT"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eut-Hg-clh">
+                                <rect key="frame" x="16" y="320.5" width="288" height="67.5"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Step 2:">
+                                        <attributes>
+                                            <color key="NSColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <font key="NSFont" size="20" name="Arial-BoldMT"/>
+                                            <font key="NSOriginalFont" size="20" name="Arial-BoldMT"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content=" Press &quot;Start Recording&quot; button below and take a swing within 15 seconds.">
+                                        <attributes>
+                                            <color key="NSColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <font key="NSFont" size="20" name="ArialMT"/>
+                                            <font key="NSOriginalFont" size="20" name="ArialMT"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mLo-ZP-vB6">
+                                <rect key="frame" x="85" y="412.5" width="150" height="36"/>
+                                <color key="backgroundColor" red="0.3144156635" green="0.71112221480000004" blue="0.55928272010000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="Hyk-Vk-pvZ"/>
+                                    <constraint firstAttribute="width" constant="150" id="pn2-fJ-3cp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="20"/>
+                                <state key="normal" title="Start Recording">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
-                                    <action selector="startDebugAction:" destination="ARM-FI-YQ4" eventType="touchUpInside" id="RzR-jZ-I8g"/>
+                                    <action selector="startDebugAction:" destination="oNg-pG-d7z" eventType="touchUpInside" id="f5R-40-N14"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mko-tZ-IGC">
+                                <rect key="frame" x="128.5" y="464.5" width="63" height="30"/>
+                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Ley-nO-GxW" firstAttribute="top" secondItem="1to-8v-hQ8" secondAttribute="bottom" constant="8" id="17j-Ku-D3H"/>
-                            <constraint firstItem="Zbw-fp-O0E" firstAttribute="bottom" secondItem="Ley-nO-GxW" secondAttribute="bottom" constant="20" id="Ah2-rA-2Zc"/>
-                            <constraint firstItem="1to-8v-hQ8" firstAttribute="leading" secondItem="Zbw-fp-O0E" secondAttribute="leading" constant="16" id="EMi-Hk-JfD"/>
-                            <constraint firstItem="Zbw-fp-O0E" firstAttribute="trailing" secondItem="1to-8v-hQ8" secondAttribute="trailing" constant="16" id="P84-ZY-cOh"/>
-                            <constraint firstItem="Ley-nO-GxW" firstAttribute="centerX" secondItem="Zbw-fp-O0E" secondAttribute="centerX" id="Qsg-ms-MOi"/>
+                            <constraint firstItem="mLo-ZP-vB6" firstAttribute="centerX" secondItem="JWp-gF-tDg" secondAttribute="centerX" id="5LY-eY-oxC"/>
+                            <constraint firstItem="OZB-dv-rEx" firstAttribute="top" secondItem="JWp-gF-tDg" secondAttribute="top" constant="8" id="8zw-f8-hC2"/>
+                            <constraint firstItem="Mko-tZ-IGC" firstAttribute="top" secondItem="mLo-ZP-vB6" secondAttribute="bottom" constant="16" id="HkD-bR-w0a"/>
+                            <constraint firstItem="mic-Mc-W0H" firstAttribute="top" secondItem="OZB-dv-rEx" secondAttribute="bottom" constant="16" id="OM6-br-mTa"/>
+                            <constraint firstItem="Mko-tZ-IGC" firstAttribute="centerX" secondItem="JWp-gF-tDg" secondAttribute="centerX" id="Xxp-TT-REe"/>
+                            <constraint firstItem="Eut-Hg-clh" firstAttribute="trailing" secondItem="JWp-gF-tDg" secondAttribute="trailing" constant="-16" id="aQs-gP-V5M"/>
+                            <constraint firstItem="mic-Mc-W0H" firstAttribute="trailing" secondItem="JWp-gF-tDg" secondAttribute="trailing" constant="-16" id="cAZ-xX-2jM"/>
+                            <constraint firstItem="OZB-dv-rEx" firstAttribute="centerX" secondItem="JWp-gF-tDg" secondAttribute="centerX" id="nM6-Pv-yev"/>
+                            <constraint firstItem="Eut-Hg-clh" firstAttribute="top" secondItem="mic-Mc-W0H" secondAttribute="bottom" constant="8" id="p2n-4o-9S5"/>
+                            <constraint firstItem="mLo-ZP-vB6" firstAttribute="top" secondItem="Eut-Hg-clh" secondAttribute="bottom" constant="24.5" id="umG-GD-ocI"/>
+                            <constraint firstItem="JWp-gF-tDg" firstAttribute="leading" secondItem="mic-Mc-W0H" secondAttribute="leading" constant="-16" id="vUW-cQ-dfS"/>
+                            <constraint firstItem="JWp-gF-tDg" firstAttribute="leading" secondItem="Eut-Hg-clh" secondAttribute="leading" constant="-16" id="vZf-bf-cng"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="Zbw-fp-O0E"/>
+                        <viewLayoutGuide key="safeArea" id="JWp-gF-tDg"/>
                     </view>
                     <connections>
-                        <outlet property="textViewDebugData" destination="1to-8v-hQ8" id="eHL-OT-4tR"/>
+                        <outlet property="btnDebug" destination="mLo-ZP-vB6" id="f5i-4P-iUh"/>
+                        <outlet property="lblTimer" destination="Mko-tZ-IGC" id="aOF-Ug-o8H"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3xm-4C-SsR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kaL-sz-2VY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-819" y="175"/>
         </scene>

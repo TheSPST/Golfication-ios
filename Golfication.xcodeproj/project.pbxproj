@@ -161,6 +161,7 @@
 		4B1F6BEA2090A29F00312EA7 /* NewGameScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */; };
 		4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */; };
 		4B39D2222237A2B200C7742F /* DebugModeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B39D2212237A2B100C7742F /* DebugModeVC.swift */; };
+		4B39D2262238E5F300C7742F /* CoreDataCRUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B39D2252238E5F300C7742F /* CoreDataCRUD.swift */; };
 		4B3A488C222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
 		4B3A488D222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
 		4B3A488E222803080049C15F /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3A488A222803070049C15F /* Location.swift */; };
@@ -203,6 +204,9 @@
 		4B7F521F2158DC6F002E328A /* PKCCropHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F52162158DC6E002E328A /* PKCCropHelper.swift */; };
 		4B7F52202158DC6F002E328A /* PKCCropLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F52172158DC6E002E328A /* PKCCropLineView.swift */; };
 		4B7F52222158FD89002E328A /* NewGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F52212158FD88002E328A /* NewGameVC.swift */; };
+		4B8B85CB223D3C2900DA7BCA /* EddieProVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8B85CA223D3C2800DA7BCA /* EddieProVC.swift */; };
+		4B8B85CE223D3FF700DA7BCA /* EddieStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8B85CC223D3FF700DA7BCA /* EddieStatsView.swift */; };
+		4B8B85CF223D3FF700DA7BCA /* EddieStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B8B85CD223D3FF700DA7BCA /* EddieStatsView.xib */; };
 		4B8C8D311FF674D0001F5D01 /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8C8D1F1FF67476001F5D01 /* SF-Pro-Display-Medium.otf */; };
 		4B8C8D321FF674D0001F5D01 /* SF-Pro-Display-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8C8D201FF6747F001F5D01 /* SF-Pro-Display-RegularItalic.otf */; };
 		4B8C8D331FF674D0001F5D01 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4B8C8D211FF67489001F5D01 /* SF-Pro-Display-Bold.otf */; };
@@ -235,6 +239,10 @@
 		4BA4793B2228334B00FC48AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E4CDC6E211C56B700C2C1C6 /* Assets.xcassets */; };
 		4BA4793C2228336600FC48AB /* IntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0175052225302700A215E6 /* IntentViewController.swift */; };
 		4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA64E452000A54400C8C03F /* Chatlogo.swift */; };
+		4BA70883223A8EAB003CEFF4 /* SuggestionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BA70882223A8EAB003CEFF4 /* SuggestionView.xib */; };
+		4BA70887223A8EDA003CEFF4 /* SuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA70886223A8EDA003CEFF4 /* SuggestionView.swift */; };
+		4BA70889223D1342003CEFF4 /* WindNotesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BA70888223D1341003CEFF4 /* WindNotesView.xib */; };
+		4BA7088D223D1C8B003CEFF4 /* WindNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA7088C223D1C8B003CEFF4 /* WindNotesView.swift */; };
 		4BB26CC71FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC01FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m */; };
 		4BB26CC81FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC21FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.m */; };
 		4BB26CC91FF77E2B001E9556 /* TPKeyboardAvoidingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB26CC41FF77E2B001E9556 /* TPKeyboardAvoidingTableView.m */; };
@@ -498,6 +506,7 @@
 		4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameScoreTableViewCell.swift; sourceTree = "<group>"; };
 		4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProMemberPopUPVC.swift; sourceTree = "<group>"; };
 		4B39D2212237A2B100C7742F /* DebugModeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugModeVC.swift; sourceTree = "<group>"; };
+		4B39D2252238E5F300C7742F /* CoreDataCRUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCRUD.swift; sourceTree = "<group>"; };
 		4B3A488A222803070049C15F /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		4B3A488B222803080049C15F /* LocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		4B4BD77121E366B00067460A /* CesPopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CesPopUpView.xib; sourceTree = "<group>"; };
@@ -544,6 +553,9 @@
 		4B7F52162158DC6E002E328A /* PKCCropHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCCropHelper.swift; sourceTree = "<group>"; };
 		4B7F52172158DC6E002E328A /* PKCCropLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCCropLineView.swift; sourceTree = "<group>"; };
 		4B7F52212158FD88002E328A /* NewGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameVC.swift; sourceTree = "<group>"; };
+		4B8B85CA223D3C2800DA7BCA /* EddieProVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EddieProVC.swift; sourceTree = "<group>"; };
+		4B8B85CC223D3FF700DA7BCA /* EddieStatsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EddieStatsView.swift; sourceTree = "<group>"; };
+		4B8B85CD223D3FF700DA7BCA /* EddieStatsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EddieStatsView.xib; sourceTree = "<group>"; };
 		4B8C8D1F1FF67476001F5D01 /* SF-Pro-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Medium.otf"; sourceTree = "<group>"; };
 		4B8C8D201FF6747F001F5D01 /* SF-Pro-Display-RegularItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-RegularItalic.otf"; sourceTree = "<group>"; };
 		4B8C8D211FF67489001F5D01 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
@@ -580,6 +592,10 @@
 		4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigation+CustomAnimation.swift"; sourceTree = "<group>"; };
 		4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array + RemoveDuplicate.swift"; sourceTree = "<group>"; };
 		4BA64E452000A54400C8C03F /* Chatlogo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chatlogo.swift; sourceTree = "<group>"; };
+		4BA70882223A8EAB003CEFF4 /* SuggestionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuggestionView.xib; sourceTree = "<group>"; };
+		4BA70886223A8EDA003CEFF4 /* SuggestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionView.swift; sourceTree = "<group>"; };
+		4BA70888223D1341003CEFF4 /* WindNotesView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WindNotesView.xib; sourceTree = "<group>"; };
+		4BA7088C223D1C8B003CEFF4 /* WindNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindNotesView.swift; sourceTree = "<group>"; };
 		4BB26CBF1FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingCollectionView.h; sourceTree = "<group>"; };
 		4BB26CC01FF77E2B001E9556 /* TPKeyboardAvoidingCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingCollectionView.m; sourceTree = "<group>"; };
 		4BB26CC11FF77E2B001E9556 /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
@@ -732,6 +748,7 @@
 				4BB26D4B1FF780A4001E9556 /* Info.plist */,
 				4B17C4702195BCF7004CA13C /* Localizable.strings */,
 				4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */,
+				4B39D2252238E5F300C7742F /* CoreDataCRUD.swift */,
 			);
 			path = Golfication;
 			sourceTree = "<group>";
@@ -828,6 +845,10 @@
 				3E40F98320E62E2A00092170 /* ShotDetailsTableViewCell.swift */,
 				3E13F3B7212E999C005D9B70 /* MapForInputViewController.swift */,
 				4B0174F22225255400A215E6 /* CoreDataModels.swift */,
+				4BA70882223A8EAB003CEFF4 /* SuggestionView.xib */,
+				4BA70886223A8EDA003CEFF4 /* SuggestionView.swift */,
+				4BA70888223D1341003CEFF4 /* WindNotesView.xib */,
+				4BA7088C223D1C8B003CEFF4 /* WindNotesView.swift */,
 			);
 			path = GameViewControllers;
 			sourceTree = "<group>";
@@ -1278,6 +1299,7 @@
 		4BB26CD51FF77EDB001E9556 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				4B8B85CA223D3C2800DA7BCA /* EddieProVC.swift */,
 				4BEB41EA223662510090568F /* SettingCell.swift */,
 				4BD6067F220D956100E153D9 /* NewHomeVC.swift */,
 				3E638E262187058500DB08B9 /* PublicScore.swift */,
@@ -1335,6 +1357,8 @@
 		4BB26CE01FF77EDB001E9556 /* ScoresViewCtrls */ = {
 			isa = PBXGroup;
 			children = (
+				4B8B85CC223D3FF700DA7BCA /* EddieStatsView.swift */,
+				4B8B85CD223D3FF700DA7BCA /* EddieStatsView.xib */,
 				4BE1E2C4206CC74B00A32845 /* ShareStatsVC.swift */,
 				4BBEA023206E2F7A00EA2783 /* FeedPostVC.swift */,
 				3E380EE91FFBB58000246865 /* customPieView.swift */,
@@ -1644,6 +1668,7 @@
 				4B1F6BE62090A29F00312EA7 /* DebugMapViewController.xib in Resources */,
 				4B4ED1A620BD3AA300D9C6DC /* MySwing.storyboard in Resources */,
 				3E59234A20A991C60056D446 /* Home.storyboard in Resources */,
+				4B8B85CF223D3FF700DA7BCA /* EddieStatsView.xib in Resources */,
 				3E40F97C20E604D600092170 /* Map.storyboard in Resources */,
 				3E3BB30E2143F52300321A1D /* RequestSFPopup.xib in Resources */,
 				3EB769F1214FD50E00830DAB /* GameImprovementPopup.xib in Resources */,
@@ -1660,6 +1685,7 @@
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
 				4B8C8D3C1FF674D0001F5D01 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
 				4B8C8D3B1FF674D0001F5D01 /* SF-Pro-Display-MediumItalic.otf in Resources */,
+				4BA70889223D1342003CEFF4 /* WindNotesView.xib in Resources */,
 				4B8C8D361FF674D0001F5D01 /* SF-Pro-Display-HeavyItalic.otf in Resources */,
 				3E27BA5C20FF4D7700DC14AB /* Main.storyboard in Resources */,
 				4B7E2A7F2175C20B00DFC3EB /* Default-568h@2x.png in Resources */,
@@ -1696,6 +1722,7 @@
 				3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */,
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
+				4BA70883223A8EAB003CEFF4 /* SuggestionView.xib in Resources */,
 				4B8C8D371FF674D0001F5D01 /* SF-Pro-Display-Black.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1922,6 +1949,7 @@
 				4B1F6BE32090A29F00312EA7 /* DebugMapViewController.swift in Sources */,
 				4B1F6BD82090A29F00312EA7 /* SearchLocationVC.swift in Sources */,
 				4B1E686522329BCE00B0F03E /* EddieView.swift in Sources */,
+				4BA70887223A8EDA003CEFF4 /* SuggestionView.swift in Sources */,
 				4BC051B222143B93000A7B14 /* StatsInfoVC.swift in Sources */,
 				4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */,
 				3EF789EE201F1B69009CC3E3 /* AcceptInviteCell.swift in Sources */,
@@ -1945,11 +1973,13 @@
 				4B7E2A662175C0D900DFC3EB /* LocalizationHelper.m in Sources */,
 				4B7F521C2158DC6F002E328A /* UIImageView+.swift in Sources */,
 				4BB26D3D1FF77EDB001E9556 /* TogetherFeedViewCell.swift in Sources */,
+				4B8B85CB223D3C2900DA7BCA /* EddieProVC.swift in Sources */,
 				3EAE867D2125573F0081857B /* ScanningVC.swift in Sources */,
 				4BB26D1D1FF77EDB001E9556 /* ChippingViewController.swift in Sources */,
 				4B1F6BD92090A29F00312EA7 /* ClassicScoringVC.swift in Sources */,
 				4B1F6BD52090A29F00312EA7 /* FinalScoreBoardTopCell.swift in Sources */,
 				4B1F6BC32090A29F00312EA7 /* FeedbackVC.swift in Sources */,
+				4B39D2262238E5F300C7742F /* CoreDataCRUD.swift in Sources */,
 				4B077D1720AC550000AFC9FC /* GolfBagCollectionCell.swift in Sources */,
 				4B0174F32225255400A215E6 /* CoreDataModels.swift in Sources */,
 				4B7F52202158DC6F002E328A /* PKCCropLineView.swift in Sources */,
@@ -1970,6 +2000,7 @@
 				4B9578E020B4409E008B2C61 /* BluetootheConnectionTesting.swift in Sources */,
 				3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */,
 				4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */,
+				4BA7088D223D1C8B003CEFF4 /* WindNotesView.swift in Sources */,
 				4B0788F920A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift in Sources */,
 				4BB26D3F1FF77EDB001E9556 /* TogetherVC.swift in Sources */,
 				4BB7C428208DB584006CCAFF /* MyFeedVC.swift in Sources */,
@@ -2020,6 +2051,7 @@
 				3EADEC9A2073D0370037A14E /* UYLNotificationDelegate.swift in Sources */,
 				3EB6D3B72137CA72000DA1BE /* FBSomeEvents.swift in Sources */,
 				4BE11A6B21353568008E529A /* CustomColorSlider.swift in Sources */,
+				4B8B85CE223D3FF700DA7BCA /* EddieStatsView.swift in Sources */,
 				4BB26D261FF77EDB001E9556 /* MySwingVC.swift in Sources */,
 				4BE1E2C5206CC74B00A32845 /* ShareStatsVC.swift in Sources */,
 				4B1F6BDF2090A29F00312EA7 /* ARTrackingManager.swift in Sources */,

@@ -12,11 +12,11 @@ import Charts
 import Google
 import DeviceKit
 import FirebaseInstanceID
-
+import CoreData
 enum VersionError: Error {
     case invalidResponse, invalidBundleInfo
 }
-
+let context = CoreDataStorage.mainQueueContext()
 class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CustomProModeDelegate, BluetoothDelegate{
     // MARK: - Set Outlets
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
@@ -489,32 +489,34 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
 
     // Get user details which have Pro membership
-//        func FindUser(){
-//            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
-//                self.progressView.show(atView: self.view, navItem: self.navigationItem)
-//                var userData = NSMutableDictionary()
-//                if(snapshot.value != nil){
-//                    userData = snapshot.value as! NSMutableDictionary
-//                    for (key,value) in userData{
-//                        if let v = value as? NSMutableDictionary{
-//                            if((v.value(forKey: "iosToken")) != nil) && (((v.value(forKey: "deviceInfo") as? NSMutableDictionary) != nil)) {
-//                                debugPrint((v.value(forKey: "deviceInfo") as! NSMutableDictionary))
-//                                debugPrint("ios Key: \(key)")
-////                                if let pro = v.value(forKey: "proMembership") as? NSMutableDictionary{
-////                                    if pro.value(forKey: "productID") as? String == "pro_subscription_trial_monthly" || pro.value(forKey: "productID") as? String == "pro_subscription_trial_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_monthly"{
-////                                        debugPrint("ios Key: \(key)")
-////                                        debugPrint("proMembership",v.value(forKey: "proMembership"))
-////                                    }
-////                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                DispatchQueue.main.async(execute: {
-//                    self.progressView.hide(navItem: self.navigationItem)
-//                })
-//            }
-//        }
+        func FindUser(){
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
+                self.progressView.show(atView: self.view, navItem: self.navigationItem)
+                var userData = NSMutableDictionary()
+                if(snapshot.value != nil){
+                    userData = snapshot.value as! NSMutableDictionary
+                    for (key,value) in userData{
+                        if let v = value as? NSMutableDictionary{
+//                            ((v.value(forKey: "iosToken")) != nil)
+                            if(((v.value(forKey: "deviceInfo") as? NSMutableDictionary) != nil)) {
+                                debugPrint((v.value(forKey: "deviceInfo") as! NSMutableDictionary).value(forKey: "OAD")as? NSMutableDictionary)
+                                debugPrint("ios Key: \(key)")
+//                                debugPrint("OAD Key: \((v.value(forKey: "OAD") as? NSMutableDictionary))")
+//                                if let pro = v.value(forKey: "proMembership") as? NSMutableDictionary{
+//                                    if pro.value(forKey: "productID") as? String == "pro_subscription_trial_monthly" || pro.value(forKey: "productID") as? String == "pro_subscription_trial_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_monthly"{
+//                                        debugPrint("ios Key: \(key)")
+//                                        debugPrint("proMembership",v.value(forKey: "proMembership"))
+//                                    }
+//                                }
+                            }
+                        }
+                    }
+                }
+                DispatchQueue.main.async(execute: {
+                    self.progressView.hide(navItem: self.navigationItem)
+                })
+            }
+        }
     
     func getGolficationXVersion(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion") { (snapshot) in
@@ -1106,7 +1108,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBAction func mySwingBtnAction(_ sender: UIButton) {
         self.mySwingAction(sender)
     }
-    // MARK: - viewWillAppear
+    // MARK: - viewWillDisappear
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(true)
         if(editWithTag != nil){
@@ -1135,17 +1137,15 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = true
         self.tabBarController?.tabBar.isHidden = false
-        
         //----------------- Check Internet Connection ---------------------------------
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if appDelegate.fromNewUserProfile{
             appDelegate.fromNewUserProfile = false
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            self.navigationController?.pushViewController(viewCtrl, animated: false)
             NotificationCenter.default.addObserver(self, selector: #selector(self.networkStatusChanged(_:)), name: NSNotification.Name(rawValue: ReachabilityStatusChangedNotification), object: nil)
             Reach().monitorReachabilityChanges()
         }
-
-        // ------------------------------------------------------------
-
         storeAllMacAddress()
         // ---------------- Google Analytics --------------------------------------
         guard let tracker = GAI.sharedInstance().defaultTracker else { return }
@@ -1204,6 +1204,15 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 if let unit = userData.object(forKey: "unit") as? Int{
                     Constants.distanceFilter = unit
+                    if let counter = NSManagedObject.findAllForEntity("DistanceUnitEntity", context: context){
+                        counter.forEach { counter in
+                            context.delete(counter as! NSManagedObject)
+                        }
+                    }
+                    if let distanceUnit = NSEntityDescription.insertNewObject(forEntityName: "DistanceUnitEntity", into: context) as? DistanceUnitEntity{
+                        distanceUnit.unit = Int16(unit)
+                        CoreDataStorage.saveContext(context)
+                    }
                 }
                 if let notification = userData.object(forKey: "notification") as? Int{
                     Constants.onCourseNotification = notification
@@ -1219,9 +1228,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 if let handed = userData.value(forKey: "handed") as? String{
                     Constants.handed = handed
-                }
-                if let isSiri = userData.value(forKey: "isSiri") as? Bool{
-                    Constants.isSiri = isSiri
                 }
                 if let deviceInfo = userData.value(forKey: "deviceInfo") as? NSMutableDictionary{
                     if let setup = deviceInfo.value(forKey: "setup") as? Bool{
@@ -2100,6 +2106,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             }
         }
         else{
+            if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
+                counter.forEach { counter in
+                    context.delete(counter as! NSManagedObject)
+                }
+            }
             if(dataArray.count > 0){
                 if let matchIDs = dataArray[0].matchId{
                     self.getScoreFromMatchData(keyId:matchIDs)
@@ -2317,7 +2328,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         self.btnContinue.isEnabled = false
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(keyId)/") { (snapshot) in
-            
+            var isOnCourse = false
             self.scoring.removeAll()
             if  let matchDict = (snapshot.value as? NSDictionary){
                 Constants.matchDataDic = matchDict as! NSMutableDictionary
@@ -2335,6 +2346,9 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                     if(keyData == "scoringMode"){
                         self.scoringMode = value as! String
+                    }
+                    if(keyData == "onCourse"){
+                        isOnCourse = value as! Bool
                     }
                     if(keyData == "courseId"){
                         self.selectedHomeGolfID = value as! String
@@ -2384,6 +2398,31 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             DispatchQueue.main.async(execute: {
                 self.players.removeAllObjects()
                 self.players = NSMutableArray()
+                if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
+                    counter.forEach { counter in
+                        context.delete(counter as! NSManagedObject)
+                    }
+                }
+                if isOnCourse{
+                    var inde = 0
+                    for data in self.scoring{
+                        for usr in data.players{
+                            if let play = usr.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
+                                let holeOut = play.value(forKey: "holeOut") as? Bool ?? false
+                                if !holeOut{
+                                    break
+                                }else{
+                                    inde += 1
+                                }
+                            }
+                        }
+                    }
+                    if let curHoleEntity = NSEntityDescription.insertNewObject(forEntityName: "CurrentHoleEntity", into: context) as? CurrentHoleEntity{
+                        curHoleEntity.timestamp = Timestamp
+                        curHoleEntity.holeIndex = Int16(inde)
+                        CoreDataStorage.saveContext(context)
+                    }
+                }
                 if(Constants.matchDataDic.object(forKey: "player") != nil){
                     let tempArray = Constants.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
                     for (k,v) in tempArray{

@@ -54,6 +54,8 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
     var fairway = [(hit:Int,left:Int,right:Int)]()
     var scores = [Scores]()
     var holesInAllRounds = [Hole]()
+    var holesInAllRoundsClassic = [Hole]()
+
     var groupDict = [String:Double]()
     var clubFilter = [String]()
     
@@ -156,10 +158,10 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             if !Constants.isProMode {
                 
 //                cardViewSpreadOffTee.makeBlurView(targetView: cardViewSpreadOffTee)
-                self.setProLockedUI(targetView: cardViewSpreadOffTee, title: "Spread of the tee".localized())
+//                self.setProLockedUI(targetView: cardViewSpreadOffTee, title: "Spread of the tee".localized())
                 
 //                cardViewDistanceOffTee.makeBlurView(targetView: cardViewDistanceOffTee)
-                self.setProLockedUI(targetView: cardViewDistanceOffTee, title: "Drive Distance".localized())
+//                self.setProLockedUI(targetView: cardViewDistanceOffTee, title: "Drive Distance".localized())
                 
                 lblProSpreadOffTee.isHidden = true
                 lblProDistanceOffTee.isHidden = true
@@ -301,7 +303,41 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         //        combinedView.center = CGPoint(x:drivingAccuracyPieChart.bounds.midX,y:drivingAccuracyPieChart.bounds.midY)
         drivingAccuracyPieChart.addSubview(combinedView)
         
-
+        if !Constants.isProMode{
+            lblSpreadOffAvg.isHidden = true
+            lblAvgSpreadOffTheTeeValue.isHidden = true
+            lblAccuracyWithDriver.isHidden = true
+            lblFairwaysLiklinessAvg.isHidden = true
+            lblAvgFairwayHitValue.isHidden = true
+            lblDriveDistanceAvg.isHidden = true
+            lblAvgDriveDistanceValue.isHidden = true
+            
+            let eddieStatsView = EddieStatsView()
+            eddieStatsView.backgroundColor = UIColor.clear
+            eddieStatsView.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+            eddieStatsView.lblTitle.text = "Unlock this stat with Eddie!"
+            eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            cardViewSpreadOffTee.addSubview(eddieStatsView)
+            
+            let eddieStatsView1 = EddieStatsView()
+            eddieStatsView1.backgroundColor = UIColor.clear
+            eddieStatsView1.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+            eddieStatsView1.lblTitle.text = "Eddie has some insights for you."
+            eddieStatsView1.lblTitle.textColor = UIColor(rgb:0xFFC700)
+            eddieStatsView1.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            cardViewDistanceOffTee.addSubview(eddieStatsView1)
+        }
+        else{
+            self.lblDriveDistanceAvg.isHidden = false
+            self.lblAvgDriveDistanceValue.isHidden = false
+            self.lblFairwaysLiklinessAvg.isHidden = false
+            self.lblAvgFairwayHitValue.isHidden = false
+        }
+    }
+    
+    @objc func eddieProClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     
     // MARK: - infoClicked
@@ -427,8 +463,6 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         }
         FairwaysLiklinessLineChart.setLineChartWithColor(dataPoints:KeysArray , values: dataArray, chartView: FairwaysLiklinessLineChart,color:UIColor.glfFlatBlue)
         
-        self.lblFairwaysLiklinessAvg.isHidden = false
-        self.lblAvgFairwayHitValue.isHidden = false
         self.lblFairwaysLiklinessAvg.text = "Average Fairways Hit Per Round"
         let totalHit = (fairwayArray.reduce(0, +))
         let totalFair = (totalFairway.reduce(0, +))
@@ -508,32 +542,64 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         var dataPoints = [Double]()
         var dataValues = [Double]()
         var date = [String]()
-        for round in scores{
-            if round.tees != nil {
-                //                print(round.tees)
-                teesArray.append(round.tees)
-                var count = 0.0
-                for tees in round.tees{
-                    if(clubFilter.count > 0){
-                        if(clubFilter.contains((tees.value as AnyObject).object(forKey: "club") as! String)) {
+        
+        if holesInAllRounds.count > 0{
+            for round in scores{
+                if round.tees != nil {
+                    //                print(round.tees)
+                    teesArray.append(round.tees)
+                    var count = 0.0
+                    for tees in round.tees{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains((tees.value as AnyObject).object(forKey: "club") as! String)) {
+                                count += 1
+                            }
+                        }
+                        else{
                             count += 1
                         }
                     }
-                    else{
-                        count += 1
-                    }
+                    dataPoints.append(count)
+                    date.append(round.date)
                 }
-                dataPoints.append(count)
-                date.append(round.date)
+            }
+            for item in holesInAllRounds{
+                dataValues.append(item.distance)
             }
         }
-        for item in holesInAllRounds{
-            dataValues.append(item.distance)
+        else{
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: cardViewDistanceOffTee.frame.height/2-15, width: cardViewDistanceOffTee.frame.width, height: 30)
+            cardViewDistanceOffTee.addSubview(demoLabel)
+            
+            setClassicData()
+            for round in Constants.classicScores{
+                if round.tees != nil {
+                    //print(round.tees)
+                    teesArray.append(round.tees)
+                    var count = 0.0
+                    for tees in round.tees{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains((tees.value as AnyObject).object(forKey: "club") as! String)) {
+                                count += 1
+                            }
+                        }
+                        else{
+                            count += 1
+                        }
+                    }
+                    dataPoints.append(count)
+                    date.append(round.date)
+                }
+            }
+            for item in holesInAllRoundsClassic{
+                dataValues.append(item.distance)
+            }
         }
+
         driveDistanceScatterChartView.setScatterChartWithLineOnlyDriveDistance(valueX:dataPoints, valueY: dataValues,xAxisValue:date ,chartView: driveDistanceScatterChartView, color: UIColor.glfPaleTeal)
         driveDistanceScatterChartView.leftAxis.labelCount = 3
-        self.lblDriveDistanceAvg.isHidden = false
-        self.lblAvgDriveDistanceValue.isHidden = false
+        
         self.lblDriveDistanceAvg.text = "Average Drive"
         if !dataValues.isEmpty{
             let sum = Int(dataValues.reduce(0, +))
@@ -548,6 +614,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         var dataXAxis = [Double]()
         var dataYAxis = [Double]()
         var color = [UIColor]()
+        if holesInAllRounds.count>0{
         for item in holesInAllRounds{
             
             if(item.spread <= 25  && item.spread >= -25){
@@ -559,6 +626,26 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             dataXAxis.append(item.spread)
             
             dataYAxis.append(item.distance)
+        }
+        }
+        else{
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: cardViewSpreadOffTee.frame.height/2-15, width: cardViewSpreadOffTee.frame.width, height: 30)
+            cardViewSpreadOffTee.addSubview(demoLabel)
+
+            setClassicData()
+            for item in holesInAllRoundsClassic{
+                
+                if(item.spread <= 25  && item.spread >= -25){
+                    color.append(UIColor.glfWhite)
+                }
+                else{
+                    color.append(UIColor.glfRosyPink)
+                }
+                dataXAxis.append(item.spread)
+                
+                dataYAxis.append(item.distance)
+            }
         }
         scattredSpreadOfTheTeeChart.setScatterChart(valueX: dataXAxis, valueY: dataYAxis, chartView: scattredSpreadOfTheTeeChart, color: color)
         scattredSpreadOfTheTeeChart.leftAxis.axisLineColor = UIColor.clear
@@ -587,6 +674,64 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         
     }
     
+    func setClassicData(){
+        for round in Constants.classicScores{
+            var fHit = Int()
+            var fLeft = Int()
+            var fRight = Int()
+            
+            if (round.tees) != nil {
+                let holes = (round.tees).allValues
+                
+                for i in 0..<holes.count{
+                    let hole = Hole()
+                    hole.club = (holes[i] as AnyObject).object(forKey:"club") as! String
+                    hole.distance = (holes[i] as AnyObject).object(forKey:"distance") as! Double
+                    hole.spread = (holes[i] as AnyObject).object(forKey:"spread") as! Double
+                    if(Constants.distanceFilter == 1){
+                        hole.distance = hole.distance/Constants.YARD
+                    }
+                    if let fHit = (holes[i] as AnyObject).object(forKey:"fairway") as? String{
+                        hole.hitMiss = fHit
+                    }
+                    
+                    if(clubFilter.count > 0){
+                        if(clubFilter.contains(hole.club)){
+                            if(hole.hitMiss == "H"){
+                                fHit += 1
+                            }else if(hole.hitMiss == "L"){
+                                fLeft += 1
+                            }else{
+                                fRight += 1
+                            }
+                            holesInAllRoundsClassic.append(hole)
+                        }
+                    }
+                    else{
+                        if(hole.hitMiss == "H"){
+                            fHit += 1
+                        }else if(hole.hitMiss == "L"){
+                            fLeft += 1
+                        }else{
+                            fRight += 1
+                        }
+                        holesInAllRoundsClassic.append(hole)
+                    }
+                }
+            }else{
+                if((round.fairwayHit) != nil){
+                    fHit = Int(round.fairwayHit)
+                }
+                if((round.fairwayLeftValue) != nil){
+                    fLeft = Int(round.fairwayLeftValue)
+                }
+                if((round.fairwayRightValue) != nil){
+                    fRight = Int(round.fairwayRightValue)
+                }
+            }
+//            self.fairway.append((hit: fHit, left: fLeft, right: fRight))
+        }
+    }
     func setDrivingAccuracyChart(){
         var fairwayLeft = Int()
         var fairwayHit = Int()

@@ -10,8 +10,9 @@ import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
 
-class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
-    
+class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,BluetoothDelegate{
+    var sharedInstance: BluetoothSync!
+
     var expandedSectionHeaderNumber: Int = -1
     var expandedSectionHeader: UITableViewHeaderFooterView!
     let kHeaderSectionTag: Int = 6900
@@ -97,17 +98,73 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
                     }
                     self.clubMArray.add(clubMDic)
                 }
-                self.getSwingGoalsData()
+                self.getSwingGoalsData(benchMarkVal:benchMarkVal)
             })
         }
     }
     
-    func getSwingGoalsData(){
+    func getSwingGoalsData(benchMarkVal:NSMutableDictionary){
         swingGoalsDic = NSMutableDictionary()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingGoals") { (snapshot) in
             if snapshot.value != nil{
                 if let goalsDic = snapshot.value as? NSMutableDictionary{
                     self.swingGoalsDic = goalsDic
+                    
+                    self.clubMArray = NSMutableArray()
+                    let clubTempArr = NSMutableArray()
+                    for (key,val) in goalsDic{
+                        let clubMDic = NSMutableDictionary()
+                        let clubName = key as! String
+                        
+                        if clubName == "tempo"{
+                            clubMDic.setObject("Swing Tempo", forKey: "clubName" as NSCopying)
+                            clubMDic.setObject(1, forKey: "minVal" as NSCopying)
+                            clubMDic.setObject(6, forKey: "maxVal" as NSCopying)
+                            clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
+                        }
+                        else if clubName == "backSwing"{
+                            clubMDic.setObject("Back Swing", forKey: "clubName" as NSCopying)
+                            clubMDic.setObject(90, forKey: "minVal" as NSCopying)
+                            clubMDic.setObject(300, forKey: "maxVal" as NSCopying)
+                            clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
+                        }
+                        else{
+                            let clubSpeedTemp:Double = Double(benchMarkVal.value(forKey: clubName) as! String)!
+                            let min = clubSpeedTemp*0.9 - (clubSpeedTemp*0.9)/2.0
+                            let max = clubSpeedTemp*0.9 + (clubSpeedTemp*0.9)/2.0
+                            
+                            clubMDic.setObject(self.getFullClubName(clubName:clubName), forKey: "clubName" as NSCopying)
+                            clubMDic.setObject(Int(min), forKey: "minVal" as NSCopying)
+                            clubMDic.setObject(Int(max), forKey: "maxVal" as NSCopying)
+                            clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
+                        }
+                        clubTempArr.add(clubMDic)
+                    }
+                    
+                    for i in 0..<clubTempArr.count{
+                        let dic = clubTempArr[i] as! NSMutableDictionary
+                        if (dic.value(forKey: "clubName") as! String) == "Swing Tempo"{
+                            self.clubMArray.add(dic)
+                            break
+                        }
+                    }
+                    for i in 0..<clubTempArr.count{
+                        let dic = clubTempArr[i] as! NSMutableDictionary
+                        if (dic.value(forKey: "clubName") as! String) == "Back Swing"{
+                            self.clubMArray.add(dic)
+                            break
+                        }
+                    }
+                    for j in 0..<Constants.allClubs.count{
+                        for i in 0..<clubTempArr.count{
+                            let dic = clubTempArr[i] as! NSMutableDictionary
+                            if Constants.allClubs[j] == self.getShortClubName(clubName: dic.value(forKey: "clubName") as! String){
+                                self.clubMArray.add(dic)
+                            }
+                        }
+                    }
+                    debugPrint("clubMArray",self.clubMArray)
+                    
                 }
             }
             else{
@@ -616,9 +673,70 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource{
     }
     
     @objc func debugModeWasTouched(_ sender: UITapGestureRecognizer){
-
+        let alertVC = UIAlertController(title: "Debug", message: "Connect your Golfication X to start the Debug mode.".localized(), preferredStyle: UIAlertController.Style.alert)
+        let action = UIAlertAction(title: "Connect", style: UIAlertAction.Style.default) { (UIAlertAction) in
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+            self.sharedInstance = BluetoothSync.getInstance()
+            self.sharedInstance.delegate = self
+            self.sharedInstance.initCBCentralManager()
+            NotificationCenter.default.addObserver(self, selector: #selector(self.debugSettingPress(_:)), name: NSNotification.Name(rawValue: "debugSetting"), object: nil)
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+        alertVC.addAction(action)
+        alertVC.addAction(cancel)
+        self.present(alertVC, animated: true, completion: nil)
     }
-    
+    func didUpdateState(_ state: CBManagerState) {
+        debugPrint("state== ",state)
+        var alert = String()
+        switch state {
+        case .poweredOff:
+            alert = "Make sure that your bluetooth is turned on."
+            break
+        case .poweredOn:
+            debugPrint("State : Powered On")
+            if Constants.macAddress != nil{
+                sharedInstance.delegate = nil
+                if Constants.ble == nil || Constants.deviceGolficationX == nil{
+                    Constants.ble = BLE()
+                    Constants.ble.startScanning()
+                }else{
+                    Constants.ble.sendEleventhCommand()
+                }
+            }else{
+                let alertVC = UIAlertController(title: "Alert", message: "Please finish the device setup first.", preferredStyle: UIAlertControllerStyle.alert)
+                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+                    self.navigationController?.pop()
+                })
+                alertVC.addAction(action)
+                self.present(alertVC, animated: true, completion: nil)
+            }
+            return
+        case .unsupported:
+            alert = "This device is unsupported."
+            break
+        default:
+            alert = "Try again after restarting the device."
+            break
+        }
+        
+        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+            self.dismiss(animated: true, completion: nil)
+            self.progressView.hide(navItem: self.navigationItem)
+            self.sharedInstance.delegate = nil
+        })
+        alertVC.addAction(action)
+        self.present(alertVC, animated: true, completion: nil)
+    }
+    @objc func debugSettingPress(_ notification:NSNotification){
+        DispatchQueue.main.async( execute: {
+            self.progressView.hide(navItem: self.navigationItem)
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "debugSetting"), object: nil)
+            let viewCtrl = UIStoryboard(name: "Device", bundle: nil).instantiateViewController(withIdentifier: "debugModeVC") as! DebugModeVC
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
+        })
+    }
     @objc func headerInfoClicked(_ sender: UIButton){
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
         viewCtrl.title = "Clubhead Speed"

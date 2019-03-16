@@ -49,15 +49,15 @@ class EddieViewRFMap: UIView {
         self.layer.borderWidth = 1.0
         addSubview(view)
         unlockEddieView.layer.cornerRadius = 12.5
-        byEddieView.isHidden = !Constants.isEddie
-        unlockEddieView.isHidden = Constants.isEddie
+        byEddieView.isHidden = !Constants.isProMode
+        unlockEddieView.isHidden = Constants.isProMode
         
         viewPar.layer.cornerRadius = 5.0
         viewBirdie.layer.cornerRadius = 5.0
         viewFairwayHit.layer.cornerRadius = 5.0
         viewGIR.layer.cornerRadius = 5.0
 
-        if !Constants.isEddie{
+        if !Constants.isProMode{
             lblParValue.text = "--"
             lblGIRValue.text = "--"
             lblBirdieValue.text = "--"
@@ -96,7 +96,7 @@ class EddieViewRFMap: UIView {
         }
     }
     func updateGoalView(achievedGoal:Goal,targetGoal:Goal){
-        if Constants.isEddie{
+        if Constants.isProMode{
             var fhPer = Double(achievedGoal.fairwayHit)/Double(targetGoal.fairwayHit)
             var girPer = Double(achievedGoal.gir)/Double(targetGoal.gir)
             var birdiePer = Double(achievedGoal.Birdie)/Double(targetGoal.Birdie)

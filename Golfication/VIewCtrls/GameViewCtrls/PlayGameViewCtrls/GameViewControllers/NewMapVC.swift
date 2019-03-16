@@ -18,6 +18,7 @@ import CTShowcase
 import GLKit
 import UICircularProgressRing
 import CoreData
+import IntentsUI
 private enum State {
     case closed
     case open
@@ -140,7 +141,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var lblDistance: UILabel!
     @IBOutlet weak var lblFrontDistance: UILabel!
     @IBOutlet weak var imgViewWindForeground: UIImageView!
-    @IBOutlet weak var lblWindSpeedForeground: UILabel!
+//    @IBOutlet weak var lblWindSpeedForeground: UILabel!
     @IBOutlet weak var btnMoveToMapGround: UIButton!
     @IBOutlet weak var lblHoleNumber: UILabel!
     @IBOutlet weak var lblParNumber: UILabel!
@@ -214,6 +215,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var topParView: UIView!
     @IBOutlet weak var topHCPView: UIView!
     
+    @IBOutlet weak var btnWindImgLock: UIButton!
     @IBOutlet weak var centerSVWidthConstraints: NSLayoutConstraint!
     @IBOutlet weak var playerStatsHeightConst: NSLayoutConstraint!
     @IBOutlet weak var playerStatsWidthConst: NSLayoutConstraint!
@@ -242,6 +244,30 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     
     @IBOutlet weak var eddieView: EddieViewRFMap!
     @IBOutlet weak var btnToastForAddShot: UIButton!
+    
+    @IBOutlet weak var lockBack: UIImageView!
+    @IBOutlet weak var lockCenter: UIImageView!
+    @IBOutlet weak var lockFront: UIImageView!
+    @IBOutlet weak var lockWind: UIImageView!
+    
+    @IBOutlet weak var lblBackElev: UILocalizedLabel!
+    @IBOutlet weak var lblCenterElev: UILocalizedLabel!
+    @IBOutlet weak var lblFrontElev: UILocalizedLabel!
+    @IBOutlet weak var lblWindElev: UILabel!
+    
+    @IBOutlet weak var btnBackDistance: UIButton!
+    @IBOutlet weak var btnCenterDistance: UIButton!
+    @IBOutlet weak var btnFrontDistance: UIButton!
+    @IBOutlet weak var btnWindDistance: UIButton!
+    
+    @IBOutlet weak var eddieUnlockView: UIView!
+    @IBOutlet weak var btnUnlockEddie: UIButton!
+    @IBOutlet weak var setupEddieView: UIView!
+    @IBOutlet weak var btnSetupSiri: UIButton!
+    
+    @IBOutlet weak var lblDirBack: UILabel!
+    @IBOutlet weak var lblDirCenter: UILabel!
+    @IBOutlet weak var lblDirFront: UILabel!
     var syncTime = Double()
     
     var isBackground : Bool{
@@ -269,7 +295,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var swingShotArr = [NSMutableDictionary]()
     var swingShotArrForCurrentHole = [NSMutableDictionary]()
     var isNextPrevBtn = false
-    let context = CoreDataStorage.mainQueueContext()
     var greenEntity : GreenDistanceEntity?
     func checkDeviceStatus() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.golficationXDisconnected(_:)), name: NSNotification.Name(rawValue: "GolficationX_Disconnected"), object: nil)
@@ -661,8 +686,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     var isOnCourse = false
     var suggestedMarker1 = GMSMarker()
     var suggestedMarker2 = GMSMarker()
-    var btnForSuggMark1 = UIButton()
-    var btnForSuggMark2 = UIButton()
+    var btnForSugg1 = SuggestionView()
+    var btnForSugg2 = SuggestionView()
     var isShowcase = false
     var isShowcaseFlag = false
     var isStopShotCT = false
@@ -1690,14 +1715,28 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         self.eddieView.setup()
-        if self.scoring.count == 9{
-            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
-            self.targetGoal.par = Constants.targetGoal.par/2
-            self.targetGoal.gir = Constants.targetGoal.gir/2
-            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
-        }else{
-            self.targetGoal = Constants.targetGoal
+        self.btnWindImgLock.setCircle(frame: self.btnWindImgLock.frame)
+        let originalImage1 = BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "locked_1"), targetSize: CGSize(width:10,height:10))
+        let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        self.btnWindImgLock.setImage(backBtnImage1, for: .normal)
+        self.btnWindImgLock.tintColor = UIColor.glfWarmGrey
+        self.btnWindImgLock.backgroundColor = UIColor.glfWhite
+        self.btnWindImgLock.isHidden = Constants.isProMode
+        self.setupEddieView.isHidden = !Constants.isProMode
+        self.eddieUnlockView.isHidden = Constants.isProMode
+        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblDirBack)
+        BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: self.lblDirCenter)
+        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblDirFront)
+        btnUnlockEddie.setCornerWithRadius(color: UIColor.clear.cgColor, radius: btnUnlockEddie.frame.height/2)
+        //INIntent
+        let button = INUIAddVoiceShortcutButton(style: .white)
+        let customIntent = DistanceOfGreenIntent()
+        if let shortcut = INShortcut(intent: customIntent) {
+            button.shortcut = shortcut
         }
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.delegate = self
+        self.btnSetupSiri.addSubview(button)
         UIApplication.shared.isIdleTimerDisabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
 
@@ -2039,7 +2078,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
                 self.stackViewForViewForground.isHidden = false
                 self.imgViewWindForeground.isHidden = false
-                self.lblWindSpeedForeground.isHidden = false
+//                self.lblWindSpeedForeground.isHidden = false
                 
             case .closed:
                 
@@ -2047,7 +2086,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 
                 self.stackViewForViewForground.isHidden = true
                 self.imgViewWindForeground.isHidden = true
-                self.lblWindSpeedForeground.isHidden = true
+//                self.lblWindSpeedForeground.isHidden = true
             }
             self.view.layoutIfNeeded()
         })
@@ -2074,7 +2113,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 UIView.animate(withDuration: 0.5, animations: {
                     self.stackViewForViewForground.isHidden = false
                     self.imgViewWindForeground.isHidden = false
-                    self.lblWindSpeedForeground.isHidden = false
+//                    self.lblWindSpeedForeground.isHidden = false
                     
                 })
             case .closed:
@@ -2089,7 +2128,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     
                     self.stackViewForViewForground.isHidden = true
                     self.imgViewWindForeground.isHidden = true
-                    self.lblWindSpeedForeground.isHidden = true
+//                    self.lblWindSpeedForeground.isHidden = true
                 })
             }
             // remove all running animators
@@ -2277,7 +2316,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             ref.child("matchData/\(self.currentMatchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
         var greenModel = [GreenLatLngModel]()
-        if (isOnCourse || Constants.deviceGolficationX != nil) && !isHoleByHole && Constants.isSiri{
+        if (isOnCourse || Constants.deviceGolficationX != nil) && !isHoleByHole && Constants.isProMode{
             BackgroundMapStats.donateInteraction()
             var i = 0
             for data in self.courseData.numberOfHoles{
@@ -2291,42 +2330,60 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 i += 1
             }
         }
-        self.context.performAndWait{ () -> Void in
-            if let counter = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context){
+        context.performAndWait{ () -> Void in
+            if let counter = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: context){
                 counter.forEach { counter in
-                    self.context.delete(counter as! NSManagedObject)
+                    context.delete(counter as! NSManagedObject)
                 }
             }
-
-            if let counter1 = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context){
+            if let counter = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: context){
+                counter.forEach { counter in
+                    context.delete(counter as! NSManagedObject)
+                }
+            }
+            if let counter1 = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: context){
                 counter1.forEach { counter in
-                    self.context.delete(counter as! NSManagedObject)
+                    context.delete(counter as! NSManagedObject)
                 }
             }
             for data in greenModel{
-                self.greenEntity = (NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: self.context) as! GreenDistanceEntity)
+                self.greenEntity = (NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: context) as! GreenDistanceEntity)
                 self.greenEntity?.greeNum = Int16(data.greenNum)
                 self.greenEntity?.lat = data.lat
                 self.greenEntity?.lng = data.lng
-                CoreDataStorage.saveContext(self.context)
+                CoreDataStorage.saveContext(context)
             }
             var i = 0
             for data in self.courseData.centerPointOfTeeNGreen{
-                let teeEntity = (NSEntityDescription.insertNewObject(forEntityName: "TeeDistanceEntity", into: self.context) as! TeeDistanceEntity)
+                let teeEntity = (NSEntityDescription.insertNewObject(forEntityName: "TeeDistanceEntity", into: context) as! TeeDistanceEntity)
                 teeEntity.teeNum = Int16(i)
                 teeEntity.lat = data.tee.latitude
                 teeEntity.lng = data.tee.longitude
-                CoreDataStorage.saveContext(self.context)
+                CoreDataStorage.saveContext(context)
                 i += 1
             }
-            if let courseDataEn = NSEntityDescription.insertNewObject(forEntityName: "CourseDetailsEntity", into: self.context) as? CourseDetailsEntity{
+            if let courseDataEn = NSEntityDescription.insertNewObject(forEntityName: "CourseDetailsEntity", into: context) as? CourseDetailsEntity{
                 courseDataEn.cName = self.matchDataDict.value(forKey: "courseName") as? String
                 courseDataEn.uName = Auth.auth().currentUser!.displayName
                 courseDataEn.imgUrl = ""
-                CoreDataStorage.saveContext(self.context)
+                CoreDataStorage.saveContext(context)
             }
         }
         setupMultiplayersButton()
+        if self.scoring.count == 9{
+            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
+            self.targetGoal.par = Constants.targetGoal.par/2
+            self.targetGoal.gir = Constants.targetGoal.gir/2
+            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+        }else{
+            self.targetGoal = Constants.targetGoal
+        }
+        let goal = NSMutableDictionary()
+        goal.setValue(self.targetGoal.Birdie, forKey: "birdie")
+        goal.setValue(self.targetGoal.par, forKey: "par")
+        goal.setValue(self.targetGoal.gir, forKey: "gir")
+        goal.setValue(self.targetGoal.fairwayHit, forKey: "fairwayHit")
+        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goal").updateChildValues(goal as! [AnyHashable : Any])
     }
     @IBAction func btnActionTrackShots(_ sender: UIButton) {
         self.btnAddShot.isHidden = true
@@ -3745,32 +3802,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for view in self.stackViewForGreenShots.arrangedSubviews{
             view.removeFromSuperview()
         }
-        
-        btnForSuggMark1.frame = CGRect(x: 0, y: 0, width: 100, height: 25)
-        btnForSuggMark1.setTitleColor(UIColor.glfWhite, for: .normal)
-        let layer1 = CAGradientLayer()
-        layer1.frame.size = btnForSuggMark1.frame.size
-        layer1.cornerRadius = 5
-        layer1.backgroundColor = UIColor.glfBlack50.cgColor
-        btnForSuggMark1.setImage(#imageLiteral(resourceName: "club_map"), for: .normal)
-        btnForSuggMark1.layer.insertSublayer(layer1, at: 0)
-        btnForSuggMark1.titleLabel?.textColor = UIColor.glfBlack
-        btnForSuggMark1.imageView?.layer.zPosition = 1
-        btnForSuggMark1.addTarget(self, action: #selector(markerAction), for: .touchUpInside)
-        
-        
-        btnForSuggMark2.frame = CGRect(x: 0, y: 0, width: 100, height: 25)
-        btnForSuggMark2.setTitleColor(UIColor.glfWhite, for: .normal)
-        let layer2 = CAGradientLayer()
-        layer2.frame.size = btnForSuggMark1.frame.size
-        layer2.cornerRadius = 5
-        layer2.backgroundColor = UIColor.glfBlack50.cgColor
-        
-        btnForSuggMark2.setImage(#imageLiteral(resourceName: "club_map"), for: .normal)
-        btnForSuggMark2.layer.insertSublayer(layer2, at: 0)
-        btnForSuggMark2.titleLabel?.textColor = UIColor.glfBlack
-        btnForSuggMark2.imageView?.layer.zPosition = 1
-        btnForSuggMark2.addTarget(self, action: #selector(markerAction), for: .touchUpInside)
+        btnForSugg1 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 150, height: 65))
+        btnForSugg2 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 150, height: 65))
+
         self.scoreTableView.dataSource = self
         self.scoreTableView.delegate = self
         if(UIDevice.current.iPad){
@@ -4735,10 +4769,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         let windSpeed = (data.value as AnyObject).value(forKey: "speed") as! Double
                         let windSpeedWithUnit = windSpeed * 2.23694
                         self.lblWindSpeed.text = " \(windSpeedWithUnit.rounded(toPlaces: 1)) mph"
-                        self.lblWindSpeedForeground.text = " \(windSpeedWithUnit.rounded(toPlaces: 1)) mph"
+//                        self.lblWindSpeedForeground.text = " \(windSpeedWithUnit.rounded(toPlaces: 1)) mph"
                         if(Constants.distanceFilter == 1){
                             self.lblWindSpeed.text = " \((windSpeedWithUnit*1.60934).rounded(toPlaces: 1)) km/h"
-                            self.lblWindSpeedForeground.text = " \((windSpeedWithUnit*1.60934).rounded(toPlaces: 1)) km/h"
+//                            self.lblWindSpeedForeground.text = " \((windSpeedWithUnit*1.60934).rounded(toPlaces: 1)) km/h"
                         }
                         if let degree = (data.value as AnyObject).value(forKey: "deg") as? Double{
                             self.windHeading = degree + 90
@@ -4810,6 +4844,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if let players = self.matchDataDict.value(forKey: "player") as? NSMutableDictionary{
             for data in players{
                 let v = data.value as! NSMutableDictionary
+                if (data.key as! String) == Auth.auth().currentUser!.uid{
+                    if let goal = v.value(forKey: "goal") as? NSMutableDictionary{
+                        self.targetGoal.Birdie = goal.value(forKey: "birdie") as! Int
+                        self.targetGoal.par = goal.value(forKey: "par") as! Int
+                        self.targetGoal.gir = goal.value(forKey: "gir") as! Int
+                        self.targetGoal.fairwayHit = goal.value(forKey: "fairwayHit") as! Int
+                    }
+                }
                 var teeOfP = String()
                 var teeColorOfP = String()
                 var handicapOfP = Double()
@@ -4929,12 +4971,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         suggestedMarker1.isTappable = false
         suggestedMarker2.isTappable = false
         
-        let dict1: [NSAttributedStringKey : Any] = [
-            NSAttributedStringKey.font : UIFont(name:"SFProDisplay-Bold", size: 15)!,
-            NSAttributedStringKey.foregroundColor : UIColor.white]
-        let dict2:[NSAttributedStringKey:Any] = [
-            NSAttributedStringKey.font : UIFont(name:"SFProDisplay-Light", size: 15)!,
-            NSAttributedStringKey.foregroundColor : UIColor.white]
+//        let dict1: [NSAttributedStringKey : Any] = [
+//            NSAttributedStringKey.font : UIFont(name:"SFProDisplay-Bold", size: 15)!,
+//            NSAttributedStringKey.foregroundColor : UIColor.white]
+//        let dict2:[NSAttributedStringKey:Any] = [
+//            NSAttributedStringKey.font : UIFont(name:"SFProDisplay-Light", size: 15)!,
+//            NSAttributedStringKey.foregroundColor : UIColor.white]
         if(!holeOutFlag){
             if(BackgroundMapStats.findPositionOfPointInside(position: position.first!, whichFeature:courseData.numberOfHoles[self.holeIndex].green)){
                 let distance = GMSGeometryDistance(position.first!, position.last!) * Constants.YARD * 3
@@ -4951,11 +4993,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.btnSelectClubs.tag = indexPath.row
                         self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
                     }
-                    let attributedText = NSMutableAttributedString()
-                    attributedText.append(NSAttributedString(string: markerClub, attributes: dict1))
-                    attributedText.append(NSAttributedString(string: markerText, attributes: dict2))
-                    btnForSuggMark1.setAttributedTitle(attributedText, for: .normal)
-                    suggestedMarker1.iconView = btnForSuggMark1
+                    btnForSugg1.setAllData(club: markerClub, dist: Int(distance))
+                    suggestedMarker1.iconView = btnForSugg1
+                    BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
                     suggestedMarker1.position = GMSGeometryOffset(position[0], distance/(6*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
                     suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker1.map = self.mapView
@@ -4995,23 +5035,16 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
                         }
                     }
-                    
-                    let attributedText1 = NSMutableAttributedString()
-                    attributedText1.append(NSAttributedString(string: markerClub1, attributes: dict1))
-                    attributedText1.append(NSAttributedString(string: markerText1, attributes: dict2))
-                    btnForSuggMark1.setAttributedTitle(attributedText1, for: .normal)
-                    //                    debugPrint("str2: \(attributedText1.string)")
-                    suggestedMarker1.iconView = btnForSuggMark1
+                    btnForSugg1.setAllData(club: markerClub1, dist: Int(dist1/(Constants.YARD)))
+                    suggestedMarker1.iconView = btnForSugg1
+                    BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+
                     suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/(2*Constants.YARD), GMSGeometryHeading(position.first!, position[1]))
                     suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker1.map = !isTracking ? self.mapView : nil
-                    let attributedText = NSMutableAttributedString()
-                    attributedText.append(NSAttributedString(string: markerClub, attributes: dict1))
-                    attributedText.append(NSAttributedString(string: markerText, attributes: dict2))
-                    btnForSuggMark2.setAttributedTitle(attributedText, for: .normal)
-                    
-                    //                    debugPrint("str1: \(attributedText.string)")
-                    suggestedMarker2.iconView = btnForSuggMark2
+                    btnForSugg2.setAllData(club: markerClub, dist: Int(dist/(Constants.YARD)))
+                    BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
+                    suggestedMarker2.iconView = btnForSugg2
                     suggestedMarker2.position = GMSGeometryOffset(position[1], dist/(2*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
                     suggestedMarker2.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker2.map = !isTracking ? self.mapView : nil
@@ -5032,11 +5065,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.btnSelectClubs.tag = indexPath.row
                         self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
                     }
-                    let attributedText = NSMutableAttributedString()
-                    attributedText.append(NSAttributedString(string: markerClub, attributes: dict1))
-                    attributedText.append(NSAttributedString(string: markerText, attributes: dict2))
-                    btnForSuggMark1.setAttributedTitle(attributedText, for: .normal)
-                    suggestedMarker1.iconView = btnForSuggMark1
+                    btnForSugg1.setAllData(club: markerClub, dist: Int(distance))
+                    suggestedMarker1.iconView = btnForSugg1
+                    BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+
                     suggestedMarker1.position = GMSGeometryOffset(position[0], distance/(2*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
                     suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker1.map = !isTracking ? self.mapView : nil
@@ -5254,7 +5286,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.positionsOfDotLine.append(courseData.centerPointOfTeeNGreen[indexToUpdate].green)
         let zoomLevel = BackgroundMapStats.getTheZoomLevel(positionsOfDotLine:self.positionsOfDotLine)
         self.mapView.setMinZoom(zoomLevel.1-1, maxZoom: 22.0)
-        //        self.updateWindSpeed(latLng: positionsOfDotLine[1], indexToUpdate: indexToUpdate)
         if(self.btnStylizedMapView.tag == 1){
             self.mapView.animate(toLocation: positionsOfDotLine[1])
         }
@@ -5720,6 +5751,29 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.hideWhenDeviceConnected()
         }else{
             self.btnTrackShot.isHidden = false
+        }
+        var inde = 0
+        for data in self.scoring{
+            for usr in data.players{
+                if let play = usr.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
+                    let holeOut = play.value(forKey: "holeOut") as? Bool ?? false
+                    if !holeOut{
+                        break
+                    }else{
+                        inde += 1
+                    }
+                }
+            }
+        }
+        if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
+            counter.forEach { counter in
+                context.delete(counter as! NSManagedObject)
+            }
+        }
+        if let curHoleEntity = NSEntityDescription.insertNewObject(forEntityName: "CurrentHoleEntity", into: context) as? CurrentHoleEntity{
+            curHoleEntity.timestamp = Timestamp
+            curHoleEntity.holeIndex = Int16(inde)
+            CoreDataStorage.saveContext(context)
         }
     }
     func plotDashedLine(positions:[CLLocationCoordinate2D]){
@@ -6615,8 +6669,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
         self.updateMap(indexToUpdate: self.holeIndex)
-        self.updateWindSpeed(latLng: courseData.centerPointOfTeeNGreen[self.holeIndex].green, indexToUpdate: self.holeIndex)
-        
+        if Constants.isProMode{
+            self.updateWindSpeed(latLng: courseData.centerPointOfTeeNGreen[self.holeIndex].green, indexToUpdate: self.holeIndex)
+        }
         if(!isContinue) && (!isHoleByHole){
             if(!isOnCourse){
                 self.showCaseMiddleMarker()
@@ -7098,7 +7153,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.btnAddNotes.isHidden = true
                 if(playersButton[i].id == Auth.auth().currentUser!.uid){
                     self.lblPlayersName.text = "Your Score".localized()
-                    btnAddNotes.isHidden = true
+                    btnAddNotes.isHidden = false
                 }
                 btn1.setCornerWithCircle(color: UIColor.glfGreen.cgColor)
             }
@@ -7879,25 +7934,6 @@ extension NewMapVC : CLLocationManagerDelegate{
         self.mapView.isMyLocationEnabled = false
         let userLocation = locations.last
         userLocationForClub = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
-        
-        if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: self.context){
-            counter.forEach { counter in
-                self.context.delete(counter as! NSManagedObject)
-            }
-        }
-        var inde = self.holeIndex
-        if inde > 0 && inde < self.scoring.count-1{
-            let greenDistance = GMSGeometryDistance(userLocationForClub!, courseData.centerPointOfTeeNGreen[self.holeIndex].green)
-            let teeDistance = GMSGeometryDistance(userLocationForClub!, courseData.centerPointOfTeeNGreen[self.holeIndex+1].tee)
-            if teeDistance < greenDistance/3{
-                inde = self.holeIndex+1
-            }
-        }
-        if let curHoleEntity = NSEntityDescription.insertNewObject(forEntityName: "CurrentHoleEntity", into: self.context) as? CurrentHoleEntity{
-            curHoleEntity.timestamp = Timestamp
-            curHoleEntity.holeIndex = Int16(inde)
-            CoreDataStorage.saveContext(self.context)
-        }
         locationManager.stopUpdatingLocation()
     }
 }
@@ -8073,5 +8109,40 @@ extension CLLocationCoordinate2D : Hashable{
 extension String{
     func trim() -> String{
         return self.trimmingCharacters(in: NSCharacterSet.whitespaces)
+    }
+}
+extension NewMapVC: INUIAddVoiceShortcutButtonDelegate {
+    
+    func present(_ addVoiceShortcutViewController: INUIAddVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {
+        addVoiceShortcutViewController.delegate = self
+        present(addVoiceShortcutViewController, animated: true, completion: nil)
+    }
+    
+    func present(_ editVoiceShortcutViewController: INUIEditVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {
+        editVoiceShortcutViewController.delegate = self
+        present(editVoiceShortcutViewController, animated: true, completion: nil)
+    }
+}
+
+extension NewMapVC: INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
+    
+    func addVoiceShortcutViewController(_ controller: INUIAddVoiceShortcutViewController, didFinishWith voiceShortcut: INVoiceShortcut?, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func addVoiceShortcutViewControllerDidCancel(_ controller: INUIAddVoiceShortcutViewController) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didUpdate voiceShortcut: INVoiceShortcut?, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didDeleteVoiceShortcutWithIdentifier deletedVoiceShortcutIdentifier: UUID) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func editVoiceShortcutViewControllerDidCancel(_ controller: INUIEditVoiceShortcutViewController) {
+        controller.dismiss(animated: true, completion: nil)
     }
 }

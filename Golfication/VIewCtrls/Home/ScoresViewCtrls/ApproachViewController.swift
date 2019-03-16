@@ -136,10 +136,10 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         }else{
             if !Constants.isProMode {
                 //cardViewApproach.makeBlurView(targetView: cardViewApproach)
-                self.setProLockedUI(targetView: cardViewApproach, title: "Approach Accuracy".localized())
+//                self.setProLockedUI(targetView: cardViewApproach, title: "Approach Accuracy".localized())
                 
                 //holeProximityCardView.makeBlurView(targetView: holeProximityCardView)
-                self.setProLockedUI(targetView: holeProximityCardView, title: "Hole Proximity".localized())
+//                self.setProLockedUI(targetView: holeProximityCardView, title: "Hole Proximity".localized())
                 
                 lblProApproach.isHidden = true
                 lblProProximity.isHidden = true
@@ -240,6 +240,40 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         self.lblAvgGIRTrendsValue.setCorner(color: UIColor.glfBlack50.cgColor)
         self.lblAvgGIRLikelinessValue.setCorner(color: UIColor.glfBlack50.cgColor)
         
+        if !Constants.isProMode{
+            lblApproachAccuracyAvg.isHidden = true
+            lblHoleProximityAvg.isHidden = true
+            lblAvgHoleProximityValue.isHidden = true
+            lblGIRAvg.isHidden = true
+            lblAvgGIRLikelinessValue.isHidden = true
+            
+            let eddieStatsView = EddieStatsView()
+            eddieStatsView.backgroundColor = UIColor.clear
+            eddieStatsView.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+            eddieStatsView.lblTitle.text = "Unlock this stat with Eddie!"
+            eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            cardViewApproach.addSubview(eddieStatsView)
+            
+            let eddieStatsView1 = EddieStatsView()
+            eddieStatsView1.backgroundColor = UIColor.clear
+            eddieStatsView1.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+            eddieStatsView1.lblTitle.text = "Eddie has some insights for you."
+            eddieStatsView1.lblTitle.textColor = UIColor(rgb:0xFFC700)
+            eddieStatsView1.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            holeProximityCardView.addSubview(eddieStatsView1)
+        }
+        else{
+            lblApproachAccuracyAvg.isHidden = false
+            lblHoleProximityAvg.isHidden = false
+            lblAvgHoleProximityValue.isHidden = false
+            lblGIRAvg.isHidden = false
+            lblAvgGIRLikelinessValue.isHidden = false
+        }
+    }
+    
+    @objc func eddieProClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     
     // MARK: - infoClicked
@@ -416,8 +450,6 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         GIRLikelinessLineChart.setLineChartWithColor(dataPoints:KeysArray , values: dataArray, chartView: GIRLikelinessLineChart,color:UIColor.glfFlatBlue)
         
         if !gir.isEmpty{
-            self.lblGIRAvg.isHidden = false
-            self.lblAvgGIRLikelinessValue.isHidden = false
             self.lblGIRAvg.text = "Average GIR Per Round"
             let totalHit = (gir.reduce(0, +))
             let totalFair = (totalGir.reduce(0, +))
@@ -439,18 +471,58 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         var color = [UIColor]()
         var maxValueOfLeftRightLongShort = 0.0
         var toLeftRightLeftShort = ""
+        
+        var noApproach = false
         for score in scores{
-            for data in score.approach{
-                for i in 0..<data.count{
-                    if(clubFilter.count > 0){
-                        proximityXPoints.append(data[i].proximityX)
-                        proximityYPoints.append(data[i].proximityY)
-                        if(clubFilter.contains(data[i].club)){
-                            if(data[i].green){
+            if score.approach.count == 0{
+                noApproach = true
+                break
+            }
+        }
+        
+        if noApproach{
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: cardViewApproach.frame.height/2-15, width: cardViewApproach.frame.width, height: 30)
+            cardViewApproach.addSubview(demoLabel)
+
+            for score in Constants.classicScores{
+                for data in score.approach{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            proximityXPoints.append(data[i].proximityX)
+                            proximityYPoints.append(data[i].proximityY)
+                            if(clubFilter.contains(data[i].club)){
+                                if(data[i].green){
+                                    hit += 1
+                                    color.append(UIColor.glfWhite)
+                                }else{
+                                    color.append(UIColor.glfRosyPink)
+                                    if(data[i].proximityY >= abs(data[i].proximityX)){
+                                        long += 1
+                                    }
+                                    else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                        short += 1
+                                    }
+                                    else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                        right += 1
+                                    }
+                                    else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                        left += 1
+                                    }
+                                }
+                                
+                            }
+                        }
+                        else{
+                            proximityXPoints.append(data[i].proximityX)
+                            proximityYPoints.append(data[i].proximityY)
+                            
+                            if(data[i].green) != nil && (data[i].green){
                                 hit += 1
                                 color.append(UIColor.glfWhite)
                             }else{
                                 color.append(UIColor.glfRosyPink)
+                                
                                 if(data[i].proximityY >= abs(data[i].proximityX)){
                                     long += 1
                                 }
@@ -463,38 +535,72 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                                 else if(data[i].proximityX <= -abs(data[i].proximityY)){
                                     left += 1
                                 }
+                                
                             }
-                            
-                        }
-                    }
-                    else{
-                        proximityXPoints.append(data[i].proximityX)
-                        proximityYPoints.append(data[i].proximityY)
-                        
-                        if(data[i].green) != nil && (data[i].green){
-                            hit += 1
-                            color.append(UIColor.glfWhite)
-                        }else{
-                            color.append(UIColor.glfRosyPink)
-                            
-                            if(data[i].proximityY >= abs(data[i].proximityX)){
-                                long += 1
-                            }
-                            else if(data[i].proximityY <= -abs(data[i].proximityX)){
-                                short += 1
-                            }
-                            else if(data[i].proximityX >= abs(data[i].proximityY)){
-                                right += 1
-                            }
-                            else if(data[i].proximityX <= -abs(data[i].proximityY)){
-                                left += 1
-                            }
-                            
                         }
                     }
                 }
             }
         }
+        else{
+            for score in scores{
+                for data in score.approach{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            proximityXPoints.append(data[i].proximityX)
+                            proximityYPoints.append(data[i].proximityY)
+                            if(clubFilter.contains(data[i].club)){
+                                if(data[i].green){
+                                    hit += 1
+                                    color.append(UIColor.glfWhite)
+                                }else{
+                                    color.append(UIColor.glfRosyPink)
+                                    if(data[i].proximityY >= abs(data[i].proximityX)){
+                                        long += 1
+                                    }
+                                    else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                        short += 1
+                                    }
+                                    else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                        right += 1
+                                    }
+                                    else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                        left += 1
+                                    }
+                                }
+                                
+                            }
+                        }
+                        else{
+                            proximityXPoints.append(data[i].proximityX)
+                            proximityYPoints.append(data[i].proximityY)
+                            
+                            if(data[i].green) != nil && (data[i].green){
+                                hit += 1
+                                color.append(UIColor.glfWhite)
+                            }else{
+                                color.append(UIColor.glfRosyPink)
+                                
+                                if(data[i].proximityY >= abs(data[i].proximityX)){
+                                    long += 1
+                                }
+                                else if(data[i].proximityY <= -abs(data[i].proximityX)){
+                                    short += 1
+                                }
+                                else if(data[i].proximityX >= abs(data[i].proximityY)){
+                                    right += 1
+                                }
+                                else if(data[i].proximityX <= -abs(data[i].proximityY)){
+                                    left += 1
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         
         approchAccuracyScatterChart.setScatterChart(valueX: proximityXPoints, valueY: proximityYPoints, chartView: approchAccuracyScatterChart, color: color)
         approchAccuracyScatterChart.leftAxis.enabled = false
@@ -529,7 +635,6 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
                 maxValueOfLeftRightLongShort = Double(100*short/sumOfLSRL);
                 toLeftRightLeftShort = "Short";
             }
-            lblApproachAccuracyAvg.isHidden = false
             lblApproachAccuracyAvg.text = "You miss " + String(format:"%.01f",maxValueOfLeftRightLongShort) + "% of the Greens " + toLeftRightLeftShort
         }else{
             
@@ -586,41 +691,85 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
         var date = [String]()
         var distance = [Double]()
         var dataPoints = [Double]()
+        
+        var noApproach = false
         for score in scores{
-            var proximityXPoints = [Double]()
-            var proximityYPoints = [Double]()
-            for data in score.approach{
-                for i in 0..<data.count{
-                    if(clubFilter.count > 0){
-                        if(clubFilter.contains(data[i].club)){
+            if score.approach.count == 0{
+                noApproach = true
+                break
+            }
+        }
+        if noApproach{
+            let demoLabel = DemoLabel()
+            demoLabel.frame = CGRect(x: 0, y: holeProximityCardView.frame.height/2-15, width: holeProximityCardView.frame.width, height: 30)
+            holeProximityCardView.addSubview(demoLabel)
+
+            for score in Constants.classicScores{
+                var proximityXPoints = [Double]()
+                var proximityYPoints = [Double]()
+                for data in score.approach{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                proximityXPoints.append(data[i].proximityX)
+                                proximityYPoints.append(data[i].proximityY)
+                            }
+                        }
+                        else{
                             proximityXPoints.append(data[i].proximityX)
                             proximityYPoints.append(data[i].proximityY)
                         }
                     }
-                    else{
-                        proximityXPoints.append(data[i].proximityX)
-                        proximityYPoints.append(data[i].proximityY)
+                    if(Constants.distanceFilter == 1){
+                        for i in 0..<proximityXPoints.count{
+                            distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i]))
+                        }
+                    }else{
+                        for i in 0..<proximityXPoints.count{
+                            distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])*3)
+                        }
                     }
+                    date.append(score.date)
+                    dataPoints.append(Double(proximityYPoints.count))
                 }
-                if(Constants.distanceFilter == 1){
-                    for i in 0..<proximityXPoints.count{
-                        distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i]))
-                    }
-                }else{
-                    for i in 0..<proximityXPoints.count{
-                        distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])*3)
-                    }
-                }
-                
-                date.append(score.date)
-                dataPoints.append(Double(proximityYPoints.count))
             }
         }
+        else{
+            for score in scores{
+                var proximityXPoints = [Double]()
+                var proximityYPoints = [Double]()
+                for data in score.approach{
+                    for i in 0..<data.count{
+                        if(clubFilter.count > 0){
+                            if(clubFilter.contains(data[i].club)){
+                                proximityXPoints.append(data[i].proximityX)
+                                proximityYPoints.append(data[i].proximityY)
+                            }
+                        }
+                        else{
+                            proximityXPoints.append(data[i].proximityX)
+                            proximityYPoints.append(data[i].proximityY)
+                        }
+                    }
+                    if(Constants.distanceFilter == 1){
+                        for i in 0..<proximityXPoints.count{
+                            distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i]))
+                        }
+                    }else{
+                        for i in 0..<proximityXPoints.count{
+                            distance.append(sqrt(proximityXPoints[i]*proximityXPoints[i] + proximityYPoints[i]*proximityYPoints[i])*3)
+                        }
+                    }
+                    
+                    date.append(score.date)
+                    dataPoints.append(Double(proximityYPoints.count))
+                }
+            }
+        }
+
         if !dataPoints.isEmpty{
             holeProximityScatterWithLineView.setScatterChartWithLine(valueX: dataPoints, valueY: distance, xAxisValue: date, chartView: holeProximityScatterWithLineView, color: UIColor.glfGreenBlue)
             holeProximityScatterWithLineView.leftAxis.labelCount = 3
-            self.lblHoleProximityAvg.isHidden = false
-            self.lblAvgHoleProximityValue.isHidden = false
             let sum = distance.reduce(0, +)
             self.lblAvgHoleProximityValue.text = "\(Int(sum/Double(distance.count))) \(Constants.distanceFilter == 1 ? "m" : "yd")"
             self.lblHoleProximityAvg.text = "Average Proximity to Hole after Approach"

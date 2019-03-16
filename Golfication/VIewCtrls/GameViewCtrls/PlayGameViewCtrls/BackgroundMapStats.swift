@@ -14,8 +14,6 @@ import CoreData
 class BackgroundMapStats: NSObject {
     static var blockRecursionIssue = 0
     static let clubsFullForm = ["Dr":"Driver","w":"Wood","h":"Hybrid","i":"Iron","Pw":"P Wedge","Gw":"Gap Wedge","Sw":"Sand Wedge","Lw":"Lob Wedge","Pu":"Putter"]
-    static let context = CoreDataStorage.mainQueueContext()
-
     static func getClubName(club:String)->String{
         var clubToShow = String()
         if(club.count > 0){
@@ -508,15 +506,23 @@ class BackgroundMapStats: NSObject {
         }
     }
     static func deleteCoreData(){
-        self.context.performAndWait{ () -> Void in
+        context.performAndWait{ () -> Void in
             let arr = ["CourseDetailsEntity","TeeDistanceEntity","FrontBackDistanceEntity","GreenDistanceEntity"]
             arr.forEach({ (string) in
-                if let counter1 = NSManagedObject.findAllForEntity(string, context: self.context){
+                if let counter1 = NSManagedObject.findAllForEntity(string, context: context){
                     counter1.forEach { counter in
-                        self.context.delete(counter as! NSManagedObject)
+                        context.delete(counter as! NSManagedObject)
                     }
                 }
             })
+        }
+    }
+    static func setDir(color:UIColor,isUp:Bool,label:UILabel){
+        label.textColor = color
+        if isUp{
+            label.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
+        }else{
+            label.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 2)
         }
     }
     static func getDynamicLinkFromPromocode(code:String){
@@ -554,6 +560,43 @@ class BackgroundMapStats: NSObject {
 //            self.present(activityViewController, animated: true, completion: nil)
         }
     }
+    
+    static func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
+        let size = image.size
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        // Figure out what our orientation is, and use that to form the rectangle
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        }
+        // This is the rect that we've calculated out and this is what is actually used below
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        // Actually do the resizing to the rect using the ImageContext stuff
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
+    }
+    static func getPlaysLike(headingTarget:Double, degree:Double, windSpeed:Double, dist:Double)->Double{
+        if (degree == 0 && windSpeed == 0) {return dist}
+        var dist = dist
+        var windTarget = -windSpeed * cos(degree-headingTarget)
+        if (Constants.distanceFilter == 1){
+            windTarget = windTarget * 1.60934
+        }
+        var PL1 = dist + (dist * 0.005 * windTarget)
+        
+        if (windTarget>0){
+            PL1 =  dist + (dist * 0.01 * windTarget)
+        }
+        let PL2 = (0.58*windTarget*(dist/100)) + dist
+        return (PL1 + PL2)/2
+    }
+
     static func calculateGoal(scoreData:[(hole:Int,par:Int,players:[NSMutableDictionary])],targetGoal:Goal)->Goal{
         let achievedGoal = Goal()
         for data in scoreData{

@@ -580,11 +580,11 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
     }
     
     @IBAction func btnActionSetupTags(_ sender: UIButton) {
-//        let leftOrRight :UInt8 = UInt8(self.sgmntCtrlOrientation.selectedSegmentIndex + 1)
-//        let metric :UInt8 = UInt8(self.sgmntCtrlMetric.selectedSegmentIndex + 1)
-//        Constants.ble.sendFirstCommand(leftOrRight: leftOrRight,metric: metric)
-        let viewCtrl = UIStoryboard(name: "Device", bundle: nil).instantiateViewController(withIdentifier: "debugModeVC") as! DebugModeVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        let leftOrRight :UInt8 = UInt8(self.sgmntCtrlOrientation.selectedSegmentIndex + 1)
+        let metric :UInt8 = UInt8(self.sgmntCtrlMetric.selectedSegmentIndex + 1)
+        Constants.ble.sendFirstCommand(leftOrRight: leftOrRight,metric: metric)
+//        let viewCtrl = UIStoryboard(name: "Device", bundle: nil).instantiateViewController(withIdentifier: "debugModeVC") as! DebugModeVC
+//        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     @objc func responseFirstCommand(_ notification: NSNotification){
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "responseFirstCommand"))

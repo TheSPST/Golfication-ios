@@ -336,13 +336,16 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                         self.present(alert, animated: true, completion: nil)
                         return
                     }
-                    let alert = UIAlertController(title: "Verify Email", message: "We have just sent you a verification email. Please verify your email address by clicking the verification link.", preferredStyle: UIAlertControllerStyle.alert)
+//                    let alert = UIAlertController(title: "Verify Email", message: "We have just sent you a verification email. Please verify your email address by clicking the verification link.", preferredStyle: UIAlertControllerStyle.alert)
+                    let alert = UIAlertController(title: "Registration Successful", message: "Login to start tracking your rounds.", preferredStyle: UIAlertControllerStyle.alert)
+
                     alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [alert] (_) in
                         
 //                        https://golfication.us15.list-manage.com/subscribe/post?u=61aa993cd19d0fb238ab03ae0&amp;id=b8bdae75ef&EMAIL=rishabh.sood@gmail.com&FULLNAME=Rishabh Sood
 
                         self.sendMailingRequestToServer(uName: self.txtFieldName.text!,uEmail: self.txtFieldEmail.text!)
-                        
+                        Constants.userEmail = self.txtFieldEmail.text!
+                            
                         self.txtFieldName.text = ""
                         self.txtFieldEmail.text = ""
                         self.txtFieldPswd.text = ""

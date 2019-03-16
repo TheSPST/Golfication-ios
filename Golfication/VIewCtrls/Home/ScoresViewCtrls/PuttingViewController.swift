@@ -61,14 +61,30 @@ class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorI
             
             self.setProLockedUI(targetView: self.puttingCardView, title: "Putting".localized())
             self.lblProPutting.isHidden = true
+            
+            lblPuttsPerHoleAvg.isHidden = true
+            lblAvgPuttsPHoleValue.isHidden = true
+            
+            let eddieStatsView1 = EddieStatsView()
+            eddieStatsView1.backgroundColor = UIColor.clear
+            eddieStatsView1.frame = CGRect(x: 16, y: 45, width: self.view.frame.width-52, height: 30)
+            eddieStatsView1.lblTitle.text = "Eddie has some insights for you."
+            eddieStatsView1.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            cardViewPuttsPerHole.addSubview(eddieStatsView1)
         }
         else{
             self.lblProPutting.isHidden = false
-
+            self.lblPuttsPerHoleAvg.isHidden = false
+            self.lblAvgPuttsPHoleValue.isHidden = false
         }
         setHoleOutDistanceWithPuttProximity()
     }
     
+    @objc func eddieProClicked(_ sender:UIButton){
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+    }
+
     func setHoleOutDistanceWithPuttProximity(){
         var totalHoleOutDistance = [Double]()//3
         var totalProximity = [Double]()//2
@@ -413,8 +429,6 @@ class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorI
         barViewPuttsPerHole.leftAxis.labelCount = 4
         
         if !roundWisePuttingSumAvg.isEmpty{
-            self.lblPuttsPerHoleAvg.isHidden = false
-            self.lblAvgPuttsPHoleValue.isHidden = false
             self.lblPuttsPerHoleAvg.text = "Average Putts Per Hole"
             self.lblAvgPuttsPHoleValue.text = "\((roundWisePuttingSumAvg.reduce(0,+)/Double(roundWisePuttingSumAvg.count)).rounded(toPlaces: 1))"
         }

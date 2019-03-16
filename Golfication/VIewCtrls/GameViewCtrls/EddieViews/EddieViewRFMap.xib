@@ -49,25 +49,25 @@
                     <rect key="frame" x="16" y="4" width="107" height="25"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="r9z-cc-DNT">
-                            <rect key="frame" x="0.0" y="2.5" width="107" height="20"/>
+                            <rect key="frame" x="0.0" y="5" width="107" height="15"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locked" translatesAutoresizingMaskIntoConstraints="NO" id="3Da-Wd-atL">
-                                    <rect key="frame" x="0.0" y="0.0" width="15" height="20"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="target_1" translatesAutoresizingMaskIntoConstraints="NO" id="3Da-Wd-atL">
+                                    <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="15" id="62D-Wa-9V8"/>
-                                        <constraint firstAttribute="height" constant="20" id="WYV-KA-B8u"/>
+                                        <constraint firstAttribute="height" constant="15" id="WYV-KA-B8u"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Goals" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aL3-Es-65h">
-                                    <rect key="frame" x="19" y="0.0" width="69" height="20"/>
+                                    <rect key="frame" x="19" y="0.0" width="69" height="15"/>
                                     <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="17"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locked" translatesAutoresizingMaskIntoConstraints="NO" id="2Zl-dD-WLQ">
-                                    <rect key="frame" x="92" y="0.0" width="15" height="20"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locked_1" translatesAutoresizingMaskIntoConstraints="NO" id="2Zl-dD-WLQ">
+                                    <rect key="frame" x="92" y="0.0" width="15" height="15"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="20" id="Wtg-US-HNM"/>
+                                        <constraint firstAttribute="height" constant="15" id="Wtg-US-HNM"/>
                                         <constraint firstAttribute="width" constant="15" id="znL-JT-Vhc"/>
                                     </constraints>
                                 </imageView>
@@ -289,6 +289,7 @@
     <resources>
         <image name="Rblue" width="153" height="153"/>
         <image name="Ryellow" width="153" height="153"/>
-        <image name="locked" width="18.75" height="21.75"/>
+        <image name="locked_1" width="48" height="48"/>
+        <image name="target_1" width="18" height="18"/>
     </resources>
 </document>

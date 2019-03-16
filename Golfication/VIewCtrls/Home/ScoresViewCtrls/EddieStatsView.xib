@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="SF-Pro-Display-MediumItalic.otf">
+            <string>SFProDisplay-MediumItalic</string>
+        </array>
+        <array key="SF-Pro-Display-Regular.otf">
+            <string>SFProDisplay-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EddieStatsView" customModule="Golfication" customModuleProvider="target">
+            <connections>
+                <outlet property="btnPlay" destination="taI-SA-kdX" id="NcD-IW-Okb"/>
+                <outlet property="btnView" destination="szG-jm-Qe2" id="f4E-Vp-0le"/>
+                <outlet property="eddieImageVIew" destination="ur5-PA-CL3" id="MBW-D5-qvO"/>
+                <outlet property="lblTitle" destination="2Sm-LN-Pqw" id="KRd-mn-6rl"/>
+                <outlet property="view" destination="iN0-l3-epB" id="0qN-G0-wch"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="220" height="28"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eddieUSer" translatesAutoresizingMaskIntoConstraints="NO" id="ur5-PA-CL3">
+                    <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="25" id="9KP-q5-1aX"/>
+                        <constraint firstAttribute="height" constant="25" id="K01-Wb-qtN"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Sm-LN-Pqw">
+                    <rect key="frame" x="30" y="4.5" width="5.5" height="16"/>
+                    <fontDescription key="fontDescription" name="SFProDisplay-MediumItalic" family="SF Pro Display" pointSize="13"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="szG-jm-Qe2">
+                    <rect key="frame" x="40.5" y="-2.5" width="70" height="30"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="aOO-5X-xvB"/>
+                        <constraint firstAttribute="height" constant="30" id="gg2-Ue-dq3"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="17"/>
+                    <state key="normal" title="View">
+                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="taI-SA-kdX">
+                    <rect key="frame" x="0.0" y="0.0" width="220" height="28"/>
+                    <fontDescription key="fontDescription" name="SFProDisplay-MediumItalic" family="SF Pro Display" pointSize="13"/>
+                    <state key="normal" title="-">
+                        <color key="titleColor" red="1" green="0.78039215689999997" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="2Sm-LN-Pqw" firstAttribute="centerY" secondItem="ur5-PA-CL3" secondAttribute="centerY" id="3ZG-h4-fO0"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="taI-SA-kdX" secondAttribute="trailing" id="4ed-xQ-1qX"/>
+                <constraint firstItem="ur5-PA-CL3" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="5Dy-BY-ies"/>
+                <constraint firstItem="2Sm-LN-Pqw" firstAttribute="leading" secondItem="ur5-PA-CL3" secondAttribute="trailing" constant="5" id="60b-oP-IIX"/>
+                <constraint firstItem="ur5-PA-CL3" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Tjj-1l-hry"/>
+                <constraint firstItem="taI-SA-kdX" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="WGB-Ir-c4F"/>
+                <constraint firstItem="szG-jm-Qe2" firstAttribute="leading" secondItem="2Sm-LN-Pqw" secondAttribute="trailing" constant="5" id="Zci-TG-HKB"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="szG-jm-Qe2" secondAttribute="trailing" id="b7m-Gq-PGa"/>
+                <constraint firstItem="taI-SA-kdX" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="eDI-xW-xDh"/>
+                <constraint firstItem="szG-jm-Qe2" firstAttribute="centerY" secondItem="2Sm-LN-Pqw" secondAttribute="centerY" id="sph-Qb-ejB"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="-4.7999999999999998" y="-125.03748125937032"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="eddieUSer" width="38" height="36"/>
+    </resources>
+</document>

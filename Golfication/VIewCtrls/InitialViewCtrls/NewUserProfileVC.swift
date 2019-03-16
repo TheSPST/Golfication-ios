@@ -16,13 +16,13 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     let progressView = SDLoader()
 
     @IBOutlet weak var lblHandicap: UILabel!
-    @IBOutlet weak var lblHandiLeft: UILocalizedLabel!
-    @IBOutlet weak var lblHandiRight: UILocalizedLabel!
+//    @IBOutlet weak var lblHandiLeft: UILocalizedLabel!
+//    @IBOutlet weak var settings: UILocalizedLabel!
     
     @IBOutlet weak var btnCheckbox: UIButton!
     @IBOutlet weak var btnNext: UILocalizedButton!
-    @IBOutlet weak var btnHandiLeft: UIButton!
-    @IBOutlet weak var btnHandiRight: UIButton!
+//    @IBOutlet weak var btnHandiLeft: UIButton!
+//    @IBOutlet weak var btnHandiRight: UIButton!
     @IBOutlet weak var btnSearch: UIButton!
     @IBOutlet weak var btnHandiMinus: UIButton!
     @IBOutlet weak var btnHandiPlus: UIButton!
@@ -33,9 +33,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var searchContainerSV: UIView!
     @IBOutlet weak var nearMeContainerView: UIView!
     @IBOutlet weak var leftModeView: UIView!
-    @IBOutlet weak var handiContainerView: UIView!
-    @IBOutlet weak var handiLeftView: UIView!
-    @IBOutlet weak var handiRightView: UIView!
+    @IBOutlet weak var handiContainerView: CardView!
+//    @IBOutlet weak var handiLeftView: UIView!
+//    @IBOutlet weak var handiRightView: UIView!
     
     @IBOutlet weak var tblViewHConstraint: NSLayoutConstraint!
     @IBOutlet weak var golfTblHConstraint: NSLayoutConstraint!
@@ -52,6 +52,11 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var golfBagTblView: UITableView!
     @IBOutlet weak var courseTblView: UITableView!
     
+    @IBOutlet weak var topImageView: UIImageView!
+    @IBOutlet weak var gpsImageView: UIImageView!
+    @IBOutlet weak var lblUnit: UILabel!
+    @IBOutlet weak var lblSpeed: UILabel!
+
     // MARK: Set Variables
     let kHeaderSectionTag: Int = 6900
     var expandedSectionHeaderNumber: Int = -1
@@ -67,11 +72,44 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     var currentPageIndex = 0
     var appDelegate: AppDelegate!
 
+    var spaceStr = "     "
+    
+    @IBOutlet var unitSgmtCtrl: UISegmentedControl!
+
+    @IBAction func unitChanged(_ sender: UISegmentedControl) {
+        
+        switch unitSgmtCtrl.selectedSegmentIndex {
+        case 0:
+            Constants.distanceFilter = 0
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :Constants.distanceFilter] as [AnyHashable:Any])
+            lblUnit.text = "Distances in feet and yards."
+            lblSpeed.text = "Speed in mph."
+
+        case 1:
+            Constants.distanceFilter = 1
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :Constants.distanceFilter] as [AnyHashable:Any])
+            lblUnit.text = "Distances in metre and kilometre."
+            lblSpeed.text = "Speed in kmph."
+
+        default:
+            break;
+        }
+    }
+
     @IBAction func handiPlusAction(_ sender: Any) {
         if self.sliderHandicapNumber.value >= 0.0 && self.sliderHandicapNumber.value < 54.0{
             self.btnCheckbox.isSelected = false
-            self.btnCheckbox.setBackgroundImage(nil, for: .normal)
-            self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
+//            let originalImage1 = #imageLiteral(resourceName: "check")
+//            let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+//            btnCheckbox.tintColor = UIColor.glfBluegreen
+
+            self.btnCheckbox.setImage(nil, for: .normal)
+            self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+            btnCheckbox.tintColor = UIColor.clear
+
+            self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
+            self.sliderHandicapNumber.maximumTrackTintColor = UIColor(rgb:0xCBD7D2)
+            self.sliderHandicapNumber.thumbTintColor = UIColor.glfBluegreen
 
             let plusVal = (((self.sliderHandicapNumber.value*10).rounded()/10) + 0.1)
             self.sliderHandicapNumber.value = Float(Double(plusVal).rounded(toPlaces: 1))
@@ -84,8 +122,17 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBAction func handiMinusAction(_ sender: Any) {
         if self.sliderHandicapNumber.value > 0.0{
             self.btnCheckbox.isSelected = false
-            self.btnCheckbox.setBackgroundImage(nil, for: .normal)
-            self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
+//            let originalImage1 = #imageLiteral(resourceName: "check")
+//            let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+//            btnCheckbox.tintColor = UIColor.glfBluegreen
+
+            self.btnCheckbox.setImage(nil, for: .normal)
+            self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+            btnCheckbox.tintColor = UIColor.clear
+
+            self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
+            self.sliderHandicapNumber.maximumTrackTintColor = UIColor(rgb:0xCBD7D2)
+            self.sliderHandicapNumber.thumbTintColor = UIColor.glfBluegreen
 
         let minusVal = (((self.sliderHandicapNumber.value*10).rounded()/10) - 0.1)
             self.sliderHandicapNumber.value = Float(Double(minusVal).rounded(toPlaces: 1))
@@ -106,9 +153,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             let x =  CGFloat(self.pageControl.currentPage) * (pageWidth)
             scrollView.setContentOffset(CGPoint(x:x, y:0), animated: false)
             
-            btnNext.setTitle("   " + "Next".localized() + "   ", for: .normal)
+            btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
             if pageControl.currentPage == 2 {
-                btnNext.setTitle("  Done  ", for: .normal)
+                btnNext.setTitle(spaceStr + "Done" + spaceStr, for: .normal)
             }
             currentPageIndex = self.pageControl.currentPage
             if pageControl.currentPage == 1 || pageControl.currentPage == 2 {
@@ -129,7 +176,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             textField.text = ""
             
             let gradient = CAGradientLayer()
-            gradient.colors = [UIColor.white.cgColor, UIColor.white.cgColor]
+            gradient.colors = [UIColor.white.cgColor, UIColor(rgb:0xFAFAFA).cgColor]
             gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
             gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
             gradient.frame = self.leftModeView.bounds
@@ -161,24 +208,50 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        btnSkip.setTitle(" " + "Skip".localized() + " ", for: .normal)
-        btnNext.setTitle("   " + "Next".localized() + "   ", for: .normal)
+        self.tabBarController?.tabBar.isHidden = true
+
+        courseTblView.layer.cornerRadius = 3.0
+        courseTblView.layer.borderWidth = 1.0
+        courseTblView.layer.borderColor = UIColor(rgb:0xEFEFEF).cgColor
+        
+        searchContainerView.layer.borderWidth = 1.0
+        searchContainerView.layer.borderColor = UIColor(rgb:0xEFEFEF).cgColor
+     
+        btnSkip.setTitle(spaceStr + "Skip".localized() + spaceStr, for: .normal)
+        btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
 
         btnNext.layer.cornerRadius = 15.0
-        self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
-        self.btnCheckbox.tintColor = UIColor.clear
+        self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
         
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
         Constants.handed = "Right"
+        
+        Constants.distanceFilter = 0
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :Constants.distanceFilter] as [AnyHashable:Any])
+        lblUnit.text = "Distances in feet and yards."
+        lblSpeed.text = "Speed in mph."
+
         
         self.sliderHandicapNumber.value = 18.0
         self.lblHandicap.text = "\((self.sliderHandicapNumber.value*10).rounded()/10)"//(value as! NSString).floatValue
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
         Constants.handicap = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
         self.btnCheckbox.isSelected = false
-        self.btnCheckbox.setBackgroundImage(nil, for: .normal)
+//        let originalImage1 = #imageLiteral(resourceName: "check")
+//        let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+//        btnCheckbox.tintColor = UIColor.glfBluegreen
         
+        self.btnCheckbox.setImage(nil, for: .normal)
+        btnCheckbox.tintColor = UIColor.clear
+
+        self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
+        self.sliderHandicapNumber.maximumTrackTintColor = UIColor(rgb:0xCBD7D2)
+        self.sliderHandicapNumber.thumbTintColor = UIColor.glfBluegreen
+
         golfBagTblView.layer.cornerRadius = 3.0
+        golfBagTblView.layer.borderWidth = 1.0
+        golfBagTblView.layer.borderColor = UIColor(rgb:0xEFEFEF).cgColor
+
         handiContainerView.layer.cornerRadius = 3.0
         
         tblViewHConstraint.constant = 0
@@ -195,7 +268,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.golfBagTblView!.tableFooterView = UIView()
         
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.white.cgColor, UIColor.white.cgColor]
+        gradient.colors = [UIColor.white.cgColor, UIColor(rgb:0xFAFAFA).cgColor]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
         gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
         gradient.frame = self.leftModeView.bounds
@@ -208,13 +281,23 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.leftModeView.layer.backgroundColor = UIColor.white.cgColor
         self.leftModeView.layer.mask = rectShape
         
-        let originalImage1 = #imageLiteral(resourceName: "search")
-        let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        let originalImage3 = #imageLiteral(resourceName: "search")
+        let backBtnImage3 = originalImage3.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnSearch.tintColor = UIColor.glfBluegreen
-        btnSearch.setImage(backBtnImage1, for: .normal)
+        btnSearch.setImage(backBtnImage3, for: .normal)
         
-        handiLeftView.layer.cornerRadius = 10.0
-        handiRightView.layer.cornerRadius = 10.0
+        let originalImg = UIImage(named:"getStarted1")
+        let topImg = originalImg!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        topImageView.tintColor = UIColor.glfBluegreen.withAlphaComponent(0.6)
+        topImageView.image = topImg
+
+        let originalGpsImg = UIImage(named:"mapPin")
+        let gpsImg = originalGpsImg!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        gpsImageView.tintColor = UIColor.glfBlack
+        gpsImageView.image = gpsImg
+
+//        handiLeftView.layer.cornerRadius = 10.0
+//        handiRightView.layer.cornerRadius = 10.0
         
         // ------ update golf bag 14 data to firbase ------------------
         self.progressView.show()
@@ -381,7 +464,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.progressView.show()
 
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.white.cgColor, UIColor.white.cgColor]
+        gradient.colors = [UIColor.white.cgColor, UIColor(rgb:0xFAFAFA).cgColor]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
         gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
         gradient.frame = self.leftModeView.bounds
@@ -504,7 +587,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.progressView.show()
 
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.white.cgColor, UIColor.white.cgColor]
+        gradient.colors = [UIColor.white.cgColor, UIColor(rgb:0xFAFAFA).cgColor]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
         gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
         gradient.frame = self.leftModeView.bounds
@@ -555,7 +638,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.progressView.hide()
 
                     if !self.searchDataArr.isEmpty{
-                        self.tblViewHConstraint.constant = self.view.frame.size.height - (self.searchContainerSV.frame.origin.y + self.searchContainerView.frame.size.height + self.bottomStackSV.frame.size.height + 20 + 30)
+                        self.tblViewHConstraint.constant = self.view.frame.size.height - (self.searchContainerSV.frame.origin.y + self.searchContainerView.frame.size.height + self.bottomStackSV.frame.size.height + 120)
                         self.view.layoutIfNeeded()
                         
                         self.nearMeContainerView.isHidden = true
@@ -574,23 +657,39 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBAction func btnCheckBoxAction(_ sender: Any) {
         if(self.btnCheckbox.isSelected){
             self.btnCheckbox.isSelected = false
-            self.btnCheckbox.setBackgroundImage(nil, for: .normal)
-            self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
+//            let originalImage1 = #imageLiteral(resourceName: "check")
+//            let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+//            btnCheckbox.tintColor = UIColor.glfBluegreen
+            self.btnCheckbox.setImage(nil, for: .normal)
+            self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+            btnCheckbox.tintColor = UIColor.clear
+
 //            self.sliderHandicapNumber.isEnabled = true
             self.lblHandicap.text = "\((self.sliderHandicapNumber.value*10).rounded()/10)"//(value as! NSString).floatValue
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
             Constants.handicap = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
+            
+            self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
+            self.sliderHandicapNumber.maximumTrackTintColor = UIColor(rgb:0xCBD7D2)
+            self.sliderHandicapNumber.thumbTintColor = UIColor.glfBluegreen
         }
         else{
-            self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "check"), for: .normal)
+            let originalImage1 = #imageLiteral(resourceName: "check")
+            let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            btnCheckbox.tintColor = UIColor.glfBluegreen
+            btnCheckbox.setImage(backBtnImage1, for: .normal)
+            
             self.btnCheckbox.imageView?.sizeToFit()
             self.btnCheckbox.isSelected = true
-            self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
+            self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
 //            self.sliderHandicapNumber.isEnabled = false
             
-            self.lblHandicap.text = "-"
+            self.lblHandicap.text = "N/A"
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"-"] as [AnyHashable:Any])
             Constants.handicap = "-"
+            self.sliderHandicapNumber.minimumTrackTintColor = UIColor.lightGray
+            self.sliderHandicapNumber.maximumTrackTintColor = UIColor.lightGray
+            self.sliderHandicapNumber.thumbTintColor = UIColor.lightGray
         }
     }
     
@@ -599,8 +698,17 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.lblHandicap.text = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
 
         self.btnCheckbox.isSelected = false
-        self.btnCheckbox.setBackgroundImage(nil, for: .normal)
-        self.btnCheckbox.setCorner(color: UIColor.white.cgColor)
+//        let originalImage1 = #imageLiteral(resourceName: "check")
+//        let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        btnCheckbox.tintColor = UIColor.clear
+
+        self.btnCheckbox.setImage(nil, for: .normal)
+        self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+        btnCheckbox.tintColor = UIColor.clear
+
+        self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
+        self.sliderHandicapNumber.maximumTrackTintColor = UIColor(rgb:0xCBD7D2)
+        self.sliderHandicapNumber.thumbTintColor = UIColor.glfBluegreen
 
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
         Constants.handicap = "\(Int(self.sliderHandicapNumber.value))"
@@ -612,18 +720,18 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         case 0:
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Left"] as [AnyHashable:Any])
             Constants.handed = "Left"
-            btnHandiLeft.setImage(#imageLiteral(resourceName: "handiLeftDark"), for: .normal)
-            btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtLight"), for: .normal)
-            lblHandiLeft.textColor = UIColor.black
-            lblHandiRight.textColor = UIColor(rgb: 0x133022)
+//            btnHandiLeft.setImage(#imageLiteral(resourceName: "handiLeftDark"), for: .normal)
+//            btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtLight"), for: .normal)
+//            lblHandiLeft.textColor = UIColor.black
+//            lblHandiRight.textColor = UIColor(rgb: 0x133022)
             
         case 1:
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
             Constants.handed = "Right"
-            btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtDark"), for: .normal)
-            btnHandiLeft.setImage(#imageLiteral(resourceName: "handiLeftLight"), for: .normal)
-            lblHandiLeft.textColor = UIColor(rgb: 0x133022)
-            lblHandiRight.textColor = UIColor.black
+//            btnHandiRight.setImage(#imageLiteral(resourceName: "handiRIghtDark"), for: .normal)
+//            btnHandiLeft.setImage(#imageLiteral(resourceName: "handiLeftLight"), for: .normal)
+//            lblHandiLeft.textColor = UIColor(rgb: 0x133022)
+//            lblHandiRight.textColor = UIColor.black
             
         default:
             break;
@@ -699,9 +807,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let x = CGFloat(pageControl.currentPage) * (newProfileScrlView.frame.size.width)
         newProfileScrlView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle("   " + "Next".localized() + "   ", for: .normal)
+        btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
         if currentPageIndex == 2 {
-            btnNext.setTitle("  Done  ", for: .normal)
+            btnNext.setTitle(spaceStr + "Done" + spaceStr, for: .normal)
         }
         if currentPageIndex == 3{
             currentPageIndex = 0
@@ -721,9 +829,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let x = CGFloat(pageControl.currentPage) * (newProfileScrlView.frame.size.width)
         newProfileScrlView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
-        btnNext.setTitle("   " + "Next".localized() + "   ", for: .normal)
+        btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
         if currentPageIndex == 2 {
-            btnNext.setTitle("  Done  ", for: .normal)
+            btnNext.setTitle(spaceStr + "Done" + spaceStr, for: .normal)
         }
         if currentPageIndex == 3{
             currentPageIndex = 0
@@ -795,7 +903,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             label.sizeToFit()
             header.addSubview(label)
             
-            let countLbl = UILabel(frame: CGRect(x: (label.frame.origin.x + label.frame.size.width + 10), y: 13, width: 30, height: 18))
+            let countLbl = UILabel(frame: CGRect(x: (label.frame.origin.x + label.frame.size.width + 10), y: 11, width: 40.0, height: 25.0))
             countLbl.text = "-"
             
             let golfBagArray = NSMutableArray()
@@ -813,8 +921,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             countLbl.textColor = UIColor(rgb: 0x133022)
             countLbl.textAlignment = .center
             countLbl.layer.borderWidth = 1.0
-            countLbl.layer.borderColor = UIColor.glfLightGreyBlue.cgColor
-            countLbl.layer.cornerRadius = 9
+            countLbl.layer.borderColor = UIColor.lightGray.cgColor
+            countLbl.layer.cornerRadius = 12.5
             countLbl.layer.masksToBounds = true
             header.addSubview(countLbl)
             
@@ -865,7 +973,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             let numOfCoulmn = 5
             let btnWidth = 40.0
-            let btnHeight = 30.0
+            let btnHeight = 25.0
             var xOffset = 0.0
             var yOffset = 10.0
             var incr = 0
@@ -879,7 +987,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
                 let btns = UIButton()
                 btns.frame = CGRect(x: xOffset, y: yOffset, width: btnWidth, height: btnHeight)
-                btns.setCornerWithRadius(color: UIColor.glfLightGreyBlue.cgColor, radius: 15.0)
+                btns.setCornerWithRadius(color: UIColor.lightGray.cgColor, radius: 12.5)
                 btns.setTitle(section[i] as? String, for: .normal)
                 btns.setTitleColor(UIColor.red, for: .normal)
                 btns.imageView?.sizeToFit()
@@ -897,13 +1005,13 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 }
                 if golfBagArray.contains(section[i]){
                     btns.isSelected = true
-                    btns.backgroundColor = UIColor.glfFlatBlue
+                    btns.backgroundColor = UIColor.glfBluegreen
                     btns.setTitleColor(UIColor.white, for: .normal)
                 }
                 else{
                     btns.isSelected = false
                     btns.backgroundColor = UIColor.white
-                    btns.setTitleColor(UIColor.glfLightGreyBlue, for: .normal)
+                    btns.setTitleColor(UIColor.lightGray, for: .normal)
                 }
             }
             cell.contentView.addSubview(golfBagContainerView)
@@ -1028,7 +1136,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
         }
         else{
-            let alertVC = UIAlertController(title: "Alert", message: "You can not add more than 14 clubs.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertVC = UIAlertController(title: "Alert", message: "You can choose a maximum of 14 clubs.", preferredStyle: UIAlertControllerStyle.alert)
             let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
             })
             alertVC.addAction(action)
