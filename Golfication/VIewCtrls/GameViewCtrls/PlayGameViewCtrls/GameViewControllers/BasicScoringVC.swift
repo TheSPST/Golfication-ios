@@ -101,21 +101,16 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     
     @IBAction func addNotesAction(_ sender: Any) {
-        if !Constants.isProMode{
-            self.view.makeToast("please update to pro membership")
+        var matchDataDictionary = NSMutableDictionary()
+        if(isAccept){
+            matchDataDictionary = self.matchDataDict
         }else{
-            var matchDataDictionary = NSMutableDictionary()
-            if(isAccept){
-                matchDataDictionary = self.matchDataDict
-            }else{
-                matchDataDictionary = Constants.matchDataDic
-            }
-            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
-            viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
-            viewCtrl.notesHoleNum = "hole\(scoreData[self.holeIndex].hole)"
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-
+            matchDataDictionary = Constants.matchDataDic
         }
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+        viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
+        viewCtrl.notesHoleNum = "hole\(scoreData[self.holeIndex].hole)"
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     @IBAction func btnActionMenu(_ sender: Any) {

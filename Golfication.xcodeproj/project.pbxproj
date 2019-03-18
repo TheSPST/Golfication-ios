@@ -111,6 +111,7 @@
 		4B01799B22256D7200A215E6 /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01799A22256D7100A215E6 /* CoreDataStorage.swift */; };
 		4B01799C22256D7200A215E6 /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01799A22256D7100A215E6 /* CoreDataStorage.swift */; };
 		4B01799D22256D7200A215E6 /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B01799A22256D7100A215E6 /* CoreDataStorage.swift */; };
+		4B028120223FC6D8005F6916 /* WelcomePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B02811F223FC6D7005F6916 /* WelcomePopUp.swift */; };
 		4B04C4C920C03930000D2C23 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C320C03930000D2C23 /* Spinner.swift */; };
 		4B04C4CA20C03930000D2C23 /* SDLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C420C03930000D2C23 /* SDLoader.swift */; };
 		4B04C4CB20C03930000D2C23 /* Sector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B04C4C520C03930000D2C23 /* Sector.swift */; };
@@ -455,6 +456,7 @@
 		4B01751E222534B000A215E6 /* DistanceOfGreenIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceOfGreenIntentHandler.swift; sourceTree = "<group>"; };
 		4B017523222536E300A215E6 /* CoreDataDistanceModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataDistanceModel.xcdatamodel; sourceTree = "<group>"; };
 		4B01799A22256D7100A215E6 /* CoreDataStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStorage.swift; sourceTree = "<group>"; };
+		4B02811F223FC6D7005F6916 /* WelcomePopUp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomePopUp.swift; sourceTree = "<group>"; };
 		4B04C4C320C03930000D2C23 /* Spinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		4B04C4C420C03930000D2C23 /* SDLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDLoader.swift; sourceTree = "<group>"; };
 		4B04C4C520C03930000D2C23 /* Sector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sector.swift; sourceTree = "<group>"; };
@@ -1428,6 +1430,7 @@
 		4BB26CF91FF77EDB001E9556 /* InitialViewCtrls */ = {
 			isa = PBXGroup;
 			children = (
+				4B02811F223FC6D7005F6916 /* WelcomePopUp.swift */,
 				3EADEC992073D0370037A14E /* UYLNotificationDelegate.swift */,
 				3E70B699201867590087738D /* IAPHandler.swift */,
 				3E5EAB031FF7AD2B00F69661 /* AppDelegate.swift */,
@@ -1934,6 +1937,7 @@
 				3E7861882111C45200CDD63F /* Toast.swift in Sources */,
 				4BB26D1A1FF77EDB001E9556 /* HomeTopTableVIewCell.swift in Sources */,
 				3E3367F02130052E00AC238F /* HomeFreeProMemberVC.swift in Sources */,
+				4B028120223FC6D8005F6916 /* WelcomePopUp.swift in Sources */,
 				4B1F6BC92090A29F00312EA7 /* ShareMapScoreVC.swift in Sources */,
 				4BB26D211FF77EDB001E9556 /* PuttingViewController.swift in Sources */,
 				4B1B1C832226CE8B00FB569F /* DistanceUtil.swift in Sources */,

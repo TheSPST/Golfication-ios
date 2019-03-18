@@ -583,7 +583,6 @@ class BackgroundMapStats: NSObject {
     }
     static func getPlaysLike(headingTarget:Double, degree:Double, windSpeed:Double, dist:Double)->Double{
         if (degree == 0 && windSpeed == 0) {return dist}
-        var dist = dist
         var windTarget = -windSpeed * cos(degree-headingTarget)
         if (Constants.distanceFilter == 1){
             windTarget = windTarget * 1.60934

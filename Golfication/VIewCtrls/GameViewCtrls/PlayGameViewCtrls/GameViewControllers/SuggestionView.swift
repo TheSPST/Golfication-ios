@@ -16,6 +16,7 @@ class SuggestionView: UIView {
     @IBOutlet weak var lblClub: UILabel!
     @IBOutlet weak var lblDirection: UILabel!
     @IBOutlet weak var lblElevDist: UILabel!
+    @IBOutlet weak var lockedImgView: UIImageView!
     
     func setAllData(club:String,dist:Int){
         lblClub.text = club
@@ -30,12 +31,16 @@ class SuggestionView: UIView {
         super.init(coder: aDecoder)
         setup()
     }
-    
+    func setViewForOffCourse(){
+        lockedImgView.isHidden = true
+        lblDirection.isHidden = true
+    }
     func setup() {
         view = loadViewFromNib()
         view.frame = bounds
         view.autoresizingMask = [UIViewAutoresizing.flexibleWidth,UIViewAutoresizing.flexibleHeight]
         addSubview(view)
+        lockedImgView.isHidden = Constants.isProMode
     }
     
     func loadViewFromNib() -> UIView! {

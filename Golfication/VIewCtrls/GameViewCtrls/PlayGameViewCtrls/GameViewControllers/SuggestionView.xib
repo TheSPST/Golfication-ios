@@ -22,6 +22,7 @@
                 <outlet property="lblDistance" destination="CJA-7X-pgd" id="y8O-r4-1E2"/>
                 <outlet property="lblElev" destination="8vD-CX-Led" id="9K4-OC-3P9"/>
                 <outlet property="lblElevDist" destination="8vD-CX-Led" id="vRO-M3-12c"/>
+                <outlet property="lockedImgView" destination="dfL-Zx-XtL" id="I83-d6-krk"/>
                 <outlet property="view" destination="iN0-l3-epB" id="kwv-Yt-EwH"/>
             </connections>
         </placeholder>

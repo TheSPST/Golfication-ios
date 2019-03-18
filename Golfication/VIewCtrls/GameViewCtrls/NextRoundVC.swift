@@ -30,7 +30,6 @@ class NextRoundVC: UIViewController {
     @IBOutlet weak var imageVIew: UIImageView!
     @IBOutlet weak var popUpContainerView: UIView!
     @IBOutlet weak var btnStart: UILocalizedButton!
-    @IBOutlet weak var popUpView: UIView!
     @IBOutlet weak var overlappingView: UIView!
     @IBOutlet weak var lblOverlapping: UILabel!
     
@@ -46,6 +45,8 @@ class NextRoundVC: UIViewController {
 
     @IBOutlet weak var popUpSubView: CardView!
     
+    @IBOutlet weak var multiplayerStackView: UIStackView!
+    @IBOutlet weak var btnAddFriends: UIButton!
     @IBOutlet weak var btnSkip: UIButton!
 
     let progressView = SDLoader()
@@ -525,7 +526,10 @@ class NextRoundVC: UIViewController {
         btnSkip.setTitle(" " + "Skip".localized() + " ", for: .normal)
         //        overlappingView.makeBlurView(targetView: overlappingView)
         btnRequestMapping.setCorner(color: UIColor.clear.cgColor)
-        
+        btnAddFriends.setCornerWithRadius(color: UIColor.clear.cgColor, radius: btnAddFriends.frame.height/2)
+        for btn in multiplayerStackView.subviews{
+            (btn as? UIButton)?.setCornerWithRadius(color: UIColor.glfGreen.cgColor, radius: btn.frame.height/2)
+        }
         popUpContainerView.isHidden = true
         if selectedMode == 1{
             prevShotBottomView.isHidden = true

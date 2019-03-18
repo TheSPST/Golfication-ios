@@ -56,6 +56,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var gpsImageView: UIImageView!
     @IBOutlet weak var lblUnit: UILabel!
     @IBOutlet weak var lblSpeed: UILabel!
+    @IBOutlet weak var lblCustomize: UILabel!
+    @IBOutlet weak var genderSgmtCtrl: UISegmentedControl!
 
     // MARK: Set Variables
     let kHeaderSectionTag: Int = 6900
@@ -76,6 +78,21 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     @IBOutlet var unitSgmtCtrl: UISegmentedControl!
 
+    
+    // MARK: genderChanged
+    @IBAction func genderChanged(_ sender: UISegmentedControl) {
+        switch genderSgmtCtrl.selectedSegmentIndex {
+        case 0:
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"male"] as [AnyHashable:Any])
+            Constants.gender = "male"
+        case 1:
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"female"] as [AnyHashable:Any])
+            Constants.gender = "female"
+        default:
+            break;
+        }
+    }
+    
     @IBAction func unitChanged(_ sender: UISegmentedControl) {
         
         switch unitSgmtCtrl.selectedSegmentIndex {
@@ -104,7 +121,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 //            btnCheckbox.tintColor = UIColor.glfBluegreen
 
             self.btnCheckbox.setImage(nil, for: .normal)
-            self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+            self.btnCheckbox.setCorner(color: UIColor.black.cgColor)
             btnCheckbox.tintColor = UIColor.clear
 
             self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
@@ -127,7 +144,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 //            btnCheckbox.tintColor = UIColor.glfBluegreen
 
             self.btnCheckbox.setImage(nil, for: .normal)
-            self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+            self.btnCheckbox.setCorner(color: UIColor.black.cgColor)
             btnCheckbox.tintColor = UIColor.clear
 
             self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
@@ -198,6 +215,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         tblViewHConstraint.constant = 0
         nearMeContainerView.isHidden = false
+        lblCustomize.isHidden = false
         if !(textField.text == "") {
             self.searchGolfLocation(searchText: textField.text!)
         }
@@ -221,11 +239,14 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
 
         btnNext.layer.cornerRadius = 15.0
-        self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+        self.btnCheckbox.setCorner(color: UIColor.black.cgColor)
         
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
         Constants.handed = "Right"
         
+        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"male"] as [AnyHashable:Any])
+        Constants.gender = "male"
+
         Constants.distanceFilter = 0
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :Constants.distanceFilter] as [AnyHashable:Any])
         lblUnit.text = "Distances in feet and yards."
@@ -256,7 +277,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         tblViewHConstraint.constant = 0
         nearMeContainerView.isHidden = false
-        
+        lblCustomize.isHidden = false
+
         sectionNames = ["Drivers", "Hybrids", "Woods", "Irons", "Wedges", "Putters"]
         sectionItems = [["Dr"],
                         ["1h","2h","3h","4h","5h","6h","7h"],
@@ -288,7 +310,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         let originalImg = UIImage(named:"getStarted1")
         let topImg = originalImg!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        topImageView.tintColor = UIColor.glfBluegreen.withAlphaComponent(0.6)
+//        topImageView.tintColor = UIColor.glfBluegreen.withAlphaComponent(0.6)
+        topImageView.tintColor = UIColor.black.withAlphaComponent(0.6)
         topImageView.image = topImg
 
         let originalGpsImg = UIImage(named:"mapPin")
@@ -452,6 +475,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             searchTxtField.resignFirstResponder()
             tblViewHConstraint.constant = 0
             nearMeContainerView.isHidden = false
+            lblCustomize.isHidden = false
+
             if !(searchTxtField.text == "") {
                 self.searchGolfLocation(searchText: searchTxtField.text!)
             }
@@ -607,6 +632,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.progressView.hide()
                     self.tblViewHConstraint.constant = 0
                     self.nearMeContainerView.isHidden = false
+                    self.lblCustomize.isHidden = false
+
                 })
             }
             else{
@@ -642,7 +669,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.view.layoutIfNeeded()
                         
                         self.nearMeContainerView.isHidden = true
-                        
+                        self.lblCustomize.isHidden = true
+
                         self.courseTblView.delegate = self
                         self.courseTblView.dataSource = self
                         self.courseTblView.reloadData()
@@ -661,7 +689,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
 //            let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
 //            btnCheckbox.tintColor = UIColor.glfBluegreen
             self.btnCheckbox.setImage(nil, for: .normal)
-            self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+            self.btnCheckbox.setCorner(color: UIColor.black.cgColor)
             btnCheckbox.tintColor = UIColor.clear
 
 //            self.sliderHandicapNumber.isEnabled = true
@@ -681,7 +709,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             self.btnCheckbox.imageView?.sizeToFit()
             self.btnCheckbox.isSelected = true
-            self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+            self.btnCheckbox.setCorner(color: UIColor.black.cgColor)
 //            self.sliderHandicapNumber.isEnabled = false
             
             self.lblHandicap.text = "N/A"
@@ -703,7 +731,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         btnCheckbox.tintColor = UIColor.clear
 
         self.btnCheckbox.setImage(nil, for: .normal)
-        self.btnCheckbox.setCorner(color: UIColor.glfBluegreen.cgColor)
+        self.btnCheckbox.setCorner(color: UIColor.black.cgColor)
         btnCheckbox.tintColor = UIColor.clear
 
         self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
@@ -813,10 +841,11 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         if currentPageIndex == 3{
             currentPageIndex = 0
-            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.fromNewUserProfile = true
-            appDelegate.window?.rootViewController = tabBarCtrl
+            btnNext.setTitle(spaceStr + "Done" + spaceStr, for: .normal)
+
+            let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WelcomePopUp") as! WelcomePopUp
+            viewCtrl.modalPresentationStyle = .overCurrentContext
+            self.present(viewCtrl, animated: true, completion: nil)
         }
     }
     
@@ -835,10 +864,11 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         if currentPageIndex == 3{
             currentPageIndex = 0
-            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.fromNewUserProfile = true
-            appDelegate.window?.rootViewController = tabBarCtrl
+            btnNext.setTitle(spaceStr + "Done" + spaceStr, for: .normal)
+
+            let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WelcomePopUp") as! WelcomePopUp
+            viewCtrl.modalPresentationStyle = .overCurrentContext
+            self.present(viewCtrl, animated: true, completion: nil)
         }
     }
     
@@ -1085,6 +1115,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             tblViewHConstraint.constant = 0
             nearMeContainerView.isHidden = false
+            lblCustomize.isHidden = false
+
         }
     }
     

@@ -1271,20 +1271,16 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 lblHolePar.text = "Hole".localized() + " \(self.index+1) - " + "Par".localized() + " \(self.scoreData[self.index].par)"
             }
         }else{
-            if !Constants.isProMode{
-                self.view.makeToast("You have to purchase pro membership")
+            var matchDataDictionary = NSMutableDictionary()
+            if(isFinalSummary){
+                matchDataDictionary = self.matchDataDict
             }else{
-                var matchDataDictionary = NSMutableDictionary()
-                if(isFinalSummary){
-                    matchDataDictionary = self.matchDataDict
-                }else{
-                    matchDataDictionary = Constants.matchDataDic
-                }
-                let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
-                viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
-                viewCtrl.notesHoleNum = "hole\(self.scoreData[sender.tag].hole)"
-                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                matchDataDictionary = Constants.matchDataDic
             }
+            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+            viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
+            viewCtrl.notesHoleNum = "hole\(self.scoreData[sender.tag].hole)"
+            self.navigationController?.pushViewController(viewCtrl, animated: true)
         }
     }
     

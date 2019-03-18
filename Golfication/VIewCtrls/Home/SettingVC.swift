@@ -129,14 +129,16 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
                             clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
                         }
                         else{
-                            let clubSpeedTemp:Double = Double(benchMarkVal.value(forKey: clubName) as! String)!
-                            let min = clubSpeedTemp*0.9 - (clubSpeedTemp*0.9)/2.0
-                            let max = clubSpeedTemp*0.9 + (clubSpeedTemp*0.9)/2.0
-                            
-                            clubMDic.setObject(self.getFullClubName(clubName:clubName), forKey: "clubName" as NSCopying)
-                            clubMDic.setObject(Int(min), forKey: "minVal" as NSCopying)
-                            clubMDic.setObject(Int(max), forKey: "maxVal" as NSCopying)
-                            clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
+                            if let clubTemp = benchMarkVal.value(forKey: clubName) as? String{
+                                let clubSpeedTemp:Double = Double(clubTemp)!
+                                let min = clubSpeedTemp*0.9 - (clubSpeedTemp*0.9)/2.0
+                                let max = clubSpeedTemp*0.9 + (clubSpeedTemp*0.9)/2.0
+                                
+                                clubMDic.setObject(self.getFullClubName(clubName:clubName), forKey: "clubName" as NSCopying)
+                                clubMDic.setObject(Int(min), forKey: "minVal" as NSCopying)
+                                clubMDic.setObject(Int(max), forKey: "maxVal" as NSCopying)
+                                clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
+                            }
                         }
                         clubTempArr.add(clubMDic)
                     }

@@ -128,7 +128,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var first = false
     var windSpeed = 0.0
     var windHeading = 0.0
-    var timeeer = 0
 
     @IBOutlet weak var fairwayHitContainerSV: UIStackView!
     @IBOutlet weak var btnAddNotes: UIButton!
@@ -136,21 +135,16 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     // Menu
     var stackViewMenu : UIStackView!
     @IBAction func addNotesAction(_ sender: Any) {
-        if Constants.isProMode{
-            self.view.makeToast("upgrade to pro membership")
+        var matchDataDictionary = NSMutableDictionary()
+        if(self.isAcceptInvite){
+            matchDataDictionary = self.matchDataDic
         }else{
-            var matchDataDictionary = NSMutableDictionary()
-            if(self.isAcceptInvite){
-                matchDataDictionary = self.matchDataDic
-            }else{
-                matchDataDictionary = matchDataDic
-            }
-            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
-            viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
-            viewCtrl.notesHoleNum = "hole\(self.scoring[self.holeIndex].hole)"
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            matchDataDictionary = matchDataDic
         }
-
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+        viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
+        viewCtrl.notesHoleNum = "hole\(self.scoring[self.holeIndex].hole)"
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     @IBAction func btnActionMenu(_ sender: UIButton) {
@@ -1827,7 +1821,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         self.lblWindS.text = "\(Int(windSpeedWithUnit))"
                         self.lblWindU.text = "mph"
                         if(Constants.distanceFilter == 1){
-                            self.lblWindU.text = "mph"
+                            self.lblWindU.text = "kmph"
                             self.lblWindS.text = "\(Int(windSpeedWithUnit*1.60934))"
                             self.windNotesView.lblWind.text = "\(Int(windSpeedWithUnit*1.60934)) kmph"
                         }
@@ -2980,6 +2974,18 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             return preferredClubs[index]
         }
     }
+    func getElevationPoint(position:CLLocationCoordinate2D,holeArr:NSMutableDictionary)->NSMutableDictionary{
+        var coordArr = [CLLocationCoordinate2D]()
+        var hArr = [NSMutableDictionary]()
+        for value in holeArr.allValues{
+            hArr.append(value as! NSMutableDictionary)
+        }
+        for data in hArr{
+            coordArr.append(CLLocationCoordinate2D(latitude: data.value(forKey: "lat") as! Double, longitude: data.value(forKey: "lng") as! Double))
+        }
+        let nearbuy = holeArr[BackgroundMapStats.nearByPoint(newPoint: position, array: coordArr)]
+        return nearbuy as! NSMutableDictionary
+    }
     func plotSuggestedMarkers(position:[CLLocationCoordinate2D]){
         if(position.count > 2){
 //            let dict1: [NSAttributedStringKey : Any] = [
@@ -3001,16 +3007,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             let head = GMSGeometryHeading(position[1], position.last!)
             markerText1 = "  \(Int(dist1)) yd "
             markerText = "  \(Int(dist == 0 ? 1:dist)) yd "
-            var suffi = "yd"
             if(Constants.distanceFilter == 1){
                 markerText = "  \(Int((dist < Constants.YARD ? Constants.YARD:dist)/(Constants.YARD))) m "
                 markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
                 dist1 = dist1/Constants.YARD
                 dist = dist/Constants.YARD
-                suffi = "m"
             }
-            var elev1 = BackgroundMapStats.getPlaysLike(headingTarget: head1, degree: self.windHeading, windSpeed: self.windSpeed, dist: dist1)
-            var elev = BackgroundMapStats.getPlaysLike(headingTarget: head, degree: self.windHeading, windSpeed: self.windSpeed, dist: dist)
+            let elev1 = BackgroundMapStats.getPlaysLike(headingTarget: head1, degree: self.windHeading, windSpeed: self.windSpeed, dist: dist1)
+            let elev = BackgroundMapStats.getPlaysLike(headingTarget: head, degree: self.windHeading, windSpeed: self.windSpeed, dist: dist)
             markerClub1 = clubReco(dist: dist1, lie: "T")
             markerClub = clubReco(dist: dist, lie: "O")
             if(dist > 250){
@@ -3023,8 +3027,25 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
             
             btnForSugg1.setAllData(club: markerClub1, dist: Int(dist1))
-            btnForSugg1.lblElevDist.text = "\(elev1) \(suffi)"
-            BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+            btnForSugg1.lblElevDist.text = "\(elev1)"
+            if !courseData.elevationHole.isEmpty{
+                let elevation1 = self.getElevationPoint(position: position.first!, holeArr: courseData.elevationHole[self.holeIndex])
+                let elevation2 = self.getElevationPoint(position: position[1], holeArr: courseData.elevationHole[self.holeIndex])
+                let elev1 = elevation1.value(forKey: "elevation") as! Double
+                let elev2 = elevation2.value(forKey: "elevation") as! Double
+                var finalElev = elev1-elev2
+                var suffix = "m"
+                if(Constants.distanceFilter == 0){
+                    finalElev = finalElev*3.28084
+                    suffix = "ft"
+                }
+                if finalElev > 0{
+                    BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                }else{
+                    BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg1.lblDirection)
+                }
+                btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+            }
             suggestedMarker1.iconView = btnForSugg1
             suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
             suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/2, GMSGeometryHeading(position.first!, position[1]))
@@ -3032,8 +3053,25 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             
             suggestedMarker2.map = nil
             btnForSugg2.setAllData(club: markerClub, dist: Int(dist))
-            btnForSugg2.lblElevDist.text = "\(elev) \(suffi)"
-            BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: true, label: btnForSugg2.lblDirection)
+            btnForSugg2.lblElevDist.text = "\(elev)"
+            if !courseData.elevationHole.isEmpty{
+                let elevation1 = self.getElevationPoint(position: position[1], holeArr: courseData.elevationHole[self.holeIndex])
+                let elevation2 = self.getElevationPoint(position: position.last!, holeArr: courseData.elevationHole[self.holeIndex])
+                let elev1 = elevation1.value(forKey: "elevation") as! Double
+                let elev2 = elevation2.value(forKey: "elevation") as! Double
+                var finalElev = elev1-elev2
+                var suffix = "m"
+                if(Constants.distanceFilter == 0){
+                    finalElev = finalElev*3.28084
+                    suffix = "ft"
+                }
+                if finalElev > 0{
+                    BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
+                }else{
+                    BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg2.lblDirection)
+                }
+                btnForSugg2.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+            }
             suggestedMarker2.iconView = btnForSugg2
             suggestedMarker2.position = GMSGeometryOffset(position[1], dist/2, GMSGeometryHeading(position[1], position.last!))
             suggestedMarker2.groundAnchor = CGPoint(x:-0.02,y:0.5)

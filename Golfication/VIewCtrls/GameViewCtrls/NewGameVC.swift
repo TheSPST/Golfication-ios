@@ -67,8 +67,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @IBOutlet weak var classicScoringSV: UIStackView!
     //    @IBOutlet weak var newGameSV: UIStackView!
     
+    @IBOutlet weak var addFriendsBtn: UIButton!
     @IBOutlet weak var newGamescrollView: UIScrollView!
+    @IBOutlet weak var goalView: CardView!
+    @IBOutlet weak var btnPar: UIButton!
+    @IBOutlet weak var btnBirdie: UIButton!
+    @IBOutlet weak var btnFairway: UIButton!
+    @IBOutlet weak var btnGir: UIButton!
     
+    @IBOutlet weak var imgViewEditGoals: UIImageView!
+    @IBOutlet weak var btnEditGoals: UIButton!
+    @IBOutlet weak var multiplayerButtonStackView: UIStackView!
     let progressView = SDLoader()
     @IBOutlet weak var continueGameView: UIView!
     @IBOutlet weak var golfCourseBgView: UIView!
@@ -169,7 +178,21 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.navigationController?.popViewController(animated: true)
         Constants.addPlayersArray.removeAllObjects()
     }
-    
+    @IBAction func btnActionEditGoal(_ sender: Any) {
+        self.progressView.show()
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+            var golfBagArray = NSMutableArray()
+            if(snapshot.value != nil){
+                golfBagArray = snapshot.value as! NSMutableArray
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide()
+                let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "SettingVC") as! SettingVC
+                viewCtrl.golfBagArray = golfBagArray
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
+            })
+        }
+    }
     
     var golfXPopupView: UIView!
     var btnRetry: UIButton!
@@ -502,6 +525,20 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         imagePicker.delegate = self
         self.getHandicap()
+        addFriendsBtn.setCornerWithRadius(color: UIColor.clear.cgColor, radius: addFriendsBtn.frame.height/2)
+        for btn in multiplayerButtonStackView.subviews{
+            (btn as? UIButton)?.setCornerWithRadius(color: UIColor.glfGreen.cgColor, radius: btn.frame.height/2)
+        }
+        
+        btnPar.setCornerWithRadius(color: UIColor.glfWarmGrey.cgColor, radius: 5.0)
+        btnPar.setTitleColor(UIColor.glfWarmGrey, for: .normal)
+        btnBirdie.setCornerWithRadius(color: UIColor.glfWarmGrey.cgColor, radius: 5.0)
+        btnBirdie.setTitleColor(UIColor.glfWarmGrey, for: .normal)
+        btnFairway.setCornerWithRadius(color: UIColor.glfWarmGrey.cgColor, radius: 5.0)
+        btnFairway.setTitleColor(UIColor.glfWarmGrey, for: .normal)
+        btnGir.setCornerWithRadius(color: UIColor.glfWarmGrey.cgColor, radius: 5.0)
+        btnGir.setTitleColor(UIColor.glfWarmGrey, for: .normal)
+        imgViewEditGoals.tintImageColor(color: UIColor.glfFlatBlue)
         // for Bluetooth device setup
         barBtnBLE = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(self.golfXAction))
         barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
@@ -917,14 +954,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: gameTypeChanged
     @IBAction func gameTypeChanged(_ sender: UISegmentedControl) {
+        var isNine = false
         switch gameTypeSgmtCtrl.selectedSegmentIndex {
         case 0:
             Constants.gameType = "18 holes"
         case 1:
             Constants.gameType = "9 holes"
+            isNine = true
         default:
             break;
         }
+        self.updateGoals(isNine:isNine)
     }
     // MARK: startHoleAction
     @IBAction func startHoleAction(sender: AnyObject) {
@@ -1384,7 +1424,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 DispatchQueue.main.async(execute: {
                     if golfData.count != 0{
                         if let parArray = golfData.object(forKey: "par") as? NSArray{
-                            
                             if parArray.count == 18{
                                 self.gameTypeSgmtCtrl.selectedSegmentIndex = 0
                             }
@@ -1590,7 +1629,12 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
     }
-    
+    func updateGoals(isNine:Bool){
+        btnPar.setTitle("\(Constants.targetGoal.par/(isNine ? 2:1))", for: .normal)
+        btnBirdie.setTitle("\(Constants.targetGoal.Birdie/(isNine ? 2:1))", for: .normal)
+        btnFairway.setTitle("\(Constants.targetGoal.fairwayHit/(isNine ? 2:1))", for: .normal)
+        btnGir.setTitle("\(Constants.targetGoal.gir/(isNine ? 2:1))", for: .normal)
+    }
     @IBAction func btnActionForRequestMapping(_ sender: UIButton) {
         var mappingCount = 0
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourse/\(Constants.selectedGolfID)") { (snapshot) in
@@ -1875,18 +1919,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }else{
             self.checkingLocation()
         }
-        
-        //        else if(mode == 2){
-        //            if  !(selectedGolfID == "") {
-        //                self.checkingLocation()
-        //
-        //            }
-        //        }
-        //        else{
-        //            if  !(selectedGolfID == ""){
-        //                self.checkingLocation()
-        //            }
-        //        }
         Notification.sendLocaNotificatonToUser()
     }
     func checkingLocation(){

@@ -23,6 +23,7 @@ class CourseData:NSObject{
     var gameTypeIndex = 18
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     var isContinue = false
+    var elevationHole = [NSMutableDictionary]()
     func getGolfCourseDataFromFirebase(courseId:String){
 //        let courseId = "course_99999999"
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
@@ -86,6 +87,11 @@ class CourseData:NSObject{
                 else if ((key as! String) == "rangefinder"){
                     let dict = value as! NSMutableDictionary
                     rangeFinderHoles = dict.value(forKey: "holes") as! NSArray
+                    if let elevation = dict.value(forKey: "elevations") as? NSArray{
+                        for data in elevation{
+                            self.elevationHole.append(data as! NSMutableDictionary)
+                        }
+                    }
                 }else if((key as! String) == "stableford"){
                     let dict = value as! NSMutableDictionary
                     stableFordHoles = dict.value(forKey: "holes") as! NSArray
@@ -214,11 +220,15 @@ class CourseData:NSObject{
                         var tempNuOfHole = self.numberOfHoles
                         var temp = self.holeHcpWithTee
                         var tempGreen = self.holeGreenDataArr
+                        var tempElevation = self.elevationHole
                         for data in self.holeGreenDataArr{
                             tempGreen.append(data)
                         }
                         for data in self.holeHcpWithTee{
                             temp.append(data)
+                        }
+                        for data in self.elevationHole{
+                            tempElevation.append(data)
                         }
                         for data in self.propertyArray{
                             tempArr.append(data)
@@ -238,6 +248,7 @@ class CourseData:NSObject{
                         self.centerPointOfTeeNGreen = tempHoleArr
                         self.holeHcpWithTee = temp
                         self.holeGreenDataArr = tempGreen
+                        self.elevationHole = tempElevation
                     }else if (self.numberOfHoles.count > self.gameTypeIndex){
                         Constants.back9 = false
                         if (self.startingIndex > self.gameTypeIndex){
@@ -248,7 +259,9 @@ class CourseData:NSObject{
                             if !self.holeHcpWithTee.isEmpty{
                                 self.holeHcpWithTee.removeFirst(9)
                             }
-
+                            if !self.elevationHole.isEmpty{
+                               self.elevationHole.removeFirst(9)
+                            }
                             Constants.back9 = true
                             for i in 0..<9{
                                 for j in 0..<self.propertyArray.count{
@@ -264,6 +277,9 @@ class CourseData:NSObject{
                             }
                             if !self.holeHcpWithTee.isEmpty{
                                 self.holeHcpWithTee.removeLast(9)
+                            }
+                            if !self.elevationHole.isEmpty{
+                                self.elevationHole.removeLast(9)
                             }
                             for i in 9..<18{
                                 for j in 0..<self.propertyArray.count{

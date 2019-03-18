@@ -17,6 +17,8 @@ class WindNotesView: UIView {
     @IBOutlet weak var btnWindLock: UIButton!
     @IBOutlet weak var btnNotesLock: UIButton!
     
+    @IBOutlet weak var midLblLine: UILabel!
+    @IBOutlet weak var windStackView: UIStackView!
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -26,7 +28,11 @@ class WindNotesView: UIView {
         super.init(coder: aDecoder)
         setup()
     }
-    
+    func setViewForOffCourse(){
+        midLblLine.isHidden = true
+        windStackView.isHidden = true
+        view.bounds.size = CGSize(width: view.bounds.width, height: view.bounds.height/2)
+    }
     func setup() {
         view = loadViewFromNib()
         view.frame = bounds
