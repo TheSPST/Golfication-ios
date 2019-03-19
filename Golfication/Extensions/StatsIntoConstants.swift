@@ -11,6 +11,8 @@ import Foundation
 struct StatsIntoConstants{
     
     // MARK: Overview
+    static let swingGoals = "Using data from over 50,000 golfers of different playing handicaps, Eddie assigns smart goals that will put you on the path of consistent game improvement! Achieving a goal is a small win for any golfer - kind of like driving a Par-5 in 2, or making a 30-ft putt... It serves as motivation to achieve bigger and better things!\n\nGoals are in four categories:\n- Pars: number of pars you need to make in an 18-hole round\n- Birdies: number of birdies you need to make in an 18-hole round\n- Fairways: number of fairways you need to hit during your round\n- GIRs: number of greens you need to hit in regulation\n\nYour smart goal is assigned based on your handicap category, but feel free to change it if you think you can do better!"
+    
     static let averageRoundScores = "While we're busy working on swing fixes, training aids, and that new tip from our YouTube Coach, we mustn't forget that the primary objective of golf is to shoot lower scores. Average Round Scores pronounce the verdict, and all other stats merely tell us how we arrived at it!\n\nIn fact, data crunched from thousands of rounds played using the Golfication App tell us exactly how much you can expect to score, given your handicap. Tell us your handicap by updating it in the profile section."
     
     static let scoreDistribution = "Have you ever broken 100? Do you shoot in the 80s? Or are you going to challenge Par? Based on our handicap level, we have different objectives. This graph tells you the story of your progress, and your goal is to shift the graph towards the left! Seems easy enough, right?"

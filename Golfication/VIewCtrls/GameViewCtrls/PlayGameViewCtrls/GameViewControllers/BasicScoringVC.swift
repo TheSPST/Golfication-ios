@@ -619,9 +619,13 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     var achievedGoal = Goal()
     var targetGoal = Goal()
-    
+    @objc func unlockEddie(_ sender: UIButton){
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         setInitialUI()
         setHoleNum()
         btnAddNotes.setCornerWithRadius(color: UIColor.clear.cgColor, radius: 12.5)

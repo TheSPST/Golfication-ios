@@ -18,9 +18,12 @@ class SuggestionView: UIView {
     @IBOutlet weak var lblElevDist: UILabel!
     @IBOutlet weak var lockedImgView: UIImageView!
     
-    func setAllData(club:String,dist:Int){
+    func setAllData(club:String,dist:Int,elevDis:String){
         lblClub.text = club
         lblDistance.text = "\(dist)"
+        if Constants.isProMode{
+            lblElev.text = elevDis
+        }
     }
     override init(frame: CGRect) {
         super.init(frame: frame)

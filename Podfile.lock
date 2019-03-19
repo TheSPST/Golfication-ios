@@ -113,6 +113,7 @@ PODS:
   - SDWebImage/Core (4.3.0)
   - SwiftyStoreKit (0.11.2)
   - UICircularProgressRing (1.7.4)
+  - "UITextView+Placeholder (1.2.1)"
   - XLPagerTabStrip (8.0.0)
   - youtube-ios-player-helper (0.1.6)
 
@@ -141,6 +142,7 @@ DEPENDENCIES:
   - SDWebImage (~> 4.0)
   - SwiftyStoreKit
   - UICircularProgressRing
+  - "UITextView+Placeholder"
   - XLPagerTabStrip (~> 8.0)
   - youtube-ios-player-helper (~> 0.1.4)
 
@@ -183,6 +185,7 @@ SPEC REPOS:
     - SDWebImage
     - SwiftyStoreKit
     - UICircularProgressRing
+    - "UITextView+Placeholder"
     - XLPagerTabStrip
     - youtube-ios-player-helper
 
@@ -224,9 +227,10 @@ SPEC CHECKSUMS:
   SDWebImage: 6da6c8bca115addc4de8613362e1b15f66333825
   SwiftyStoreKit: 5a6393f606bb91f859efe52bbd6a3bed510fbe0a
   UICircularProgressRing: 5aca63423d913dc967661370e94e2af0770dd9cd
+  "UITextView+Placeholder": 0c3efd97f37ea64bde7f34cc6e90fe02e87b3909
   XLPagerTabStrip: d1ab378af0923320ec0b5eab11d7b2f803d31261
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: e2bc1327620450f1cd5b113fe0b465f3d0861f8d
+PODFILE CHECKSUM: 0f173b156d6843d5090bf3da2e373cb97ba8c83d
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0.rc.2

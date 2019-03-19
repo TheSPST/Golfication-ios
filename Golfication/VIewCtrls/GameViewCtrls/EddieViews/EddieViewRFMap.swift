@@ -21,6 +21,7 @@ class EddieViewRFMap: UIView {
     @IBOutlet weak var viewFairwayHit: UIView!
     @IBOutlet weak var lblFairwayHitValue: UILabel!
     
+    @IBOutlet weak var btnUnlockEddie: UIButton!
     @IBOutlet weak var lblPar: UILabel!
     @IBOutlet weak var lblGIR: UILabel!
     @IBOutlet weak var lblBirdie: UILabel!

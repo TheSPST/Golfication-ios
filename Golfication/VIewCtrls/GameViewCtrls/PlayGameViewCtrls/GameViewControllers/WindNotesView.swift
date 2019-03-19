@@ -17,6 +17,8 @@ class WindNotesView: UIView {
     @IBOutlet weak var btnWindLock: UIButton!
     @IBOutlet weak var btnNotesLock: UIButton!
     
+    @IBOutlet weak var btnNotesUnlock: UIButton!
+    @IBOutlet weak var btnWindUnlock: UIButton!
     @IBOutlet weak var midLblLine: UILabel!
     @IBOutlet weak var windStackView: UIStackView!
     override init(frame: CGRect) {
@@ -32,6 +34,7 @@ class WindNotesView: UIView {
         midLblLine.isHidden = true
         windStackView.isHidden = true
         view.bounds.size = CGSize(width: view.bounds.width, height: view.bounds.height/2)
+        btnWindLock.isHidden = true
     }
     func setup() {
         view = loadViewFromNib()

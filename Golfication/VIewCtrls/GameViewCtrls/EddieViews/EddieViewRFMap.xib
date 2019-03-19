@@ -23,6 +23,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EddieViewRFMap" customModule="Golfication" customModuleProvider="target">
             <connections>
+                <outlet property="btnUnlockEddie" destination="iFl-Su-ELJ" id="Dmn-pU-cqP"/>
                 <outlet property="byEddieView" destination="q0j-O2-wEV" id="PTA-qV-XCS"/>
                 <outlet property="lblBirdie" destination="sq6-qQ-ADh" id="vsd-JR-rcG"/>
                 <outlet property="lblBirdieValue" destination="BQ2-Bt-1OA" id="qth-5C-dZd"/>
@@ -88,7 +89,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="BsX-a1-Hqm">
                             <rect key="frame" x="0.0" y="2.5" width="68.5" height="20"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Ryellow" translatesAutoresizingMaskIntoConstraints="NO" id="qFI-dT-lyc">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eddieUSer" translatesAutoresizingMaskIntoConstraints="NO" id="qFI-dT-lyc">
                                     <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="20" id="FD5-Gx-6EV"/>
@@ -238,19 +239,19 @@
                     </subviews>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y18-Ed-6hR">
-                    <rect key="frame" x="263.5" y="132" width="103.5" height="25"/>
+                    <rect key="frame" x="259.5" y="132" width="107.5" height="25"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="cfw-vp-Hgr">
-                            <rect key="frame" x="0.0" y="2.5" width="103.5" height="20"/>
+                            <rect key="frame" x="0.0" y="2.5" width="107.5" height="20"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Unlock With Eddie" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e9j-ld-Y0N">
-                                    <rect key="frame" x="0.0" y="0.0" width="79.5" height="20"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   Unlock With Eddie" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e9j-ld-Y0N">
+                                    <rect key="frame" x="0.0" y="0.0" width="83.5" height="20"/>
                                     <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="10"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Rblue" translatesAutoresizingMaskIntoConstraints="NO" id="X3n-XB-MBr">
-                                    <rect key="frame" x="83.5" y="0.0" width="20" height="20"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eddieUSer" translatesAutoresizingMaskIntoConstraints="NO" id="X3n-XB-MBr">
+                                    <rect key="frame" x="87.5" y="0.0" width="20" height="20"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="20" id="3KH-hD-W6U"/>
                                         <constraint firstAttribute="width" constant="20" id="9NE-7i-DPE"/>
@@ -267,13 +268,20 @@
                         <constraint firstItem="cfw-vp-Hgr" firstAttribute="leading" secondItem="y18-Ed-6hR" secondAttribute="leading" id="xkq-UF-1EW"/>
                     </constraints>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iFl-Su-ELJ">
+                    <rect key="frame" x="259.5" y="132" width="107.5" height="25"/>
+                </button>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="wpr-bL-QS0" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="Aek-3A-89f"/>
+                <constraint firstItem="iFl-Su-ELJ" firstAttribute="width" secondItem="y18-Ed-6hR" secondAttribute="width" id="KgG-lJ-XBK"/>
+                <constraint firstItem="y18-Ed-6hR" firstAttribute="trailing" secondItem="iFl-Su-ELJ" secondAttribute="trailing" id="Rla-E5-9Zb"/>
                 <constraint firstItem="q0j-O2-wEV" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="4" id="YN2-jP-gPP"/>
+                <constraint firstItem="y18-Ed-6hR" firstAttribute="bottom" secondItem="iFl-Su-ELJ" secondAttribute="bottom" id="Yiv-4H-qNp"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="wpr-bL-QS0" secondAttribute="trailing" constant="16" id="dGl-fu-dEI"/>
                 <constraint firstItem="Tsf-GO-frG" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="4" id="di7-86-eKd"/>
+                <constraint firstItem="iFl-Su-ELJ" firstAttribute="height" secondItem="y18-Ed-6hR" secondAttribute="height" id="fNK-s0-vax"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="y18-Ed-6hR" secondAttribute="bottom" constant="4" id="mFk-9m-TIb"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="y18-Ed-6hR" secondAttribute="trailing" constant="8" id="nAF-vl-e8O"/>
                 <constraint firstItem="y18-Ed-6hR" firstAttribute="top" secondItem="wpr-bL-QS0" secondAttribute="bottom" constant="8" id="sae-rf-Xbn"/>
@@ -287,8 +295,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Rblue" width="153" height="153"/>
-        <image name="Ryellow" width="153" height="153"/>
+        <image name="eddieUSer" width="976" height="976"/>
         <image name="locked_1" width="48" height="48"/>
         <image name="target_1" width="32" height="32"/>
     </resources>

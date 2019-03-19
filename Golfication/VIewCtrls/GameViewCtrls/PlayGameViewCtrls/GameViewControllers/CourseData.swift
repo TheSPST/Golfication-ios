@@ -23,9 +23,10 @@ class CourseData:NSObject{
     var gameTypeIndex = 18
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     var isContinue = false
-    var elevationHole = [NSMutableDictionary]()
+    var elevationHole = [NSArray]()
     func getGolfCourseDataFromFirebase(courseId:String){
-//        let courseId = "course_99999999"
+//        let courseId = "course_9999999"
+        
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath:courseId) { (snapshot) in
             let group = DispatchGroup()
             let completeDataDict = (snapshot.value as? NSDictionary)!
@@ -89,7 +90,7 @@ class CourseData:NSObject{
                     rangeFinderHoles = dict.value(forKey: "holes") as! NSArray
                     if let elevation = dict.value(forKey: "elevations") as? NSArray{
                         for data in elevation{
-                            self.elevationHole.append(data as! NSMutableDictionary)
+                            self.elevationHole.append(data as! NSArray)
                         }
                     }
                 }else if((key as! String) == "stableford"){

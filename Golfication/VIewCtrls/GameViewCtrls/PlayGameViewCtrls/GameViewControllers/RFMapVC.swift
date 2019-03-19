@@ -17,7 +17,6 @@ import FirebaseDatabase
 import FirebaseAnalytics
 import UserNotifications
 import CoreData
-import IntentsUI
 struct GreenData {
     let front: CLLocationCoordinate2D
     let center: CLLocationCoordinate2D
@@ -64,6 +63,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var lblFrontDist: UILabel!
     @IBOutlet weak var lblCenterDist: UILabel!
     @IBOutlet weak var lblEndDist: UILabel!
+    @IBOutlet weak var lblBackElev: UILabel!
+    @IBOutlet weak var lblCenterElev: UILabel!
+    @IBOutlet weak var lblFrontElev: UILabel!
     @IBOutlet weak var lblCenterHeader: UILabel!
     @IBOutlet weak var viewForground : UIView!
     
@@ -102,6 +104,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var lblDirFront: UILabel!
     @IBOutlet weak var btnWindImgLock: UIButton!
     @IBOutlet weak var windNotesView: WindNotesView!
+    @IBOutlet weak var lockBack: UIImageView!
+    @IBOutlet weak var lockCenter: UIImageView!
+    @IBOutlet weak var lockFront: UIImageView!
+    @IBOutlet weak var lblWindOnlyLbl: UILabel!
+    
     
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
@@ -130,11 +137,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var windHeading = 0.0
 
     @IBOutlet weak var fairwayHitContainerSV: UIStackView!
-    @IBOutlet weak var btnAddNotes: UIButton!
 
     // Menu
     var stackViewMenu : UIStackView!
-    @IBAction func addNotesAction(_ sender: Any) {
+    @objc func addNotesAction(_ sender: Any) {
         var matchDataDictionary = NSMutableDictionary()
         if(self.isAcceptInvite){
             matchDataDictionary = self.matchDataDic
@@ -1120,6 +1126,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     override func viewDidLoad() {
         super.viewDidLoad()
         initalSetup()
+        self.mapView.delegate = self
         btnPlayerStats.isEnabled = false
         self.view.isUserInteractionEnabled = false
         let onCourse = matchDataDic.value(forKeyPath: "onCourse") as! Bool
@@ -1349,8 +1356,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var targetGoal = Goal()
     func initalSetup(){
         self.eddieView.setup()
+        eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         self.siriSetupView.isHidden = !Constants.isProMode
         self.unlockEddieView.isHidden = Constants.isProMode
+        lockBack.isHidden = Constants.isProMode
+        lockCenter.isHidden = Constants.isProMode
+        lockFront.isHidden = Constants.isProMode
+        lblWindOnlyLbl.isHidden = Constants.isProMode
         self.btnUnlockE.setCornerWithRadius(color: UIColor.clear.cgColor, radius: self.btnUnlockE.frame.height/2)
         self.imgViewWindForeground.tintImageColor(color: UIColor.glfYellow)
         BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblDirBack)
@@ -1364,18 +1376,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         self.btnWindImgLock.tintColor = UIColor.glfBlack
         self.btnWindImgLock.backgroundColor = UIColor.glfWhite
         self.btnWindImgLock.isHidden = Constants.isProMode
-        //INIntent
-        let button = INUIAddVoiceShortcutButton(style: .white)
-        let customIntent = DistanceOfGreenIntent()
-        if let shortcut = INShortcut(intent: customIntent) {
-            button.shortcut = shortcut
-        }
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.delegate = self
-        self.btnSiriSetup.addSubview(button)
-//        self.btnSiriSetup.setCornerWithRadius(color: UIColor.glfYellow.cgColor, radius: btnSiriSetup.frame.height/2)
-        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
-        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
+        let backBtnImag = #imageLiteral(resourceName: "setting").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        self.btnSiriSetup.setImage(backBtnImag, for: .normal)
+        self.btnSiriSetup.tintColor = UIColor.glfYellow
+        self.btnSiriSetup.setCorner(color: UIColor.glfYellow.cgColor)
+//        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
+//        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
         lblEditShotNumber.layer.cornerRadius = lblEditShotNumber.frame.size.height/2
         lblEditShotNumber.layer.masksToBounds = true
         
@@ -1388,6 +1394,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         btnNext.isHidden = false
         btnPrev.isHidden = false
         btnDetailScoring.setCorner(color: UIColor.glfWhite.cgColor)
+        btnDetailScoring.setTitleColor(UIColor.glfWhite, for: .normal)
         btnNext.setCircle(frame: self.btnNext.frame)
         btnPrev.setCircle(frame: self.btnPrev.frame)
         btnNextScrl.setCircle(frame: btnNextScrl.frame)
@@ -1498,6 +1505,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         setInitialUI()
         
     }
+    @objc func unlockEddie(_ sender: UIButton){
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+    }
     /*
     @objc func wasDragged(sender: UIPanGestureRecognizer) {
         self.view.bringSubview(toFront: sender.view!)
@@ -1551,8 +1562,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             UIView.commitAnimations()
         }
     }*/
+    
+    @IBAction func btnActionSiriSetup(_ sender: Any) {
+        let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "SiriSetupVC") as! SiriSetupVC
+    self.navigationController?.pushViewController(viewCtrl, animated: false)
+    }
     @IBAction func btnActionUnlockEddie(_ sender: Any) {
-        
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     func updateNotificationFor30Minutes(){
         ref.child("matchData/\(self.matchId)/scoring").observe(DataEventType.value, with: { (snapshot) in
@@ -1582,10 +1599,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 self.showHideViews(isHide:false)
             })
         }
-    }
-    @IBAction func btnActionSiriSetup(_ sender: Any) {
-        
-        
     }
     
     func showHideViews(isHide:Bool){
@@ -1810,15 +1823,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             DispatchQueue.main.async(execute: {
                 let headingOfHole = GMSGeometryHeading(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee,self.courseData.centerPointOfTeeNGreen[indexToUpdate].green)
                 debugPrint(response!)
-                var windHeding = Double()
                 for data in response!{
                     debugPrint(data.key)
                     if data.key == "wind"{
                         self.windTimeStamp = Timestamp + 600000
                         self.windSpeed = (data.value as AnyObject).value(forKey: "speed") as! Double
                         let windSpeedWithUnit = self.windSpeed * 2.23694
-                        self.windNotesView.lblWind.text = " \(Int(windSpeedWithUnit)) mph"
-                        self.lblWindS.text = "\(Int(windSpeedWithUnit))"
+                        self.windNotesView.lblWind.text = " \(Int(windSpeedWithUnit.rounded())) mph"
+                        self.lblWindS.text = "\(Int(windSpeedWithUnit.rounded()))"
                         self.lblWindU.text = "mph"
                         if(Constants.distanceFilter == 1){
                             self.lblWindU.text = "kmph"
@@ -1826,13 +1838,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                             self.windNotesView.lblWind.text = "\(Int(windSpeedWithUnit*1.60934)) kmph"
                         }
                         if let degree = (data.value as AnyObject).value(forKey: "deg") as? Double{
-                            windHeding = degree + 90
-                            self.windHeading = degree
+                            self.windHeading = degree + 135
                         }
-                        let rotationAngle = headingOfHole - windHeding
+                        let rotationAngle1 = self.windHeading - headingOfHole
+                        let rotationAngle = self.windHeading - self.mapView.camera.bearing
                         UIButton.animate(withDuration: 2.0, animations: {
                             self.windNotesView.imgWind.transform = CGAffineTransform(rotationAngle: (CGFloat(rotationAngle)) / 180.0 * CGFloat(Double.pi))
-                            self.imgViewWindForeground.transform = CGAffineTransform(rotationAngle: (CGFloat(rotationAngle)) / 180.0 * CGFloat(Double.pi))
+                            self.imgViewWindForeground.transform = CGAffineTransform(rotationAngle: (CGFloat(rotationAngle1)) / 180.0 * CGFloat(Double.pi))
                         })
                         break
                     }
@@ -1903,6 +1915,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
         }
     }
+    
+    @objc func btnActionWindLocked(_ sender: Any) {
+        if !Constants.isProMode{
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            self.navigationController?.pushViewController(viewCtrl, animated: false)
+        }
+    }
+    
     @objc func strokesAction(sender: UIButton!){
         let title = sender.currentTitle
         lblEditShotNumber.text = " \(title!) "
@@ -2583,9 +2603,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     // Update Map - removing all markers and features from map and reload map with new Features and details.
     func updateMap(indexToUpdate:Int){
-        btnAddNotes.isHidden = true
         if self.playerId.contains(find: "\(Auth.auth().currentUser!.uid)"){
-            btnAddNotes.isHidden = false
+            windNotesView.btnNotesUnlock.isHidden = false
+            
+        }else{
+            windNotesView.btnNotesUnlock.isHidden = true
         }
         self.suggestedMarker1.map = nil
         self.suggestedMarker2.map = nil
@@ -2670,64 +2692,82 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     }else{
                         self.locationManager.startUpdatingLocation()
                     }
-                    let distance  = GMSGeometryDistance(self.positionsOfDotLine.first!,self.userLocationForClub!)
+                    debugPrint(self.windSpeed)
+                    debugPrint(self.windHeading)
                     if Constants.isProMode && self.windTimeStamp < Timestamp{
                         self.updateWindSpeed(latLng: self.userLocationForClub!, indexToUpdate: indexToUpdate)
+                    }else{
+                        if let currentLocation: CLLocation = self.locationManager.location{
+                            debugPrint(currentLocation.altitude)
+                            self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+                            let heading = GMSGeometryHeading(self.userLocationForClub!,self.courseData.centerPointOfTeeNGreen[self.holeIndex].green)
+                            let rotationAngle = self.windHeading-heading
+                            UIButton.animate(withDuration: 0.5, animations: {
+                                self.imgViewWindForeground.transform = CGAffineTransform(rotationAngle: CGFloat(rotationAngle) / 180.0 * CGFloat(Double.pi))
+                            })
+                        }
                     }
-                    if (distance < 15000.0){
-                        self.positionsOfDotLine.remove(at: 0)
-                        self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
-                        self.isUserInsideBound = true
-                        self.markers[0].position = self.positionsOfDotLine.first!
-                        if(self.previousLocation != nil){
-                            let newDis = GMSGeometryDistance(self.positionsOfDotLine.first!, self.previousLocation)
-                            if(newDis > 10){
-                                self.first = false
-                            }
+                    self.positionsOfDotLine.remove(at: 0)
+                    self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
+                    self.isUserInsideBound = true
+                    self.markers[0].position = self.positionsOfDotLine.first!
+                    if(self.previousLocation != nil){
+                        let newDis = GMSGeometryDistance(self.positionsOfDotLine.first!, self.previousLocation)
+                        if(newDis > 10){
+                            self.first = false
                         }
-                        
-                        if(!self.first){
-                            let newDist = GMSGeometryDistance(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!)
-                            if(newDist > 225){
-                                self.positionsOfDotLine[1] = GMSGeometryOffset(self.positionsOfDotLine.first!, 225, GMSGeometryHeading(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!))
-                                self.markers[1].position = self.positionsOfDotLine[1]
-                            }
-                            self.first = true
-                        }
-                        self.plotLine(positions: self.positionsOfDotLine)
-                        var data : GreenData!
-                        if(self.courseData.holeGreenDataArr.isEmpty){
-                            data = self.setFronBackCenter(ind: indexToUpdate, currentLocation: self.userLocationForClub!)
-                        }else{
-                            data = self.courseData.holeGreenDataArr[indexToUpdate]
-                        }
-                        var distanceF = GMSGeometryDistance(data.front,self.userLocationForClub!) * Constants.YARD
-                        var distanceC = GMSGeometryDistance(data.center,self.userLocationForClub!) * Constants.YARD
-                        var distanceE = GMSGeometryDistance(data.back,self.userLocationForClub!) * Constants.YARD
-                        var suffix = "yd"
-                        if(Constants.distanceFilter == 1){
-                            suffix = "m"
-                            distanceF = distanceF/Constants.YARD
-                            distanceC = distanceC/Constants.YARD
-                            distanceE = distanceE/Constants.YARD
-                        }
-                        self.lblFrontDist.text = "\(Int(distanceF)) \(suffix)"
-                        self.lblCenterDist.text = "\(Int(distanceC)) \(suffix)"
-                        self.lblEndDist.text = "\(Int(distanceE)) \(suffix)"
-                        self.lblCenterHeader.text = "\(Int(distanceC)) \(suffix)"
-                        if(counter%60 == 0){
-                            Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0)
-                        }
-                        counter += 2
                     }
-                    else{
-                        let alert = UIAlertController(title: "Alert" , message: "You are not inside the Hole Boundary Switching Back to GPS OFF Mode" , preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
-                        timer.invalidate()
-                        self.isUserInsideBound = false
-                        self.navigationController?.pop()
+                    
+                    if(!self.first){
+                        let newDist = GMSGeometryDistance(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!)
+                        if(newDist > 225){
+                            self.positionsOfDotLine[1] = GMSGeometryOffset(self.positionsOfDotLine.first!, 225, GMSGeometryHeading(self.positionsOfDotLine.first!, self.positionsOfDotLine.last!))
+                            self.markers[1].position = self.positionsOfDotLine[1]
+                        }
+                        self.first = true
                     }
+                    self.plotLine(positions: self.positionsOfDotLine)
+                    var data : GreenData!
+                    if(self.courseData.holeGreenDataArr.isEmpty){
+                        data = self.setFronBackCenter(ind: indexToUpdate, currentLocation: self.userLocationForClub!)
+                    }else{
+                        data = self.courseData.holeGreenDataArr[indexToUpdate]
+                    }
+                    self.updateElevationForeground(p1: self.userLocationForClub!, p2: data.front, btn: self.btnEleFront, lbl: self.lblDirFront, lblElev: self.lblFrontElev)
+                    self.updateElevationForeground(p1: self.userLocationForClub!, p2: data.center, btn: self.btnEleCenter, lbl: self.lblDirCenter, lblElev: self.lblCenterElev)
+                    self.updateElevationForeground(p1: self.userLocationForClub!, p2: data.back, btn: self.btnEleBack, lbl: self.lblDirBack, lblElev: self.lblBackElev)
+                    var distanceF = GMSGeometryDistance(data.front,self.userLocationForClub!) * Constants.YARD
+                    var distanceC = GMSGeometryDistance(data.center,self.userLocationForClub!) * Constants.YARD
+                    var distanceE = GMSGeometryDistance(data.back,self.userLocationForClub!) * Constants.YARD
+                   
+                    let elevDistanceFront = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.front), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.userLocationForClub!,data.front)*Constants.YARD)
+                    self.lblFrontElev.text = "\(Int(elevDistanceFront.rounded()))"
+                    
+                    let elevDistanceCenter = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.center), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.userLocationForClub!,data.center)*Constants.YARD)
+                    self.lblCenterElev.text = "\(Int(elevDistanceCenter.rounded()))"
+                    
+                    let elevDistancBack = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.back), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.userLocationForClub!,data.back)*Constants.YARD)
+                    self.lblBackElev.text = "\(Int(elevDistancBack.rounded()))"
+                    var suffix = "yd"
+                    if(Constants.distanceFilter == 1){
+                        suffix = "m"
+                        distanceF = distanceF/Constants.YARD
+                        distanceC = distanceC/Constants.YARD
+                        distanceE = distanceE/Constants.YARD
+                    }
+                    self.lblFrontDist.text = "\(Int(distanceF)) \(suffix)"
+                    self.lblCenterDist.text = "\(Int(distanceC)) \(suffix)"
+                    self.lblEndDist.text = "\(Int(distanceE)) \(suffix)"
+                    self.lblCenterHeader.text = "\(Int(distanceC)) \(suffix)"
+                    if !Constants.isProMode{
+                        self.lblFrontDist.text = "ELEVATION"
+                        self.lblCenterDist.text = "ELEVATION"
+                        self.lblEndDist.text = "ELEVATION"
+                    }
+                    if(counter%60 == 0){
+                        Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0)
+                    }
+                    counter += 2
                 }
             })
         }
@@ -2755,6 +2795,34 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.view.layoutIfNeeded()
         })
 
+    }
+    func updateElevationForeground(p1:CLLocationCoordinate2D,p2:CLLocationCoordinate2D,btn:UIButton,lbl:UILabel,lblElev:UILabel){
+        if !self.courseData.elevationHole.isEmpty{
+            let elevation1 = self.getElevationPoint(position: p1, holeArr: self.courseData.elevationHole[self.holeIndex])
+            let elevation2 = self.getElevationPoint(position: p2, holeArr: self.courseData.elevationHole[self.holeIndex])
+            
+            let elev1 = elevation1.value(forKey: "elevation") as! Double
+            let elev2 = elevation2.value(forKey: "elevation") as! Double
+            var finalElev = elev1-elev2
+            var suffix = "m"
+            if(Constants.distanceFilter == 0){
+                finalElev = finalElev*3.28084
+                suffix = "ft"
+            }
+            if finalElev > 0{
+                BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: lbl)
+            }else{
+                BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: lbl)
+            }
+            btn.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+        }else{
+            lbl.isHidden = true
+            btn.isHidden = true
+        }
+    }
+    func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+        let rotationAngle = self.windHeading - position.bearing
+        self.windNotesView.imgWind.transform = CGAffineTransform(rotationAngle: CGFloat(rotationAngle) / 180.0 * CGFloat(Double.pi))
     }
     func getSuggestedClub(distance:Double,isGreen:Bool,shot:Int)->NSMutableAttributedString{
         var clubName = String()
@@ -2829,6 +2897,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         if !isContinueMatch{
             self.updateCoreData()
         }
+        windNotesView.btnNotesUnlock.addTarget(self, action: #selector(self.addNotesAction(_:)), for: .touchUpInside)
+        windNotesView.btnWindUnlock.addTarget(self, action: #selector(self.btnActionWindLocked(_:)), for: .touchUpInside)
     }
     func updateCoreData(){
         var greenModel = [GreenLatLngModel]()
@@ -2974,10 +3044,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             return preferredClubs[index]
         }
     }
-    func getElevationPoint(position:CLLocationCoordinate2D,holeArr:NSMutableDictionary)->NSMutableDictionary{
+    func getElevationPoint(position:CLLocationCoordinate2D,holeArr:NSArray)->NSMutableDictionary{
         var coordArr = [CLLocationCoordinate2D]()
         var hArr = [NSMutableDictionary]()
-        for value in holeArr.allValues{
+        for value in holeArr{
             hArr.append(value as! NSMutableDictionary)
         }
         for data in hArr{
@@ -2995,26 +3065,25 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
 //                NSAttributedStringKey.font : UIFont(name:"SFProDisplay-Light", size: 15)!,
 //                ]
             
-            var markerText = String()
-            var markerText1 = String()
+//            var markerText = String()
+//            var markerText1 = String()
             var markerClub = String()
             var markerClub1 = String()
             
             suggestedMarker1.map = nil
-            var dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
-            var dist = GMSGeometryDistance(position[1], position.last!) * Constants.YARD
-            let head1 = GMSGeometryHeading(position.first!, position[1])
-            let head = GMSGeometryHeading(position[1], position.last!)
-            markerText1 = "  \(Int(dist1)) yd "
-            markerText = "  \(Int(dist == 0 ? 1:dist)) yd "
+            let dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
+            let dist = GMSGeometryDistance(position[1], position.last!) * Constants.YARD
+            var suffix = "yd"
+//            markerText1 = "  \(Int(dist1)) yd "
+//            markerText = "  \(Int(dist == 0 ? 1:dist)) yd "
             if(Constants.distanceFilter == 1){
-                markerText = "  \(Int((dist < Constants.YARD ? Constants.YARD:dist)/(Constants.YARD))) m "
-                markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
-                dist1 = dist1/Constants.YARD
-                dist = dist/Constants.YARD
+//                markerText = "  \(Int((dist < Constants.YARD ? Constants.YARD:dist)/(Constants.YARD))) m "
+//                markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
+                suffix = "m"
             }
-            let elev1 = BackgroundMapStats.getPlaysLike(headingTarget: head1, degree: self.windHeading, windSpeed: self.windSpeed, dist: dist1)
-            let elev = BackgroundMapStats.getPlaysLike(headingTarget: head, degree: self.windHeading, windSpeed: self.windSpeed, dist: dist)
+            let elev1 = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position.first!, position[1]), degree: self.windHeading-135, windSpeed: self.windSpeed * 2.23694, dist: GMSGeometryDistance(position.first!, position[1]) * Constants.YARD)
+            
+            let elev = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position[1], position.last!), degree: self.windHeading-135, windSpeed: self.windSpeed * 2.23694, dist: GMSGeometryDistance(position[1], position.last!) * Constants.YARD)
             markerClub1 = clubReco(dist: dist1, lie: "T")
             markerClub = clubReco(dist: dist, lie: "O")
             if(dist > 250){
@@ -3026,8 +3095,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 markerClub1 = " - "
             }
             
-            btnForSugg1.setAllData(club: markerClub1, dist: Int(dist1))
-            btnForSugg1.lblElevDist.text = "\(elev1)"
+            btnForSugg1.setAllData(club: markerClub1, dist: Int(dist1), elevDis:"\(Int(elev1.rounded())) \(suffix)")
             if !courseData.elevationHole.isEmpty{
                 let elevation1 = self.getElevationPoint(position: position.first!, holeArr: courseData.elevationHole[self.holeIndex])
                 let elevation2 = self.getElevationPoint(position: position[1], holeArr: courseData.elevationHole[self.holeIndex])
@@ -3042,18 +3110,22 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 if finalElev > 0{
                     BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
                 }else{
-                    BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg1.lblDirection)
+                    if Constants.isProMode{
+                        BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg1.lblDirection)
+                    }
                 }
                 btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+            }else{
+                btnForSugg1.lblDirection.isHidden = Constants.isProMode
+                BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                btnForSugg1.btnElev.isHidden = true
             }
             suggestedMarker1.iconView = btnForSugg1
             suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
             suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/2, GMSGeometryHeading(position.first!, position[1]))
             suggestedMarker1.map = self.mapView
-            
             suggestedMarker2.map = nil
-            btnForSugg2.setAllData(club: markerClub, dist: Int(dist))
-            btnForSugg2.lblElevDist.text = "\(elev)"
+            btnForSugg2.setAllData(club: markerClub, dist: Int(dist), elevDis: "\(Int(elev.rounded())) \(suffix)")
             if !courseData.elevationHole.isEmpty{
                 let elevation1 = self.getElevationPoint(position: position[1], holeArr: courseData.elevationHole[self.holeIndex])
                 let elevation2 = self.getElevationPoint(position: position.last!, holeArr: courseData.elevationHole[self.holeIndex])
@@ -3068,9 +3140,15 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 if finalElev > 0{
                     BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
                 }else{
-                    BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg2.lblDirection)
+                    if Constants.isProMode{
+                        BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg2.lblDirection)
+                    }
                 }
                 btnForSugg2.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+            }else{
+                btnForSugg2.lblDirection.isHidden = Constants.isProMode
+                BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
+                btnForSugg2.btnElev.isHidden = true
             }
             suggestedMarker2.iconView = btnForSugg2
             suggestedMarker2.position = GMSGeometryOffset(position[1], dist/2, GMSGeometryHeading(position[1], position.last!))
@@ -3195,6 +3273,7 @@ extension RFMapVC{
             }
         }
         fairwayHitContainerSV.isHidden = false
+        
     }
     
     @IBAction func previousAction(_ sender: UIButton!) {
@@ -3214,40 +3293,5 @@ extension RFMapVC{
         if self.scoring[self.holeIndex].par == 3{
             fairwayHitContainerSV.isHidden = true
         }
-    }
-}
-extension RFMapVC: INUIAddVoiceShortcutButtonDelegate {
-    
-    func present(_ addVoiceShortcutViewController: INUIAddVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {
-        addVoiceShortcutViewController.delegate = self
-        present(addVoiceShortcutViewController, animated: true, completion: nil)
-    }
-    
-    func present(_ editVoiceShortcutViewController: INUIEditVoiceShortcutViewController, for addVoiceShortcutButton: INUIAddVoiceShortcutButton) {
-        editVoiceShortcutViewController.delegate = self
-        present(editVoiceShortcutViewController, animated: true, completion: nil)
-    }
-}
-
-extension RFMapVC: INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
-    
-    func addVoiceShortcutViewController(_ controller: INUIAddVoiceShortcutViewController, didFinishWith voiceShortcut: INVoiceShortcut?, error: Error?) {
-        controller.dismiss(animated: true, completion: nil)
-    }
-    
-    func addVoiceShortcutViewControllerDidCancel(_ controller: INUIAddVoiceShortcutViewController) {
-        controller.dismiss(animated: true, completion: nil)
-    }
-    
-    func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didUpdate voiceShortcut: INVoiceShortcut?, error: Error?) {
-        controller.dismiss(animated: true, completion: nil)
-    }
-    
-    func editVoiceShortcutViewController(_ controller: INUIEditVoiceShortcutViewController, didDeleteVoiceShortcutWithIdentifier deletedVoiceShortcutIdentifier: UUID) {
-        controller.dismiss(animated: true, completion: nil)
-    }
-    
-    func editVoiceShortcutViewControllerDidCancel(_ controller: INUIEditVoiceShortcutViewController) {
-        controller.dismiss(animated: true, completion: nil)
     }
 }

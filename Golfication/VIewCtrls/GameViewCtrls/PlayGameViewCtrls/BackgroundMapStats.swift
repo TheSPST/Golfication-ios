@@ -582,18 +582,26 @@ class BackgroundMapStats: NSObject {
         return newImage!
     }
     static func getPlaysLike(headingTarget:Double, degree:Double, windSpeed:Double, dist:Double)->Double{
-        if (degree == 0 && windSpeed == 0) {return dist}
-        var windTarget = -windSpeed * cos(degree-headingTarget)
-        if (Constants.distanceFilter == 1){
-            windTarget = windTarget * 1.60934
+        debugPrint("headingTarget:",headingTarget)
+        debugPrint("degree:",degree)
+        debugPrint("windSpeed:",windSpeed)
+        debugPrint("dist:",dist)
+        if (degree == 0 && windSpeed == 0) {
+            debugPrint("return Distance:",Constants.distanceFilter == 1 ?dist/Constants.YARD:dist)
+            return Constants.distanceFilter == 1 ?dist/Constants.YARD:dist
         }
+        let windTarget = -windSpeed * cos(((degree-headingTarget)/180)*Double.pi)
+        debugPrint("cos:",cos(((degree-headingTarget)/180)*Double.pi))
         var PL1 = dist + (dist * 0.005 * windTarget)
-        
         if (windTarget>0){
             PL1 =  dist + (dist * 0.01 * windTarget)
         }
         let PL2 = (0.58*windTarget*(dist/100)) + dist
-        return (PL1 + PL2)/2
+        debugPrint("return Distance:",Constants.distanceFilter == 1 ?((PL1 + PL2)/2)/Constants.YARD:(PL1 + PL2)/2)
+        debugPrint("__________________________________________")
+//
+        return Constants.distanceFilter == 1 ?((PL1 + PL2)/2)/Constants.YARD:(PL1 + PL2)/2
+        
     }
 
     static func calculateGoal(scoreData:[(hole:Int,par:Int,players:[NSMutableDictionary])],targetGoal:Goal)->Goal{

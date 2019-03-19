@@ -120,6 +120,8 @@
 		4B077D1720AC550000AFC9FC /* GolfBagCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B077D1620AC550000AFC9FC /* GolfBagCollectionCell.swift */; };
 		4B0788F920A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */; };
 		4B132F5C205A6D1900791656 /* NewUserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B132F5B205A6D1900791656 /* NewUserProfileVC.swift */; };
+		4B14D3D622402C800072BFE3 /* SiriSetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B14D3D522402C800072BFE3 /* SiriSetupVC.swift */; };
+		4B14D3D8224124DF0072BFE3 /* GoalsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B14D3D7224124DF0072BFE3 /* GoalsVC.swift */; };
 		4B17C4722195BCF7004CA13C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4B17C4702195BCF7004CA13C /* Localizable.strings */; };
 		4B1B1C832226CE8B00FB569F /* DistanceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */; };
 		4B1B1C842226CE8B00FB569F /* DistanceUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1B1C822226CE8B00FB569F /* DistanceUtil.swift */; };
@@ -465,6 +467,8 @@
 		4B077D1620AC550000AFC9FC /* GolfBagCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolfBagCollectionCell.swift; sourceTree = "<group>"; };
 		4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationTableViewCell.swift; sourceTree = "<group>"; };
 		4B132F5B205A6D1900791656 /* NewUserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserProfileVC.swift; sourceTree = "<group>"; };
+		4B14D3D522402C800072BFE3 /* SiriSetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriSetupVC.swift; sourceTree = "<group>"; };
+		4B14D3D7224124DF0072BFE3 /* GoalsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoalsVC.swift; sourceTree = "<group>"; };
 		4B17C4662195B9A5004CA13C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		4B17C4712195BCF7004CA13C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4B17C4772195BE43004CA13C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -851,6 +855,7 @@
 				4BA70886223A8EDA003CEFF4 /* SuggestionView.swift */,
 				4BA70888223D1341003CEFF4 /* WindNotesView.xib */,
 				4BA7088C223D1C8B003CEFF4 /* WindNotesView.swift */,
+				4B14D3D522402C800072BFE3 /* SiriSetupVC.swift */,
 			);
 			path = GameViewControllers;
 			sourceTree = "<group>";
@@ -1301,6 +1306,7 @@
 		4BB26CD51FF77EDB001E9556 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				4B14D3D7224124DF0072BFE3 /* GoalsVC.swift */,
 				4B8B85CA223D3C2800DA7BCA /* EddieProVC.swift */,
 				4BEB41EA223662510090568F /* SettingCell.swift */,
 				4BD6067F220D956100E153D9 /* NewHomeVC.swift */,
@@ -1773,7 +1779,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Golfication/Pods-Golfication-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Golfication/Pods-Golfication-resources.sh",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
 			);
@@ -1784,7 +1790,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Golfication/Pods-Golfication-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Golfication/Pods-Golfication-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3E8323262019F2BA0015A5D3 /* ShellScript */ = {
@@ -1821,7 +1827,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Golfication/Pods-Golfication-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Golfication/Pods-Golfication-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/ActionButton/ActionButton.framework",
 				"${BUILT_PRODUCTS_DIR}/ActionSheetPicker-3.0/ActionSheetPicker_3_0.framework",
 				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
@@ -1838,6 +1844,7 @@
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyStoreKit/SwiftyStoreKit.framework",
 				"${BUILT_PRODUCTS_DIR}/UICircularProgressRing/UICircularProgressRing.framework",
+				"${BUILT_PRODUCTS_DIR}/UITextView+Placeholder/UITextView_Placeholder.framework",
 				"${BUILT_PRODUCTS_DIR}/XLPagerTabStrip/XLPagerTabStrip.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -1861,6 +1868,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyStoreKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICircularProgressRing.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UITextView_Placeholder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XLPagerTabStrip.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -1868,7 +1876,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Golfication/Pods-Golfication-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Golfication/Pods-Golfication-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1987,6 +1995,7 @@
 				4B077D1720AC550000AFC9FC /* GolfBagCollectionCell.swift in Sources */,
 				4B0174F32225255400A215E6 /* CoreDataModels.swift in Sources */,
 				4B7F52202158DC6F002E328A /* PKCCropLineView.swift in Sources */,
+				4B14D3D622402C800072BFE3 /* SiriSetupVC.swift in Sources */,
 				0D2CA1C41FB4360900CE9D82 /* UIColor+GLFAdditions.swift in Sources */,
 				3ED2C87A2088C08800604F31 /* ProfileVC.swift in Sources */,
 				4BE66A862236739B0057A22B /* EddieViewRFMap.swift in Sources */,
@@ -2021,6 +2030,7 @@
 				3E5EAB041FF7AD2B00F69661 /* AppDelegate.swift in Sources */,
 				3E03F107207C9D8B001DDC5F /* EnterFreeProCodeVC.swift in Sources */,
 				3E03F1202080B36A001DDC5F /* SettingVC.swift in Sources */,
+				4B14D3D8224124DF0072BFE3 /* GoalsVC.swift in Sources */,
 				4BA4793C2228336600FC48AB /* IntentViewController.swift in Sources */,
 				4B7E2A682175C0D900DFC3EB /* RadarView.m in Sources */,
 				4B7E2A6A2175C0D900DFC3EB /* ARKitConfig.m in Sources */,

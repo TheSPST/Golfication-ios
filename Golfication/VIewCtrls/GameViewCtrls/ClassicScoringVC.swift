@@ -103,7 +103,6 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         self.tableView.addGestureRecognizer(rightSwipe)
    
     }
-    
     @objc func handleSwipes(sender:UISwipeGestureRecognizer) {
         if (sender.direction == .right) {
             self.currentIndex = self.currentIndex - 1

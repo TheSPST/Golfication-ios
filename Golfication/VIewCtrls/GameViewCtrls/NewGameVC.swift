@@ -516,6 +516,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         debugPrint("didLoad")
         NotificationCenter.default.addObserver(self, selector: #selector(self.discardGame(_:)), name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
         if(Constants.deviceGolficationX != nil){
@@ -588,7 +589,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         getHomeCourse()
     }
-    
+    @objc func unlockEddie(_ sender: UIButton){
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+    }
     func getHomeCourse() {
         debugPrint("HomeCourse")
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails") { (snapshot) in

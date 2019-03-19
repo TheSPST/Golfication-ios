@@ -11,6 +11,7 @@ import UIKit
 
 @IBDesignable final class EddieView:UIView{
     
+    @IBOutlet weak var eddieImgView: UIImageView!
     var gradient = CAGradientLayer()
     @IBInspectable var cornerRadius: CGFloat = 5
     @IBInspectable var shadowOffsetWidth: Int = 1
@@ -28,6 +29,7 @@ import UIKit
     @IBOutlet weak var viewBirdie : UIView!
     @IBOutlet weak var viewFH : UIView!
     
+    @IBOutlet weak var btnUnlockEddie: UIButton!
     @IBOutlet weak var lblPar : UILabel!
     @IBOutlet weak var lblGIR : UILabel!
     @IBOutlet weak var lblBirdie : UILabel!
@@ -51,7 +53,7 @@ import UIKit
         self.layer.borderColor = UIColor.glfBlack40.cgColor
         self.layer.cornerRadius = 5.0
         self.layer.borderWidth = 1.0
-        
+        eddieImgView.setCircle(frame: eddieImgView.frame)
         viewPar.setCornerView(color: UIColor.glfBlack5.cgColor)
         viewGIR.setCornerView(color: UIColor.glfBlack5.cgColor)
         viewBirdie.setCornerView(color: UIColor.glfBlack5.cgColor)
