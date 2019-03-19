@@ -152,12 +152,13 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
            self.view.makeToast("Please wait for a while.")
         }
         else{
-            if Constants.trial == true{
-                IAPHandler.shared.purchaseMyProduct(index: 4)
-            }
-            else{
-                IAPHandler.shared.purchaseMyProduct(index: 5)
-            }
+            IAPHandler.shared.purchaseMyProduct(index: 6)
+//            if Constants.trial == true{
+//                IAPHandler.shared.purchaseMyProduct(index: 4)
+//            }
+//            else{
+//                IAPHandler.shared.purchaseMyProduct(index: 5)
+//            }
         }
     }
     
@@ -167,12 +168,14 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
             self.view.makeToast("Please wait for a while.")
         }
         else{
-            if Constants.trial == true{
-                IAPHandler.shared.purchaseMyProduct(index: 0)
-            }
-            else{
-                IAPHandler.shared.purchaseMyProduct(index: 1)
-            }
+            IAPHandler.shared.purchaseMyProduct(index: 1)
+
+//            if Constants.trial == true{
+//                IAPHandler.shared.purchaseMyProduct(index: 0)
+//            }
+//            else{
+//                IAPHandler.shared.purchaseMyProduct(index: 1)
+//            }
         }
     }
 
@@ -182,12 +185,14 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
             self.view.makeToast("Please wait for a while.")
         }
         else{
-            if Constants.trial == true{
-                IAPHandler.shared.purchaseMyProduct(index: 4)
-            }
-            else{
-                IAPHandler.shared.purchaseMyProduct(index: 5)
-            }
+            IAPHandler.shared.purchaseMyProduct(index: 6)
+
+//            if Constants.trial == true{
+//                IAPHandler.shared.purchaseMyProduct(index: 4)
+//            }
+//            else{
+//                IAPHandler.shared.purchaseMyProduct(index: 5)
+//            }
         }
     }
     

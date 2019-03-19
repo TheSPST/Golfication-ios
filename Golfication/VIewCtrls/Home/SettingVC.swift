@@ -12,24 +12,14 @@ import FBSDKLoginKit
 
 class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,BluetoothDelegate{
     var sharedInstance: BluetoothSync!
-
-    var expandedSectionHeaderNumber: Int = -1
-    var expandedSectionHeader: UITableViewHeaderFooterView!
     let kHeaderSectionTag: Int = 6900
-    
     var sectionOne:[Int] = [0, 1]
     var sectionTwo:[Int] = [0, 1, 2, 3, 4]
     var sectionThree:[Int] = [0, 1]
-    
     var progressView = SDLoader()
-    var goalsDic = NSMutableDictionary()
-    var swingGoalsDic = NSMutableDictionary()
-    
     @IBOutlet weak var versionLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var golfBagArray = NSMutableArray()
-    var clubMArray = NSMutableArray()
-    //    var swingMArray = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,23 +27,6 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
         
         self.title = "Settings".localized()
         self.navigationItem.rightBarButtonItem?.title = "Logout".localized()
-        
-        let clubTempArr = NSMutableArray()
-        clubTempArr.add("Swing Tempo")
-        clubTempArr.add("Back Swing")
-        for j in 0..<Constants.allClubs.count{
-            for i in 0..<golfBagArray.count{
-                let dic = golfBagArray[i] as! NSMutableDictionary
-                if let clubName  = (dic.value(forKey: "clubName") as? String){
-                    if Constants.allClubs[j] == clubName{
-                        if clubName != "Pu"{
-                            clubTempArr.add(clubName)
-                        }
-                    }
-                }
-            }
-        }
-        self.getBenchMark(clubTempArr:clubTempArr)
         
         self.tableView.contentInset = UIEdgeInsetsMake(-34, 0, 0, 0)
         tableView.sectionHeaderHeight = 0.0
@@ -65,145 +38,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
         self.checkVersion()
         self.checkFilterValuesFromFirebase()
     }
-    func getBenchMark(clubTempArr:NSMutableArray){
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "benchmarks/" + Constants.benchmark_Key) { (snapshot) in
-            let benchMarkVal = snapshot.value as! NSMutableDictionary
-            
-            DispatchQueue.main.async(execute: {
-                self.clubMArray = NSMutableArray()
-                for i in 0..<clubTempArr.count{
-                    let clubMDic = NSMutableDictionary()
-                    let clubName = clubTempArr[i] as! String
-                    if clubName == "Swing Tempo"{
-                        clubMDic.setObject(clubName, forKey: "clubName" as NSCopying)
-                        clubMDic.setObject(1, forKey: "minVal" as NSCopying)
-                        clubMDic.setObject(6, forKey: "maxVal" as NSCopying)
-                        clubMDic.setObject(3, forKey: "defaultVal" as NSCopying)
-                    }
-                    else if clubName == "Back Swing"{
-                        clubMDic.setObject(clubName, forKey: "clubName" as NSCopying)
-                        clubMDic.setObject(90, forKey: "minVal" as NSCopying)
-                        clubMDic.setObject(300, forKey: "maxVal" as NSCopying)
-                        clubMDic.setObject(195, forKey: "defaultVal" as NSCopying)
-                    }
-                    else{
-                        let clubSpeedTemp:Double = Double(benchMarkVal.value(forKey: clubName) as! String)!
-                        clubMDic.setObject(self.getFullClubName(clubName:clubName), forKey: "clubName" as NSCopying)
-                        let min = clubSpeedTemp*0.9 - (clubSpeedTemp*0.9)/2.0
-                        let max = clubSpeedTemp*0.9 + (clubSpeedTemp*0.9)/2.0
-                        clubMDic.setObject(Int(min), forKey: "minVal" as NSCopying)
-                        clubMDic.setObject(Int(max), forKey: "maxVal" as NSCopying)
-                        clubMDic.setObject(Int(clubSpeedTemp*0.9), forKey: "defaultVal" as NSCopying)
-                    }
-                    self.clubMArray.add(clubMDic)
-                }
-                self.getSwingGoalsData(benchMarkVal:benchMarkVal)
-            })
-        }
-    }
     
-    func getSwingGoalsData(benchMarkVal:NSMutableDictionary){
-        swingGoalsDic = NSMutableDictionary()
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "swingGoals") { (snapshot) in
-            if snapshot.value != nil{
-                if let goalsDic = snapshot.value as? NSMutableDictionary{
-                    self.swingGoalsDic = goalsDic
-                    
-                    self.clubMArray = NSMutableArray()
-                    let clubTempArr = NSMutableArray()
-                    for (key,val) in goalsDic{
-                        let clubMDic = NSMutableDictionary()
-                        let clubName = key as! String
-                        
-                        if clubName == "tempo"{
-                            clubMDic.setObject("Swing Tempo", forKey: "clubName" as NSCopying)
-                            clubMDic.setObject(1, forKey: "minVal" as NSCopying)
-                            clubMDic.setObject(6, forKey: "maxVal" as NSCopying)
-                            clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
-                        }
-                        else if clubName == "backSwing"{
-                            clubMDic.setObject("Back Swing", forKey: "clubName" as NSCopying)
-                            clubMDic.setObject(90, forKey: "minVal" as NSCopying)
-                            clubMDic.setObject(300, forKey: "maxVal" as NSCopying)
-                            clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
-                        }
-                        else{
-                            if let clubTemp = benchMarkVal.value(forKey: clubName) as? String{
-                                let clubSpeedTemp:Double = Double(clubTemp)!
-                                let min = clubSpeedTemp*0.9 - (clubSpeedTemp*0.9)/2.0
-                                let max = clubSpeedTemp*0.9 + (clubSpeedTemp*0.9)/2.0
-                                
-                                clubMDic.setObject(self.getFullClubName(clubName:clubName), forKey: "clubName" as NSCopying)
-                                clubMDic.setObject(Int(min), forKey: "minVal" as NSCopying)
-                                clubMDic.setObject(Int(max), forKey: "maxVal" as NSCopying)
-                                clubMDic.setObject(val, forKey: "defaultVal" as NSCopying)
-                            }
-                        }
-                        clubTempArr.add(clubMDic)
-                    }
-                    
-                    for i in 0..<clubTempArr.count{
-                        let dic = clubTempArr[i] as! NSMutableDictionary
-                        if (dic.value(forKey: "clubName") as! String) == "Swing Tempo"{
-                            self.clubMArray.add(dic)
-                            break
-                        }
-                    }
-                    for i in 0..<clubTempArr.count{
-                        let dic = clubTempArr[i] as! NSMutableDictionary
-                        if (dic.value(forKey: "clubName") as! String) == "Back Swing"{
-                            self.clubMArray.add(dic)
-                            break
-                        }
-                    }
-                    for j in 0..<Constants.allClubs.count{
-                        for i in 0..<clubTempArr.count{
-                            let dic = clubTempArr[i] as! NSMutableDictionary
-                            if Constants.allClubs[j] == self.getShortClubName(clubName: dic.value(forKey: "clubName") as! String){
-                                self.clubMArray.add(dic)
-                            }
-                        }
-                    }
-                    debugPrint("clubMArray",self.clubMArray)
-                    
-                }
-            }
-            else{
-                debugPrint("clubMArray",self.clubMArray)
-                let swingDict = NSMutableDictionary()
-                
-                for i in 0..<self.clubMArray.count{
-                    let dic = self.clubMArray[i] as! NSMutableDictionary
-                    var clubName = dic.value(forKey: "clubName") as! String
-                    if clubName == "Back Swing" || clubName == "Swing Tempo"{
-                        clubName = dic.value(forKey: "clubName") as! String
-                    }
-                    else{
-                        clubName = self.getShortClubName(clubName: dic.value(forKey: "clubName") as! String)
-                    }
-                    let defaultVal =  dic.value(forKey: "defaultVal") as! Int
-                    
-                    if clubName == "Back Swing" {
-                        swingDict.setObject(defaultVal, forKey: "backSwing" as NSCopying)
-                    }
-                    else if clubName == "Swing Tempo" {
-                        swingDict.setObject(defaultVal, forKey: "tempo" as NSCopying)
-                    }
-                    else{
-                        swingDict.setObject(defaultVal, forKey: clubName as NSCopying)
-                    }
-                }
-                self.swingGoalsDic = swingDict
-                let golfFinalDic = ["swingGoals":swingDict]
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfFinalDic)
-            }
-            DispatchQueue.main.async( execute: {
-                debugPrint("swingGoalsDic",self.swingGoalsDic)
-                self.progressView.hide(navItem: self.navigationItem)
-            })
-        }
-    }
     func getShortClubName(clubName: String) -> String{
         var shortClubName = String()
         
@@ -305,101 +140,48 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
     func checkFilterValuesFromFirebase(){
         self.progressView.show()
         self.navigationItem.rightBarButtonItem?.isEnabled = false
-        var hand = 0
-        if Constants.handicap != "-"{
-            hand = Int(Double(Constants.handicap)!.rounded())
-        }
-        goalsDic = NSMutableDictionary()
-        debugPrint("handicap == ",hand)
+//        var hand = 0
+//        if Constants.handicap != "-"{
+//            hand = Int(Double(Constants.handicap)!.rounded())
+//        }
         
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "goals") { (snapshot) in
-            if snapshot.value != nil{
-                if let goalsDic = snapshot.value as? NSMutableDictionary{
-                    self.goalsDic = goalsDic
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "unit") { (snapshot) in
+            if snapshot.exists(){
+                if let index = snapshot.value as? Int{
+                    Constants.distanceFilter = index
                 }
             }
             else{
-                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "target/\(hand)") { (snapshot) in
-                    if let targetDic = snapshot.value as? NSMutableDictionary{
-                        self.goalsDic = targetDic
-                        
-                        let goalsDict = NSMutableDictionary()
-                        goalsDict.setObject(Int((self.goalsDic.value(forKey: "birdie") as! Double).rounded()), forKey: "birdie" as NSCopying)
-                        goalsDict.setObject(Int((self.goalsDic.value(forKey: "fairway") as! Double).rounded()), forKey: "fairway" as NSCopying)
-                        goalsDict.setObject(Int((self.goalsDic.value(forKey: "gir") as! Double).rounded()), forKey: "gir" as NSCopying)
-                        goalsDict.setObject(Int((self.goalsDic.value(forKey: "par") as! Double).rounded()), forKey: "par" as NSCopying)
-                        
-                        if Int((self.goalsDic.value(forKey: "birdie") as! Double).rounded()) < 1{
-                            goalsDict.setObject(1, forKey: "birdie" as NSCopying)
-                        }
-                        else if Int((self.goalsDic.value(forKey: "fairway") as! Double).rounded()) < 1{
-                            goalsDict.setObject(1, forKey: "fairway" as NSCopying)
-                        }
-                        else if Int((self.goalsDic.value(forKey: "gir") as! Double).rounded()) < 1{
-                            goalsDict.setObject(1, forKey: "gir" as NSCopying)
-                        }
-                        else if Int((self.goalsDic.value(forKey: "par") as! Double).rounded()) < 1{
-                            goalsDict.setObject(1, forKey: "par" as NSCopying)
-                        }
-                        //----------------------------------------------------------------------
-                        if Int((self.goalsDic.value(forKey: "birdie") as! Double).rounded()) > 18{
-                            goalsDict.setObject(18, forKey: "birdie" as NSCopying)
-                        }
-                        else if Int((self.goalsDic.value(forKey: "fairway") as! Double).rounded()) > 14{
-                            goalsDict.setObject(14, forKey: "fairway" as NSCopying)
-                        }
-                        else if Int((self.goalsDic.value(forKey: "gir") as! Double).rounded()) > 18{
-                            goalsDict.setObject(18, forKey: "gir" as NSCopying)
-                        }
-                        else if Int((self.goalsDic.value(forKey: "par") as! Double).rounded()) > 18{
-                            goalsDict.setObject(18, forKey: "par" as NSCopying)
-                        }
-                        self.goalsDic = goalsDict
-                        let golfFinalDic = ["goals":goalsDict]
-                        ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfFinalDic)
-                    }
-                }
+                Constants.distanceFilter = 0
             }
             DispatchQueue.main.async( execute: {
-                FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "unit") { (snapshot) in
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "strokesGained") { (snapshot) in
+                    
                     if snapshot.exists(){
                         if let index = snapshot.value as? Int{
-                            Constants.distanceFilter = index
+                            Constants.skrokesGainedFilter = index
                         }
                     }
                     else{
-                        Constants.distanceFilter = 0
+                        Constants.skrokesGainedFilter = 0
                     }
                     DispatchQueue.main.async( execute: {
-                        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "strokesGained") { (snapshot) in
-                            
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "notification") { (snapshot) in
                             if snapshot.exists(){
                                 if let index = snapshot.value as? Int{
-                                    Constants.skrokesGainedFilter = index
+                                    Constants.onCourseNotification = index
                                 }
                             }
                             else{
-                                Constants.skrokesGainedFilter = 0
+                                Constants.onCourseNotification = 0
                             }
                             DispatchQueue.main.async( execute: {
-                                FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "notification") { (snapshot) in
-                                    if snapshot.exists(){
-                                        if let index = snapshot.value as? Int{
-                                            Constants.onCourseNotification = index
-                                        }
-                                    }
-                                    else{
-                                        Constants.onCourseNotification = 0
-                                    }
-                                    DispatchQueue.main.async( execute: {
-                                        self.progressView.hide()
-                                        self.navigationItem.rightBarButtonItem?.isEnabled = true
-                                        
-                                        self.tableView.delegate = self
-                                        self.tableView.dataSource = self
-                                        self.tableView.reloadData()
-                                    })
-                                }
+                                self.progressView.hide()
+                                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                                
+                                self.tableView.delegate = self
+                                self.tableView.dataSource = self
+                                self.tableView.reloadData()
                             })
                         }
                     })
@@ -510,41 +292,33 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
     // MARK: - Table View Delegate And DataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         tableView.backgroundView = nil
-        if Constants.isDevice{
+        if Constants.isDevice && Constants.isProMode{
             return 6
         }
-        else{
+        else if !Constants.isDevice && Constants.isProMode{
             return 5
+        }
+        else if Constants.isDevice && !Constants.isProMode{
+            return 4
+        }
+        else{
+            return 3
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 3 || section == 4{
-            if (self.expandedSectionHeaderNumber == section) {
-                if section == 3{
-                    return 4
-                }
-                else{
-                    return clubMArray.count
-                }
-            }
-            else {
-                return 0
-            }
+        
+        if section == 0{
+            return 2
+        }
+        else if section == 1{
+            return 5
+        }
+        else if section == 2{
+            return 2
         }
         else{
-            if section == 0{
-                return 2
-            }
-            else if section == 1{
-                return 5
-            }
-            else if section == 2{
-                return 2
-            }
-            else{
-                return 0
-            }
+            return 0
         }
     }
     
@@ -557,20 +331,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 3{
-            return CGFloat(110.0)
-        }
-        if indexPath.section == 4{
-            if indexPath.row == 2{
-                return CGFloat(125.0)
-            }
-            else{
-                return CGFloat(100.0)
-            }
-        }
-        else{
-            return CGFloat(44.0)
-        }
+        return CGFloat(44.0)
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -591,87 +352,141 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
             label.text = "Rangefinder Distance Notification"
         }
         else if section == 3{
-            label.text = "Game Goals"
-            
-            if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
-                viewWithTag.removeFromSuperview()
+            if Constants.isDevice && Constants.isProMode{
+                
+                label.text = "Scoring Goals"
+                
+                if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
+                    viewWithTag.removeFromSuperview()
+                }
+                let headerFrame = self.tableView.frame.size
+                
+                let arrowImage = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 5, width: 25, height: 25))
+                arrowImage.image = UIImage(named: "forwardArrow")
+                header.addSubview(arrowImage)
+                
+                let btnInfo = UIButton(frame: CGRect(x: 0, y: 0, width: headerFrame.width, height: 35))
+                btnInfo.backgroundColor = UIColor.clear
+                btnInfo.tag = section
+                btnInfo.addTarget(self, action: #selector(self.scoringGoalWasTouched(_:)), for: .touchUpInside)
+                header.addSubview(btnInfo)
+                
             }
-            let headerFrame = self.tableView.frame.size
-            
-            let theImageView = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 7, width: 18, height: 18))
-            theImageView.image = UIImage(named: "Chevron-Dn-Wht")
-            theImageView.tag = kHeaderSectionTag + section
-            
-            header.addSubview(theImageView)
-            
-            header.tag = section
-            let headerTapGesture = UITapGestureRecognizer()
-            headerTapGesture.addTarget(self, action: #selector(self.sectionHeaderWasTouched(_:)))
-            header.addGestureRecognizer(headerTapGesture)
+            else if !Constants.isDevice && Constants.isProMode{
+                label.text = "Scoring Goals"
+                
+                if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
+                    viewWithTag.removeFromSuperview()
+                }
+                let headerFrame = self.tableView.frame.size
+                
+                let arrowImage = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 5, width: 25, height: 25))
+                arrowImage.image = UIImage(named: "forwardArrow")
+                header.addSubview(arrowImage)
+                
+                let btnInfo = UIButton(frame: CGRect(x: 0, y: 0, width: headerFrame.width, height: 35))
+                btnInfo.backgroundColor = UIColor.clear
+                btnInfo.tag = section
+                btnInfo.addTarget(self, action: #selector(self.scoringGoalWasTouched(_:)), for: .touchUpInside)
+                header.addSubview(btnInfo)
+            }
+            else if Constants.isDevice && !Constants.isProMode{
+                label.frame = CGRect(x: 10, y: (35.0/2)-8, width: 270, height: 35.0)
+                label.text = "Debug Golfication X"
+                label.sizeToFit()
+                
+                if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
+                    viewWithTag.removeFromSuperview()
+                }
+                let headerFrame = self.tableView.frame.size
+                
+                let arrowImage = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 5, width: 25, height: 25))
+                arrowImage.image = UIImage(named: "forwardArrow")
+                header.addSubview(arrowImage)
+                
+                header.tag = section
+                let headerTapGesture = UITapGestureRecognizer()
+                headerTapGesture.addTarget(self, action: #selector(self.debugModeWasTouched(_:)))
+                header.addGestureRecognizer(headerTapGesture)
+            }
         }
         else if section == 4{
-            label.frame = CGRect(x: 10, y: (35.0/2)-8, width: 270, height: 35.0)
-            label.text = "Swing Goals"
-            label.sizeToFit()
-            
-            if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
-                viewWithTag.removeFromSuperview()
+            if Constants.isDevice && Constants.isProMode{
+                label.text = "Swing Goals"
+                
+                if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
+                    viewWithTag.removeFromSuperview()
+                }
+                let headerFrame = self.tableView.frame.size
+                
+                let arrowImage = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 5, width: 25, height: 25))
+                arrowImage.image = UIImage(named: "forwardArrow")
+                header.addSubview(arrowImage)
+                
+                let btnInfo = UIButton(frame: CGRect(x: 0, y: 0, width: headerFrame.width, height: 35))
+                btnInfo.backgroundColor = UIColor.clear
+                btnInfo.tag = section
+                btnInfo.addTarget(self, action: #selector(self.scoringGoalWasTouched(_:)), for: .touchUpInside)
+                header.addSubview(btnInfo)
             }
-            let headerFrame = self.tableView.frame.size
-            
-            let theImageView = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 7, width: 18, height: 18))
-            theImageView.image = UIImage(named: "Chevron-Dn-Wht")
-            theImageView.tag = kHeaderSectionTag + section
-            
-            header.addSubview(theImageView)
-            
-            header.tag = section
-            let headerTapGesture = UITapGestureRecognizer()
-            headerTapGesture.addTarget(self, action: #selector(self.sectionHeaderWasTouched(_:)))
-            header.addGestureRecognizer(headerTapGesture)
-            
-            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
-            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-            
-            let btnInfo = UIButton()
-            btnInfo.frame = CGRect(x:label.frame.origin.x+label.frame.size.width+10, y:7, width:25, height:25)
-            btnInfo.setBackgroundImage(infoBtnImage, for: .normal)
-            btnInfo.tintColor = UIColor.glfFlatBlue
-            btnInfo.addTarget(self, action: #selector(self.headerInfoClicked(_:)), for: .touchUpInside)
-            header.addSubview(btnInfo)
+            else if !Constants.isDevice && Constants.isProMode{
+                label.text = "Swing Goals"
+                
+                if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
+                    viewWithTag.removeFromSuperview()
+                }
+                let headerFrame = self.tableView.frame.size
+                
+                let arrowImage = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 5, width: 25, height: 25))
+                arrowImage.image = UIImage(named: "forwardArrow")
+                header.addSubview(arrowImage)
+                
+                let btnInfo = UIButton(frame: CGRect(x: 0, y: 0, width: headerFrame.width, height: 35))
+                btnInfo.backgroundColor = UIColor.clear
+                btnInfo.tag = section
+                btnInfo.addTarget(self, action: #selector(self.scoringGoalWasTouched(_:)), for: .touchUpInside)
+                header.addSubview(btnInfo)
+            }
         }
         else{
-            label.frame = CGRect(x: 10, y: (35.0/2)-8, width: 270, height: 35.0)
-            label.text = "Debug Golfication X"
-            label.sizeToFit()
-            
-            if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
-                viewWithTag.removeFromSuperview()
+            if Constants.isDevice && Constants.isProMode{
+                label.frame = CGRect(x: 10, y: (35.0/2)-8, width: 270, height: 35.0)
+                label.text = "Debug Golfication X"
+                label.sizeToFit()
+                
+                if let viewWithTag = self.view.viewWithTag(kHeaderSectionTag + section) {
+                    viewWithTag.removeFromSuperview()
+                }
+                let headerFrame = self.tableView.frame.size
+                
+                let arrowImage = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 5, width: 25, height: 25))
+                arrowImage.image = UIImage(named: "forwardArrow")
+                header.addSubview(arrowImage)
+                
+                header.tag = section
+                let headerTapGesture = UITapGestureRecognizer()
+                headerTapGesture.addTarget(self, action: #selector(self.debugModeWasTouched(_:)))
+                header.addGestureRecognizer(headerTapGesture)
             }
-            let headerFrame = self.tableView.frame.size
-            
-            let arrowImage = UIImageView(frame: CGRect(x: headerFrame.width - 32, y: 5, width: 25, height: 25))
-            arrowImage.image = UIImage(named: "forwardArrow")
-            header.addSubview(arrowImage)
-            
-            header.tag = section
-            let headerTapGesture = UITapGestureRecognizer()
-            headerTapGesture.addTarget(self, action: #selector(self.debugModeWasTouched(_:)))
-            header.addGestureRecognizer(headerTapGesture)
-            
-//            let originalImage = #imageLiteral(resourceName: "icon_info_grey")
-//            let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-//
-//            let btnInfo = UIButton()
-//            btnInfo.frame = CGRect(x:label.frame.origin.x+label.frame.size.width+10, y:7, width:25, height:25)
-//            btnInfo.setBackgroundImage(infoBtnImage, for: .normal)
-//            btnInfo.tintColor = UIColor.glfFlatBlue
-//            btnInfo.addTarget(self, action: #selector(self.headerInfoClicked(_:)), for: .touchUpInside)
-//            header.addSubview(btnInfo)
         }
         label.textColor = UIColor.black
         header.addSubview(label)
         return header
+    }
+    
+    @objc func scoringGoalWasTouched(_ sender: UIButton){
+        
+        var titleStr = String()
+        if sender.tag == 3{
+            titleStr = "Scoring Goals"
+        }
+        else{
+            titleStr = "Swing Goals"
+        }
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "GoalsVC") as! GoalsVC
+        viewCtrl.golfBagArray = self.golfBagArray
+        viewCtrl.titleStr = titleStr
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     @objc func debugModeWasTouched(_ sender: UITapGestureRecognizer){
@@ -739,12 +554,6 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
             self.navigationController?.pushViewController(viewCtrl, animated: true)
         })
     }
-    @objc func headerInfoClicked(_ sender: UIButton){
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
-        viewCtrl.title = "Clubhead Speed"
-        viewCtrl.desc = StatsIntoConstants.clubheadSpeed
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
-    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -810,189 +619,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
             default: break
             }
         }
-        else if indexPath.section == 3{
-            cell.goalStackView.isHidden = false
-            cell.lblGoal.isHidden = false
-            cell.btnGoalInfo.isHidden = false
-            cell.lblGoal.font = UIFont(name: "SFProDisplay-Regular", size: 17.0)
-            
-            cell.isSelected = false
-            cell.tintColor = UIColor.clear
-            cell.accessoryType = cell.isSelected ? .none : .none
-            
-            cell.textLabel?.text = ""
-            cell.lblMinGoal.text = "1"
-            cell.lblMaxGoal.text = "18"
-            cell.goalSlider.minimumValue = 1
-            cell.goalSlider.maximumValue = 18
-            
-            cell.goalSlider.addTarget(self, action: #selector(self.sliderChanged(_:)), for: .valueChanged)
-            cell.goalSlider.tag = indexPath.row
-            cell.lblGoalVal.tag = indexPath.row
-            
-            switch indexPath.row{
-            case 0: cell.lblGoal.text = "PAR"
-            cell.goalSlider.value = Float(Int((goalsDic.value(forKey: "par") as! Double).rounded()))
-            cell.lblGoalVal.text = "\(Int((goalsDic.value(forKey: "par") as! Double).rounded()))"
-                
-            case 1: cell.lblGoal.text = "BIRDIE"
-            cell.goalSlider.value = Float(Int((goalsDic.value(forKey: "birdie") as! Double).rounded()))
-            cell.lblGoalVal.text = "\(Int((goalsDic.value(forKey: "birdie") as! Double).rounded()))"
-                
-            case 2: cell.lblGoal.text = "FAIRWAY HIT"
-            cell.goalSlider.value = Float(Int((goalsDic.value(forKey: "fairway") as! Double).rounded()))
-            cell.lblGoalVal.text = "\(Int((goalsDic.value(forKey: "fairway") as! Double).rounded()))"
-                
-            case 3: cell.lblGoal.text = "GIR"
-            cell.goalSlider.value = Float(Int((goalsDic.value(forKey: "gir") as! Double).rounded()))
-            cell.lblGoalVal.text = "\(Int((goalsDic.value(forKey: "gir") as! Double).rounded()))"
-            
-            cell.lblMaxGoal.text = "14"
-            cell.goalSlider.maximumValue = 14
-                
-            default: break
-            }
-            cell.btnGoalInfo.tag = indexPath.row
-            cell.btnGoalInfo.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
-        }
-        else{
-            cell.goalStackView.isHidden = false
-            cell.lblGoal.isHidden = false
-            cell.btnGoalInfo.isHidden = true
-            if indexPath.row == 0 || indexPath.row == 1{
-                cell.lblGoal.font = UIFont(name: "SFProDisplay-Regular", size: 17.0)
-            }
-            else{
-                cell.lblGoal.font = UIFont(name: "SFProDisplay-Regular", size: 15.0)
-            }
-            
-            if indexPath.row == 2{
-                cell.lblClubHead.isHidden = false
-            }
-            else{
-                cell.lblClubHead.isHidden = true
-            }
-            
-            cell.isSelected = false
-            cell.tintColor = UIColor.clear
-            cell.accessoryType = cell.isSelected ? .none : .none
-            
-            cell.textLabel?.text = ""
-            
-            let clubDic = clubMArray[indexPath.row] as! NSDictionary
-            cell.lblGoal.text = (clubDic.value(forKey: "clubName") as! String)
-            
-            cell.lblMinGoal.text = "\(clubDic.value(forKey: "minVal") as! Int)"
-            cell.lblMaxGoal.text = "\(clubDic.value(forKey: "maxVal") as! Int)"
-            cell.goalSlider.minimumValue = Float((clubDic.value(forKey: "minVal") as! Int))
-            cell.goalSlider.maximumValue = Float((clubDic.value(forKey: "maxVal") as! Int))
-            
-            cell.goalSlider.value = Float(Int((clubDic.value(forKey: "defaultVal") as! Int)))
-            cell.lblGoalVal.text = "\(Int((clubDic.value(forKey: "defaultVal") as! Int)))"
-            
-            cell.goalSlider.addTarget(self, action: #selector(self.sliderChanged(_:)), for: .valueChanged)
-            cell.goalSlider.tag = (indexPath.section*100)+indexPath.row
-            cell.lblGoalVal.tag = (indexPath.section*100)+indexPath.row
-            
-            cell.btnGoalInfo.tag = (indexPath.section*100)+indexPath.row
-            cell.btnGoalInfo.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
-        }
         return cell
-    }
-    
-    // MARK: - infoClicked
-    @objc func infoClicked(_ sender:UIButton){
-        let section = sender.tag/100
-        //        let row = sender.tag%100
-        
-        if section == 0{
-            var title = String()
-            var desc = String()
-            
-            if sender.tag == 0{
-                title = "PAR"
-                desc = StatsIntoConstants.parAverage
-            }
-            else if sender.tag == 1{
-                title = "BIRDIE"
-                desc = "Birdie"
-            }
-            else if sender.tag == 2{
-                title = "FAIRWAY HIT"
-                desc = StatsIntoConstants.fairwayHitTrend
-            }
-            else{
-                title = "GIR"
-                desc = StatsIntoConstants.GIR
-            }
-            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
-            viewCtrl.title = (title as String)
-            viewCtrl.desc = desc
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-        }
-        else{
-            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
-            viewCtrl.title = "Clubhead Speed"
-            viewCtrl.desc = StatsIntoConstants.clubheadSpeed
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-        }
-    }
-    
-    @objc func sliderChanged(_ sender: UISlider) {
-        let section = sender.tag/100
-        let row = sender.tag%100
-        
-        if section == 0{
-            let cell = self.tableView.cellForRow(at: IndexPath(row: sender.tag, section: 3))  as! SettingCell
-            cell.lblGoalVal.text = "\(Int((cell.goalSlider.value).rounded()))"
-            
-            let updatedValue  = Int((cell.goalSlider.value).rounded())
-            if sender.tag == 0{
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/goals/").updateChildValues(["par":updatedValue])
-            }
-            else if sender.tag == 1{
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/goals/").updateChildValues(["birdie":updatedValue])
-            }
-            else if sender.tag == 2{
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/goals/").updateChildValues(["fairway":updatedValue])
-            }
-            else{
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/goals/").updateChildValues(["gir":updatedValue])
-            }
-        }
-        else{
-            let cell = self.tableView.cellForRow(at: IndexPath(row: row, section: 4))  as! SettingCell
-            cell.lblGoalVal.text = "\(Int((cell.goalSlider.value).rounded()))"
-            
-            let clubDic = clubMArray[row] as! NSDictionary
-            var clubName = clubDic.value(forKey: "clubName") as! String
-            let defaultVal  = Int((cell.goalSlider.value).rounded())
-            
-            if clubName == "Back Swing"{
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingGoals/").updateChildValues(["backSwing":defaultVal])
-            }
-            else if clubName == "Swing Tempo"{
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingGoals/").updateChildValues(["tempo":defaultVal])
-            }
-            else{
-                clubName  = getShortClubName(clubName: clubDic.value(forKey: "clubName") as! String)
-                ref.child("userData/\(Auth.auth().currentUser!.uid)/swingGoals/").updateChildValues([clubName:defaultVal])
-            }
-            for i in 0..<clubMArray.count{
-                let dic = clubMArray[i] as! NSDictionary
-                if dic.value(forKey: "clubName") as! String == clubDic.value(forKey: "clubName") as! String{
-                    let clubDic = NSMutableDictionary()
-                    clubDic.setObject(dic.value(forKey: "clubName") as! String, forKey: "clubName" as NSCopying)
-                    clubDic.setObject(dic.value(forKey: "minVal")!, forKey: "minVal" as NSCopying)
-                    clubDic.setObject(dic.value(forKey: "maxVal")!, forKey: "maxVal" as NSCopying)
-                    clubDic.setObject(defaultVal, forKey: "defaultVal" as NSCopying)
-                    
-                    clubMArray.replaceObject(at: i, with: clubDic)
-                    break
-                }
-            }
-            debugPrint("clubMArray",clubMArray)
-        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -1049,81 +676,5 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
         else{
             // DO nothing
         }
-    }
-    
-    // MARK: - Expand / Collapse Methods
-    @objc func sectionHeaderWasTouched(_ sender: UITapGestureRecognizer){
-        
-        let headerView = sender.view!
-        let section    = headerView.tag
-        let eImageView = headerView.viewWithTag(kHeaderSectionTag + section) as? UIImageView
-        
-        if (self.expandedSectionHeaderNumber == -1) {
-            self.expandedSectionHeaderNumber = section
-            getUpDatedGoalsValues(section:section, imageView: eImageView!)
-        }
-        else {
-            if (self.expandedSectionHeaderNumber == section) {
-                tableViewCollapeSection(section, imageView: eImageView!)
-            }
-            else {
-                tableViewCollapeSection(self.expandedSectionHeaderNumber, imageView: eImageView!)
-                getUpDatedGoalsValues(section:section, imageView: eImageView!)
-            }
-        }
-    }
-    func getUpDatedGoalsValues(section:Int, imageView: UIImageView){
-        self.goalsDic = NSMutableDictionary()
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "goals") { (snapshot) in
-            if snapshot.value != nil{
-                if let goalsDic = snapshot.value as? NSMutableDictionary{
-                    self.goalsDic = goalsDic
-                }
-            }
-            DispatchQueue.main.async( execute: {
-                self.tableViewExpandSection(section, imageView: imageView)
-            })
-        }
-    }
-    
-    func tableViewCollapeSection(_ section: Int, imageView: UIImageView) {
-        
-        self.expandedSectionHeaderNumber = -1
-        var indexesPath = [IndexPath]()
-        if section == 3{
-            for i in 0 ..< 4 {
-                let index = IndexPath(row: i, section: section)
-                indexesPath.append(index)
-            }
-        }
-        else{
-            for i in 0 ..< clubMArray.count {
-                let index = IndexPath(row: i, section: section)
-                indexesPath.append(index)
-            }
-        }
-        self.tableView!.beginUpdates()
-        self.tableView!.deleteRows(at: indexesPath, with: UITableViewRowAnimation.fade)
-        self.tableView!.endUpdates()
-    }
-    
-    func tableViewExpandSection(_ section: Int, imageView: UIImageView) {
-        var indexesPath = [IndexPath]()
-        if section == 3{
-            for i in 0 ..< 4 {
-                let index = IndexPath(row: i, section: section)
-                indexesPath.append(index)
-            }
-        }
-        else{
-            for i in 0 ..< clubMArray.count {
-                let index = IndexPath(row: i, section: section)
-                indexesPath.append(index)
-            }
-        }
-        self.expandedSectionHeaderNumber = section
-        self.tableView!.beginUpdates()
-        self.tableView!.insertRows(at: indexesPath, with: UITableViewRowAnimation.fade)
-        self.tableView!.endUpdates()
     }
 }

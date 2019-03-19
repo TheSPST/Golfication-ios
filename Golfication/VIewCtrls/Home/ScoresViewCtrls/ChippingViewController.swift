@@ -304,16 +304,16 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
             cardViewChippingAccuracy.addSubview(eddieStatsView)
             
-            let eddieStatsView1 = EddieStatsView()
-            eddieStatsView1.backgroundColor = UIColor.clear
-            eddieStatsView1.frame = CGRect(x: 16, y: 35, width: self.view.frame.width-52, height: 30)
-            eddieStatsView1.eddieImageVIew.isHidden = true
-            eddieStatsView1.lblTitle.isHidden = true
-            eddieStatsView1.btnView.isHidden = true
-            eddieStatsView1.btnPlay.isHidden = false
-            eddieStatsView1.btnPlay.setTitle("Get this stat by playing in Shot tracking mode", for: .normal)
-            eddieStatsView1.btnPlay.addTarget(self, action: #selector(self.eddiePlayClicked(_:)), for: .touchUpInside)
-            cardViewChipUPnDown.addSubview(eddieStatsView1)
+//            let eddieStatsView1 = EddieStatsView()
+//            eddieStatsView1.backgroundColor = UIColor.clear
+//            eddieStatsView1.frame = CGRect(x: 16, y: 35, width: self.view.frame.width-52, height: 30)
+//            eddieStatsView1.eddieImageVIew.isHidden = true
+//            eddieStatsView1.lblTitle.isHidden = true
+//            eddieStatsView1.btnView.isHidden = true
+//            eddieStatsView1.btnPlay.isHidden = false
+//            eddieStatsView1.btnPlay.setTitle("Get this stat by playing in Shot tracking mode", for: .normal)
+//            eddieStatsView1.btnPlay.addTarget(self, action: #selector(self.eddiePlayClicked(_:)), for: .touchUpInside)
+//            cardViewChipUPnDown.addSubview(eddieStatsView1)
             
             let eddieStatsView2 = EddieStatsView()
             eddieStatsView2.backgroundColor = UIColor.clear
@@ -339,16 +339,16 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             eddieStatsView4.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
             cardViewChippingProximity.addSubview(eddieStatsView4)
 
-            let eddieStatsView5 = EddieStatsView()
-            eddieStatsView5.backgroundColor = UIColor.clear
-            eddieStatsView5.frame = CGRect(x: 16, y: 35, width: self.view.frame.width-52, height: 30)
-            eddieStatsView5.eddieImageVIew.isHidden = true
-            eddieStatsView5.lblTitle.isHidden = true
-            eddieStatsView5.btnView.isHidden = true
-            eddieStatsView5.btnPlay.isHidden = false
-            eddieStatsView5.btnPlay.setTitle("Get this stat by playing in Shot tracking mode", for: .normal)
-            eddieStatsView5.btnPlay.addTarget(self, action: #selector(self.eddiePlayClicked(_:)), for: .touchUpInside)
-            cardViewSandUPnDown.addSubview(eddieStatsView5)
+//            let eddieStatsView5 = EddieStatsView()
+//            eddieStatsView5.backgroundColor = UIColor.clear
+//            eddieStatsView5.frame = CGRect(x: 16, y: 35, width: self.view.frame.width-52, height: 30)
+//            eddieStatsView5.eddieImageVIew.isHidden = true
+//            eddieStatsView5.lblTitle.isHidden = true
+//            eddieStatsView5.btnView.isHidden = true
+//            eddieStatsView5.btnPlay.isHidden = false
+//            eddieStatsView5.btnPlay.setTitle("Get this stat by playing in Shot tracking mode", for: .normal)
+//            eddieStatsView5.btnPlay.addTarget(self, action: #selector(self.eddiePlayClicked(_:)), for: .touchUpInside)
+//            cardViewSandUPnDown.addSubview(eddieStatsView5)
         }
         else{
             lblChippingProximityAvg.isHidden = false
@@ -440,8 +440,11 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         }
         else{
 
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//        self.navigationController?.pushViewController(viewCtrl, animated: true)
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            self.navigationController?.pushViewController(viewCtrl, animated: false)
+
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
         }

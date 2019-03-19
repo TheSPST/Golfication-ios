@@ -107,5 +107,7 @@ struct Constants{
     static let FREE_MONTHLY_PRODUCT_ID = "Free_Membership"
     static let AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID = "pro_subscription_yearly_month_1"
     static let AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID = "pro_subscription_yearly_days_3"
-
+    
+    static let AUTO_RENEW_EDDIE_MONTHLY_PRODUCT_ID = "pro_subscription_monthly_eddie"
+    static let AUTO_RENEW_EDDIE_YEARLY_PRODUCT_ID = "pro_subscription_yearly_eddie"
 }

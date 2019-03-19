@@ -91,7 +91,7 @@
 			<key>INIntentRestrictions</key>
 			<integer>0</integer>
 			<key>INIntentTitle</key>
-			<string>Distance To Green</string>
+			<string>What’s My Distance</string>
 			<key>INIntentTitleID</key>
 			<string>Fz0deK</string>
 			<key>INIntentType</key>

@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -63,6 +61,8 @@
 	<false/>
 	<key>ITSEncryptionExportComplianceCode</key>
 	<string>NO</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -83,17 +83,17 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>$(PRODUCT_NAME) Bluetooth Peripheral use</string>
 	<key>NSCameraUsageDescription</key>
-	<string>App Requires Camera to activate AR or to set user&apos;s profile image</string>
+	<string>App Requires Camera to activate AR or to set user's profile image</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user&apos;s exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user&apos;s exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user&apos;s exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>App Requires to take screenshot of  stats or graph for sharing purpose</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>App Requires Photo Library to set user&apos;s Profile Image</string>
+	<string>App Requires Photo Library to set user's Profile Image</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>DistanceOfGreenIntent</string>

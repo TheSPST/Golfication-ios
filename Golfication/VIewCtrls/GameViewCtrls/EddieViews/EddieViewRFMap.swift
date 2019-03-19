@@ -11,6 +11,7 @@ import UIKit
 class EddieViewRFMap: UIView {
 
     @IBOutlet weak var view: UIView!
+    @IBOutlet weak var lockImgView: UIImageView!
     
     @IBOutlet weak var viewPar: UIView!
     @IBOutlet weak var lblParValue: UILabel!
@@ -52,7 +53,7 @@ class EddieViewRFMap: UIView {
         unlockEddieView.layer.cornerRadius = 12.5
         byEddieView.isHidden = !Constants.isProMode
         unlockEddieView.isHidden = Constants.isProMode
-        
+        lockImgView.isHidden = Constants.isProMode
         viewPar.layer.cornerRadius = 5.0
         viewBirdie.layer.cornerRadius = 5.0
         viewFairwayHit.layer.cornerRadius = 5.0

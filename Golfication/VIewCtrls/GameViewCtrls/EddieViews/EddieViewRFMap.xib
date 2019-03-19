@@ -33,6 +33,7 @@
                 <outlet property="lblGIRValue" destination="8oL-Bu-uAp" id="y7P-Hp-3Wv"/>
                 <outlet property="lblPar" destination="lH5-VE-j2p" id="mHH-lW-FMP"/>
                 <outlet property="lblParValue" destination="nXL-CS-prt" id="C90-BF-VNX"/>
+                <outlet property="lockImgView" destination="2Zl-dD-WLQ" id="Fs1-VE-UDW"/>
                 <outlet property="unlockEddieView" destination="y18-Ed-6hR" id="IpS-Xb-jV3"/>
                 <outlet property="view" destination="iN0-l3-epB" id="3i3-Kq-VTt"/>
                 <outlet property="viewBirdie" destination="uLF-I5-ggF" id="Mce-Di-Wna"/>

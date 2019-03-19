@@ -76,8 +76,8 @@ class IAPHandler: NSObject {
     func fetchAvailableProducts(){
         
         // Put here your IAP Products ID's
-        let productIdentifiers = NSSet(objects: Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID,Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID)
-        
+        let productIdentifiers = NSSet(objects: Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID,Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID, Constants.AUTO_RENEW_EDDIE_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_EDDIE_YEARLY_PRODUCT_ID)
+
         productsRequest = SKProductsRequest(productIdentifiers: productIdentifiers as! Set<String>)
         debugPrint("productIdentifiers==",productIdentifiers)
         productsRequest.delegate = self
@@ -129,7 +129,7 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
 
                         var date = Date()
                         let calendar = Calendar.current
-                        if productID == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID || productID == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID{
+                        if productID == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID || productID == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID || productID == Constants.AUTO_RENEW_EDDIE_MONTHLY_PRODUCT_ID{
                             date = calendar.date(byAdding: .day, value: 30, to: dateNow as Date)!
                         }
                         else{
@@ -150,9 +150,9 @@ extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver{
                         formatter2.dateFormat = "dd-MMM-yyyy  HH:mm:ss"
                         let trnStr = formatter2.string(from: yourDate2!)
                         
-                        if productID == Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID || productID == Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID{
-                            productID = Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID
-                        }
+//                        if productID == Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID || productID == Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID{
+//                            productID = Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID
+//                        }
                         
                         let membershipDict = NSMutableDictionary()
                         membershipDict.setObject(1, forKey: "isMembershipActive" as NSCopying)

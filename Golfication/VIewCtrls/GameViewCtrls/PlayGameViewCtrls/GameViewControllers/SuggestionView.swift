@@ -45,7 +45,10 @@ class SuggestionView: UIView {
         addSubview(view)
         lockedImgView.isHidden = Constants.isProMode
     }
-    
+    func autoresize(){
+        let width = lblClub.frame.maxX > btnElev.frame.maxX ? lblClub.frame.maxX:btnElev.frame.maxX
+        self.frame.size = CGSize(width: width, height: 65)
+    }
     func loadViewFromNib() -> UIView! {
         let bundle = Bundle(for: type(of: self))
         let nib = UINib(nibName: String(describing: type(of: self)), bundle: bundle)

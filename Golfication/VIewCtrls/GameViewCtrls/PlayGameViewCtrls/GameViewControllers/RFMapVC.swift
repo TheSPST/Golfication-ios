@@ -1405,10 +1405,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         
         btnScore.setCornerWithCircleWidthOne(color: UIColor.white.cgColor)
         self.mapView.mapType = GMSMapViewType.satellite
-        
-        btnForSugg1 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 150, height: 65))
-        btnForSugg2 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 150, height: 65))
-        
+        btnForSugg1 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 120, height: 65))
+        btnForSugg1.autoresize()
+        btnForSugg2 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 120, height: 65))
+        btnForSugg2.autoresize()
+        btnForSugg1.setCornerView(color: UIColor.clear.cgColor)
+        btnForSugg2.setCornerView(color: UIColor.clear.cgColor)
         btnTopShotRanking.layer.cornerRadius = 10.0
         btnTopShotRanking.layer.masksToBounds = true
         
@@ -3120,6 +3122,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
                 btnForSugg1.btnElev.isHidden = true
             }
+            btnForSugg1.autoresize()
             suggestedMarker1.iconView = btnForSugg1
             suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
             suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/2, GMSGeometryHeading(position.first!, position[1]))
@@ -3150,6 +3153,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
                 btnForSugg2.btnElev.isHidden = true
             }
+            btnForSugg2.autoresize()
             suggestedMarker2.iconView = btnForSugg2
             suggestedMarker2.position = GMSGeometryOffset(position[1], dist/2, GMSGeometryHeading(position[1], position.last!))
             suggestedMarker2.groundAnchor = CGPoint(x:-0.02,y:0.5)
@@ -3251,11 +3255,6 @@ extension RFMapVC{
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(index)", forKey: "currentHole" as NSCopying)
         ref.child("matchData/\(self.matchId)/").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            if(self.positionsOfDotLine.count > 2){
-                self.plotSuggestedMarkers(position: self.positionsOfDotLine)
-            }
-        })
     }
     
     @IBAction func nextAction(_ sender: UIButton!) {

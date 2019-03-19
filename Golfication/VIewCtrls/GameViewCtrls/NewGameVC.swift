@@ -21,6 +21,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: Set Outlets
     
+    @IBOutlet weak var btnGoalInfo: UIButton!
     @IBOutlet weak var stblfordRulesLabel: UILabel!
     @IBOutlet weak var gameTypeStackView: UIStackView!
     @IBOutlet weak var changeCourseView: CardView!
@@ -75,7 +76,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @IBOutlet weak var btnFairway: UIButton!
     @IBOutlet weak var btnGir: UIButton!
     
-    @IBOutlet weak var imgViewEditGoals: UIImageView!
     @IBOutlet weak var btnEditGoals: UIButton!
     @IBOutlet weak var multiplayerButtonStackView: UIStackView!
     let progressView = SDLoader()
@@ -187,8 +187,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide()
-                let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "SettingVC") as! SettingVC
+                let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "GoalsVC") as! GoalsVC
                 viewCtrl.golfBagArray = golfBagArray
+                viewCtrl.titleStr = "Scoring Goals"
                 self.navigationController?.pushViewController(viewCtrl, animated: true)
             })
         }
@@ -516,6 +517,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.goalView.isHidden = !Constants.isProMode
         eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         debugPrint("didLoad")
         NotificationCenter.default.addObserver(self, selector: #selector(self.discardGame(_:)), name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
@@ -539,7 +541,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         btnFairway.setTitleColor(UIColor.glfWarmGrey, for: .normal)
         btnGir.setCornerWithRadius(color: UIColor.glfWarmGrey.cgColor, radius: 5.0)
         btnGir.setTitleColor(UIColor.glfWarmGrey, for: .normal)
-        imgViewEditGoals.tintImageColor(color: UIColor.glfFlatBlue)
         // for Bluetooth device setup
         barBtnBLE = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(self.golfXAction))
         barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
@@ -589,6 +590,13 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         getHomeCourse()
     }
+    @IBAction func goalInfoAction(_ sender: Any) {
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = "Your Goals"
+        viewCtrl.desc = StatsIntoConstants.editGoalInfo
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+    
     @objc func unlockEddie(_ sender: UIButton){
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         self.navigationController?.pushViewController(viewCtrl, animated: false)

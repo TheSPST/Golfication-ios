@@ -435,8 +435,11 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     }
     
     @IBAction func premiumBecomeAProAction(_ sender: UIButton){
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+
     }
     
     @IBAction func playNowAction(_ sender: UIButton){
@@ -1074,8 +1077,11 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         }
     }
     func proLockBtnPressed(button:UIButton) {
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+
     }
     func setSpreadOffTheTeaGraph(){
         var dataXAxis = [Double]()

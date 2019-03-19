@@ -3852,8 +3852,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for view in self.stackViewForGreenShots.arrangedSubviews{
             view.removeFromSuperview()
         }
-        btnForSugg1 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 150, height: 65))
-        btnForSugg2 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 150, height: 65))
+        btnForSugg1 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 120, height: 65))
+        btnForSugg1.autoresize()
+        btnForSugg2 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 120, height: 65))
+        btnForSugg2.autoresize()
+        
         btnForSuggMarkOffCourse = SuggestionView(frame: CGRect(x: 0, y: 0, width: 150, height: 65))
 
         self.scoreTableView.dataSource = self
@@ -5064,6 +5067,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                     let elevDistance = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position.first!, position.last!), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(position.first!, position.last!)*Constants.YARD)
                     btnForSugg1.setAllData(club: markerClub, dist: Int(distance), elevDis: "\(Int(elevDistance.rounded())) \(Constants.distanceFilter == 0 ? "yd" : "m")")
+                    btnForSugg1.autoresize()
                     suggestedMarker1.iconView = btnForSugg1
                     if !courseData.elevationHole.isEmpty{
                         let elevation1 = self.getElevationPoint(position: position.first!, holeArr: courseData.elevationHole[self.holeIndex])
@@ -5132,7 +5136,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                     let elevDistance = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position.first!, position[1]), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(position.first!, position[1])*Constants.YARD)
                     btnForSugg1.setAllData(club: markerClub1, dist: Int(dist1), elevDis: "\(Int(elevDistance.rounded())) \(Constants.distanceFilter == 0 ? "yd" : "m")")
-                    
+                    btnForSugg1.autoresize()
                     suggestedMarker1.iconView = btnForSugg1
                     if !courseData.elevationHole.isEmpty{
                         let elevation1 = self.getElevationPoint(position: position.first!, holeArr: courseData.elevationHole[self.holeIndex])
@@ -5187,7 +5191,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
                         btnForSugg2.btnElev.isHidden = true
                     }
-
+                    btnForSugg2.autoresize()
                     suggestedMarker2.iconView = btnForSugg2
                     suggestedMarker2.position = GMSGeometryOffset(position[1], dist/(2*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
                     suggestedMarker2.groundAnchor = CGPoint(x:-0.02,y:0.5)
@@ -5212,6 +5216,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     }
                     let elevDistance = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position.first!, position.last!), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(position.first!, position.last!)*Constants.YARD)
                     btnForSugg1.setAllData(club: markerClub, dist: Int(distance), elevDis: "\(Int(elevDistance.rounded())) \(Constants.distanceFilter == 0 ? "yd" : "m")")
+                    btnForSugg1.autoresize()
                     suggestedMarker1.iconView = btnForSugg1
                     if !courseData.elevationHole.isEmpty{
                         let elevation1 = self.getElevationPoint(position: position[1], holeArr: courseData.elevationHole[self.holeIndex])

@@ -20,6 +20,9 @@ class SiriSetupVC: UIViewController {
         if let shortcut = INShortcut(intent: customIntent) {
             button.shortcut = shortcut
         }
+        self.navigationController?.navigationBar.isHidden = false
+        self.title = "Add To Siri"
+        self.navigationController?.navigationItem.leftBarButtonItem?.title = "Back"
         button.translatesAutoresizingMaskIntoConstraints = false
         button.delegate = self
         btnSiri.addSubview(button)

@@ -42,7 +42,7 @@ class RefreshSubscriptionManager: NSObject {
                     let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(expTimestamp/1000)))
                     self.firTimeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
                     if proData.value(forKey: "productID") as? String != nil{
-                        if (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID){
+                        if (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_EDDIE_MONTHLY_PRODUCT_ID){
                             
                             self.firTimeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
                         }
@@ -75,7 +75,7 @@ class RefreshSubscriptionManager: NSObject {
 //        let AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID = "pro_subscription_trial_monthly"
 //        let AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID = "pro_subscription_trial_yearly"
         
-        let productIDarr = [Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID,Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID]
+        let productIDarr = [Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_YEARLY_PRODUCT_ID, Constants.AUTO_RENEW_TRIAL_3_DAYS_PRODUCT_ID,Constants.AUTO_RENEW_TRIAL_1_MONTH_PRODUCT_ID,Constants.AUTO_RENEW_EDDIE_MONTHLY_PRODUCT_ID,Constants.AUTO_RENEW_EDDIE_YEARLY_PRODUCT_ID]
         for data in productIDarr{
             SwiftyStoreKit.fetchReceipt(forceRefresh: false) { result in
                 switch result {

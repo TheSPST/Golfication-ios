@@ -313,8 +313,11 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             self.navigationController?.pushViewController(mapViewController, animated: true)
         }
         else{
-            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
+//            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            self.navigationController?.pushViewController(viewCtrl, animated: false)
+
             playButton.contentView.isHidden = true
             playButton.floatButton.isHidden = true
         }

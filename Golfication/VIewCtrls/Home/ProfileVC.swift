@@ -271,8 +271,10 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     // MARK: yearlyPlanAction
     @IBAction func yearlyPlanAction(_ sender: Any) {
         
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
 
 //        viewUpgradeInactive.isHidden = true
 //        viewUpgradeFreeActive.isHidden = true
@@ -301,8 +303,10 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         }
         if(valid){
             
-            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
+//            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            self.navigationController?.pushViewController(viewCtrl, animated: false)
         }
     }
     
@@ -554,7 +558,9 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         whatISProHeightConstraint.constant = 0.0
         self.view.layoutIfNeeded()
         
-        btnUpdradeNow.setTitle(" " + "Upgrade Now!".localized() + " ", for: .normal)
+        //btnUpdradeNow.setTitle(" " + "Upgrade Now!".localized() + " ", for: .normal)
+        btnUpdradeNow.layer.borderColor = UIColor.glfBlack.cgColor
+        btnUpdradeNow.layer.borderWidth = 4.0
         btnWhatIsPro.setTitle(" " + "What is Pro?".localized() + " ", for: .normal)
         
         btnUpdradeNow.layer.cornerRadius = 3.0
@@ -690,7 +696,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                     
                      timeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
                     if proData.value(forKey: "productID") as? String != nil{
-                        if (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID){
+                        if (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID) || (proData.value(forKey: "productID") as! String == Constants.AUTO_RENEW_EDDIE_MONTHLY_PRODUCT_ID){
                             
                             timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
                         }

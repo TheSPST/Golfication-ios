@@ -150,8 +150,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - upgradeAction
     @IBAction func upgradeAction(_ sender: Any) {
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+
     }
     
     // MARK: - playFriendsAction
@@ -246,9 +249,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - goProAction
     @IBAction func goProAction(_ sender: Any) {
         
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//        self.navigationController?.pushViewController(viewCtrl, animated: true)
         
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+
         /*let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "HomeFreeProMemberVC") as! HomeFreeProMemberVC
          viewCtrl.modalPresentationStyle = .overCurrentContext
          present(viewCtrl, animated: true, completion: nil)
@@ -848,9 +854,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     
     func proLockBtnPressed(button:UIButton) {
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
+//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//        self.navigationController?.pushViewController(viewCtrl, animated: true)
         
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        self.navigationController?.pushViewController(viewCtrl, animated: false)
+
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
     }
@@ -1266,10 +1275,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             
                             var timeEnd = Calendar.current.date(byAdding: .day, value: 365, to: timeStart as Date)
                             if proMembership.value(forKey: "productID") as? String != nil{
-                                if (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID){
+                                if (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_TRIAL_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.FREE_MONTHLY_PRODUCT_ID) || (proMembership.value(forKey: "productID") as! String == Constants.AUTO_RENEW_EDDIE_MONTHLY_PRODUCT_ID){
                                     
                                     timeEnd = Calendar.current.date(byAdding: .day, value: 30, to: timeStart as Date)
-                                    //                                    timeEnd = Calendar.current.date(byAdding: .minute, value: 5, to: timeStart as Date)
+                                    //timeEnd = Calendar.current.date(byAdding: .minute, value: 5, to: timeStart as Date)
                                 }
                                 
                                 let timeNow = NSDate()
@@ -1305,8 +1314,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                             alert.addAction(UIAlertAction(title: "RENEW", style: .default, handler: { [weak alert] (_) in
                                                 debugPrint("RENEW Alert: \(alert?.title ?? "")")
                                                 
-                                                let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-                                                self.navigationController?.pushViewController(viewCtrl, animated: true)
+//                                                let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
+//                                                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                                                let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+                                                self.navigationController?.pushViewController(viewCtrl, animated: false)
                                             }))
                                             self.present(alert, animated: true, completion: nil)
                                         }
