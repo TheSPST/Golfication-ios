@@ -3073,14 +3073,16 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             var markerClub1 = String()
             
             suggestedMarker1.map = nil
-            let dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
-            let dist = GMSGeometryDistance(position[1], position.last!) * Constants.YARD
+            var dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
+            var dist = GMSGeometryDistance(position[1], position.last!) * Constants.YARD
             var suffix = "yd"
 //            markerText1 = "  \(Int(dist1)) yd "
 //            markerText = "  \(Int(dist == 0 ? 1:dist)) yd "
             if(Constants.distanceFilter == 1){
 //                markerText = "  \(Int((dist < Constants.YARD ? Constants.YARD:dist)/(Constants.YARD))) m "
 //                markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
+                dist1 = dist1/Constants.YARD
+                dist = dist/Constants.YARD
                 suffix = "m"
             }
             let elev1 = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position.first!, position[1]), degree: self.windHeading-135, windSpeed: self.windSpeed * 2.23694, dist: GMSGeometryDistance(position.first!, position[1]) * Constants.YARD)
@@ -3097,7 +3099,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 markerClub1 = " - "
             }
             
-            btnForSugg1.setAllData(club: markerClub1, dist: Int(dist1), elevDis:"\(Int(elev1.rounded())) \(suffix)")
+            btnForSugg1.setAllData(club: markerClub1, dist: Int(elev1.rounded()), elevDis:"\(Int(dist1)) \(suffix)")
             if !courseData.elevationHole.isEmpty{
                 let elevation1 = self.getElevationPoint(position: position.first!, holeArr: courseData.elevationHole[self.holeIndex])
                 let elevation2 = self.getElevationPoint(position: position[1], holeArr: courseData.elevationHole[self.holeIndex])
@@ -3128,7 +3130,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/2, GMSGeometryHeading(position.first!, position[1]))
             suggestedMarker1.map = self.mapView
             suggestedMarker2.map = nil
-            btnForSugg2.setAllData(club: markerClub, dist: Int(dist), elevDis: "\(Int(elev.rounded())) \(suffix)")
+            btnForSugg2.setAllData(club: markerClub, dist: Int(elev.rounded()), elevDis: "\(Int(dist)) \(suffix)")
             if !courseData.elevationHole.isEmpty{
                 let elevation1 = self.getElevationPoint(position: position[1], holeArr: courseData.elevationHole[self.holeIndex])
                 let elevation2 = self.getElevationPoint(position: position.last!, holeArr: courseData.elevationHole[self.holeIndex])

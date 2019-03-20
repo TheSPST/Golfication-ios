@@ -199,6 +199,9 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         }
                         if let userName = feedData["userName"] as? String {
                             feed.userName = userName
+//                            if userName.containsIgnoringCase(find: "rishabh") || userName.containsIgnoringCase(find: "test") || userName.containsIgnoringCase(find: "arjun"){
+//                                debugPrint(feedData)
+//                            }
                         }
                         if let matchId = feedData["matchKey"] as? String {
                             feed.matchId = matchId
@@ -229,6 +232,9 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         }
                         if let userName = feedData["userName"] as? String {
                             feed.userName = userName
+//                            if userName.containsIgnoringCase(find: "rishabh") || userName.containsIgnoringCase(find: "test") || userName.containsIgnoringCase(find: "arjun"){
+//                                debugPrint(feedData)
+//                            }
                         }
                         feed.deleted = false
                         if let deleted = feedData["deleted"] as? Bool {

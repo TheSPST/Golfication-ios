@@ -58,7 +58,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBOutlet weak var subViewClubImage: UIView!
     //    @IBOutlet weak var viewOnCourse: UIView!
     @IBOutlet weak var viewBecomePro: UIView!
-    @IBOutlet weak var viewInvite: UIView!
+//    @IBOutlet weak var viewInvite: UIView!
     
     @IBOutlet weak var lblGameStatus: UILabel!
     @IBOutlet weak var lblUserName: UILabel!
@@ -347,8 +347,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         viewPreviousGame.isHidden = true
         viewNewGame.isHidden = true
         
-        let rndom = Int(arc4random_uniform(100))
-        viewInvite.isHidden = rndom < 40 ? false : true
+//        let rndom = Int(arc4random_uniform(100))
+//        viewInvite.isHidden = rndom < 40 ? false : true
         
         self.setInitialUI()
         
@@ -1249,7 +1249,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 if let proMode = userData.value(forKey: "proMode") as? Bool{
                     Constants.isProMode = proMode
-                    self.btnUpgrade.isHidden = false
+//                    self.btnUpgrade.isHidden = false
                     
                     if let proMembership = userData.value(forKey: "proMembership") as? NSDictionary{
                         if let device  = proMembership.value(forKey: "device") as? String{

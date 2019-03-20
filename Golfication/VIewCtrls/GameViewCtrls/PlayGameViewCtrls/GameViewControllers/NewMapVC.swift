@@ -3458,6 +3458,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for marker in markers{
             marker.isDraggable = false
         }
+        
+        self.windNotesView.isHidden = true
         suggestedMarkerOffCourse.map = nil
         self.btnTrackShot.isHidden = true
         self.lblEditShotNumber.isHidden = true
@@ -4633,9 +4635,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func plotSuggestedMarkersOffCourse(position:[CLLocationCoordinate2D]){
-        var markerText = String()
+//        var markerText = String()
         var markerClub = String()
-        var markerText1 = String()
+//        var markerText1 = String()
         var markerClub1 = String()
         
         suggestedMarkerOffCourse.map = nil
@@ -4646,10 +4648,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(!holeOutFlag){
             if(BackgroundMapStats.findPositionOfPointInside(position: position.first!, whichFeature:courseData.numberOfHoles[self.holeIndex].green)){
                 let distance = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD * 3
-                markerText = "  \(Int(distance)) ft "
+//                markerText = "  \(Int(distance)) ft "
                 if(Constants.distanceFilter == 1){
                     let distance = GMSGeometryDistance(position.first!, position.last!)
-                    markerText = "  \(Int(distance)) m "
+//                    markerText = "  \(Int(distance)) m "
                 }
                 markerClub = clubReco(dist: distance, lie: "G")
                 if (distance/3 < 100) {
@@ -4673,9 +4675,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 let distance = GMSGeometryDistance(position.first!, position.last!) * Constants.YARD
                 if(distance > 100){
                     var dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
-                    markerText1 = "  \(Int(dist1)) yd "
+//                    markerText1 = "  \(Int(dist1)) yd "
                     if(Constants.distanceFilter == 1){
-                        markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
+//                        markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
                         dist1 = dist1/Constants.YARD
                     }
                     let lie = callFindPositionInsideFeature(position: position[1])
@@ -4703,9 +4705,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     suggestedMarkerOffCourse.map = self.mapView
                 }else{
                     var distance = GMSGeometryDistance(position[0], position[1]) * Constants.YARD
-                    markerText = " \(Int(distance.rounded())) yd"
+//                    markerText = " \(Int(distance.rounded())) yd"
                     if(Constants.distanceFilter == 1){
-                        markerText = " \(Int((distance/Constants.YARD).rounded())) m"
+//                        markerText = " \(Int((distance/Constants.YARD).rounded())) m"
                         distance = distance/Constants.YARD
                     }
                     if(self.shotCount != 0){
@@ -5033,9 +5035,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         return nearbuy as! NSMutableDictionary
     }
     func plotSuggestedMarkers(position:[CLLocationCoordinate2D]){
-        var markerText = String()
+//        var markerText = String()
         var markerClub = String()
-        var markerText1 = String()
+//        var markerText1 = String()
         var markerClub1 = String()
         
         suggestedMarker1.map = nil
@@ -5052,10 +5054,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(!holeOutFlag){
             if(BackgroundMapStats.findPositionOfPointInside(position: position.first!, whichFeature:courseData.numberOfHoles[self.holeIndex].green)){
                 let distance = GMSGeometryDistance(position.first!, position.last!) * Constants.YARD * 3
-                markerText = "  \(Int(distance)) ft "
+//                markerText = "  \(Int(distance)) ft "
                 if(Constants.distanceFilter == 1){
                     let distance = GMSGeometryDistance(position.first!, position.last!)
-                    markerText = "  \(Int(distance)) m "
+//                    markerText = "  \(Int(distance)) m "
                 }
                 markerClub = "Pu"
                 if (distance/3 < 100) {
@@ -5104,11 +5106,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     var dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
                     var dist = GMSGeometryDistance(position[1], position.last!) * Constants.YARD
                     
-                    markerText1 = "  \(Int(dist1)) yd "
-                    markerText = "  \(Int(dist)) yd "
+//                    markerText1 = "  \(Int(dist1)) yd "
+//                    markerText = "  \(Int(dist)) yd "
                     if(Constants.distanceFilter == 1){
-                        markerText = "  \(Int(dist/(Constants.YARD))) m "
-                        markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
+//                        markerText = "  \(Int(dist/(Constants.YARD))) m "
+//                        markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
                         dist1 = dist1/Constants.YARD
                         dist = dist/Constants.YARD
                     }
@@ -5135,7 +5137,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         }
                     }
                     let elevDistance = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position.first!, position[1]), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(position.first!, position[1])*Constants.YARD)
-                    btnForSugg1.setAllData(club: markerClub1, dist: Int(dist1), elevDis: "\(Int(elevDistance.rounded())) \(Constants.distanceFilter == 0 ? "yd" : "m")")
+                    btnForSugg1.setAllData(club: markerClub1, dist: Int(elevDistance.rounded()), elevDis: "\(Int(dist1)) \(Constants.distanceFilter == 0 ? "yd" : "m")")
                     btnForSugg1.autoresize()
                     suggestedMarker1.iconView = btnForSugg1
                     if !courseData.elevationHole.isEmpty{
@@ -5166,7 +5168,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
                     suggestedMarker1.map = !isTracking ? self.mapView : nil
                     let elevDistance1 = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position[1], position.last!), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(position[1], position.last!)*Constants.YARD)
-                    btnForSugg2.setAllData(club: markerClub, dist: Int(dist), elevDis: "\(Int(elevDistance1.rounded())) \(Constants.distanceFilter == 0 ? "yd" : "m")")
+                    btnForSugg2.setAllData(club: markerClub, dist: Int(elevDistance1.rounded()), elevDis: "\(Int(dist)) \(Constants.distanceFilter == 0 ? "yd" : "m")")
                     if !courseData.elevationHole.isEmpty{
                         let elevation1 = self.getElevationPoint(position: position[1], holeArr: courseData.elevationHole[self.holeIndex])
                         let elevation2 = self.getElevationPoint(position: position.last!, holeArr: courseData.elevationHole[self.holeIndex])
@@ -5198,9 +5200,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     suggestedMarker2.map = !isTracking ? self.mapView : nil
                 }else{
                     var distance = GMSGeometryDistance(position[0], position.last!) * Constants.YARD
-                    markerText = " \(Int(distance.rounded())) yd"
+//                    markerText = " \(Int(distance.rounded())) yd"
                     if(Constants.distanceFilter == 1){
-                        markerText = " \(Int((distance/Constants.YARD).rounded())) m"
+//                        markerText = " \(Int((distance/Constants.YARD).rounded())) m"
                         distance = distance/Constants.YARD
                     }
                     if(self.shotCount != 0){
@@ -5215,7 +5217,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         self.selectClubDropper.TableMenu.delegate?.tableView!(self.selectClubDropper.TableMenu, didSelectRowAt: indexPath)
                     }
                     let elevDistance = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(position.first!, position.last!), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(position.first!, position.last!)*Constants.YARD)
-                    btnForSugg1.setAllData(club: markerClub, dist: Int(distance), elevDis: "\(Int(elevDistance.rounded())) \(Constants.distanceFilter == 0 ? "yd" : "m")")
+                    btnForSugg1.setAllData(club: markerClub, dist: Int(elevDistance.rounded()), elevDis: "\(Int(distance.rounded())) \(Constants.distanceFilter == 0 ? "yd" : "m")")
                     btnForSugg1.autoresize()
                     suggestedMarker1.iconView = btnForSugg1
                     if !courseData.elevationHole.isEmpty{
@@ -5777,13 +5779,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             self.updateElevationForeground(p1: self.userLocationForClub!, p2: data.center, btn: self.btnCenterDistance, lbl: self.lblDirCenter, lblElev: self.lblCenterElev)
                             self.updateElevationForeground(p1: self.userLocationForClub!, p2: data.back, btn: self.btnBackDistance, lbl: self.lblDirBack, lblElev: self.lblBackElev)
                             
-                            let elevDistanceFront = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(data.front, self.userLocationForClub!), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(data.front, self.userLocationForClub!)*Constants.YARD)
+                            let elevDistanceFront = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.front), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(data.front, self.userLocationForClub!)*Constants.YARD)
                             self.lblFrontElev.text = "\(Int(elevDistanceFront.rounded()))"
-                            
-                            let elevDistanceCenter = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(data.center, self.userLocationForClub!), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(data.center, self.userLocationForClub!)*Constants.YARD)
+
+                            let elevDistanceCenter = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.center), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(data.center, self.userLocationForClub!)*Constants.YARD)
                             self.lblCenterElev.text = "\(Int(elevDistanceCenter.rounded()))"
-                            
-                            let elevDistancBack = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(data.back, self.userLocationForClub!), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(data.back, self.userLocationForClub!)*Constants.YARD)
+
+                            let elevDistancBack = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.back), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(data.back, self.userLocationForClub!)*Constants.YARD)
                             self.lblBackElev.text = "\(Int(elevDistancBack.rounded()))"
                             
                             var suffix = "yd"

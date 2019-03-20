@@ -127,15 +127,9 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
     
     @IBAction func btnSkipAction(_ sender: Any) {
         if Auth.auth().currentUser != nil{
-            if fbId  == "facebook.com" || (Auth.auth().currentUser?.isEmailVerified)!{
-                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                appDelegate.window?.rootViewController = tabBarCtrl
-            }
-            else{
-                let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AuthParentVC") as! AuthParentVC
-                self.navigationController?.pushViewController(viewCtrl, animated: false)
-            }
+            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = tabBarCtrl
         }
         else{
             let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AuthParentVC") as! AuthParentVC

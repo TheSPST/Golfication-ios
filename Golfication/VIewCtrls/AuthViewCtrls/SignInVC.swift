@@ -468,7 +468,6 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
                         UserDefaults.standard.synchronize()
                         // --------------------------------------------------------------------------------
                         if(currentUser.uid.count>1){
-                            
                             let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
                                 if newUser{
                                     

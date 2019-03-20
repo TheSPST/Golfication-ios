@@ -590,7 +590,7 @@ class BackgroundMapStats: NSObject {
             debugPrint("return Distance:",Constants.distanceFilter == 1 ?dist/Constants.YARD:dist)
             return Constants.distanceFilter == 1 ?dist/Constants.YARD:dist
         }
-        let windTarget = -windSpeed * cos(((degree-headingTarget)/180)*Double.pi)
+        let windTarget = windSpeed * cos(((degree-headingTarget)/180)*Double.pi)
         debugPrint("cos:",cos(((degree-headingTarget)/180)*Double.pi))
         var PL1 = dist + (dist * 0.005 * windTarget)
         if (windTarget>0){

@@ -155,6 +155,8 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                         DispatchQueue.main.async(execute: {
                             self.userDetails.setObject(device, forKey: "device" as NSCopying)
                             self.userDetails.setObject(proMode, forKey: "proMode" as NSCopying)
+                            self.userDetails.setObject(fbName, forKey: "name" as NSCopying)
+                            self.userDetails.setObject(fbEmail, forKey: "email" as NSCopying)
                             if let locale = Locale.current.regionCode {
                                 self.userList.setObject(locale, forKey:"country" as NSCopying)
 
@@ -336,22 +338,25 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                         self.present(alert, animated: true, completion: nil)
                         return
                     }
+                    
 //                    let alert = UIAlertController(title: "Verify Email", message: "We have just sent you a verification email. Please verify your email address by clicking the verification link.", preferredStyle: UIAlertControllerStyle.alert)
-                    let alert = UIAlertController(title: "Registration Successful", message: "Login to start tracking your rounds.", preferredStyle: UIAlertControllerStyle.alert)
-
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [alert] (_) in
+                    let alert = UIAlertController(title: "Registration Successful", message: "You will be logged in automatically to start tracking your rounds. This may take a few seconds.", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { [alert] (_) in
                         
 //                        https://golfication.us15.list-manage.com/subscribe/post?u=61aa993cd19d0fb238ab03ae0&amp;id=b8bdae75ef&EMAIL=rishabh.sood@gmail.com&FULLNAME=Rishabh Sood
+                        UserDefaults.standard.set(self.isNewUser, forKey: "isNewUser")
+                        UserDefaults.standard.synchronize()
+                        self.updateUserDataIntoFirebase(uid: (user?.uid)!, fbEmail: self.txtFieldEmail.text!, fbName: self.txtFieldName.text!)
 
                         self.sendMailingRequestToServer(uName: self.txtFieldName.text!,uEmail: self.txtFieldEmail.text!)
-                        Constants.userEmail = self.txtFieldEmail.text!
-                            
-                        self.txtFieldName.text = ""
-                        self.txtFieldEmail.text = ""
-                        self.txtFieldPswd.text = ""
-                        self.txtFieldCnfrmPswd.text = ""
-                        let vc = self.parent as! ButtonBarPagerTabStripViewController
-                        vc.moveToViewController(at: 1)
+//                        Constants.userEmail = self.txtFieldEmail.text!
+//                            
+//                        self.txtFieldName.text = ""
+//                        self.txtFieldEmail.text = ""
+//                        self.txtFieldPswd.text = ""
+//                        self.txtFieldCnfrmPswd.text = ""
+//                        let vc = self.parent as! ButtonBarPagerTabStripViewController
+//                        vc.moveToViewController(at: 1)
                     }))
 //                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)

@@ -1034,14 +1034,17 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         
         customProModeView.btnPro.frame.size.width = (customProModeView.label.frame.size.width/2)+10
         customProModeView.btnPro.frame.size.height = 40
-        customProModeView.btnPro.center = CGPoint(x: customProModeView.bounds.midX, y: customProModeView.label.frame.origin.y + customProModeView.label.frame.size.height + 20)
-        
+        customProModeView.btnPro.center = CGPoint(x: customProModeView.bounds.midX, y:
+            customProModeView.label.frame.origin.y + customProModeView.label.frame.size.height + 20)
+        customProModeView.btnPro.backgroundColor = UIColor.glfYellowEddie
+        customProModeView.btnPro.setTitleColor(UIColor.glfWhite, for: .normal)
+        customProModeView.btnPro.layer.borderColor = UIColor.clear.cgColor
         customProModeView.titleLabel.frame = CGRect(x: customProModeView.frame.origin.x + 16, y: customProModeView.frame.origin.y + 16, width: customProModeView.bounds.width, height: 30)
         customProModeView.titleLabel.backgroundColor = UIColor.clear
         customProModeView.titleLabelText = title
         
-        customProModeView.labelText = "Pro members only"
-        customProModeView.btnTitle = "Become a Pro"
+        customProModeView.labelText = "Unlock this stat with Eddie"
+        customProModeView.btnTitle = "Get Eddie"
         //customProModeView.backgroundColor = UIColor.clear
         customProModeView.backgroundColor = UIColor(red:110.0/255.0, green:185.0/255.0, blue:165.0/255.0, alpha:1.0)
         targetView?.addSubview(customProModeView)

@@ -3799,7 +3799,7 @@
                                                             <constraint firstAttribute="height" constant="70" id="I5E-4a-oZt"/>
                                                             <constraint firstAttribute="width" constant="70" id="yaE-mn-Sg8"/>
                                                         </constraints>
-                                                        <state key="normal" image="Rblue"/>
+                                                        <state key="normal" image="1"/>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bz7-v2-KyM">
                                                         <rect key="frame" x="86" y="0.0" width="70" height="70"/>
@@ -3807,7 +3807,7 @@
                                                             <constraint firstAttribute="width" constant="70" id="K08-4g-qEz"/>
                                                             <constraint firstAttribute="height" constant="70" id="lNE-Bo-NoD"/>
                                                         </constraints>
-                                                        <state key="normal" image="Rgreen"/>
+                                                        <state key="normal" image="2"/>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lh0-P7-548">
                                                         <rect key="frame" x="172" y="0.0" width="70" height="70"/>
@@ -3815,7 +3815,7 @@
                                                             <constraint firstAttribute="width" constant="70" id="W1z-Dq-CCH"/>
                                                             <constraint firstAttribute="height" constant="70" id="WX9-1v-sZn"/>
                                                         </constraints>
-                                                        <state key="normal" image="Ryellow"/>
+                                                        <state key="normal" image="3"/>
                                                     </button>
                                                 </subviews>
                                             </stackView>
@@ -5677,7 +5677,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BWL-P3-n5x" userLabel="Stats Unlocked View">
                                                 <rect key="frame" x="0.0" y="4547" width="414" height="907"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pro Stats Unlocked" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4JQ-He-uGj">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Advanced Stats" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4JQ-He-uGj">
                                                         <rect key="frame" x="16" y="16" width="382" height="25"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="nx8-ca-giU"/>
@@ -5686,7 +5686,7 @@
                                                         <color key="textColor" red="0.074509803920000006" green="0.18823529410000001" blue="0.1333333333" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Advanced stats have been temporarily unlocked" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AjM-A4-Lwo">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Eddie has temporarily unlocked your performances insights" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AjM-A4-Lwo">
                                                         <rect key="frame" x="10" y="51" width="394" height="25"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="25" id="JGK-Tn-nYl"/>
@@ -5918,27 +5918,20 @@
                                                         </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="W4A-Q9-qDm">
-                                                        <rect key="frame" x="45" y="770.5" width="324" height="116.5"/>
+                                                        <rect key="frame" x="83" y="770.5" width="248" height="116.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Like these stats?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yEQ-Fr-Fn3">
-                                                                <rect key="frame" x="89" y="0.0" width="146.5" height="30"/>
+                                                                <rect key="frame" x="51" y="0.0" width="146.5" height="30"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="21"/>
                                                                 <color key="textColor" red="0.26274509800000001" green="0.6588235294" blue="0.43137254899999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4fJ-EL-3AR">
-                                                                <rect key="frame" x="0.0" y="40" width="324" height="21.5"/>
+                                                                <rect key="frame" x="0.0" y="40" width="248" height="21.5"/>
                                                                 <attributedString key="attributedText">
-                                                                    <fragment content="Get these stats and more for just $3.33/month">
+                                                                    <fragment content="Get these stats and more with Eddie">
                                                                         <attributes>
                                                                             <color key="NSColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                            <font key="NSFont" metaFont="system" size="15"/>
-                                                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                                        </attributes>
-                                                                    </fragment>
-                                                                    <fragment content="*">
-                                                                        <attributes>
-                                                                            <color key="NSColor" red="0.22352941179999999" green="0.56470588239999997" blue="0.41568627450000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <font key="NSFont" metaFont="system" size="15"/>
                                                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                                         </attributes>
@@ -5947,14 +5940,14 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZQ-2p-icu">
-                                                                <rect key="frame" x="77" y="71.5" width="170" height="45"/>
+                                                                <rect key="frame" x="39" y="71.5" width="170" height="45"/>
                                                                 <color key="backgroundColor" red="0.96470588239999999" green="0.72549019609999998" blue="0.2156862745" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="170" id="7PM-C1-BeM"/>
                                                                     <constraint firstAttribute="height" constant="45" id="Txq-G4-3UC"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-BoldItalic" family="SF Pro Display" pointSize="19"/>
-                                                                <state key="normal" title="BECOME A PRO">
+                                                                <state key="normal" title="Get Eddie">
                                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </state>
                                                                 <connections>
@@ -7464,7 +7457,7 @@
                                                             <constraint firstAttribute="width" constant="70" id="S1C-XR-QdB"/>
                                                             <constraint firstAttribute="height" constant="70" id="dny-x9-nd4"/>
                                                         </constraints>
-                                                        <state key="normal" image="Rblue"/>
+                                                        <state key="normal" image="1"/>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zrc-SH-fJY">
                                                         <rect key="frame" x="86" y="0.0" width="70" height="70"/>
@@ -7472,7 +7465,7 @@
                                                             <constraint firstAttribute="height" constant="70" id="i5f-wQ-KO1"/>
                                                             <constraint firstAttribute="width" constant="70" id="zE5-dg-3IT"/>
                                                         </constraints>
-                                                        <state key="normal" image="Rgreen"/>
+                                                        <state key="normal" image="2"/>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mZu-Zf-Nbl">
                                                         <rect key="frame" x="172" y="0.0" width="70" height="70"/>
@@ -7480,7 +7473,7 @@
                                                             <constraint firstAttribute="width" constant="70" id="5Sy-LA-bnE"/>
                                                             <constraint firstAttribute="height" constant="70" id="yvV-bu-zEs"/>
                                                         </constraints>
-                                                        <state key="normal" image="Ryellow"/>
+                                                        <state key="normal" image="3"/>
                                                     </button>
                                                 </subviews>
                                             </stackView>
@@ -7892,11 +7885,11 @@
     </scenes>
     <resources>
         <image name="0_you" width="22" height="20"/>
+        <image name="1" width="112" height="112"/>
+        <image name="2" width="112" height="112"/>
+        <image name="3" width="112" height="112"/>
         <image name="Club_arrow_down" width="10" height="8"/>
         <image name="ICC_emptyStar_2x" width="75" height="75"/>
-        <image name="Rblue" width="153" height="153"/>
-        <image name="Rgreen" width="153" height="153"/>
-        <image name="Ryellow" width="153" height="153"/>
         <image name="add_course" width="40" height="40"/>
         <image name="approach" width="142" height="142"/>
         <image name="backArrow" width="15" height="28"/>
