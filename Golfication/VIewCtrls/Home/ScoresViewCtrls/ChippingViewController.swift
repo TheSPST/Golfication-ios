@@ -365,6 +365,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
 
     @objc func eddieProClicked(_ sender:UIButton){
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "Chipping"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
 
@@ -443,6 +444,7 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            viewCtrl.source = "Chipping"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
 
         playButton.contentView.isHidden = true

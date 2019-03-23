@@ -150,9 +150,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - upgradeAction
     @IBAction func upgradeAction(_ sender: Any) {
-//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-//        self.navigationController?.pushViewController(viewCtrl, animated: true)
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "Home"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
 
     }
@@ -165,8 +164,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // \
     @IBAction func notifiAction(_ sender: Any) {
-        //        let storyboard = UIStoryboard(name: "OAD", bundle: nil)
-        //        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
@@ -253,6 +250,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
         
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "Home"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
 
         /*let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "HomeFreeProMemberVC") as! HomeFreeProMemberVC
@@ -858,6 +856,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
         
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "Home"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
 
         playButton.contentView.isHidden = true
@@ -1151,6 +1150,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         if appDelegate.fromNewUserProfile{
             appDelegate.fromNewUserProfile = false
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            viewCtrl.source = "NewUser"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
             NotificationCenter.default.addObserver(self, selector: #selector(self.networkStatusChanged(_:)), name: NSNotification.Name(rawValue: ReachabilityStatusChangedNotification), object: nil)
             Reach().monitorReachabilityChanges()
@@ -1317,6 +1317,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
 //                                                let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //                                                self.navigationController?.pushViewController(viewCtrl, animated: true)
                                                 let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+                                                viewCtrl.source = "Renew"
                                                 self.navigationController?.pushViewController(viewCtrl, animated: false)
                                             }))
                                             self.present(alert, animated: true, completion: nil)

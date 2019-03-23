@@ -1509,6 +1509,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     @objc func unlockEddie(_ sender: UIButton){
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "RangeFinder"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     /*
@@ -1571,6 +1572,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     @IBAction func btnActionUnlockEddie(_ sender: Any) {
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "RangeFinder"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     func updateNotificationFor30Minutes(){
@@ -1921,6 +1923,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @objc func btnActionWindLocked(_ sender: Any) {
         if !Constants.isProMode{
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            viewCtrl.source = "RangeFinder"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
         }
     }

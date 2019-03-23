@@ -438,6 +438,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "FinalScoring"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
 
     }
@@ -1083,6 +1084,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "FinalScoring"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
 
     }

@@ -207,6 +207,7 @@
 		4B7F521F2158DC6F002E328A /* PKCCropHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F52162158DC6E002E328A /* PKCCropHelper.swift */; };
 		4B7F52202158DC6F002E328A /* PKCCropLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F52172158DC6E002E328A /* PKCCropLineView.swift */; };
 		4B7F52222158FD89002E328A /* NewGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F52212158FD88002E328A /* NewGameVC.swift */; };
+		4B87031122452F5100B17790 /* CourseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B87031022452F5000B17790 /* CourseViewController.swift */; };
 		4B8B85CB223D3C2900DA7BCA /* EddieProVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8B85CA223D3C2800DA7BCA /* EddieProVC.swift */; };
 		4B8B85CE223D3FF700DA7BCA /* EddieStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8B85CC223D3FF700DA7BCA /* EddieStatsView.swift */; };
 		4B8B85CF223D3FF700DA7BCA /* EddieStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B8B85CD223D3FF700DA7BCA /* EddieStatsView.xib */; };
@@ -239,7 +240,6 @@
 		4B9E7BD52196D889008B6181 /* UILocalizedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9E7BD42196D889008B6181 /* UILocalizedLabel.swift */; };
 		4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338A1FDC006600471070 /* UINavigation+CustomAnimation.swift */; };
 		4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA0338B1FDC006600471070 /* Array + RemoveDuplicate.swift */; };
-		4BA4793B2228334B00FC48AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E4CDC6E211C56B700C2C1C6 /* Assets.xcassets */; };
 		4BA4793C2228336600FC48AB /* IntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0175052225302700A215E6 /* IntentViewController.swift */; };
 		4BA64E462000A54400C8C03F /* Chatlogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA64E452000A54400C8C03F /* Chatlogo.swift */; };
 		4BA70883223A8EAB003CEFF4 /* SuggestionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BA70882223A8EAB003CEFF4 /* SuggestionView.xib */; };
@@ -559,6 +559,7 @@
 		4B7F52162158DC6E002E328A /* PKCCropHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCCropHelper.swift; sourceTree = "<group>"; };
 		4B7F52172158DC6E002E328A /* PKCCropLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCCropLineView.swift; sourceTree = "<group>"; };
 		4B7F52212158FD88002E328A /* NewGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameVC.swift; sourceTree = "<group>"; };
+		4B87031022452F5000B17790 /* CourseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseViewController.swift; sourceTree = "<group>"; };
 		4B8B85CA223D3C2800DA7BCA /* EddieProVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EddieProVC.swift; sourceTree = "<group>"; };
 		4B8B85CC223D3FF700DA7BCA /* EddieStatsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EddieStatsView.swift; sourceTree = "<group>"; };
 		4B8B85CD223D3FF700DA7BCA /* EddieStatsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EddieStatsView.xib; sourceTree = "<group>"; };
@@ -992,6 +993,7 @@
 				4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */,
 				4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */,
 				4B1E686222329B9D00B0F03E /* EddieViews */,
+				4B87031022452F5000B17790 /* CourseViewController.swift */,
 			);
 			path = GameViewCtrls;
 			sourceTree = "<group>";
@@ -1598,7 +1600,7 @@
 					0D5D4A361F94D382004621C7 = {
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1622,7 +1624,7 @@
 					};
 					4B0174F72225302600A215E6 = {
 						CreatedOnToolsVersion = 10.1;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1631,7 +1633,7 @@
 					};
 					4B0175002225302600A215E6 = {
 						CreatedOnToolsVersion = 10.1;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1747,7 +1749,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BA4793B2228334B00FC48AB /* Assets.xcassets in Resources */,
 				4B0175092225302700A215E6 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2081,6 +2082,7 @@
 				4BB26D171FF77EDB001E9556 /* FilterVC.swift in Sources */,
 				4BB26D441FF77EED001E9556 /* FirebaseHandler.swift in Sources */,
 				3EAE867E2125573F0081857B /* PracticePageContainerVC.swift in Sources */,
+				4B87031122452F5100B17790 /* CourseViewController.swift in Sources */,
 				4B7E2A842175DDA100DFC3EB /* DetailView.swift in Sources */,
 				3E70B69A201867590087738D /* IAPHandler.swift in Sources */,
 				4B7F4AE31FFD10A300191452 /* customPieViewCenter.swift in Sources */,
@@ -2316,9 +2318,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FE7D783SLH;
@@ -2330,7 +2332,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_28_Feb_2020;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2344,9 +2346,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Golfication/Golfication.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FE7D783SLH;
@@ -2358,7 +2360,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_28_Feb_2020;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(Golficaiton)Golfication/Golfication-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2370,9 +2372,9 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = DistanceIntents/DistanceIntents.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				INFOPLIST_FILE = DistanceIntents/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -2381,7 +2383,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie.DistanceIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_Intent_28_2020;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2393,9 +2395,9 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = DistanceIntents/DistanceIntents.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				INFOPLIST_FILE = DistanceIntents/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -2403,7 +2405,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie.DistanceIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_Intent_28_2020;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2415,9 +2417,9 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = DistanceIntentsUI/DistanceIntentsUI.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				INFOPLIST_FILE = DistanceIntentsUI/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -2426,7 +2428,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie.DistanceIntentsUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_Intent_UI_28_2020;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2438,9 +2440,9 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = DistanceIntentsUI/DistanceIntentsUI.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Khelfie Technologies Private Limited (FE7D783SLH)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FE7D783SLH;
 				INFOPLIST_FILE = DistanceIntentsUI/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -2448,7 +2450,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.Khelfie.DistanceIntentsUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Golfication_Prod_PP_Intent_UI_28_2020;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";

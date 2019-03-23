@@ -273,6 +273,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
     
     @objc func eddieProClicked(_ sender:UIButton){
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "Approach"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     
@@ -402,6 +403,7 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            viewCtrl.source = "Approach"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
 
         playButton.contentView.isHidden = true

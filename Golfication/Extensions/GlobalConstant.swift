@@ -10,7 +10,7 @@ import Foundation
 
 struct Constants{
     static var placeholder = "Enter your notes here e.g. Fiarway narrows at 255. Hit 3 wood."
-
+    
     static var deviceGameType = 0
     static var tempGolfBagArray = NSMutableArray()
     // MARK: NewHomeVC

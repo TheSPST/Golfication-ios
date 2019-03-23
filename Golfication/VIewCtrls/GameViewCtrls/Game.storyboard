@@ -3465,8 +3465,8 @@
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n6n-Yt-A4m">
                                                 <rect key="frame" x="0.0" y="0.0" width="290" height="342"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="D1Y-4X-uoc">
-                                                        <rect key="frame" x="15" y="82" width="260" height="178"/>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="D1Y-4X-uoc">
+                                                        <rect key="frame" x="15" y="34" width="260" height="274"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="nND-ct-609">
                                                                 <rect key="frame" x="130" y="0.0" width="0.0" height="0.0"/>
@@ -3485,13 +3485,19 @@
                                                                     </label>
                                                                 </subviews>
                                                             </stackView>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Oops, the greens need to be maped!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LKx-Or-O5c">
+                                                                <rect key="frame" x="6" y="42" width="248.5" height="19.5"/>
+                                                                <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
+                                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shot tracking is currently unavailable for this course. If you play on this course often let us know and we'll work on it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8CI-64-uEe">
-                                                                <rect key="frame" x="10" y="30" width="240.5" height="47"/>
-                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
+                                                                <rect key="frame" x="4.5" y="76.5" width="251" height="54"/>
+                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="BJL-Gh-UZn">
-                                                                <rect key="frame" x="32" y="92" width="196" height="25"/>
+                                                                <rect key="frame" x="32" y="138" width="196" height="25"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Z84-Ry-ZDc">
                                                                         <rect key="frame" x="12.5" y="0.0" width="171" height="25"/>
@@ -3584,36 +3590,36 @@
                                                                 </constraints>
                                                             </stackView>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="HSH-Am-PAm">
-                                                                <rect key="frame" x="130" y="107" width="0.0" height="0.0"/>
+                                                                <rect key="frame" x="130" y="155.5" width="0.0" height="0.0"/>
                                                                 <subviews>
                                                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LiQ-B9-1tj">
-                                                                        <rect key="frame" x="60" y="0.0" width="0.0" height="0.0"/>
+                                                                        <rect key="frame" x="75" y="0.0" width="0.0" height="0.0"/>
                                                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="11"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFL-Pu-xje">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="120" height="35"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="35"/>
                                                                         <color key="backgroundColor" red="0.0" green="0.50980392159999999" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="35" id="cRX-ve-oNE"/>
-                                                                            <constraint firstAttribute="width" constant="120" id="z0r-KA-15N"/>
+                                                                            <constraint firstAttribute="width" constant="150" id="z0r-KA-15N"/>
                                                                         </constraints>
                                                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
-                                                                        <state key="normal" title="Start">
+                                                                        <state key="normal" title="Boost your request">
                                                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         </state>
                                                                         <connections>
-                                                                            <action selector="startClassicActionWithSender:" destination="f3R-vW-nQN" eventType="touchUpInside" id="yB7-sT-Ui1"/>
+                                                                            <action selector="startClassicAction2WithSender:" destination="f3R-vW-nQN" eventType="touchUpInside" id="wyh-ds-gvE"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
                                                             </stackView>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G7e-8E-B8O">
-                                                                <rect key="frame" x="70" y="143" width="120" height="35"/>
+                                                                <rect key="frame" x="55" y="192" width="150" height="30"/>
                                                                 <color key="backgroundColor" red="0.0" green="0.50980392159999999" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="8Ui-4P-c7l"/>
-                                                                    <constraint firstAttribute="width" constant="120" id="dOg-Ny-PR5"/>
+                                                                    <constraint firstAttribute="height" constant="30" id="8Ui-4P-c7l"/>
+                                                                    <constraint firstAttribute="width" constant="150" id="dOg-Ny-PR5"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                                 <state key="normal" title="Request Mapping">
@@ -3623,11 +3629,39 @@
                                                                     <action selector="btnActionForRequestMapping:" destination="f3R-vW-nQN" eventType="touchUpInside" id="qj9-aT-nmu"/>
                                                                 </connections>
                                                             </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d5c-oC-Ea1">
+                                                                <rect key="frame" x="55" y="244" width="150" height="30"/>
+                                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="30" id="1jY-pY-fPZ"/>
+                                                                    <constraint firstAttribute="width" constant="150" id="l3r-Zq-F32"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
+                                                                <state key="normal" title="Play in Scorecard Mode">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="startClassicActionWithSender:" destination="f3R-vW-nQN" eventType="touchUpInside" id="JZK-hA-r0W"/>
+                                                                </connections>
+                                                            </button>
                                                         </subviews>
                                                     </stackView>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sbj-bT-64U">
+                                                        <rect key="frame" x="257" y="8" width="25" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="fc2-4c-LAt"/>
+                                                            <constraint firstAttribute="width" constant="25" id="urx-3j-aJE"/>
+                                                        </constraints>
+                                                        <state key="normal" image="icon_info_grey"/>
+                                                        <connections>
+                                                            <action selector="btnActionInfoForRequest:" destination="f3R-vW-nQN" eventType="touchUpInside" id="zQn-3X-nD7"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="sbj-bT-64U" secondAttribute="trailing" constant="8" id="KCT-bT-mba"/>
+                                                    <constraint firstItem="sbj-bT-64U" firstAttribute="top" secondItem="n6n-Yt-A4m" secondAttribute="top" constant="8" id="h8w-KY-baZ"/>
                                                     <constraint firstItem="D1Y-4X-uoc" firstAttribute="centerX" secondItem="n6n-Yt-A4m" secondAttribute="centerX" id="kmt-Kf-vhe"/>
                                                     <constraint firstItem="D1Y-4X-uoc" firstAttribute="centerY" secondItem="n6n-Yt-A4m" secondAttribute="centerY" id="vPW-bo-mNM"/>
                                                     <constraint firstAttribute="trailing" secondItem="D1Y-4X-uoc" secondAttribute="trailing" constant="15" id="w6m-uY-h7U"/>
@@ -3899,6 +3933,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="btnAddFriends" destination="VJn-vj-EDW" id="VeV-AD-nQk"/>
+                        <outlet property="btnPlayBasic" destination="d5c-oC-Ea1" id="epY-2P-sOk"/>
                         <outlet property="btnPrevClassic" destination="O47-2K-XF2" id="5er-GJ-7Mz"/>
                         <outlet property="btnPrevContainerView" destination="QIH-7e-rlR" id="VO0-FQ-Mra"/>
                         <outlet property="btnPrevRf" destination="hOk-ZL-jUM" id="1n6-4u-Cw8"/>
@@ -3932,7 +3967,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Thm-h8-CA5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5625" y="1299"/>
+            <point key="canvasLocation" x="-6047" y="1262"/>
         </scene>
         <!--finalscoreSummary-->
         <scene sceneID="rOm-z3-7ut">
@@ -7881,6 +7916,199 @@
                 </view>
             </objects>
             <point key="canvasLocation" x="68" y="2361"/>
+        </scene>
+        <!--Course Mapping-->
+        <scene sceneID="yDZ-FT-x49">
+            <objects>
+                <viewController storyboardIdentifier="courseViewController" title="Course Mapping" id="Meh-Tw-FhO" customClass="CourseViewController" customModule="Golfication" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QRF-4t-EyR">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WYd-wj-mKe">
+                                <rect key="frame" x="16" y="36" width="288" height="484.5"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Why should I ask my friends to boost my request?">
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="16" name="HelveticaNeue-Bold"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="16" name="HelveticaNeue-Bold"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment>
+                                        <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="16" name="HelveticaNeue"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="16" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment>
+                                        <string key="content">Our mapping team currently adds thousands of new courses each week to the Golfication ecosystem. However, owing to the extraordinary volume of requests, we regularly prioritize courses that are played by groups of golfers.
+
+(Can you blame us? -- the only way to bring the greatest happiness to the greatest number of people)
+</string>
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="14" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment>
+                                        <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="13" name="HelveticaNeue"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content="Do I need to ask ten of my friends to boost the mapping request?">
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="16" name="HelveticaNeue-Bold"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="16" name="HelveticaNeue-Bold"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment>
+                                        <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="16" name="HelveticaNeue"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="16" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment>
+                                        <string key="content">Not necessarily. A course will be mapped on priority as soon as it receives a grand total of ten boosts. So if you and your friends account for four boosts, and the course receives six more from other golfers you may not know, it will be mapped on priority (since it has received ten boosts in total).
+</string>
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="14" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment>
+                                        <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="13" name="HelveticaNeue"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content="Is this step mandatory?">
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="16" name="HelveticaNeue-Bold"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="16" name="HelveticaNeue-Bold"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment>
+                                        <string key="content" base64-UTF8="YES">
+Cg
+</string>
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="16" name="HelveticaNeue"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="16" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment>
+                                        <string key="content">You can choose to forgo this step, but this may mean longer waiting periods for your course to get mapped. In the meanwhile, perhaps you want to use one of our other Game Modes.</string>
+                                        <attributes>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <font key="NSOriginalFont" size="14" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                                <mutableString key="userLabel">Why should I ask my friends to boost my request? Our mapping team currently adds thousands of new courses each week to the Golfication ecosystem. However, owing to the extraordinary volume of requests, we regularly prioritize courses that are played by groups of golfers.  (Can you blame us? -- the only way to bring the greatest happiness to the greatest number of people)  Do I need to ask ten of my friends to boost the mapping request? Not necessarily. A course will be mapped on priority as soon as it receives a grand total of ten boosts. So if you and your friends account for four boosts, and the course receives six more from other golfers you may not know, it will be mapped on priority (since it has received ten boosts in total).  Is this step mandatory? You can choose to forgo this step, but this may mean longer waiting periods for your course to get mapped. In the meanwhile, perhaps you want to use one of our other Game Modes.</mutableString>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.98288482427597046" green="0.97730177640914917" blue="0.98380059003829956" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="WYd-wj-mKe" firstAttribute="top" secondItem="yS7-Bf-wrq" secondAttribute="top" constant="16" id="Rrs-tF-VSG"/>
+                            <constraint firstItem="WYd-wj-mKe" firstAttribute="leading" secondItem="yS7-Bf-wrq" secondAttribute="leading" constant="16" id="hCe-1J-6fC"/>
+                            <constraint firstItem="WYd-wj-mKe" firstAttribute="trailing" secondItem="yS7-Bf-wrq" secondAttribute="trailing" constant="-16" id="ssY-jb-9dY"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="yS7-Bf-wrq"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ouh-o8-iyK"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WaB-mL-GFv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5353" y="1262"/>
         </scene>
     </scenes>
     <resources>

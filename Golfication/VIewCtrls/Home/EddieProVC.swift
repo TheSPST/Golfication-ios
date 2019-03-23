@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import FirebaseAuth
 class EddieProVC: UIViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var eddieScrollView: UIScrollView!
@@ -22,10 +22,12 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var btnMonthlyPayment: UIButton!
     @IBOutlet weak var getEddieView: CardView!
     @IBOutlet weak var smartCaddieView: CardView!
-
+    var source = String()
+    @IBOutlet weak var topContra: NSLayoutConstraint!
+    @IBOutlet weak var bottomPadd: NSLayoutConstraint!
     var currentPageIndex = 0
     var isProgress = false
-    
+    var eddieView = NSMutableDictionary()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,7 +39,6 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         btnEddiePayment.layer.insertSublayer(gradient, at: 0)
         btnEddiePayment.layer.cornerRadius = 20.0
         btnEddiePayment.layer.masksToBounds = true
-        
         let gradient1 = CAGradientLayer()
         gradient1.frame = btnYearlyPayment.bounds
         gradient1.colors = [UIColor(rgb: 0x2E6594).cgColor, UIColor(rgb: 0x2C4094).cgColor]
@@ -75,8 +76,15 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         gradientLayer1.frame = CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width-40, height: self.smartCaddieView.frame.size.height-40)
         self.smartCaddieView.layer.insertSublayer(gradientLayer1, at: 0)
         smartCaddieView.layer.masksToBounds = true
-
+        if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
+            pageControl.heightConst(50)
+            bottomPadd.constant = 30.0
+            topContra.constant = 30.0
+        }
         checkTrialPreriod()
+        self.eddieView.setValue(source, forKey: "source")
+        self.eddieView.setValue(true, forKey: "screen\(currentPageIndex+1)")
+        self.eddieView.setValue(Auth.auth().currentUser!.displayName, forKey: "name")
     }
     
     func checkTrialPreriod(){
@@ -201,7 +209,8 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentStarted"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentFinished"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "PaymentCancelled"), object: nil)
-        
+        debugPrint(self.eddieView)
+        ref.child("eddieViews/\(Auth.auth().currentUser!.uid)").updateChildValues(["\(Timestamp)":self.eddieView])
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "FetchingStarted"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "FetchingFinished"), object: nil)
     }
@@ -217,7 +226,8 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         let currentPage: CGFloat = floor((scrollView.contentOffset.x - pageWidth/2) / pageWidth) + 1
         
         self.pageControl.currentPage = Int(currentPage)
-        
+        self.eddieView.setValue(true, forKey: "screen\(Int(currentPage+1))")
+
         let x =  CGFloat(self.pageControl.currentPage) * (pageWidth)
         scrollView.setContentOffset(CGPoint(x:x, y:0), animated: false)
         
@@ -272,7 +282,6 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func closeAction(_ sender: Any) {
-
         self.navigationController?.popViewController(animated: false)
     }
 }

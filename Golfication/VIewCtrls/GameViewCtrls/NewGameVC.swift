@@ -599,6 +599,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     @objc func unlockEddie(_ sender: UIButton){
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "NewGame"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     func getHomeCourse() {

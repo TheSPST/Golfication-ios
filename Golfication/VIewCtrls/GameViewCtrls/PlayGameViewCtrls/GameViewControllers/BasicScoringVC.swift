@@ -621,6 +621,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var targetGoal = Goal()
     @objc func unlockEddie(_ sender: UIButton){
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "BasicScoring"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     override func viewDidLoad() {

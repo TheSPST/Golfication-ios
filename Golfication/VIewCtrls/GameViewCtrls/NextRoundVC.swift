@@ -49,6 +49,7 @@ class NextRoundVC: UIViewController {
     @IBOutlet weak var btnAddFriends: UIButton!
     @IBOutlet weak var btnSkip: UIButton!
 
+    @IBOutlet weak var btnPlayBasic: UIButton!
     let progressView = SDLoader()
     
     var selectedMode = 0
@@ -65,6 +66,12 @@ class NextRoundVC: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func btnActionInfoForRequest(_ sender: Any) {
+        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+        viewCtrl.title = "Course Mapping"
+        viewCtrl.desc = StatsIntoConstants.requestMapping
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
     @IBAction func btnActionForRequestMapping(_ sender: UIButton) {
         var mappingCount = 0
         var mappedTimestamp = Int64()
@@ -96,6 +103,13 @@ class NextRoundVC: UIViewController {
                     let mappingDic = NSMutableDictionary()
                     mappingDic.setObject(Timestamp, forKey: Constants.selectedGolfID as NSCopying)
                     mappingDic.setObject(Auth.auth().currentUser!.displayName!, forKey: "name" as NSCopying)
+                    if self.selectedMode == 0 && self.selectedTab == 1{
+                        mappingDic.setObject("rangefinder", forKey: "\(Auth.auth().currentUser!.uid)" as NSCopying)
+                    }else if self.selectedMode == 0 && self.selectedTab == 2{
+                        mappingDic.setObject("oncourse", forKey: "\(Auth.auth().currentUser!.uid)" as NSCopying)
+                    }else if self.selectedMode == 1 && self.selectedTab == 1{
+                        mappingDic.setObject("oncourse", forKey: "\(Auth.auth().currentUser!.uid)" as NSCopying)
+                    }
                     ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues(mappingDic as! [AnyHashable:Any])
                 }
                 if mappingCount+1 >= 10{
@@ -107,9 +121,13 @@ class NextRoundVC: UIViewController {
                     self.lblRequestReceive.isHidden = true
                     self.mappedProgressView.isHidden = true
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
-                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
+//                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
+                    if self.scoringMode.containsIgnoringCase(find: "classic"){
+                        self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                    }else{
+                        self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                    }
                     self.lblOverlapping.text = "This course is being mapped. It will be available within:"
-                    
                     let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(mappedTimestamp/1000)))
                     let timeEnd = Calendar.current.date(byAdding: .second, value: 2*24*60*60, to: timeStart as Date)
                     let timeNow = NSDate()
@@ -127,8 +145,12 @@ class NextRoundVC: UIViewController {
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
                     self.mappedProgressView.progress = Float(mappingCount+1)/Float(10)
                     self.lblRequestReceive.text = "Requests received: " + "\(mappingCount+1)" + "/" + "10"
-                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
-                    
+//                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
+                    if self.scoringMode.containsIgnoringCase(find: "classic"){
+                        self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                    }else{
+                        self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                    }
                     let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received. Invite your friends to get this course mapped sooner!")
                     let font = UIFont(name: "SFProDisplay-Regular", size: 13.0)
                     stringAttributed.addAttribute(NSAttributedStringKey.font, value:font!, range: NSRange.init(location: 83, length: 20))
@@ -140,6 +162,17 @@ class NextRoundVC: UIViewController {
                     self.lblOverlapping.addGestureRecognizer(tap)
                     self.lblOverlapping.isUserInteractionEnabled = true
                 }
+                let alert = UIAlertController(title: "", message: "We've received your mapping request. If you would like the course to be mapped on priority, please tell your friends to boost your request - once a course receives ten boosts, it will be mapped within 48 hours.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "KNOW MORE", style: .cancel, handler: { _ in
+                    let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
+                    viewCtrl.title = "Course Mapping"
+                    viewCtrl.desc = StatsIntoConstants.requestMapping
+                    self.navigationController?.pushViewController(viewCtrl, animated: true)
+                }))
+                alert.addAction(UIAlertAction(title: "CONTINUE", style: .default, handler: { _ in
+                    
+                }))
+                self.present(alert, animated: true, completion: nil)
             })
         }
     }
@@ -175,7 +208,7 @@ class NextRoundVC: UIViewController {
                 }else{
                     self.btnStartClassic.tag = 2
                 }
-                self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
+//                self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
                 self.countdownTimer.invalidate()
             }
         })
@@ -197,6 +230,38 @@ class NextRoundVC: UIViewController {
             self.btnStartClassic.tag = 2
         }
         startGameAction(sender: btnStart)
+    }
+    @IBAction func startClassicAction2(sender: UIButton) {
+        let text = "You were the first person I thought of when I read this. I use this new golf app called Golfication that uses data and AI to help me improve faster! The app is really powerful when your course is fully mapped out - with hazards, bunkers, roughs... the whole nine yards. I have requested for the mapping of \(Constants.selectedGolfName) on priority. It would be great if you can download the app and boost my request: that way it'll get mapped faster. And we can, together, use advanced insights to improve our game. Download and Boost my Request"
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let link = URL(string: "https://p5h99.app.goo.gl/mVFa?invitedby=\(uid)")
+        let referralLink = DynamicLinkComponents(link: link!, domain: "p5h99.app.goo.gl")
+        referralLink.iOSParameters = DynamicLinkIOSParameters(bundleID: "com.khelfie.Khelfie")
+        referralLink.iOSParameters?.minimumAppVersion = "1.0.1"
+        referralLink.iOSParameters?.appStoreID = "1216612467"
+        referralLink.androidParameters = DynamicLinkAndroidParameters(packageName: "com.khelfiegolf")
+        referralLink.androidParameters?.minimumVersion = 1
+        
+        referralLink.shorten { (shortURL, warnings, error) in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            let invitationUrl = shortURL
+            let invitationStr = invitationUrl?.absoluteString
+            let shareItems = [text, invitationStr] as! [String]
+            let activityViewController = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+            
+            // exclude some activity types from the list (optional)
+            activityViewController.excludedActivityTypes = [UIActivityType.airDrop, UIActivityType.postToFacebook, UIActivityType.postToTwitter, UIActivityType.message, UIActivityType.mail, UIActivityType.postToFlickr, UIActivityType.postToWeibo, UIActivityType.postToVimeo]
+            
+            // present the view controller
+            
+            //https://stackoverflow.com/questions/35931946/basic-example-for-sharing-text-or-image-with-uiactivityviewcontroller-in-swift
+            //http://www.rockhoppertech.com/blog/uiactivitycontroller-in-swift/
+            self.present(activityViewController, animated: true, completion: nil)
+        }
     }
     
     let locationManager = CLLocationManager()
@@ -522,6 +587,7 @@ class NextRoundVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        btnPlayBasic.setCorner(color: UIColor.clear.cgColor)
         self.title = "New Round".localized()
         btnSkip.setTitle(" " + "Skip".localized() + " ", for: .normal)
         //        overlappingView.makeBlurView(targetView: overlappingView)
@@ -593,6 +659,11 @@ class NextRoundVC: UIViewController {
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
+                if self.scoringMode.containsIgnoringCase(find: "classic"){
+                    self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                }else{
+                    self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                }
             })
         }
     }
@@ -623,9 +694,13 @@ class NextRoundVC: UIViewController {
                     self.lblRequestReceive.isHidden = true
                     self.mappedProgressView.isHidden = true
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
-                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
+//                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
                     self.lblOverlapping.text = "This course is being mapped. It will be available within:"
-                    
+                    if self.scoringMode.containsIgnoringCase(find: "classic"){
+                        self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                    }else{
+                        self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                    }
                     let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(mappedTimestamp/1000)))
                     let timeEnd = Calendar.current.date(byAdding: .second, value: 2*24*60*60, to: timeStart as Date)
                     let timeNow = NSDate()
@@ -647,8 +722,12 @@ class NextRoundVC: UIViewController {
                     if self.selectedMode == 1{
                         self.scoringMode = "classic"
                     }
-                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
-                    
+//                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
+                    if self.scoringMode.containsIgnoringCase(find: "classic"){
+                        self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                    }else{
+                        self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                    }
                     let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received. Invite your friends to get this course mapped sooner!")
                     let font = UIFont(name: "SFProDisplay-Regular", size: 13.0)
                     stringAttributed.addAttribute(NSAttributedStringKey.font, value:font!, range: NSRange.init(location: 83, length: 20))

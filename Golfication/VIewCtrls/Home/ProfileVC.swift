@@ -274,6 +274,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+        viewCtrl.source = "Profile"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
 
 //        viewUpgradeInactive.isHidden = true
@@ -306,6 +307,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
 //            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //            self.navigationController?.pushViewController(viewCtrl, animated: true)
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            viewCtrl.source = "Profile"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
         }
     }

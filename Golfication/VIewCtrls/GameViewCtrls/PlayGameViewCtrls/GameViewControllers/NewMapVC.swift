@@ -1876,6 +1876,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @objc func btnActionWindUnlock(_ sender: Any) {
         if !Constants.isProMode{
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+            viewCtrl.source = "NewMap"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
         }else{
             
