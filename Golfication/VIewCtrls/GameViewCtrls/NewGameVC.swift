@@ -1671,7 +1671,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 if(Auth.auth().currentUser!.uid.count > 1){
                     let mappingDic = NSMutableDictionary()
                     mappingDic.setObject(Timestamp, forKey: Constants.selectedGolfID as NSCopying)
-                    mappingDic.setObject(Auth.auth().currentUser!.displayName!, forKey: "name" as NSCopying)
+                    mappingDic.setObject(Auth.auth().currentUser?.displayName == nil ? Auth.auth().currentUser!.uid : Auth.auth().currentUser!.displayName!, forKey: "name" as NSCopying)
                     ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues(mappingDic as! [AnyHashable:Any])
                 }
                 self.btnRequestMapping.isHidden = true

@@ -357,7 +357,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                 }
             }
             else{
-                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user1/scores") { (snapshot) in
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/scoring") { (snapshot) in
                     dataDic = (snapshot.value as? NSDictionary)!
                     self.setData(dataDic:dataDic)
                     self.setDemoFotter()

@@ -84,18 +84,15 @@ class DistanceUtil: NSObject {
         currentLocation = location
         var holeWiseData = [CLLocation]()
         var greenWiseData = [[CLLocation]]()
-
-        currentLocation = location
-        
         for _ in 0..<teeArr.count{
             holeWiseData.append(CLLocation())
             greenWiseData.append([CLLocation]())
         }
         for i in 0..<rfHole.count{
             let data = rfHole[i]
-            let frontLatLng = CLLocation(latitude: data.frontLat, longitude: data.frontLat)
-            let centerLatLng = CLLocation(latitude: data.centerLat, longitude: data.centerLat)
-            let backLatLng = CLLocation(latitude: data.backLat, longitude: data.backLat)
+            let frontLatLng = CLLocation(latitude: data.frontLat, longitude: data.frontLng)
+            let centerLatLng = CLLocation(latitude: data.centerLat, longitude: data.centerLng)
+            let backLatLng = CLLocation(latitude: data.backLat, longitude: data.backLng)
             greenWiseData[i].append(centerLatLng)
             greenWiseData[i].append(frontLatLng)
             greenWiseData[i].append(backLatLng)

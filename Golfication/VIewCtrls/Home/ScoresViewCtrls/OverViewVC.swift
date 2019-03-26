@@ -182,7 +182,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             strokeGainedChartView.addSubview(demoLabel)
             
             progressView.show(atView: self.view, navItem: self.navigationItem)
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user3/scores") { (snapshot) in
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/scoring") { (snapshot) in
                 self.progressView.hide(navItem: self.navigationItem)
                 
                 let classicScore = Scores()

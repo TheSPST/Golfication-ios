@@ -1751,8 +1751,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     let swipeHeaderDown2 = UISwipeGestureRecognizer()
     override func viewDidLoad() {
         super.viewDidLoad()
+        if Constants.isProMode{
+            btnClubs.setImage( #imageLiteral(resourceName: "eddieUSer").resize(CGSize(width:45,height:45)), for: .normal)
+            btnSelectClubs.backgroundColor = UIColor.glfYellowEddie
+            btnSelectClubs.setTitleColor(UIColor.glfSelecClubsColor, for: .normal)
+        }
         self.eddieView.setup()
-        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblElevDir)
+        BackgroundMapStats.setDir(isUp: false, label: self.lblElevDir)
         self.btnWindImgLock.setCircle(frame: self.btnWindImgLock.frame)
         let originalImage1 = BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "locked_1"), targetSize: CGSize(width:10,height:10))
         let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
@@ -1780,17 +1785,18 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         btnCenter.superview?.addGestureRecognizer(swipeHeaderDown2)
         btnCenter.roundCorners([.bottomLeft], radius: 3.0)
 
-        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblDirBack)
-        BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: self.lblDirCenter)
-        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblDirFront)
+//        BackgroundMapStats.setDir(isUp: true, label: self.lblDirBack)
+//        BackgroundMapStats.setDir(isUp: false, label: self.lblDirCenter)
+//        BackgroundMapStats.setDir(isUp: true, label: self.lblDirFront)
         btnUnlockEddie.setCornerWithRadius(color: UIColor.clear.cgColor, radius: btnUnlockEddie.frame.height/2)
         
-        let originalImage =  #imageLiteral(resourceName: "setting")
-        let backBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        let originalImage =  #imageLiteral(resourceName: "setting").resize(CGSize(width:18,height:18))
+        let backBtnImage = originalImage!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         self.btnSetupSiri.setImage(backBtnImage, for: .normal)
         self.btnSetupSiri.tintColor = UIColor.glfYellow
         self.btnSetupSiri.setCorner(color: UIColor.glfYellow.cgColor)
-//        self.btnSetupSiri.addSubview(button)
+        self.btnSetupSiri.setTitle("  Setup", for: .normal)
+
         UIApplication.shared.isIdleTimerDisabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.chkBluetoothStatus(_:)), name: NSNotification.Name(rawValue: "BluetoothStatus"), object: nil)
 
@@ -3855,13 +3861,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         for view in self.stackViewForGreenShots.arrangedSubviews{
             view.removeFromSuperview()
         }
-        btnForSugg1 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 120, height: 65))
+        btnForSugg1 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 160, height: 65))
         btnForSugg1.autoresize()
-        btnForSugg2 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 120, height: 65))
+        btnForSugg2 = SuggestionView(frame: CGRect(x: 0, y: 0, width: 160, height: 65))
         btnForSugg2.autoresize()
+        btnForSuggMarkOffCourse = SuggestionView(frame: CGRect(x: 0, y: 0, width: 160, height: 65))
+        btnForSuggMarkOffCourse.autoresize()
         
-        btnForSuggMarkOffCourse = SuggestionView(frame: CGRect(x: 0, y: 0, width: 150, height: 65))
-
         self.scoreTableView.dataSource = self
         self.scoreTableView.delegate = self
         if(UIDevice.current.iPad){
@@ -4666,6 +4672,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     btnForSuggMarkOffCourse.lblElev.text = fullName.0
                     
                     btnForSuggMarkOffCourse.setAllData(club: markerClub, dist: Int(distance), elevDis: "")
+                    btnForSuggMarkOffCourse.autoresize()
                     suggestedMarkerOffCourse.iconView = btnForSuggMarkOffCourse
                     suggestedMarkerOffCourse.position = GMSGeometryOffset(position.first!, distance/(2*Constants.YARD*3), GMSGeometryHeading(position[0], position[1]))
                     suggestedMarkerOffCourse.groundAnchor = CGPoint(x:-0.02,y:0.5)
@@ -4700,6 +4707,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     let fullName = BackgroundMapStats.returnLandedOnFullName(data: lie)
                     btnForSuggMarkOffCourse.lblElev.text = fullName.0
                     btnForSuggMarkOffCourse.setAllData(club: markerClub1, dist: Int(dist1), elevDis: "ELEVATION")
+                    btnForSuggMarkOffCourse.autoresize()
                     suggestedMarkerOffCourse.iconView = btnForSuggMarkOffCourse
                     suggestedMarkerOffCourse.position = GMSGeometryOffset(position.first!, dist1/(2*Constants.YARD), GMSGeometryHeading(position.first!, position[1]))
                     suggestedMarkerOffCourse.groundAnchor = CGPoint(x:-0.02,y:0.5)
@@ -4730,6 +4738,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     let fullName = BackgroundMapStats.returnLandedOnFullName(data: lie)
                     btnForSuggMarkOffCourse.lblElev.text = fullName.0
                     btnForSuggMarkOffCourse.setAllData(club: markerClub, dist: Int(distance), elevDis: "ELEVATION")
+                    btnForSuggMarkOffCourse.autoresize()
                     suggestedMarkerOffCourse.iconView = btnForSuggMarkOffCourse
                     suggestedMarkerOffCourse.position = GMSGeometryOffset(position[0], distance/(2*Constants.YARD), GMSGeometryHeading(position[0], position[1]))
                     suggestedMarkerOffCourse.groundAnchor = CGPoint(x:-0.02,y:0.5)
@@ -5083,17 +5092,19 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             finalElev = finalElev*3.28084
                             suffix = "ft"
                         }
-                        if finalElev > 0{
-                            BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                        if finalElev >= 0{
+                            BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
+                            btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                         }else{
                             if Constants.isProMode{
-                                BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg1.lblDirection)
+                                BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
+                                btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
                     }else{
                         btnForSugg1.lblDirection.isHidden = Constants.isProMode
-                        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                        BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
                         btnForSugg1.btnElev.isHidden = true
                     }
                     suggestedMarker1.position = GMSGeometryOffset(position[0], distance/(6*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
@@ -5152,17 +5163,21 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             finalElev = finalElev*3.28084
                             suffix = "ft"
                         }
-                        if finalElev > 0{
-                            BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                        if finalElev >= 0{
+                            BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
+                            btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
+
                         }else{
                             if Constants.isProMode{
-                                BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg1.lblDirection)
+                                BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
+                                btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
+
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
                     }else{
                         btnForSugg1.lblDirection.isHidden = Constants.isProMode
-                        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                        BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
                         btnForSugg1.btnElev.isHidden = true
                     }
                     suggestedMarker1.position = GMSGeometryOffset(position.first!, dist1/(2*Constants.YARD), GMSGeometryHeading(position.first!, position[1]))
@@ -5181,17 +5196,20 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             finalElev = finalElev*3.28084
                             suffix = "ft"
                         }
-                        if finalElev > 0{
-                            BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
+                        if finalElev >= 0{
+                            BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
+                            btnForSugg2.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                         }else{
                             if Constants.isProMode{
-                                BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg2.lblDirection)
+                                BackgroundMapStats.setDir(isUp: false, label: btnForSugg2.lblDirection)
+                                btnForSugg2.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
+
                             }
                         }
                         btnForSugg2.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
                     }else{
                         btnForSugg2.lblDirection.isHidden = Constants.isProMode
-                        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
+                        BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
                         btnForSugg2.btnElev.isHidden = true
                     }
                     btnForSugg2.autoresize()
@@ -5232,17 +5250,19 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             finalElev = finalElev*3.28084
                             suffix = "ft"
                         }
-                        if finalElev > 0{
-                            BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                        if finalElev >= 0{
+                            BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
+                            btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                         }else{
                             if Constants.isProMode{
-                                BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg1.lblDirection)
+                                BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
+                                btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
                     }else{
                         btnForSugg1.lblDirection.isHidden = Constants.isProMode
-                        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                        BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
                         btnForSugg1.btnElev.isHidden = true
                     }
                     suggestedMarker1.position = GMSGeometryOffset(position[0], distance/(2*Constants.YARD), GMSGeometryHeading(position[1], position.last!))
@@ -5799,7 +5819,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             self.lblFrontDistance.text = "\(Int(distanceF)) \(suffix)"
                             self.lblDistance.text = "\(Int(distanceC)) \(suffix)"
                             self.lblBackDistance.text = "\(Int(distanceE)) \(suffix)"
-                            self.lblCenterHeader.text = "\(Int(distanceC)) \(suffix)"
+                            self.lblCenterHeader.text = "\(Int(elevDistanceCenter.rounded()))"
                             if !Constants.isProMode{
                                 self.lblFrontDistance.text = "ELEVATION"
                                 self.lblDistance.text = "ELEVATION"
@@ -6085,10 +6105,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 finalElev = finalElev*3.28084
                 suffix = "ft"
             }
-            if finalElev > 0{
-                BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: lbl)
+            if finalElev >= 0{
+                BackgroundMapStats.setDir(isUp: true, label: lbl)
+                btn.setTitleColor(UIColor.glfRed, for: .normal)
             }else{
-                BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: lbl)
+                if Constants.isProMode{
+                    BackgroundMapStats.setDir(isUp: false, label: lbl)
+                    btn.setTitleColor(UIColor.glfGreen, for: .normal)
+                }
+                
             }
             btn.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
         }else{

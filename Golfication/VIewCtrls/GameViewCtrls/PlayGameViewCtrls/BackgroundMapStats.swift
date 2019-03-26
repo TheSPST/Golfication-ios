@@ -11,6 +11,7 @@ import Firebase
 import GoogleMaps
 import Intents
 import CoreData
+import FacebookCore
 class BackgroundMapStats: NSObject {
     static var blockRecursionIssue = 0
     static let clubsFullForm = ["Dr":"Driver","w":"Wood","h":"Hybrid","i":"Iron","Pw":"P Wedge","Gw":"Gap Wedge","Sw":"Sand Wedge","Lw":"Lob Wedge","Pu":"Putter"]
@@ -517,8 +518,8 @@ class BackgroundMapStats: NSObject {
             })
         }
     }
-    static func setDir(color:UIColor,isUp:Bool,label:UILabel){
-        label.textColor = color
+    static func setDir(isUp:Bool,label:UILabel){
+        label.textColor = !isUp ? UIColor.glfDarkGreen :UIColor.glfRed
         if isUp{
             label.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2)
         }else{

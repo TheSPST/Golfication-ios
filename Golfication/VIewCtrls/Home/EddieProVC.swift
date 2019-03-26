@@ -30,7 +30,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     var eddieView = NSMutableDictionary()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        FBSomeEvents.shared.logInitiateCheckoutEvent()
         let gradient = CAGradientLayer()
         gradient.frame = btnEddiePayment.bounds
         gradient.colors = [UIColor(rgb: 0xEB6A2D).cgColor, UIColor(rgb: 0xF5B646).cgColor]
@@ -161,6 +161,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         }
         else{
             IAPHandler.shared.purchaseMyProduct(index: 6)
+            FBSomeEvents.shared.logAddToCartEvent(type: "Yearly", price: 40)
 //            if Constants.trial == true{
 //                IAPHandler.shared.purchaseMyProduct(index: 4)
 //            }
@@ -177,7 +178,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         }
         else{
             IAPHandler.shared.purchaseMyProduct(index: 1)
-
+            FBSomeEvents.shared.logAddToCartEvent(type: "Monthly", price: 4)
 //            if Constants.trial == true{
 //                IAPHandler.shared.purchaseMyProduct(index: 0)
 //            }
@@ -194,6 +195,8 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         }
         else{
             IAPHandler.shared.purchaseMyProduct(index: 6)
+            FBSomeEvents.shared.logAddToCartEvent(type: "Yearly", price: 40)
+
 
 //            if Constants.trial == true{
 //                IAPHandler.shared.purchaseMyProduct(index: 4)

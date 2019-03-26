@@ -84,18 +84,20 @@ class CourseData:NSObject{
                             }
                         }
                     }
-                }
-                else if ((key as! String) == "rangefinder"){
+                }else if((key as! String) == "stableford"){
                     let dict = value as! NSMutableDictionary
-                    rangeFinderHoles = dict.value(forKey: "holes") as! NSArray
+                    stableFordHoles = dict.value(forKey: "holes") as! NSArray
+                }
+                if ((key as! String) == "rangefinder"){
+                    let dict = value as! NSMutableDictionary
+                    if self.propertyArray.isEmpty{
+                        rangeFinderHoles = dict.value(forKey: "holes") as! NSArray
+                    }
                     if let elevation = dict.value(forKey: "elevations") as? NSArray{
                         for data in elevation{
                             self.elevationHole.append(data as! NSArray)
                         }
                     }
-                }else if((key as! String) == "stableford"){
-                    let dict = value as! NSMutableDictionary
-                    stableFordHoles = dict.value(forKey: "holes") as! NSArray
                 }
                 group.leave()
             }            

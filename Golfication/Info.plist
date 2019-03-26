@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>FacebookCodelessDebugLogEnabled</key>
+	<true/>
+	<key>CFBundleDisplayName</key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -15,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.3.0</string>
+	<string>3.3.1</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -36,7 +40,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>1</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -83,17 +87,17 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>$(PRODUCT_NAME) Bluetooth Peripheral use</string>
 	<key>NSCameraUsageDescription</key>
-	<string>App Requires Camera to activate AR or to set user's profile image</string>
+	<string>App Requires Camera to activate AR or to set user&apos;s profile image</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>Your location is used to show GPS Distances, track shots accurately and locate nearby courses in the Golfication app.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>Your location is used to show GPS Distances, track shots accurately and locate nearby courses in the Golfication app.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>Your location is used to show GPS Distances, track shots accurately and locate nearby courses in the Golfication app.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>App Requires to take screenshot of  stats or graph for sharing purpose</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>App Requires Photo Library to set user's Profile Image</string>
+	<string>App Requires Photo Library to set user&apos;s Profile Image</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>DistanceOfGreenIntent</string>

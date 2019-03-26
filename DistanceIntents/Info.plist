@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.3.0</string>
+	<string>3.3.1</string>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>1</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
@@ -39,10 +39,10 @@
 		<string>$(PRODUCT_MODULE_NAME).IntentHandler</string>
 	</dict>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>Your location is used to show GPS Distances, track shots accurately and locate nearby courses in the Golfication app.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>Your location is used to show GPS Distances, track shots accurately and locate nearby courses in the Golfication app.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>App requires users location to find the nearest Golf Courses and to track user's exact location on the Golf course in order to track shots and provide distances.</string>
+	<string>Your location is used to show GPS Distances, track shots accurately and locate nearby courses in the Golfication app.</string>
 </dict>
 </plist>

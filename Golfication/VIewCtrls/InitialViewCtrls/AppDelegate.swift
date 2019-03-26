@@ -22,6 +22,8 @@
   import StoreKit
   import UserNotifications
   import Google
+  import FacebookCore
+
   var sharedSecret = "79d35d5b3b684c84ba4302a33d498a47"
   var referedBy : String!
   var locationBackgroundTask: UIBackgroundTaskIdentifier!
@@ -51,10 +53,10 @@
         }
         //-------------------------------------------------------------------------
 
-        if(locationManager.location == nil){
-            locationManager.requestAlwaysAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        }
+//        if(locationManager.location == nil){
+//            locationManager.requestAlwaysAuthorization()
+//            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        }
         // Override point for customization after application launch.
         Fabric.sharedSDK().debug = false
         FirebaseOptions.defaultOptions()?.deepLinkURLScheme = "dlscheme"
@@ -103,10 +105,10 @@
         //debugPrint("IDFA",ASIdentifierManager.shared().advertisingIdentifier.uuidString)
         
         // -------------------------- Google Analytics --------------------------------r
-        let gai: GAI = GAI.sharedInstance()
-        gai.tracker(withTrackingId: "UA-115156894-1")
-        // Optional: automatically report uncaught exceptions.
-        gai.trackUncaughtExceptions = true
+//        let gai: GAI = GAI.sharedInstance()
+//        gai.tracker(withTrackingId: "UA-115156894-1")
+//        // Optional: automatically report uncaught exceptions.
+//        gai.trackUncaughtExceptions = true
         
         // Optional: set Logger to VERBOSE for debug information.
         // Remove before app release.

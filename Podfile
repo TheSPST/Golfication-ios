@@ -20,9 +20,6 @@ target 'Golfication' do
     pod 'Dropper'
     pod 'CTShowcase', '~> 2.2'
     pod 'ActionSheetPicker-3.0'
-    pod 'FBSDKLoginKit'
-    pod 'FBSDKCoreKit'
-    pod 'Bolts'
     pod 'IQKeyboardManagerSwift'
     pod 'youtube-ios-player-helper', '~> 0.1.4'
     pod 'SwiftyStoreKit'
@@ -33,5 +30,8 @@ target 'Golfication' do
     pod 'GooglePlaces'
     pod 'DeviceKit', '~> 1.3'
     pod 'UITextView+Placeholder'
+    pod 'FacebookSDK/LoginKit'
+    pod 'FBSDKMarketingKit'
+    pod 'FacebookCore'
 
 end

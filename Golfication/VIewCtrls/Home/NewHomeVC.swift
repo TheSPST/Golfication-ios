@@ -1157,10 +1157,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
         storeAllMacAddress()
         // ---------------- Google Analytics --------------------------------------
-        guard let tracker = GAI.sharedInstance().defaultTracker else { return }
-        tracker.set(kGAIScreenName, value: "Home Screen")
-        guard let builder = GAIDictionaryBuilder.createScreenView() else { return }
-        tracker.send(builder.build() as [NSObject : AnyObject])
+//        guard let tracker = GAI.sharedInstance().defaultTracker else { return }
+//        tracker.set(kGAIScreenName, value: "Home Screen")
+//        guard let builder = GAIDictionaryBuilder.createScreenView() else { return }
+//        tracker.send(builder.build() as [NSObject : AnyObject])
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         getUserDataFromFireBase()
         self.getGolficationXVersion()
@@ -1221,6 +1221,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     if let distanceUnit = NSEntityDescription.insertNewObject(forEntityName: "DistanceUnitEntity", into: context) as? DistanceUnitEntity{
                         distanceUnit.unit = Int16(unit)
                         CoreDataStorage.saveContext(context)
+                    }
+                }
+                if let nam = userData.object(forKey: "name") as? String{
+                    if Auth.auth().currentUser!.displayName == nil{
+                        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+                        changeRequest?.displayName = nam
+                        changeRequest?.commitChanges { (error) in}
                     }
                 }
                 if let notification = userData.object(forKey: "notification") as? Int{
@@ -1622,10 +1629,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 self.setMyData()
                 if(self.round_score.count == 0){
-                    self.updateCard4(path: "userData/user1/statistics")
+                    self.updateCard4(path: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/statistics")
                 }
                 if self.profileScoring == nil{
-                    FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user1/scores") { (snapshot) in
+                    FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/scoring") { (snapshot) in
                         var dataDic = NSDictionary()
                         dataDic = (snapshot.value as? NSDictionary)!
                         

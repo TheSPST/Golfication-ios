@@ -339,7 +339,7 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
                 self.getData(dataDic: dataDic)
             }
             else{
-                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user1/scores") { (snapshot) in
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/scoring") { (snapshot) in
                     dataDic = (snapshot.value as? NSDictionary)!
                     self.getData(dataDic: dataDic)
                     self.setDemoFotter()

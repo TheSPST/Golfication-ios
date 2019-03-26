@@ -84,7 +84,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                 self.isDemoUser = false
             }
             else{
-                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user3/scores") { (snapshot) in
+                FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/scoring") { (snapshot) in
                     self.dataDic = (snapshot.value as? NSDictionary)!
                     self.setData(dataDic: self.dataDic)
                     self.isDemoUser = true
@@ -418,7 +418,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
     }
     
     func getUser3Data(){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/user3/scores") { (snapshot) in
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/scoring") { (snapshot) in
             let dataDic = (snapshot.value as? NSDictionary)!
             self.setDemoData(dataDic: dataDic)
 //            self.isDemoUser = true

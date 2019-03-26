@@ -227,7 +227,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         super.viewDidLoad()
         
         self.tabBarController?.tabBar.isHidden = true
-
+        FBSomeEvents.shared.logFindLocationEvent()
         courseTblView.layer.cornerRadius = 3.0
         courseTblView.layer.borderWidth = 1.0
         courseTblView.layer.borderColor = UIColor(rgb:0xEFEFEF).cgColor
@@ -588,6 +588,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                         homeCourseDic.setObject(golfLat, forKey: "lat" as NSCopying)
                         homeCourseDic.setObject(golfLong, forKey: "lng" as NSCopying)
                         homeCourseDic.setObject(golfName, forKey: "name" as NSCopying)
+                        homeCourseDic.setObject(golfMapped, forKey: "mapped" as NSCopying)
                         let homeCourseDetails = ["homeCourseDetails":homeCourseDic]
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(homeCourseDetails)
                         
@@ -1103,6 +1104,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             homeCourseDic.setObject(golfLat, forKey: "lat" as NSCopying)
             homeCourseDic.setObject(golfLong, forKey: "lng" as NSCopying)
             homeCourseDic.setObject(golfName, forKey: "name" as NSCopying)
+            homeCourseDic.setObject(golfMapped, forKey: "mapped" as NSCopying)
             let homeCourseDetails = ["homeCourseDetails":homeCourseDic]
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(homeCourseDetails)
             

@@ -325,7 +325,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-        self.mapView.isMyLocationEnabled = true
+//        self.mapView.isMyLocationEnabled = true
         let userLocation = locations.last
         userLocationForClub = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
         locationManager.stopUpdatingLocation()
@@ -1122,9 +1122,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
     }
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationManager.delegate = self
         initalSetup()
         self.mapView.delegate = self
         btnPlayerStats.isEnabled = false
@@ -1132,11 +1132,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         let onCourse = matchDataDic.value(forKeyPath: "onCourse") as! Bool
         self.courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
         if (onCourse){
-            locationManager.delegate = self
             locationManager.startUpdatingLocation()
-            let currentLocation: CLLocation = self.locationManager.location!
-            self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
-            self.mapView.isMyLocationEnabled = true
+            if let currentLocation: CLLocation = self.locationManager.location{
+                self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
+            }
+//            self.mapView.isMyLocationEnabled = false
             if Constants.onCourseNotification == 1{
                 self.registerBackgroundTask()
             }
@@ -1365,10 +1365,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         lblWindOnlyLbl.isHidden = Constants.isProMode
         self.btnUnlockE.setCornerWithRadius(color: UIColor.clear.cgColor, radius: self.btnUnlockE.frame.height/2)
         self.imgViewWindForeground.tintImageColor(color: UIColor.glfYellow)
-        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblDirBack)
-        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblDirEddie)        
-        BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: self.lblDirCenter)
-        BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: self.lblDirFront)
+        BackgroundMapStats.setDir(isUp: false, label: self.lblDirEddie)
         self.btnWindImgLock.setCircle(frame: self.btnWindImgLock.frame)
         let originalImage1 = BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "locked_1"), targetSize: CGSize(width:10,height:10))
         let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
@@ -1376,12 +1373,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         self.btnWindImgLock.tintColor = UIColor.glfBlack
         self.btnWindImgLock.backgroundColor = UIColor.glfWhite
         self.btnWindImgLock.isHidden = Constants.isProMode
-        let backBtnImag = #imageLiteral(resourceName: "setting").withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        self.btnSiriSetup.setImage(backBtnImag, for: .normal)
+        
+        let originalImage2 =  #imageLiteral(resourceName: "setting").resize(CGSize(width:18,height:18))
+        let backBtnImage2 = originalImage2!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        self.btnSiriSetup.setImage(backBtnImage2, for: .normal)
         self.btnSiriSetup.tintColor = UIColor.glfYellow
         self.btnSiriSetup.setCorner(color: UIColor.glfYellow.cgColor)
-//        self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: self.targetGoal)
-//        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
+        self.btnSiriSetup.setTitle("  Setup", for: .normal)
+        
         lblEditShotNumber.layer.cornerRadius = lblEditShotNumber.frame.size.height/2
         lblEditShotNumber.layer.masksToBounds = true
         
@@ -2763,7 +2762,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     self.lblFrontDist.text = "\(Int(distanceF)) \(suffix)"
                     self.lblCenterDist.text = "\(Int(distanceC)) \(suffix)"
                     self.lblEndDist.text = "\(Int(distanceE)) \(suffix)"
-                    self.lblCenterHeader.text = "\(Int(distanceC)) \(suffix)"
+                    self.lblCenterHeader.text = "\(Int(elevDistanceCenter.rounded()))"
                     if !Constants.isProMode{
                         self.lblFrontDist.text = "ELEVATION"
                         self.lblCenterDist.text = "ELEVATION"
@@ -2814,10 +2813,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 finalElev = finalElev*3.28084
                 suffix = "ft"
             }
-            if finalElev > 0{
-                BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: lbl)
+            if finalElev >= 0{
+                BackgroundMapStats.setDir(isUp: true, label: lbl)
+                btn.setTitleColor(UIColor.glfRed, for: .normal)
             }else{
-                BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: lbl)
+                if Constants.isProMode{
+                    BackgroundMapStats.setDir(isUp: false, label: lbl)
+                    btn.setTitleColor(UIColor.glfGreen, for: .normal)
+                }
             }
             btn.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
         }else{
@@ -3063,15 +3066,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     func plotSuggestedMarkers(position:[CLLocationCoordinate2D]){
         if(position.count > 2){
-//            let dict1: [NSAttributedStringKey : Any] = [
-//                NSAttributedStringKey.font : UIFont(name:"SFProDisplay-Bold", size: 15)!,
-//                ]
-//            let dict2:[NSAttributedStringKey:Any] = [
-//                NSAttributedStringKey.font : UIFont(name:"SFProDisplay-Light", size: 15)!,
-//                ]
-            
-//            var markerText = String()
-//            var markerText1 = String()
             var markerClub = String()
             var markerClub1 = String()
             
@@ -3079,11 +3073,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             var dist1 = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD
             var dist = GMSGeometryDistance(position[1], position.last!) * Constants.YARD
             var suffix = "yd"
-//            markerText1 = "  \(Int(dist1)) yd "
-//            markerText = "  \(Int(dist == 0 ? 1:dist)) yd "
             if(Constants.distanceFilter == 1){
-//                markerText = "  \(Int((dist < Constants.YARD ? Constants.YARD:dist)/(Constants.YARD))) m "
-//                markerText1 = "  \(Int(dist1/(Constants.YARD))) m "
                 dist1 = dist1/Constants.YARD
                 dist = dist/Constants.YARD
                 suffix = "m"
@@ -3114,17 +3104,19 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     finalElev = finalElev*3.28084
                     suffix = "ft"
                 }
-                if finalElev > 0{
-                    BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                if finalElev >= 0{
+                    BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
+                    btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                 }else{
                     if Constants.isProMode{
-                        BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg1.lblDirection)
+                        BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
+                        btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                     }
                 }
                 btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
             }else{
                 btnForSugg1.lblDirection.isHidden = Constants.isProMode
-                BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg1.lblDirection)
+                BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
                 btnForSugg1.btnElev.isHidden = true
             }
             btnForSugg1.autoresize()
@@ -3145,17 +3137,19 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     finalElev = finalElev*3.28084
                     suffix = "ft"
                 }
-                if finalElev > 0{
-                    BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
+                if finalElev >= 0{
+                    BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
+                    btnForSugg2.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                 }else{
                     if Constants.isProMode{
-                        BackgroundMapStats.setDir(color: UIColor.glfRed, isUp: false, label: btnForSugg2.lblDirection)
+                        BackgroundMapStats.setDir(isUp: false, label: btnForSugg2.lblDirection)
+                        btnForSugg2.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                     }
                 }
                 btnForSugg2.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
             }else{
                 btnForSugg2.lblDirection.isHidden = Constants.isProMode
-                BackgroundMapStats.setDir(color: UIColor.glfGreen, isUp: true, label: btnForSugg2.lblDirection)
+                BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
                 btnForSugg2.btnElev.isHidden = true
             }
             btnForSugg2.autoresize()

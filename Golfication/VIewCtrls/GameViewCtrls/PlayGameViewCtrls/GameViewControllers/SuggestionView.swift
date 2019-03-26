@@ -46,6 +46,7 @@ class SuggestionView: UIView {
         lockedImgView.isHidden = Constants.isProMode
     }
     func autoresize(){
+//        view.autoresizingMask = [UIViewAutoresizing.flexibleWidth,UIViewAutoresizing.flexibleHeight]
         let width = lblClub.frame.maxX > btnElev.frame.maxX ? lblClub.frame.maxX:btnElev.frame.maxX
         self.frame.size = CGSize(width: width, height: 65)
     }

@@ -151,26 +151,26 @@ class NextRoundVC: UIViewController {
                     }else{
                         self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
                     }
-                    let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received. Invite your friends to get this course mapped sooner!")
-                    let font = UIFont(name: "SFProDisplay-Regular", size: 13.0)
-                    stringAttributed.addAttribute(NSAttributedStringKey.font, value:font!, range: NSRange.init(location: 83, length: 20))
-                    stringAttributed.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.glfFlatBlue, range: NSRange.init(location: 83, length: 20))
-                    stringAttributed.addAttribute(NSAttributedStringKey.underlineStyle, value: 1.0, range: NSRange.init(location: 83, length: 20))
+                    let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received.")
+//                    let font = UIFont(name: "SFProDisplay-Regular", size: 13.0)
+//                    stringAttributed.addAttribute(NSAttributedStringKey.font, value:font!, range: NSRange.init(location: 83, length: 20))
+//                    stringAttributed.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.glfFlatBlue, range: NSRange.init(location: 83, length: 20))
+//                    stringAttributed.addAttribute(NSAttributedStringKey.underlineStyle, value: 1.0, range: NSRange.init(location: 83, length: 20))
                     self.lblOverlapping?.attributedText = stringAttributed
                     
                     let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
                     self.lblOverlapping.addGestureRecognizer(tap)
                     self.lblOverlapping.isUserInteractionEnabled = true
                 }
-                let alert = UIAlertController(title: "", message: "We've received your mapping request. If you would like the course to be mapped on priority, please tell your friends to boost your request - once a course receives ten boosts, it will be mapped within 48 hours.", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Mapping Request Received!", message: "Our mapping team is working on your course request. You can fast-track your request by asking friends to boost your course.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "KNOW MORE", style: .cancel, handler: { _ in
                     let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
                     viewCtrl.title = "Course Mapping"
                     viewCtrl.desc = StatsIntoConstants.requestMapping
                     self.navigationController?.pushViewController(viewCtrl, animated: true)
                 }))
-                alert.addAction(UIAlertAction(title: "CONTINUE", style: .default, handler: { _ in
-                    
+                alert.addAction(UIAlertAction(title: "GET BOOST", style: .default, handler: { _ in
+                    self.startClassicAction2(sender: self.btnStartClassic)
                 }))
                 self.present(alert, animated: true, completion: nil)
             })
@@ -728,13 +728,8 @@ class NextRoundVC: UIViewController {
                     }else{
                         self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
                     }
-                    let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received. Invite your friends to get this course mapped sooner!")
-                    let font = UIFont(name: "SFProDisplay-Regular", size: 13.0)
-                    stringAttributed.addAttribute(NSAttributedStringKey.font, value:font!, range: NSRange.init(location: 83, length: 20))
-                    stringAttributed.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.glfFlatBlue, range: NSRange.init(location: 83, length: 20))
-                    stringAttributed.addAttribute(NSAttributedStringKey.underlineStyle, value: 1.0, range: NSRange.init(location: 83, length: 20))
-                    self.lblOverlapping?.attributedText = stringAttributed
-                    
+                    let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received.")
+                    self.lblOverlapping?.attributedText = stringAttributed                    
                     let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
                     self.lblOverlapping.addGestureRecognizer(tap)
                     self.lblOverlapping.isUserInteractionEnabled = true

@@ -182,7 +182,11 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                                 self.navigationController?.pushViewController(viewCtrl, animated: false)
                                 self.progressView.hide()
                                 self.sendMailingRequestToServer(uName: fbName,uEmail: fbEmail)
-
+                                if let _ = self.userDetails.value(forKey: "fb_id") as? String{
+                                    FBSomeEvents.shared.logCompleteRegistrationEvent(registrationMethod: "Facebook")
+                                }else{
+                                    FBSomeEvents.shared.logCompleteRegistrationEvent(registrationMethod: "Email")
+                                }
                             }
                             else{
                                 self.progressView.hide()
@@ -323,7 +327,8 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             }
             if (user != nil){
                 let changeRequest = user?.createProfileChangeRequest()
-                changeRequest?.displayName = self.txtFieldName.text
+                debugPrint("self.txtFieldName.text",self.txtFieldName.text)
+                changeRequest?.displayName = self.txtFieldName.text!
                 changeRequest?.photoURL = URL(string: "")
                 Auth.auth().signIn(withEmail: self.txtFieldEmail.text!, password: self.txtFieldPswd.text!, completion: { (user, error) in
                     user?.sendEmailVerification(completion: { (error) in
@@ -359,6 +364,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
 //                        vc.moveToViewController(at: 1)
                     }))
 //                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    debugPrint("Auth.auth().currentUser?.displayName",Auth.auth().currentUser?.displayName)
                     self.present(alert, animated: true, completion: nil)
                 })
             }

@@ -34,10 +34,10 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
             userLocation.locationManager.requestAlwaysAuthorization()
             userLocation.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
-        
         if let currentLocation: CLLocation = userLocation.locationManager.location{
             self.mapView.mapType = MKMapType.satellite
             self.mapView.showsUserLocation = true
+            mapView.delegate = self
             self.context.performAndWait{ () -> Void in
                 if let distanceUnitEntity = NSManagedObject.findAllForEntity("DistanceUnitEntity", context: self.context) as? [DistanceUnitEntity],!distanceUnitEntity.isEmpty{
                     distanceUtil.writeDistanceUnit(cDetails: distanceUnitEntity.last!)
@@ -47,9 +47,9 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
                     if let courseDetails = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: self.context) as? [CourseDetailsEntity],!courseDetails.isEmpty{
                         distanceUtil.writeCourseDetails(cDetails: courseDetails.last!)
                     }
-                    if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity],!counterGreen.isEmpty{
-                        if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity],!counterTee.isEmpty{
-                            let _ =  distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
+                    if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity],!counterTee.isEmpty{
+                        if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity],!counterGreen.isEmpty{
+                            let _ = distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
                             let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
                                                  ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
                             
@@ -58,12 +58,52 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
                             let locationsList = Location.locations(fromDictionaries: locationValue)
                             mapView.showAnnotations(locationsList, animated: true)
                             mapView.addAnnotations(locationsList)
+//                            mapView.showsUserLocation = true
+//
+//                            let userLocation = MKPointAnnotation()
+//                            userLocation.title = "Flag"
+//                            userLocation.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.flagPointOfGreen.coordinate.latitude, longitude: distanceUtil.flagPointOfGreen.coordinate.longitude)
+//                            mapView.addAnnotation(userLocation)
+                            
+//                            let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
+//                                                 ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
+//
+//                            mapView.register(LocationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+//                            let locationsList = Location.locations(fromDictionaries: locationValue)
+//                            mapView.showAnnotations(locationsList, animated: true)
+//                            mapView.addAnnotations(locationsList)
+                        }else if let frontBackEnt = NSManagedObject.findAllForEntity("FrontBackDistanceEntity", context: self.context) as? [FrontBackDistanceEntity],!frontBackEnt.isEmpty{
+                            let _ = distanceUtil.getHoleNumRF(location: currentLocation, rfHole: frontBackEnt, teeArr: counterTee)
+                            let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
+                                                 ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
+                            
+                            mapView.delegate = self
+                            mapView.register(LocationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+                            let locationsList = Location.locations(fromDictionaries: locationValue)
+                            mapView.showAnnotations(locationsList, animated: true)
+                            mapView.addAnnotations(locationsList)
+                            
+//                            mapView.showsUserLocation = true
+//
+//                            let userLocation = MKPointAnnotation()
+//                            userLocation.title = "Flag"
+//
+//                            userLocation.coordinate = CLLocationCoordinate2D(latitude: distanceUtil.flagPointOfGreen.coordinate.latitude, longitude: distanceUtil.flagPointOfGreen.coordinate.longitude)
+//                            mapView.addAnnotation(userLocation)
+//                            let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
+//                                                 ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
+//
+//                            mapView.register(LocationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+//                            let locationsList = Location.locations(fromDictionaries: locationValue)
+//                            mapView.showAnnotations(locationsList, animated: true)
+//                            mapView.addAnnotations(locationsList)
                         }
                     }
                 }
             }
         }
     }
+
     
     // MARK: - INUIHostedViewControlling
     // Prepare your view controller for the interaction to handle.
@@ -88,7 +128,7 @@ extension IntentViewController: MKMapViewDelegate {
 //                annotationView!.image = UIImage(named: "nav")!
             }
             else{
-                annotationView!.image = UIImage(named: "holeflag")!
+                annotationView?.image = #imageLiteral(resourceName: "holeflag")
             }
         }
         else {

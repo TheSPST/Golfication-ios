@@ -34,7 +34,7 @@ class SessionReportVC: UIViewController , UITableViewDelegate, UITableViewDataSo
             if value {
                 group.enter()
                 let swing = Swings()
-                ref.child("userData/user1/swings/\(key)").observeSingleEvent(of: .value, with: { snapshot in
+                ref.child("userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/swings/\(key)").observeSingleEvent(of: .value, with: { snapshot in
                     if snapshot.exists() {
                         count += 1
                         let swingData = (snapshot.value as? NSDictionary)!

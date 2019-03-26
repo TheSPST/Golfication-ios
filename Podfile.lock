@@ -1,12 +1,12 @@
 PODS:
   - ActionButton (0.1.5)
   - ActionSheetPicker-3.0 (2.2.0)
-  - Bolts (1.8.4):
-    - Bolts/AppLinks (= 1.8.4)
-    - Bolts/Tasks (= 1.8.4)
-  - Bolts/AppLinks (1.8.4):
+  - Bolts (1.9.0):
+    - Bolts/AppLinks (= 1.9.0)
+    - Bolts/Tasks (= 1.9.0)
+  - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.8.4)
+  - Bolts/Tasks (1.9.0)
   - Charts (3.1.1):
     - Charts/Core (= 3.1.1)
   - Charts/Core (3.1.1)
@@ -16,9 +16,21 @@ PODS:
   - DeviceKit (1.6.0)
   - Dropper (2.7.6)
   - Fabric (1.7.6)
-  - FBSDKCoreKit (4.32.0):
-    - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.32.0):
+  - FacebookCore (0.5.0):
+    - Bolts (~> 1.9)
+    - FBSDKCoreKit (~> 4.37)
+  - FacebookSDK/CoreKit (4.38.0):
+    - Bolts (~> 1.9)
+    - FBSDKCoreKit
+  - FacebookSDK/LoginKit (4.38.0):
+    - Bolts (~> 1.9)
+    - FacebookSDK/CoreKit
+    - FBSDKLoginKit
+  - FBSDKCoreKit (4.40.0):
+    - Bolts (~> 1.9)
+  - FBSDKLoginKit (4.40.0):
+    - FBSDKCoreKit
+  - FBSDKMarketingKit (4.38.0):
     - FBSDKCoreKit
   - Firebase/Auth (4.12.0):
     - Firebase/Core
@@ -120,15 +132,15 @@ PODS:
 DEPENDENCIES:
   - ActionButton
   - ActionSheetPicker-3.0
-  - Bolts
   - Charts
   - Crashlytics (~> 3.10)
   - CTShowcase (~> 2.2)
   - DeviceKit (~> 1.3)
   - Dropper
   - Fabric
-  - FBSDKCoreKit
-  - FBSDKLoginKit
+  - FacebookCore
+  - FacebookSDK/LoginKit
+  - FBSDKMarketingKit
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
@@ -157,8 +169,11 @@ SPEC REPOS:
     - DeviceKit
     - Dropper
     - Fabric
+    - FacebookCore
+    - FacebookSDK
     - FBSDKCoreKit
     - FBSDKLoginKit
+    - FBSDKMarketingKit
     - Firebase
     - FirebaseAnalytics
     - FirebaseAuth
@@ -192,15 +207,18 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   ActionButton: a71147de5a83b6d8d8e18464b216904ba7821677
   ActionSheetPicker-3.0: d11a4c12c6aaf704b8a3f56d179198c99f3e41e6
-  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
   Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
   CTShowcase: e7246c7294dc76a133582e8e20fb07f39e9e19c0
   DeviceKit: 3de509f9db7ae93bf676da5e97b945517bc957cd
   Dropper: 52a020beb6fef2e4b1d55447f17099e5776954ef
   Fabric: f8d42c893bb187326a7968b62abe55c36a987a46
-  FBSDKCoreKit: 55d7f2ac45d9c4b9b6119f4e43900fe84b9b7b1b
-  FBSDKLoginKit: 32ac05c2a59952c363c2e85aafa8f73ba93bcbad
+  FacebookCore: 74288d0add931d361b1596beae787ab72c438249
+  FacebookSDK: 73f54b8b94e09b05647cdef0af147f470cd3edc6
+  FBSDKCoreKit: ae214474b25033399c131dc81d258e412582a2ba
+  FBSDKLoginKit: 7a1e411d46acc8834588eca437daf34de42e1d52
+  FBSDKMarketingKit: e609f39d74ab273cf52e2f8b7e8829ed412b2827
   Firebase: d7fdf40e4d6c841849c52919f437fd3a0009ded0
   FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
   FirebaseAuth: 85a1b118a89838efc6f6ab3f2b1f94747d72a915
@@ -231,6 +249,6 @@ SPEC CHECKSUMS:
   XLPagerTabStrip: d1ab378af0923320ec0b5eab11d7b2f803d31261
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: 0f173b156d6843d5090bf3da2e373cb97ba8c83d
+PODFILE CHECKSUM: 6743c1c5d4af6c28eeee052dfafcb84d29f84a08
 
 COCOAPODS: 1.6.0.rc.2

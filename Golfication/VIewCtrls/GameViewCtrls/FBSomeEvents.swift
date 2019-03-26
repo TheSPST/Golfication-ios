@@ -26,9 +26,32 @@ class FBSomeEvents: NSObject {
     }
     func logAchievedLevelEvent(level : String) {
         FBSDKAppEvents.logEvent(FBSDKAppEventNameAchievedLevel, parameters: [FBSDKAppEventParameterNameLevel : level])
-        
     }
     func logUnlockedAchievementEvent(description : String) {
         FBSDKAppEvents.logEvent(FBSDKAppEventNameUnlockedAchievement, parameters: [FBSDKAppEventParameterNameDescription : description])
     }
+    // after sign up
+    func logCompleteRegistrationEvent (registrationMethod: String) {
+        FBSDKAppEvents.logEvent(FBSDKAppEventNameCompletedRegistration, parameters: [FBSDKAppEventParameterNameRegistrationMethod : true])
+    }
+    
+    // home screen after sign up
+    func logCompleteTutorialEvent (contentData:String,contentId:String,success:Bool) {
+        FBSDKAppEvents.logEvent(FBSDKAppEventNameCompletedTutorial, parameters: [FBSDKAppEventParameterNameContent : contentData,FBSDKAppEventParameterNameContentID:contentId,FBSDKAppEventParameterNameSuccess:true])
+    }
+    
+    // on update of homecourse details
+    func logFindLocationEvent () {
+        FBSDKAppEvents.logEvent(FBSDKAppEventNameFindLocation)
+    }
+    // on launching eddie popup
+    func logInitiateCheckoutEvent () {
+        FBSDKAppEvents.logEvent(FBSDKAppEventNameInitiatedCheckout, parameters: [FBSDKAppEventParameterNameContent : "",FBSDKAppEventParameterNameContentID:"",FBSDKAppEventParameterNameContentType:"",FBSDKAppEventParameterNameNumItems:1,FBSDKAppEventParameterNamePaymentInfoAvailable:1,FBSDKAppEventParameterNameCurrency:""])
+    }
+    
+    // on purchase click both monthly yearly
+    func logAddToCartEvent (type:String,price:Int) {
+        FBSDKAppEvents.logEvent(FBSDKAppEventNameAddedToCart,parameters: [FBSDKAppEventParameterNameContent : type,FBSDKAppEventParameterNameContentID:"",FBSDKAppEventParameterNameContentType:"",FBSDKAppEventParameterNameCurrency:""])
+    }
+
 }
