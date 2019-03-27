@@ -317,6 +317,8 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             eddieStatsView.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
             eddieStatsView.lblTitle.text = "Unlock this stat with Eddie!"
             eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView.btnView.setTitleColor(UIColor.glfWhite, for: .normal)
+            eddieStatsView.btnView.layer.borderColor = UIColor.glfWhite.cgColor
             cardViewSpreadOffTee.addSubview(eddieStatsView)
             
             let eddieStatsView1 = EddieStatsView()
@@ -325,6 +327,8 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             eddieStatsView1.lblTitle.text = "Eddie has some insights for you."
             eddieStatsView1.lblTitle.textColor = UIColor(rgb:0xFFC700)
             eddieStatsView1.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView1.btnView.setTitleColor(UIColor.glfWarmGrey, for: .normal)
+            eddieStatsView1.btnView.layer.borderColor = UIColor.glfWarmGrey.cgColor
             cardViewDistanceOffTee.addSubview(eddieStatsView1)
         }
         else{

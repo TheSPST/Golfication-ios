@@ -10,9 +10,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="SF-Pro-Display-Heavy.otf">
-            <string>SFProDisplay-Heavy</string>
-        </array>
         <array key="SF-Pro-Display-Medium.otf">
             <string>SFProDisplay-Medium</string>
         </array>
@@ -118,15 +115,15 @@
                     <rect key="frame" x="16" y="37" width="343" height="87"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="nGr-eA-CA1">
-                            <rect key="frame" x="0.0" y="0.0" width="60" height="87"/>
+                            <rect key="frame" x="0.0" y="0.0" width="50" height="87"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iPF-pK-KEx">
-                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nXL-CS-prt">
-                                            <rect key="frame" x="30" y="30" width="0.0" height="0.0"/>
+                                            <rect key="frame" x="25" y="25" width="0.0" height="0.0"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="fontDescription" name="SFProDisplay-Heavy" family="SF Pro Display" pointSize="20"/>
+                                            <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="18"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -134,29 +131,29 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="nXL-CS-prt" firstAttribute="centerX" secondItem="iPF-pK-KEx" secondAttribute="centerX" id="Vcl-IW-NRp"/>
-                                        <constraint firstAttribute="width" constant="60" id="YyC-wu-w7D"/>
-                                        <constraint firstAttribute="height" constant="60" id="iQ1-37-a6r"/>
+                                        <constraint firstAttribute="width" constant="50" id="YyC-wu-w7D"/>
+                                        <constraint firstAttribute="height" constant="50" id="iQ1-37-a6r"/>
                                         <constraint firstItem="nXL-CS-prt" firstAttribute="centerY" secondItem="iPF-pK-KEx" secondAttribute="centerY" id="yDv-oA-Bpa"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PAR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lH5-VE-j2p">
-                                    <rect key="frame" x="0.0" y="64" width="60" height="23"/>
-                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
+                                    <rect key="frame" x="0.0" y="54" width="50" height="33"/>
+                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="iWi-cC-e0q">
-                            <rect key="frame" x="94.5" y="0.0" width="60" height="87"/>
+                            <rect key="frame" x="97.5" y="0.0" width="50" height="87"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uLF-I5-ggF">
-                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BQ2-Bt-1OA">
-                                            <rect key="frame" x="30" y="30" width="0.0" height="0.0"/>
+                                            <rect key="frame" x="25" y="25" width="0.0" height="0.0"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="fontDescription" name="SFProDisplay-Heavy" family="SF Pro Display" pointSize="20"/>
+                                            <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="18"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -165,73 +162,73 @@
                                     <constraints>
                                         <constraint firstItem="BQ2-Bt-1OA" firstAttribute="centerY" secondItem="uLF-I5-ggF" secondAttribute="centerY" id="0Mp-bs-vgf"/>
                                         <constraint firstItem="BQ2-Bt-1OA" firstAttribute="centerX" secondItem="uLF-I5-ggF" secondAttribute="centerX" id="loo-GI-IdM"/>
-                                        <constraint firstAttribute="height" constant="60" id="pVR-bP-pwb"/>
-                                        <constraint firstAttribute="width" constant="60" id="wf3-QF-3PF"/>
+                                        <constraint firstAttribute="height" constant="50" id="pVR-bP-pwb"/>
+                                        <constraint firstAttribute="width" constant="50" id="wf3-QF-3PF"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIRDIE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sq6-qQ-ADh">
-                                    <rect key="frame" x="0.0" y="64" width="60" height="23"/>
-                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
+                                    <rect key="frame" x="0.0" y="54" width="50" height="33"/>
+                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="GRJ-1s-M9L">
-                            <rect key="frame" x="188.5" y="0.0" width="60" height="87"/>
+                            <rect key="frame" x="195.5" y="0.0" width="50" height="87"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9gV-DV-KAC">
-                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wzq-qH-n2R">
-                                            <rect key="frame" x="30" y="30" width="0.0" height="0.0"/>
+                                            <rect key="frame" x="25" y="25" width="0.0" height="0.0"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="fontDescription" name="SFProDisplay-Heavy" family="SF Pro Display" pointSize="20"/>
+                                            <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="18"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="1Ue-xt-JIx"/>
+                                        <constraint firstAttribute="height" constant="50" id="1Ue-xt-JIx"/>
                                         <constraint firstItem="wzq-qH-n2R" firstAttribute="centerX" secondItem="9gV-DV-KAC" secondAttribute="centerX" id="6O0-Qn-5m9"/>
                                         <constraint firstItem="wzq-qH-n2R" firstAttribute="centerY" secondItem="9gV-DV-KAC" secondAttribute="centerY" id="F30-4r-4kw"/>
-                                        <constraint firstAttribute="width" constant="60" id="alJ-pY-Tjn"/>
+                                        <constraint firstAttribute="width" constant="50" id="alJ-pY-Tjn"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FAIRWAY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hjZ-pL-ugI">
-                                    <rect key="frame" x="0.0" y="64" width="60" height="23"/>
-                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
+                                    <rect key="frame" x="0.0" y="54" width="50" height="33"/>
+                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="oOa-sn-bZ9">
-                            <rect key="frame" x="283" y="0.0" width="60" height="87"/>
+                            <rect key="frame" x="293" y="0.0" width="50" height="87"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YLr-rq-YIO">
-                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8oL-Bu-uAp">
-                                            <rect key="frame" x="30" y="30" width="0.0" height="0.0"/>
+                                            <rect key="frame" x="25" y="25" width="0.0" height="0.0"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="fontDescription" name="SFProDisplay-Heavy" family="SF Pro Display" pointSize="20"/>
+                                            <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="18"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="60" id="0Ub-1a-0MD"/>
+                                        <constraint firstAttribute="width" constant="50" id="0Ub-1a-0MD"/>
                                         <constraint firstItem="8oL-Bu-uAp" firstAttribute="centerX" secondItem="YLr-rq-YIO" secondAttribute="centerX" id="Cd1-ys-1M2"/>
-                                        <constraint firstAttribute="height" constant="60" id="fYq-zL-ywM"/>
+                                        <constraint firstAttribute="height" constant="50" id="fYq-zL-ywM"/>
                                         <constraint firstItem="8oL-Bu-uAp" firstAttribute="centerY" secondItem="YLr-rq-YIO" secondAttribute="centerY" id="ygY-Zp-Vmk"/>
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GIR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="udb-4U-s9l" userLabel="GIR">
-                                    <rect key="frame" x="0.0" y="64" width="60" height="23"/>
-                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
+                                    <rect key="frame" x="0.0" y="54" width="50" height="33"/>
+                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>

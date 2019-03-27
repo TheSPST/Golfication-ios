@@ -1392,7 +1392,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     private func processSelectTee(rangeFinArr:[NSMutableDictionary]){
         for data in rangeFinArr{
-            var ratin = "N/A"
+            var ratin = "72.0"
             if let rating = data.value(forKey: "courseRating") as? Double{
                 ratin = "\(rating)"
             }
@@ -3049,7 +3049,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblPlayer.textColor = UIColor.black
         lblPlayer.backgroundColor = UIColor.clear
         lblPlayer.textAlignment = NSTextAlignment.left
-        lblPlayer.font = UIFont.systemFont(ofSize: 11.0)
+        lblPlayer.font = UIFont.systemFont(ofSize: 14.0)
         header.addSubview(lblPlayer)
         
         let lblStroke = UILabel()
@@ -3058,7 +3058,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblStroke.textColor = UIColor.black
         lblStroke.backgroundColor = UIColor.clear
         lblStroke.textAlignment = NSTextAlignment.right
-        lblStroke.font = UIFont.systemFont(ofSize: 11.0)
+        lblStroke.font = UIFont.systemFont(ofSize: 14.0)
         header.addSubview(lblStroke)
         
         let lblThru = UILabel()
@@ -3067,7 +3067,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblThru.textColor = UIColor.black
         lblThru.backgroundColor = UIColor.clear
         lblThru.textAlignment = NSTextAlignment.right
-        lblThru.font = UIFont.systemFont(ofSize: 11.0)
+        lblThru.font = UIFont.systemFont(ofSize: 14.0)
         header.addSubview(lblThru)
         
         let lblToPar = UILabel()
@@ -3076,7 +3076,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         lblToPar.textColor = UIColor.black
         lblToPar.backgroundColor = UIColor.clear
         lblToPar.textAlignment = NSTextAlignment.right
-        lblToPar.font = UIFont.systemFont(ofSize: 11.0)
+        lblToPar.font = UIFont.systemFont(ofSize: 14.0)
         header.addSubview(lblToPar)
         
         return header

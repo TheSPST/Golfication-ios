@@ -12,11 +12,20 @@ class CourseViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+//        let originalImage1 = UIImage(named: "backArrow")!
+//        let btnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+//        self.navigationItem.leftBarButtonItem.set
+//
+//        btnBack.tintColor = UIColor.white
+//        btnBack.setImage(btnImage, for: .normal)
 
         // Do any additional setup after loading the view.
     }
     
-
+    @IBAction func btnBackAction(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     /*
     // MARK: - Navigation
 

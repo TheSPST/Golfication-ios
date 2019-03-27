@@ -59,7 +59,7 @@ class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorI
 
         if !Constants.isProMode {
             
-            self.setProLockedUI(targetView: self.puttingCardView, title: "Putting".localized())
+//            self.setProLockedUI(targetView: self.puttingCardView, title: "Putting".localized())
             self.lblProPutting.isHidden = true
             
             lblPuttsPerHoleAvg.isHidden = true
@@ -70,6 +70,8 @@ class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorI
             eddieStatsView1.frame = CGRect(x: 16, y: 45, width: self.view.frame.width-52, height: 30)
             eddieStatsView1.lblTitle.text = "Eddie has some insights for you."
             eddieStatsView1.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView1.btnView.setTitleColor(UIColor.glfWhite, for: .normal)
+            eddieStatsView1.btnView.layer.borderColor = UIColor.glfWhite.cgColor
             cardViewPuttsPerHole.addSubview(eddieStatsView1)
         }
         else{
@@ -430,7 +432,7 @@ class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorI
         }
         barViewPuttsPerHole.setBarChartGameType(dataPoints: roundTimeStamp, values: roundWisePuttingSumAvg, gameType: gameTypes, chartView: barViewPuttsPerHole, barWidth: 0.2)
         barViewPuttsPerHole.leftAxis.axisMinimum = 0.0
-        barViewPuttsPerHole.leftAxis.axisMaximum = 8.0
+        barViewPuttsPerHole.leftAxis.axisMaximum = 1 + (roundWisePuttingSumAvg.max() ?? 0)
         barViewPuttsPerHole.leftAxis.labelCount = 4
         
         if !roundWisePuttingSumAvg.isEmpty{

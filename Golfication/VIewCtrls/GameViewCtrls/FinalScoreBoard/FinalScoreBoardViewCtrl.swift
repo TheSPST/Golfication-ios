@@ -170,7 +170,17 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     @IBOutlet weak var moreStatsContainerImage: UIView!
     @IBOutlet weak var viewProStatsUnlocked: UIView!
     @IBOutlet weak var btnStatsBecomePro: UIButton!
-
+    
+    @IBOutlet weak var cardViewGoals: CardView!
+    @IBOutlet weak var lblParGoal: UILabel!
+    @IBOutlet weak var lblBirdieGoal: UILabel!
+    @IBOutlet weak var lblFairwayGoal: UILabel!
+    @IBOutlet weak var lblGirGoal: UILabel!
+    
+    @IBOutlet weak var viewParGoal: CardView!
+    @IBOutlet weak var viewBirdieGoal: CardView!
+    @IBOutlet weak var viewFairwayGoal: CardView!
+    @IBOutlet weak var viewGirGoal: CardView!
     var superClassName : String!
     let label = UILabel()
     var myVal: Int = 0
@@ -294,6 +304,29 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             let playerName = (finalPlayersData[i] as AnyObject).value(forKey: "name") as? String
             let img = (finalPlayersData[i] as AnyObject).value(forKey: "image") as? String
             playerArray.append((id: playerId!, name: playerName ?? "", image: img ?? ""))
+            if playerId == Auth.auth().currentUser!.uid && Constants.isProMode{
+                if let goal = (finalPlayersData[i] as AnyObject).value(forKey: "goals") as? NSMutableDictionary{
+                    let targetGoal = Goal()
+                    let achievedGoal = Goal()
+                    if let target = goal.value(forKey: "target") as? NSMutableDictionary{
+                        targetGoal.Birdie = target.value(forKey: "birdie") as! Int
+                        targetGoal.par = target.value(forKey: "par") as! Int
+                        targetGoal.gir = target.value(forKey: "gir") as! Int
+                        targetGoal.fairwayHit = target.value(forKey: "fairway") as! Int
+                    }
+                    if let achieved = goal.value(forKey: "achieved") as? NSMutableDictionary{
+                        achievedGoal.Birdie = achieved.value(forKey: "birdie") as! Int
+                        achievedGoal.par = achieved.value(forKey: "par") as! Int
+                        achievedGoal.gir = achieved.value(forKey: "gir") as! Int
+                        achievedGoal.fairwayHit = achieved.value(forKey: "fairway") as! Int
+                    }
+                    updateGoalView(achievedGoal: achievedGoal, targetGoal: targetGoal)
+                }else{
+                    cardViewGoals.isHidden = true
+                }
+            }else{
+                cardViewGoals.isHidden = true
+            }
             let button = UIButton()
             let frame = CGRect(x: 0, y: 0, width: 35, height: 35)
             button.setCorner(color: playersColor[i].cgColor)
@@ -411,7 +444,47 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             }
         }
     }
-   
+    func updateGoalView(achievedGoal:Goal,targetGoal:Goal){
+        if Constants.isProMode{
+            var fhPer = Double(achievedGoal.fairwayHit)/Double(targetGoal.fairwayHit)
+            var girPer = Double(achievedGoal.gir)/Double(targetGoal.gir)
+            var birdiePer = Double(achievedGoal.Birdie)/Double(targetGoal.Birdie)
+            var parPer = Double(achievedGoal.par)/Double(targetGoal.par)
+            
+            if achievedGoal.fairwayHit >= targetGoal.fairwayHit{
+                fhPer = 1.0
+            }
+            if achievedGoal.gir >= targetGoal.gir{
+                girPer = 1.0
+            }
+            if achievedGoal.Birdie >= targetGoal.Birdie{
+                birdiePer = 1.0
+            }
+            if achievedGoal.par >= targetGoal.par{
+                parPer = 1.0
+            }
+            fillViewLayer(per: 1.0-fhPer, layer: viewFairwayGoal.layer)
+            fillViewLayer(per: 1.0-girPer, layer: viewGirGoal.layer)
+            fillViewLayer(per: 1.0-birdiePer, layer: viewBirdieGoal.layer)
+            fillViewLayer(per: 1.0-parPer, layer: viewParGoal.layer)
+            lblFairwayGoal.text = "\(achievedGoal.fairwayHit)/\(targetGoal.fairwayHit)"
+            lblGirGoal.text = "\(achievedGoal.gir)/\(targetGoal.gir)"
+            lblBirdieGoal.text = "\(achievedGoal.Birdie)/\(targetGoal.Birdie)"
+            lblParGoal.text = "\(achievedGoal.par)/\(targetGoal.par)"
+        }
+    }
+    func fillViewLayer(per:Double,layer:CALayer){
+        if ((layer.sublayers?[0] as? CAGradientLayer) != nil) {
+            layer.sublayers?.remove(at: 0)
+        }
+        let gradient = CAGradientLayer()
+        gradient.frame = layer.bounds
+        let color = UIColor(red: 255.0/255.0, green: 166.0 / 255.0, blue: 0.0 / 255.0, alpha: 1.0).cgColor
+        gradient.colors = [UIColor.glfWhite.cgColor, UIColor.glfWhite.cgColor, color, color]
+        gradient.locations = [NSNumber(value: 0.0), NSNumber(value: per), NSNumber(value: per), NSNumber(value: 1.0)]
+        gradient.cornerRadius = 5.0
+        layer.insertSublayer(gradient, at: 0)
+    }
     func startTimer(totalTime : Int) {
         var totalTime = totalTime
         countdownTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (Timer) in
@@ -1454,7 +1527,6 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         rightSwipe.direction = .right
         scrollableStackView.addGestureRecognizer(leftSwipe)
         scrollableStackView.addGestureRecognizer(rightSwipe)
-
     }
     
     // MARK: - infoClicked

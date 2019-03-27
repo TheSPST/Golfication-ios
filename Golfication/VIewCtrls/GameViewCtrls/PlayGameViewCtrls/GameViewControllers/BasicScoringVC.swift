@@ -683,13 +683,21 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                         }
                     }
                     if (k as! String) == Auth.auth().currentUser!.uid{
-                        if let goal = (v as! NSMutableDictionary).value(forKey: "goal") as? NSMutableDictionary{
-                            self.targetGoal.Birdie = goal.value(forKey: "birdie") as! Int
-                            self.targetGoal.par = goal.value(forKey: "par") as! Int
-                            self.targetGoal.gir = goal.value(forKey: "gir") as! Int
-                            self.targetGoal.fairwayHit = goal.value(forKey: "fairwayHit") as! Int
+                        if let goal = (v as! NSMutableDictionary).value(forKey: "goals") as? NSMutableDictionary{
+                            if let target = goal.value(forKey: "target") as? NSMutableDictionary{
+                                self.targetGoal.Birdie = target.value(forKey: "birdie") as! Int
+                                self.targetGoal.par = target.value(forKey: "par") as! Int
+                                self.targetGoal.gir = target.value(forKey: "gir") as! Int
+                                self.targetGoal.fairwayHit = target.value(forKey: "fairway") as! Int
+                            }
+                            if let achieved = goal.value(forKey: "achieved") as? NSMutableDictionary{
+                                self.achievedGoal.Birdie = achieved.value(forKey: "birdie") as! Int
+                                self.achievedGoal.par = achieved.value(forKey: "par") as! Int
+                                self.achievedGoal.gir = achieved.value(forKey: "gir") as! Int
+                                self.achievedGoal.fairwayHit = achieved.value(forKey: "fairway") as! Int
+                            }
+                            self.eddieView.updateGoalView(achievedGoal: achievedGoal, targetGoal: targetGoal)
                         }
-                        self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
                     }
                     btn.isHidden = false
                     btn.setCornerWithRadius(color: UIColor.clear.cgColor, radius: 25)
@@ -1852,8 +1860,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         goal.setValue(self.targetGoal.Birdie, forKey: "birdie")
         goal.setValue(self.targetGoal.par, forKey: "par")
         goal.setValue(self.targetGoal.gir, forKey: "gir")
-        goal.setValue(self.targetGoal.fairwayHit, forKey: "fairwayHit")
-        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goal").updateChildValues(goal as! [AnyHashable : Any])
+        goal.setValue(self.targetGoal.fairwayHit, forKey: "fairway")
+        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goals/target").updateChildValues(goal as! [AnyHashable : Any])
         self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: self.targetGoal)
     }
     private func getHCPValue(playerID:String,holeNo:Int)->Int{

@@ -45,13 +45,13 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="szG-jm-Qe2">
-                    <rect key="frame" x="40.5" y="-2.5" width="70" height="30"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <rect key="frame" x="40.5" y="5" width="40" height="15"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="70" id="aOO-5X-xvB"/>
-                        <constraint firstAttribute="height" constant="30" id="gg2-Ue-dq3"/>
+                        <constraint firstAttribute="width" constant="40" id="aOO-5X-xvB"/>
+                        <constraint firstAttribute="height" constant="15" id="gg2-Ue-dq3"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="17"/>
+                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                     <state key="normal" title="View">
                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
@@ -83,6 +83,6 @@
         </view>
     </objects>
     <resources>
-        <image name="eddieUSer" width="38" height="36"/>
+        <image name="eddieUSer" width="976" height="976"/>
     </resources>
 </document>

@@ -634,6 +634,12 @@ class BackgroundMapStats: NSObject {
                 }
             }
         }
+        let goal = NSMutableDictionary()
+        goal.setValue(achievedGoal.Birdie, forKey: "birdie")
+        goal.setValue(achievedGoal.par, forKey: "par")
+        goal.setValue(achievedGoal.gir, forKey: "gir")
+        goal.setValue(achievedGoal.fairwayHit, forKey: "fairway")
+        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goals/achieved").updateChildValues(goal as! [AnyHashable : Any])
         return achievedGoal
     }
 }

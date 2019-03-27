@@ -553,7 +553,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let cameraBtn =  UIButton(frame: CGRect(x: self.view.frame.width/2-15, y: self.view.frame.height-40-(30+5), width: 30, height: 30))
         cameraBtn.setBackgroundImage(UIImage(named:"icon_camera"), for: .normal)
         cameraBtn.addTarget(self, action: #selector(self.cameraAction), for: .touchUpInside)
-        
         let bottomLbl = UILabel()
         bottomLbl.frame = CGRect(x: 50, y: self.view.frame.height-40-(30+30+5), width: self.view.frame.width-100, height: 30)
         bottomLbl.numberOfLines = 2

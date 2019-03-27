@@ -435,11 +435,20 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             for data in players{
                 let v = data.value
                 if data.key as! String == Auth.auth().currentUser!.uid{
-                    if let goal = (v as! NSMutableDictionary).value(forKey: "goal") as? NSMutableDictionary{
-                        self.targetGoal.Birdie = goal.value(forKey: "birdie") as! Int
-                        self.targetGoal.par = goal.value(forKey: "par") as! Int
-                        self.targetGoal.gir = goal.value(forKey: "gir") as! Int
-                        self.targetGoal.fairwayHit = goal.value(forKey: "fairwayHit") as! Int
+                    if let goal = (v as! NSMutableDictionary).value(forKey: "goals") as? NSMutableDictionary{
+                        if let target = goal.value(forKey: "target") as? NSMutableDictionary{
+                            self.targetGoal.Birdie = target.value(forKey: "birdie") as! Int
+                            self.targetGoal.par = target.value(forKey: "par") as! Int
+                            self.targetGoal.gir = target.value(forKey: "gir") as! Int
+                            self.targetGoal.fairwayHit = target.value(forKey: "fairway") as! Int
+                        }
+                        if let achieved = goal.value(forKey: "achieved") as? NSMutableDictionary{
+                            self.achievedGoal.Birdie = achieved.value(forKey: "birdie") as! Int
+                            self.achievedGoal.par = achieved.value(forKey: "par") as! Int
+                            self.achievedGoal.gir = achieved.value(forKey: "gir") as! Int
+                            self.achievedGoal.fairwayHit = achieved.value(forKey: "fairway") as! Int
+                        }
+                        self.eddieView.updateGoalView(achievedGoal: achievedGoal, targetGoal: targetGoal)
                     }
                 }
                 var teeOfP = String()
@@ -1001,7 +1010,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             scrlView.isHidden = false
             btnNext.isHidden = true
             btnPrev.isHidden = true
-            btnPlayerStats.isHidden = true
+//            btnPlayerStats.isHidden = true
             self.btnEditShots.isHidden = true
             scrlHConstraint.constant = 0
             UIView.animate(withDuration: 0.3, animations: {
@@ -1018,7 +1027,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.btnEditShots.isHidden = false
             sender.tag = 0
             scoreSecondSV.isHidden = true
-            btnPlayerStats.isHidden = false
+//            btnPlayerStats.isHidden = false
             btnExpendScore.isHidden = false
             scoreSV2.isHidden = true
             scoreSV.isHidden = false
@@ -1124,6 +1133,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        btnPlayerStats.isHidden = true
         locationManager.delegate = self
         initalSetup()
         self.mapView.delegate = self
@@ -1392,8 +1402,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         scrlView.isHidden = true
         btnNext.isHidden = false
         btnPrev.isHidden = false
-        btnDetailScoring.setCorner(color: UIColor.glfWhite.cgColor)
+//        btnDetailScoring.setCorner(color: UIColor.glfWhite.cgColor)
         btnDetailScoring.setTitleColor(UIColor.glfWhite, for: .normal)
+        btnDetailScoring.setImage(#imageLiteral(resourceName: "Club_arrow_down").resize(CGSize(width:10,height:10)), for: .normal)
+//        btnDetailScoring.imageView?.tintImageColor(color: UIColor.glfWhite)
         btnNext.setCircle(frame: self.btnNext.frame)
         btnPrev.setCircle(frame: self.btnPrev.frame)
         btnNextScrl.setCircle(frame: btnNextScrl.frame)
@@ -1613,7 +1625,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         
         self.btnCenter.isHidden = isHide
         self.windNotesView.isHidden = isHide
-        self.btnPlayerStats.isHidden = isHide
+//        self.btnPlayerStats.isHidden = isHide
         self.btnEditShots.isHidden = isHide
         self.viewForground.isHidden = !isHide
         self.lblCenterHeader.superview!.isHidden = isHide
@@ -1886,7 +1898,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         self.mapView.settings.scrollGestures = true
         if(!self.scrlView.isHidden){
             self.playerStatsAction(self.btnPlayerStats)
-            self.lblEditShotNumber.isHidden = self.btnPlayerStats.isHidden ? true:false
+            self.lblEditShotNumber.isHidden = self.scrlView.isHidden ? true:false
         }
         
         if(sender.numberOfTouches > 0){
@@ -2213,7 +2225,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.btnScore.setTitle("\(classicScoring.strokesCount!)", for: .normal)
             self.scoreSV.isHidden = true
             self.scoreSV2.isHidden = false
-            lblEditShotNumber.isHidden = self.btnPlayerStats.isHidden ? true:false
+            lblEditShotNumber.isHidden = self.scrlView.isHidden ? true:false
             lblEditShotNumber.text = " \(classicScoring.strokesCount!) "
 //            self.lblStblScore.text = "\(self.classicScoring.strokesCount!)"
 //            self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
@@ -2581,8 +2593,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         goal.setValue(self.targetGoal.Birdie, forKey: "birdie")
         goal.setValue(self.targetGoal.par, forKey: "par")
         goal.setValue(self.targetGoal.gir, forKey: "gir")
-        goal.setValue(self.targetGoal.fairwayHit, forKey: "fairwayHit")
-        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goal").updateChildValues(goal as! [AnyHashable : Any])
+        goal.setValue(self.targetGoal.fairwayHit, forKey: "fairway")
+        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goals/target").updateChildValues(goal as! [AnyHashable : Any])
     }
     func getScoreFromMatchDataFirebase(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchId)/scoring/\(self.holeIndex)/") { (snapshot) in
@@ -2634,7 +2646,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         btnTopShotRanking.isHidden = true
         markers.removeAll()
         self.lblHoleNumber.text = "\(self.scoring[indexToUpdate].hole)"
-        self.lblHoleNumber2.text = "Hole".localized() + "\(self.scoring[indexToUpdate].hole)"
+        self.lblHoleNumber2.text = "Hole".localized() + " \(self.scoring[indexToUpdate].hole)"
 
         self.lblParNumber.text = "Par".localized() + " \(self.scoring[indexToUpdate].par)"
 

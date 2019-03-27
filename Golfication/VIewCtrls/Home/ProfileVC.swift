@@ -303,9 +303,6 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             self.present(alert, animated: true, completion: nil)
         }
         if(valid){
-            
-//            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-//            self.navigationController?.pushViewController(viewCtrl, animated: true)
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "Profile"
             self.navigationController?.pushViewController(viewCtrl, animated: false)

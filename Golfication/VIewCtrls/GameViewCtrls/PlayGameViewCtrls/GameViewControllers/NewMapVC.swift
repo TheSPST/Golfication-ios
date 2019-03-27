@@ -2441,8 +2441,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         goal.setValue(self.targetGoal.Birdie, forKey: "birdie")
         goal.setValue(self.targetGoal.par, forKey: "par")
         goal.setValue(self.targetGoal.gir, forKey: "gir")
-        goal.setValue(self.targetGoal.fairwayHit, forKey: "fairwayHit")
-        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goal").updateChildValues(goal as! [AnyHashable : Any])
+        goal.setValue(self.targetGoal.fairwayHit, forKey: "fairway")
+        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goals/target").updateChildValues(goal as! [AnyHashable : Any])
     }
     @IBAction func btnActionTrackShots(_ sender: UIButton) {
         self.btnAddShot.isHidden = true
@@ -4912,11 +4912,20 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             for data in players{
                 let v = data.value as! NSMutableDictionary
                 if (data.key as! String) == Auth.auth().currentUser!.uid{
-                    if let goal = v.value(forKey: "goal") as? NSMutableDictionary{
-                        self.targetGoal.Birdie = goal.value(forKey: "birdie") as! Int
-                        self.targetGoal.par = goal.value(forKey: "par") as! Int
-                        self.targetGoal.gir = goal.value(forKey: "gir") as! Int
-                        self.targetGoal.fairwayHit = goal.value(forKey: "fairwayHit") as! Int
+                    if let goal = v.value(forKey: "goals") as? NSMutableDictionary{
+                        if let target = goal.value(forKey: "target") as? NSMutableDictionary{
+                            self.targetGoal.Birdie = target.value(forKey: "birdie") as! Int
+                            self.targetGoal.par = target.value(forKey: "par") as! Int
+                            self.targetGoal.gir = target.value(forKey: "gir") as! Int
+                            self.targetGoal.fairwayHit = target.value(forKey: "fairway") as! Int
+                        }
+                        if let achieved = goal.value(forKey: "achieved") as? NSMutableDictionary{
+                            self.achievedGoal.Birdie = achieved.value(forKey: "birdie") as! Int
+                            self.achievedGoal.par = achieved.value(forKey: "par") as! Int
+                            self.achievedGoal.gir = achieved.value(forKey: "gir") as! Int
+                            self.achievedGoal.fairwayHit = achieved.value(forKey: "fairway") as! Int
+                        }
+                        self.eddieView.updateGoalView(achievedGoal: achievedGoal, targetGoal: targetGoal)
                     }
                 }
                 var teeOfP = String()

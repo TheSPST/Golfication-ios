@@ -296,32 +296,16 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             lblAvgChippingProximityValue.isHidden = true
             lblSandProximityAvg.isHidden = true
             lblAvgSandProximityValue.isHidden = true
-            
-            let eddieStatsView = EddieStatsView()
-            eddieStatsView.backgroundColor = UIColor.clear
-            eddieStatsView.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
-            eddieStatsView.lblTitle.text = "Unlock this stat with Eddie!"
-            eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
-            cardViewChippingAccuracy.addSubview(eddieStatsView)
-            
-//            let eddieStatsView1 = EddieStatsView()
-//            eddieStatsView1.backgroundColor = UIColor.clear
-//            eddieStatsView1.frame = CGRect(x: 16, y: 35, width: self.view.frame.width-52, height: 30)
-//            eddieStatsView1.eddieImageVIew.isHidden = true
-//            eddieStatsView1.lblTitle.isHidden = true
-//            eddieStatsView1.btnView.isHidden = true
-//            eddieStatsView1.btnPlay.isHidden = false
-//            eddieStatsView1.btnPlay.setTitle("Get this stat by playing in Shot tracking mode", for: .normal)
-//            eddieStatsView1.btnPlay.addTarget(self, action: #selector(self.eddiePlayClicked(_:)), for: .touchUpInside)
-//            cardViewChipUPnDown.addSubview(eddieStatsView1)
-            
-            let eddieStatsView2 = EddieStatsView()
-            eddieStatsView2.backgroundColor = UIColor.clear
-            eddieStatsView2.frame = CGRect(x: 16, y: 45, width: self.view.frame.width-52, height: 30)
-            eddieStatsView2.lblTitle.text = "Unlock this stat with Eddie!"
-            eddieStatsView2.lblTitle.textColor = UIColor(rgb:0xFFC700)
-            eddieStatsView2.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
-            cardViewChippingSandAccuracy.addSubview(eddieStatsView2)
+            lblChippingAccuracyAvg.isHidden = true
+
+//            let eddieStatsView = EddieStatsView()
+//            eddieStatsView.backgroundColor = UIColor.clear
+//            eddieStatsView.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
+//            eddieStatsView.lblTitle.text = "Unlock this stat with Eddie!"
+//            eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+//            eddieStatsView.btnView.setTitleColor(UIColor.glfWhite, for: .normal)
+//            eddieStatsView.btnView.layer.borderColor = UIColor.glfWhite.cgColor
+//            cardViewChippingAccuracy.addSubview(eddieStatsView)
 
             let eddieStatsView3 = EddieStatsView()
             eddieStatsView3.backgroundColor = UIColor.clear
@@ -329,6 +313,8 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             eddieStatsView3.lblTitle.text = "Unlock this stat with Eddie!"
             eddieStatsView3.lblTitle.textColor = UIColor(rgb:0xFFC700)
             eddieStatsView3.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView3.btnView.setTitleColor(UIColor.glfWarmGrey, for: .normal)
+            eddieStatsView3.btnView.layer.borderColor = UIColor.glfWarmGrey.cgColor
             cardViewChippingSandProximity.addSubview(eddieStatsView3)
             
             let eddieStatsView4 = EddieStatsView()
@@ -337,18 +323,9 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             eddieStatsView4.lblTitle.text = "Eddie has some insights for you."
             eddieStatsView4.lblTitle.textColor = UIColor(rgb:0xFFC700)
             eddieStatsView4.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView4.btnView.setTitleColor(UIColor.glfWarmGrey, for: .normal)
+            eddieStatsView4.btnView.layer.borderColor = UIColor.glfWarmGrey.cgColor
             cardViewChippingProximity.addSubview(eddieStatsView4)
-
-//            let eddieStatsView5 = EddieStatsView()
-//            eddieStatsView5.backgroundColor = UIColor.clear
-//            eddieStatsView5.frame = CGRect(x: 16, y: 35, width: self.view.frame.width-52, height: 30)
-//            eddieStatsView5.eddieImageVIew.isHidden = true
-//            eddieStatsView5.lblTitle.isHidden = true
-//            eddieStatsView5.btnView.isHidden = true
-//            eddieStatsView5.btnPlay.isHidden = false
-//            eddieStatsView5.btnPlay.setTitle("Get this stat by playing in Shot tracking mode", for: .normal)
-//            eddieStatsView5.btnPlay.addTarget(self, action: #selector(self.eddiePlayClicked(_:)), for: .touchUpInside)
-//            cardViewSandUPnDown.addSubview(eddieStatsView5)
         }
         else{
             lblChippingProximityAvg.isHidden = false

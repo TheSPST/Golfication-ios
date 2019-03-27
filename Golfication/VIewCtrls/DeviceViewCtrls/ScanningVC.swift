@@ -14,6 +14,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
     
     @IBOutlet weak var btnBuyNow: UIButton!
 
+    @IBOutlet weak var btnConnect: UIButton!
     @IBOutlet weak var lblWaitingForSwing: UILabel!
     @IBOutlet weak var lblStartSwinging: UILabel!
     @IBOutlet weak var barBtnBLE: UIBarButtonItem!
@@ -46,7 +47,107 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         if (self.barBtnBLE.image == #imageLiteral(resourceName: "golficationBarG")) && (Constants.macAddress != nil){
             self.getSwingData()
         }else{
-            self.view.makeToast("Please Do Setup first from Profile section.")
+           self.getGolfBagUpdate()
+        }
+    }
+    func getGolfBagUpdate(){
+        
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
+            var golfBagArray = NSMutableArray()
+            var selectedClubs = NSMutableArray()
+            if let glfbag = snapshot.value as? NSMutableArray{
+                golfBagArray = glfbag
+                for i in 0..<golfBagArray.count{
+                    if let dict = golfBagArray[i] as? NSDictionary{
+                        selectedClubs.add(dict)
+                        for data in Constants.clubWithMaxMin where data.name == dict.value(forKey: "clubName") as! String{
+                            if (data.name).contains("Pu"){
+                                dict.setValue(30, forKey: "avgDistance")
+                                golfBagArray[i] = dict
+                                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":30])
+                            }else if(dict.value(forKey: "avgDistance") == nil){
+                                let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                                dict.setValue(avgDistance, forKey: "avgDistance")
+                                golfBagArray[i] = dict
+                                ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":avgDistance])
+                            }
+                            
+                        }
+                    }
+                    else{
+                        let tempArray = snapshot.value as! NSMutableArray
+                        var golfBagData = [String: NSMutableArray]()
+                        for i in 0..<tempArray.count{
+                            let golfBagDict = NSMutableDictionary()
+                            golfBagDict.setObject("", forKey: "brand" as NSCopying)
+                            golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
+                            golfBagDict.setObject(tempArray[i], forKey: "clubName" as NSCopying)
+                            golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
+                            golfBagDict.setObject(false, forKey: "tag" as NSCopying)
+                            golfBagDict.setObject("", forKey: "tagName" as NSCopying)
+                            golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
+                            for data in Constants.clubWithMaxMin where data.name == tempArray[i] as! String{
+                                if (data.name).contains("Pu"){
+                                    golfBagDict.setObject(30, forKey: "avgDistance" as NSCopying)
+                                }else{
+                                    let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                                    golfBagDict.setObject(avgDistance, forKey: "avgDistance" as NSCopying)
+                                }
+                            }
+                            golfBagArray.replaceObject(at: i, with: golfBagDict)
+                            golfBagData = ["golfBag": golfBagArray]
+                            
+                            selectedClubs.add(golfBagDict)
+                        }
+                        if golfBagData.count>0{
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
+                        }
+                        break
+                    }
+                }
+            }
+            else{
+                let golfBagArray = NSMutableArray()
+                golfBagArray.addObjects(from: ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu"])
+                var golfBagData = [String: NSMutableArray]()
+                selectedClubs = NSMutableArray()
+                let tempArray = NSMutableArray()
+                
+                for i in 0..<golfBagArray.count{
+                    let golfBagDict = NSMutableDictionary()
+                    golfBagDict.setObject("", forKey: "brand" as NSCopying)
+                    golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
+                    golfBagDict.setObject(golfBagArray[i], forKey: "clubName" as NSCopying)
+                    golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
+                    golfBagDict.setObject(false, forKey: "tag" as NSCopying)
+                    golfBagDict.setObject("", forKey: "tagName" as NSCopying)
+                    golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
+                    for data in Constants.clubWithMaxMin where data.name == golfBagArray[i] as! String{
+                        if (data.name).contains("Pu"){
+                            golfBagDict.setObject(30, forKey: "avgDistance" as NSCopying)
+                        }else{
+                            let avgDistance = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                            golfBagDict.setObject(avgDistance, forKey: "avgDistance" as NSCopying)
+                        }
+                    }
+                    tempArray.insert(golfBagDict, at: i)
+                    golfBagData = ["golfBag": tempArray]
+                    
+                    selectedClubs.add(golfBagDict)
+                }
+                if golfBagData.count>0{
+                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
+                }
+            }
+            DispatchQueue.main.async(execute: {
+                self.progressView.hide(navItem: self.navigationItem)
+                Constants.tempGolfBagArray = NSMutableArray()
+                Constants.tempGolfBagArray = NSMutableArray(array: golfBagArray)
+                let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "bluetootheConnectionTesting") as! BluetootheConnectionTesting
+                debugPrint("golfBagArray.count:",golfBagArray.count)
+                viewCtrl.golfBagArr = golfBagArray
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
+            })
         }
     }
     override func viewDidLoad() {
@@ -62,16 +163,15 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         if Constants.isDevice{
             viewHaveDevice.isHidden = true
             noDeviceSV.isHidden = true
-//            getSwingData()
+            self.getSwingData()
+//            sharedInstance = BluetoothSync.getInstance()
+//            sharedInstance.delegate = self
+//            sharedInstance.initCBCentralManager()
         }
         else{
             viewHaveDevice.isHidden = true
             noDeviceSV.isHidden = false
         }
-        
-        sharedInstance = BluetoothSync.getInstance()
-        sharedInstance.delegate = self
-        sharedInstance.initCBCentralManager()
     }
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -80,6 +180,15 @@ class ScanningVC: UIViewController, BluetoothDelegate {
     }
     var sharedInstance: BluetoothSync!
 
+    @IBAction func btnACtionBuyNow(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "https://www.golfication.com/product/golfication-x/"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.title = ""
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
     func didUpdateState(_ state: CBManagerState) {
         debugPrint("state== ",state)
         var alert = String()
@@ -414,6 +523,7 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         btnBuyNow.layer.cornerRadius = 3.0
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
         self.barBtnBLE.isEnabled = true
+        btnConnect.layer.cornerRadius = 3.0
     }
 
     @objc func updateProgress() {
@@ -428,11 +538,6 @@ class ScanningVC: UIViewController, BluetoothDelegate {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        
-//        if(Constants.deviceGolficationX != nil){
-//            self.isFromViewWillApp = true
-            self.getSwingData()
-//        }
     }
     
     @objc func retryAction(_ sender: UIButton) {

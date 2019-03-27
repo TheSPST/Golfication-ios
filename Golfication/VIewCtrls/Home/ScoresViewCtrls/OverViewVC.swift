@@ -79,6 +79,8 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             eddieStatsView.frame = CGRect(x: 16, y: 45, width: self.view.frame.width-52, height: 30)
             eddieStatsView.lblTitle.text = "Eddie has some insights for you."
             eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView.btnView.setTitleColor(UIColor.glfWhite, for: .normal)
+            eddieStatsView.btnView.layer.borderColor = UIColor.glfWhite.cgColor
             roundCardView.addSubview(eddieStatsView)
 
             let eddieStatsView1 = EddieStatsView()
@@ -86,6 +88,8 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             eddieStatsView1.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
             eddieStatsView1.lblTitle.text = "Unlock this stat with Eddie!"
             eddieStatsView1.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView1.btnView.setTitleColor(UIColor.glfWhite, for: .normal)
+            eddieStatsView1.btnView.layer.borderColor = UIColor.glfWhite.cgColor
             strokeGainedChartView.addSubview(eddieStatsView1)
 
             lblRoundsAvg.isHidden = true

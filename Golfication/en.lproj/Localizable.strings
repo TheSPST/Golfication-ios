@@ -117,7 +117,7 @@
 
 "Skip"="Skip";//2-Done
 
-"EASY SCORING"="Easy Scoring";//3-Done
+"Easy Scoring"="Easy Scoring";//3-Done
 
 "Record Hole scores, Fairways, GIRs and putts for you and your friends."="Record Hole scores, Fairways, GIRs and putts for you and your friends.";//4-Done
 
@@ -366,7 +366,7 @@
 "Version"="Version";//176-Done
 "Logout"="Logout";//177-Done
 
-"Are you sure you want to Logout."="Are you sure you want to Logout?";//178-Done
+"Are you sure you want to Logout?"="Are you sure you want to Logout?";//178-Done
 
 // MARK: - Post Game Shot Tracking Mode Option
 "Post Game Shot Tracking Mode Option"="Post Game Shot Tracking Mode Option";

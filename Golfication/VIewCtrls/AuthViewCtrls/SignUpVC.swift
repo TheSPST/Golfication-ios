@@ -120,6 +120,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                     
                     connection.start()
                     self.updateUserDataIntoFirebase(uid: (user?.uid)!, fbEmail: (user?.email)!, fbName: (user?.displayName)!)
+                    Constants.userName = (user?.displayName)!
                     
                 })
             }
@@ -180,13 +181,13 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                                 }
                                 let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewUserProfileVC") as! NewUserProfileVC
                                 self.navigationController?.pushViewController(viewCtrl, animated: false)
-                                self.progressView.hide()
-                                self.sendMailingRequestToServer(uName: fbName,uEmail: fbEmail)
+//                                self.sendMailingRequestToServer(uName: fbName,uEmail: fbEmail)
                                 if let _ = self.userDetails.value(forKey: "fb_id") as? String{
                                     FBSomeEvents.shared.logCompleteRegistrationEvent(registrationMethod: "Facebook")
                                 }else{
                                     FBSomeEvents.shared.logCompleteRegistrationEvent(registrationMethod: "Email")
                                 }
+                                self.progressView.hide()
                             }
                             else{
                                 self.progressView.hide()
@@ -248,7 +249,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             if ((valid) && (txtFieldName.text == "")) {
                 valid = false
                 
-                let alert = UIAlertController(title: "Alert", message: "Please enter name", preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Alert", message: "Please enter your name", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 
                 self.present(alert, animated: true, completion: nil)
@@ -256,7 +257,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             if((valid) && (txtFieldEmail.text == "")){
                 valid = false
                 
-                let alert = UIAlertController(title: "Alert", message: "Please enter email", preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Alert", message: "Please enter your email address", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 
@@ -267,7 +268,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             if ((valid) && (txtFieldPswd.text == "")) {
                 valid = false
                 
-                let alert = UIAlertController(title: "Alert", message: "Please enter password", preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Alert", message: "Please enter a password", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 
                 self.present(alert, animated: true, completion: nil)
@@ -275,7 +276,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             if ((valid) && (txtFieldCnfrmPswd.text == "")) {
                 valid = false
                 
-                let alert = UIAlertController(title: "Alert", message: "Please enter confirm  password", preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Alert", message: "Please confirm your password", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 
                 self.present(alert, animated: true, completion: nil)
@@ -283,7 +284,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             if ((valid) && ((!(txtFieldPswd.text == ""))&&(!(txtFieldCnfrmPswd.text == ""))&&(!(txtFieldPswd.text == txtFieldCnfrmPswd.text)))) {
                 valid = false
                 
-                let alert = UIAlertController(title: "Alert", message: "Password and confirm password does not match", preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Alert", message: "Your password and confirmation password do not match", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 
                 self.present(alert, animated: true, completion: nil)
@@ -306,7 +307,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
         }
         else
         {
-            let alert = UIAlertController(title: "Alert", message: "Enter valid email id", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Alert", message: "Enter a valid email address", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
             
@@ -351,9 +352,9 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
 //                        https://golfication.us15.list-manage.com/subscribe/post?u=61aa993cd19d0fb238ab03ae0&amp;id=b8bdae75ef&EMAIL=rishabh.sood@gmail.com&FULLNAME=Rishabh Sood
                         UserDefaults.standard.set(self.isNewUser, forKey: "isNewUser")
                         UserDefaults.standard.synchronize()
+                        Constants.userName = self.txtFieldName.text!
                         self.updateUserDataIntoFirebase(uid: (user?.uid)!, fbEmail: self.txtFieldEmail.text!, fbName: self.txtFieldName.text!)
 
-                        self.sendMailingRequestToServer(uName: self.txtFieldName.text!,uEmail: self.txtFieldEmail.text!)
 //                        Constants.userEmail = self.txtFieldEmail.text!
 //                            
 //                        self.txtFieldName.text = ""
@@ -364,24 +365,24 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
 //                        vc.moveToViewController(at: 1)
                     }))
 //                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                    debugPrint("Auth.auth().currentUser?.displayName",Auth.auth().currentUser?.displayName)
+//                    debugPrint("Auth.auth().currentUser?.displayName",Auth.auth().currentUser?.displayName)
                     self.present(alert, animated: true, completion: nil)
                 })
             }
         }
     }
     
-    func sendMailingRequestToServer(uName: String, uEmail: String) {
-        
-        let serverHandler = ServerHandler()
-        serverHandler.state = 2
-        let urlStr = "https://golfication.us15.list-manage.com/subscribe/post?"
-        let dataStr =  "u=" + "61aa993cd19d0fb238ab03ae0&amp;" + "id=" + "b8bdae75ef&" + "EMAIL=" + "\(uEmail)&" + "FULLNAME=" + "\(uName)"
-
-         serverHandler.sendMailingRequest(urlString: urlStr, dataString: dataStr){(arg0, error)  in
-            debugPrint("arg0_&_error==", arg0 ?? "", error ?? "")
-        }
-    }
+//    func sendMailingRequestToServer(uName: String, uEmail: String) {
+//
+//        let serverHandler = ServerHandler()
+//        serverHandler.state = 2
+//        let urlStr = "https://golfication.us15.list-manage.com/subscribe/post?"
+//        let dataStr =  "u=" + "61aa993cd19d0fb238ab03ae0&amp;" + "id=" + "b8bdae75ef&" + "EMAIL=" + "\(uEmail)&" + "FULLNAME=" + "\(uName)"
+//
+//         serverHandler.sendMailingRequest(urlString: urlStr, dataString: dataStr){(arg0, error)  in
+//            debugPrint("arg0_&_error==", arg0 ?? "", error ?? "")
+//        }
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -171,38 +171,55 @@
                                 <rect key="frame" x="0.0" y="40" width="320" height="508"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="7iI-6S-WyA">
-                                        <rect key="frame" x="37" y="0.0" width="246.5" height="44.5"/>
+                                        <rect key="frame" x="25.5" y="0.0" width="269" height="45.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Practice with all new Golfication X" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jVG-Mx-H7H">
-                                                <rect key="frame" x="0.0" y="0.0" width="246.5" height="20.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Practice with all new Golfication X" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jVG-Mx-H7H">
+                                                <rect key="frame" x="0.0" y="0.0" width="269" height="20.5"/>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SWING SCORE, CLUB HEAD SPEED, CLUB PLANE AND MORE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rc0-3c-Ve5">
-                                                <rect key="frame" x="0.0" y="33.5" width="246.5" height="11"/>
-                                                <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="9"/>
-                                                <color key="textColor" red="0.52941176469999995" green="0.63921568630000003" blue="0.60392156860000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SWING SCORE, CLUB HEAD SPEED, CLUB PLANE AND MORE" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rc0-3c-Ve5">
+                                                <rect key="frame" x="0.0" y="33.5" width="269" height="12"/>
+                                                <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="10"/>
+                                                <color key="textColor" red="0.29574871060000002" green="0.66736453770000004" blue="0.48493468760000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="X12-Hd-cCn">
-                                        <rect key="frame" x="20" y="153.5" width="280" height="201"/>
+                                        <rect key="frame" x="20" y="126.5" width="280" height="255"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="device1" translatesAutoresizingMaskIntoConstraints="NO" id="X3D-Nz-tdR">
                                                 <rect key="frame" x="65" y="0.0" width="150" height="150"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="150" id="ego-np-HY8"/>
                                                     <constraint firstAttribute="height" constant="150" id="pzu-F7-cvJ"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get golfication X to improve your swings" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1f-xz-C6z">
-                                                <rect key="frame" x="37.5" y="160" width="205.5" height="41"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect Golfication X to improve your swings" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L1f-xz-C6z">
+                                                <rect key="frame" x="18" y="160" width="244" height="41"/>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Fa-ER-yyt">
+                                                <rect key="frame" x="98.5" y="211" width="83" height="44"/>
+                                                <color key="backgroundColor" red="0.22352941179999999" green="0.56470588239999997" blue="0.41568627450000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="rUh-M5-6Lf"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="17"/>
+                                                <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <state key="normal" title="Connect">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="barBtnBLEAction:" destination="vAa-9T-Cdd" eventType="touchUpInside" id="hDt-A1-cSQ"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="VKx-h3-NbX">
@@ -220,9 +237,12 @@
                                                     <constraint firstAttribute="height" constant="44" id="Ww3-3e-ZR6"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="17"/>
-                                                <state key="normal" title="Buy now for $199">
+                                                <state key="normal" title="Buy now">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="btnACtionBuyNow:" destination="vAa-9T-Cdd" eventType="touchUpInside" id="uMu-5P-4Uy"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -265,6 +285,7 @@
                     <connections>
                         <outlet property="barBtnBLE" destination="uCR-qQ-6Yt" id="Vgb-rM-Rnq"/>
                         <outlet property="btnBuyNow" destination="a9p-3E-CEg" id="JuE-k1-q1I"/>
+                        <outlet property="btnConnect" destination="1Fa-ER-yyt" id="3jj-TS-Whf"/>
                         <outlet property="lblStartSwinging" destination="Nle-tu-zoQ" id="E9G-eZ-s1Y"/>
                         <outlet property="lblWaitingForSwing" destination="Ka1-9T-uEl" id="drK-Ho-HxP"/>
                         <outlet property="noDeviceSV" destination="ibW-wp-AYX" id="32Q-ZK-fkd"/>

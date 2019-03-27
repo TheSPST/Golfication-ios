@@ -94,7 +94,7 @@
 "Next"="Prochain";
 "Skip"="Sautiller";
 
-"EASY SCORING"="La Notation Facile";//
+"Easy Scoring"="La Notation Facile";//
 "Record Hole scores, Fairways, GIRs and putts for you and your friends."="Enregistrez les scores des trous, Fairways, GIRs et les putts pour vous et vos amis";
 "Hole 1"="Trou 1";
 "Par 4"="Par 4";
@@ -325,7 +325,7 @@
 "Version"="Version";
 "Logout"="Déconnexion";
 
-"Are you sure you want to Logout."="Êtes-vous sûr de vouloir déconnecter?";
+"Are you sure you want to Logout?"="Êtes-vous sûr de vouloir déconnecter?";
 "Cancel"="Annuler";
 
 "Post Game Shot Tracking Mode Option"="L'option de Suivi de coup l'après-match";

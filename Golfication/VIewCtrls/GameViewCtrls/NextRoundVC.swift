@@ -43,7 +43,9 @@ class NextRoundVC: UIViewController {
     @IBOutlet weak var lblMins: UILabel!
     @IBOutlet weak var lblSecs: UILabel!
 
+    @IBOutlet weak var lblAfterMappingRequst: UILabel!
     @IBOutlet weak var popUpSubView: CardView!
+    @IBOutlet weak var oopsLbl: UILabel!
     
     @IBOutlet weak var multiplayerStackView: UIStackView!
     @IBOutlet weak var btnAddFriends: UIButton!
@@ -67,9 +69,7 @@ class NextRoundVC: UIViewController {
     }
     
     @IBAction func btnActionInfoForRequest(_ sender: Any) {
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
-        viewCtrl.title = "Course Mapping"
-        viewCtrl.desc = StatsIntoConstants.requestMapping
+        let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "CourseViewController") as! CourseViewController
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     @IBAction func btnActionForRequestMapping(_ sender: UIButton) {
@@ -120,12 +120,13 @@ class NextRoundVC: UIViewController {
                     self.lblStartClassic.isHidden = false
                     self.lblRequestReceive.isHidden = true
                     self.mappedProgressView.isHidden = true
+                    self.lblAfterMappingRequst.isHidden = true
+                    self.oopsLbl.isHidden = false
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
-//                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
                     if self.scoringMode.containsIgnoringCase(find: "classic"){
-                        self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                        self.btnPlayBasic.setTitle("Play in Scorecard Mode", for: .normal)
                     }else{
-                        self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                        self.btnPlayBasic.setTitle("Play in Rangefinder Mode", for: .normal)
                     }
                     self.lblOverlapping.text = "This course is being mapped. It will be available within:"
                     let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(mappedTimestamp/1000)))
@@ -142,34 +143,29 @@ class NextRoundVC: UIViewController {
                     self.lblStartClassic.isHidden = false
                     self.lblRequestReceive.isHidden = false
                     self.mappedProgressView.isHidden = false
+                    self.lblAfterMappingRequst.isHidden = false
+                    self.oopsLbl.isHidden = true
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
                     self.mappedProgressView.progress = Float(mappingCount+1)/Float(10)
-                    self.lblRequestReceive.text = "Requests received: " + "\(mappingCount+1)" + "/" + "10"
-//                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
+                    self.lblRequestReceive.text = "BOOSTS RECEIVED: " + "\(mappingCount+1)" + "/" + "10"
                     if self.scoringMode.containsIgnoringCase(find: "classic"){
                         self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
                     }else{
                         self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
                     }
-                    let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received.")
-//                    let font = UIFont(name: "SFProDisplay-Regular", size: 13.0)
-//                    stringAttributed.addAttribute(NSAttributedStringKey.font, value:font!, range: NSRange.init(location: 83, length: 20))
-//                    stringAttributed.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.glfFlatBlue, range: NSRange.init(location: 83, length: 20))
-//                    stringAttributed.addAttribute(NSAttributedStringKey.underlineStyle, value: 1.0, range: NSRange.init(location: 83, length: 20))
-                    self.lblOverlapping?.attributedText = stringAttributed
                     
+                    let stringAttributed = NSMutableAttributedString.init(string: "Courses are on priority, mapped within 48 hrs when 10 boosts are received.")
+                    self.lblOverlapping?.attributedText = stringAttributed
                     let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
                     self.lblOverlapping.addGestureRecognizer(tap)
                     self.lblOverlapping.isUserInteractionEnabled = true
                 }
                 let alert = UIAlertController(title: "Mapping Request Received!", message: "Our mapping team is working on your course request. You can fast-track your request by asking friends to boost your course.", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "KNOW MORE", style: .cancel, handler: { _ in
-                    let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
-                    viewCtrl.title = "Course Mapping"
-                    viewCtrl.desc = StatsIntoConstants.requestMapping
+                alert.addAction(UIAlertAction(title: "Know More", style: .cancel, handler: { _ in
+                    let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "CourseViewController") as! CourseViewController
                     self.navigationController?.pushViewController(viewCtrl, animated: true)
                 }))
-                alert.addAction(UIAlertAction(title: "GET BOOST", style: .default, handler: { _ in
+                alert.addAction(UIAlertAction(title: "Get Boosts", style: .default, handler: { _ in
                     self.startClassicAction2(sender: self.btnStartClassic)
                 }))
                 self.present(alert, animated: true, completion: nil)
@@ -201,14 +197,10 @@ class NextRoundVC: UIViewController {
                 self.lblStartClassic.isHidden = false
                 self.lblRequestReceive.isHidden = true
                 self.mappedProgressView.isHidden = true
+                self.lblAfterMappingRequst.isHidden = true
+                self.oopsLbl.isHidden = false
                 self.countdownTimer.invalidate()
                 self.lblOverlapping.isHidden = true
-                if self.scoringMode.contains("classic"){
-                    self.btnStartClassic.tag = 1
-                }else{
-                    self.btnStartClassic.tag = 2
-                }
-//                self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
                 self.countdownTimer.invalidate()
             }
         })
@@ -225,11 +217,10 @@ class NextRoundVC: UIViewController {
     
     @IBAction func startClassicAction(sender: UIButton) {
         if self.scoringMode.contains("classic"){
-            self.btnStartClassic.tag = 1
+            prevClassicAction(sender: btnPrevClassic)
         }else{
-            self.btnStartClassic.tag = 2
+            prevRfAction(sender: btnPrevRf)
         }
-        startGameAction(sender: btnStart)
     }
     @IBAction func startClassicAction2(sender: UIButton) {
         let text = "You were the first person I thought of when I read this. I use this new golf app called Golfication that uses data and AI to help me improve faster! The app is really powerful when your course is fully mapped out - with hazards, bunkers, roughs... the whole nine yards. I have requested for the mapping of \(Constants.selectedGolfName) on priority. It would be great if you can download the app and boost my request: that way it'll get mapped faster. And we can, together, use advanced insights to improve our game. Download and Boost my Request"
@@ -267,6 +258,11 @@ class NextRoundVC: UIViewController {
     let locationManager = CLLocationManager()
 
     @IBAction func startGameAction(sender: UIButton) {
+        if self.scoringMode.contains("classic"){
+            self.btnStartClassic.tag = 1
+        }else{
+            self.btnStartClassic.tag = 2
+        }
         if selectedMode == 0 && (selectedTab == 1 || selectedTab == 2){
             if self.btnStartClassic.tag == 2{
                 switch CLLocationManager.authorizationStatus() {
@@ -504,39 +500,46 @@ class NextRoundVC: UIViewController {
             if(self.scoringMode != "Advanced(GPS)"){
                 self.btnStart.isEnabled = false
                 self.btnStart.backgroundColor = UIColor.glfWarmGrey
-                self.btnStart.isHidden = true
+//                self.btnStart.isHidden = true
                 self.overlappingView.isHidden = false
-                //                btnRequestMapping.isHidden = false
-                //                lblOverlapping.text = "Shot tracking is currently unavailable for this course. If you play on this course often let us know and we'll work on it."
             }
             
         }else{
             self.setBgViewForRequestMaping()
+//            mappedProgressView
         }
     }
     func setBgViewForRequestMaping(){
         switch self.scoringMode {
         case "classic":
-            if(selectedTab != 0){
+            if(selectedTab == 1) || (selectedTab == 2){
                 self.btnStart.isEnabled = false
                 self.btnStart.backgroundColor = UIColor.glfWarmGrey
-                self.btnStart.isHidden = true
                 self.overlappingView.isHidden = false
-                //                btnRequestMapping.isHidden = false
-                //                lblOverlapping.text = "Shot tracking is currently unavailable for this course. If you play on this course often let us know and we'll work on it."
-                
+                self.lblAfterMappingRequst.isHidden = self.mappedProgressView.isHidden
+                self.oopsLbl.isHidden = !self.mappedProgressView.isHidden
+                if mappedProgressView.isHidden{
+                    var text = "Shot Tracking "
+                    if selectedTab == 1{
+                        text = "GPS Rangefinder "
+                    }
+                    self.btnPlayBasic.setTitle("Play in Scorecard Mode", for: .normal)
+                    self.lblOverlapping.text = text + "has not been initialized for this course. If you play this course often, please request for mapping below."
+                }
             }
             break
         case "rangeFinder":
             if(selectedTab > 1){
                 self.btnStart.isEnabled = false
                 self.btnStart.backgroundColor = UIColor.glfWarmGrey
-                self.btnStart.isHidden = true
                 self.overlappingView.isHidden = false
-                //                btnRequestMapping.isHidden = false
-                //                lblOverlapping.text = "Shot tracking is currently unavailable for this course. If you play on this course often let us know and we'll work on it."
-                
-                
+                self.lblAfterMappingRequst.isHidden = self.mappedProgressView.isHidden
+                self.oopsLbl.isHidden = !self.mappedProgressView.isHidden
+                if mappedProgressView.isHidden{
+                    let text = "Shot Tracking "
+                    self.btnPlayBasic.setTitle("Play in Rangefinder Mode", for: .normal)
+                    self.lblOverlapping.text = text + "has not been initialized for this course. If you play this course often, please request for mapping below."
+                }
             }else{
                 self.btnStart.isEnabled = true
                 self.btnStart.backgroundColor = UIColor.glfBluegreen
@@ -616,12 +619,8 @@ class NextRoundVC: UIViewController {
             if scoringMode == "classic"{
                 prevClassicAction(sender: btnPrevClassic)
             }else{
-                //            else if scoringMode == "rangeFinder"{
                 prevRfAction(sender: btnPrevRf)
             }
-            //            else{
-            //                prevShotTrackAction(sender: btnPrevShotTrack)
-            //            }
         }
         
         btnPrevContainerView.setCornerView(color: UIColor.glfBluegreen.cgColor)
@@ -667,17 +666,17 @@ class NextRoundVC: UIViewController {
             })
         }
     }
-    
+    var mappingCount = 0
     func checkMappingRequest(){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        var mappingCount = 0
+        mappingCount = 0
         var mappedTimestamp = Int64()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourse/\(Constants.selectedGolfID)") { (snapshot) in
             var dataDic = NSDictionary()
             if(snapshot.value != nil){
                 dataDic = snapshot.value as! NSDictionary
                 if let count = dataDic.value(forKey: "count") as? Int{
-                    mappingCount = count
+                    self.mappingCount = count
                 }
                 if let timestamp = dataDic.value(forKey: "timestamp") as? Int64{
                     mappedTimestamp = timestamp
@@ -685,7 +684,7 @@ class NextRoundVC: UIViewController {
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-                if mappingCount >= 10{
+                if self.mappingCount >= 10{
                     // show timer here
                     self.timerSv.isHidden = false
                     self.btnRequestMapping.isHidden = true
@@ -693,13 +692,15 @@ class NextRoundVC: UIViewController {
                     self.lblStartClassic.isHidden = false
                     self.lblRequestReceive.isHidden = true
                     self.mappedProgressView.isHidden = true
+                    self.lblAfterMappingRequst.isHidden = true
+                    self.oopsLbl.isHidden = false
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
 //                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
                     self.lblOverlapping.text = "This course is being mapped. It will be available within:"
                     if self.scoringMode.containsIgnoringCase(find: "classic"){
-                        self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                        self.btnPlayBasic.setTitle("Play in Scorecard Mode", for: .normal)
                     }else{
-                        self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                        self.btnPlayBasic.setTitle("Play in Rangefinder Mode", for: .normal)
                     }
                     let timeStart = NSDate(timeIntervalSince1970: (TimeInterval(mappedTimestamp/1000)))
                     let timeEnd = Calendar.current.date(byAdding: .second, value: 2*24*60*60, to: timeStart as Date)
@@ -715,20 +716,22 @@ class NextRoundVC: UIViewController {
                     self.lblStartClassic.isHidden = false
                     self.lblRequestReceive.isHidden = false
                     self.mappedProgressView.isHidden = false
+                    self.lblAfterMappingRequst.isHidden = false
+                    self.oopsLbl.isHidden = true
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
                     
-                    self.mappedProgressView.progress = Float(mappingCount)/Float(10)
-                    self.lblRequestReceive.text = "Requests received: " + "\(mappingCount)" + "/" + "10"
+                    self.mappedProgressView.progress = Float(self.mappingCount)/Float(10)
+                    self.lblRequestReceive.text = "BOOSTS RECEIVED: " + "\(self.mappingCount)" + "/" + "10"
                     if self.selectedMode == 1{
                         self.scoringMode = "classic"
                     }
 //                    self.lblStartClassic.text = "Meanwhile you can play on this course in \(self.scoringMode) mode."
                     if self.scoringMode.containsIgnoringCase(find: "classic"){
-                        self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                        self.btnPlayBasic.setTitle("Play in Scorecard Mode", for: .normal)
                     }else{
-                        self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                        self.btnPlayBasic.setTitle("Play in Rangefinder Mode", for: .normal)
                     }
-                    let stringAttributed = NSMutableAttributedString.init(string: "Thanks for your request. This course will be mapped when 10 requests are received.")
+                    let stringAttributed = NSMutableAttributedString.init(string: "Courses are mapped on priority, within 48 hrs when 10 boosts are received.")
                     self.lblOverlapping?.attributedText = stringAttributed                    
                     let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
                     self.lblOverlapping.addGestureRecognizer(tap)

@@ -960,9 +960,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     var sharedInstance: BluetoothSync!
     // MARK: - startGameAction
     @IBAction func practiceAction(_ sender: Any) {
-        sharedInstance = BluetoothSync.getInstance()
-        sharedInstance.delegate = self
-        sharedInstance.initCBCentralManager()
+//        sharedInstance = BluetoothSync.getInstance()
+//        sharedInstance.delegate = self
+//        sharedInstance.initCBCentralManager()
+        let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     func didUpdateState(_ state: CBManagerState) {
@@ -1157,10 +1159,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         }
         storeAllMacAddress()
         // ---------------- Google Analytics --------------------------------------
-//        guard let tracker = GAI.sharedInstance().defaultTracker else { return }
-//        tracker.set(kGAIScreenName, value: "Home Screen")
-//        guard let builder = GAIDictionaryBuilder.createScreenView() else { return }
-//        tracker.send(builder.build() as [NSObject : AnyObject])
+        guard let tracker = GAI.sharedInstance().defaultTracker else { return }
+        tracker.set(kGAIScreenName, value: "Home Screen")
+        guard let builder = GAIDictionaryBuilder.createScreenView() else { return }
+        tracker.send(builder.build() as [NSObject : AnyObject])
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         getUserDataFromFireBase()
         self.getGolficationXVersion()
@@ -2141,7 +2143,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 else
                 {
-                    lblGameStatus.text = "Start Game"
+                    lblGameStatus.text = "Start a new Round"
                     lblStartGolfName.text = "Chena Bend Golf Course"
                     if !(profileHomeCourse == "" || profileHomeCourse == nil){
                         lblStartGolfName.text = profileHomeCourse
@@ -2152,7 +2154,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
             }
             else{
-                lblGameStatus.text = "Start Game"
+                lblGameStatus.text = "Start a new Round"
                 lblStartGolfName.text = "Chena Bend Golf Course"
                 if !(profileHomeCourse == "" || profileHomeCourse == nil){
                     lblStartGolfName.text = profileHomeCourse

@@ -97,7 +97,7 @@
 "Next"="다음";
 "Skip"="넘기";
 
-"EASY SCORING"="쉬운 스코링";
+"Easy Scoring"="쉬운 스코링";
 "Record Hole scores, Fairways, GIRs and putts for you and your friends."="당신과 당신의 친구들을 위해 홀 점수, 페어웨이, GIR ,퍼트를 기록";
 "Hole 1"="홀 1";
 "Par 4"="파 4";
@@ -326,7 +326,7 @@
 "Version"="버전";
 "Logout"="로그 아웃";
 
-"Are you sure you want to Logout."="로그 아웃 하시겠습니까?";
+"Are you sure you want to Logout?"="로그 아웃 하시겠습니까?";
 "Cancel"="취소";
 
 "Post Game Shot Tracking Mode Option"="포스트 게임 샷 추적 모드 옵션";

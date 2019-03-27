@@ -252,6 +252,8 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
             eddieStatsView.frame = CGRect(x: 16, y: 50, width: self.view.frame.width-52, height: 30)
             eddieStatsView.lblTitle.text = "Unlock this stat with Eddie!"
             eddieStatsView.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView.btnView.setTitleColor(UIColor.glfWhite, for: .normal)
+            eddieStatsView.btnView.layer.borderColor = UIColor.glfWhite.cgColor
             cardViewApproach.addSubview(eddieStatsView)
             
             let eddieStatsView1 = EddieStatsView()
@@ -260,6 +262,8 @@ class ApproachViewController: UIViewController, IndicatorInfoProvider,CustomProM
             eddieStatsView1.lblTitle.text = "Eddie has some insights for you."
             eddieStatsView1.lblTitle.textColor = UIColor(rgb:0xFFC700)
             eddieStatsView1.btnView.addTarget(self, action: #selector(self.eddieProClicked(_:)), for: .touchUpInside)
+            eddieStatsView1.btnView.setTitleColor(UIColor.glfWarmGrey, for: .normal)
+            eddieStatsView1.btnView.layer.borderColor = UIColor.glfWarmGrey.cgColor
             holeProximityCardView.addSubview(eddieStatsView1)
         }
         else{

@@ -197,7 +197,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
     
     // MARK: btnLogoutAction
     @IBAction func btnLogoutAction(_ sender: Any) {
-        let alert = UIAlertController(title: "Alert", message: "Are you sure you want to Logout.".localized(), preferredStyle: .alert)
+        let alert = UIAlertController(title: "Alert", message: "Are you sure you want to Logout?".localized(), preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { [weak alert] (_) in
             // Do Nothing

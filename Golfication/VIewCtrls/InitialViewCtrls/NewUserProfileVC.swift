@@ -234,10 +234,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         searchContainerView.layer.borderWidth = 1.0
         searchContainerView.layer.borderColor = UIColor(rgb:0xEFEFEF).cgColor
-     
+        
         btnSkip.setTitle(spaceStr + "Skip".localized() + spaceStr, for: .normal)
         btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
-
+        
         btnNext.layer.cornerRadius = 15.0
         self.btnCheckbox.setCorner(color: UIColor.black.cgColor)
         
@@ -246,39 +246,36 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"male"] as [AnyHashable:Any])
         Constants.gender = "male"
-
+        
         Constants.distanceFilter = 0
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :Constants.distanceFilter] as [AnyHashable:Any])
         lblUnit.text = "Distances in feet and yards."
         lblSpeed.text = "Speed in mph."
-
+        
         
         self.sliderHandicapNumber.value = 18.0
         self.lblHandicap.text = "\((self.sliderHandicapNumber.value*10).rounded()/10)"//(value as! NSString).floatValue
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.sliderHandicapNumber.value*10).rounded()/10)"] as [AnyHashable:Any])
         Constants.handicap = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
         self.btnCheckbox.isSelected = false
-//        let originalImage1 = #imageLiteral(resourceName: "check")
-//        let backBtnImage1 = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-//        btnCheckbox.tintColor = UIColor.glfBluegreen
         
         self.btnCheckbox.setImage(nil, for: .normal)
         btnCheckbox.tintColor = UIColor.clear
-
+        
         self.sliderHandicapNumber.minimumTrackTintColor = UIColor.glfBluegreen
         self.sliderHandicapNumber.maximumTrackTintColor = UIColor(rgb:0xCBD7D2)
         self.sliderHandicapNumber.thumbTintColor = UIColor.glfBluegreen
-
+        
         golfBagTblView.layer.cornerRadius = 3.0
         golfBagTblView.layer.borderWidth = 1.0
         golfBagTblView.layer.borderColor = UIColor(rgb:0xEFEFEF).cgColor
-
+        
         handiContainerView.layer.cornerRadius = 3.0
         
         tblViewHConstraint.constant = 0
         nearMeContainerView.isHidden = false
         lblCustomize.isHidden = false
-
+        
         sectionNames = ["Drivers", "Hybrids", "Woods", "Irons", "Wedges", "Putters"]
         sectionItems = [["Dr"],
                         ["1h","2h","3h","4h","5h","6h","7h"],
@@ -310,107 +307,120 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         let originalImg = UIImage(named:"getStarted1")
         let topImg = originalImg!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-//        topImageView.tintColor = UIColor.glfBluegreen.withAlphaComponent(0.6)
+        //        topImageView.tintColor = UIColor.glfBluegreen.withAlphaComponent(0.6)
         topImageView.tintColor = UIColor.black.withAlphaComponent(0.6)
         topImageView.image = topImg
-
+        
         let originalGpsImg = UIImage(named:"mapPin")
         let gpsImg = originalGpsImg!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         gpsImageView.tintColor = UIColor.glfBlack
         gpsImageView.image = gpsImg
+        if Auth.auth().currentUser!.displayName == nil{
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "name") { (snapshot) in
+                var name = String()
+                if let nae = snapshot.value as? String{
+                    name = nae
+                }
+                DispatchQueue.main.async(execute: {
+                    let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+                    changeRequest?.displayName = name
+                    changeRequest?.commitChanges { (error) in
+                    }
+                })
+            }
+        }
 
-//        handiLeftView.layer.cornerRadius = 10.0
-//        handiRightView.layer.cornerRadius = 10.0
+        //        handiLeftView.layer.cornerRadius = 10.0
+        //        handiRightView.layer.cornerRadius = 10.0
         
         // ------ update golf bag 14 data to firbase ------------------
-        self.progressView.show()
+        //        self.progressView.show()
         golfBagTblView.isHidden = true
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
-            self.progressView.hide()
+        //        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/\(Auth.auth().currentUser!.uid)/golfBag") { (snapshot) in
+        //            if(snapshot.value != nil){
+        //                let golfBagArray = snapshot.value as! NSMutableArray
+        //                if golfBagArray.count > 0{
+        //                    self.selectedClubs = NSMutableArray()
+        //                    for i in 0..<golfBagArray.count{
+        //                        if let dict = golfBagArray[i] as? NSDictionary{
+        //                            self.selectedClubs.add(dict)
+        //
+        //                            if dict.value(forKey: "tagNum") != nil{
+        //                                if let tagNum = dict.value(forKey: "tagNum") as? Int{
+        //                                    if tagNum == 0{
+        //                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["tagNum":""])
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                        else{
+        //                            let tempArray = snapshot.value as! NSMutableArray
+        //                            var golfBagData = [String: NSMutableArray]()
+        //                            for i in 0..<tempArray.count{
+        //                                let golfBagDict = NSMutableDictionary()
+        //                                golfBagDict.setObject("", forKey: "brand" as NSCopying)
+        //                                golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
+        //                                golfBagDict.setObject(tempArray[i], forKey: "clubName" as NSCopying)
+        //                                golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
+        //                                golfBagDict.setObject(false, forKey: "tag" as NSCopying)
+        //                                golfBagDict.setObject("", forKey: "tagName" as NSCopying)
+        //                                golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
+        //
+        //                                golfBagArray.replaceObject(at: i, with: golfBagDict)
+        //                                golfBagData = ["golfBag": golfBagArray]
+        //
+        //                                self.selectedClubs.add(golfBagDict)
+        //                            }
+        //                            if golfBagData.count>0{
+        //                                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
+        //                            }
+        //                            break
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //            else{
+        let golfBagArray = NSMutableArray()
+        golfBagArray.addObjects(from: ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu"])
+        var golfBagData = [String: NSMutableArray]()
+        self.selectedClubs = NSMutableArray()
+        let tempArray = NSMutableArray()
+        
+        for i in 0..<golfBagArray.count{
+            let golfBagDict = NSMutableDictionary()
+            golfBagDict.setObject("", forKey: "brand" as NSCopying)
+            golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
+            golfBagDict.setObject(golfBagArray[i], forKey: "clubName" as NSCopying)
+            golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
+            golfBagDict.setObject(false, forKey: "tag" as NSCopying)
+            golfBagDict.setObject("", forKey: "tagName" as NSCopying)
+            golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
             
-            if(snapshot.value != nil){
-                let golfBagArray = snapshot.value as! NSMutableArray
-                if golfBagArray.count > 0{
-                    self.selectedClubs = NSMutableArray()
-                    for i in 0..<golfBagArray.count{
-                        if let dict = golfBagArray[i] as? NSDictionary{
-                            self.selectedClubs.add(dict)
-                            
-                            if dict.value(forKey: "tagNum") != nil{
-                                if let tagNum = dict.value(forKey: "tagNum") as? Int{
-                                    if tagNum == 0{
-                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["tagNum":""])
-                                    }
-                                }
-                            }
-                        }
-                        else{
-                            let tempArray = snapshot.value as! NSMutableArray
-                            var golfBagData = [String: NSMutableArray]()
-                            for i in 0..<tempArray.count{
-                                let golfBagDict = NSMutableDictionary()
-                                golfBagDict.setObject("", forKey: "brand" as NSCopying)
-                                golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
-                                golfBagDict.setObject(tempArray[i], forKey: "clubName" as NSCopying)
-                                golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
-                                golfBagDict.setObject(false, forKey: "tag" as NSCopying)
-                                golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                                golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
-                                
-                                golfBagArray.replaceObject(at: i, with: golfBagDict)
-                                golfBagData = ["golfBag": golfBagArray]
-                                
-                                self.selectedClubs.add(golfBagDict)
-                            }
-                            if golfBagData.count>0{
-                                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
-                            }
-                            break
-                        }
-                    }
-                }
-            }
-            else{
-                let golfBagArray = NSMutableArray()
-                golfBagArray.addObjects(from: ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu"])
-                var golfBagData = [String: NSMutableArray]()
-                self.selectedClubs = NSMutableArray()
-                let tempArray = NSMutableArray()
-                
-                for i in 0..<golfBagArray.count{
-                    let golfBagDict = NSMutableDictionary()
-                    golfBagDict.setObject("", forKey: "brand" as NSCopying)
-                    golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
-                    golfBagDict.setObject(golfBagArray[i], forKey: "clubName" as NSCopying)
-                    golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
-                    golfBagDict.setObject(false, forKey: "tag" as NSCopying)
-                    golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-                    golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
-                    
-                    tempArray.insert(golfBagDict, at: i)
-                    golfBagData = ["golfBag": tempArray]
-                    
-                    self.selectedClubs.add(golfBagDict)
-                }
-                if golfBagData.count>0{
-                    ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
-                }
-            }
-            DispatchQueue.main.async(execute: {
-                self.golfBagTblView.isHidden = false
-                self.golfBagTblView.delegate = self
-                self.golfBagTblView.dataSource = self
-                self.golfBagTblView.reloadData()
-                
-                if UIDevice.current.iPad{
-                    self.golfTblHConstraint.constant = (4.5 * 44)
-                    self.thirdSV.spacing = 5
-                    self.handiOrientContainerSV.spacing = 5
-                    self.bottomStackSV.spacing = 0
-                }
-            })
+            tempArray.insert(golfBagDict, at: i)
+            golfBagData = ["golfBag": tempArray]
+            
+            self.selectedClubs.add(golfBagDict)
         }
+        if golfBagData.count>0{
+            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
+        }
+        //            }
+        DispatchQueue.main.async(execute: {
+            //                self.progressView.hide()
+            self.golfBagTblView.isHidden = false
+            self.golfBagTblView.delegate = self
+            self.golfBagTblView.dataSource = self
+            self.golfBagTblView.reloadData()
+            
+            if UIDevice.current.iPad{
+                self.golfTblHConstraint.constant = (4.5 * 44)
+                self.thirdSV.spacing = 5
+                self.handiOrientContainerSV.spacing = 5
+                self.bottomStackSV.spacing = 0
+            }
+        })
     }
+    
     
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool) {

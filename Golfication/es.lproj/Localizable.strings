@@ -96,7 +96,7 @@
 "Next"="Siguiente";
 "Skip"="Omitir";
 
-"EASY SCORING"="Scores fáciles";
+"Easy Scoring"="Scores fáciles";
 "Record Hole scores, Fairways, GIRs and putts for you and your friends."="Registrar scores de hoyos, Fairways (Calles), GIRs, y golpe cortos para usted y sus amigos";
 "Hole 1"="Hoyo 1";
 "Par 4"="Par 4";
@@ -329,7 +329,7 @@
 "Version"="Versión";
 "Logout"="Cerrar sesión";
 
-"Are you sure you want to Logout."="Estás seguro que quiere cerrar de la sesión";
+"Are you sure you want to Logout?"="Estás seguro que quiere cerrar de la sesión";
 "Cancel"="Cancelar";
 
 "Post Game Shot Tracking Mode Option"="Opción del modo para rastrear el golpe posteriores al juego";

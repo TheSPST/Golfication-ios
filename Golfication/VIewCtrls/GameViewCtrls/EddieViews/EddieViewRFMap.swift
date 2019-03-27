@@ -135,6 +135,7 @@ class EddieViewRFMap: UIView {
         let color = UIColor.glfFlatBlue.cgColor
         gradient.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor, color, color]
         gradient.locations = [NSNumber(value: 0.0), NSNumber(value: per), NSNumber(value: per), NSNumber(value: 1.0)]
+        gradient.cornerRadius = 5.0
         layer.insertSublayer(gradient, at: 0)
     }
     func loadViewFromNib() -> UIView! {
