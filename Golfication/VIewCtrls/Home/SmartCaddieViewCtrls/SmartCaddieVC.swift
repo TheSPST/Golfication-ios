@@ -50,11 +50,13 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
 
     @IBAction func filterNavBarButtonClick(_ sender: Any) {
 //        IAPHandler.shared.purchaseMyProduct(index: 0)
+        FBSomeEvents.shared.singleParamFBEvene(param: "Filter Smart Caddie")
         let filterVc = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "FilterVC") as! FilterVC
+        filterVc.isSmartCaddie = true
         self.navigationController?.pushViewController(filterVc, animated: true)
     }
-    
     override func viewDidLoad() {
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Smart Caddie")
         super.viewDidLoad()
         self.tabBarController?.tabBar.isHidden = true
         Analytics.logEvent("smart_caddie", parameters: [:])
@@ -67,8 +69,10 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         Constants.finalFilterDic.removeAllObjects()
         self.automaticallyAdjustsScrollViewInsets = false
         self.setInitialUI()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Club Stats")
     }
     @objc func backAction(_ sender: UIBarButtonItem) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Smart Caddie Back")
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -257,106 +261,108 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                         }
                     }
                 }
-                 if !Constants.isProMode {
-//                    self.cardViewDistance.makeBlurView(targetView: self.cardViewDistance)
-                    self.setProLockedUI(targetView: self.cardViewDistance, title: "Club Distance")
+                if self.totalCaddie > 0{
+                    if !Constants.isProMode {
+                        //                    self.cardViewDistance.makeBlurView(targetView: self.cardViewDistance)
+                        self.setProLockedUI(targetView: self.cardViewDistance, title: "Club Distance")
+                        
+                        self.lblProClubDistance.isHidden = true
+                    }
+                    else{
+                        self.lblProClubDistance.backgroundColor = UIColor.clear
+                        self.lblProClubDistance.layer.borderWidth = 1.0
+                        self.lblProClubDistance.layer.borderColor = UIColor(rgb: 0xFFC700).cgColor
+                        self.lblProClubDistance.textColor = UIColor(rgb: 0xFFC700)
+                        
+                        self.lblProClubDistance.isHidden = false
+                    }
+                    let originalImage1 = #imageLiteral(resourceName: "share")
+                    let sharBtnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                     
-                    self.lblProClubDistance.isHidden = true
-                }
-                else{
-                    self.lblProClubDistance.backgroundColor = UIColor.clear
-                    self.lblProClubDistance.layer.borderWidth = 1.0
-                    self.lblProClubDistance.layer.borderColor = UIColor(rgb: 0xFFC700).cgColor
-                    self.lblProClubDistance.textColor = UIColor(rgb: 0xFFC700)
+                    let originalImage = #imageLiteral(resourceName: "icon_info_grey")
+                    let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
                     
-                    self.lblProClubDistance.isHidden = false
-                }
-                let originalImage1 = #imageLiteral(resourceName: "share")
-                let sharBtnImage = originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                
-                let originalImage = #imageLiteral(resourceName: "icon_info_grey")
-                let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-
-                var viewTag = 0
-                self.cardViewInfoArray = [(title:String,value:String)]()
-                for v in self.smartCaddieStackView.subviews{
-                    if v.isKind(of: CardView.self){
-                        self.cardViewMArray.add(v)
-                        switch viewTag{
-                        case 0:
-                            self.cardViewInfoArray.append((title:"Club Distance",value:StatsIntoConstants.clubDistance))
-                            break
-                        case 1:
-                            self.cardViewInfoArray.append((title:"Club Range",value:StatsIntoConstants.clubRange))
-                            break
-                        case 2:
-                            self.cardViewInfoArray.append((title:"Short Game",value:StatsIntoConstants.shortGame))
-                            break
-                        case 3:
-                            self.cardViewInfoArray.append((title:"Club Usage",value:StatsIntoConstants.clubUsage))
-                            break
-                        case 4:
-                            self.cardViewInfoArray.append((title:"Strokes Gained Per Club",value:StatsIntoConstants.strokesGainedPerClub))
-                            break
-                        case 5:
-                            self.cardViewInfoArray.append((title:"Club Control",value:StatsIntoConstants.control))
-                            break
-                        default: break
-                        }
-                        if (!Constants.isProMode && !((v == self.cardViewDistance))){
-                            let shareStatsButton = ShareStatsButton()
-                            shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
-                            shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
-                            shareStatsButton.tintColor = UIColor.glfFlatBlue
-                            shareStatsButton.tag = viewTag
-                            shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
-                            v.addSubview(shareStatsButton)
-                            
-                            //Stats Info Button
-                            let statsInfoButton = StatsInfoButton()
-                            statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
-                            statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
-                            statsInfoButton.tintColor = UIColor.glfFlatBlue
-                            statsInfoButton.tag = viewTag
-                            statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
-                            v.addSubview(statsInfoButton)
-                        }
-                        else if Constants.isProMode{
-                            let shareStatsButton = ShareStatsButton()
-                            shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
-                            shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
-                            shareStatsButton.tintColor = UIColor.glfFlatBlue
-                            shareStatsButton.tag = viewTag
-                            if (v == self.cardViewDistance){
-                                shareStatsButton.tintColor = UIColor.white
+                    var viewTag = 0
+                    self.cardViewInfoArray = [(title:String,value:String)]()
+                    for v in self.smartCaddieStackView.subviews{
+                        if v.isKind(of: CardView.self){
+                            self.cardViewMArray.add(v)
+                            switch viewTag{
+                            case 0:
+                                self.cardViewInfoArray.append((title:"Club Distance",value:StatsIntoConstants.clubDistance))
+                                break
+                            case 1:
+                                self.cardViewInfoArray.append((title:"Club Range",value:StatsIntoConstants.clubRange))
+                                break
+                            case 2:
+                                self.cardViewInfoArray.append((title:"Short Game",value:StatsIntoConstants.shortGame))
+                                break
+                            case 3:
+                                self.cardViewInfoArray.append((title:"Club Usage",value:StatsIntoConstants.clubUsage))
+                                break
+                            case 4:
+                                self.cardViewInfoArray.append((title:"Strokes Gained Per Club",value:StatsIntoConstants.strokesGainedPerClub))
+                                break
+                            case 5:
+                                self.cardViewInfoArray.append((title:"Club Control",value:StatsIntoConstants.control))
+                                break
+                            default: break
                             }
-                            shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
-                            v.addSubview(shareStatsButton)
-                            
-                            //Stats Info Button
-                            let statsInfoButton = StatsInfoButton()
-                            statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
-                            statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
-                            statsInfoButton.tintColor = UIColor.glfFlatBlue
-                            statsInfoButton.tag = viewTag
-                            if (v == self.cardViewDistance){
-                                statsInfoButton.tintColor = UIColor.white
+                            if (!Constants.isProMode && !((v == self.cardViewDistance))){
+                                let shareStatsButton = ShareStatsButton()
+                                shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
+                                shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
+                                shareStatsButton.tintColor = UIColor.glfFlatBlue
+                                shareStatsButton.tag = viewTag
+                                shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
+                                v.addSubview(shareStatsButton)
+                                
+                                //Stats Info Button
+                                let statsInfoButton = StatsInfoButton()
+                                statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                                statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                                statsInfoButton.tintColor = UIColor.glfFlatBlue
+                                statsInfoButton.tag = viewTag
+                                statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                                v.addSubview(statsInfoButton)
                             }
-                            statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
-                            v.addSubview(statsInfoButton)
+                            else if Constants.isProMode{
+                                let shareStatsButton = ShareStatsButton()
+                                shareStatsButton.frame = CGRect(x: self.view.frame.size.width-25-10-10-10, y: 16, width: 25, height: 25)
+                                shareStatsButton.setBackgroundImage(sharBtnImage, for: .normal)
+                                shareStatsButton.tintColor = UIColor.glfFlatBlue
+                                shareStatsButton.tag = viewTag
+                                if (v == self.cardViewDistance){
+                                    shareStatsButton.tintColor = UIColor.white
+                                }
+                                shareStatsButton.addTarget(self, action: #selector(self.shareClicked(_:)), for: .touchUpInside)
+                                v.addSubview(shareStatsButton)
+                                
+                                //Stats Info Button
+                                let statsInfoButton = StatsInfoButton()
+                                statsInfoButton.frame = CGRect(x: (self.view.frame.size.width-shareStatsButton.frame.size.width)-70, y: 16, width: 25, height: 25)
+                                statsInfoButton.setBackgroundImage(infoBtnImage, for: .normal)
+                                statsInfoButton.tintColor = UIColor.glfFlatBlue
+                                statsInfoButton.tag = viewTag
+                                if (v == self.cardViewDistance){
+                                    statsInfoButton.tintColor = UIColor.white
+                                }
+                                statsInfoButton.addTarget(self, action: #selector(self.infoClicked(_:)), for: .touchUpInside)
+                                v.addSubview(statsInfoButton)
+                            }
+                            viewTag = viewTag+1
                         }
-                        viewTag = viewTag+1
+                    }
+                    if !Constants.isDevice {
+                        self.cardViewShortGame.makeBlurView(targetView: self.cardViewShortGame)
+                        self.setDeviceLockedUI(targetView: self.cardViewShortGame, title: "Short Game")
+                        
+                        self.cardViewControlRadar.makeBlurView(targetView: self.cardViewControlRadar)
+                        self.setDeviceLockedUI(targetView: self.cardViewControlRadar, title: "Control")
                     }
                 }
-                if !Constants.isDevice {
-                    self.cardViewShortGame.makeBlurView(targetView: self.cardViewShortGame)
-                    self.setDeviceLockedUI(targetView: self.cardViewShortGame, title: "Short Game")
-                    
-                    self.cardViewControlRadar.makeBlurView(targetView: self.cardViewControlRadar)
-                    self.setDeviceLockedUI(targetView: self.cardViewControlRadar, title: "Control")
-                }
             }
-            else{
+            if self.totalCaddie == 0{
                 FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/scoring") { (snapshot) in
                     dataDic = (snapshot.value as? NSDictionary)!
                     self.setData(dataDic:dataDic)
@@ -811,6 +817,7 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         else{
 //            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click Smart Caddie Eddie")
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "SmartCaddie"
             self.navigationController?.pushViewController(viewCtrl, animated: false)

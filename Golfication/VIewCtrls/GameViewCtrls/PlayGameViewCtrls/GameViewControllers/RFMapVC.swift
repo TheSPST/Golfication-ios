@@ -633,6 +633,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         
     }
     func exitWithoutSave(){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Discard Game")
         self.updateFeedNode()
         if(matchId.count > 1){
             if(Auth.auth().currentUser!.uid.count > 1){
@@ -656,6 +657,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
 
     @objc func statsCompleted(_ notification: NSNotification) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Save Game")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide()
         if(matchId.count > 1){
@@ -1130,9 +1132,21 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             playerStatsAction(btnPlayerStats)
         }
     }
-    
+    /*
+             FBSomeEvents.shared.singleParamFBEvene(param: "Score Rangefinder Hole")
+     Score Rangefinder Hole 1
+     .
+     Score Rangefinder Hole 18
+     View Rangefinder Pulldown
+     Click Rangefinder Notes
+     Click Rangefinder Wind
+     Click Rangefinder Pulldown Eddie
+     Click Rangefinder Detailed Scoring
+     Click Rangefinder Goals Eddie
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Rangefinder Game")
         btnPlayerStats.isHidden = true
         locationManager.delegate = self
         initalSetup()
@@ -1942,7 +1956,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @objc func strokesAction(sender: UIButton!){
         let title = sender.currentTitle
         lblEditShotNumber.text = " \(title!) "
-
+        FBSomeEvents.shared.singleParamFBEvene(param: "Score Rangefinder Hole \(self.scoring[self.holeIndex].hole)")
         self.holeWiseShots.setObject(Int(title!)!, forKey: "strokes" as NSCopying)
         self.holeWiseShots.setObject(true, forKey: "holeOut" as NSCopying)
         ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(["strokes":Int(title!)!] as [AnyHashable : Any])
@@ -2627,7 +2641,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.suggestedMarker1.map = nil
         self.suggestedMarker2.map = nil
-        var indexToUpdate = indexToUpdate
+        let indexToUpdate = indexToUpdate == -1 ? indexToUpdate+1 : indexToUpdate
         mapTimer.invalidate()
         isSolidLinePloted = false
         mapView.clear()
@@ -2640,7 +2654,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.scrlView.isHidden = true
         self.first = false
-        indexToUpdate = indexToUpdate == -1 ? indexToUpdate+1 : indexToUpdate
         self.isUpdating = false
         btnTopShotRanking.setTitle("", for: .normal)
         btnTopShotRanking.isHidden = true
@@ -2665,6 +2678,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].fairway)
         self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].green)
+        debugPrint(self.courseData.centerPointOfTeeNGreen[indexToUpdate].fairway)
         let distance = GMSGeometryDistance(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!) * Constants.YARD
         let heading = GMSGeometryHeading(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!)
         if(distance < 250){
@@ -2825,13 +2839,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 finalElev = finalElev*3.28084
                 suffix = "ft"
             }
-            if finalElev >= 0{
-                BackgroundMapStats.setDir(isUp: true, label: lbl)
-                btn.setTitleColor(UIColor.glfRed, for: .normal)
+            if finalElev > 0{
+                BackgroundMapStats.setDir(isUp: false, label: lbl)
+                btn.setTitleColor(UIColor.glfGreen, for: .normal)
             }else{
                 if Constants.isProMode{
-                    BackgroundMapStats.setDir(isUp: false, label: lbl)
-                    btn.setTitleColor(UIColor.glfGreen, for: .normal)
+                    BackgroundMapStats.setDir(isUp: true, label: lbl)
+                    btn.setTitleColor(UIColor.glfRed, for: .normal)
                 }
             }
             btn.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
@@ -3116,13 +3130,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     finalElev = finalElev*3.28084
                     suffix = "ft"
                 }
-                if finalElev >= 0{
-                    BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
-                    btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
+                if finalElev > 0{
+                    BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
+                    btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                 }else{
                     if Constants.isProMode{
-                        BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
-                        btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
+                        BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
+                        btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                     }
                 }
                 btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
@@ -3149,13 +3163,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     finalElev = finalElev*3.28084
                     suffix = "ft"
                 }
-                if finalElev >= 0{
-                    BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
-                    btnForSugg2.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
+                if finalElev > 0{
+                    BackgroundMapStats.setDir(isUp: false, label: btnForSugg2.lblDirection)
+                    btnForSugg2.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                 }else{
                     if Constants.isProMode{
-                        BackgroundMapStats.setDir(isUp: false, label: btnForSugg2.lblDirection)
-                        btnForSugg2.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
+                        BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
+                        btnForSugg2.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                     }
                 }
                 btnForSugg2.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
@@ -3262,6 +3276,7 @@ extension RFMapVC{
 extension RFMapVC{
     
     func updateCurrentHole(index: Int){
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Rangefinder Hole \(index)")
         Notification.sendLocaNotificatonToUser()
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(index)", forKey: "currentHole" as NSCopying)

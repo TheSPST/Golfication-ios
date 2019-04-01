@@ -9,7 +9,7 @@
 import UIKit
 import FirebaseAuth
 import CoreLocation
-
+import iAd
 class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIScrollViewDelegate {
     
     // MARK: Set Outlets
@@ -59,6 +59,14 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var lblCustomize: UILabel!
     @IBOutlet weak var genderSgmtCtrl: UISegmentedControl!
 
+    // MARK: NewView
+    @IBOutlet weak var viewAddCourse: UIView!
+    @IBOutlet weak var addCourseView: UIScrollView!
+    @IBOutlet weak var tanksView: CardView!
+    
+    @IBOutlet weak var cityTxtField: UITextField!
+    @IBOutlet weak var countryTxtField: UITextField!
+    @IBOutlet weak var courseTxtField: UITextField!
     // MARK: Set Variables
     let kHeaderSectionTag: Int = 6900
     var expandedSectionHeaderNumber: Int = -1
@@ -190,8 +198,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             return false
         }
         else{
-            textField.text = ""
-            
+//            textField.text = ""
             let gradient = CAGradientLayer()
             gradient.colors = [UIColor.white.cgColor, UIColor(rgb:0xFAFAFA).cgColor]
             gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
@@ -209,32 +216,24 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textField.resignFirstResponder()
-        
-        tblViewHConstraint.constant = 0
-        nearMeContainerView.isHidden = false
-        lblCustomize.isHidden = false
-        if !(textField.text == "") {
-            self.searchGolfLocation(searchText: textField.text!)
-        }
         return true
     }
     
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        updateIAd()
         self.tabBarController?.tabBar.isHidden = true
         FBSomeEvents.shared.logFindLocationEvent()
         courseTblView.layer.cornerRadius = 3.0
         courseTblView.layer.borderWidth = 1.0
         courseTblView.layer.borderColor = UIColor(rgb:0xEFEFEF).cgColor
-        
+        searchTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         searchContainerView.layer.borderWidth = 1.0
         searchContainerView.layer.borderColor = UIColor(rgb:0xEFEFEF).cgColor
-        
+        viewAddCourse.isHidden = true
         btnSkip.setTitle(spaceStr + "Skip".localized() + spaceStr, for: .normal)
         btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
         
@@ -419,16 +418,93 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 self.bottomStackSV.spacing = 0
             }
         })
+        
     }
-    
-    
+    func updateIAd(){
+        if ADClient.shared().responds(to: #selector(ADClient.requestAttributionDetails(_:))) {
+            debugPrint("iOS 10 call exists")
+            ADClient.shared().requestAttributionDetails({ attributionDetails, error in
+                // Look inside of the returned dictionary for all attribution details
+                if let attributionDetails = attributionDetails{
+                    print("Attribution Dictionary: \(attributionDetails)")
+                    let cookieHeader = ((attributionDetails as NSDictionary).compactMap({ (key, value) -> String in
+                        return "\(key)=\(value)"
+                    }) as Array).joined(separator: ";")
+                    print(cookieHeader)
+                    ref.child("iosAdsUser/").updateChildValues(["\(Auth.auth().currentUser!.uid)" : cookieHeader], withCompletionBlock: { (error, ref) in
+                        debugPrint("Success fulll write")
+                    })
+                }
+            })
+        }
+    }
     // MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = true
         appDelegate = (UIApplication.shared.delegate as! AppDelegate)
     }
+    var gameTimer: Timer!
     
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        if (textField.text?.count ?? 0 > 2){
+            if gameTimer != nil{
+               gameTimer.invalidate()
+            }
+            gameTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        }
+    }
+    @objc func runTimedCode(){
+        self.searchGolfLocation(searchText: searchTxtField.text!)
+        self.gameTimer.invalidate()
+    }
+    @IBAction func submitCourseAction(_ sender: Any) {
+        
+        if courseTxtField.text == ""{
+            let alert = UIAlertController(title: "Alert", message: "Please enter course name.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        if countryTxtField.text == ""{
+            let alert = UIAlertController(title: "Alert", message: "Please enter country.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        if cityTxtField.text == ""{
+            let alert = UIAlertController(title: "Alert", message: "Please enter city.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            
+            sendCourseDetailToFirebase()
+        }
+    }
+    
+    func sendCourseDetailToFirebase() {
+        
+        let courseDetailDic = NSMutableDictionary()
+        let courseDic = NSMutableDictionary()
+        let courseId = ref!.child("courseAdditions").childByAutoId().key
+        courseDic.setObject(cityTxtField.text!, forKey: "city" as NSCopying)
+        courseDic.setObject(countryTxtField.text!, forKey: "country" as NSCopying)
+        courseDic.setObject(courseTxtField.text!, forKey: "courseName" as NSCopying)
+        courseDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        courseDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
+        courseDic.setObject(Auth.auth().currentUser!.displayName!, forKey: "userName" as NSCopying)
+        courseDetailDic.setObject(courseDic, forKey: courseId as NSCopying)
+        ref.child("courseAdditions").updateChildValues(courseDetailDic as! [AnyHashable : Any])
+        
+        viewAddCourse.isHidden = false
+        addCourseView.isHidden = true
+        tanksView.isHidden = false
+        courseTxtField.text = ""
+        countryTxtField.text = ""
+        cityTxtField.text = ""
+        courseTxtField.resignFirstResponder()
+        countryTxtField.resignFirstResponder()
+        cityTxtField.resignFirstResponder()
+    }
     // MARK: nearestCourseAction
     let locationManager = CLLocationManager()
     @IBAction func nearestCourseAction(_ sender: Any) {
@@ -483,7 +559,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         else{
             searchTxtField.resignFirstResponder()
-            tblViewHConstraint.constant = 0
+            tblViewHConstraint.constant = 60
             nearMeContainerView.isHidden = false
             lblCustomize.isHidden = false
 
@@ -611,12 +687,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
         }
     }
-    
+    let serverHandler = ServerHandler()
     // MARK: searchGolfLocation
     func searchGolfLocation(searchText: String){
-        let serverHandler = ServerHandler()
-        serverHandler.state = 1
-        
+        debugPrint(searchText)
         let urlStr = "getData.php?"
         let dataStr =  "text=\(searchText)"
         
@@ -637,14 +711,17 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.leftModeView.layer.mask = rectShape
         
         serverHandler.getLocations(urlString: urlStr, dataString: dataStr){(arg0, error)  in
-            
+            self.serverHandler.state = 1
+            debugPrint("self.serverHandler.state_calling",self.serverHandler.state)
             if (arg0 == nil) && (error != nil){
                 DispatchQueue.main.async(execute: {
                     self.progressView.hide()
-                    self.tblViewHConstraint.constant = 0
+                    self.tblViewHConstraint.constant = 60
                     self.nearMeContainerView.isHidden = false
                     self.lblCustomize.isHidden = false
-
+                    self.courseTblView.delegate = self
+                    self.courseTblView.dataSource = self
+                    self.courseTblView.reloadData()
                 })
             }
             else{
@@ -664,19 +741,24 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     dataDic.setObject($0.value.Latitude, forKey : "Latitude" as NSCopying)
                     dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
                     dataDic.setObject($0.value.Mapped, forKey : "Mapped" as NSCopying)
-                    
                     self.searchDataArr.append(dataDic)
                     group.leave()
-                    
                     group.notify(queue: .main) {
-                        
+                        debugPrint("self.serverHandler.state_Notify",self.serverHandler.state)
                     }
                 }
                 DispatchQueue.main.async(execute: {
+                    self.serverHandler.state = 0
+                    debugPrint("self.serverHandler.state_Dispatch",self.serverHandler.state)
                     self.progressView.hide()
-
                     if !self.searchDataArr.isEmpty{
-                        self.tblViewHConstraint.constant = self.view.frame.size.height - (self.searchContainerSV.frame.origin.y + self.searchContainerView.frame.size.height + self.bottomStackSV.frame.size.height + 120)
+                        self.tblViewHConstraint.constant = self.view.frame.size.height - (self.searchContainerView.frame.size.height + self.bottomStackSV.frame.size.height + 240)
+                        if CGFloat((self.searchDataArr.count+1) * 60) < self.tblViewHConstraint.constant{
+                            self.tblViewHConstraint.constant = CGFloat((self.searchDataArr.count+1) * 60)
+                        }
+                        debugPrint("empty,",self.tblViewHConstraint.constant)
+                        debugPrint("data,",self.searchDataArr.count)
+                        
                         self.view.layoutIfNeeded()
                         
                         self.nearMeContainerView.isHidden = true
@@ -882,6 +964,17 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             self.present(viewCtrl, animated: true, completion: nil)
         }
     }
+    // MARK: - addCourseMethods
+    @IBAction func thankYouDoneAction(_ sender: Any) {
+        viewAddCourse.isHidden = true
+        courseTxtField.text = ""
+        countryTxtField.text = ""
+        cityTxtField.text = ""
+    }
+    
+    @IBAction func dismissCourseAction(_ sender: Any) {
+        viewAddCourse.isHidden = true
+    }
     
     // MARK: - Tableview Methods
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -926,9 +1019,42 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat{
-        return 0
+        if tableView.tag == 1{
+            return 0
+        }
+        return 60
     }
     
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if tableView.tag != 1{
+            let view = CardView(frame: CGRect(x:0,y:0,width:tableView.frame.width,height:60))
+            let btnView = UIButton(frame: CGRect(x:0,y:0,width:tableView.frame.width,height:60))
+            btnView.setTitle("", for: .normal)
+            btnView.setTitleColor(UIColor.clear, for: .normal)
+            btnView.backgroundColor = UIColor.clear
+            btnView.addTarget(self, action: #selector(self.footerTouched(_:)), for: .touchUpInside)
+            view.backgroundColor = UIColor.glfWhite
+            let lbl = UILabel(frame: CGRect(x:0,y:5,width:tableView.frame.width,height:20))
+            lbl.text = "Couldn't find your course?"
+            lbl.textColor = UIColor.glfWarmGrey
+            lbl.textAlignment = .center
+        
+            let btn = UIButton(frame: CGRect(x:0,y:(lbl.frame.maxY+2),width:tableView.frame.width,height:30))
+            btn.setImage(#imageLiteral(resourceName: "add_course"), for: .normal)
+            btn.setTitle("  Add course name to the list", for: .normal)
+            btn.setTitleColor(UIColor.glfDarkGreen, for: .normal)
+            view.addSubview(lbl)
+            view.addSubview(btn)
+            view.addSubview(btnView)
+            return view
+        }
+        return UIView()
+    }
+    @objc func footerTouched(_ sender:UIButton){
+        self.addCourseView.isHidden = false
+        self.viewAddCourse.isHidden = false
+        self.tanksView.isHidden = true
+    }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if tableView.tag == 1{
             
@@ -1060,9 +1186,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "SearchLocationTableViewCell", for: indexPath as IndexPath) as! SearchLocationTableViewCell
-            
-            cell.lblTitle.text = (searchDataArr[indexPath.row] as AnyObject).value(forKey: "Name") as? String
-            cell.lblSubTitle.text = "\((searchDataArr[indexPath.row] as AnyObject).value(forKey: "City") as? String ?? ""),\((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Country") as? String ?? "")"
+            if indexPath.row < searchDataArr.count{
+                cell.lblTitle.text = (searchDataArr[indexPath.row] as AnyObject).value(forKey: "Name") as? String
+                cell.lblSubTitle.text = "\((searchDataArr[indexPath.row] as AnyObject).value(forKey: "City") as? String ?? ""),\((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Country") as? String ?? "")"
+            }
             return cell
         }
     }
@@ -1125,7 +1252,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             searchTxtField.resignFirstResponder()
             
-            tblViewHConstraint.constant = 0
+            tblViewHConstraint.constant = 60
             nearMeContainerView.isHidden = false
             lblCustomize.isHidden = false
 

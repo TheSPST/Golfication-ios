@@ -392,7 +392,7 @@ class GoalsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func checkFilterValuesFromFirebase(){
         self.progressView.show()
         self.navigationItem.rightBarButtonItem?.isEnabled = false
-        var hand = 0
+        var hand = 18
         if Constants.handicap != "-"{
             hand = Int(Double(Constants.handicap)!.rounded())
         }

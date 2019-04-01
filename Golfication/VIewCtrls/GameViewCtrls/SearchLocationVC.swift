@@ -41,7 +41,19 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             searchTableView.isHidden = true
         }
     }
-    
+    var gameTimer: Timer!
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if (searchText.count > 2){
+            if gameTimer != nil{
+                gameTimer.invalidate()
+            }
+            gameTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        }
+    }
+    @objc func runTimedCode(){
+        self.searchGolfLocation(searchText: self.golfSearchBar.text!)
+        self.gameTimer.invalidate()
+    }
     @IBAction func submitCourseAction(_ sender: Any) {
         
         if courseTxtField.text == ""{
@@ -145,7 +157,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
         
         golfSearchBar.layer.cornerRadius = 5.0
         golfSearchBar.clipsToBounds = true
-        
+//        searchTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         let originalImage = #imageLiteral(resourceName: "backArrow")
         let backImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnBack.setBackgroundImage(backImage, for: .normal)
@@ -164,7 +176,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
         }
     }
-    
+
     // MARK: getNearByData
     func getNearByData(latitude: Double, longitude: Double, currentLocation: CLLocation){
         self.actvtIndView.isHidden = false

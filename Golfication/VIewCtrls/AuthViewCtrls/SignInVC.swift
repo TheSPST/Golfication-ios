@@ -178,6 +178,7 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
                                 }
 
                             }
+                            
                             let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewUserProfileVC") as! NewUserProfileVC
                             self.navigationController?.pushViewController(viewCtrl, animated: true)
                             self.progressView.hide()

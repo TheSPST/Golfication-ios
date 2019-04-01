@@ -1459,6 +1459,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
     }
     func exitWithoutSave(){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Discard Game")
         self.updateFeedNode()
         if(Constants.matchId.count > 1){
             if(Auth.auth().currentUser!.uid.count > 1){
@@ -1501,6 +1502,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         generateStats.generateStats()
     }
     @objc func statsCompleted(_ notification: NSNotification) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Save Game")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide(navItem: self.navigationItem)
         
@@ -5101,13 +5103,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             finalElev = finalElev*3.28084
                             suffix = "ft"
                         }
-                        if finalElev >= 0{
-                            BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
-                            btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
+                        if finalElev > 0{
+                            BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
+                            btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                         }else{
                             if Constants.isProMode{
-                                BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
-                                btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
+                                BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
+                                btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
@@ -5172,15 +5174,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             finalElev = finalElev*3.28084
                             suffix = "ft"
                         }
-                        if finalElev >= 0{
-                            BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
-                            btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
-
+                        if finalElev > 0{
+                            BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
+                            btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                         }else{
                             if Constants.isProMode{
-                                BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
-                                btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
-
+                                BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
+                                btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
@@ -5205,14 +5205,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             finalElev = finalElev*3.28084
                             suffix = "ft"
                         }
-                        if finalElev >= 0{
-                            BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
-                            btnForSugg2.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
+                        if finalElev > 0{
+                            BackgroundMapStats.setDir(isUp: false, label: btnForSugg2.lblDirection)
+                            btnForSugg2.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                         }else{
                             if Constants.isProMode{
-                                BackgroundMapStats.setDir(isUp: false, label: btnForSugg2.lblDirection)
-                                btnForSugg2.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
-
+                                BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
+                                btnForSugg2.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                             }
                         }
                         btnForSugg2.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
@@ -5259,13 +5258,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             finalElev = finalElev*3.28084
                             suffix = "ft"
                         }
-                        if finalElev >= 0{
-                            BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
-                            btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
+                        if finalElev > 0{
+                            BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
+                            btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
                         }else{
                             if Constants.isProMode{
-                                BackgroundMapStats.setDir(isUp: false, label: btnForSugg1.lblDirection)
-                                btnForSugg1.btnElev.setTitleColor(UIColor.glfGreen, for: .normal)
+                                BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
+                                btnForSugg1.btnElev.setTitleColor(UIColor.glfRed, for: .normal)
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
@@ -6114,15 +6113,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 finalElev = finalElev*3.28084
                 suffix = "ft"
             }
-            if finalElev >= 0{
-                BackgroundMapStats.setDir(isUp: true, label: lbl)
-                btn.setTitleColor(UIColor.glfRed, for: .normal)
+            if finalElev > 0{
+                BackgroundMapStats.setDir(isUp: false, label: lbl)
+                btn.setTitleColor(UIColor.glfGreen, for: .normal)
             }else{
                 if Constants.isProMode{
-                    BackgroundMapStats.setDir(isUp: false, label: lbl)
-                    btn.setTitleColor(UIColor.glfGreen, for: .normal)
+                    BackgroundMapStats.setDir(isUp: true, label: lbl)
+                    btn.setTitleColor(UIColor.glfRed, for: .normal)
                 }
-                
             }
             btn.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
         }else{

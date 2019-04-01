@@ -83,67 +83,67 @@ class DebugModeVC: UIViewController{
         
         if (Int(value[0])>50){
             let val1 = Float(value[0])-255.0
-            let val2 = Float(Int(value[1])>100 ? (Int(value[1])-255):Int(value[1]))/100.0
-            x = Float(val1)-val2
+            let val2 = Float(Int(value[1])>100 ? (Int(value[1])-256):Int(value[1]))/100.0
+            x = Float(val1)+val2
         }else {
             let val1 = Float(value[0])
-            let val2 = Float(Int(value[1])>100 ? (Int(value[1])-255):Int(value[1]))/100.0
+            let val2 = Float(Int(value[1])>100 ? (Int(value[1])-256):Int(value[1]))/100.0
             x = val1+val2
         }
         
         if (Int(value[2])>50){
             let val1 = Float(value[2])-255.0
-            let val2 = Float(Int(value[3])>100 ? (Int(value[3])-255):Int(value[3]))/100.0
-            y = val1-val2
+            let val2 = Float(Int(value[3])>100 ? (Int(value[3])-256):Int(value[3]))/100.0
+            y = val1+val2
         }else {
             let val1 = Float(value[2])
-            let val2 = Float(Int(value[3])>100 ? (Int(value[3])-255):Int(value[3]))/100.0
+            let val2 = Float(Int(value[3])>100 ? (Int(value[3])-256):Int(value[3]))/100.0
             y = val1+val2
         }
         
         if (Int(value[4])>50){
             let val1 = Float(value[4])-255.0
-            let val2 = Float(Int(value[5])>100 ? (Int(value[5])-255):Int(value[5]))/100.0
-            z = val1-val2
+            let val2 = Float(Int(value[5])>100 ? (Int(value[5])-256):Int(value[5]))/100.0
+            z = val1+val2
         }else {
             let val1 = Float(value[4])
-            let val2 = Float(Int(value[5])>100 ? (Int(value[5])-255):Int(value[5]))/100.0
+            let val2 = Float(Int(value[5])>100 ? (Int(value[5])-256):Int(value[5]))/100.0
             z = val1+val2
         }
         
         if (Int(value[6])>50){
             let val1 = Float(value[6])-255.0
-            let val2 = Float(Int(value[7])>100 ? (Int(value[7])-255):Int(value[7]))/100.0
-            a = val1-val2;
+            let val2 = Float(Int(value[7])>100 ? (Int(value[7])-256):Int(value[7]))/100.0
+            a = val1+val2;
         }else {
             let val1 = Float(value[6])
-            let val2 = Float(Int(value[7])>100 ? (Int(value[7])-255):Int(value[7]))/100.0
+            let val2 = Float(Int(value[7])>100 ? (Int(value[7])-256):Int(value[7]))/100.0
             a = Float(val1)+val2
         }
         
         if (Int(value[8])>50){
             let val1 = Float(value[8])-255.0
-            let val2 = Float(Int(value[9])>100 ? (Int(value[9])-255):Int(value[9]))/100.0
-            b = val1-val2
+            let val2 = Float(Int(value[9])>100 ? (Int(value[9])-256):Int(value[9]))/100.0
+            b = val1+val2
         }else {
             let val1 = Float(value[8])
-            let val2 = Float(Int(value[9])>100 ? (Int(value[9])-255):Int(value[9]))/100.0
+            let val2 = Float(Int(value[9])>100 ? (Int(value[9])-256):Int(value[9]))/100.0
             b = Float(val1)+val2
         }
         
         if (Int(value[10])>50){
             let val1 = Float(value[10])-255.0
-            let val2 = Float(Int(value[11])>100 ? (Int(value[11])-255):Int(value[11]))/100.0
-            c = val1-val2
+            let val2 = Float(Int(value[11])>100 ? (Int(value[11])-256):Int(value[11]))/100.0
+            c = val1+val2
         }else {
             let val1 = Float(value[10])
-            let val2 = Float(Int(value[11])>100 ? (Int(value[11])-255):Int(value[11]))/100.0
+            let val2 = Float(Int(value[11])>100 ? (Int(value[11])-256):Int(value[11]))/100.0
             c = val1+val2
         }
         
-        let g1 = Float(Int(value[12]) > 100 ? (Int(value[12])-255):(Int(value[12]))) + Float(Int(value[13]) > 100 ? (Int(value[13])-255) : Int(value[13]))*100.0
-        let g2 = Float(Int(value[14]) > 100 ? (Int(value[14])-255):(Int(value[14]))) + Float(Int(value[15]) > 100 ? (Int(value[15])-255) : Int(value[15]))*100.0
-        let g3 = Float(Int(value[16]) > 100 ? (Int(value[16])-255):(Int(value[16]))) + Float(Int(value[17]) > 100 ? (Int(value[17])-255) : Int(value[17]))*100.0
+        let g1 = Float(Int(value[12]) > 100 ? (Int(value[12])-256):(Int(value[12]))) + Float(Int(value[13]) > 100 ? (Int(value[13])-256) : Int(value[13]))*100.0
+        let g2 = Float(Int(value[14]) > 100 ? (Int(value[14])-256):(Int(value[14]))) + Float(Int(value[15]) > 100 ? (Int(value[15])-256) : Int(value[15]))*100.0
+        let g3 = Float(Int(value[16]) > 100 ? (Int(value[16])-256):(Int(value[16]))) + Float(Int(value[17]) > 100 ? (Int(value[17])-256) : Int(value[17]))*100.0
         
         if (x.isNaN){ x=0}
         if (y.isNaN){ y=0}

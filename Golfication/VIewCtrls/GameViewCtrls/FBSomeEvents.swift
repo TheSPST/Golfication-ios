@@ -8,7 +8,7 @@
 
 import UIKit
 import FBSDKCoreKit
-
+import FirebaseAnalytics
 class FBSomeEvents: NSObject {
     static let shared = FBSomeEvents()
     override init(){}
@@ -53,5 +53,22 @@ class FBSomeEvents: NSObject {
     func logAddToCartEvent (type:String,price:Int) {
         FBSDKAppEvents.logEvent(FBSDKAppEventNameAddedToCart,parameters: [FBSDKAppEventParameterNameContent : type,FBSDKAppEventParameterNameContentID:"",FBSDKAppEventParameterNameContentType:"",FBSDKAppEventParameterNameCurrency:""])
     }
-
+    
+    //MARK: Eddie Events
+    
+    func singleParamFBEvene(param:String,hole:Int? = nil){
+        
+        var str = String()
+        for char in param{
+            if char != " "{
+                str.append(char)
+            }
+        }
+        FBSDKAppEvents.logEvent(str)
+        if hole != nil{
+            Analytics.logEvent(str, parameters: ["hole":hole!])
+        }else{
+            Analytics.logEvent(str, parameters: [:])
+        }
+    }
 }

@@ -686,8 +686,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B5B265F204540A000BE3940 /* WebKit.framework in Frameworks */,
 				4BD98B5A2025DC4700535AF1 /* iAd.framework in Frameworks */,
+				4B5B265F204540A000BE3940 /* WebKit.framework in Frameworks */,
 				4BD98B582025DC3900535AF1 /* AdSupport.framework in Frameworks */,
 				3E70B69C201867820087738D /* StoreKit.framework in Frameworks */,
 				1C454C008565050A4C014552 /* Pods_Golfication.framework in Frameworks */,

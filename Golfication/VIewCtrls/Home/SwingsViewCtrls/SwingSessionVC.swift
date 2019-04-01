@@ -51,6 +51,7 @@ class SwingSessionVC: ButtonBarPagerTabStripViewController, DemoFooterViewDelega
             self.title = "My Swings Demo"
             setDemoFotter()
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "View My Swings")
     }
     
     func setDemoFotter(){

@@ -101,6 +101,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var holeHcpWithTee = [(hole:Int,teeBox:[NSMutableDictionary])]()
     
     @IBAction func addNotesAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Classic Notes",hole: self.scoreData[self.holeIndex].hole)
         var matchDataDictionary = NSMutableDictionary()
         if(isAccept){
             matchDataDictionary = self.matchDataDict
@@ -114,6 +115,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @IBAction func btnActionMenu(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Classic Menu",hole: self.scoreData[self.holeIndex].hole)
         var j = 0
         for player in playersButton{
             self.holeOutforAppsFlyer[j] = self.checkHoleOutZero(playerId: player.id)
@@ -147,6 +149,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     @IBAction func btnActionChangeHole(_ sender: Any) {
         menuStackView.isHidden = true
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Classic Hole Dropdown",hole: self.scoreData[self.holeIndex].hole)
         var strArr = [String]()
         for hole in self.scoreData{
             strArr.append("Hole".localized() + " \(hole.hole) - " + "Par".localized() + " - \(hole.par)")
@@ -285,6 +288,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         return myVal
     }
     func exitWithoutSave(){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Discard Game")
         if(Constants.matchId.count > 1){
             self.updateFeedNode()
             if(Auth.auth().currentUser!.uid.count > 1){
@@ -359,6 +363,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
     }
     @objc func statsCompleted(_ notification: NSNotification) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Save Game")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.show()
         if(Constants.matchId.count > 1){
@@ -449,6 +454,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.present(viewCtrl, animated: true, completion: nil)
     }
     @IBAction func detailScoreAction(_ sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Classic Detailed Scoring",hole: self.scoreData[self.holeIndex].hole)
         menuStackView.isHidden = true
         if sender.tag == 0{
             sender.tag = 1
@@ -469,6 +475,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @IBAction func nextAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Classic Next Hole",hole: self.scoreData[self.holeIndex].hole)
         menuStackView.isHidden = true
         holeIndex += 1
         self.btnNext.isHidden = false
@@ -484,6 +491,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         updateData(indexToUpdate: self.holeIndex)
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Classic Hole \(self.holeIndex+1)")
         ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
         let transition = CATransition()
         transition.type = kCATransitionPush
@@ -492,6 +500,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @IBAction func prevAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Classic Previous Hole",hole: self.scoreData[self.holeIndex].hole)
         menuStackView.isHidden = true
         holeIndex -= 1
         self.btnNext.isHidden = false
@@ -504,6 +513,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         updateData(indexToUpdate: self.holeIndex)
         let currentHoleWhilePlaying = NSMutableDictionary()
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Classic Hole \(self.holeIndex+1)")
         ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
         let transition = CATransition()
         transition.type = kCATransitionPush
@@ -556,6 +566,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     
     @IBAction func btnActionViewScorecard(_ sender: Any) {
         menuStackView.isHidden = true
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Classic Scorecard",hole: self.scoreData[self.holeIndex].hole)
         let players = NSMutableArray()
         if(matchDataDict.object(forKey: "player") != nil){
             let tempArray = matchDataDict.object(forKey: "player")! as! NSMutableDictionary
@@ -620,12 +631,14 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     var achievedGoal = Goal()
     var targetGoal = Goal()
     @objc func unlockEddie(_ sender: UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Eddie Classic")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "BasicScoring"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Classic Game")
         eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         setInitialUI()
         setHoleNum()
@@ -868,6 +881,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.swipePrev.isEnabled = false
             self.btnFinishRound.isHidden = false
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Classic Hole \((self.holeIndex%self.gameTypeIndex)+1)")
         updateData(indexToUpdate: self.holeIndex%self.gameTypeIndex)
         if(self.gameTypeIndex < scoreData.count){
             self.btnChangeHole.isUserInteractionEnabled = false
@@ -1494,6 +1508,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     }
     
     @objc func strokesAction(sender: UIButton!){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Score Classic Hole \(self.scoreData[self.holeIndex].hole)")
         let title = sender.currentTitle
         self.holeWiseShots.setObject(Int(title!)!, forKey: "strokes" as NSCopying)
         self.holeWiseShots.setObject(true, forKey: "holeOut" as NSCopying)

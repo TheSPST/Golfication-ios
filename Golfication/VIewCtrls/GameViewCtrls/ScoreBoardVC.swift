@@ -161,6 +161,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     @IBAction func refreshStableFordAction(_ sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Scorecard Stableford")
         if self.teeTypeArr.isEmpty{
             self.ifnoStableFord()
         }else{
@@ -281,6 +282,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     @objc func btnContinueAction(){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Scorecard Continue")
         self.superClassName = NSStringFromClass((self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)!-2].classForCoder)!).components(separatedBy: ".").last!
         if  superClassName == "newGameVC"{
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "continueAction"), object: nil)
@@ -550,6 +552,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Scorecard")
         let cameraBtn =  UIButton(frame: CGRect(x: self.view.frame.width/2-15, y: self.view.frame.height-40-(30+5), width: 30, height: 30))
         cameraBtn.setBackgroundImage(UIImage(named:"icon_camera"), for: .normal)
         cameraBtn.addTarget(self, action: #selector(self.cameraAction), for: .touchUpInside)
@@ -755,7 +758,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 
             }
             let startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as? String ?? "1")
-            let gameTypeIndex = matchDataDictionary.value(forKey: "matchType") as! String == "9 holes" ? 9:18
+            let gameTypeIndex = self.scoreData.count
             self.courseData.startingIndex = startingIndex
             self.courseData.gameTypeIndex = gameTypeIndex
             let courseId = "course_\(matchDataDictionary.value(forKeyPath: "courseId") as! String)"
@@ -1275,6 +1278,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 lblHolePar.text = "Hole".localized() + " \(self.index+1) - " + "Par".localized() + " \(self.scoreData[self.index].par)"
             }
         }else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click Scorecard Note")
             var matchDataDictionary = NSMutableDictionary()
             if(isFinalSummary){
                 matchDataDictionary = self.matchDataDict

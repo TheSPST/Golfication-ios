@@ -191,6 +191,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     var countdownTimer: Timer!
 
     @IBAction func backButtonAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Back")
         if(superClassName! == "MyFeedVC"){
             self.navigationController?.popViewController(animated: true)
         }else{
@@ -443,6 +444,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 }
             }
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Round Summary")
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Completed Game")
     }
     func updateGoalView(achievedGoal:Goal,targetGoal:Goal){
         if Constants.isProMode{
@@ -510,6 +513,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     @IBAction func premiumBecomeAProAction(_ sender: UIButton){
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Eddie")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "FinalScoring"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -517,6 +521,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     }
     
     @IBAction func playNowAction(_ sender: UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Play Now")
         let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
@@ -713,7 +718,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     // MARK: - shareClicked
     @objc func shareClicked(_ sender:UIButton){
         let tagVal = sender.tag
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Share")
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ShareStatsVC") as! ShareStatsVC
         viewCtrl.shareCardView = (cardViewMArray[tagVal] as! CardView)
         viewCtrl.fromFeed = false
@@ -1156,6 +1161,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     func proLockBtnPressed(button:UIButton) {
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Eddie")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "FinalScoring"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -1531,6 +1537,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     
     // MARK: - infoClicked
     @objc func infoClicked(_ sender:UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Info")
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
         viewCtrl.title = cardViewInfoArray[sender.tag].title
         viewCtrl.desc = cardViewInfoArray[sender.tag].value
@@ -1823,6 +1830,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
             return cell
     }
     @objc func viewScoreAction(_ sender: UIButton!) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Scorecard")
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = finalScoreData
         viewCtrl.playerData = finalPlayerMArray
@@ -1853,12 +1861,14 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     @objc func afterResponseEditRound(_ notification:NSNotification){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Edit")
         let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
         self.navigationController?.pushViewController(mapViewController, animated: true)
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "editRound"))
     }
     
     @objc func viewHoleByHoleAction(_ sender: UIButton!) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Hole By Hole")
         if(superClassName! == "NewGameVC") || superClassName! == "MapViewController" || superClassName! == "RFMapVC" || (superClassName! == "NewMapVC"){
             self.matchDataDict = Constants.matchDataDic
         }

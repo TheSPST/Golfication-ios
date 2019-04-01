@@ -109,6 +109,7 @@ class NotificationVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.progressView.hide(navItem: self.navigationItem)
             }
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Notification")
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat

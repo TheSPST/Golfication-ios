@@ -527,6 +527,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         
     }
     func exitWithoutSave(){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Discard Game")
         if(Constants.matchId.count > 1){
             self.updateFeedNode()
             if(Auth.auth().currentUser!.uid.count > 1){
@@ -559,6 +560,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
 
     }
     @objc func statsCompleted(_ notification: NSNotification) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Save Game")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.actvtIndView.isHidden = true
         self.actvtIndView.stopAnimating()

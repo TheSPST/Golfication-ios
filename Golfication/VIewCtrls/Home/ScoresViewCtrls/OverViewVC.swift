@@ -52,7 +52,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
     override func viewDidLoad() {
         super.viewDidLoad()
         Analytics.logEvent("my_scores_overview", parameters: [:])
-
+        FBSomeEvents.shared.singleParamFBEvene(param: "View My Scores Overview")
         self.setupUI()
         //print("Scores in ViewDid Load : \(scores)")
         self.setData()
@@ -265,6 +265,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
     }
     
     @objc func eddieProClicked(_ sender:UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click My Scores Eddie")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "Overview"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -318,8 +319,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             self.navigationController?.pushViewController(mapViewController, animated: true)
         }
         else{
-//            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-//            self.navigationController?.pushViewController(viewCtrl, animated: true)
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click My Scores Eddie")
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "Overview"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -471,6 +471,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
     
     // MARK: - infoClicked
     @objc func infoClicked(_ sender:UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click My Scores Info")
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
         viewCtrl.title = cardViewInfoArray[sender.tag].title
         viewCtrl.desc = cardViewInfoArray[sender.tag].value

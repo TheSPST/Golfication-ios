@@ -45,6 +45,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         Constants.finalFilterDic.removeAllObjects()
         buttonBarView.isHidden = true
         self.setupActivityIndicator()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View My Scores")
         //self.getScoreDataFromFirebase()
     }
     
@@ -112,20 +113,13 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
             let course = ((self.myDataArray[i] as AnyObject).object(forKey:"course") ?? "") as! String
             Constants.section5.append(course)
             //--------------------------------
-            
             group.leave()
         }
         group.notify(queue: .main){
-            
-            //let sortedScore = self.scores.sorted { ($0 as! Scores).timestamp > ($1 as! Scores).timestamp } as NSArray
-            //self.scores = NSMutableArray(array:sortedScore)
-            
-            //print("myDataArray: \(self.myDataArray)")
             self.buttonBarView.isHidden = false
             self.actvtIndView.isHidden = true
             self.actvtIndView.stopAnimating()
             self.filteredArray = self.myDataArray as! [NSDictionary]
-
             self.reloadPagerTabStripView()
         }
     }
@@ -227,11 +221,11 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                 var approachArray = [Chipping]()
                 for i in 0..<approach.count{
                     let chip = Chipping()
-                    chip.club = (approach[i] as AnyObject).object(forKey:"club") as! String
-                    chip.distance = (approach[i] as AnyObject).object(forKey:"distance") as! Double
-                    chip.hole = (approach[i] as AnyObject).object(forKey:"hole") as! Int
-                    chip.proximityX = (approach[i] as AnyObject).object(forKey:"proximityX") as! Double
-                    chip.proximityY = (approach[i] as AnyObject).object(forKey:"proximityY") as! Double
+                    chip.club = ((approach[i] as AnyObject).object(forKey:"club") as! String)
+                    chip.distance = ((approach[i] as AnyObject).object(forKey:"distance") as! Double)
+                    chip.hole = ((approach[i] as AnyObject).object(forKey:"hole") as! Int)
+                    chip.proximityX = ((approach[i] as AnyObject).object(forKey:"proximityX") as! Double)
+                    chip.proximityY = ((approach[i] as AnyObject).object(forKey:"proximityY") as! Double)
                     chip.green = (approach[i] as AnyObject).object(forKey:"green") as? Bool
                     if(Constants.distanceFilter == 1){
                         chip.proximityX = chip.proximityX/Constants.YARD
@@ -308,6 +302,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         
         let index =  self.buttonBarView.selectedIndex
         let filterVc = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "FilterVC") as! FilterVC
+        filterVc.isMyScoreParent = true
         if (index == 4 || index == 0) {
             filterVc.fromScorePutting = true
         }
@@ -342,10 +337,10 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         var CSTypeArray = [String]()
         if(Constants.finalFilterDic.count>0){
             CSTypeArray = Constants.finalFilterDic.value(forKey: "CSTypeArray") as! [String]
+            FBSomeEvents.shared.singleParamFBEvene(param: "Filter My Scores")
         }
         
         if index == 0{
-            //print(transferDataIntoClasses(myDataArray: self.filteredArray))
             child1.scores = transferDataIntoClasses(myDataArray: self.filteredArray)
             child2.scores = transferDataIntoClasses(myDataArray: self.myDataArray as! [NSDictionary])
             child3.scores = child2.scores
@@ -353,7 +348,6 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
             child5.scores = child2.scores
         }
         else if index == 1{
-            //print(transferDataIntoClasses(myDataArray: self.myDataArray as! [NSDictionary]))
             child2.scores = transferDataIntoClasses(myDataArray: self.filteredArray)
             child2.clubFilter = CSTypeArray
             child1.scores = transferDataIntoClasses(myDataArray: self.myDataArray as! [NSDictionary])
@@ -362,7 +356,6 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
             child5.scores = child1.scores
         }
         else if index == 2{
-            //print(transferDataIntoClasses(myDataArray: self.filteredArray))
             child3.scores = transferDataIntoClasses(myDataArray: self.filteredArray)
             child3.clubFilter = CSTypeArray
             child1.scores = transferDataIntoClasses(myDataArray: self.myDataArray as! [NSDictionary])
@@ -371,7 +364,6 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
             child5.scores = child1.scores
         }
         else if index == 3{
-            //print(transferDataIntoClasses(myDataArray: self.filteredArray))
             child4.scores = transferDataIntoClasses(myDataArray: self.filteredArray)
             child1.scores = transferDataIntoClasses(myDataArray: self.myDataArray as! [NSDictionary])
             child2.scores = child1.scores
@@ -380,7 +372,6 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
             child5.scores = child1.scores
         }
         else if index == 4{
-            //print(transferDataIntoClasses(myDataArray: self.filteredArray))
             child5.scores = transferDataIntoClasses(myDataArray: self.filteredArray)
             child1.scores = transferDataIntoClasses(myDataArray: self.myDataArray as! [NSDictionary])
             child2.scores = child1.scores
@@ -411,6 +402,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
         }
         if RSTypeArray.count>0 || CSTypeArray.count>0 || HoleTypeArray.count>0 || CoursesTypeArray.count>0{
             self.getFilteredValue(roundTimeArr: RSTypeArray, clubTypeArr: CSTypeArray, holeTypeArr: HoleTypeArray, coursesTypeArr: CoursesTypeArray)
+            FBSomeEvents.shared.singleParamFBEvene(param: "Filter My Scores")
         }else{
             self.getScoreDataFromFirebase()
         }

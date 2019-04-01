@@ -160,12 +160,13 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                             self.userDetails.setObject(fbEmail, forKey: "email" as NSCopying)
                             if let locale = Locale.current.regionCode {
                                 self.userList.setObject(locale, forKey:"country" as NSCopying)
-
                             }
+                            self.userList.setObject(fbName, forKey: "name" as NSCopying)
+                            self.userList.setObject(Int(NSDate().timeIntervalSince1970*1000), forKey: "timestamp" as NSCopying)
+                            self.userList.setObject(fbEmail, forKey: "email" as NSCopying)
                             if(uid.count>1){
                                 ref.child("userData/\(uid)").updateChildValues(self.userDetails as! [AnyHashable : Any])
                                 ref.child("userList/\(uid)").updateChildValues(self.userList as! [AnyHashable : Any])
-                                
                                 self.getUserDataFromFirebase(uid: uid, isFirst:isFirst)
                             }
                             let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
@@ -177,7 +178,6 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                                         ref.child("userData/\(referedBy!)/invite").updateChildValues([(Auth.auth().currentUser?.uid)!:true])
                                         ref.child("userData/\((Auth.auth().currentUser?.uid)!)/friends").updateChildValues([referedBy!:true])
                                     }
-
                                 }
                                 let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewUserProfileVC") as! NewUserProfileVC
                                 self.navigationController?.pushViewController(viewCtrl, animated: false)

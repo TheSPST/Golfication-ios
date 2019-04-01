@@ -1561,16 +1561,16 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="zn3-lf-E7N">
-                                        <rect key="frame" x="16" y="16" width="256" height="105.5"/>
+                                        <rect key="frame" x="16" y="16" width="256" height="123.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How was your app experience playing this round?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0y4-kq-U8m">
-                                                <rect key="frame" x="23.5" y="0.0" width="209.5" height="19.5"/>
+                                                <rect key="frame" x="17.5" y="0.0" width="221.5" height="37.5"/>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="6MW-Cd-RlL">
-                                                <rect key="frame" x="49.5" y="35.5" width="157" height="25"/>
+                                                <rect key="frame" x="49.5" y="53.5" width="157" height="25"/>
                                                 <subviews>
                                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Good" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="syz-9S-l8U">
                                                         <rect key="frame" x="0.0" y="0.0" width="157" height="0.0"/>
@@ -1632,19 +1632,19 @@
                                                 </subviews>
                                             </stackView>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What went wrong ?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="My1-3W-D13">
-                                                <rect key="frame" x="0.0" y="68.5" width="256" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="86.5" width="256" height="0.0"/>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5WK-jo-BTe">
-                                                <rect key="frame" x="0.0" y="68.5" width="256" height="16"/>
+                                                <rect key="frame" x="0.0" y="86.5" width="256" height="16"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="uIx-nC-cma">
                                                         <rect key="frame" x="0.0" y="0.0" width="256" height="0.0"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fHo-CV-rEZ">
-                                                                <rect key="frame" x="0.0" y="0.0" width="113" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="121" height="0.0"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                                 <color key="tintColor" red="0.1941823661" green="0.45834267140000001" blue="0.3299675286" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1657,7 +1657,7 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JAC-Ap-Mrk">
-                                                                <rect key="frame" x="143" y="0.0" width="113" height="0.0"/>
+                                                                <rect key="frame" x="135" y="0.0" width="121" height="0.0"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                                 <color key="tintColor" red="0.1941823661" green="0.45834267140000001" blue="0.3299675286" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1678,7 +1678,7 @@
                                                         <rect key="frame" x="0.0" y="8" width="256" height="0.0"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vmn-q6-PiT">
-                                                                <rect key="frame" x="0.0" y="0.0" width="117" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="124" height="0.0"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                                 <color key="tintColor" red="0.1941823661" green="0.45834267140000001" blue="0.3299675286" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1691,7 +1691,7 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNz-El-Nbw">
-                                                                <rect key="frame" x="139" y="0.0" width="117" height="0.0"/>
+                                                                <rect key="frame" x="132" y="0.0" width="124" height="0.0"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                                 <color key="tintColor" red="0.1941823661" green="0.45834267140000001" blue="0.3299675286" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1709,7 +1709,7 @@
                                                         </constraints>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pgd-RI-i0a">
-                                                        <rect key="frame" x="89" y="16" width="78" height="0.0"/>
+                                                        <rect key="frame" x="87" y="16" width="82" height="0.0"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                         <color key="tintColor" red="0.1941823661" green="0.45834267140000001" blue="0.3299675286" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1728,7 +1728,7 @@
                                                 </constraints>
                                             </stackView>
                                             <textField hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Additional feedback" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Sd7-Dq-ArI">
-                                                <rect key="frame" x="0.0" y="68.5" width="256" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="86.5" width="256" height="0.0"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -1737,7 +1737,7 @@
                                                 </connections>
                                             </textField>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="7Kb-UL-hlj">
-                                                <rect key="frame" x="0.0" y="76.5" width="256" height="29"/>
+                                                <rect key="frame" x="0.0" y="94.5" width="256" height="29"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KAt-d5-hji" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="30" height="29"/>
@@ -7873,7 +7873,7 @@
                                                     </subviews>
                                                 </stackView>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" verticalCompressionResistancePriority="749" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="gGo-b1-K91" customClass="ZeroPaddingTextView" customModule="Golfication" customModuleProvider="target">
-                                                    <rect key="frame" x="10" y="40" width="300" height="19.5"/>
+                                                    <rect key="frame" x="10" y="40" width="300" height="35.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>

@@ -51,6 +51,7 @@ class ExploreVC: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Explore")
         self.automaticallyAdjustsScrollViewInsets = false
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.glfBluegreen
     }

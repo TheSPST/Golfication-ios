@@ -13,6 +13,7 @@ import Google
 import DeviceKit
 import FirebaseInstanceID
 import CoreData
+
 enum VersionError: Error {
     case invalidResponse, invalidBundleInfo
 }
@@ -146,6 +147,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             let matchID = dataArray[0].matchId!
             self.getScoreFromMatchDataScoring(matchId:matchID)
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Details")
     }
     
     // MARK: - upgradeAction
@@ -158,6 +160,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - playFriendsAction
     @IBAction func playFriendsAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Play Golf")
         let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
@@ -188,11 +191,19 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 btnTabsArray[i].setTitleColor(UIColor.glfBluegreen, for: .normal)
                 btnTabsArray[i].addBottomBorderWithColor(color: UIColor.glfBluegreen, width: 1.0)
                 viewTabsArray[i].isHidden = false
+                if i == 0{
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Scores")
+                }else if i == 1{
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Swings")
+                }else{
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Clubs")
+                }
             }
         }
     }
     
     @IBAction func btnBuyNow(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Buy GX")
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
         viewCtrl.linkStr = "https://www.golfication.com/product/golfication-x/"
@@ -228,17 +239,18 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.navigationController?.pushViewController(viewCtrl, animated: true)
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
-        
     }
     
     // MARK: - continueAction
     @IBAction func continueAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Continue")
         let viewCtrl = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
     // MARK: - startGameAction
     @IBAction func startGameAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Start")
         let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
@@ -248,7 +260,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
-        
+             FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Unlock")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "Home"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -360,6 +372,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
 //                self.FindUser()
 //        setCesPopupCount()
         getMinIOSVersion()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Home")
     }
     func getMinIOSVersion(){
         
@@ -493,34 +506,35 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
 
     // Get user details which have Pro membership
-        func FindUser(){
-            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
-                self.progressView.show(atView: self.view, navItem: self.navigationItem)
-                var userData = NSMutableDictionary()
-                if(snapshot.value != nil){
-                    userData = snapshot.value as! NSMutableDictionary
-                    for (key,value) in userData{
-                        if let v = value as? NSMutableDictionary{
-//                            ((v.value(forKey: "iosToken")) != nil)
-                            if(((v.value(forKey: "deviceInfo") as? NSMutableDictionary) != nil)) {
-                                debugPrint((v.value(forKey: "deviceInfo") as! NSMutableDictionary).value(forKey: "OAD")as? NSMutableDictionary)
-                                debugPrint("ios Key: \(key)")
-//                                debugPrint("OAD Key: \((v.value(forKey: "OAD") as? NSMutableDictionary))")
+//        func FindUser(){
+//            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
+//                self.progressView.show(atView: self.view, navItem: self.navigationItem)
+//                var userData = NSMutableDictionary()
+//                if(snapshot.value != nil){
+//                    userData = snapshot.value as! NSMutableDictionary
+//                    for (key,value) in userData{
+//                        if let v = value as? NSMutableDictionary{
+//                            //(((v.value(forKey: "deviceInfo") as? NSMutableDictionary) != nil))
+//                            if ((v.value(forKey: "iosToken")) != nil){
+////                                debugPrint((v.value(forKey: "deviceInfo") as! NSMutableDictionary).value(forKey: "OAD")as? NSMutableDictionary)
+////                                debugPrint("ios Key: \(key)")
+////                                debugPrint("OAD Key: \((v.value(forKey: "OAD") as? NSMutableDictionary))")
 //                                if let pro = v.value(forKey: "proMembership") as? NSMutableDictionary{
-//                                    if pro.value(forKey: "productID") as? String == "pro_subscription_trial_monthly" || pro.value(forKey: "productID") as? String == "pro_subscription_trial_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_monthly"{
+////                                    if pro.value(forKey: "productID") as? String == "pro_subscription_trial_monthly" || pro.value(forKey: "productID") as? String == "pro_subscription_trial_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_monthly"{
 //                                        debugPrint("ios Key: \(key)")
-//                                        debugPrint("proMembership",v.value(forKey: "proMembership"))
-//                                    }
+//                                        debugPrint("proMembership",pro)
+//
+////                                    }
 //                                }
-                            }
-                        }
-                    }
-                }
-                DispatchQueue.main.async(execute: {
-                    self.progressView.hide(navItem: self.navigationItem)
-                })
-            }
-        }
+//                            }
+//                        }
+//                    }
+//                }
+//                DispatchQueue.main.async(execute: {
+//                    self.progressView.hide(navItem: self.navigationItem)
+//                })
+//            }
+//        }
     
     func getGolficationXVersion(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion") { (snapshot) in
@@ -578,16 +592,20 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     
     func getClubDataFromFirebase(isShow:Bool){
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "clubsData") { (snapshot) in
-            let clubDataDict = snapshot.value as! [String:NSMutableDictionary]
-            DispatchQueue.main.async(execute: {
-                Constants.clubWithMaxMin.removeAll()
-                for (key, value) in clubDataDict{
-                    Constants.clubWithMaxMin.append((name: key, max: value.value(forKey: "max") as! Int, min: value.value(forKey: "min") as! Int))
-                }
-                Constants.clubWithMaxMin.append((name: "Pu", max: 22, min: 1))
-                self.setSGAndSmartCaddieData(isShow:isShow)
-            })
+        if Constants.clubWithMaxMin.count == 0{
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "clubsData") { (snapshot) in
+                let clubDataDict = snapshot.value as! [String:NSMutableDictionary]
+                DispatchQueue.main.async(execute: {
+                    Constants.clubWithMaxMin.removeAll()
+                    for (key, value) in clubDataDict{
+                        Constants.clubWithMaxMin.append((name: key, max: value.value(forKey: "max") as! Int, min: value.value(forKey: "min") as! Int))
+                    }
+                    Constants.clubWithMaxMin.append((name: "Pu", max: 22, min: 1))
+                    self.setSGAndSmartCaddieData(isShow:isShow)
+                })
+            }
+        }else{
+            self.setSGAndSmartCaddieData(isShow:isShow)
         }
     }
     
@@ -642,24 +660,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     
     func setSGAndSmartCaddieData(isShow:Bool) {
-        
-        lblClubStatName.text = "-"
-        if let club = clubName{
-            lblClubStatName.text = getClubName(club: club)
-        }
-        
-        if(strokesGainedValue == -100){
-            lblClubStatSG.text = "--"
-        }else{
-            lblClubStatSG.text = "\(strokesGainedValue?.rounded(toPlaces: 2) ?? 0.0)"
-        }
-        
-        if((strokesCount) != nil && strokesCount! > 0.0){
-            let strokesGainedAvg = strokesGained! / strokesCount!
-            lblClubStatAvgDist.text = "\(strokesGainedAvg.rounded(toPlaces: 2))"
-        }
-        
         let clubDict = self.transferDataIntoClasses(myDataArray: self.filteredArray)
+        if totalCaddie == 0{
+            
+        }
         self.createSmartDataWith(clubDict: clubDict)
         strokesGainedData.removeAll()
         strokesGainedData = [(clubType: String,clubTotalDistance: Double,clubStrokesGained: Double,clubCount:Int,clubSwingScore:Double)]()
@@ -963,6 +967,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
 //        sharedInstance = BluetoothSync.getInstance()
 //        sharedInstance.delegate = self
 //        sharedInstance.initCBCentralManager()
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Home Practice")
         let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
@@ -1398,16 +1403,18 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             }
                         }
                     }
-                    // Data for card 5
-                    if (statistics["card5"] as? NSDictionary) != nil{
-                        //self.homeVCModel.card4AchievDic = card5
-                    }
                 }
                 if let scoring = userData.value(forKey: "scoring") as? NSDictionary{
                     self.profileScoring = Int(scoring.count)
                     let dataArray = scoring.allValues as NSArray
                     self.filteredArray = [NSDictionary]()
                     self.filteredArray = dataArray as! [NSDictionary]
+                    self.totalCaddie = 0
+                    for i in 0..<self.filteredArray.count{
+                        if let _ = ((self.filteredArray[i] as AnyObject).object(forKey:"smartCaddie") as? NSDictionary){
+                            self.totalCaddie += 1
+                        }
+                    }
                 }
                 if let activeMatches = userData["activeMatches"] as? [String:Bool]{
                     for data in activeMatches{
@@ -1415,7 +1422,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             Constants.matchId = data.key
                         }
                         else if(!data.value){
-                            
+                            Constants.matchId = ""
                         }
                     }
                 }
@@ -1445,9 +1452,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             }
                         }
                         else{
-//                            Constants.swingSessionKey = key
-//                            group.leave()
-                            
                             Constants.swingSessionKey = key
                             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(key)") { (snapshot) in
                                 if(snapshot.value != nil){
@@ -1567,6 +1571,66 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     if let value = gameGoal.value(forKey: "gir") as? Int{
                         Constants.targetGoal.gir = value
                     }
+                }else{
+                    if let handi = userData["handicap"] as? String{
+                        var handicap : Int = 18
+                        if !handi.contains(find: "-"){
+                            handicap = Int((Double(handicap).rounded()))
+                        }
+                        var goalsDic = NSMutableDictionary()
+                        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "target/\(handicap)") { (snapshot) in
+                            if let targetDic = snapshot.value as? NSMutableDictionary{
+                                goalsDic = targetDic
+                                
+                                let goalsDict = NSMutableDictionary()
+                                goalsDict.setObject(Int((goalsDic.value(forKey: "birdie") as! Double).rounded()), forKey: "birdie" as NSCopying)
+                                goalsDict.setObject(Int((goalsDic.value(forKey: "fairway") as! Double).rounded()), forKey: "fairway" as NSCopying)
+                                goalsDict.setObject(Int((goalsDic.value(forKey: "gir") as! Double).rounded()), forKey: "gir" as NSCopying)
+                                goalsDict.setObject(Int((goalsDic.value(forKey: "par") as! Double).rounded()), forKey: "par" as NSCopying)
+                                Constants.targetGoal.Birdie = Int((goalsDic.value(forKey: "birdie") as! Double).rounded())
+                                Constants.targetGoal.fairwayHit = Int((goalsDic.value(forKey: "fairway") as! Double).rounded())
+                                Constants.targetGoal.gir = Int((goalsDic.value(forKey: "gir") as! Double).rounded())
+                                Constants.targetGoal.par = Int((goalsDic.value(forKey: "par") as! Double).rounded())
+
+                                if Int((goalsDic.value(forKey: "birdie") as! Double).rounded()) < 1{
+                                    goalsDict.setObject(1, forKey: "birdie" as NSCopying)
+                                    Constants.targetGoal.Birdie = 1
+                                }
+                                else if Int((goalsDic.value(forKey: "fairway") as! Double).rounded()) < 1{
+                                    goalsDict.setObject(1, forKey: "fairway" as NSCopying)
+                                    Constants.targetGoal.fairwayHit = 1
+                                }
+                                else if Int((goalsDic.value(forKey: "gir") as! Double).rounded()) < 1{
+                                    goalsDict.setObject(1, forKey: "gir" as NSCopying)
+                                    Constants.targetGoal.gir = 1
+                                }
+                                else if Int((goalsDic.value(forKey: "par") as! Double).rounded()) < 1{
+                                    goalsDict.setObject(1, forKey: "par" as NSCopying)
+                                    Constants.targetGoal.par = 1
+                                }
+                                //----------------------------------------------------------------------
+                                if Int((goalsDic.value(forKey: "birdie") as! Double).rounded()) > 18{
+                                    goalsDict.setObject(18, forKey: "birdie" as NSCopying)
+                                    Constants.targetGoal.Birdie = 18
+                                }
+                                else if Int((goalsDic.value(forKey: "fairway") as! Double).rounded()) > 14{
+                                    goalsDict.setObject(14, forKey: "fairway" as NSCopying)
+                                    Constants.targetGoal.fairwayHit = 14
+                                }
+                                else if Int((goalsDic.value(forKey: "gir") as! Double).rounded()) > 18{
+                                    goalsDict.setObject(18, forKey: "gir" as NSCopying)
+                                    Constants.targetGoal.gir = 18
+                                }
+                                else if Int((goalsDic.value(forKey: "par") as! Double).rounded()) > 18{
+                                    goalsDict.setObject(18, forKey: "par" as NSCopying)
+                                    Constants.targetGoal.par = 18
+                                }
+                                goalsDic = goalsDict
+                                let golfFinalDic = ["goals":goalsDict]
+                                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfFinalDic)
+                            }
+                        }
+                    }
                 }
                 if let gender = userData["gender"] as? String{
                     Constants.gender = gender
@@ -1633,7 +1697,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 if(self.round_score.count == 0){
                     self.updateCard4(path: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/statistics")
                 }
-                if self.profileScoring == nil{
+                if self.profileScoring == nil || self.totalCaddie == 0{
                     FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/m0BmtxOAiuXYIhDN0BGwFo3QjKq2/scoring") { (snapshot) in
                         var dataDic = NSDictionary()
                         dataDic = (snapshot.value as? NSDictionary)!
@@ -2957,7 +3021,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-                
                 let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
                 viewCtrl.finalPlayersData = players
                 viewCtrl.finalScoreData = self.scoring

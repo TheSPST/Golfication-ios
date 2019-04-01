@@ -65,6 +65,7 @@ class NextRoundVC: UIViewController {
 
     // MARK: backAction
     @IBAction func backAction(sender: UIBarButtonItem) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 Back")
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -258,8 +259,12 @@ class NextRoundVC: UIViewController {
     let locationManager = CLLocationManager()
 
     @IBAction func startGameAction(sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 Start Round")
+        FBSomeEvents.shared.singleParamFBEvene(param: "Start Game")
         if self.scoringMode.contains("classic"){
             self.btnStartClassic.tag = 1
+        }else if self.scoringMode.contains("Advanced(GPS)"){
+            self.btnStartClassic.tag = 0
         }else{
             self.btnStartClassic.tag = 2
         }
@@ -326,6 +331,7 @@ class NextRoundVC: UIViewController {
     }
     
     @IBAction func skipAction(sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 Skip")
         Constants.addPlayersArray = NSMutableArray()
         popUpContainerView.isHidden = true
         let gameCompleted = StartGameModeObj()
@@ -363,7 +369,7 @@ class NextRoundVC: UIViewController {
     @objc func classicCompleted(_ notification: NSNotification) {
         let notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
         self.progressView.hide(navItem: self.navigationItem)
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Start Classic")
         if(notifScoring.count > 0){
             let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "BasicScoringVC") as! BasicScoringVC
             viewCtrl.matchDataDict = Constants.matchDataDic
@@ -381,7 +387,7 @@ class NextRoundVC: UIViewController {
     @objc func rfApiCompleted(_ notification: NSNotification) {
         let notifGolfId = notification.object as! String
         self.progressView.hide(navItem: self.navigationItem)
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Start Rangefinder")
         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "RFMapVC") as! RFMapVC
         viewCtrl.matchDataDic = Constants.matchDataDic
         viewCtrl.isContinueMatch = false
@@ -395,7 +401,13 @@ class NextRoundVC: UIViewController {
     @objc func defaultMapApiCompleted(_ notification: NSNotification) {
         let notifScoring = notification.object as! [(hole:Int,par:Int,players:[NSMutableDictionary])]
         self.progressView.hide(navItem: self.navigationItem)
-        
+        if let onCourse = Constants.matchDataDic.value(forKeyPath: "onCourse") as? Bool{
+            if onCourse{
+                FBSomeEvents.shared.singleParamFBEvene(param: "Start On Course ST")
+            }else{
+                FBSomeEvents.shared.singleParamFBEvene(param: "Start Post Game ST")
+            }
+        }
         let viewCtrl = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "NewMapVC") as! NewMapVC
         
         viewCtrl.matchDataDict = Constants.matchDataDic
@@ -409,6 +421,7 @@ class NextRoundVC: UIViewController {
     }
     
     @IBAction func addFriendAction(sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 Add Friends")
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "SearchPlayerVC") as! SearchPlayerVC
         viewCtrl.selectedMode = selectedMode
         viewCtrl.selectedTab = selectedTab
@@ -437,7 +450,12 @@ class NextRoundVC: UIViewController {
         btnPrevClassic.setImage(#imageLiteral(resourceName: "classic_active"), for: .normal)
         btnPrevRf.setImage(#imageLiteral(resourceName: "rf_inactive"), for: .normal)
         btnPrevShotTrack.setImage(#imageLiteral(resourceName: "ultimate_inactive"), for: .normal)
-        
+        if selectedMode == 0{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 Course Classic")
+        }else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 OC Classic")
+        }
+
         if selectedMode == 1{
             let rfTitle = NSAttributedString(string: "Post-Game Shot Tracking".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor.darkGray])
             btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
@@ -485,8 +503,11 @@ class NextRoundVC: UIViewController {
         lblBottomTitle.text = "Fast and accurate Distances".localized()
         lblBottomSubTitle.text = "FREE distances and club-recommendations.".localized() + " \n" + "Live Scoring available".localized()
         imageVIew.image = #imageLiteral(resourceName: "range_finder")
-        
+        if selectedMode == 0{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 Rangefinder")
+        }
         if selectedMode == 1{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 OC Shot Tracking")
             let rfTitle = NSAttributedString(string: "Post-Game Shot Tracking".localized(),attributes: [NSAttributedStringKey.foregroundColor : UIColor(rgb: 0x0E220D)])
             btnPrevRf.setAttributedTitle(rfTitle, for: .normal)
             btnPrevRf.setImage(#imageLiteral(resourceName: "post_active"), for: .normal)
@@ -505,6 +526,7 @@ class NextRoundVC: UIViewController {
             }
             
         }else{
+            
             self.setBgViewForRequestMaping()
 //            mappedProgressView
         }
@@ -555,6 +577,7 @@ class NextRoundVC: UIViewController {
     }
     
     @IBAction func prevShotTrackAction(sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 Course Shot Tracking")
         selectedTab = 2
         self.setBgViewForRequestMaping()
         btnPrevClassic.setCorner(color: UIColor.clear.cgColor)
@@ -587,9 +610,9 @@ class NextRoundVC: UIViewController {
     
         imageVIew.image = #imageLiteral(resourceName: "ultimate_shot")
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View New Game 2")
         btnPlayBasic.setCorner(color: UIColor.clear.cgColor)
         self.title = "New Round".localized()
         btnSkip.setTitle(" " + "Skip".localized() + " ", for: .normal)

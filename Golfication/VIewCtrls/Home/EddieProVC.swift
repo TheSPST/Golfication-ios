@@ -84,6 +84,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         checkTrialPreriod()
         self.eddieView.setValue(source, forKey: "source")
         self.eddieView.setValue(true, forKey: "screen\(currentPageIndex+1)")
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Eddie \(currentPageIndex+1))")
         self.eddieView.setValue(Auth.auth().currentUser!.displayName, forKey: "name")
     }
     
@@ -169,6 +170,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
 //                IAPHandler.shared.purchaseMyProduct(index: 5)
 //            }
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Eddie Buy")
     }
     
     @IBAction func monthlyPaymentAction(_ sender: Any) {
@@ -186,6 +188,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
 //                IAPHandler.shared.purchaseMyProduct(index: 1)
 //            }
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Eddie Buy Monthly")
     }
 
     @IBAction func yearlyPaymentAction(_ sender: Any) {
@@ -205,6 +208,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
 //                IAPHandler.shared.purchaseMyProduct(index: 5)
 //            }
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Eddie Buy Annual")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -244,6 +248,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
             btnNext.setTitle("See How >", for: .normal)
         }
         currentPageIndex = self.pageControl.currentPage
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Eddie \(currentPageIndex+1))")
     }
     
     @IBAction func btnNextAction(_ sender: Any) {
@@ -252,13 +257,14 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
 
         currentPageIndex = self.pageControl.currentPage + 1
         pageControl.currentPage += 1
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Eddie \(currentPageIndex+1))")
         let x = CGFloat(pageControl.currentPage) * (eddieScrollView.frame.size.width)
         eddieScrollView.setContentOffset(CGPoint(x:x, y:0), animated: true)
         
         if currentPageIndex == 9 {
             btnNext.isHidden = true
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Eddie \(currentPageIndex+1))")
     }
 
     @IBAction func btnPrevAction(_ sender: Any) {
@@ -275,6 +281,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
             btnPrev.isHidden = true
             btnNext.setTitle("See How >", for: .normal)
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Eddie \(currentPageIndex+1))")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -285,6 +292,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func closeAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Eddie Close")
         self.navigationController?.popViewController(animated: false)
     }
 }

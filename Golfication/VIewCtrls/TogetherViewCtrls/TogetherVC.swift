@@ -59,7 +59,7 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.glfBluegreen
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Together")
         swingsRankValue.text = ""
         roundPlayerRankValue.text = ""
         strokesGainedPuttingRankValue.text = ""

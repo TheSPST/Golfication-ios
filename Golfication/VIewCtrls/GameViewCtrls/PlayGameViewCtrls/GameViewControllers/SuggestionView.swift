@@ -43,6 +43,7 @@ class SuggestionView: UIView {
         view.frame = bounds
         view.autoresizingMask = [UIViewAutoresizing.flexibleWidth,UIViewAutoresizing.flexibleHeight]
         addSubview(view)
+        view.layer.cornerRadius = 5.0
         lockedImgView.isHidden = Constants.isProMode
     }
     func autoresize(){

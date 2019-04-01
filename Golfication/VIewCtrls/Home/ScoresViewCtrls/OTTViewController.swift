@@ -67,7 +67,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
     override func viewDidLoad() {
         super.viewDidLoad()
         Analytics.logEvent("my_scores_ott", parameters: [:])
-
+        FBSomeEvents.shared.singleParamFBEvene(param: "View My Scores OTT")
         self.setupUI()
         self.setData()
         self.setSpreadOffTheTeaGraph()
@@ -340,6 +340,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
     }
     
     @objc func eddieProClicked(_ sender:UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click My Scores Eddie")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "OTT"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -347,6 +348,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
     
     // MARK: - infoClicked
     @objc func infoClicked(_ sender:UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click My Scores Info")
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
         viewCtrl.title = cardViewInfoArray[sender.tag].title
         viewCtrl.desc = cardViewInfoArray[sender.tag].value
@@ -416,8 +418,7 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             self.navigationController?.pushViewController(mapViewController, animated: true)
         }
         else{
-//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-//        self.navigationController?.pushViewController(viewCtrl, animated: true)
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click My Scores Eddie")
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "OTT"
             self.navigationController?.pushViewController(viewCtrl, animated: false)

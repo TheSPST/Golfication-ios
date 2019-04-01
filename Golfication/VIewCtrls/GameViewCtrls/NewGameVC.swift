@@ -133,6 +133,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // Marke : StartingTee Action
     var courseData = CourseData()
     @IBAction func btnActionStartingTee(_ sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Tee")
         let myController = UIAlertController(title: "Select Tee", message: "Please select your Tee according to your Handicap", preferredStyle: UIAlertControllerStyle.actionSheet)
         
         let messageAttributed = NSMutableAttributedString(
@@ -175,11 +176,18 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     // MARK: backAction
     @IBAction func backAction(sender: UIBarButtonItem) {
+        if isActiveMatch{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click CG Back")
+        }else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Back")
+        }
+
         self.navigationController?.popViewController(animated: true)
         Constants.addPlayersArray.removeAllObjects()
     }
     @IBAction func btnActionEditGoal(_ sender: Any) {
         self.progressView.show()
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Edit Goals")
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
             var golfBagArray = NSMutableArray()
             if(snapshot.value != nil){
@@ -517,6 +525,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View New Game")
         self.goalView.isHidden = !Constants.isProMode
         eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         debugPrint("didLoad")
@@ -591,6 +600,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         getHomeCourse()
     }
     @IBAction func goalInfoAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Goals Info")
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
         viewCtrl.title = "Your Goals"
         viewCtrl.desc = StatsIntoConstants.editGoalInfo
@@ -894,6 +904,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 })
             }
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Home Course")
     }
     
     // MARK: nearestCourseAction
@@ -923,6 +934,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 self.present(alert, animated: true, completion: nil)
             }
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Nearest Course")
     }
     
     // MARK: searchLocationAction
@@ -938,6 +950,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             viewCtrl.fromNewGame = true
             self.navigationController?.pushViewController(viewCtrl, animated: true)
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Edit Course")
     }
     
     // MARK: moreInfoAction
@@ -978,6 +991,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             break;
         }
         self.updateGoals(isNine:isNine)
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Holes")
     }
     // MARK: startHoleAction
     @IBAction func startHoleAction(sender: AnyObject) {
@@ -1001,6 +1015,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         else{
             Constants.startingHole = String(btn.tag)
         }
+        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Starting Holes")
     }
     
     func otherHoleAction(_ sender: Any) {
@@ -1064,6 +1080,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             return
             
         }, origin: sender)
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Starting Hole")
     }
     
     // MARK: addPlayerAction
@@ -1330,11 +1347,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
     }
-    
+    var isActiveMatch = false
     // MARK: setActiveMatchUI
     func setActiveMatchUI(){
         // ------- check active match ------------------
-        var isActiveMatch = false
+        
         if(Constants.matchId.count > 1){
             isActiveMatch = true
         }
@@ -1350,6 +1367,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     self.getScoreFromMatchDataFirebase(keyId:Constants.matchId)
                 }
             }
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Continue Game")
         }
         else{
             if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
@@ -2059,6 +2077,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             btnStartContinue.setTitle("Next".localized(), for: .normal)
         }
         deselectGOlfXView()
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG On Course")
     }
     @IBAction func prevRoundAction(_ sender: Any) {
         modeInt = 1
@@ -2077,6 +2096,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             btnStartContinue.setTitle("Next".localized(), for: .normal)
         }
         deselectGOlfXView()
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Off Course")
     }
     
     var fromStartContinueBtn = false
@@ -2087,6 +2107,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         // Amit's Changes
         if btnStartContinue.titleLabel?.text == "Continue Round".localized(){
             var swingK = String()
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click CG Continue")
             for data in self.players{
                 if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
                     if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
@@ -2143,6 +2164,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             //            }
         }
         else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Next")
             isContinueClicked = false
             Constants.deviceGolficationX = nil
             Constants.ble = nil
@@ -2505,6 +2527,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: endAction
     @IBAction func endAction(_ sender: Any) {
+        
         fromEndRound = true
         fromStartContinueBtn = false
         var swingK = String()
@@ -2565,9 +2588,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         myController.setValue(messageAttributed, forKey: "attributedMessage")
         
         let saveOption = (UIAlertAction(title: "Save Round", style: UIAlertActionStyle.default, handler: { action in
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click CG Popup Save")
             self.saveAndviewScore()
         }))
         let saveReviewOption = (UIAlertAction(title: "Save & Review", style: UIAlertActionStyle.default, handler: { action in
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click CG Popup Save")
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
             ref.child("matchData/\(Constants.matchId)").updateChildValues(["onCourse":false])
             self.pushDefultMapVC()
@@ -2577,9 +2602,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             descardRound = "Delete Round".localized()
         }
         let discardOption = (UIAlertAction(title: descardRound, style: UIAlertActionStyle.default, handler: { action in
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click CG Popup Discard")
             self.exitWithoutSave()
         }))
         let cancelOption = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { action in
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click CG Popup Cancel")
             debugPrint("Cancelled")
         })
         discardOption.setValue(UIColor.red, forKey: "titleTextColor")
@@ -2625,6 +2652,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func exitWithoutSave(){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Discard Game")
         if(Constants.matchId.count > 1){
             if(Auth.auth().currentUser!.uid.count > 1){
                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
@@ -2786,6 +2814,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         //        let totalThru: Int = self.checkHoleOutZero()
     }
     @objc func statsCompleted(_ notification: NSNotification) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Save Game")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide()
         
@@ -2982,6 +3011,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: viewScoreAction
     @IBAction func viewScoreAction(_ sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click CG View Scorecard")
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "ScoreBoardVC") as! ScoreBoardVC
         viewCtrl.scoreData = scoring
         viewCtrl.playerData = players

@@ -625,6 +625,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             self.lblHandicap.text = "Handicap".localized() + " \(self.sliderHandicapNumber.value)"
         }
         getData()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View My Profile")
     }
     
     // MARK: getData

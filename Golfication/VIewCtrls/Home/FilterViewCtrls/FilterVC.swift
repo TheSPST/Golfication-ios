@@ -18,7 +18,8 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
     
     var commanArray = [String]()
     var allSections : [NSArray] = []
-    
+    var isSmartCaddie = false
+    var isMyScoreParent = false
     var section1 = [String]()
     var section2 = [String]()
     var section3 = [String]()
@@ -86,7 +87,12 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
                 allSections.append(Constants.section5 as NSArray)
             }
         }
-        
+        if isSmartCaddie{
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Smart Caddie Filter")
+        }
+        if isMyScoreParent{
+            FBSomeEvents.shared.singleParamFBEvene(param: "View My Scores Filter")
+        }
         /*var indexPath = IndexPath()
 //        var cell = FilterCollectionViewCell()
         for index in 0..<allSections.count{

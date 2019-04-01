@@ -53,11 +53,9 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
             }
         }
         if Auth.auth().currentUser != nil{
-            if fbId  == "facebook.com" || (Auth.auth().currentUser?.isEmailVerified)!{
-                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                appDelegate.window?.rootViewController = tabBarCtrl
-            }
+            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = tabBarCtrl
         }
         if UIDevice.current.iPhoneX || UIDevice.current.iPhonePlus{
             scoringImgTopConstraint.constant = cardView1.center.y - scoreImageView.frame.size.height/2
