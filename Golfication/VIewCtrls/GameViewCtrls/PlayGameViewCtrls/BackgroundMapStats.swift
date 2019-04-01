@@ -583,10 +583,6 @@ class BackgroundMapStats: NSObject {
         return newImage!
     }
     static func getPlaysLike(headingTarget:Double, degree:Double, windSpeed:Double, dist:Double)->Double{
-        debugPrint("headingTarget:",headingTarget)
-        debugPrint("degree:",degree)
-        debugPrint("windSpeed:",windSpeed)
-        debugPrint("dist:",dist)
         if (degree == 0 && windSpeed == 0) {
             debugPrint("return Distance:",Constants.distanceFilter == 1 ?dist/Constants.YARD:dist)
             return Constants.distanceFilter == 1 ?dist/Constants.YARD:dist

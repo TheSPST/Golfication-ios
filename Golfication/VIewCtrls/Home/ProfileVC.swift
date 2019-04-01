@@ -273,6 +273,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         
 //        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
 //        self.navigationController?.pushViewController(viewCtrl, animated: true)
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Profile Eddie")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "Profile"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -359,7 +360,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     
     // MARK: btnActionChangeImage
     @IBAction func btnActionChangeImage(_ sender: Any) {
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Profile Change Image")
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProfilePhotoDetailVC") as! ProfilePhotoDetailVC
         viewCtrl.modalPresentationStyle = .overCurrentContext
         viewCtrl.modalTransitionStyle = .crossDissolve
@@ -452,7 +453,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     
     // MARK: btnActionChangeCourse
     @IBAction func btnActionChangeCourse(_ sender: Any) {
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Profile Change Course")
         let latitude = Double("64.830673")!
         let longitude = Double("-147.576172")!
         
@@ -514,6 +515,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     
     // MARK: sliderChangedAction
     @IBAction func sliderChangedAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Profile Change HCP")
         self.lblHandicap.text = "Handicap".localized() + " \((self.slider.value*10).rounded()/10)"//(value as! NSString).floatValue
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.slider.value*10).rounded()/10)"] as [AnyHashable:Any])
         Constants.handicap = "\((self.slider.value*10).rounded()/10)"
@@ -521,6 +523,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     
     // MARK: btnCheckBoxAction
     @IBAction func btnCheckBoxAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Profile Change HCP")
         if(self.btnCheckbox.isSelected){
             self.btnCheckbox.isSelected = false
             self.btnCheckbox.setBackgroundImage(nil, for: .normal)
@@ -543,6 +546,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     }
     
     @IBAction func editGolfBagAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Profile Edit Bag")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "GolfBagVC") as! GolfBagVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }

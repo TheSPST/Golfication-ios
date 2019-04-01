@@ -147,6 +147,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }else{
             matchDataDictionary = matchDataDic
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Rangefinder Notes")
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
         viewCtrl.notesCourseID = matchDataDictionary.value(forKeyPath: "courseId") as! String
         viewCtrl.notesHoleNum = "hole\(self.scoring[self.holeIndex].hole)"
@@ -1049,6 +1050,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
 
     @IBAction func detailScoreAction(_ sender: UIButton) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Rangefinder Detailed Scoring")
         if sender.tag == 0{
             
 //            UIView.animate(withDuration: 0.3, animations: {
@@ -1132,18 +1134,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             playerStatsAction(btnPlayerStats)
         }
     }
-    /*
-             FBSomeEvents.shared.singleParamFBEvene(param: "Score Rangefinder Hole")
-     Score Rangefinder Hole 1
-     .
-     Score Rangefinder Hole 18
-     View Rangefinder Pulldown
-     Click Rangefinder Notes
-     Click Rangefinder Wind
-     Click Rangefinder Pulldown Eddie
-     Click Rangefinder Detailed Scoring
-     Click Rangefinder Goals Eddie
-     */
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         FBSomeEvents.shared.singleParamFBEvene(param: "View Rangefinder Game")
@@ -1533,6 +1524,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         
     }
     @objc func unlockEddie(_ sender: UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Rangefinder Pulldown Eddie")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "RangeFinder"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -1596,6 +1588,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     self.navigationController?.pushViewController(viewCtrl, animated: false)
     }
     @IBAction func btnActionUnlockEddie(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Rangefinder Goals Eddie")
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "RangeFinder"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
@@ -1607,6 +1600,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     @IBAction func btnActionMoveToMap(_ sender: Any) {
         if(self.viewForground.isHidden){
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Rangefinder Pulldown")
             self.showHideViews(isHide:true)
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseIn],
                            animations: {
@@ -1946,6 +1940,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     
     @objc func btnActionWindLocked(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Rangefinder Wind")
         if !Constants.isProMode{
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "RangeFinder"

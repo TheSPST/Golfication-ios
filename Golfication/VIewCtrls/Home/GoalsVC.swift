@@ -32,6 +32,11 @@ class GoalsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = titleStr
+        if titleStr.containsIgnoringCase(find: "Swing Goals"){
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Swing Goals")
+        }else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Goals")
+        }
         
         let originalImage = #imageLiteral(resourceName: "icon_info_grey")
         let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
@@ -881,6 +886,7 @@ class GoalsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             else{
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/goals/").updateChildValues(["gir":updatedValue])
             }
+            FBSomeEvents.shared.singleParamFBEvene(param: "Set Goals")
         }
         else{
             let cell = self.tableView.cellForRow(at: IndexPath(row: row, section: 0))  as! SettingCell
@@ -916,6 +922,7 @@ class GoalsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 }
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/swingGoals/").updateChildValues([clubName:defaultVal])
             }
+            FBSomeEvents.shared.singleParamFBEvene(param: "Set Swing Goals")
             for i in 0..<clubMArray.count{
                 let dic = clubMArray[i] as! NSDictionary
                 if dic.value(forKey: "clubName") as! String == clubDic.value(forKey: "clubName") as! String{

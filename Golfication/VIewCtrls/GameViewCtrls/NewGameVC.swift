@@ -2527,7 +2527,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: endAction
     @IBAction func endAction(_ sender: Any) {
-        
         fromEndRound = true
         fromStartContinueBtn = false
         var swingK = String()

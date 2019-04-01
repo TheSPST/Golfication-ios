@@ -1715,6 +1715,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     @IBAction func btnActionMoveToMap(_ sender: Any) {
         if(self.viewForground.isHidden){
+            FBSomeEvents.shared.singleParamFBEvene(param: "View On Course ST Pulldown")
             self.showHideViews(isHide:true)
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseIn],
                            animations: {
@@ -1768,6 +1769,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnWindImgLock.backgroundColor = UIColor.glfWhite
         self.btnWindImgLock.isHidden = Constants.isProMode
         self.setupEddieView.isHidden = !Constants.isProMode
+        self.btnUnlockEddie.tag = 114
+        self.btnUnlockEddie.addTarget(self, action: #selector(self.btnActionWindUnlock(_:)), for: .touchUpInside)
+        eddieView.btnUnlockEddie.tag = 112
         eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.btnActionWindUnlock(_:)), for: .touchUpInside)
         self.eddieUnlockView.isHidden = Constants.isProMode
         lockBack.isHidden = Constants.isProMode
@@ -1787,9 +1791,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         btnCenter.superview?.addGestureRecognizer(swipeHeaderDown2)
         btnCenter.roundCorners([.bottomLeft], radius: 3.0)
 
-//        BackgroundMapStats.setDir(isUp: true, label: self.lblDirBack)
-//        BackgroundMapStats.setDir(isUp: false, label: self.lblDirCenter)
-//        BackgroundMapStats.setDir(isUp: true, label: self.lblDirFront)
         btnUnlockEddie.setCornerWithRadius(color: UIColor.clear.cgColor, radius: btnUnlockEddie.frame.height/2)
         
         let originalImage =  #imageLiteral(resourceName: "setting").resize(CGSize(width:18,height:18))
@@ -1821,9 +1822,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         // for BluetoothChecking
         // register background task
         if(isOnCourse){
+            FBSomeEvents.shared.singleParamFBEvene(param: "View On Course ST Game")
             if Constants.onCourseNotification == 1{
                 self.registerBackgroundTask()
             }
+        }else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Post Game ST")
         }
         self.forTutorial = [Bool]()
         for _ in 0..<4{
@@ -1881,13 +1885,18 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "hideStableFord"), object: nil)
     }
     
-    @objc func btnActionWindUnlock(_ sender: Any) {
+    @objc func btnActionWindUnlock(_ sender: UIButton) {
+        if (sender.tag == 112){
+            self.isOnCourse ? FBSomeEvents.shared.singleParamFBEvene(param: "Click On Course ST Pulldown Eddie") : debugPrint("offCourse")
+        }else if sender.tag == 113{
+            self.isOnCourse ? FBSomeEvents.shared.singleParamFBEvene(param: "Click On Course ST Wind") : debugPrint("offCourse")
+        }else{
+            self.isOnCourse ? FBSomeEvents.shared.singleParamFBEvene(param: "Click On Course ST Goals Eddie"):FBSomeEvents.shared.singleParamFBEvene(param: "Click Post Game ST Goals Eddie")
+        }
         if !Constants.isProMode{
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "NewMap"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
-        }else{
-            
         }
     }
     
@@ -2018,10 +2027,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             }
                         }
                     }
-                    self.updateMap(indexToUpdate: self.holeIndex)
 //                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "")
                     self.getSwingData(swingKey: self.swingMatchId)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.25 , execute: {
+                        self.updateMap(indexToUpdate: self.holeIndex)
                         if let playerSData = self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSMutableDictionary{
                             let holeOut = playerSData.value(forKey: "holeOut") as? Bool ?? false
                             if holeOut && self.viewHoleStats.isHidden{
@@ -2447,6 +2456,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)/goals/target").updateChildValues(goal as! [AnyHashable : Any])
     }
     @IBAction func btnActionTrackShots(_ sender: UIButton) {
+        self.isOnCourse ? FBSomeEvents.shared.singleParamFBEvene(param: "Score On Course ST Hole \(self.scoring[self.holeIndex].hole)") : FBSomeEvents.shared.singleParamFBEvene(param: "Score Post Game ST Hole \(self.scoring[self.holeIndex].hole)")
         self.btnAddShot.isHidden = true
         self.btnAddShotLbl.isHidden = true
         let shotClub = courseData.clubs[self.btnSelectClubs.tag]
@@ -4975,6 +4985,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             windNotesView.setViewForOffCourse()
             btnForSuggMarkOffCourse.setViewForOffCourse()
         }
+        windNotesView.btnWindUnlock.tag = 113
         windNotesView.btnWindUnlock.addTarget(self, action: #selector(self.btnActionWindUnlock(_:)), for: .touchUpInside)
         windNotesView.btnNotesUnlock.addTarget(self, action: #selector(self.addNotesAction(_:)), for: .touchUpInside)
     }
@@ -5407,7 +5418,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         self.mapTimer.invalidate()
         if(!isOnCourse){
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Post Game ST Hole \(self.scoring[indexToUpdate].hole)")
             self.btnTrackShot.backgroundColor = UIColor.glfGreenBlue
+        }else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "View On Course ST Hole \(self.scoring[indexToUpdate].hole)")
         }
         markers.removeAll()
         markersForCurved.removeAll()
@@ -7413,6 +7427,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     
     @objc func addNotesAction(_ sender: Any) {
+        self.isOnCourse ? FBSomeEvents.shared.singleParamFBEvene(param: "Click On Course ST Notes") : FBSomeEvents.shared.singleParamFBEvene(param: "Click Post Game ST Notes")
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
         viewCtrl.notesCourseID = self.matchDataDict.value(forKeyPath: "courseId") as! String
         viewCtrl.notesHoleNum = "hole\(self.scoring[self.holeIndex].hole)"

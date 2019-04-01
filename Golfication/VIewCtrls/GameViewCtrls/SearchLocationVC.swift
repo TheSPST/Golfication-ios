@@ -51,11 +51,12 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
         }
     }
     @objc func runTimedCode(){
+        FBSomeEvents.shared.singleParamFBEvene(param: "CS Search Course")
         self.searchGolfLocation(searchText: self.golfSearchBar.text!)
         self.gameTimer.invalidate()
     }
     @IBAction func submitCourseAction(_ sender: Any) {
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "CS Request Course")
         if courseTxtField.text == ""{
             let alert = UIAlertController(title: "Alert", message: "Please enter course name.", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -157,7 +158,6 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
         
         golfSearchBar.layer.cornerRadius = 5.0
         golfSearchBar.clipsToBounds = true
-//        searchTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         let originalImage = #imageLiteral(resourceName: "backArrow")
         let backImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         btnBack.setBackgroundImage(backImage, for: .normal)
@@ -175,6 +175,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             let currentLocation: CLLocation = locationManager.location!
             self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
         }
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Course Selection")
     }
 
     // MARK: getNearByData
@@ -370,7 +371,7 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "CS Select Course")
         Constants.selectedGolfID = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Id") as? String)!
         Constants.selectedGolfName = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Name") as? String)!
         Constants.selectedLat = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Latitude") as? String)!

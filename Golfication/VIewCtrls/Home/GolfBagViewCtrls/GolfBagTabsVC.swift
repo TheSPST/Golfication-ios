@@ -90,6 +90,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         btnTempAddBag.isHidden = true
     }
     @IBAction func saveAction(_ sender: Any){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Bag Save")
         for i in 0..<golfBagTabMArray.count{
             let dic = golfBagTabMArray[i] as! NSDictionary
             if (dic.value(forKey: "clubName") as! String == selectedBagStr){
@@ -724,7 +725,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     @IBAction func removeBagAction(_ sender: Any){
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Bag Remove Club")
         self.progressView.show(atView: self.scrlView, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
             self.progressView.hide(navItem: self.navigationItem)
@@ -773,6 +774,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     @IBAction func addToBagAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Bag Add Club")
         self.progressView.show(atView: self.scrlView, navItem: self.navigationItem)
         let tempBagArray = NSMutableArray()
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in

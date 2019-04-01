@@ -328,57 +328,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 })
             }
         }
-
-        //        handiLeftView.layer.cornerRadius = 10.0
-        //        handiRightView.layer.cornerRadius = 10.0
-        
-        // ------ update golf bag 14 data to firbase ------------------
-        //        self.progressView.show()
         golfBagTblView.isHidden = true
-        //        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/\(Auth.auth().currentUser!.uid)/golfBag") { (snapshot) in
-        //            if(snapshot.value != nil){
-        //                let golfBagArray = snapshot.value as! NSMutableArray
-        //                if golfBagArray.count > 0{
-        //                    self.selectedClubs = NSMutableArray()
-        //                    for i in 0..<golfBagArray.count{
-        //                        if let dict = golfBagArray[i] as? NSDictionary{
-        //                            self.selectedClubs.add(dict)
-        //
-        //                            if dict.value(forKey: "tagNum") != nil{
-        //                                if let tagNum = dict.value(forKey: "tagNum") as? Int{
-        //                                    if tagNum == 0{
-        //                                        ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["tagNum":""])
-        //                                    }
-        //                                }
-        //                            }
-        //                        }
-        //                        else{
-        //                            let tempArray = snapshot.value as! NSMutableArray
-        //                            var golfBagData = [String: NSMutableArray]()
-        //                            for i in 0..<tempArray.count{
-        //                                let golfBagDict = NSMutableDictionary()
-        //                                golfBagDict.setObject("", forKey: "brand" as NSCopying)
-        //                                golfBagDict.setObject("", forKey: "clubLength" as NSCopying)
-        //                                golfBagDict.setObject(tempArray[i], forKey: "clubName" as NSCopying)
-        //                                golfBagDict.setObject("", forKey: "loftAngle" as NSCopying)
-        //                                golfBagDict.setObject(false, forKey: "tag" as NSCopying)
-        //                                golfBagDict.setObject("", forKey: "tagName" as NSCopying)
-        //                                golfBagDict.setObject("", forKey: "tagNum" as NSCopying)
-        //
-        //                                golfBagArray.replaceObject(at: i, with: golfBagDict)
-        //                                golfBagData = ["golfBag": golfBagArray]
-        //
-        //                                self.selectedClubs.add(golfBagDict)
-        //                            }
-        //                            if golfBagData.count>0{
-        //                                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
-        //                            }
-        //                            break
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //            else{
         let golfBagArray = NSMutableArray()
         golfBagArray.addObjects(from: ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu"])
         var golfBagData = [String: NSMutableArray]()
@@ -403,9 +353,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         if golfBagData.count>0{
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(golfBagData)
         }
-        //            }
         DispatchQueue.main.async(execute: {
-            //                self.progressView.hide()
             self.golfBagTblView.isHidden = false
             self.golfBagTblView.delegate = self
             self.golfBagTblView.dataSource = self
@@ -418,7 +366,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 self.bottomStackSV.spacing = 0
             }
         })
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Setup Course")
     }
     func updateIAd(){
         if ADClient.shared().responds(to: #selector(ADClient.requestAttributionDetails(_:))) {
@@ -455,6 +403,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
     @objc func runTimedCode(){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Setup Search Course")
         self.searchGolfLocation(searchText: searchTxtField.text!)
         self.gameTimer.invalidate()
     }
@@ -776,6 +725,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     // MARK: btnCheckBoxAction
     @IBAction func btnCheckBoxAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Setup Enter HCP")
         if(self.btnCheckbox.isSelected){
             self.btnCheckbox.isSelected = false
 //            let originalImage1 = #imageLiteral(resourceName: "check")
@@ -816,6 +766,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     // MARK: sliderChangedAction
     @IBAction func sliderChangedAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Setup Enter HCP")
         self.lblHandicap.text = "\((self.sliderHandicapNumber.value*10).rounded()/10)"
 
         self.btnCheckbox.isSelected = false
@@ -861,7 +812,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     // MARK: btnActionChangeCourse
     @IBAction func btnActionChangeCourse(_ sender: Any) {
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Setup Nearby")
         let latitude = Double("64.830673")!
         let longitude = Double("-147.576172")!
         
@@ -918,10 +869,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
         }
     }
-    
+
     // MARK: skipAction
     @IBAction func skipAction(_ sender: UIButton) {
-
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Setup Skip")
         currentPageIndex = self.pageControl.currentPage + 1
         pageControl.currentPage += 1
         
@@ -930,7 +881,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
         if currentPageIndex == 2 {
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Setup Details")
             btnNext.setTitle(spaceStr + "Done" + spaceStr, for: .normal)
+        }else if currentPageIndex == 1{
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Setup Bag")
         }
         if currentPageIndex == 3{
             currentPageIndex = 0
@@ -944,7 +898,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     // MARK: nextAction
     @IBAction func nextAction(_ sender: UIButton) {
-        
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Setup Next (inc done)")
         currentPageIndex = self.pageControl.currentPage + 1
         pageControl.currentPage += 1
         
@@ -953,7 +907,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         btnNext.setTitle(spaceStr + "Next".localized() + spaceStr, for: .normal)
         if currentPageIndex == 2 {
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Setup Details")
             btnNext.setTitle(spaceStr + "Done" + spaceStr, for: .normal)
+        }else if currentPageIndex == 1{
+            FBSomeEvents.shared.singleParamFBEvene(param: "View Setup Bag")
         }
         if currentPageIndex == 3{
             currentPageIndex = 0
@@ -1051,6 +1008,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         return UIView()
     }
     @objc func footerTouched(_ sender:UIButton){
+        FBSomeEvents.shared.singleParamFBEvene(param: "Setup Request Course")
         self.addCourseView.isHidden = false
         self.viewAddCourse.isHidden = false
         self.tanksView.isHidden = true
@@ -1255,12 +1213,13 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             tblViewHConstraint.constant = 60
             nearMeContainerView.isHidden = false
             lblCustomize.isHidden = false
-
+            FBSomeEvents.shared.singleParamFBEvene(param: "Setup Select Course")
         }
     }
     
     // MARK: clubButtonTapped
     @objc func clubButtonTapped(_ sender: UIButton!) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Setup Change Bag")
         if(sender.isSelected){
             for i in 0..<selectedClubs.count{
                 let dict = selectedClubs[i] as! NSDictionary

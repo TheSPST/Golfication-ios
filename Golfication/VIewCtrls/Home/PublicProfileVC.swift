@@ -79,6 +79,7 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
     // MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View User Profile")
         // Do any additional setup after loading the view.
         self.btnAddFriend.isUserInteractionEnabled = false
 

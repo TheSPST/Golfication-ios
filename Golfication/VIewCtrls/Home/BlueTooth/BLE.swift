@@ -2236,12 +2236,14 @@ extension BLE: CBPeripheralDelegate {
         if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
             debugPrint("hole scoring count",scoring.count)
             debugPrint("hole Number",hole-1)
-            if let holeData = (scoring[hole-1] as! NSMutableDictionary).value(forKey: Auth.auth().currentUser!.uid) as? NSMutableDictionary{
-                if let holeShotArr = holeData.value(forKey: "shots") as? NSArray{
-                    shotNm = holeShotArr.count
-                }
-                if let _ = holeData.value(forKey: "shotTracking") as? NSMutableDictionary{
-                    shotNm += shotNm == 0 ? 0:1
+            if hole-1 < scoring.count{
+                if let holeData = (scoring[hole-1] as! NSMutableDictionary).value(forKey: Auth.auth().currentUser!.uid) as? NSMutableDictionary{
+                    if let holeShotArr = holeData.value(forKey: "shots") as? NSArray{
+                        shotNm = holeShotArr.count
+                    }
+                    if let _ = holeData.value(forKey: "shotTracking") as? NSMutableDictionary{
+                        shotNm += shotNm == 0 ? 0:1
+                    }
                 }
             }
         }

@@ -20,7 +20,11 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
     @IBOutlet weak var versionLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
     var golfBagArray = NSMutableArray()
-    
+    /*
+     FBSomeEvents.shared.singleParamFBEvene(param: "Set Goals")
+     
+     Set Swing Goals
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -37,6 +41,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
         
         self.checkVersion()
         self.checkFilterValuesFromFirebase()
+        FBSomeEvents.shared.singleParamFBEvene(param: "View Settings")
     }
     
     func getShortClubName(clubName: String) -> String{
@@ -197,6 +202,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
     
     // MARK: btnLogoutAction
     @IBAction func btnLogoutAction(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Logout")
         let alert = UIAlertController(title: "Alert", message: "Are you sure you want to Logout?".localized(), preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { [weak alert] (_) in
@@ -479,9 +485,11 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
         var titleStr = String()
         if sender.tag == 3{
             titleStr = "Scoring Goals"
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click Goals")
         }
         else{
             titleStr = "Swing Goals"
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click Swing Goals")
         }
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "GoalsVC") as! GoalsVC
         viewCtrl.golfBagArray = self.golfBagArray
@@ -640,6 +648,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
                     }
                 }
             }
+            FBSomeEvents.shared.singleParamFBEvene(param: "Settings Set Units")
             Constants.distanceFilter = indexPath.row
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["unit" :Constants.distanceFilter] as [AnyHashable:Any])
         }
@@ -655,6 +664,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
                     }
                 }
             }
+            FBSomeEvents.shared.singleParamFBEvene(param: "Settings Set Strokes Gained")
             Constants.skrokesGainedFilter = indexPath.row
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["strokesGained" :Constants.skrokesGainedFilter] as [AnyHashable:Any])
         }

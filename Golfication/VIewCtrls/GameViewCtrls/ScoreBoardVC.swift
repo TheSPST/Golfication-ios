@@ -580,10 +580,17 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         tempDic.setObject("parId", forKey: "id" as NSCopying)
         tempDic.setObject("Par".localized(), forKey: "name" as NSCopying)
         self.sectionNames.insert(tempDic, at: 1)
-        
+        var isPlayer = false
         for i in 0..<self.playerData.count{
-            
+            if let playerID = (self.playerData[i] as! NSMutableDictionary).value(forKey:"id") as? String{
+                if playerID.containsIgnoringCase(find: "\(Auth.auth().currentUser!.uid)"){
+                    isPlayer = true
+                }
+            }
             self.sectionNames.insert(self.playerData[i], at: i+2)
+        }
+        if !isPlayer{
+            FBSomeEvents.shared.singleParamFBEvene(param: "View UserFeed Scorecard")
         }
         debugPrint("sectionNames== ",self.sectionNames.count)
         
@@ -753,9 +760,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             var matchDataDictionary = NSMutableDictionary()
             if(isFinalSummary){
                 matchDataDictionary = self.matchDataDict
+                if matchDataDictionary.count == 0{
+                    matchDataDictionary = Constants.matchDataDic
+                }
             }else{
                 matchDataDictionary = Constants.matchDataDic
-
             }
             let startingIndex = Int(matchDataDictionary.value(forKeyPath: "startingHole") as? String ?? "1")
             let gameTypeIndex = self.scoreData.count

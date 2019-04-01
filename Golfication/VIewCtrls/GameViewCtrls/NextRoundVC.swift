@@ -90,7 +90,7 @@ class NextRoundVC: UIViewController {
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-                if mappingCount >= 10{
+                if mappingCount >= 4{
                     ref.child("unmappedCourse/\(Constants.selectedGolfID)/").updateChildValues(["count":mappingCount+1] as [AnyHashable:Any])
                 }
                 else{
@@ -113,7 +113,7 @@ class NextRoundVC: UIViewController {
                     }
                     ref.child("unmappedCourseRequest/\(Auth.auth().currentUser!.uid)/").updateChildValues(mappingDic as! [AnyHashable:Any])
                 }
-                if mappingCount+1 >= 10{
+                if mappingCount+1 >= 4{
                     // show timer here
                     self.timerSv.isHidden = false
                     self.btnRequestMapping.isHidden = true
@@ -135,6 +135,7 @@ class NextRoundVC: UIViewController {
                     let timeNow = NSDate()
                     let calendar = NSCalendar.current
                     var components = calendar.dateComponents([.second], from: timeNow as Date, to: timeEnd!)
+                    self.oopsLbl.isHidden = true
                     self.startTimer(totalTime: (components.second!))
                 }
                 else{
@@ -147,15 +148,15 @@ class NextRoundVC: UIViewController {
                     self.lblAfterMappingRequst.isHidden = false
                     self.oopsLbl.isHidden = true
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
-                    self.mappedProgressView.progress = Float(mappingCount+1)/Float(10)
-                    self.lblRequestReceive.text = "BOOSTS RECEIVED: " + "\(mappingCount+1)" + "/" + "10"
+                    self.mappedProgressView.progress = Float(mappingCount+1)/Float(4)
+                    self.lblRequestReceive.text = "BOOSTS RECEIVED: " + "\(mappingCount+1)" + "/" + "4"
                     if self.scoringMode.containsIgnoringCase(find: "classic"){
                         self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
                     }else{
                         self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
                     }
                     
-                    let stringAttributed = NSMutableAttributedString.init(string: "Courses are on priority, mapped within 48 hrs when 10 boosts are received.")
+                    let stringAttributed = NSMutableAttributedString.init(string: "Courses are on priority, mapped within 48 hrs when 4 boosts are received.")
                     self.lblOverlapping?.attributedText = stringAttributed
                     let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
                     self.lblOverlapping.addGestureRecognizer(tap)
@@ -547,6 +548,7 @@ class NextRoundVC: UIViewController {
                     }
                     self.btnPlayBasic.setTitle("Play in Scorecard Mode", for: .normal)
                     self.lblOverlapping.text = text + "has not been initialized for this course. If you play this course often, please request for mapping below."
+                    self.oopsLbl.isHidden = !self.timerSv.isHidden
                 }
             }
             break
@@ -561,6 +563,7 @@ class NextRoundVC: UIViewController {
                     let text = "Shot Tracking "
                     self.btnPlayBasic.setTitle("Play in Rangefinder Mode", for: .normal)
                     self.lblOverlapping.text = text + "has not been initialized for this course. If you play this course often, please request for mapping below."
+                    self.oopsLbl.isHidden = !self.timerSv.isHidden
                 }
             }else{
                 self.btnStart.isEnabled = true
@@ -707,7 +710,7 @@ class NextRoundVC: UIViewController {
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-                if self.mappingCount >= 10{
+                if self.mappingCount >= 4{
                     // show timer here
                     self.timerSv.isHidden = false
                     self.btnRequestMapping.isHidden = true
@@ -730,6 +733,7 @@ class NextRoundVC: UIViewController {
                     let timeNow = NSDate()
                     let calendar = NSCalendar.current
                     var components = calendar.dateComponents([.second], from: timeNow as Date, to: timeEnd!)
+                    self.oopsLbl.isHidden = true
                     self.startTimer(totalTime: (components.second!))
                 }
                 else{
@@ -743,8 +747,8 @@ class NextRoundVC: UIViewController {
                     self.oopsLbl.isHidden = true
                     self.btnStartClassic.setCorner(color: UIColor.clear.cgColor)
                     
-                    self.mappedProgressView.progress = Float(self.mappingCount)/Float(10)
-                    self.lblRequestReceive.text = "BOOSTS RECEIVED: " + "\(self.mappingCount)" + "/" + "10"
+                    self.mappedProgressView.progress = Float(self.mappingCount)/Float(4)
+                    self.lblRequestReceive.text = "BOOSTS RECEIVED: " + "\(self.mappingCount)" + "/" + "4"
                     if self.selectedMode == 1{
                         self.scoringMode = "classic"
                     }
@@ -754,7 +758,7 @@ class NextRoundVC: UIViewController {
                     }else{
                         self.btnPlayBasic.setTitle("Play in Rangefinder Mode", for: .normal)
                     }
-                    let stringAttributed = NSMutableAttributedString.init(string: "Courses are mapped on priority, within 48 hrs when 10 boosts are received.")
+                    let stringAttributed = NSMutableAttributedString.init(string: "Courses are mapped on priority, within 48 hrs when 5 boosts are received.")
                     self.lblOverlapping?.attributedText = stringAttributed                    
                     let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
                     self.lblOverlapping.addGestureRecognizer(tap)
