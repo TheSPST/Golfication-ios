@@ -758,7 +758,7 @@ class NextRoundVC: UIViewController {
                     }else{
                         self.btnPlayBasic.setTitle("Play in Rangefinder Mode", for: .normal)
                     }
-                    let stringAttributed = NSMutableAttributedString.init(string: "Courses are mapped on priority, within 48 hrs when 5 boosts are received.")
+                    let stringAttributed = NSMutableAttributedString.init(string: "Courses are mapped on priority, within 48 hrs when 4 boosts are received.")
                     self.lblOverlapping?.attributedText = stringAttributed                    
                     let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
                     self.lblOverlapping.addGestureRecognizer(tap)
