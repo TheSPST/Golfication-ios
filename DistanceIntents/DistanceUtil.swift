@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 class DistanceUtil: NSObject {
-    
+    let context = CoreDataStorage.mainQueueContext()
     var nearbuyPointOfGreen : CLLocation!
     var flagPointOfGreen  : CLLocation!
     var endPointOfGreen  : CLLocation!
@@ -41,7 +42,7 @@ class DistanceUtil: NSObject {
         userName = cDetails.uName
         imageUrl = cDetails.imgUrl
     }
-    func getHoleNum(location:CLLocation,greeDisArr:[GreenDistanceEntity],teeArr:[TeeDistanceEntity])->String{
+    func getHoleNum(location:CLLocation,greeDisArr:[GreenDistanceEntity],teeArr:[TeeDistanceEntity],isMap:Bool=false)->String{
         var greenWiseData = [[CLLocation]]()
         var holeWiseData = [CLLocation]()
         currentLocation = location
@@ -75,12 +76,22 @@ class DistanceUtil: NSObject {
         distanceToCenter =  distanceUnit == 0 ? distanceToCenter*1.09361 : distanceToCenter
         let sufffix = distanceUnit == 0 ? "yards":"meter"
         textMsg = "You are \(Int(distanceToCenter)) \(sufffix) from the green on hole \(index+1)"
-//        if diff > 5*60{
-//            textMsg = "please open app to update your current hole."
-//        }
+        if !isMap{
+            self.storeCalledByUser(hole: index+1, lat: location.coordinate.latitude, lng: location.coordinate.longitude)
+        }
         return textMsg
     }
-    func getHoleNumRF(location:CLLocation,rfHole:[FrontBackDistanceEntity],teeArr:[TeeDistanceEntity])->String{
+    func storeCalledByUser(hole:Int,lat:Double,lng:Double){
+        context.performAndWait{ () -> Void in
+            let calledByUserEntity = (NSEntityDescription.insertNewObject(forEntityName: "CalledByUserEntity", into: context) as! CalledByUserEntity)
+            calledByUserEntity.timestamp = Timestamp
+            calledByUserEntity.lat = lat
+            calledByUserEntity.lng = lng
+            calledByUserEntity.hole = Int16(hole)
+            CoreDataStorage.saveContext(context)
+        }
+    }
+    func getHoleNumRF(location:CLLocation,rfHole:[FrontBackDistanceEntity],teeArr:[TeeDistanceEntity],isMap:Bool=false)->String{
         currentLocation = location
         var holeWiseData = [CLLocation]()
         var greenWiseData = [[CLLocation]]()
@@ -122,6 +133,9 @@ class DistanceUtil: NSObject {
         //        if diff > 5*60{
 //            textMsg = "please open app to update your current hole."
 //        }
+        if !isMap{
+            self.storeCalledByUser(hole: index+1, lat: location.coordinate.latitude, lng: location.coordinate.longitude)
+        }
         return textMsg
     }
     func middlePointOfListMarkers(listCoords: [CLLocation]) -> CLLocation{

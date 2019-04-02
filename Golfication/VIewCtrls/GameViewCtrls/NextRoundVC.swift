@@ -70,12 +70,14 @@ class NextRoundVC: UIViewController {
     }
     
     @IBAction func btnActionInfoForRequest(_ sender: Any) {
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RM3 Info")
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "CourseViewController") as! CourseViewController
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     @IBAction func btnActionForRequestMapping(_ sender: UIButton) {
         var mappingCount = 0
         var mappedTimestamp = Int64()
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click RM1 Request")
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourse/\(Constants.selectedGolfID)") { (snapshot) in
             var dataDic = NSDictionary()
@@ -164,6 +166,7 @@ class NextRoundVC: UIViewController {
                 }
                 let alert = UIAlertController(title: "Mapping Request Received!", message: "Our mapping team is working on your course request. You can fast-track your request by asking friends to boost your course.", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Know More", style: .cancel, handler: { _ in
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Click RM2 Know More")
                     let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "CourseViewController") as! CourseViewController
                     self.navigationController?.pushViewController(viewCtrl, animated: true)
                 }))
@@ -218,6 +221,11 @@ class NextRoundVC: UIViewController {
     }
     
     @IBAction func startClassicAction(sender: UIButton) {
+        if !self.mappedProgressView.isHidden || !self.timerSv.isHidden{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click RM3 Start")
+        }else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click RM1 Start")
+        }
         if self.scoringMode.contains("classic"){
             prevClassicAction(sender: btnPrevClassic)
         }else{
@@ -225,6 +233,11 @@ class NextRoundVC: UIViewController {
         }
     }
     @IBAction func startClassicAction2(sender: UIButton) {
+        if !self.mappedProgressView.isHidden || !self.timerSv.isHidden{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click RM3 Boosts")
+        }else{
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click RM2 Boosts")
+        }
         let text = "You were the first person I thought of when I read this. I use this new golf app called Golfication that uses data and AI to help me improve faster! The app is really powerful when your course is fully mapped out - with hazards, bunkers, roughs... the whole nine yards. I have requested for the mapping of \(Constants.selectedGolfName) on priority. It would be great if you can download the app and boost my request: that way it'll get mapped faster. And we can, together, use advanced insights to improve our game. Download and Boost my Request"
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let link = URL(string: "https://p5h99.app.goo.gl/mVFa?invitedby=\(uid)")

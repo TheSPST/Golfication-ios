@@ -41,10 +41,7 @@ class GolfBagVC: ButtonBarPagerTabStripViewController {
         }
     }
 
-    override func viewDidLoad() {
-
-        self.automaticallyAdjustsScrollViewInsets = false
-        
+    override func viewDidLoad() {        
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white
         settings.style.selectedBarBackgroundColor = UIColor.glfBluegreen

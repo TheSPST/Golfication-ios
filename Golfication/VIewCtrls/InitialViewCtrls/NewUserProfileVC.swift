@@ -379,9 +379,14 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                         return "\(key)=\(value)"
                     }) as Array).joined(separator: ";")
                     print(cookieHeader)
-                    ref.child("iosAdsUser/").updateChildValues(["\(Auth.auth().currentUser!.uid)" : cookieHeader], withCompletionBlock: { (error, ref) in
-                        debugPrint("Success fulll write")
-                    })
+                    let dddict = NSMutableDictionary()
+                    dddict.addEntries(from: ["uid" : Auth.auth().currentUser!.uid])
+                    dddict.addEntries(from: ["data" : cookieHeader])
+                    if tempararyUserKey != nil{
+                        ref.child("iosAdsUser/").updateChildValues(["\(tempararyUserKey!)" : dddict], withCompletionBlock: { (error, ref) in
+                            debugPrint("Success fulll write")
+                        })
+                    }
                 }
             })
         }

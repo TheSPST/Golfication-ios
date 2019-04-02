@@ -145,6 +145,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
 
         let alert = UIAlertController(title: "Alert", message: "Congratulations! Your Pro MemberShip is now Active", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
+            debugPrint(alert as Any)
             self.navigationController?.popToRootViewController(animated: true)
         }))
         self.present(alert, animated: true, completion: nil)

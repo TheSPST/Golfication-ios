@@ -49,7 +49,7 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
                     }
                     if let counterTee = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: self.context) as? [TeeDistanceEntity],!counterTee.isEmpty{
                         if let counterGreen = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: self.context) as? [GreenDistanceEntity],!counterGreen.isEmpty{
-                            let _ = distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee)
+                            let _ = distanceUtil.getHoleNum(location: currentLocation, greeDisArr: counterGreen, teeArr: counterTee,isMap: true)
                             let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
                                                  ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
                             
@@ -73,7 +73,7 @@ class IntentViewController: UIViewController, INUIHostedViewControlling {
 //                            mapView.showAnnotations(locationsList, animated: true)
 //                            mapView.addAnnotations(locationsList)
                         }else if let frontBackEnt = NSManagedObject.findAllForEntity("FrontBackDistanceEntity", context: self.context) as? [FrontBackDistanceEntity],!frontBackEnt.isEmpty{
-                            let _ = distanceUtil.getHoleNumRF(location: currentLocation, rfHole: frontBackEnt, teeArr: counterTee)
+                            let _ = distanceUtil.getHoleNumRF(location: currentLocation, rfHole: frontBackEnt, teeArr: counterTee,isMap: true)
                             let locationValue = [["name":distanceUtil.userName!,"lat":"\(distanceUtil.currentLocation.coordinate.latitude)","log":"\(distanceUtil.currentLocation.coordinate.longitude)"],
                                                  ["name":"Flag\(Int(distanceUtil.distanceToCenter))","lat":"\(distanceUtil.flagPointOfGreen.coordinate.latitude)","log":"\(distanceUtil.flagPointOfGreen.coordinate.longitude)"]]
                             

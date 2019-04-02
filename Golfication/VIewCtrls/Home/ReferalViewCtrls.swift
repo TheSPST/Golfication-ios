@@ -123,7 +123,7 @@ class ReferalViewCtrls: UIViewController {
                 }else{
                     FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "referralTimestamp") { (snapshot) in
                         if(snapshot.value != nil){
-                            self.newTimer = snapshot.value as! Int64
+                            self.newTimer = (snapshot.value as! Int64)
                         }
                         DispatchQueue.main.async( execute: {
                             self.ReferalFrontCardView.isHidden = false
@@ -321,7 +321,7 @@ class ReferalViewCtrls: UIViewController {
         
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "indiegogo") { (snapshot) in
             if(snapshot.value != nil){
-                self.indiegogoProURL = snapshot.value as! String
+                self.indiegogoProURL = (snapshot.value as! String)
             }
             DispatchQueue.main.async(execute: {
                 let storyboard = UIStoryboard(name: "Home", bundle: nil)

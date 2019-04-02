@@ -975,10 +975,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         
         let config = ARKitConfig.defaultConfig(for: self)
-        config?.orientation = self.interfaceOrientation
+        config?.orientation = UIApplication.shared.statusBarOrientation
         //config?.useAltitude = true
         let s :CGSize = UIScreen.main.bounds.size
-        if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        if (UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)) {
             config?.radarPoint = CGPoint(x:s.width - 50, y:s.height - 50);
         } else {
             config?.radarPoint = CGPoint(x:s.height - 50, y:s.width - 50);
@@ -1159,7 +1159,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if let playerDict = self.scoring[self.holeIndex].players[i].value(forKey: self.selectedUserId) as? NSMutableDictionary{
                     playerDict.removeObject(forKey: "shotTracking")
                     self.scoring[self.holeIndex].players[i].setValue(playerDict, forKey: self.selectedUserId)
-                    
                 }
             }
         }

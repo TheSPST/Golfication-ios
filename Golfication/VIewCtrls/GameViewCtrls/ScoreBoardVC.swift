@@ -390,7 +390,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     let score = scoreArray[i] as! NSDictionary
                     for(key,value) in score{
                         if(key as! String == "par"){
-                            par = value as! Int
+                            par = (value as! Int)
                         }else{
                             let dict = NSMutableDictionary()
                             dict.setObject(value, forKey: key as! String as NSCopying)
@@ -568,7 +568,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.title = "Your Scorecard".localized()
         self.view.backgroundColor = UIColor(rgb: 0xF8F8F7)
         //        self.navigationController?.navigationBar.backItem?.title = ""
-        self.automaticallyAdjustsScrollViewInsets = false
         self.setInitialUI()
         self.scoringView.layer.cornerRadius = 5
         

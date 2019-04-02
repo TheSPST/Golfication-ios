@@ -259,7 +259,7 @@ class SessionVC: UIViewController, UITableViewDelegate, UITableViewDataSource, I
         viewCtrl.shotsArray = shotsAr
         viewCtrl.tempArray1 = swingArr
         viewCtrl.isDemoStats = isDemoStats
-        viewCtrl.unit = (array[indexPath.row] as AnyObject).value(forKey:"unit") as! Int
+        viewCtrl.unit = ((array[indexPath.row] as AnyObject).value(forKey:"unit") as! Int)
         if sectionNames.count == 2{
             if indexPath.section == 0{
                 viewCtrl.fromRoundsPlayed = false

@@ -182,8 +182,8 @@ class MyFeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate{
                             let score = scoreArray[j] as! NSDictionary
                             for(key,value) in score{
                                 if(key as! String == "par"){
-                                    holeShotPar.par = value as! Int
-                                    par = value as! Int
+                                    holeShotPar.par = (value as! Int)
+                                    par = (value as! Int)
                                 }
                                 if(key as! String == userID){
                                     let playersShotsDic = score.value(forKey: userID) as! NSMutableDictionary
@@ -195,7 +195,7 @@ class MyFeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate{
                                             holeShotPar.shot = (dict.value(forKey: "shots") as! NSArray).count
                                         }
                                         else if (dict.value(forKey: "strokes") != nil){
-                                            holeShotPar.shot = dict.value(forKey: "strokes") as! Int
+                                            holeShotPar.shot = (dict.value(forKey: "strokes") as! Int)
                                         }
                                     }
                                 }
@@ -684,7 +684,7 @@ class MyFeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate{
                 let score = scoreArray[i] as! NSDictionary
                 for(key,value) in score{
                     if(key as! String == "par"){
-                        par = value as! Int
+                        par = (value as! Int)
                     }
                     for playerId in playersKey{
                         if(key as! String)==playerId{

@@ -760,8 +760,6 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         self.sharedInstance = BluetoothSync.getInstance()
         self.sharedInstance.delegate = self
         self.sharedInstance.initCBCentralManager()
-
-        self.automaticallyAdjustsScrollViewInsets = false
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "homeCourseDetails/name") { (snapshot) in
 

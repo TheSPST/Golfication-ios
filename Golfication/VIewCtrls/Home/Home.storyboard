@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
@@ -457,25 +458,29 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uEB-pI-wyt">
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5rB-J8-pHe">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </webView>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Ln6-Hp-jEZ" firstAttribute="bottom" secondItem="uEB-pI-wyt" secondAttribute="bottom" id="CYq-Hp-iEp"/>
                             <constraint firstItem="Ln6-Hp-jEZ" firstAttribute="top" secondItem="iWz-VP-D9j" secondAttribute="top" id="JJr-PO-xIq"/>
-                            <constraint firstItem="Ln6-Hp-jEZ" firstAttribute="trailing" secondItem="uEB-pI-wyt" secondAttribute="trailing" id="KkG-OG-WCv"/>
-                            <constraint firstItem="uEB-pI-wyt" firstAttribute="top" secondItem="iWz-VP-D9j" secondAttribute="bottom" id="OvH-rp-mwC"/>
+                            <constraint firstItem="Ln6-Hp-jEZ" firstAttribute="bottom" secondItem="5rB-J8-pHe" secondAttribute="bottom" id="K6T-rC-oyR"/>
                             <constraint firstItem="iWz-VP-D9j" firstAttribute="leading" secondItem="Ln6-Hp-jEZ" secondAttribute="leading" id="Piz-8E-Y9e"/>
-                            <constraint firstItem="uEB-pI-wyt" firstAttribute="leading" secondItem="Ln6-Hp-jEZ" secondAttribute="leading" id="Y2u-V3-OGD"/>
+                            <constraint firstItem="Ln6-Hp-jEZ" firstAttribute="trailing" secondItem="5rB-J8-pHe" secondAttribute="trailing" id="TrW-As-DMU"/>
+                            <constraint firstItem="5rB-J8-pHe" firstAttribute="top" secondItem="iWz-VP-D9j" secondAttribute="bottom" id="e0R-K7-h0I"/>
+                            <constraint firstItem="5rB-J8-pHe" firstAttribute="leading" secondItem="Ln6-Hp-jEZ" secondAttribute="leading" id="g8e-yT-b3S"/>
                             <constraint firstItem="Ln6-Hp-jEZ" firstAttribute="trailing" secondItem="iWz-VP-D9j" secondAttribute="trailing" id="n6u-iY-aTN"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Ln6-Hp-jEZ"/>
                     </view>
                     <connections>
-                        <outlet property="webView" destination="uEB-pI-wyt" id="MN9-YJ-KnM"/>
+                        <outlet property="webView" destination="5rB-J8-pHe" id="P6G-Ex-kNN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4nT-c6-okR" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -587,7 +592,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get 3 friends to use the app and we got a sweet deal for you." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DNf-LE-fHA">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get 3 friends to use the app and we got a sweet deal for you." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DNf-LE-fHA">
                                 <rect key="frame" x="16" y="36" width="288" height="33"/>
                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="14"/>
                                 <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -629,7 +634,7 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 friends required" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Led-LP-k8T">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 friends required" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Led-LP-k8T">
                                 <rect key="frame" x="12" y="159" width="288" height="16.5"/>
                                 <fontDescription key="fontDescription" name="SFProDisplay-Medium" family="SF Pro Display" pointSize="14"/>
                                 <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -673,7 +678,7 @@
                                     <action selector="btnActionInviteFriends:" destination="jNf-vk-Ui4" eventType="touchUpInside" id="rDQ-dL-kXE"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share the best Golf App with your friends" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHf-tg-gJ0">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share the best Golf App with your friends" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHf-tg-gJ0">
                                 <rect key="frame" x="49.5" y="481" width="221.5" height="14"/>
                                 <fontDescription key="fontDescription" name="SFProDisplay-Light" family="SF Pro Display" pointSize="12"/>
                                 <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

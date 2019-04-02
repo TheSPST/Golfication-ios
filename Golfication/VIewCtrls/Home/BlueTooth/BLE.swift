@@ -260,7 +260,7 @@ class BLE: NSObject {
     func sendFirstCommand(leftOrRight:UInt8,metric:UInt8){
         timeOut = 0
 //        debugPrint(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
-        if(Constants.charctersticsGlobalForWrite != nil){
+        if(Constants.charctersticsGlobalForWrite != nil) && (Constants.deviceGolficationX != nil){
             invalidateAllTimers()
             self.randomGenerator()
             var data:[UInt8] = [1,counter,leftOrRight, metric]
@@ -324,7 +324,7 @@ class BLE: NSObject {
     }
     public func sendEleventhCommand(){
         
-        if(Constants.charctersticsGlobalForWrite != nil){
+        if(Constants.charctersticsGlobalForWrite != nil) && (Constants.deviceGolficationX != nil){
             self.randomGenerator()
             let param : [UInt8] = [11,counter]
             var writeData = Data()
@@ -336,7 +336,9 @@ class BLE: NSObject {
                 self.randomGenerator()
                 let param : [UInt8] = [11,self.counter]
                 writeData =  Data(bytes:param)
-                Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
+                if (Constants.deviceGolficationX != nil){
+                    Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
+                }
                 self.currentCommandData = param
                 if counte > 2{
                     self.timerForWriteCommand11.invalidate()
@@ -345,8 +347,6 @@ class BLE: NSObject {
                     }
                 }
                 counte += 1
-                
-                
             })
         }else{
             DispatchQueue.main.async {
@@ -358,7 +358,7 @@ class BLE: NSObject {
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "command2"))
         self.totalTagInFirstPackate = 0
         timeOut = 0
-        if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3{
+        if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3 && (Constants.deviceGolficationX != nil){
             if let myDict = notification.object as? [(tag:Int ,club:Int,clubName:String)] {
                 tagClubNumber = myDict
                 self.clubsArr.removeAll()
@@ -391,7 +391,7 @@ class BLE: NSObject {
     }
     func sendSecondCommand(packet:UInt8){
         timeOut = 0
-        if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3{
+        if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3 && (Constants.deviceGolficationX != nil){
             var paramData : [UInt8] = [2,packet]
             var i = 0
             debugPrint(tagClubNumber)
@@ -444,7 +444,7 @@ class BLE: NSObject {
     
     func sendThirdCommand(){
         timeOut = 0
-        if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3{
+        if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3 && (Constants.deviceGolficationX != nil){
             self.invalidateAllTimers()
             self.randomGenerator()
             var param:[UInt8] = [3,counter]
@@ -467,7 +467,7 @@ class BLE: NSObject {
         }
     }
     func sendFourthCommand(param:[UInt8]?){
-        if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3{
+        if(Constants.charctersticsGlobalForWrite != nil) && timeOut < 3 && (Constants.deviceGolficationX != nil){
             self.centerPointOfTeeNGreen.removeAll()
             var writeData = Data()
             self.currentCommandData = param!
@@ -572,7 +572,7 @@ class BLE: NSObject {
     }
     @objc private func sendThirteenCommand(_ notification: NSNotification){
         if let holeNum = notification.object as? Int{
-            if(Constants.charctersticsGlobalForWrite != nil){
+            if(Constants.charctersticsGlobalForWrite != nil) && (Constants.deviceGolficationX != nil){
                 self.randomGenerator()
                 let param : [UInt8] = [13,counter,UInt8(holeNum)]
                 var writeData = Data()
@@ -587,7 +587,7 @@ class BLE: NSObject {
         }
     }
     public func sendforteenCommand(){
-        if(Constants.charctersticsGlobalForWrite != nil){
+        if(Constants.charctersticsGlobalForWrite != nil) && (Constants.deviceGolficationX != nil){
             self.randomGenerator()
             let param : [UInt8] = [14,counter]
             var writeData = Data()
@@ -724,7 +724,7 @@ class BLE: NSObject {
     }
 
     private func sendFifthCommand(){
-        if (Constants.charctersticsGlobalForWrite != nil){
+        if (Constants.charctersticsGlobalForWrite != nil) && (Constants.deviceGolficationX != nil){
             self.randomGenerator()
             let timeStamp = Timestamp
             self.currentGameId = Int(timeStamp%100000000) //87554701

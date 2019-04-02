@@ -74,7 +74,7 @@ class ExploreDetailPageVC:  UIViewController, UIScrollViewDelegate {
         }
         
         let btnYouTube = testView.viewWithTag(666) as! UIButton
-            viewYouTube = testView.viewWithTag(30000) as! YTPlayerView
+            viewYouTube = (testView.viewWithTag(30000) as! YTPlayerView)
         let imageLink = ((((self.finalDataArray[i] as AnyObject).object(forKey:"image")) as? String) ?? "")
         if imageLink == ""{
             imageView.isHidden = true
@@ -225,7 +225,6 @@ class ExploreDetailPageVC:  UIViewController, UIScrollViewDelegate {
 
         self.tabBarController?.tabBar.isHidden = true
         self.navigationItem.setHidesBackButton(true, animated: true)
-        self.automaticallyAdjustsScrollViewInsets = false
         self.getContentData(contentKey: self.ctgryKey)
     }
     

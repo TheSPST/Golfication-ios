@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18D32a" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CalledByUserEntity" representedClassName="CalledByUserEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="hole" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="lng" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
     <entity name="CourseDetailsEntity" representedClassName="CourseDetailsEntity" syncable="YES" codeGenerationType="class">
         <attribute name="cName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imgUrl" optional="YES" attributeType="String" syncable="YES"/>
@@ -33,9 +39,10 @@
     <elements>
         <element name="CourseDetailsEntity" positionX="-18" positionY="72" width="128" height="90"/>
         <element name="CurrentHoleEntity" positionX="-27" positionY="63" width="128" height="75"/>
+        <element name="DistanceUnitEntity" positionX="-27" positionY="63" width="128" height="60"/>
         <element name="FrontBackDistanceEntity" positionX="-36" positionY="9" width="128" height="135"/>
         <element name="GreenDistanceEntity" positionX="-54" positionY="-9" width="128" height="90"/>
         <element name="TeeDistanceEntity" positionX="-9" positionY="81" width="128" height="90"/>
-        <element name="DistanceUnitEntity" positionX="-27" positionY="63" width="128" height="60"/>
+        <element name="CalledByUserEntity" positionX="-27" positionY="63" width="128" height="105"/>
     </elements>
 </model>

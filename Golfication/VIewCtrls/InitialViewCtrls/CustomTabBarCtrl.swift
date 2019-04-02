@@ -146,7 +146,6 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         google.action = { item in
             
             let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
-            mapViewController.automaticallyAdjustsScrollViewInsets = false
             self.playNavCtrl = (self.selectedViewController as? UINavigationController)!
             self.playNavCtrl.pushViewController(mapViewController, animated: true)
             
@@ -157,7 +156,6 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         playButton = ActionButton(attachedToView: self.view, items: [twitter, google])
         playButton.action = { button in            
             let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
-            mapViewController.automaticallyAdjustsScrollViewInsets = false
             self.playNavCtrl = (self.selectedViewController as? UINavigationController)!
             self.playNavCtrl.pushViewController(mapViewController, animated: true)
             

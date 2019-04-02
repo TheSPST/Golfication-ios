@@ -36,7 +36,7 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
 
         var userInfo = response.notification.request.content.userInfo
-
+        FBSomeEvents.shared.singleParamFBEvene(param: "Click Notification")
         if userInfo["type"] as? String == "8" {
            getScoreFromMatchDataScoring(matchId: userInfo["swingKey"] as! String)
          }

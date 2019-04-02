@@ -57,18 +57,20 @@ class FBSomeEvents: NSObject {
     //MARK: Eddie Events
     
     func singleParamFBEvene(param:String,hole:Int? = nil){
-        
-        var str = String()
-        for char in param{
-            if char != " "{
-                str.append(char)
+        let isDevelopment = BackgroundMapStats.isDevelopmentProvisioningProfile()
+        if !isDevelopment{
+            var str = String()
+            for char in param{
+                if char != " "{
+                    str.append(char)
+                }
             }
-        }
-        FBSDKAppEvents.logEvent(str)
-        if hole != nil{
-            Analytics.logEvent(str, parameters: ["hole":hole!])
-        }else{
-            Analytics.logEvent(str, parameters: [:])
+            FBSDKAppEvents.logEvent(str)
+            if hole != nil{
+                Analytics.logEvent(str, parameters: ["hole":hole!])
+            }else{
+                Analytics.logEvent(str, parameters: [:])
+            }
         }
     }
 }

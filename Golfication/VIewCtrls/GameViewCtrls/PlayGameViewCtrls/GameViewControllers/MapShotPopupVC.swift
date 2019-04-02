@@ -182,7 +182,7 @@ class MapShotPopupVC: UIViewController, UIScrollViewDelegate {
         let scoreVal3 =  self.shotsDetails[self.pageIndex][2] as! String
         let shotBtnLbl3 = mapShotPopupView.viewWithTag(42) as! UILabel
         shotBtnLbl3.text = "Comming Soon"//"\(scoreVal3)"
-
+        debugPrint(scoreVal3)
         let scoreVal4 =  self.shotsDetails[self.pageIndex][3] as! String
         let shotBtnLbl4 = mapShotPopupView.viewWithTag(43) as! UILabel
         shotBtnLbl4.text = "\(scoreVal4)"

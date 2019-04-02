@@ -508,7 +508,7 @@ class BackgroundMapStats: NSObject {
     }
     static func deleteCoreData(){
         context.performAndWait{ () -> Void in
-            let arr = ["CourseDetailsEntity","TeeDistanceEntity","FrontBackDistanceEntity","GreenDistanceEntity"]
+            let arr = ["CourseDetailsEntity","TeeDistanceEntity","FrontBackDistanceEntity","GreenDistanceEntity","CalledByUserEntity"]
             arr.forEach({ (string) in
                 if let counter1 = NSManagedObject.findAllForEntity(string, context: context){
                     counter1.forEach { counter in
@@ -600,7 +600,26 @@ class BackgroundMapStats: NSObject {
         return Constants.distanceFilter == 1 ?((PL1 + PL2)/2)/Constants.YARD:(PL1 + PL2)/2
         
     }
-
+    static func isDevelopmentProvisioningProfile() -> Bool {
+        #if IOS_SIMULATOR
+        return true
+        #else
+        // there will be no provisioning profile in AppStore Apps
+        guard let fileName = Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") else {
+            return false
+        }
+        
+        let fileURL = URL(fileURLWithPath: fileName)
+        // the documentation says this file is in UTF-8, but that failed
+        // on my machine. ASCII encoding worked ¯\_(ツ)_/¯
+        guard let data = try? String(contentsOf: fileURL, encoding: .ascii) else {
+            return false
+        }
+        
+        let cleared: String = data.components(separatedBy: .whitespacesAndNewlines).joined()
+        return cleared.contains("<key>get-task-allow</key><true/>")
+        #endif
+    }
     static func calculateGoal(scoreData:[(hole:Int,par:Int,players:[NSMutableDictionary])],targetGoal:Goal)->Goal{
         let achievedGoal = Goal()
         for data in scoreData{

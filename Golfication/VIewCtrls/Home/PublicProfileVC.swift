@@ -148,7 +148,6 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                 
                 let gameController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
                 var playNavCtrl = UINavigationController()
-                playNavCtrl.automaticallyAdjustsScrollViewInsets = false
                 playNavCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
                 playNavCtrl.pushViewController(gameController, animated: false)
                 playButton.contentView.isHidden = true
@@ -927,8 +926,8 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                             let score = scoreArray[j] as! NSDictionary
                             for(key,value) in score{
                                 if(key as! String == "par"){
-                                    holeShotPar.par = value as! Int
-                                    par = value as! Int
+                                    holeShotPar.par = (value as! Int)
+                                    par = (value as! Int)
                                 }
                                 if(key as! String == userID){
                                     let playersShotsDic = score.value(forKey: userID) as! NSMutableDictionary
@@ -936,11 +935,11 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                                         self.dataArray[i].isShow = false
                                         let dict = value as! NSMutableDictionary
                                         holeCount += 1
-                                        if (dict.value(forKey: "shots") != nil){
-                                            holeShotPar.shot = (dict.value(forKey: "shots") as! NSArray).count
+                                        if let shots = dict.value(forKey: "shots") as? NSArray{
+                                            holeShotPar.shot = shots.count
                                         }
-                                        else if (dict.value(forKey: "strokes") != nil){
-                                            holeShotPar.shot = dict.value(forKey: "strokes") as! Int
+                                        else if let strokes = dict.value(forKey: "strokes") as? Int{
+                                            holeShotPar.shot = strokes
                                         }
                                     }
                                 }
@@ -1335,7 +1334,7 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                 let score = scoreArray[i] as! NSDictionary
                 for(key,value) in score{
                     if(key as! String == "par"){
-                        par = value as! Int
+                        par = (value as! Int)
                     }
                     for playerId in playersKey{
                         if(key as! String)==playerId{

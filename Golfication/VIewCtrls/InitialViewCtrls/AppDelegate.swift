@@ -20,14 +20,13 @@
   import FirebaseAuth
   import SwiftyStoreKit
   import StoreKit
-  import UserNotifications
   import Google
   import FacebookCore
-
+  import iAd
   var sharedSecret = "79d35d5b3b684c84ba4302a33d498a47"
   var referedBy : String!
   var locationBackgroundTask: UIBackgroundTaskIdentifier!
-  
+  var tempararyUserKey : String!
   @UIApplicationMain
   class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate,UNUserNotificationCenterDelegate{
     var window: UIWindow?
@@ -50,6 +49,26 @@
             catch let signOutError as NSError {
                 debugPrint("error== ",signOutError.localizedDescription)
             }
+            if ADClient.shared().responds(to: #selector(ADClient.requestAttributionDetails(_:))) {
+                debugPrint("iOS 10 call exists")
+                ADClient.shared().requestAttributionDetails({ attributionDetails, error in
+                    // Look inside of the returned dictionary for all attribution details
+                    if let attributionDetails = attributionDetails{
+                        print("Attribution Dictionary: \(attributionDetails)")
+                        let cookieHeader = ((attributionDetails as NSDictionary).compactMap({ (key, value) -> String in
+                            return "\(key)=\(value)"
+                        }) as Array).joined(separator: ";")
+                        print(cookieHeader)
+                        tempararyUserKey = ref!.child("iosAdsUser").childByAutoId().key
+                        let ddddict = NSMutableDictionary()
+                        ddddict.addEntries(from: ["data" : cookieHeader])
+                        ref.child("iosAdsUser/").updateChildValues(["\(tempararyUserKey!)" : ddddict], withCompletionBlock: { (error, ref) in
+                            debugPrint("Success fulll write")
+                        })
+                    }
+                })
+            }
+            
         }
         //-------------------------------------------------------------------------
 
@@ -84,22 +103,19 @@
         
         
         Messaging.messaging().delegate = self
-        if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
-            
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
-        } else {
-            let settings: UIUserNotificationSettings =
-                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
+        let center  = UNUserNotificationCenter.current()
+        center.delegate = self
+        // set the type as sound or badge
+        center.requestAuthorization(options: [.sound,.alert,.badge]) { (granted, error) in
+            // Enable or disable features based on authorization
             
         }
         application.registerForRemoteNotifications()
         
+//        let settings: UIUserNotificationSettings =
+//                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+//        application.registerUserNotificationSettings(settings)
+//        application.registerForRemoteNotifications()
         // [END register_for_notifications]
         
         
@@ -116,7 +132,7 @@
         
         
         //------------------- Local Notification ----------------------
-        let center = UNUserNotificationCenter.current()
+//        let center = UNUserNotificationCenter.current()
         center.delegate = notificationDelegate
         // ------------------------------------------------------------
         
@@ -137,7 +153,6 @@
     }
 
     func receiptValidation() {
-        var expireDate = Date()
         let SUBSCRIPTION_SECRET = "79d35d5b3b684c84ba4302a33d498a47"
         let receiptPath = Bundle.main.appStoreReceiptURL?.path
 
@@ -194,7 +209,7 @@
                             debugPrint("json serialization failed with error: \(error)")
                         }
                     } else {
-                        debugPrint("the upload task returned an error: \(error)")
+                        debugPrint("the upload task returned an error: \(String(describing: error))")
                     }
                 }
                 task.resume()
@@ -389,11 +404,8 @@
                     else{
                         self.endBackgroundTask()
                     }
-                }
-                else
-                {
+                }else{
                     self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
-                    
                     // ------------ For testing at Saket Metro --------------
                     /*let lat = Double("28.523329")!
                      let lng = Double("77.195157")!
@@ -401,8 +413,7 @@
                      self.getNearByData(latitude: lat, longitude: lng, currentLocation: currentLocation)*/
                 }
             }
-            else
-            {
+            else{
                 self.endBackgroundTask()
             }
         }
@@ -458,7 +469,7 @@
                         let golfDistance = (dataArr[0].value(forKey: "Distance") as? Double) ?? 0.0
                         
 //                        let distance: Double  = Double(golfDistance)!
-                        if golfDistance < 1000.0 && golfName != ""{
+                        if golfDistance < 1500.0 && golfName != ""{
                             UserDefaults.standard.set(golfName, forKey: "NearByGolfClub")
                             UserDefaults.standard.synchronize()
                             self.sendLocalNotificationToUSer()
@@ -564,7 +575,6 @@
             
             let gameController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
             var playNavCtrl = UINavigationController()
-            playNavCtrl.automaticallyAdjustsScrollViewInsets = false
             playNavCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
             playNavCtrl.pushViewController(gameController, animated: true)
             playButton.contentView.isHidden = true

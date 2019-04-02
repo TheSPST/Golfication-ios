@@ -165,7 +165,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
     
-    // \
+    // MARK: - NotificationAction
     @IBAction func notifiAction(_ sender: Any) {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NotificationVC") as! NotificationVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
@@ -173,6 +173,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - profileAction
     @IBAction func profileAction(_ sender: Any) {
+//        Notification.sendLocaNotificatonAfterLogin()
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
         viewCtrl.fromPublicProfile = false
@@ -2062,8 +2063,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             let score = scoreArray[j] as! NSDictionary
                             for(key,value) in score{
                                 if(key as! String == "par"){
-                                    holeShotPar.par = value as! Int
-                                    par = value as! Int
+                                    holeShotPar.par = (value as! Int)
+                                    par = (value as! Int)
                                 }
                                 if(key as! String == userID){
                                     let playersShotsDic = score.value(forKey: userID) as! NSMutableDictionary
@@ -2075,7 +2076,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                                             holeShotPar.shot = (dict.value(forKey: "shots") as! NSArray).count
                                         }
                                         else if (dict.value(forKey: "strokes") != nil){
-                                            holeShotPar.shot = dict.value(forKey: "strokes") as! Int
+                                            holeShotPar.shot = (dict.value(forKey: "strokes") as! Int)
                                         }
                                     }
                                 }
@@ -2339,7 +2340,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     let score = scoreArray[i] as! NSDictionary
                     for(key,value) in score{
                         if(key as! String == "par"){
-                            par = value as! Int
+                            par = (value as! Int)
                         }
                         if(key as! String)==Auth.auth().currentUser!.uid{
                             let dict = NSMutableDictionary()
@@ -2506,6 +2507,21 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                         curHoleEntity.timestamp = Timestamp
                         curHoleEntity.holeIndex = Int16(inde)
                         CoreDataStorage.saveContext(context)
+                    }
+                    if let calledByUserEntity = NSManagedObject.findAllForEntity("CalledByUserEntity", context: context) as? [CalledByUserEntity],!calledByUserEntity.isEmpty{
+                        let timeStampDict = NSMutableDictionary()
+                        let holeWiseDict = NSMutableDictionary()
+                        for data in calledByUserEntity{
+                            let dict = NSMutableDictionary()
+                            dict.addEntries(from: ["lat":data.lat])
+                            dict.addEntries(from: ["lng":data.lng])
+                            timeStampDict.addEntries(from: ["\(data.timestamp)":dict])
+                            holeWiseDict.addEntries(from: ["\(data.hole)":timeStampDict])
+                        }
+                        holeWiseDict.addEntries(from: ["courseId" : self.selectedHomeGolfID])
+                        holeWiseDict.addEntries(from: ["courseName" : self.selectedHomeGolfName])
+                        debugPrint(holeWiseDict)
+                        ref.child("siriEvent/\(Auth.auth().currentUser!.uid)/\(keyId)").updateChildValues(holeWiseDict as! [AnyHashable:Any])
                     }
                 }
                 if(Constants.matchDataDic.object(forKey: "player") != nil){
@@ -2998,7 +3014,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 let score = scoreArray[i] as! NSDictionary
                 for(key,value) in score{
                     if(key as! String == "par"){
-                        par = value as! Int
+                        par = (value as! Int)
                     }
                     for playerId in playersKey{
                         if(key as! String)==playerId{

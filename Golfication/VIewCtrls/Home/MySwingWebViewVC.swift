@@ -10,8 +10,7 @@ import UIKit
 import WebKit
 
 class MySwingWebViewVC: UIViewController, WKUIDelegate {
-    @IBOutlet weak var webView: UIWebView!
-    
+    @IBOutlet weak var webView: WKWebView!
     var linkStr: String =  ""
     var fromIndiegogo = Bool()
     var fromNotification = Bool()
@@ -49,21 +48,9 @@ class MySwingWebViewVC: UIViewController, WKUIDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        let myURL = URL(string: linkStr)
-//        let myRequest = URLRequest(url: myURL!)
-//        webView.load(myRequest)
-        
         if let url = URL(string: linkStr) {
             let request = URLRequest(url: url)
-            webView.loadRequest(request)
+            webView.load(request)
         }
     }
-
-//    override func loadView() {
-//        let webConfiguration = WKWebViewConfiguration()
-//        webView = WKWebView(frame: CGRect( x: 0, y: 64, width: self.view.frame.width, height: self.view.frame.height - 20 ), configuration: webConfiguration)
-//        webView.uiDelegate = self
-//        view = webView
-//    }
 }

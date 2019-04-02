@@ -201,6 +201,20 @@ class Notification: NSObject{
                 request, withCompletionHandler: nil)
         }
     }
+    static func sendLocaNotificatonAfterLogin(){
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["my.login"])
+        center.removeDeliveredNotifications(withIdentifiers: ["my.login"])
+        let content = UNMutableNotificationContent()
+        content.title = "Golfication"
+        content.body = "Please select your Home Course."
+        content.badge = 0
+        content.sound = UNNotificationSound.default()
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 120, repeats: false)
+        let request = UNNotificationRequest(identifier: "my.login", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         switch response.actionIdentifier {
         case "prev_hole":
@@ -212,6 +226,4 @@ class Notification: NSObject{
         }
         completionHandler()
     }
-
-
 }

@@ -52,7 +52,6 @@ class ExploreVC: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         FBSomeEvents.shared.singleParamFBEvene(param: "View Explore")
-        self.automaticallyAdjustsScrollViewInsets = false
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.glfBluegreen
     }
     func getApiData(){
@@ -76,7 +75,7 @@ class ExploreVC: UIViewController, UIScrollViewDelegate {
                 let array: NSArray = self.tempArray.sortedArray(using: [sortDescriptor]) as NSArray
                 self.tempArray.removeAllObjects()
                 self.tempArray = NSMutableArray()
-                self.tempArray = array.mutableCopy() as! NSMutableArray
+                self.tempArray = (array.mutableCopy() as! NSMutableArray)
                 
                 for i in 0..<self.tempArray.count{
                     let title = ((self.tempArray[i] as AnyObject) .object(forKey:"title") as? String) ?? ""
@@ -269,7 +268,7 @@ class ExploreVC: UIViewController, UIScrollViewDelegate {
         viewCtrl.ctgryKey = category
         viewCtrl.topBarTitle = categoryTitle
         viewCtrl.scrollIndex = cardTag
-        viewCtrl.categoryData = categoryData.value(forKey: category) as! NSArray
+        viewCtrl.categoryData = (categoryData.value(forKey: category) as! NSArray)
         self.navigationController?.pushViewController(viewCtrl, animated: true)
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true
@@ -290,7 +289,7 @@ class ExploreVC: UIViewController, UIScrollViewDelegate {
         viewCtrl.ctgryKey = category
         viewCtrl.topBarTitle = categoryTitle
         viewCtrl.scrollIndex = cardTag
-        viewCtrl.categoryData = categoryData.value(forKey: category) as! NSArray
+        viewCtrl.categoryData = (categoryData.value(forKey: category) as! NSArray)
         self.navigationController?.pushViewController(viewCtrl, animated: true)
         playButton.contentView.isHidden = true
         playButton.floatButton.isHidden = true

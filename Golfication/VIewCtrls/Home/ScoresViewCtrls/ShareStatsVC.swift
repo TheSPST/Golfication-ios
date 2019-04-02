@@ -132,77 +132,46 @@ class ShareStatsVC: UIViewController, UIGestureRecognizerDelegate, UIDocumentInt
         switch tagVal {
         case 0:
             //Share To Facebook:
-            
-            //if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
-            if let vc = SLComposeViewController(forServiceType:SLServiceTypeFacebook){
-                vc.add(screenShot)
-                //vc.add(URL(string: ""))
-                //vc.setInitialText("Initial text here.")
-                self.present(vc, animated: true, completion: nil)
-            }
-            //}else{self.showAlert(service: "Facebook") }
+            let share = [screenShot]
+            let activityViewController = UIActivityViewController(activityItems: share, applicationActivities: nil)
+            self.present(activityViewController, animated: true, completion: nil)
             
         case 1:
             //Share To Twitter:
-            
-            // if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeTwitter) {
-            if let vc = SLComposeViewController(forServiceType:SLServiceTypeTwitter){
-                vc.add(screenShot)
-                //vc.add(URL(string: ""))
-                //vc.setInitialText("Initial text here.")
-                self.present(vc, animated: true, completion: nil)
-            }
-            //}else{self.showAlert(service: "Twitter") }
-            
+            let share = [screenShot]
+            let activityViewController = UIActivityViewController(activityItems: share, applicationActivities: nil)
+            self.present(activityViewController, animated: true, completion: nil)
         case 2:
             DispatchQueue.main.async {
                 
                 //Share To Instagrma:
-                
                 let instagramURL = URL(string: "instagram://app")
-                
                 if UIApplication.shared.canOpenURL(instagramURL!) {
-                    
                     let imageData = UIImageJPEGRepresentation(self.screenShot, 100)
-                    
                     let writePath = (NSTemporaryDirectory() as NSString).appendingPathComponent("instagram.igo")
-                    
                     do {
                         try imageData?.write(to: URL(fileURLWithPath: writePath), options: .atomic)
-                        
                     } catch {
-                        
                         debugPrint(error)
                     }
-                    
                     let fileURL = URL(fileURLWithPath: writePath)
-                    
                     self.documentInteractionController = UIDocumentInteractionController(url: fileURL)
-                    
                     self.documentInteractionController.delegate = self
-                    
                     self.documentInteractionController.uti = "com.instagram.exlusivegram"
-                    
                     self.documentInteractionController.presentOpenInMenu(from: self.view.bounds, in: self.view, animated: true)
-                    
-                } else {
-                    
+                }else{
                     let alert = UIAlertController(title: "Error", message: "Please install Instagram app", preferredStyle: .alert)
                     let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                     alert.addAction(action)
                     self.present(alert, animated: true, completion: nil)
                 }
             }
-            
         case 3:
             //Share To Whatsapp:
-            
             let urlWhats = "whatsapp://app"
             if let urlString = urlWhats.addingPercentEncoding(withAllowedCharacters:CharacterSet.urlQueryAllowed) {
                 if let whatsappURL = URL(string: urlString) {
-                    
                     if UIApplication.shared.canOpenURL(whatsappURL as URL) {
-                        
                         if let imageData = UIImageJPEGRepresentation(screenShot, 1.0) {
                             let tempFile = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("Documents/whatsAppTmp.wai")
                             do {
@@ -210,12 +179,10 @@ class ShareStatsVC: UIViewController, UIGestureRecognizerDelegate, UIDocumentInt
                                 self.documentInteractionController = UIDocumentInteractionController(url: tempFile)
                                 self.documentInteractionController.uti = "net.whatsapp.image"
                                 self.documentInteractionController.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
-                                
                             } catch {
                                 debugPrint(error)
                             }
                         }
-                        
                     } else {
                         let alert = UIAlertController(title: "Error", message: "Please install Whatsapp app", preferredStyle: .alert)
                         let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)

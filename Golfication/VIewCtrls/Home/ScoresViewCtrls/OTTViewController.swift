@@ -694,9 +694,9 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
                 
                 for i in 0..<holes.count{
                     let hole = Hole()
-                    hole.club = (holes[i] as AnyObject).object(forKey:"club") as! String
-                    hole.distance = (holes[i] as AnyObject).object(forKey:"distance") as! Double
-                    hole.spread = (holes[i] as AnyObject).object(forKey:"spread") as! Double
+                    hole.club = ((holes[i] as AnyObject).object(forKey:"club") as! String)
+                    hole.distance = ((holes[i] as AnyObject).object(forKey:"distance") as! Double)
+                    hole.spread = ((holes[i] as AnyObject).object(forKey:"spread") as! Double)
                     if(Constants.distanceFilter == 1){
                         hole.distance = hole.distance/Constants.YARD
                     }
@@ -814,9 +814,9 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
                 
                 for i in 0..<holes.count{
                     let hole = Hole()
-                    hole.club = (holes[i] as AnyObject).object(forKey:"club") as! String
-                    hole.distance = (holes[i] as AnyObject).object(forKey:"distance") as! Double
-                    hole.spread = (holes[i] as AnyObject).object(forKey:"spread") as! Double
+                    hole.club = ((holes[i] as AnyObject).object(forKey:"club") as! String)
+                    hole.distance = ((holes[i] as AnyObject).object(forKey:"distance") as! Double)
+                    hole.spread = ((holes[i] as AnyObject).object(forKey:"spread") as! Double)
                     if(Constants.distanceFilter == 1){
                         hole.distance = hole.distance/Constants.YARD
                     }
