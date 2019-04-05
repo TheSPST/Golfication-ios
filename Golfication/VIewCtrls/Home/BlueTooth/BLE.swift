@@ -323,8 +323,22 @@ class BLE: NSObject {
         self.sendThirdCommand()
     }
     public func sendEleventhCommand(){
-        
-        if(Constants.charctersticsGlobalForWrite != nil) && (Constants.deviceGolficationX != nil){
+        if Constants.OADVersion < Constants.firmwareVersion{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                if let wd = UIApplication.shared.delegate?.window {
+                    let vc = wd!.rootViewController
+                    if(vc is UITabBarController){
+                        if let viewC = (vc as! UITabBarController).selectedViewController as? UINavigationController{
+                            let storyboard = UIStoryboard(name: "OAD", bundle: nil)
+                            let viewCtrl = storyboard.instantiateViewController(withIdentifier: "TIOADViewController") as! TIOADViewController
+                            viewCtrl.modalPresentationStyle = .overCurrentContext
+                            viewC.topViewController?.present(viewCtrl, animated: true, completion: nil)
+                        }
+                    }
+                }
+            }
+        } else if(Constants.charctersticsGlobalForWrite != nil) && (Constants.deviceGolficationX != nil){
             self.randomGenerator()
             let param : [UInt8] = [11,counter]
             var writeData = Data()

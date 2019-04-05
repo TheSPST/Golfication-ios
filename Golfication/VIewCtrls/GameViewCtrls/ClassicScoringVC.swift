@@ -542,8 +542,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
             Constants.addPlayersArray.removeAllObjects()
             if Constants.mode>0{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
-                let center = UNUserNotificationCenter.current()
-                center.removeAllPendingNotificationRequests()
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             }
         }
         self.scoreData.removeAll()
@@ -561,6 +560,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
     }
     @objc func statsCompleted(_ notification: NSNotification) {
         FBSomeEvents.shared.singleParamFBEvene(param: "Save Game")
+        Notification.sendLocaNotificatonAfterGameFinished()
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.actvtIndView.isHidden = true
         self.actvtIndView.stopAnimating()
@@ -577,8 +577,7 @@ class ClassicScoringVC: UIViewController,UITableViewDelegate,UITableViewDataSour
         Constants.isUpdateInfo = true
         if Constants.mode>0{
             Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
-            let center = UNUserNotificationCenter.current()
-            center.removeAllPendingNotificationRequests()
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
         }
         if(Constants.matchId.count > 1){
             self.gotoFeedBackViewController(mID: Constants.matchId,mode:Constants.mode)

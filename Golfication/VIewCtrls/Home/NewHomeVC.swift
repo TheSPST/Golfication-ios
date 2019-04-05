@@ -13,7 +13,7 @@ import Google
 import DeviceKit
 import FirebaseInstanceID
 import CoreData
-
+import UserNotifications
 enum VersionError: Error {
     case invalidResponse, invalidBundleInfo
 }
@@ -173,7 +173,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - profileAction
     @IBAction func profileAction(_ sender: Any) {
-//        Notification.sendLocaNotificatonAfterLogin()
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
         viewCtrl.fromPublicProfile = false
@@ -291,7 +290,20 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     override func viewDidLoad() {
         super.viewDidLoad()
         if let iosToken = (InstanceID.instanceID().token()){
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :iosToken] as [AnyHashable:String])
+            if Auth.auth().currentUser != nil{
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :iosToken] as [AnyHashable:String])
+            }else{
+                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "GolficationGuideVC") as! GolficationGuideVC
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.window?.rootViewController = tabBarCtrl
+                return
+            }
+        }
+        if Auth.auth().currentUser == nil{
+            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "GolficationGuideVC") as! GolficationGuideVC
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = tabBarCtrl
+            return
         }
         NotificationCenter.default.addObserver(self, selector: #selector(self.afterResponseEditRound(_:)), name: NSNotification.Name(rawValue: "editRoundHome"), object: nil)
         
@@ -1261,6 +1273,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                             }
                         }
                     }
+                    if let oad = deviceInfo.value(forKey: "OAD") as? NSDictionary{
+                        if let oadVal = oad.allValues as? [Int] {
+                            Constants.OADVersion = oadVal.max()!
+                        }
+                    }
                 }
                 if let proMode = userData.value(forKey: "proMode") as? Bool{
                     Constants.isProMode = proMode
@@ -1421,6 +1438,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     for data in activeMatches{
                         if(data.value){
                             Constants.matchId = data.key
+                            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.game","my.elevation","my.newUser","my.newUser3","my.newUser5","my.newUser7"])
                         }
                         else if(!data.value){
                             Constants.matchId = ""
@@ -1545,6 +1563,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                     if let courseLng = homeCourseDic.object(forKey: "lng"){
                         UserDefaults.standard.set(courseLng, forKey: "HomeLng")
+                        UserDefaults.standard.synchronize()
+                    }
+                    if let courseID = homeCourseDic.object(forKey: "id"){
+                        UserDefaults.standard.set(courseID, forKey: "HomeCourseId")
                         UserDefaults.standard.synchronize()
                     }
                 }

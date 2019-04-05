@@ -181,7 +181,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                                 }
                                 let viewCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewUserProfileVC") as! NewUserProfileVC
                                 self.navigationController?.pushViewController(viewCtrl, animated: false)
-//                                self.sendMailingRequestToServer(uName: fbName,uEmail: fbEmail)
+                                BackgroundMapStats.sendMailingRequestToServer(uName: fbName,uEmail: fbEmail)
                                 if let _ = self.userDetails.value(forKey: "fb_id") as? String{
                                     FBSomeEvents.shared.logCompleteRegistrationEvent(registrationMethod: "Facebook")
                                 }else{
@@ -371,19 +371,6 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             }
         }
     }
-    
-//    func sendMailingRequestToServer(uName: String, uEmail: String) {
-//
-//        let serverHandler = ServerHandler()
-//        serverHandler.state = 2
-//        let urlStr = "https://golfication.us15.list-manage.com/subscribe/post?"
-//        let dataStr =  "u=" + "61aa993cd19d0fb238ab03ae0&amp;" + "id=" + "b8bdae75ef&" + "EMAIL=" + "\(uEmail)&" + "FULLNAME=" + "\(uName)"
-//
-//         serverHandler.sendMailingRequest(urlString: urlStr, dataString: dataStr){(arg0, error)  in
-//            debugPrint("arg0_&_error==", arg0 ?? "", error ?? "")
-//        }
-//    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         appDelegate = (UIApplication.shared.delegate as! AppDelegate)

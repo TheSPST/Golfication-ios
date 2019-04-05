@@ -11,6 +11,7 @@ import CoreLocation
 import FirebaseAuth
 import FirebaseAnalytics
 import FBSDKCoreKit
+import UserNotifications
 class StartGameModeObj: NSObject{
 
     var finalMatchDic = NSMutableDictionary()
@@ -70,6 +71,7 @@ class StartGameModeObj: NSObject{
         Constants.matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
         updateLastCourseDetails(scoringMode:"classic")
         Constants.matchId = ref!.child("matchData").childByAutoId().key
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.game","my.elevation","my.newUser","my.newUser3","my.newUser5","my.newUser7"])
         self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
         for player in Constants.addPlayersArray{
             
@@ -198,6 +200,7 @@ class StartGameModeObj: NSObject{
         Constants.matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
         updateLastCourseDetails(scoringMode:"rangefinder")
         Constants.matchId = ref!.child("matchData").childByAutoId().key
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.game","my.elevation","my.newUser","my.newUser3","my.newUser5","my.newUser7"])
         self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
         for player in Constants.addPlayersArray{
             if let reciever = ((player as AnyObject).object(forKey:"id") as? String){
@@ -285,6 +288,7 @@ class StartGameModeObj: NSObject{
         Constants.matchDataDic.setObject(onCourse == 0 ? true:false, forKey: "onCourse" as NSCopying)
         updateLastCourseDetails(scoringMode:"advanced")
         Constants.matchId = ref!.child("matchData").childByAutoId().key
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.game","my.elevation","my.newUser","my.newUser3","my.newUser5","my.newUser7"])
         self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
         
         for player in Constants.addPlayersArray{

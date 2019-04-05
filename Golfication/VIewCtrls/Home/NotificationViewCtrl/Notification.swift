@@ -44,88 +44,7 @@ class Notification: NSObject{
         })
         task.resume()
     }
-    
-    static func sendLocaNotificatonToUser(){
-        let options: UNAuthorizationOptions = [.alert, .sound, .badge];
-        let center = UNUserNotificationCenter.current()
-        center.removeAllPendingNotificationRequests()
-        // Swift
-        center.requestAuthorization(options: options) {
-            (granted, error) in
-            if !granted {
-                print("Something went wrong")
-            }
-        }
-        center.getNotificationSettings { (settings) in
-            if settings.authorizationStatus != .authorized {
-                // Notifications not allowed
-            }
-        }
-        
-        let content = UNMutableNotificationContent()
-        //content.title = "Please complete your Game"
-        //content.subtitle = "Notification test"
-        content.body = "Complete your ongoing round at \(Constants.selectedGolfName)!"
-        content.badge = 0
-        
-        content.sound = UNNotificationSound.default()
-        //content.sound = UNNotificationSound(named: "MySound.aiff") //file name is "MySound.aiff"
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1800, repeats: false)
-        let request = UNNotificationRequest(identifier: "UYLLocalNotification", content: content, trigger: trigger)
-        
-        center.add(request, withCompletionHandler: { (error) in
-            if let error = error {
-                debugPrint(error)
-                // Something went wrong
-            }
-        })
-    }
-    
-    static func sendLocaNotificatonNearByGolf(){
-        let options: UNAuthorizationOptions = [.alert, .sound, .badge];
-        let center = UNUserNotificationCenter.current()
-        center.removeAllPendingNotificationRequests()
-        // Swift
-        center.requestAuthorization(options: options) {
-            (granted, error) in
-            if !granted {
-                print("Something went wrong")
-            }
-        }
-        center.getNotificationSettings { (settings) in
-            if settings.authorizationStatus != .authorized {
-                // Notifications not allowed
-            }
-        }
-        //
-        let content = UNMutableNotificationContent()
-        
-        if let nearByGolfClub = UserDefaults.standard.object(forKey: "NearByGolfClub") as? String{
-            content.body = "Start your round at \(nearByGolfClub)!"
-            UserDefaults.standard.set("", forKey: "NearByGolfClub")
-            UserDefaults.standard.synchronize()
-        }
-        else{
-            if let courseName = UserDefaults.standard.object(forKey: "HomeCourseName") as? String{
-                content.body = "Start your round at \(courseName)!"
-            }
-        }
-        content.badge = 0
-        
-        content.sound = UNNotificationSound.default()
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-        let request = UNNotificationRequest(identifier: "UYLLocalNotification", content: content, trigger: trigger)
-        
-        center.add(request, withCompletionHandler: { (error) in
-            if let error = error {
-                debugPrint(error)
-                // Something went wrong
-            }
-        })
-    }
-    
+
     // ---------- New Additions by Shubham -------------------------
 
     static func sendGameDetailsNotification(msg:String,title:String,subtitle:String,timer:Double,isStart:Bool,isHole:Bool){
@@ -213,6 +132,116 @@ class Notification: NSObject{
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 120, repeats: false)
         let request = UNNotificationRequest(identifier: "my.login", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    static func sendLocalNotificationForNonProNewUser(){
+        
+        if !Constants.isProMode && Constants.matchId.isEmpty {
+            let titleArr = ["Make a Birdie","Are you a weak-iron player?","Score your round in 90 seconds","Account for the Wind!"]
+            let subtitleArr = ["Track your round with Easy Scoring, and learn to shoot lower scores.","Know your weaknesses. Make data-driven decisions on-course.","In a hurry? Use Easy Scoring & keep improving your game!","Plan your shots using live Wind Speed and direction."]
+            let timeArr : [TimeInterval] = [86400,259200,432000,604800]
+//            let timeArr : [TimeInterval] = [60,180,300,420]
+            let identifiers = ["my.newUser","my.newUser3","my.newUser5","my.newUser7"]
+            for i in 0..<identifiers.count{
+                let center = UNUserNotificationCenter.current()
+                center.removePendingNotificationRequests(withIdentifiers: [identifiers[i]])
+                center.removeDeliveredNotifications(withIdentifiers: [identifiers[i]])
+                let content = UNMutableNotificationContent()
+                content.title = titleArr[i]
+                content.body = subtitleArr[i]
+                content.badge = 0
+                content.sound = UNNotificationSound.default()
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeArr[i], repeats: false)
+                let request = UNNotificationRequest(identifier: identifiers[i], content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            }
+        }
+    }
+    
+    static func sendLocaNotificatonNearByGolf(){
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["my.nearbyGolf"])
+        center.removeDeliveredNotifications(withIdentifiers: ["my.nearbyGolf"])
+        let content = UNMutableNotificationContent()
+        if let nearByGolfClub = UserDefaults.standard.object(forKey: "NearByGolfClub") as? String{
+            content.body = "Start your round at \(nearByGolfClub)!"
+            UserDefaults.standard.set("", forKey: "NearByGolfClub")
+            UserDefaults.standard.synchronize()
+        }
+        else{
+            if let courseName = UserDefaults.standard.object(forKey: "HomeCourseName") as? String{
+                content.body = "Start your round at \(courseName)!"
+            }
+        }
+        content.badge = 0
+        content.sound = UNNotificationSound.default()
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: "my.nearbyGolf", content: content, trigger: trigger)
+        center.add(request, withCompletionHandler: { (error) in
+            if let error = error {
+                debugPrint(error)
+            }
+        })
+    }
+    static func sendLocaNotificatonToUser(){
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["my.notification"])
+        center.removeDeliveredNotifications(withIdentifiers: ["my.notification"])
+        let content = UNMutableNotificationContent()
+        content.title = "Finish your on-going round"
+        content.body = "View performance stats and advanced insights by completing your round at \(Constants.selectedGolfName)!"
+        content.badge = 0
+        content.sound = UNNotificationSound.default()//1800 30Minutes
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1800, repeats: false)
+        let request = UNNotificationRequest(identifier: "my.notification", content: content, trigger: trigger)
+        center.add(request, withCompletionHandler: { (error) in
+            if let error = error {
+                debugPrint(error)
+            }
+        })
+    }
+    static func sendLocaNotificatonAfterGameFinished(){
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["my.game"])
+        center.removeDeliveredNotifications(withIdentifiers: ["my.game"])
+        let content = UNMutableNotificationContent()
+        content.title = "Optimized Hole Strategy"
+        content.body = "Improve your Birdie chances with AI Club Recommendations."
+        content.badge = 0
+        content.sound = UNNotificationSound.default()//604800 7Days
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 604800, repeats: false)
+        let request = UNNotificationRequest(identifier: "my.game", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    static func sendLocalNotificationForElevation(){
+        if let courseId = UserDefaults.standard.object(forKey: "HomeCourseId") as? String{
+            let course = "course_\(courseId)"
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseGolf(addedPath: "\(course)/rangefinder/elevations") { (snapshot) in
+                var arr = NSArray()
+                if let elevation = snapshot.value as? NSArray{
+                    arr = elevation
+                }
+                DispatchQueue.main.async(execute: {
+                    if arr.count != 0{
+                        let center = UNUserNotificationCenter.current()
+                        center.removePendingNotificationRequests(withIdentifiers: ["my.elevation"])
+                        center.removeDeliveredNotifications(withIdentifiers: ["my.elevation"])
+                        let content = UNMutableNotificationContent()
+                        content.title = "Course elevations are now live!"
+                        var golfName = ""
+                        if let courseName = UserDefaults.standard.object(forKey: "HomeCourseName") as? String{
+                            golfName = courseName
+                        }
+                        let fullNameArr = Auth.auth().currentUser!.displayName!.components(separatedBy: " ")
+                        content.body = "Hi \(fullNameArr[0]). \(golfName) is ready with elevations and \"plays like\" distances. Start your round now!"
+                        content.badge = 0
+                        content.sound = UNNotificationSound.default()//3600 1hour
+                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3600, repeats: false)
+                        let request = UNNotificationRequest(identifier: "my.elevation", content: content, trigger: trigger)
+                        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                    }
+                })
+            }
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {

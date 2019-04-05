@@ -2373,6 +2373,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         Constants.matchDataDic.setObject(Constants.selectedLat, forKey: "lat" as NSCopying)
         Constants.matchDataDic.setObject(Constants.selectedLong, forKey: "lng" as NSCopying)
         Constants.matchId = ref!.child("matchData").childByAutoId().key
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.game","my.elevation","my.newUser","my.newUser3","my.newUser5","my.newUser7"])
         self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
         
         for player in Constants.addPlayersArray{
@@ -2489,6 +2490,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         Constants.matchDataDic.setObject(Constants.selectedLat, forKey: "lat" as NSCopying)
         Constants.matchDataDic.setObject(Constants.selectedLong, forKey: "lng" as NSCopying)
         Constants.matchId = ref!.child("matchData").childByAutoId().key
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.game","my.elevation","my.newUser","my.newUser3","my.newUser5","my.newUser7"])
         self.finalMatchDic.setObject(Constants.matchDataDic, forKey: Constants.matchId as NSCopying)
         for player in Constants.addPlayersArray{
             if let reciever = ((player as AnyObject).object(forKey:"id") as? String){
@@ -2675,9 +2677,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             Constants.addPlayersArray.removeAllObjects()
             if Constants.mode>0{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
-                let center = UNUserNotificationCenter.current()
-                center.removeAllPendingNotificationRequests()
-                //center.removePendingNotificationRequests(withIdentifiers: ["UYLLocalNotification"])
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             }
         }
         BackgroundMapStats.deleteCoreData()
@@ -2692,7 +2692,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         var swingVal = false
         for data in self.players{
             if ((data as! NSMutableDictionary).value(forKey: "id") as! String) == Auth.auth().currentUser!.uid{
-                if let swingKey = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
+                if let _ = (data as! NSMutableDictionary).value(forKey: "swingKey") as? String{
                     swingVal = true
                     break
                 }
@@ -2814,6 +2814,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     @objc func statsCompleted(_ notification: NSNotification) {
         FBSomeEvents.shared.singleParamFBEvene(param: "Save Game")
+        Notification.sendLocaNotificatonAfterGameFinished()
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide()
         
@@ -2841,9 +2842,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         Constants.isUpdateInfo = true
         if Constants.mode>0{
             Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
-            let center = UNUserNotificationCenter.current()
-            center.removeAllPendingNotificationRequests()
-            //center.removePendingNotificationRequests(withIdentifiers: ["UYLLocalNotification"])
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
         }
         if(Constants.matchId.count > 1){
             self.gotoFeedBackViewController(mID: Constants.matchId,mode:Constants.mode)

@@ -561,7 +561,22 @@ class BackgroundMapStats: NSObject {
 //            self.present(activityViewController, animated: true, completion: nil)
         }
     }
-    
+    static func sendMailingRequestToServer(uName: String, uEmail: String) {
+        let serverHandler = ServerHandler()
+        serverHandler.state = 2
+        let fullNameArr = uName.components(separatedBy: " ")
+        var fName = uName
+        var lName = ""
+        if fullNameArr.count > 1{
+            fName = fullNameArr[0]
+            lName = fullNameArr[1]
+        }
+        let urlStr = "https://golfication.us15.list-manage.com/subscribe/post?"
+        let dataStr =  "u=" + "61aa993cd19d0fb238ab03ae0&amp;" + "id=" + "b8bdae75ef&" + "EMAIL=" + "\(uEmail)&" + "FULLNAME=" + "\(uName)&" + "FNAME=" + "\(fName)&" + "LNAME=" + "\(lName)"
+        serverHandler.sendMailingRequest(urlString: urlStr, dataString: dataStr){(arg0, error)  in
+            debugPrint("arg0_&_error==", arg0 ?? "", error ?? "")
+        }
+    }
     static func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
         let size = image.size
         let widthRatio  = targetSize.width  / size.width

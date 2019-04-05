@@ -646,8 +646,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             Constants.addPlayersArray.removeAllObjects()
             if Constants.mode>0{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
-                let center = UNUserNotificationCenter.current()
-                center.removeAllPendingNotificationRequests()
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             }
         }
         BackgroundMapStats.deleteCoreData()
@@ -659,6 +658,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
 
     @objc func statsCompleted(_ notification: NSNotification) {
         FBSomeEvents.shared.singleParamFBEvene(param: "Save Game")
+        Notification.sendLocaNotificatonAfterGameFinished()
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
         self.progressView.hide()
         if(matchId.count > 1){
@@ -673,8 +673,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         Constants.isUpdateInfo = true
         if Constants.mode>0{
             Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
-            let center = UNUserNotificationCenter.current()
-            center.removeAllPendingNotificationRequests()
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
         }
         if(matchId.count > 1){
             self.gotoFeedBackViewController(mID: matchId,mode:Constants.mode)

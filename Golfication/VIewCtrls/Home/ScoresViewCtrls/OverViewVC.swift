@@ -206,7 +206,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
                                     let clubData = Club()
                                     let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
                                     if((backSwing) != nil){
-                                        clubData.backswing = backSwing as! Double
+                                        clubData.backswing = (backSwing as! Double)
                                     }
                                     if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
                                         clubData.distance = distance
@@ -222,11 +222,11 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
                                     
                                     let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
                                     if((swingScore) != nil){
-                                        clubData.swingScore = swingScore as! Double
+                                        clubData.swingScore = (swingScore as! Double)
                                     }
                                     let type = (valueArray[j] as AnyObject).object(forKey: "type")
                                     if((type) != nil){
-                                        clubData.type = type as! Int
+                                        clubData.type = (type as! Int)
                                     }
                                     if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
                                         clubData.proximity = proximity
@@ -236,7 +236,7 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
                                     }
                                     let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut")
                                     if((holeout) != nil){
-                                        clubData.holeout = holeout as! Double
+                                        clubData.holeout = (holeout as! Double)
                                     }
                                     
                                     clubWiseArray.append(clubData)

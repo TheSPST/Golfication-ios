@@ -49,6 +49,7 @@
             catch let signOutError as NSError {
                 debugPrint("error== ",signOutError.localizedDescription)
             }
+            Notification.sendLocalNotificationForNonProNewUser()
             if ADClient.shared().responds(to: #selector(ADClient.requestAttributionDetails(_:))) {
                 debugPrint("iOS 10 call exists")
                 ADClient.shared().requestAttributionDetails({ attributionDetails, error in

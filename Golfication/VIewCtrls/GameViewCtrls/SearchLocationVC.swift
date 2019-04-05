@@ -397,7 +397,9 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             UserDefaults.standard.set(Constants.selectedLat, forKey: "HomeLat")
             UserDefaults.standard.set(Constants.selectedLong, forKey: "HomeLng")
             UserDefaults.standard.set(Constants.selectedGolfName, forKey: "HomeCourseName")
+            UserDefaults.standard.set(Constants.selectedGolfID, forKey: "HomeCourseId")
             UserDefaults.standard.synchronize()
+            Notification.sendLocalNotificationForElevation()
         }
         self.navigationController?.popViewController(animated: true)
     }

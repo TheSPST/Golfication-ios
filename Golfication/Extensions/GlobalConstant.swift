@@ -51,6 +51,7 @@ struct Constants{
     static var allMacAdrsDic = NSMutableDictionary()
 
     static var OADFeedback = false
+    static var OADVersion = 0
     // MARK: BLESCANNING
     static var bleObserver = 0
     static var fileName = String()

@@ -49,7 +49,6 @@
         var roundData = NSMutableDictionary()
         
         func generateStats() {
-            
             if (matchKey.count>2){
                 FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(matchKey!)/") { (snapshot) in
                     
@@ -768,7 +767,6 @@
                     let statistics = ["statistics":statisticsValue]
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(statistics)
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/scoring/\(self.matchKey!)").setValue(self.roundData)
-                    
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
                     //}
                 })

@@ -163,7 +163,7 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
                 let score = scoreArray[i] as! NSDictionary
                 for(key,value) in score{
                     if(key as! String == "par"){
-                        par = value as! Int
+                        par = (value as! Int)
                     }
                     for playerId in playersKey{
                         if(key as! String)==playerId{
@@ -211,7 +211,6 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
         let gameController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
 
         var playNavCtrl = UINavigationController()
-        playNavCtrl.automaticallyAdjustsScrollViewInsets = false
         playNavCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
         playNavCtrl.pushViewController(gameController, animated: true)
         playButton.contentView.isHidden = true

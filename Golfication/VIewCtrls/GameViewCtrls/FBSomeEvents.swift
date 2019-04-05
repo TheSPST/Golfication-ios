@@ -57,8 +57,8 @@ class FBSomeEvents: NSObject {
     //MARK: Eddie Events
     
     func singleParamFBEvene(param:String,hole:Int? = nil){
-        let isDevelopment = BackgroundMapStats.isDevelopmentProvisioningProfile()
-        if !isDevelopment{
+//        let isDevelopment = BackgroundMapStats.isDevelopmentProvisioningProfile()
+//        if !isDevelopment{
             var str = String()
             for char in param{
                 if char != " "{
@@ -72,5 +72,5 @@ class FBSomeEvents: NSObject {
                 Analytics.logEvent(str, parameters: [:])
             }
         }
-    }
+//    }
 }

@@ -635,7 +635,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                         UserDefaults.standard.set(golfLat, forKey: "HomeLat")
                         UserDefaults.standard.set(golfLong, forKey: "HomeLng")
                         UserDefaults.standard.set(golfName, forKey: "HomeCourseName")
+                        UserDefaults.standard.set(golfID, forKey: "HomeCourseId")
                         UserDefaults.standard.synchronize()
+                        Notification.sendLocalNotificationForElevation()
                     }
                 })
             }
@@ -1211,8 +1213,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             UserDefaults.standard.set(golfLat, forKey: "HomeLat")
             UserDefaults.standard.set(golfLong, forKey: "HomeLng")
             UserDefaults.standard.set(golfName, forKey: "HomeCourseName")
+            UserDefaults.standard.set(golfID, forKey: "HomeCourseId")
             UserDefaults.standard.synchronize()
-            
+            Notification.sendLocalNotificationForElevation()
             searchTxtField.resignFirstResponder()
             
             tblViewHConstraint.constant = 60
