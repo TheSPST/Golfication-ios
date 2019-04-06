@@ -157,6 +157,7 @@ class DebugModeVC: UIViewController{
     }
     @IBAction func startDebugAction(_ sender: UIButton) {
         if Constants.ble != nil && Constants.deviceGolficationX != nil{
+            btnDebug.isEnabled = false
             Constants.ble.sendforteenCommand()
             var tim = 1
             var totalTime = 1500
@@ -170,6 +171,7 @@ class DebugModeVC: UIViewController{
                 if totalTime == 0{
                     self.lblTimer.text = "00:00"
                     t.invalidate()
+                    self.btnDebug.isEnabled = true
                 }
             }
         }

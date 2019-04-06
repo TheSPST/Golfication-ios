@@ -28,6 +28,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     var currentPageIndex = 0
     var isProgress = false
     var eddieView = NSMutableDictionary()
+    var progressView = SDLoader()
     override func viewDidLoad() {
         super.viewDidLoad()
         FBSomeEvents.shared.logInitiateCheckoutEvent()
@@ -91,6 +92,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     func checkTrialPreriod(){
         
         isProgress = true
+//        progressView.show(atView: self.view, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "trial") { (snapshot) in
             if(snapshot.value != nil){
                 Constants.trial = snapshot.value as! Bool
@@ -102,6 +104,7 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
             }
             DispatchQueue.main.async( execute: {
                 self.isProgress = false
+                self.progressView.hide(navItem: self.navigationItem)
                 NotificationCenter.default.addObserver(self, selector: #selector(self.startPaymentRequest(_:)), name: NSNotification.Name(rawValue: "PaymentStarted"), object: nil)
                 NotificationCenter.default.addObserver(self, selector: #selector(self.endPaymentRequest(_:)), name: NSNotification.Name(rawValue: "PaymentFinished"), object: nil)
                 NotificationCenter.default.addObserver(self, selector: #selector(self.paymentCancelled(_:)), name: NSNotification.Name(rawValue: "PaymentCancelled"), object: nil)
@@ -127,22 +130,32 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     
     @objc func startFetchingDetails(_ notification: NSNotification) {
         isProgress = true
+//        progressView.show(atView: self.view, navItem: self.navigationItem)
+
 
     }
     @objc func endFetchingDetails(_ notification: NSNotification) {
         isProgress = false
-
+        if self.isBtnEddieClicked{
+            IAPHandler.shared.purchaseMyProduct(index: 6)
+            FBSomeEvents.shared.logAddToCartEvent(type: "Yearly", price: 40)
+            FBSomeEvents.shared.singleParamFBEvene(param: "Click Eddie Buy")
+        }else{
+            self.progressView.hide(navItem: self.navigationItem)
+        }
     }
     
     @objc func startPaymentRequest(_ notification: NSNotification) {
         isProgress = true
+        progressView.show(atView: self.view, navItem: self.navigationItem)
+
 
     }
 
     @objc func endPaymentRequest(_ notification: NSNotification) {
         
         isProgress = false
-
+        self.progressView.hide(navItem: self.navigationItem)
         let alert = UIAlertController(title: "Alert", message: "Congratulations! Your Pro MemberShip is now Active", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
             debugPrint(alert as Any)
@@ -153,13 +166,16 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     
     @objc func paymentCancelled(_ notification: NSNotification) {
         isProgress = false
+        self.progressView.hide(navItem: self.navigationItem)
     }
-    
+    var isBtnEddieClicked = false
     @IBAction func btnEddiePaymentAction(_ sender: Any) {
         
         //0->monthly , 1->trial monthly, 2-> trial yearly, 3->yearly, 4->yearly_3Days_39.99, 5->yearly_1Month_39.99
+        progressView.show(atView: self.view, navItem: self.navigationItem)
         if isProgress{
-           self.view.makeToast("Please wait for a while.")
+           self.isBtnEddieClicked = true
+//           self.view.makeToast("Please wait for a while.")
         }
         else{
             IAPHandler.shared.purchaseMyProduct(index: 6)

@@ -15,7 +15,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
     let kHeaderSectionTag: Int = 6900
     var sectionOne:[Int] = [0, 1]
     var sectionTwo:[Int] = [0, 1, 2, 3, 4]
-    var sectionThree:[Int] = [0, 1]
+//    var sectionThree:[Int] = [0, 1]
     var progressView = SDLoader()
     @IBOutlet weak var versionLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
@@ -215,6 +215,7 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
             debugPrint("ok :\(alert?.title ?? "")")
             
             if Auth.auth().currentUser != nil{
+                BackgroundMapStats.deleteCoreData()
                 //print("fb display name== ",Auth.auth().currentUser?.displayName ?? "")
                 Constants.isDevice = Bool()
                 Constants.isProMode = Bool()
@@ -320,15 +321,18 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
         else if section == 1{
             return 5
         }
-        else if section == 2{
-            return 2
-        }
+//        else if section == 2{
+//            return 2
+//        }
         else{
             return 0
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 2{
+            return 0
+        }
         return 35.0
     }
     
@@ -355,7 +359,9 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
             label.text =  "Strokes Gained".localized()
         }
         else if section == 2{
-            label.text = "Rangefinder Distance Notification"
+            label.text = ""
+            header.backgroundColor = UIColor.clear
+            label.isHidden = true
         }
         else if section == 3{
             if Constants.isDevice && Constants.isProMode{
@@ -668,23 +674,23 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
             Constants.skrokesGainedFilter = indexPath.row
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["strokesGained" :Constants.skrokesGainedFilter] as [AnyHashable:Any])
         }
-        else if indexPath.section == 2{
-            if !sectionThree.isEmpty{
-                for i in 0..<sectionThree.count{
-                    tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))?.accessoryType = .none
-                }
-                for i in 0..<sectionThree.count{
-                    if sectionThree[i] == indexPath.row{
-                        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-                        break
-                    }
-                }
-            }
-            Constants.onCourseNotification = indexPath.row
-            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["notification" :Constants.onCourseNotification] as [AnyHashable:Any])
-        }
-        else{
-            // DO nothing
-        }
+//        else if indexPath.section == 2{
+////            if !sectionThree.isEmpty{
+////                for i in 0..<sectionThree.count{
+////                    tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))?.accessoryType = .none
+////                }
+////                for i in 0..<sectionThree.count{
+////                    if sectionThree[i] == indexPath.row{
+////                        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+////                        break
+////                    }
+////                }
+////            }
+////            Constants.onCourseNotification = indexPath.row
+////            ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["notification" :Constants.onCourseNotification] as [AnyHashable:Any])
+//        }
+//        else{
+//            // DO nothing
+//        }
     }
 }

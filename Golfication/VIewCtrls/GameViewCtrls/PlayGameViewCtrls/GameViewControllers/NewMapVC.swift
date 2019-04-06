@@ -18,6 +18,8 @@ import CTShowcase
 import GLKit
 import UICircularProgressRing
 import CoreData
+import MaterialTapTargetPrompt_iOS
+
 private enum State {
     case closed
     case open
@@ -274,15 +276,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     
     var syncTime = Double()
     
-    var isBackground : Bool{
-        let state = UIApplication.shared.applicationState
-        if state == .background {
-            return true
-        }else{
-            return false
-        }
-    }
-    var totalTimer : TimeInterval = 2
+//    var isBackground : Bool{
+//        let state = UIApplication.shared.applicationState
+//        if state == .background {
+//            return true
+//        }else{
+//            return false
+//        }
+//    }
+    var totalTimer : TimeInterval = 1
     /*var isGolfX : Bool{
         if Constants.ble == nil{
             return false
@@ -1644,42 +1646,42 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         viewCtrl.isContinue = true
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
-    func registerBackgroundTask() {
-        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-            self?.endBackgroundTask()
-        }
-        assert(backgroundTask != UIBackgroundTaskInvalid)
-    }
-    @objc func reinstateBackgroundTask() {
-        if backgroundTask == UIBackgroundTaskInvalid{
-            registerBackgroundTask()
-        }
-    }
-    @objc func appDidEnterBackground() {
-        let thePresenter = self.navigationController?.visibleViewController
-        if (thePresenter != nil) && (thePresenter?.isKind(of:NewMapVC.self))! {
-            if Constants.onCourseNotification == 0{
-                self.mapTimer.invalidate()
-            }else{
-                self.totalTimer = 60
-                self.updateMap(indexToUpdate: self.holeIndex)
-            }
-        }else{
-            self.mapTimer.invalidate()
-        }
-    }
-    @objc func appDidEnterForeground(){
-        let thePresenter = self.navigationController?.visibleViewController
-        if (thePresenter != nil) && (thePresenter?.isKind(of:NewMapVC.self))! {
-            self.view.makeToast("gathering location please wait........", duration: 2.0, position: .bottom)
-            self.mapTimer.invalidate()
-            self.totalTimer = 1
-            self.updateMap(indexToUpdate: self.holeIndex)
-        }else{
-            self.mapTimer.invalidate()
-        }
-        self.checkCurrentLocation()
-    }
+//    func registerBackgroundTask() {
+//        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+//            self?.endBackgroundTask()
+//        }
+//        assert(backgroundTask != UIBackgroundTaskInvalid)
+//    }
+//    @objc func reinstateBackgroundTask() {
+//        if backgroundTask == UIBackgroundTaskInvalid{
+//            registerBackgroundTask()
+//        }
+//    }
+//    @objc func appDidEnterBackground() {
+//        let thePresenter = self.navigationController?.visibleViewController
+//        if (thePresenter != nil) && (thePresenter?.isKind(of:NewMapVC.self))! {
+//            if Constants.onCourseNotification == 0{
+//                self.mapTimer.invalidate()
+//            }else{
+////                self.totalTimer = 60
+////                self.updateMap(indexToUpdate: self.holeIndex)
+//            }
+//        }else{
+//            self.mapTimer.invalidate()
+//        }
+//    }
+//    @objc func appDidEnterForeground(){
+//        let thePresenter = self.navigationController?.visibleViewController
+//        if (thePresenter != nil) && (thePresenter?.isKind(of:NewMapVC.self))! {
+//            self.view.makeToast("gathering location please wait........", duration: 2.0, position: .bottom)
+//            self.mapTimer.invalidate()
+//            self.totalTimer = 1
+//            self.updateMap(indexToUpdate: self.holeIndex)
+//        }else{
+//            self.mapTimer.invalidate()
+//        }
+//        self.checkCurrentLocation()
+//    }
     func checkCurrentLocation(){
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
@@ -1735,11 +1737,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             })
         }
     }
-    func endBackgroundTask() {
-        print("Background task ended.")
-        UIApplication.shared.endBackgroundTask(backgroundTask)
-        backgroundTask = UIBackgroundTaskInvalid
-    }
+//    func endBackgroundTask() {
+//        print("Background task ended.")
+//        UIApplication.shared.endBackgroundTask(backgroundTask)
+//        backgroundTask = UIBackgroundTaskInvalid
+//    }
     var forTutorial = [Bool]()
     var achievedGoal = Goal()
     var targetGoal = Goal()
@@ -1820,9 +1822,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         // register background task
         if(isOnCourse){
             FBSomeEvents.shared.singleParamFBEvene(param: "View On Course ST Game")
-            if Constants.onCourseNotification == 1{
-                self.registerBackgroundTask()
-            }
+//            if Constants.onCourseNotification == 1{
+//                self.registerBackgroundTask()
+//            }
         }else{
             FBSomeEvents.shared.singleParamFBEvene(param: "View Post Game ST")
         }
@@ -1833,9 +1835,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.mapView.delegate = self
         self.initialSetup()
         NotificationCenter.default.addObserver(self, selector: #selector(self.doAfterResponse(_:)), name: NSNotification.Name(rawValue: "response9"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.sendNotificationOnCourse(_:)), name: NSNotification.Name(rawValue: "updateLocation"),object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.stopTrackingFromNotification(_:)), name: NSNotification.Name(rawValue: "shotTracking"),object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.sendNotificationOnCourse(_:)), name: NSNotification.Name(rawValue: "updateLocation"),object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.stopTrackingFromNotification(_:)), name: NSNotification.Name(rawValue: "shotTracking"),object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.shareShotsDissmiss(_:)), name: NSNotification.Name(rawValue: "ShareShots"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
@@ -1979,30 +1981,30 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.updateMap(indexToUpdate: self.holeIndex)
     }
     
-    @objc func sendNotificationOnCourse(_ notification:NSNotification){
-        self.locationManager.startUpdatingLocation()
-        var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
-        var suffix = "meter"
-        if(Constants.distanceFilter != 1){
-            distance = distance*Constants.YARD
-            suffix = "yard"
-        }
-        Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[self.holeIndex].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking,isHole: self.holeOutFlag)
-        debugPrint("distance",distance)
-    }
-    @objc func stopTrackingFromNotification(_ notification:NSNotification){
-        self.btnActionTrackShots(self.btnTrackShot)
-        self.sendNotificationOnCourse(notification)
-    }
-    @objc func changeHoleFromNotification(_ notification:NSNotification){
-        if let nextOrPrev = notification.object as? String{
-            if(nextOrPrev == "next"){
-                self.btnActionNextHole(Any.self)
-            }else{
-                self.btnActionPrevHole(Any.self)
-            }
-        }
-    }
+//    @objc func sendNotificationOnCourse(_ notification:NSNotification){
+//        self.locationManager.startUpdatingLocation()
+//        var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
+//        var suffix = "meter"
+//        if(Constants.distanceFilter != 1){
+//            distance = distance*Constants.YARD
+//            suffix = "yard"
+//        }
+//        Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[self.holeIndex].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking,isHole: self.holeOutFlag)
+//        debugPrint("distance",distance)
+//    }
+//    @objc func stopTrackingFromNotification(_ notification:NSNotification){
+//        self.btnActionTrackShots(self.btnTrackShot)
+//        self.sendNotificationOnCourse(notification)
+//    }
+//    @objc func changeHoleFromNotification(_ notification:NSNotification){
+//        if let nextOrPrev = notification.object as? String{
+//            if(nextOrPrev == "next"){
+//                self.btnActionNextHole(Any.self)
+//            }else{
+//                self.btnActionPrevHole(Any.self)
+//            }
+//        }
+//    }
     @objc func doAfterResponse(_ notification:NSNotification){
         if let hole = notification.object as? Int{
             debugPrint("HOLE NUMBER:",hole)
@@ -2383,7 +2385,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             ref.child("matchData/\(self.currentMatchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
         var greenModel = [GreenLatLngModel]()
-        if (isOnCourse || Constants.deviceGolficationX != nil) && !isHoleByHole && Constants.isProMode{
+        if (isOnCourse || Constants.deviceGolficationX != nil) && !isHoleByHole{
             BackgroundMapStats.donateInteraction()
             var i = 0
             for data in self.courseData.numberOfHoles{
@@ -3855,9 +3857,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.centerSV.isHidden = true
                     self.centerSVWidthConstraints.constant = 0
                 }else{
-                    NotificationCenter.default.addObserver(self, selector: #selector(reinstateBackgroundTask), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
-                    NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-                    NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+//                    NotificationCenter.default.addObserver(self, selector: #selector(reinstateBackgroundTask), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+//                    NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+//                    NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
 
 //                    setupPanGuesture()
                 }
@@ -5760,15 +5762,22 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.plotMarkerForCurvedLine(position: self.positionsOfCurveLines.last!, userData: self.positionsOfCurveLines.count-1)
                 }
                 if(userLocationForClub != nil) && (self.selectedUserId == Auth.auth().currentUser!.uid){
+                    var counter = 0
                     mapTimer = Timer.scheduledTimer(withTimeInterval:self.totalTimer, repeats: true, block: { (timer) in
                         if(self.positionsOfDotLine.count > 2){
-                            debugPrint(self.totalTimer)
+//                            debugPrint(self.totalTimer)
                             self.locationManager.startUpdatingLocation()
                             if self.locationManager.location == nil{
-                                self.view.makeToast("Locating you.... please reload hole.", duration: 1, position: .bottom)
+                                self.view.makeToast("Locating you.... please reload hole.", duration: 1.5, position: .bottom)
                             }
                             if let currentLocation: CLLocation = self.locationManager.location{
-                                debugPrint(currentLocation.altitude)
+                                if counter%5 == 0{
+                                    let dict = NSMutableDictionary()
+                                    dict.addEntries(from: ["lat" : currentLocation.coordinate.latitude])
+                                    dict.addEntries(from: ["lng" : currentLocation.coordinate.longitude])
+                                    ref.child("gps/\(Auth.auth().currentUser!.uid)/\(self.currentMatchId)/hole\(self.scoring[self.holeIndex].hole)/").updateChildValues(["\(Timestamp)" : dict])
+                                }
+                                
                                 self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
                                 let heading = GMSGeometryHeading(self.userLocationForClub!,self.courseData.centerPointOfTeeNGreen[self.holeIndex].green)
                                 let rotationAngle = self.windHeading-heading
@@ -5844,16 +5853,16 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 self.lblDistance.text = "ELEVATION"
                                 self.lblBackDistance.text = "ELEVATION"
                             }
-                            if(self.holeOutFlag){
-                                Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
-                            }else{
-                                if(BackgroundMapStats.findPositionOfPointInside(position: self.userLocationForClub!, whichFeature:self.courseData.numberOfHoles[self.holeIndex].green)){
-                                    Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
-                                }else{
-                                    Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
-                                }
-                                
-                            }
+//                            if(self.holeOutFlag){
+//                                Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
+//                            }else{
+//                                if(BackgroundMapStats.findPositionOfPointInside(position: self.userLocationForClub!, whichFeature:self.courseData.numberOfHoles[self.holeIndex].green)){
+//                                    Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
+//                                }else{
+//                                    Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
+//                                }
+//
+//                            }
                             if(!self.positionsOfCurveLines.isEmpty) && self.isTracking{
                                 for i in 0..<self.penaltyShots.count{
                                     if (self.penaltyShots[i]){
@@ -5934,6 +5943,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 self.hideWhenDeviceConnected()
                             }
                         }
+                        counter += 1
                     })
                 }
             }
@@ -7117,43 +7127,75 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // MARK :- OFFCourse Tutorials
     func showCaseMiddleMarker(){
         var label2 = UILabel()
-        let showCaseTargetLine = CTShowcaseView(title: "", message: "Drag your target marker to get free club recommendations for every shot.".localized(),key:nil){ () -> () in
-            label2.removeFromSuperview()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                self.showCaseClubChange()
-            })
-        }
-        showCaseTargetLine.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showCaseTargetLine.continueButton.isHidden = false
-        let highlighterForTargetLine = showCaseTargetLine.highlighter as! CTStaticGlowHighlighter
-        highlighterForTargetLine.highlightColor = UIColor.glfWhite
-        highlighterForTargetLine.highlightType = .circle
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            if(self.positionsOfDotLine.count > 1){
-                let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
-                label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-25, width: 50, height: 50))
-                self.mapView.addSubview(label2)
-                showCaseTargetLine.setup(for:label2 , offset: .zero , margin: 5)
-                var timerForMiddleMarker = Timer()
-                
-                //                debugPrint(self.view.)
-                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                    if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-                        if let thePresenter = self.navigationController?.visibleViewController{
-                            if (thePresenter.isKind(of:NewMapVC.self)){
-                                if !self.forTutorial[0]{
-                                    showCaseTargetLine.show()
-                                    self.forTutorial[0] = true
-                                }
-                            }
+//        let showCaseTargetLine = CTShowcaseView(title: "", message: "Drag your target marker to get free club recommendations for every shot.".localized(),key:nil){ () -> () in
+//            label2.removeFromSuperview()
+//
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+//                self.showCaseClubChange()
+//            })
+//        }
+//        showCaseTargetLine.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
+//        showCaseTargetLine.continueButton.isHidden = false
+//        let highlighterForTargetLine = showCaseTargetLine.highlighter as! CTStaticGlowHighlighter
+//        highlighterForTargetLine.highlightColor = UIColor.glfWhite
+//        highlighterForTargetLine.highlightType = .circle
+//
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+//            if(self.positionsOfDotLine.count > 1){
+//                let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
+//                label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-25, width: 50, height: 50))
+//                self.mapView.addSubview(label2)
+//                showCaseTargetLine.setup(for:label2 , offset: .zero , margin: 5)
+//                var timerForMiddleMarker = Timer()
+//
+//                //                debugPrint(self.view.)
+//                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+//                    if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+//                        if let thePresenter = self.navigationController?.visibleViewController{
+//                            if (thePresenter.isKind(of:NewMapVC.self)){
+//                                if !self.forTutorial[0]{
+//                                    showCaseTargetLine.show()
+//                                    self.forTutorial[0] = true
+//                                }
+//                            }
+//                        }
+//                        timerForMiddleMarker.invalidate()
+//                    }
+//                })
+//            }
+//        })
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                    if(self.positionsOfDotLine.count > 1){
+                        let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
+                        label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-25, width: 50, height: 50))
+                        self.mapView.addSubview(label2)
+                        let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
+                        
+                        tapTargetPrompt.action = {
+                            self.forTutorial[0] = true
+                            print("dragged Clicked")
+                            label2.removeFromSuperview()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                                self.showCaseClubChange()
+                            })
                         }
-                        timerForMiddleMarker.invalidate()
+                        tapTargetPrompt.dismissed = {
+                            
+                            print("view dismissed")
+                            self.forTutorial[0] = true
+                            print("dragged Clicked")
+                            label2.removeFromSuperview()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                                self.showCaseClubChange()
+                            })
+                        }
+                        tapTargetPrompt.circleColor = UIColor.glfBlack75
+                        tapTargetPrompt.primaryText = ""
+                        tapTargetPrompt.secondaryText = "Drag your target marker to get free club recommendations for every shot.".localized()
+                        tapTargetPrompt.textPostion = .bottomLeft
                     }
                 })
-            }
-        })
+
     }
     func showCaseClubChange(){
         let showCaseSelectClub = CTShowcaseView(title: "", message: "This is the club we recommend based on your yardage. Tap to change.".localized(),key:nil){()->() in
@@ -8182,6 +8224,7 @@ extension NewMapVC : CLLocationManagerDelegate{
         self.mapView.isMyLocationEnabled = false
         let userLocation = locations.last
         userLocationForClub = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
+        
         locationManager.stopUpdatingLocation()
     }
 }

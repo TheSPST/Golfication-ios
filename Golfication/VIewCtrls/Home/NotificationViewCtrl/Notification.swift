@@ -167,11 +167,11 @@ class Notification: NSObject{
             UserDefaults.standard.set("", forKey: "NearByGolfClub")
             UserDefaults.standard.synchronize()
         }
-        else{
-            if let courseName = UserDefaults.standard.object(forKey: "HomeCourseName") as? String{
-                content.body = "Start your round at \(courseName)!"
-            }
-        }
+//        else{
+//            if let courseName = UserDefaults.standard.object(forKey: "HomeCourseName") as? String{
+//                content.body = "Start your round at \(courseName)!"
+//            }
+//        }
         content.badge = 0
         content.sound = UNNotificationSound.default()
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)

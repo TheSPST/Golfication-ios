@@ -21,7 +21,7 @@ let context = CoreDataStorage.mainQueueContext()
 class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CustomProModeDelegate, BluetoothDelegate{
     // MARK: - Set Outlets
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
-    
+    var locationManager : CLLocationManager!
     @IBOutlet weak var notifStackView: UIStackView!
     @IBOutlet weak var proLabelProfileStackView: UIStackView!
     
@@ -173,6 +173,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - profileAction
     @IBAction func profileAction(_ sender: Any) {
+//        Notification.sendLocaNotificatonNearByGolf()
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
         viewCtrl.fromPublicProfile = false
@@ -289,6 +290,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationUpdate()
         if let iosToken = (InstanceID.instanceID().token()){
             if Auth.auth().currentUser != nil{
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :iosToken] as [AnyHashable:String])
@@ -1281,8 +1283,15 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
                 if let proMode = userData.value(forKey: "proMode") as? Bool{
                     Constants.isProMode = proMode
-//                    self.btnUpgrade.isHidden = false
-                    
+                    if let counter = NSManagedObject.findAllForEntity("ProModeEntity", context: context){
+                        counter.forEach { counter in
+                            context.delete(counter as! NSManagedObject)
+                        }
+                    }
+                    if let proModeEntity = NSEntityDescription.insertNewObject(forEntityName: "ProModeEntity", into: context) as? ProModeEntity{
+                        proModeEntity.isProMode = Constants.isProMode
+                        CoreDataStorage.saveContext(context)
+                    }
                     if let proMembership = userData.value(forKey: "proMembership") as? NSDictionary{
                         if let device  = proMembership.value(forKey: "device") as? String{
                             if (device == "ios"){
@@ -3099,5 +3108,78 @@ extension UIView {
         border.backgroundColor = color.cgColor
         border.frame = CGRect(x: 0, y: 0, width: width, height: self.frame.size.height)
         self.layer.addSublayer(border)
+    }
+}
+extension NewHomeVC:CLLocationManagerDelegate{
+    func locationUpdate(){
+        self.locationManager = CLLocationManager()
+        self.locationManager.delegate = self
+        self.locationManager.allowsBackgroundLocationUpdates = true
+        self.locationManager.pausesLocationUpdatesAutomatically = false
+        self.locationManager.startMonitoringSignificantLocationChanges()
+//        self.locationManager.startUpdatingLocation()
+    }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
+        let userLocation = locations.last!
+        let userLocationForClub = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
+
+        if Constants.matchId.isEmpty{
+            self.getNearByData(latitude: userLocationForClub.latitude, longitude: userLocationForClub.longitude, currentLocation: userLocation)
+        }
+    }
+    func getNearByData(latitude: Double, longitude: Double,currentLocation: CLLocation){
+        
+        let serverHandler = ServerHandler()
+        serverHandler.state = 0
+        let urlStr = "nearBy.php?"
+        let dataStr =  "lat=" + "\(latitude)&" + "lng=" + "\(longitude)"
+        
+        serverHandler.getLocations(urlString: urlStr, dataString: dataStr){(arg0, error)  in
+            if (arg0 == nil) && (error != nil){
+                
+                DispatchQueue.main.async(execute: {
+                    // In case of -1 response
+                })
+            }
+            else{
+                var dataArr =  [NSMutableDictionary]()
+                
+                let (courses) = arg0
+                let group = DispatchGroup()
+                
+                courses?.forEach {
+                    group.enter()
+                    
+                    let dataDic = NSMutableDictionary()
+                    dataDic.setObject($0.key, forKey:"Id"  as NSCopying)
+                    dataDic.setObject($0.value.Name, forKey : "Name" as NSCopying)
+                    dataDic.setObject($0.value.City, forKey : "City" as NSCopying)
+                    dataDic.setObject($0.value.Country, forKey : "Country" as NSCopying)
+                    dataDic.setObject($0.value.Latitude, forKey : "Latitude" as NSCopying)
+                    dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
+                    if($0.key != "99999999"){
+                        dataArr.append(dataDic)
+                    }
+                    group.leave()
+                    group.notify(queue: .main) {
+                    }
+                }
+                DispatchQueue.main.async(execute: {
+                    if !dataArr.isEmpty{
+                        dataArr = BackgroundMapStats.sortAndShow(searchDataArr: dataArr, myLocation: currentLocation)
+                        let golfName = (dataArr[0].value(forKey: "Name") as? String) ?? ""
+                        let golfDistance = (dataArr[0].value(forKey: "Distance") as? Double) ?? 0.0
+                        
+                        ref.child("userData/\(Auth.auth().currentUser!.uid)/nearByGolfClub").updateChildValues(["\(Timestamp)":golfDistance])
+                        if golfDistance < 1500.0 && golfName != ""{
+                            UserDefaults.standard.set(golfName, forKey: "NearByGolfClub")
+                            UserDefaults.standard.synchronize()
+                            FBSomeEvents.shared.logFindLocationEvent()
+                            Notification.sendLocaNotificatonNearByGolf()
+                        }
+                    }
+                })
+            }
+        }
     }
 }

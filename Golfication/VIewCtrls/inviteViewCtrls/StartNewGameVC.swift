@@ -303,24 +303,24 @@ class StartNewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                         
                     case .authorizedWhenInUse, .authorizedAlways:
                         // Enable basic location features
-                        if let currentLocation: CLLocation = self.locationManager.location{
+                        if let _: CLLocation = self.locationManager.location{
                             
-                            var currentCoord = CLLocationCoordinate2D()
-                            currentCoord = currentLocation.coordinate
-                            
-                            let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
-                            let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
-                            let distance : CLLocationDistance = location1.distance(from: location2)
-                            debugPrint("distance = \(distance) m")
-                            if(distance <= 15000.0){
+//                            var currentCoord = CLLocationCoordinate2D()
+//                            currentCoord = currentLocation.coordinate
+//
+//                            let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
+//                            let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
+//                            let distance : CLLocationDistance = location1.distance(from: location2)
+//                            debugPrint("distance = \(distance) m")
+//                            if(distance <= 15000.0){
                                 self.openSuitableGameMode(matchDict:matchDict as! NSMutableDictionary,players:players)
-                            }
-                            else{
-                                // show alert
-                                let emptyAlert = UIAlertController(title: "Alert", message: "You need to be near the course to play in On-Course mode.", preferredStyle: UIAlertControllerStyle.alert)
-                                emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                                self.present(emptyAlert, animated: true, completion: nil)
-                            }
+//                            }
+//                            else{
+//                                // show alert
+//                                let emptyAlert = UIAlertController(title: "Alert", message: "You need to be near the course to play in On-Course mode.", preferredStyle: UIAlertControllerStyle.alert)
+//                                emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+//                                self.present(emptyAlert, animated: true, completion: nil)
+//                            }
                         }
                         break
                     }

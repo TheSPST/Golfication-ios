@@ -33,5 +33,6 @@ target 'Golfication' do
     pod 'FacebookSDK/LoginKit'
     pod 'FBSDKMarketingKit'
     pod 'FacebookCore'
+    pod 'MaterialTapTargetPrompt-iOS'
 
 end

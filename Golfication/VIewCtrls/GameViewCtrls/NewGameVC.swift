@@ -1955,7 +1955,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     func checkingLocation(){
         let onCourse = Constants.matchDataDic.value(forKey: "onCourse") as! Bool
         if onCourse{
-            //            let locationManager = CLLocationManager()
             if(locationManager.location == nil){
                 locationManager.requestAlwaysAuthorization()
                 locationManager.desiredAccuracy = kCLLocationAccuracyBest

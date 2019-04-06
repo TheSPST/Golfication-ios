@@ -14,66 +14,57 @@ import FBSDKLoginKit
 import FirebaseDynamicLinks
 import FirebaseStorage
 
-//var profileGolfName = String()
-
 class ProfileVC: UIViewController, BluetoothDelegate {
     
     // MARK: - Set Outlets
-    @IBOutlet weak var lblTryPremium: UILabel!
-    @IBOutlet weak var lblHomeCorseTitle: UILocalizedLabel!
     @IBOutlet weak var lblHomeCourseName: UILabel!
     @IBOutlet weak var lblGolfBagTitle: UILocalizedLabel!
     @IBOutlet weak var lblClub: UILabel!
-    @IBOutlet weak var lblGrip: UILocalizedLabel!
     @IBOutlet weak var lblHandicap: UILocalizedLabel!
     @IBOutlet weak var lblMinimumValue: UILabel!
     @IBOutlet weak var lblMaxValue: UILabel!
-    @IBOutlet weak var lblInactivePrice: UILabel!
-    @IBOutlet weak var lblDaysLeft: UILabel!
-    @IBOutlet weak var lblDaysLeftTitle: UILocalizedLabel!
     @IBOutlet weak var lblNextBilling: UILabel!
     @IBOutlet weak var lblLastBilling: UILabel!
 
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderHandicapNumber: UISlider!
 
-    @IBOutlet weak var btnUpdradeNow: UILocalizedButton!
     @IBOutlet weak var btnUserImg: UIButton!
     @IBOutlet weak var btnUserName: UIButton!
     @IBOutlet weak var btnCheckbox: UIButton!
-    @IBOutlet weak var btnFreeActiveIndiegogo: UIButton!
-    @IBOutlet weak var btnActiveIndiegogo: UIButton!
-    @IBOutlet weak var btnInviteNow: UILocalizedButton!
 
     @IBOutlet weak var handSelection: UISegmentedControl!
     @IBOutlet weak var genderSgmtCtrl: UISegmentedControl!
 
-    @IBOutlet weak var genderCardView: CardView!
-    @IBOutlet weak var viewUpgradeInactive: UIView!
-    @IBOutlet weak var viewUpgradeActive: UIView!
-    @IBOutlet weak var viewUpgradeFreeActive: UIView!
-    @IBOutlet weak var viewYearlyBtn: UIView!
-    @IBOutlet weak var viewTopWhatIsPro: UIView!
     @IBOutlet weak var viewProMembership: UIView!
     var golfBagArray = NSMutableArray()
-    @IBOutlet weak var actvtIndView: UIActivityIndicatorView!
     var progressView = SDLoader()
-    @IBOutlet weak var  whatISProHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var  viewUpgradeNowHConstraint: NSLayoutConstraint!
 
     var fromPublicProfile = Bool()
     
     @IBOutlet weak var golfBagContainerView: UIView!
     @IBOutlet weak var golfBagHConstraint: NSLayoutConstraint!
 
-    @IBOutlet weak var btnWhatIsPro:UIButton!
     @IBOutlet weak var btnConnectGolfX: UIButton!
+    
+    @IBOutlet weak var editSV: UIStackView!
+    @IBOutlet weak var defaultSV: UIStackView!
+    @IBOutlet weak var editProfileBtnSV: UIStackView!
+    @IBOutlet weak var changeCourseBtnSV: UIStackView!
+    @IBOutlet weak var btnSaveProfile: UIButton!
+    @IBOutlet weak var btnCamera: UIButton!
+    @IBOutlet weak var lblDefaultHandicap: UILabel!
+    @IBOutlet weak var lblGrip: UILabel!
+    @IBOutlet weak var lblGender: UILabel!
+    @IBOutlet weak var btnUpgradeToPro: UIButton!
+    @IBOutlet weak var lblProStatus: UILabel!
+    @IBOutlet weak var btnEditProfile: UIButton!
+    @IBOutlet weak var btnChangeCourse: UIButton!
+
     var appDelegate: AppDelegate!
 
     // MARK: - Initialize Variables
     let imagePicker = UIImagePickerController()
-//    var clubs = ["Dr","3w","4w","5w","7w","1h","2h","3h","4h","5h","6h","7h","1i","2i","3i","4i","5i","6i","7i","8i","9i", "Pw","Gw","Sw","Lw","Pu"]
-    //var selectedClubs = ["Dr", "3w","5w","3i","4i","5i","6i","7i","8i","9i", "Pw","Sw","Lw","Pu"]
     var selectedClubs = NSMutableArray()
     
     var clubsBtn = [UIButton]()
@@ -95,6 +86,35 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     var bluetoothStatus: Bool!
     var bluetoothMessage = String()
 
+    // MARK: editProfileAction
+    @IBAction func editProfileAction(_ sender: Any){
+
+        editSV.isHidden = false
+        defaultSV.isHidden = true
+        
+        editProfileBtnSV.isHidden = true
+        changeCourseBtnSV.isHidden = false
+        btnCamera.isHidden = false
+    }
+    
+    // MARK: editProfileAction
+    @IBAction func saveProfileAction(_ sender: Any){
+        editSV.isHidden = true
+        defaultSV.isHidden = false
+        
+        editProfileBtnSV.isHidden = false
+        changeCourseBtnSV.isHidden = true
+        btnCamera.isHidden = true
+    }
+
+    // MARK: topProAction
+    @IBAction func topProAction(_ sender: Any){
+
+    let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
+    viewCtrl.source = "Profile"
+    self.navigationController?.pushViewController(viewCtrl, animated: false)
+    }
+    
     // MARK: connectBluetoothAction
     @IBAction func connectBluetoothAction(_ sender: Any) {
         if bluetoothStatus{
@@ -156,87 +176,15 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         btnConnectGolfX.setAttributedTitle(atrString, for: .normal)
     }
     
-    // MARK: inviteNowAction
-    @IBAction func inviteNowAction(_ sender: Any) {
-        
-        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
-        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ReferalViewCtrls") as! ReferalViewCtrls
-        self.navigationController?.pushViewController(viewCtrl, animated: true)
-//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "InviteViewController") as! InviteViewController
-//        self.navigationController?.push(viewController: viewCtrl)
-//        self.present(viewCtrl, animated: false, completion: nil)
-        
-    }
-    
-    // MARK: indiegogoAction
-    @IBAction func activeIndiegogoAction(_ sender: UIButton) {
-        
-        var valid: Bool  = true
-        
-        if ((valid) && ((lblHomeCourseName.text == "") || (lblHomeCourseName.text == "-"))) {
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please select home course", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        if((valid) && (selectedClubs.count == 0)){
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please select golf bag", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        if(valid){
-            
-            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "EnterFreeProCodeVC") as! EnterFreeProCodeVC
-//            let navCtrl = UINavigationController(rootViewController: viewCtrl)
-//            navCtrl.modalPresentationStyle = .overCurrentContext
-            self.present(viewCtrl, animated: false, completion: nil)
-        }
-    }
-    // MARK: indiegogoAction
-    @IBAction func indiegogoAction(_ sender: UIButton) {
-        
-        var valid: Bool  = true
-        
-        if ((valid) && ((lblHomeCourseName.text == "") || (lblHomeCourseName.text == "-"))) {
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please select home course", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        if((valid) && (selectedClubs.count == 0)){
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please select golf bag", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        if(valid){
-            
-//            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProfileProMemberPopUPVC") as! ProfileProMemberPopUPVC
-//            viewCtrl.fromUpgrade = true
-//            viewCtrl.modalPresentationStyle = .overCurrentContext
-//            present(viewCtrl, animated: true, completion: nil)
-
-            let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "EnterFreeProCodeVC") as! EnterFreeProCodeVC
-//            let navCtrl = UINavigationController(rootViewController: viewCtrl)
-//            navCtrl.modalPresentationStyle = .overCurrentContext
-            self.present(viewCtrl, animated: false, completion: nil)
-        }
-    }
-    
     // MARK: genderChanged
     @IBAction func genderChanged(_ sender: UISegmentedControl) {
         switch genderSgmtCtrl.selectedSegmentIndex {
         case 0:
+            lblGender.text = "Male"
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"male"] as [AnyHashable:Any])
             Constants.gender = "male"
         case 1:
+            lblGender.text = "Female"
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["gender":"female"] as [AnyHashable:Any])
             Constants.gender = "female"
         default:
@@ -248,65 +196,15 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     @IBAction func gripChanged(_ sender: UISegmentedControl) {
         switch handSelection.selectedSegmentIndex {
         case 0:
+            lblGrip.text = "Left Handed"
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Left"] as [AnyHashable:Any])
             Constants.handed = "Left"
         case 1:
+            lblGrip.text = "Right Handed"
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handed":"Right"] as [AnyHashable:Any])
             Constants.handed = "Right"
         default:
             break;
-        }
-    }
-    
-    // MARK: btnActionWhatIsPro
-    @IBAction func btnActionWhatIsPro(_ sender: Any) {
-        
-        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProfileProMemberPopUPVC") as! ProfileProMemberPopUPVC
-        viewCtrl.fromUpgrade = false
-        viewCtrl.fromNewUserPopUp = false
-        viewCtrl.modalPresentationStyle = .overCurrentContext
-        present(viewCtrl, animated: true, completion: nil)
-    }
-    
-    // MARK: yearlyPlanAction
-    @IBAction func yearlyPlanAction(_ sender: Any) {
-        
-//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-//        self.navigationController?.pushViewController(viewCtrl, animated: true)
-        FBSomeEvents.shared.singleParamFBEvene(param: "Click Profile Eddie")
-        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
-        viewCtrl.source = "Profile"
-        self.navigationController?.pushViewController(viewCtrl, animated: false)
-
-//        viewUpgradeInactive.isHidden = true
-//        viewUpgradeFreeActive.isHidden = true
-//        viewUpgradeActive.isHidden = false
-    }
-    
-    // MARK: upgradeNowAction
-    @IBAction func upgradeNowAction(_ sender: Any) {
-
-        var valid: Bool  = true
-        
-        if ((valid) && ((lblHomeCourseName.text == "") || (lblHomeCourseName.text == "-"))) {
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please select home course", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        if((valid) && (selectedClubs.count == 0)){
-            valid = false
-            
-            let alert = UIAlertController(title: "Alert", message: "Please select golf bag", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        if(valid){
-            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
-            viewCtrl.source = "Profile"
-            self.navigationController?.pushViewController(viewCtrl, animated: false)
         }
     }
     
@@ -322,8 +220,6 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             appDelegate.window?.rootViewController = tabBarCtrl
         }
     }
-
-    // MARK: btnLogoutAction
     
     @IBAction func settingAction(_ sender: Any) {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "SettingVC") as! SettingVC
@@ -517,6 +413,8 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     @IBAction func sliderChangedAction(_ sender: Any) {
         FBSomeEvents.shared.singleParamFBEvene(param: "Profile Change HCP")
         self.lblHandicap.text = "Handicap".localized() + " \((self.slider.value*10).rounded()/10)"//(value as! NSString).floatValue
+        self.lblDefaultHandicap.text = "\((self.slider.value*10).rounded()/10)"//(value as! NSString).floatValue
+
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\((self.slider.value*10).rounded()/10)"] as [AnyHashable:Any])
         Constants.handicap = "\((self.slider.value*10).rounded()/10)"
     }
@@ -527,7 +425,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         if(self.btnCheckbox.isSelected){
             self.btnCheckbox.isSelected = false
             self.btnCheckbox.setBackgroundImage(nil, for: .normal)
-            self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
+            self.btnCheckbox.setCorner(color: UIColor.darkGray.cgColor)
             self.sliderHandicapNumber.isEnabled = true
             
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"\(Int(self.slider.value))"] as [AnyHashable:Any])
@@ -537,7 +435,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "path15"), for: .normal)
             self.btnCheckbox.imageView?.sizeToFit()
             self.btnCheckbox.isSelected = true
-            self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
+            self.btnCheckbox.setCorner(color: UIColor.darkGray.cgColor)
             self.sliderHandicapNumber.isEnabled = false
             
             ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["handicap":"-"] as [AnyHashable:Any])
@@ -557,55 +455,57 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         super.viewDidLoad()
         self.title = "Profile".localized()
         
-        self.viewTopWhatIsPro.isHidden = true
-        whatISProHeightConstraint.constant = 0.0
-        self.view.layoutIfNeeded()
-        
-        //btnUpdradeNow.setTitle(" " + "Upgrade Now!".localized() + " ", for: .normal)
-        btnUpdradeNow.layer.borderColor = UIColor.glfBlack.cgColor
-        btnUpdradeNow.layer.borderWidth = 4.0
-        btnWhatIsPro.setTitle(" " + "What is Pro?".localized() + " ", for: .normal)
-        
-        btnUpdradeNow.layer.cornerRadius = 3.0
-        viewYearlyBtn.layer.cornerRadius = 3.0
-        btnInviteNow.layer.cornerRadius = 3.0
-        
-        btnInviteNow.setTitle(" " + "Invite Now".localized() + " ", for: .normal)
+        let originalImage = UIImage(named:"text_edit_blue")!
+        let courseImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        btnEditProfile.tintColor = UIColor(rgb:0x3A7CA5).withAlphaComponent(0.75)
+        btnEditProfile.setImage(courseImage, for: .normal)
+
+        btnChangeCourse.tintColor = UIColor(rgb:0x3A7CA5).withAlphaComponent(0.75)
+        btnChangeCourse.setImage(courseImage, for: .normal)
+
+        lblProStatus.layer.cornerRadius = 3.0
+        lblProStatus.layer.masksToBounds = true
+        lblProStatus.backgroundColor = UIColor.glfFlatBlue
+        lblProStatus.text = "Basic"
+        if Constants.isProMode{
+            btnUpgradeToPro.isHidden = true
+            lblProStatus.text = "PRO"
+            lblProStatus.backgroundColor = UIColor(rgb:0xFFC700)
+        }
+        btnUpgradeToPro.setCorner(color: UIColor(rgb:0xFFC700).cgColor)
+        btnSaveProfile.setCorner(color: UIColor.clear.cgColor)
+        saveProfileAction(btnSaveProfile)
         
         viewProMembership.isHidden = true
-        viewUpgradeInactive.isHidden = true
-        viewUpgradeFreeActive.isHidden = true
-        viewUpgradeActive.isHidden = true
-        
-        let buttonTitleStr = NSMutableAttributedString(string: "Have Indiegogo promo code?", attributes:attrs)
-        attributedString.append(buttonTitleStr)
-        btnFreeActiveIndiegogo.setAttributedTitle(attributedString, for: .normal)
-        btnActiveIndiegogo.setAttributedTitle(attributedString, for: .normal)
-        btnFreeActiveIndiegogo.isHidden = true
         
         imagePicker.delegate=self
         PKCCropHelper.shared.degressBeforeImage = UIImage(named: "pkc_crop_rotate_left.png")
         PKCCropHelper.shared.degressAfterImage = UIImage(named: "pkc_crop_rotate_right.png")
 
-        if Constants.gender == ""{
-            self.genderCardView.isHidden = false
-        }
-        else{
-            self.genderCardView.isHidden = true
+//        if Constants.gender == ""{
+//            self.genderCardView.isHidden = false
+//        }
+//        else{
+//            self.genderCardView.isHidden = true
             if Constants.gender == "male"{
                 self.genderSgmtCtrl.selectedSegmentIndex = 0
+                lblGender.text = "Male"
             }
             else{
                 self.genderSgmtCtrl.selectedSegmentIndex = 1
+                lblGender.text = "Female"
             }
-        }
+        //}
         
         if Constants.handed == ""{
+            lblGrip.text = "Right Handed"
             self.handSelection.selectedSegmentIndex = 1
         }
         else{
+            lblGrip.text = "Right Handed"
             self.handSelection.selectedSegmentIndex = 1
             if(Constants.handed == "Left"){
+                lblGrip.text = "Left Handed"
                 self.handSelection.selectedSegmentIndex = 0
             }
         }
@@ -614,7 +514,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "path15"), for: .normal)
             self.btnCheckbox.imageView?.sizeToFit()
             self.btnCheckbox.isSelected = true
-            self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
+            self.btnCheckbox.setCorner(color: UIColor.darkGray.cgColor)
             self.sliderHandicapNumber.isEnabled = false
         }
         else{
@@ -622,11 +522,12 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                 self.btnCheckbox.setBackgroundImage(#imageLiteral(resourceName: "path15"), for: .normal)
                 self.btnCheckbox.imageView?.sizeToFit()
                 self.btnCheckbox.isSelected = true
-                self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
+                self.btnCheckbox.setCorner(color: UIColor.darkGray.cgColor)
                 self.sliderHandicapNumber.isEnabled = false
             }
             self.sliderHandicapNumber.value = (Constants.handicap as NSString).floatValue
             self.lblHandicap.text = "Handicap".localized() + " \(self.sliderHandicapNumber.value)"
+            self.lblDefaultHandicap.text = "\(self.sliderHandicapNumber.value)"
         }
         getData()
         FBSomeEvents.shared.singleParamFBEvene(param: "View My Profile")
@@ -634,26 +535,15 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     
     // MARK: getData
     func getData()  {
-        btnUpdradeNow.isEnabled = false
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "proMembership") { (snapshot) in
 
             if(snapshot.value != nil){
                 var proData = NSDictionary()
                 proData = snapshot.value as! NSDictionary
                 
-                self.viewTopWhatIsPro.isHidden = true
-                self.whatISProHeightConstraint.constant = 0.0
-                self.view.layoutIfNeeded()
-                
-                self.viewProMembership.isHidden = false // Show only when user has subscription.
-                self.viewUpgradeNowHConstraint.constant = 0.0
-                
-                self.viewUpgradeInactive.isHidden = true
-                self.viewUpgradeFreeActive.isHidden = true
-                self.viewUpgradeActive.isHidden = false
+                self.viewProMembership.isHidden = false
                 
                 if proData.value(forKey: "productID") as! String == Constants.PROMO_CODE_YEARLY_PRODUCT_ID{
-                    self.btnActiveIndiegogo.isHidden = true
                     self.lblNextBilling.isHidden = true
                 }
                 
@@ -711,38 +601,15 @@ class ProfileVC: UIViewController, BluetoothDelegate {
                 case .orderedAscending?    :   debugPrint("currentDate is earlier than expDate")
 
                 case .orderedDescending?    :   debugPrint("currentDate is later than expDate")
-                self.viewUpgradeNowHConstraint.constant = 99.0
-                self.viewUpgradeInactive.isHidden = false
-                self.viewUpgradeFreeActive.isHidden = true
-                self.viewUpgradeActive.isHidden = true
-                self.lblInactivePrice.text = "Your Pro Membership has been expired"
+                self.viewProMembership.isHidden = true
                 case .orderedSame?         :   debugPrint("Both dates are same")
-                self.viewUpgradeNowHConstraint.constant = 99.0
-                self.viewUpgradeInactive.isHidden = false
-                self.viewUpgradeFreeActive.isHidden = true
-                self.viewUpgradeActive.isHidden = true
-                self.lblInactivePrice.text = "Your Pro Membership has been expired"
+                self.viewProMembership.isHidden = true
                 case .none: break
                 }
             }
             else{
-//                self.viewTopWhatIsPro.isHidden = false // Hide "what is pro" permanantly
-//                self.whatISProHeightConstraint.constant = 57.0 // Hide "what is pro" permanantly
-                self.viewTopWhatIsPro.isHidden = true
-                self.whatISProHeightConstraint.constant = 0.0
-
-                self.lblInactivePrice.text = "free for 30 days".localized()
-                if Constants.trial == true{
-                    self.lblInactivePrice.text = "Your Pro Membership has been expired"
-                    self.viewTopWhatIsPro.isHidden = true
-                    self.whatISProHeightConstraint.constant = 0.0
-                }
-                self.viewUpgradeNowHConstraint.constant = 99.0
-                self.viewUpgradeInactive.isHidden = false
-                self.viewUpgradeFreeActive.isHidden = true
-                self.viewUpgradeActive.isHidden = true
+                self.viewProMembership.isHidden = true
             }
-            self.btnUpdradeNow.isEnabled = true
             self.setupInitialUI()
         }
     }
@@ -929,7 +796,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             titleLbl.frame = CGRect(x: xOffset, y: (Double(btns.frame.size.height + CGFloat(yOffset))), width: btnWidth, height: lblHeight)
             titleLbl.textColor = UIColor.glfFlatBlue
             titleLbl.textAlignment = .center
-            titleLbl.font = UIFont(name: "SFProDisplay-Light", size: 9.0)
+            titleLbl.font = UIFont(name: "SFProDisplay-Regular", size: 9.0)
             
             let lastChar = (dict.value(forKey: "clubName") as! String).last!
             let firstChar = (dict.value(forKey: "clubName") as! String).first!
@@ -976,7 +843,6 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     
     // MARK: setupInitialUI
     func setupInitialUI(){
-        self.lblTryPremium.text = "Get your 30 days membership absolutely FREE".localized()
         self.btnUserImg.setCornerWithCircle(color: UIColor.glfBluegreen.cgColor)
         self.btnUserImg.sd_setBackgroundImage(with: Auth.auth().currentUser?.photoURL ?? URL(string:""), for: .normal, completed: nil)
         if Auth.auth().currentUser?.photoURL == nil{
@@ -985,7 +851,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
 //        self.btnUserImg.isEnabled = false //change in next build
         self.btnUserName.setTitle("\(Auth.auth().currentUser?.displayName ?? "Guest")", for: .normal)
         self.btnUserName.isEnabled = false //change in next build
-        self.btnCheckbox.setCorner(color: UIColor.glfWarmGrey.cgColor)
+        self.btnCheckbox.setCorner(color: UIColor.darkGray.cgColor)
         self.btnCheckbox.tintColor = UIColor.clear
         self.lblMinimumValue.text = "0"
         

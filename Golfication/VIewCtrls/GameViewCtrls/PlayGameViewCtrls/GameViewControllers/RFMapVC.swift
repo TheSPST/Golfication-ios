@@ -780,14 +780,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var userLocationForClub : CLLocationCoordinate2D?
     var positionsOfDotLine = [CLLocationCoordinate2D]()
     var polygonArray = [[CLLocationCoordinate2D]]()
-    var isBackground : Bool{
-        let state = UIApplication.shared.applicationState
-        if state == .background {
-            return true
-        }else{
-            return false
-        }
-    }
+//    var isBackground : Bool{
+//        let state = UIApplication.shared.applicationState
+//        if state == .background {
+//            return true
+//        }else{
+//            return false
+//        }
+//    }
     //    var mapView = GMSMapView()
     var progressView = SDLoader()
     
@@ -1151,9 +1151,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 self.userLocationForClub = CLLocationCoordinate2D(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude)
             }
 //            self.mapView.isMyLocationEnabled = false
-            if Constants.onCourseNotification == 1{
-                self.registerBackgroundTask()
-            }
+//            if Constants.onCourseNotification == 1{
+//                self.registerBackgroundTask()
+//            }
         }
         var matchDataDictionary = NSMutableDictionary()
         if(self.isAcceptInvite){
@@ -1169,11 +1169,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         progressView.show()
         self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadMap(_:)), name: NSNotification.Name(rawValue: "courseDataAPIFinished"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.sendNotificationOnCourse(_:)), name: NSNotification.Name(rawValue: "updateLocation"),object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.sendNotificationOnCourse(_:)), name: NSNotification.Name(rawValue: "updateLocation"),object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.changeHoleFromNotification(_:)), name: NSNotification.Name(rawValue: "holeChange"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         //         getGolfCourseDataFromFirebase()
     }
     @objc func appDidEnterForeground(){
@@ -1202,49 +1202,49 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
 
     // --------------------------- End -------------------------------
-    @objc func sendNotificationOnCourse(_ notification:NSNotification){
-        self.locationManager.startUpdatingLocation()
-        var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
-        var suffix = "meter"
-        if(Constants.distanceFilter != 1){
-            distance = distance*Constants.YARD
-            suffix = "yard"
-        }
-        Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[self.holeIndex].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0)
-        debugPrint("distance",distance)
-    }
-    @objc func changeHoleFromNotification(_ notification:NSNotification){
-        if let nextOrPrev = notification.object as? String{
-            if(nextOrPrev == "next"){
-                self.nextAction(self.btnNext)
-            }else{
-                self.previousAction(self.btnPrev)
-            }
-        }
-    }
-    func registerBackgroundTask() {
-        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-            self?.endBackgroundTask()
-        }
-        assert(backgroundTask != UIBackgroundTaskInvalid)
-    }
-    @objc func appDidEnterBackground() {
-        let thePresenter = self.navigationController?.visibleViewController
-        if (thePresenter != nil) && (thePresenter?.isKind(of:RFMapVC.self))! {
-            if Constants.onCourseNotification == 0{
-                self.mapTimer.invalidate()
-            }else{
-                self.updateMap(indexToUpdate: self.holeIndex)
-            }
-        }else{
-            self.mapTimer.invalidate()
-        }
-    }
-    func endBackgroundTask() {
-        print("Background task ended.")
-        UIApplication.shared.endBackgroundTask(backgroundTask)
-        backgroundTask = UIBackgroundTaskInvalid
-    }
+//    @objc func sendNotificationOnCourse(_ notification:NSNotification){
+//        self.locationManager.startUpdatingLocation()
+//        var distance  = GMSGeometryDistance(self.positionsOfDotLine.last!,self.userLocationForClub!)
+//        var suffix = "meter"
+//        if(Constants.distanceFilter != 1){
+//            distance = distance*Constants.YARD
+//            suffix = "yard"
+//        }
+//        Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[self.holeIndex].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distance)) \(suffix)", subtitle:"",timer:1.0)
+//        debugPrint("distance",distance)
+//    }
+//    @objc func changeHoleFromNotification(_ notification:NSNotification){
+//        if let nextOrPrev = notification.object as? String{
+//            if(nextOrPrev == "next"){
+//                self.nextAction(self.btnNext)
+//            }else{
+//                self.previousAction(self.btnPrev)
+//            }
+//        }
+//    }
+//    func registerBackgroundTask() {
+//        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+//            self?.endBackgroundTask()
+//        }
+//        assert(backgroundTask != UIBackgroundTaskInvalid)
+//    }
+//    @objc func appDidEnterBackground() {
+//        let thePresenter = self.navigationController?.visibleViewController
+//        if (thePresenter != nil) && (thePresenter?.isKind(of:RFMapVC.self))! {
+//            if Constants.onCourseNotification == 0{
+//                self.mapTimer.invalidate()
+//            }else{
+//                self.updateMap(indexToUpdate: self.holeIndex)
+//            }
+//        }else{
+//            self.mapTimer.invalidate()
+//        }
+//    }
+//    func endBackgroundTask() {
+//        print("Background task ended.")
+//        UIApplication.shared.endBackgroundTask(backgroundTask)
+//        backgroundTask = UIBackgroundTaskInvalid
+//    }
     //MARK: - Setup Initital UI
     func setInitialUI(){
         var tag = 0
@@ -2666,7 +2666,15 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         locationManager.startUpdatingLocation()
         self.positionsOfDotLine.removeAll()
         if(self.userLocationForClub != nil) && (self.playerId == Auth.auth().currentUser!.uid){
-            self.positionsOfDotLine.append(self.userLocationForClub!)
+            let userToTeeDistance = GMSGeometryDistance(self.userLocationForClub!, self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
+            let userToGreenDistance = GMSGeometryDistance(self.userLocationForClub!, self.courseData.centerPointOfTeeNGreen[indexToUpdate].green)
+            let radiusDistance = GMSGeometryDistance(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee, self.courseData.centerPointOfTeeNGreen[indexToUpdate].green) + 200
+            if radiusDistance > userToTeeDistance && radiusDistance > userToGreenDistance{
+                self.positionsOfDotLine.append(self.userLocationForClub!)
+            }else{
+                self.userLocationForClub = nil
+                self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
+            }
         }else{
             self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
         }
@@ -2707,17 +2715,25 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         var counter = 0
         if(userLocationForClub != nil) && (self.playerId == Auth.auth().currentUser!.uid){
-            mapTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (timer) in
+            mapTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
                 if(self.positionsOfDotLine.count > 2){
-                    if self.isBackground{
-                        if(counter%60 == 0){
-                            self.locationManager.startUpdatingLocation()
-                        }
-                    }else{
+//                    if self.isBackground{
+//                        if(counter%60 == 0){
+//                            self.locationManager.startUpdatingLocation()
+//                        }
+//                    }else{
                         self.locationManager.startUpdatingLocation()
+//                    }
+//                    debugPrint(self.windSpeed)
+//                    debugPrint(self.windHeading)
+                    if let currentLocation: CLLocation = self.locationManager.location{
+                        if counter%5 == 0{
+                            let dict = NSMutableDictionary()
+                            dict.addEntries(from: ["lat" : currentLocation.coordinate.latitude])
+                            dict.addEntries(from: ["lng" : currentLocation.coordinate.longitude])
+                            ref.child("gps/\(Auth.auth().currentUser!.uid)/\(self.matchId)/hole\(self.scoring[self.holeIndex].hole)").updateChildValues(["\(Timestamp)" : dict])
+                        }
                     }
-                    debugPrint(self.windSpeed)
-                    debugPrint(self.windHeading)
                     if Constants.isProMode && self.windTimeStamp < Timestamp{
                         self.updateWindSpeed(latLng: self.userLocationForClub!, indexToUpdate: indexToUpdate)
                     }else{
@@ -2788,12 +2804,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         self.lblCenterDist.text = "ELEVATION"
                         self.lblEndDist.text = "ELEVATION"
                     }
-                    if(counter%60 == 0){
-                        Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0)
-                    }
-                    counter += 2
+//                    if(counter%60 == 0){
+//                        Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0)
+//                    }
+                    counter += 1
                 }
             })
+        }else{
+            self.plotLine(positions: positionsOfDotLine)
         }
         if !self.scoreSecondSV.isHidden{
             for btn in self.buttonsArrayForStrokes{
@@ -2952,7 +2970,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             fbDistance.frontLng = data.front.longitude
             frontBackDistanceArr.append(fbDistance)
         }
-        if Constants.isProMode{
             BackgroundMapStats.donateInteraction()
             context.performAndWait{ () -> Void in
                 if let counter1 = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: context){
@@ -3035,7 +3052,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     CoreDataStorage.saveContext(context)
                 }
             }
-        }
+        
         
     }
     func clubReco(dist:Double,lie:String)->String {

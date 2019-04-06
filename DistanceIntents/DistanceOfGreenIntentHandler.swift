@@ -32,6 +32,11 @@ class DistanceOfGreenIntentHandler: NSObject, DistanceOfGreenIntentHandling {
         
         if let currentLocation: CLLocation = userLocation.locationManager.location{
             self.context.performAndWait{ () -> Void in
+                if let distanceUnitEntity = NSManagedObject.findAllForEntity("ProModeEntity", context: self.context) as? [ProModeEntity],!distanceUnitEntity.isEmpty{
+                    if !distanceUnitEntity.last!.isProMode{
+                        completion(DistanceOfGreenIntentResponse.success(distanceString: "Siri Voice Caddie is available with Golfication Pro Membership."))
+                    }
+                }
                 if let distanceUnitEntity = NSManagedObject.findAllForEntity("DistanceUnitEntity", context: self.context) as? [DistanceUnitEntity],!distanceUnitEntity.isEmpty{
                     distanceUtil.writeDistanceUnit(cDetails: distanceUnitEntity.last!)
                 }

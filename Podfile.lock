@@ -114,6 +114,7 @@ PODS:
   - GTMSessionFetcher/Core (1.1.15)
   - IQKeyboardManagerSwift (5.0.4)
   - leveldb-library (1.20)
+  - MaterialTapTargetPrompt-iOS (1.0.0)
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
     - nanopb/encode (= 0.3.8)
@@ -151,6 +152,7 @@ DEPENDENCIES:
   - GoogleMaps
   - GooglePlaces
   - IQKeyboardManagerSwift
+  - MaterialTapTargetPrompt-iOS
   - SDWebImage (~> 4.0)
   - SwiftyStoreKit
   - UICircularProgressRing
@@ -195,6 +197,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - IQKeyboardManagerSwift
     - leveldb-library
+    - MaterialTapTargetPrompt-iOS
     - nanopb
     - Protobuf
     - SDWebImage
@@ -240,6 +243,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
   IQKeyboardManagerSwift: a0592bb636b10a9a1cf75d2b2c61144226226c84
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
+  MaterialTapTargetPrompt-iOS: 91499f8e8118324517076ce6315a2f016764ac00
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   SDWebImage: 6da6c8bca115addc4de8613362e1b15f66333825
@@ -249,6 +253,6 @@ SPEC CHECKSUMS:
   XLPagerTabStrip: d1ab378af0923320ec0b5eab11d7b2f803d31261
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: 6743c1c5d4af6c28eeee052dfafcb84d29f84a08
+PODFILE CHECKSUM: 4083e1d1712ed1bf5e4a600d3e7c413e8695baea
 
 COCOAPODS: 1.6.0.rc.2
