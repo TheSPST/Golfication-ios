@@ -109,7 +109,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var lockFront: UIImageView!
     @IBOutlet weak var lblWindOnlyLbl: UILabel!
     
-    
+    @IBOutlet weak var gpsBtn: UIButton!
+    @IBOutlet weak var farFromTheHoleView : FarFromTheHole!
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
     var buttonsArrayForGIR = [UIButton]()
@@ -483,6 +484,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.lblStblScore.text = "n/a"
         }
         var currentHole = self.startingIndex
+        if self.isContinueMatch == nil{
+           self.isContinueMatch = false
+        }
         if(self.isContinueMatch){
             
             if(self.scoring.isEmpty){
@@ -512,6 +516,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         if self.scoring[self.holeIndex].par == 3{
             fairwayHitContainerSV.isHidden = true
         }
+        locationManager.startUpdatingLocation()
+        self.farFromTheHoleView.layer.cornerRadius = 5.0
+        self.farFromTheHoleView.isHidden = true
+        self.farFromTheHoleView.btnContinue.addTarget(self, action: #selector(self.farFromTheHoleContinueAction), for: .touchUpInside)
         self.updateMap(indexToUpdate: self.holeIndex)
         btnPlayerStats.isEnabled = true
         self.view.isUserInteractionEnabled = true
@@ -648,12 +656,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             }
+            self.mapTimer.invalidate()
+            self.gotoFeedBackViewController(mID: Constants.matchId, mode: Constants.mode, isDiscard: true)
         }
         BackgroundMapStats.deleteCoreData()
         scoring.removeAll()
-        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController = tabBarCtrl
     }
 
     @objc func statsCompleted(_ notification: NSNotification) {
@@ -717,33 +724,40 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         ref.child("feedData").updateChildValues(finalFeedDic as! [AnyHashable : Any])
         ref.child("userData/\(feedDict.value(forKey: "userKey")!)/myFeeds").updateChildValues([feedId:true])
     }
-    func gotoFeedBackViewController(mID:String,mode:Int){
+    func gotoFeedBackViewController(mID:String,mode:Int,isDiscard:Bool = false){
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FeedbackVC") as! FeedbackVC
         viewCtrl.matchIdentifier = mID
         viewCtrl.mode = mode
-        viewCtrl.onDoneBlock = { result in
-            let players = NSMutableArray()
-            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
-            if(self.matchDataDic.object(forKey: "player") != nil){
-                let tempArray = self.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
-                for (k,v) in tempArray{
-                    let dict = v as! NSMutableDictionary
-                    dict.addEntries(from: ["id":k])
-                    if(k as! String == Auth.auth().currentUser!.uid){
-                        dict.addEntries(from: ["status":4])
+        if !isDiscard{
+            viewCtrl.onDoneBlock = { result in
+                let players = NSMutableArray()
+                let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
+                if(self.matchDataDic.object(forKey: "player") != nil){
+                    let tempArray = self.matchDataDic.object(forKey: "player")! as! NSMutableDictionary
+                    for (k,v) in tempArray{
+                        let dict = v as! NSMutableDictionary
+                        dict.addEntries(from: ["id":k])
+                        if(k as! String == Auth.auth().currentUser!.uid){
+                            dict.addEntries(from: ["status":4])
+                        }
+                        players.add(dict)
                     }
-                    players.add(dict)
                 }
+                viewCtrl.finalPlayersData = players
+                viewCtrl.finalScoreData = self.scoring
+                viewCtrl.currentMatchId = mID
+                viewCtrl.justFinishedTheMatch = true
+                viewCtrl.fromGameImprovement = false
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                self.scoring.removeAll()
+                self.matchId.removeAll()
             }
-            viewCtrl.finalPlayersData = players
-            viewCtrl.finalScoreData = self.scoring
-            viewCtrl.currentMatchId = mID
-            viewCtrl.justFinishedTheMatch = true
-            viewCtrl.fromGameImprovement = false
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-            self.scoring.removeAll()
-            self.matchId.removeAll()
-            
+        }else{
+            viewCtrl.onDoneBlock = { result in
+                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.window?.rootViewController = tabBarCtrl
+            }
         }
         self.present(viewCtrl, animated: true, completion: nil)
     }
@@ -915,8 +929,17 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBAction func backButtonAction(_ sender: Any) {
         for controller in self.navigationController!.viewControllers as Array {
             if controller.isKind(of: NewGameVC.self) {
-                _ =  self.navigationController!.popToViewController(controller, animated: !isAcceptInvite)
-                break
+                if self.navigationController == nil{
+                    let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                    appDelegate.window?.rootViewController = tabBarCtrl
+                    break
+                }else{
+                    _ =  self.navigationController!.popToViewController(controller, animated: !isAcceptInvite)
+                    break
+                }
+            }else{
+                self.navigationController!.popToRootViewController(animated: !isAcceptInvite)
             }
         }
     }
@@ -1133,17 +1156,23 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             playerStatsAction(btnPlayerStats)
         }
     }
-    
+    var isFarFromHoleFirstTime = false
     override func viewDidLoad() {
         super.viewDidLoad()
         FBSomeEvents.shared.singleParamFBEvene(param: "View Rangefinder Game")
         btnPlayerStats.isHidden = true
         locationManager.delegate = self
         initalSetup()
+        self.gpsBtn.setCircle(frame: self.gpsBtn.frame)
+        self.gpsBtn.backgroundColor = UIColor.glfBlack40
+        self.gpsBtn.addTarget(self, action: #selector(self.gpsAction(_:)), for: .touchUpInside)
         self.mapView.delegate = self
         btnPlayerStats.isEnabled = false
         self.view.isUserInteractionEnabled = false
-        let onCourse = matchDataDic.value(forKeyPath: "onCourse") as! Bool
+        if matchDataDic.count == 0{
+           matchDataDic = Constants.matchDataDic
+        }
+        let onCourse = matchDataDic.value(forKeyPath: "onCourse") as? Bool ?? true
         self.courseId = "course_\(matchDataDic.value(forKeyPath: "courseId") as! String)"
         if (onCourse){
             locationManager.startUpdatingLocation()
@@ -1176,30 +1205,47 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
 //        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         //         getGolfCourseDataFromFirebase()
     }
-    @objc func appDidEnterForeground(){
-        switch CLLocationManager.authorizationStatus() {
-        case .notDetermined:
-            self.locationManager.requestAlwaysAuthorization()
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-            break
-            
-        case .restricted, .denied:
-            let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
-                self.backButtonAction(self.backBtnHeader)
-            }))
-            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
-                let url = URL(string: UIApplicationOpenSettingsURLString)!
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }))
-            self.present(alert, animated: true, completion: nil)
-            break
-            
-        case .authorizedWhenInUse, .authorizedAlways:
-            // Do Nothing
-            break
-        }
+    @objc func gpsAction(_ sender:UIButton){
+        self.gpsBtn.tag = 11
+        locationManager.startUpdatingLocation()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            let userToTeeDistance = GMSGeometryDistance(self.userLocationForClub!, self.courseData.centerPointOfTeeNGreen[self.holeIndex].tee)
+            let userToGreenDistance = GMSGeometryDistance(self.userLocationForClub!, self.courseData.centerPointOfTeeNGreen[self.holeIndex].green)
+            let radiusDistance = GMSGeometryDistance(self.courseData.centerPointOfTeeNGreen[self.holeIndex].tee, self.courseData.centerPointOfTeeNGreen[self.holeIndex].green) + 200
+            if radiusDistance > userToTeeDistance && radiusDistance > userToGreenDistance{
+                self.updateMap(indexToUpdate: self.holeIndex)
+            }else{
+                self.farFromTheHoleView.isHidden = false
+            }
+        })
     }
+    @objc func farFromTheHoleContinueAction(_ sender:UIButton){
+        self.farFromTheHoleView.isHidden = true
+    }
+//    @objc func appDidEnterForeground(){
+//        switch CLLocationManager.authorizationStatus() {
+//        case .notDetermined:
+//            self.locationManager.requestAlwaysAuthorization()
+//            self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+//            break
+//
+//        case .restricted, .denied:
+//            let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+//                self.backButtonAction(self.backBtnHeader)
+//            }))
+//            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+//                let url = URL(string: UIApplicationOpenSettingsURLString)!
+//                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//            }))
+//            self.present(alert, animated: true, completion: nil)
+//            break
+//
+//        case .authorizedWhenInUse, .authorizedAlways:
+//            // Do Nothing
+//            break
+//        }
+//    }
 
     // --------------------------- End -------------------------------
 //    @objc func sendNotificationOnCourse(_ notification:NSNotification){
@@ -2671,8 +2717,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             let radiusDistance = GMSGeometryDistance(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee, self.courseData.centerPointOfTeeNGreen[indexToUpdate].green) + 200
             if radiusDistance > userToTeeDistance && radiusDistance > userToGreenDistance{
                 self.positionsOfDotLine.append(self.userLocationForClub!)
+                self.gpsBtn.isHidden = true
             }else{
-                self.userLocationForClub = nil
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                    self.farFromTheHoleView.isHidden = self.isFarFromHoleFirstTime
+                    self.isFarFromHoleFirstTime = true
+                    self.gpsBtn.isHidden = false
+                })
                 self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
             }
         }else{
@@ -2680,7 +2731,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].fairway)
         self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].green)
-        debugPrint(self.courseData.centerPointOfTeeNGreen[indexToUpdate].fairway)
+
         let distance = GMSGeometryDistance(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!) * Constants.YARD
         let heading = GMSGeometryHeading(self.positionsOfDotLine.first!,self.positionsOfDotLine.last!)
         if(distance < 250){
@@ -2747,8 +2798,20 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                             })
                         }
                     }
-                    self.positionsOfDotLine.remove(at: 0)
-                    self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
+                    let userToTeeDistance = GMSGeometryDistance(self.userLocationForClub!, self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
+                    let userToGreenDistance = GMSGeometryDistance(self.userLocationForClub!, self.courseData.centerPointOfTeeNGreen[indexToUpdate].green)
+                    let radiusDistance = GMSGeometryDistance(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee, self.courseData.centerPointOfTeeNGreen[indexToUpdate].green) + 200
+                    if radiusDistance > userToTeeDistance && radiusDistance > userToGreenDistance{
+                        self.positionsOfDotLine.remove(at: 0)
+                        self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
+                        self.gpsBtn.isHidden = true
+                    }else{
+                        self.positionsOfDotLine.remove(at: 0)
+                        self.positionsOfDotLine.insert(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee, at: 0)
+                    }
+                    
+//                    self.positionsOfDotLine.remove(at: 0)
+//                    self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
                     self.isUserInsideBound = true
                     self.markers[0].position = self.positionsOfDotLine.first!
                     if(self.previousLocation != nil){
@@ -2769,24 +2832,24 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     self.plotLine(positions: self.positionsOfDotLine)
                     var data : GreenData!
                     if(self.courseData.holeGreenDataArr.isEmpty){
-                        data = self.setFronBackCenter(ind: indexToUpdate, currentLocation: self.userLocationForClub!)
+                        data = self.setFronBackCenter(ind: indexToUpdate, currentLocation: self.positionsOfDotLine.first!)
                     }else{
                         data = self.courseData.holeGreenDataArr[indexToUpdate]
                     }
-                    self.updateElevationForeground(p1: self.userLocationForClub!, p2: data.front, btn: self.btnEleFront, lbl: self.lblDirFront, lblElev: self.lblFrontElev)
-                    self.updateElevationForeground(p1: self.userLocationForClub!, p2: data.center, btn: self.btnEleCenter, lbl: self.lblDirCenter, lblElev: self.lblCenterElev)
-                    self.updateElevationForeground(p1: self.userLocationForClub!, p2: data.back, btn: self.btnEleBack, lbl: self.lblDirBack, lblElev: self.lblBackElev)
-                    var distanceF = GMSGeometryDistance(data.front,self.userLocationForClub!) * Constants.YARD
-                    var distanceC = GMSGeometryDistance(data.center,self.userLocationForClub!) * Constants.YARD
-                    var distanceE = GMSGeometryDistance(data.back,self.userLocationForClub!) * Constants.YARD
+                    self.updateElevationForeground(p1: self.positionsOfDotLine.first!, p2: data.front, btn: self.btnEleFront, lbl: self.lblDirFront, lblElev: self.lblFrontElev)
+                    self.updateElevationForeground(p1: self.positionsOfDotLine.first!, p2: data.center, btn: self.btnEleCenter, lbl: self.lblDirCenter, lblElev: self.lblCenterElev)
+                    self.updateElevationForeground(p1: self.positionsOfDotLine.first!, p2: data.back, btn: self.btnEleBack, lbl: self.lblDirBack, lblElev: self.lblBackElev)
+                    var distanceF = GMSGeometryDistance(data.front,self.positionsOfDotLine.first!) * Constants.YARD
+                    var distanceC = GMSGeometryDistance(data.center,self.positionsOfDotLine.first!) * Constants.YARD
+                    var distanceE = GMSGeometryDistance(data.back,self.positionsOfDotLine.first!) * Constants.YARD
                    
-                    let elevDistanceFront = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.front), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.userLocationForClub!,data.front)*Constants.YARD)
+                    let elevDistanceFront = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.positionsOfDotLine.first!,data.front), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.positionsOfDotLine.first!,data.front)*Constants.YARD)
                     self.lblFrontElev.text = "\(Int(elevDistanceFront.rounded()))"
-                    
-                    let elevDistanceCenter = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.center), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.userLocationForClub!,data.center)*Constants.YARD)
+
+                    let elevDistanceCenter = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.positionsOfDotLine.first!,data.center), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.positionsOfDotLine.first!,data.center)*Constants.YARD)
                     self.lblCenterElev.text = "\(Int(elevDistanceCenter.rounded()))"
                     
-                    let elevDistancBack = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.userLocationForClub!,data.back), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.userLocationForClub!,data.back)*Constants.YARD)
+                    let elevDistancBack = BackgroundMapStats.getPlaysLike(headingTarget: GMSGeometryHeading(self.positionsOfDotLine.first!,data.back), degree: self.windHeading-135, windSpeed: self.windSpeed*2.23694, dist: GMSGeometryDistance(self.positionsOfDotLine.first!,data.back)*Constants.YARD)
                     self.lblBackElev.text = "\(Int(elevDistancBack.rounded()))"
                     var suffix = "yd"
                     if(Constants.distanceFilter == 1){
@@ -2803,6 +2866,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         self.lblFrontDist.text = "ELEVATION"
                         self.lblCenterDist.text = "ELEVATION"
                         self.lblEndDist.text = "ELEVATION"
+                        
+                        self.btnEleFront.isHidden = true
+                        self.lblDirFront.isHidden = true
+                        self.btnEleCenter.isHidden = true
+                        self.lblDirCenter.isHidden = true
+                        self.btnEleBack.isHidden = true
+                        self.lblDirBack.isHidden = true
                     }
 //                    if(counter%60 == 0){
 //                        Notification.sendRangeFinderNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDic.value(forKey: "courseName") as! String))", title: "Distance to Pin: \(Int(distanceC)) \(suffix)", subtitle:"",timer:1.0)
@@ -2812,6 +2882,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             })
         }else{
             self.plotLine(positions: positionsOfDotLine)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                self.plotSuggestedMarkers(position: self.positionsOfDotLine)
+            })
         }
         if !self.scoreSecondSV.isHidden{
             for btn in self.buttonsArrayForStrokes{
@@ -3151,11 +3224,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     }
                 }
                 btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+                btnForSugg1.lblDirection.isHidden = !Constants.isProMode
+                btnForSugg1.btnElev.isHidden = !Constants.isProMode
             }else{
-                btnForSugg1.lblDirection.isHidden = Constants.isProMode
+                btnForSugg1.lblDirection.isHidden = true
                 BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
                 btnForSugg1.btnElev.isHidden = true
             }
+
             btnForSugg1.autoresize()
             suggestedMarker1.iconView = btnForSugg1
             suggestedMarker1.groundAnchor = CGPoint(x:-0.02,y:0.5)
@@ -3184,8 +3260,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                     }
                 }
                 btnForSugg2.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+                btnForSugg2.lblDirection.isHidden = !Constants.isProMode
+                btnForSugg2.btnElev.isHidden = !Constants.isProMode
             }else{
-                btnForSugg2.lblDirection.isHidden = Constants.isProMode
+                btnForSugg2.lblDirection.isHidden = true
                 BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
                 btnForSugg2.btnElev.isHidden = true
             }

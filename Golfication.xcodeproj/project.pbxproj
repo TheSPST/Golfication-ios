@@ -162,6 +162,8 @@
 		4B1F6BE82090A29F00312EA7 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC02090A29F00312EA7 /* AnnotationView.swift */; };
 		4B1F6BE92090A29F00312EA7 /* SelectCourseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */; };
 		4B1F6BEA2090A29F00312EA7 /* NewGameScoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */; };
+		4B2049242258B9C9006CC4EE /* FarFromTheHole.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B2049232258B9C9006CC4EE /* FarFromTheHole.xib */; };
+		4B2049262258B9F1006CC4EE /* FarFromTheHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2049252258B9F1006CC4EE /* FarFromTheHole.swift */; };
 		4B382CFF204E7574000EBF82 /* ProfileProMemberPopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */; };
 		4B39D2222237A2B200C7742F /* DebugModeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B39D2212237A2B100C7742F /* DebugModeVC.swift */; };
 		4B39D2262238E5F300C7742F /* CoreDataCRUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B39D2252238E5F300C7742F /* CoreDataCRUD.swift */; };
@@ -296,6 +298,8 @@
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
 		4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4BCF8E2B21B502F70015338F /* swing_beep.mp3 */; };
 		4BCFF6D820453CBC00FCB10D /* MySwingWebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */; };
+		4BD451C5225B8B6E00E2BB6F /* SupportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD451C3225B8B6E00E2BB6F /* SupportVC.swift */; };
+		4BD451C6225B8B6E00E2BB6F /* SupportCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD451C4225B8B6E00E2BB6F /* SupportCell.swift */; };
 		4BD5CF83214CE17E00BEBEED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E128EF120D4EEE000A5E950 /* GoogleService-Info.plist */; };
 		4BD5CF85214D212500BEBEED /* RefreshSubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */; };
 		4BD60680220D956100E153D9 /* NewHomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD6067F220D956100E153D9 /* NewHomeVC.swift */; };
@@ -511,6 +515,8 @@
 		4B1F6BC02090A29F00312EA7 /* AnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCourseData.swift; sourceTree = "<group>"; };
 		4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewGameScoreTableViewCell.swift; sourceTree = "<group>"; };
+		4B2049232258B9C9006CC4EE /* FarFromTheHole.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FarFromTheHole.xib; sourceTree = "<group>"; };
+		4B2049252258B9F1006CC4EE /* FarFromTheHole.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarFromTheHole.swift; sourceTree = "<group>"; };
 		4B382CFE204E7574000EBF82 /* ProfileProMemberPopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileProMemberPopUPVC.swift; sourceTree = "<group>"; };
 		4B39D2212237A2B100C7742F /* DebugModeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugModeVC.swift; sourceTree = "<group>"; };
 		4B39D2252238E5F300C7742F /* CoreDataCRUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCRUD.swift; sourceTree = "<group>"; };
@@ -659,6 +665,8 @@
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
 		4BCF8E2B21B502F70015338F /* swing_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = swing_beep.mp3; sourceTree = "<group>"; };
 		4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySwingWebViewVC.swift; sourceTree = "<group>"; };
+		4BD451C3225B8B6E00E2BB6F /* SupportVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportVC.swift; sourceTree = "<group>"; };
+		4BD451C4225B8B6E00E2BB6F /* SupportCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportCell.swift; sourceTree = "<group>"; };
 		4BD5CF84214D212500BEBEED /* RefreshSubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshSubscriptionManager.swift; sourceTree = "<group>"; };
 		4BD6067F220D956100E153D9 /* NewHomeVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewHomeVC.swift; sourceTree = "<group>"; };
 		4BD6AABA20A9AA0C00F1839C /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
@@ -858,6 +866,8 @@
 				4BA70888223D1341003CEFF4 /* WindNotesView.xib */,
 				4BA7088C223D1C8B003CEFF4 /* WindNotesView.swift */,
 				4B14D3D522402C800072BFE3 /* SiriSetupVC.swift */,
+				4B2049232258B9C9006CC4EE /* FarFromTheHole.xib */,
+				4B2049252258B9F1006CC4EE /* FarFromTheHole.swift */,
 			);
 			path = GameViewControllers;
 			sourceTree = "<group>";
@@ -1274,6 +1284,8 @@
 		4BB26CCE1FF77EDB001E9556 /* VIewCtrls */ = {
 			isa = PBXGroup;
 			children = (
+				4BD451C4225B8B6E00E2BB6F /* SupportCell.swift */,
+				4BD451C3225B8B6E00E2BB6F /* SupportVC.swift */,
 				3EAE86772125573E0081857B /* DeviceViewCtrls */,
 				3EEC413620E0D10F0093D0CC /* DeviceFramework */,
 				4BB26CF91FF77EDB001E9556 /* InitialViewCtrls */,
@@ -1728,6 +1740,7 @@
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
 				4B7E2A792175C20B00DFC3EB /* DetailView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
+				4B2049242258B9C9006CC4EE /* FarFromTheHole.xib in Resources */,
 				4B7E2A7B2175C20B00DFC3EB /* radar_dot.png in Resources */,
 				4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */,
 				4B7E2A7E2175C20B00DFC3EB /* arrow.png in Resources */,
@@ -1897,6 +1910,7 @@
 				4B1F6BCA2090A29F00312EA7 /* ManualScoring.swift in Sources */,
 				4BB26D131FF77EDB001E9556 /* GolficationGuideVC.swift in Sources */,
 				3E035F86215293F000019014 /* TIOADViewController.swift in Sources */,
+				4BD451C6225B8B6E00E2BB6F /* SupportCell.swift in Sources */,
 				4B132F5C205A6D1900791656 /* NewUserProfileVC.swift in Sources */,
 				4B1F6BCE2090A29F00312EA7 /* CustomPopUpViewController.swift in Sources */,
 				4B54A9E520C94B9B004285AF /* BluetoothDelegate.swift in Sources */,
@@ -1965,6 +1979,7 @@
 				4B1F6BDD2090A29F00312EA7 /* Place.swift in Sources */,
 				0D7F3BF91F9E312C00AE5301 /* Double+String.swift in Sources */,
 				4BB26D1F1FF77EDB001E9556 /* OTTViewController.swift in Sources */,
+				4BD451C5225B8B6E00E2BB6F /* SupportVC.swift in Sources */,
 				4B1F6BE32090A29F00312EA7 /* DebugMapViewController.swift in Sources */,
 				4B1F6BD82090A29F00312EA7 /* SearchLocationVC.swift in Sources */,
 				4B1E686522329BCE00B0F03E /* EddieView.swift in Sources */,
@@ -2021,6 +2036,7 @@
 				3EDC6BBA2109E97A009B6F49 /* ExitGamePopUpView.swift in Sources */,
 				4BA0338D1FDC006600471070 /* Array + RemoveDuplicate.swift in Sources */,
 				4BA7088D223D1C8B003CEFF4 /* WindNotesView.swift in Sources */,
+				4B2049262258B9F1006CC4EE /* FarFromTheHole.swift in Sources */,
 				4B0788F920A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift in Sources */,
 				4BB26D3F1FF77EDB001E9556 /* TogetherVC.swift in Sources */,
 				4BB7C428208DB584006CCAFF /* MyFeedVC.swift in Sources */,

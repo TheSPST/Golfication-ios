@@ -70,7 +70,10 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
 //        playButton.contentView.isHidden = false
 //        playButton.floatButton.isHidden = false
     }
-    
+
+//    profileVC.tabBarItem.image = #imageLiteral(resourceName: "homeTab")
+//    profileVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "homeTabSelected")
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -81,10 +84,15 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         
         let meVC = UIStoryboard(name: "Home", bundle:nil).instantiateViewController(withIdentifier: "NewHomeVC") as! NewHomeVC
         meVC.title = "Golfication"
-        meVC.tabBarItem.image = #imageLiteral(resourceName: "avatar_0")
-        meVC.tabBarItem.title = "You".localized()
+        meVC.tabBarItem.image = #imageLiteral(resourceName: "homeTab")
+        meVC.tabBarItem.title = "Home".localized()
         // deselect image
-        meVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "avatar_1")
+//        let originalImage = #imageLiteral(resourceName: "homeTabSe")
+//        let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+//        UITabBar.appearance().tintColor
+        meVC.tabBarItem.selectedImage = UIImage(contentsOfFile: "homeTabSe")?.maskWithColor(color:
+            UIColor.glfGreenBlue)
+        self.tabBar.tintColor = UIColor.glfGreenBlue
         // select image
         meVC.view.backgroundColor = UIColor.white
         meNavCtrl = UINavigationController(rootViewController: meVC)
@@ -104,7 +112,7 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         let togetherNavCtrl = UINavigationController(rootViewController: togetherVC)
 //        togetherNavCtrl.navigationBar.tintColor = UIColor.glfGreenBlue
 
-        let exloreVC = UIStoryboard(name: "Explore", bundle:nil).instantiateViewController(withIdentifier: "ExploreVC") as! ExploreVC
+        /*let exloreVC = UIStoryboard(name: "Explore", bundle:nil).instantiateViewController(withIdentifier: "ExploreVC") as! ExploreVC
         exloreVC.title = "Explore".localized()
         exloreVC.tabBarItem.title = "Explore".localized()
         exloreVC.tabBarItem.image = #imageLiteral(resourceName: "explore_0")
@@ -113,9 +121,18 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         // select image
         exloreVC.view.backgroundColor = UIColor.white
         let exploreVCNavCtrl = UINavigationController(rootViewController: exloreVC)
-//        exploreVCNavCtrl.navigationBar.tintColor = UIColor.glfGreenBlue
+//        exploreVCNavCtrl.navigationBar.tintColor = UIColor.glfGreenBlue*/
 
-
+        let profileVC = UIStoryboard(name: "Home", bundle:nil).instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
+        profileVC.title = "Profile".localized()
+        profileVC.tabBarItem.title = "Profile".localized()
+        profileVC.tabBarItem.image = #imageLiteral(resourceName: "avatar_0")
+        // deselect image
+        profileVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "avatar_1")
+        // select image
+        let profileVCNavCtrl = UINavigationController(rootViewController: profileVC)
+        
+        //        exploreVCNavCtrl.navigationBar.tintColor = UIColor.glfGreenBlue
 //        let playActionVC = UIViewController()
 //        playActionVC.view.backgroundColor = UIColor(rgb: 0xdad2d5)
 //        playNavCtrl = UINavigationController(rootViewController: playActionVC)
@@ -129,7 +146,7 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
 //        self.tabBar.barTintColor = UIColor.glfDarkSlateBlue
         
         //viewControllers = [meNavCtrl, togetherNavCtrl, exploreVCNavCtrl,playNavCtrl]
-        viewControllers = [meNavCtrl, togetherNavCtrl, exploreVCNavCtrl]
+        viewControllers = [meNavCtrl, togetherNavCtrl, profileVCNavCtrl]
         setupPlayTabButton()
     }
    
@@ -187,4 +204,30 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
         return true
         //}
     }
+}
+extension UIImage {
+    
+    func maskWithColor(color: UIColor) -> UIImage? {
+        let maskImage = cgImage!
+        
+        let width = size.width
+        let height = size.height
+        let bounds = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+        let context = CGContext(data: nil, width: Int(width), height: Int(height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)!
+        
+        context.clip(to: bounds, mask: maskImage)
+        context.setFillColor(color.cgColor)
+        context.fill(bounds)
+        
+        if let cgImage = context.makeImage() {
+            let coloredImage = UIImage(cgImage: cgImage)
+            return coloredImage
+        } else {
+            return nil
+        }
+    }
+    
 }

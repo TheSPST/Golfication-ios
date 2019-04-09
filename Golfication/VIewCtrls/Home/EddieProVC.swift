@@ -308,8 +308,34 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         self.tabBarController?.tabBar.isHidden = true
     }
     
+    @IBAction func btnActionTermOfService(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "http://www.golfication.com/terms-of-service.html"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
+    @IBAction func btnActionPrivacyPolicy(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let viewCtrl = storyboard.instantiateViewController(withIdentifier: "MySwingWebViewVC") as! MySwingWebViewVC
+        viewCtrl.linkStr = "http://www.golfication.com/privacypolicy.htm"
+        viewCtrl.fromIndiegogo = false
+        viewCtrl.fromNotification = false
+        self.navigationController?.pushViewController(viewCtrl, animated: true)
+    }
     @IBAction func closeAction(_ sender: Any) {
         FBSomeEvents.shared.singleParamFBEvene(param: "Click Eddie Close")
-        self.navigationController?.popViewController(animated: false)
+        if self.navigationController?.viewControllers.count == 2{
+            if self.navigationController?.viewControllers[0].isKind(of: NewHomeVC.self) ?? false{
+                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.window?.rootViewController = tabBarCtrl
+            }else{
+                self.navigationController?.popViewController(animated: false)
+            }
+        }else{
+            self.navigationController?.popViewController(animated: false)
+        }
     }
 }

@@ -304,12 +304,10 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             }
+            self.gotoFeedBackViewController(mID: Constants.matchId, mode: Constants.mode, isDiscard: true)
         }
         self.scoreData.removeAll()
         scoreData.removeAll()
-        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController = tabBarCtrl
     }
     func saveAndviewScore(){
 
@@ -422,33 +420,41 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         ref.child("feedData").updateChildValues(finalFeedDic as! [AnyHashable : Any])
         ref.child("userData/\(feedDict.value(forKey: "userKey")!)/myFeeds").updateChildValues([feedId:true])
     }
-    func gotoFeedBackViewController(mID:String,mode:Int){
+    func gotoFeedBackViewController(mID:String,mode:Int,isDiscard:Bool = false){
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FeedbackVC") as! FeedbackVC
         viewCtrl.matchIdentifier = mID
         viewCtrl.mode = mode
-        viewCtrl.onDoneBlock = { result in
-            let players = NSMutableArray()
-            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
-            if(self.matchDataDict.object(forKey: "player") != nil){
-                let tempArray = self.matchDataDict.object(forKey: "player")! as! NSMutableDictionary
-                for (k,v) in tempArray{
-                    let dict = v as! NSMutableDictionary
-                    dict.addEntries(from: ["id":k])
-                    if(k as! String == Auth.auth().currentUser!.uid){
-                        dict.addEntries(from: ["status":4])
+        if !isDiscard{
+            viewCtrl.onDoneBlock = { result in
+                let players = NSMutableArray()
+                let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
+                if(self.matchDataDict.object(forKey: "player") != nil){
+                    let tempArray = self.matchDataDict.object(forKey: "player")! as! NSMutableDictionary
+                    for (k,v) in tempArray{
+                        let dict = v as! NSMutableDictionary
+                        dict.addEntries(from: ["id":k])
+                        if(k as! String == Auth.auth().currentUser!.uid){
+                            dict.addEntries(from: ["status":4])
+                        }
+                        players.add(dict)
                     }
-                    players.add(dict)
                 }
+                viewCtrl.finalPlayersData = players
+                viewCtrl.finalScoreData = self.scoreData
+                viewCtrl.currentMatchId = mID
+                viewCtrl.justFinishedTheMatch = true
+                viewCtrl.fromGameImprovement = false
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                self.scoreData.removeAll()
+                Constants.matchId.removeAll()
+                
             }
-            viewCtrl.finalPlayersData = players
-            viewCtrl.finalScoreData = self.scoreData
-            viewCtrl.currentMatchId = mID
-            viewCtrl.justFinishedTheMatch = true
-            viewCtrl.fromGameImprovement = false
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-            self.scoreData.removeAll()
-            Constants.matchId.removeAll()
-            
+        }else{
+            viewCtrl.onDoneBlock = { result in
+                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.window?.rootViewController = tabBarCtrl
+            }
         }
         self.present(viewCtrl, animated: true, completion: nil)
     }

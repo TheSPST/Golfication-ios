@@ -24,29 +24,34 @@
         func getResponseFromFirebase(addedPath:String, onCompletion: @escaping (DataSnapshot) -> Void) {
             let route: String!
             route = "userData/\(Auth.auth().currentUser?.uid ?? "user1")" + "/" + addedPath
+            debugPrint("getResponseFromFirebase",route)
             makeFirebaseRequest(route: route, onCompletion: {snapshot, err in
                 onCompletion(snapshot)
             })
         }
         func getResponseFromFirebaseGolf(addedPath:String,onCompletion: @escaping (DataSnapshot) -> Void) {
             let route = golfPathStr + "/" + addedPath
+            debugPrint("getResponseFromFirebaseGolf",route)
             makeFirebaseRequest(route: route, onCompletion: {snapshot, err in
                 onCompletion(snapshot)
             })
         }
         func getResponseFromFirebaseMatch(addedPath:String,onCompletion: @escaping (DataSnapshot) -> Void) {
+            debugPrint("getResponseFromFirebaseMatch",addedPath)
             makeFirebaseRequest(route: addedPath, onCompletion: {snapshot, err in
             onCompletion(snapshot)
             })
         }
         func getResponseFromFirebaseUserData(addedPath:String,onCompletion: @escaping (DataSnapshot) -> Void) {
             let route = userStr + "/" + addedPath
+            debugPrint("getResponseFromFirebaseUserData",route)
             makeFirebaseRequest(route: route, onCompletion: {snapshot, err in
                 onCompletion(snapshot)
             })
         }
         private func makeFirebaseRequest(route: String, onCompletion: @escaping ServiceResponse) {
-            
+            debugPrint("route",route)
+
             let error  = NSError()
 //            if route.contains("swingSession"){
 //                debugPrint(route)

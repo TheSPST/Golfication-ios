@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment version="4368" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -241,7 +241,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dz8-vg-W9x">
-                                <rect key="frame" x="63" y="479" width="81" height="25"/>
+                                <rect key="frame" x="63" y="479" width="70" height="25"/>
                                 <color key="backgroundColor" red="0.2274509804" green="0.48627450979999998" blue="0.58431372550000005" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="fpZ-x5-WY3"/>
@@ -266,7 +266,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yeh-Ld-tuc">
-                                <rect key="frame" x="63" y="398" width="81" height="25"/>
+                                <rect key="frame" x="63" y="398" width="70" height="25"/>
                                 <color key="backgroundColor" red="0.2274509804" green="0.48627450979999998" blue="0.58431372550000005" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="Ba0-NY-tmL"/>
@@ -1046,10 +1046,10 @@
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pbk-Wg-beB">
-                                <rect key="frame" x="0.0" y="-16" width="320" height="584"/>
+                                <rect key="frame" x="0.0" y="16" width="320" height="552"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="FI9-Xp-ihl">
-                                        <rect key="frame" x="8" y="8" width="304" height="518"/>
+                                        <rect key="frame" x="8" y="8" width="304" height="486"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="7GH-7m-qap">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="40"/>
@@ -1073,7 +1073,7 @@
                                                         <rect key="frame" x="72" y="0.0" width="160" height="40"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="lfG-xk-h2Q">
-                                                                <rect key="frame" x="21" y="-5" width="118" height="50"/>
+                                                                <rect key="frame" x="23.5" y="-5" width="113" height="50"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mUr-vS-hgT">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -1088,7 +1088,7 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bg9-wq-c7e">
-                                                                        <rect key="frame" x="108" y="0.0" width="10" height="50"/>
+                                                                        <rect key="frame" x="108" y="0.0" width="5" height="50"/>
                                                                         <state key="normal" image="Club_arrow_down"/>
                                                                     </button>
                                                                 </subviews>
@@ -1562,10 +1562,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" translatesAutoresizingMaskIntoConstraints="NO" id="psG-us-gCV">
-                                                <rect key="frame" x="0.0" y="454" width="304" height="64"/>
+                                                <rect key="frame" x="0.0" y="454" width="304" height="32"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3WZ-dl-FGF" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="64"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="32"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="80" id="Iov-cn-BIV"/>
                                                         </constraints>
@@ -1578,7 +1578,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9AM-dR-2lc">
-                                                        <rect key="frame" x="94" y="0.0" width="100" height="64"/>
+                                                        <rect key="frame" x="94" y="0.0" width="100" height="32"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="100" id="YaY-9F-TxA"/>
                                                         </constraints>
@@ -1590,7 +1590,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5t6-9e-2k1" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                                        <rect key="frame" x="194" y="0.0" width="110" height="64"/>
+                                                        <rect key="frame" x="194" y="0.0" width="110" height="32"/>
                                                         <color key="backgroundColor" red="0.2274509804" green="0.48627450979999998" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="110" id="ao0-T0-aKT"/>
@@ -1608,7 +1608,7 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="28Q-Wj-sNT" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                        <rect key="frame" x="96" y="534" width="128" height="50"/>
+                                        <rect key="frame" x="96" y="502" width="128" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="MDx-Ld-hmq"/>
                                         </constraints>
@@ -2007,7 +2007,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eo3-RH-ZOM">
-                                                                <rect key="frame" x="287" y="2" width="25" height="40"/>
+                                                                <rect key="frame" x="287" y="9.5" width="25" height="25"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="25" id="Txs-SQ-0ym"/>
@@ -2134,7 +2134,7 @@
                                                         <rect key="frame" x="100" y="44" width="120" height="30"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="hbD-Vf-7DM">
-                                                                <rect key="frame" x="1" y="-10" width="118" height="50"/>
+                                                                <rect key="frame" x="3.5" y="-10" width="113" height="50"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uhz-i0-74p">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -2149,7 +2149,7 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MsE-uD-pQ4">
-                                                                        <rect key="frame" x="108" y="0.0" width="10" height="50"/>
+                                                                        <rect key="frame" x="108" y="0.0" width="5" height="50"/>
                                                                         <state key="normal" image="Club_arrow_down"/>
                                                                         <connections>
                                                                             <action selector="btnActionChangeHole:" destination="l6N-0K-2bQ" eventType="touchUpInside" id="dgK-gr-MBQ"/>
@@ -2592,7 +2592,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="zTn-XK-1cO">
-                                                                        <rect key="frame" x="79" y="64" width="122" height="20"/>
+                                                                        <rect key="frame" x="86" y="64" width="108" height="20"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iDZ-YO-QoR">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="17" height="20"/>
@@ -2602,7 +2602,7 @@
                                                                                 </constraints>
                                                                             </view>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mRk-xn-wTb">
-                                                                                <rect key="frame" x="29" y="0.0" width="64" height="20"/>
+                                                                                <rect key="frame" x="22" y="0.0" width="64" height="20"/>
                                                                                 <color key="backgroundColor" red="0.17254901959999999" green="0.25882352939999997" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="20" id="qQK-2M-XCC"/>
@@ -2617,7 +2617,7 @@
                                                                                 </connections>
                                                                             </button>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G0L-S3-5JT">
-                                                                                <rect key="frame" x="98" y="0.0" width="24" height="20"/>
+                                                                                <rect key="frame" x="92" y="0.0" width="16" height="20"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                                 <state key="normal" image="text_edit"/>
                                                                                 <connections>
@@ -3174,7 +3174,7 @@
                                 <rect key="frame" x="4" y="523" width="312" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lc3-CI-l1U" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="22" height="35"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="33" height="35"/>
                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                                         <state key="normal" image="prev">
                                             <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -3199,7 +3199,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Pr-3m-a7W" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                        <rect key="frame" x="290" y="0.0" width="22" height="35"/>
+                                        <rect key="frame" x="279" y="0.0" width="33" height="35"/>
                                         <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                                         <state key="normal" image="next">
                                             <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -3227,10 +3227,10 @@
                                 <color key="backgroundColor" white="0.67000000000000004" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="lf3-vh-D3u" customClass="StackView" customModule="Golfication" customModuleProvider="target">
-                                <rect key="frame" x="161" y="64" width="143" height="98"/>
+                                <rect key="frame" x="178" y="64" width="126" height="98"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fwb-wY-ATE">
-                                        <rect key="frame" x="0.0" y="0.0" width="143" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="126" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="HLJ-mk-eaT"/>
                                         </constraints>
@@ -3245,7 +3245,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jaR-Ve-lSR">
-                                        <rect key="frame" x="0.0" y="34" width="143" height="30"/>
+                                        <rect key="frame" x="0.0" y="34" width="126" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="3SS-nI-SVY"/>
                                         </constraints>
@@ -3260,7 +3260,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5q4-vl-A4E" customClass="UILocalizedButton" customModule="Golfication" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="68" width="143" height="30"/>
+                                        <rect key="frame" x="0.0" y="68" width="126" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="tX6-2L-bmT"/>
                                         </constraints>
@@ -4064,7 +4064,7 @@
                                                         <rect key="frame" x="75" y="0.0" width="150" height="40"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Rw7-Xa-24I">
-                                                                <rect key="frame" x="16" y="-5" width="118" height="50"/>
+                                                                <rect key="frame" x="18.5" y="-5" width="113" height="50"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="30J-fe-LUm">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -4079,7 +4079,7 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j3S-Bq-h7O">
-                                                                        <rect key="frame" x="108" y="0.0" width="10" height="50"/>
+                                                                        <rect key="frame" x="108" y="0.0" width="5" height="50"/>
                                                                         <state key="normal" image="Club_arrow_down"/>
                                                                     </button>
                                                                 </subviews>
@@ -4657,7 +4657,7 @@
                                                                 </connections>
                                                             </button>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="msg-oV-vwe">
-                                                                <rect key="frame" x="93.5" y="114" width="93" height="20"/>
+                                                                <rect key="frame" x="97.5" y="114" width="85" height="20"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3lc-Xf-vlk">
                                                                         <rect key="frame" x="0.0" y="0.0" width="64" height="20"/>
@@ -4675,7 +4675,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HiQ-6S-wOs">
-                                                                        <rect key="frame" x="69" y="0.0" width="24" height="20"/>
+                                                                        <rect key="frame" x="69" y="0.0" width="16" height="20"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                         <state key="normal" image="text_edit"/>
                                                                         <connections>
@@ -5307,6 +5307,23 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.67000000000000004" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Gw-uS-xiR" customClass="FarFromTheHole" customModule="Golfication" customModuleProvider="target">
+                                <rect key="frame" x="10" y="164" width="300" height="260"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="260" id="zSr-HZ-mS9"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ZO-Bq-qfb">
+                                <rect key="frame" x="16" y="522" width="30" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="R6b-Ek-Elg"/>
+                                    <constraint firstAttribute="width" constant="30" id="qlc-jH-KPH"/>
+                                </constraints>
+                                <color key="tintColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="gps-RF"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -5316,6 +5333,7 @@
                             <constraint firstItem="wI6-da-Ivh" firstAttribute="trailing" secondItem="uNJ-mo-qlr" secondAttribute="trailing" id="81C-9u-QTe"/>
                             <constraint firstItem="Le6-GR-Y0C" firstAttribute="bottom" secondItem="wI6-da-Ivh" secondAttribute="bottom" constant="-30" id="ALi-AQ-xOQ"/>
                             <constraint firstItem="pAM-FE-VKd" firstAttribute="trailing" secondItem="wI6-da-Ivh" secondAttribute="trailing" id="BQZ-rn-DU8"/>
+                            <constraint firstItem="3Gw-uS-xiR" firstAttribute="centerY" secondItem="wI6-da-Ivh" secondAttribute="centerY" id="CI9-Ds-h5R"/>
                             <constraint firstItem="bOm-rj-0xu" firstAttribute="top" secondItem="RoQ-X6-IAm" secondAttribute="bottom" constant="-30" id="Cbz-S4-DYV"/>
                             <constraint firstItem="F8n-fc-qci" firstAttribute="top" secondItem="wI6-da-Ivh" secondAttribute="top" id="Jjy-bu-mzf"/>
                             <constraint firstItem="Jrl-Rl-sxD" firstAttribute="centerY" secondItem="wI6-da-Ivh" secondAttribute="centerY" id="MFT-JT-eU5"/>
@@ -5328,12 +5346,15 @@
                             <constraint firstItem="F8n-fc-qci" firstAttribute="leading" secondItem="wI6-da-Ivh" secondAttribute="leading" id="Wve-4H-TQV"/>
                             <constraint firstItem="Le6-GR-Y0C" firstAttribute="leading" secondItem="wI6-da-Ivh" secondAttribute="leading" id="Y8R-Ch-piG"/>
                             <constraint firstItem="wI6-da-Ivh" firstAttribute="bottom" secondItem="4e3-Ef-jIP" secondAttribute="bottom" id="ajf-Oz-YvE"/>
+                            <constraint firstItem="3Gw-uS-xiR" firstAttribute="leading" secondItem="wI6-da-Ivh" secondAttribute="leading" constant="10" id="bBr-KC-Ta6"/>
                             <constraint firstItem="wI6-da-Ivh" firstAttribute="trailing" secondItem="bOm-rj-0xu" secondAttribute="trailing" constant="8" id="cbe-2p-tib"/>
                             <constraint firstItem="bOm-rj-0xu" firstAttribute="leading" secondItem="RoQ-X6-IAm" secondAttribute="trailing" constant="-15" id="d1f-eg-EvA"/>
                             <constraint firstItem="ZOq-NX-RRO" firstAttribute="top" secondItem="myE-oE-5SN" secondAttribute="bottom" constant="8" id="dtm-E2-P18"/>
+                            <constraint firstItem="6ZO-Bq-qfb" firstAttribute="leading" secondItem="wI6-da-Ivh" secondAttribute="leading" constant="16" id="fHr-lS-h40"/>
                             <constraint firstItem="wI6-da-Ivh" firstAttribute="bottom" secondItem="Wzh-rb-sVu" secondAttribute="bottom" constant="-90" id="gQ8-5j-Y80"/>
                             <constraint firstItem="uNJ-mo-qlr" firstAttribute="top" secondItem="Le6-GR-Y0C" secondAttribute="bottom" id="hKk-ZC-4om"/>
                             <constraint firstItem="pAM-FE-VKd" firstAttribute="leading" secondItem="wI6-da-Ivh" secondAttribute="leading" id="iAL-AQ-UAM"/>
+                            <constraint firstItem="3Gw-uS-xiR" firstAttribute="centerX" secondItem="wI6-da-Ivh" secondAttribute="centerX" id="jba-O3-m5f"/>
                             <constraint firstItem="wI6-da-Ivh" firstAttribute="bottom" secondItem="I2X-8P-BLu" secondAttribute="bottom" id="lRX-0U-7Zd"/>
                             <constraint firstItem="wI6-da-Ivh" firstAttribute="trailing" secondItem="F8n-fc-qci" secondAttribute="trailing" id="luf-1U-ZcL"/>
                             <constraint firstItem="KQJ-Uq-oq0" firstAttribute="centerY" secondItem="wI6-da-Ivh" secondAttribute="centerY" id="nO3-G6-J8S"/>
@@ -5344,6 +5365,8 @@
                             <constraint firstItem="Jrl-Rl-sxD" firstAttribute="leading" secondItem="wI6-da-Ivh" secondAttribute="leading" constant="8" id="t8q-T7-nRF"/>
                             <constraint firstItem="wI6-da-Ivh" firstAttribute="trailing" secondItem="ZOq-NX-RRO" secondAttribute="trailing" id="uHW-IN-BZC"/>
                             <constraint firstItem="wI6-da-Ivh" firstAttribute="trailing" secondItem="KQJ-Uq-oq0" secondAttribute="trailing" constant="8" id="v6p-gp-b2f"/>
+                            <constraint firstItem="wI6-da-Ivh" firstAttribute="trailing" secondItem="3Gw-uS-xiR" secondAttribute="trailing" constant="10" id="wvA-kF-Ul5"/>
+                            <constraint firstItem="wI6-da-Ivh" firstAttribute="bottom" secondItem="6ZO-Bq-qfb" secondAttribute="bottom" constant="16" id="xAQ-ex-8w3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wI6-da-Ivh"/>
                     </view>
@@ -5389,7 +5412,9 @@
                         <outlet property="exitGamePopUpView" destination="pAM-FE-VKd" id="1oK-Dz-cW7"/>
                         <outlet property="fairwayHitContainerSV" destination="hlt-z8-C3k" id="dYu-gx-DO6"/>
                         <outlet property="fairwayHitStackView" destination="xsc-Rg-ZCM" id="J2a-SI-W9w"/>
+                        <outlet property="farFromTheHoleView" destination="3Gw-uS-xiR" id="Ymv-EZ-9sH"/>
                         <outlet property="girStackView" destination="g0e-MS-fU0" id="Txb-lA-puH"/>
+                        <outlet property="gpsBtn" destination="6ZO-Bq-qfb" id="1Bv-Jd-566"/>
                         <outlet property="greenSideSandShotStackView" destination="56u-I0-rmF" id="IL0-wt-tuj"/>
                         <outlet property="imgViewStblReferesh" destination="Bxq-TJ-HZ2" id="YZj-VM-Xen"/>
                         <outlet property="imgViewStblfordInfo" destination="n4v-iN-Jlb" id="dI3-fr-HUJ"/>
@@ -5471,7 +5496,7 @@
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vVe-XY-wDK">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1390.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1353.5"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="voiceAssitance" translatesAutoresizingMaskIntoConstraints="NO" id="jes-98-DL6">
                                                 <rect key="frame" x="0.0" y="8" width="320" height="320"/>
@@ -5480,19 +5505,19 @@
                                                 </constraints>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="vX5-Xs-fld">
-                                                <rect key="frame" x="16" y="344" width="288" height="1026.5"/>
+                                                <rect key="frame" x="16" y="344" width="288" height="989.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Af0-jZ-VsG">
-                                                        <rect key="frame" x="0.0" y="0.0" width="288" height="119.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="288" height="122"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Set Up Voice Caddie using Siri Shortcuts" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4N3-sT-VC0">
-                                                                <rect key="frame" x="0.0" y="0.0" width="288" height="44.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="288" height="45.5"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="19"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pj7-Ex-QY0">
-                                                                <rect key="frame" x="0.0" y="44.5" width="288" height="75"/>
+                                                                <rect key="frame" x="0.0" y="45.5" width="288" height="76.5"/>
                                                                 <string key="text">Siri shortcuts (available only on iOS version 12 or newer) allows you to 'Ask Siri' the exact distance to the green, without reaching for your phone.</string>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="16"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5501,16 +5526,16 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vDJ-mH-DfU">
-                                                        <rect key="frame" x="0.0" y="144.5" width="288" height="194"/>
+                                                        <rect key="frame" x="0.0" y="147" width="288" height="179.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Set Up Voice Caddie using Siri Shortcuts" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eRh-Kr-hlE">
-                                                                <rect key="frame" x="0.0" y="0.0" width="288" height="44.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="288" height="45.5"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="19"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cOr-x0-qTz">
-                                                                <rect key="frame" x="0.0" y="44.5" width="288" height="149.5"/>
+                                                                <rect key="frame" x="0.0" y="45.5" width="288" height="134"/>
                                                                 <string key="text">Tap on the button below and record the phrase you want to use to ask for the distances? We recommend using a simple phrase like "What's the distance" or "Distance to green". But keep in mind that while setting up Siri shortcuts, you can use any verbiage you would like.</string>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="16"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5519,23 +5544,23 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OXb-cl-UhA">
-                                                        <rect key="frame" x="69" y="398.5" width="150" height="50"/>
+                                                        <rect key="frame" x="69" y="387.5" width="150" height="50"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="150" id="gF7-Qr-GPf"/>
                                                             <constraint firstAttribute="height" constant="50" id="tYR-9h-FEf"/>
                                                         </constraints>
                                                     </button>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="Ri9-BM-CZL">
-                                                        <rect key="frame" x="0.0" y="538" width="288" height="134.5"/>
+                                                        <rect key="frame" x="0.0" y="529" width="288" height="118.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to use it while playing?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uR0-8S-TSp">
-                                                                <rect key="frame" x="0.0" y="0.0" width="238" height="22.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="238" height="23"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="19"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8P7-l2-hTs">
-                                                                <rect key="frame" x="0.0" y="22.5" width="288" height="112"/>
+                                                                <rect key="frame" x="0.0" y="23" width="288" height="95.5"/>
                                                                 <string key="text">During your round, you can summon Siri through any of the common methods on you AirPods, earphones, headphones, iPhone or Apple Watch. Then repeat the phrase that you set up in the previous step.</string>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="16"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5544,16 +5569,16 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="rwm-Gx-dnS">
-                                                        <rect key="frame" x="0.0" y="708.5" width="288" height="156.5"/>
+                                                        <rect key="frame" x="0.0" y="693.5" width="288" height="141"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to change holes while playing?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k0E-Ie-j3C">
-                                                                <rect key="frame" x="0.0" y="0.0" width="185.5" height="44.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="184" height="45.5"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="19"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="29t-lU-dbr">
-                                                                <rect key="frame" x="0.0" y="44.5" width="288" height="112"/>
+                                                                <rect key="frame" x="0.0" y="45.5" width="288" height="95.5"/>
                                                                 <string key="text">You need to score a hole in the Golfication app to move on to the next hole. E.g. once you add hole score on Hole 1, and repeat the question "What's the distance" - Siri will provide you distances to Hole 2.</string>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="16"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5562,16 +5587,16 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="dD2-c3-GJv">
-                                                        <rect key="frame" x="0.0" y="910.5" width="288" height="116"/>
+                                                        <rect key="frame" x="0.0" y="890" width="288" height="99.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SUPPORT" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sim-Fc-2Pt">
-                                                                <rect key="frame" x="0.0" y="0.0" width="89" height="22.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="87" height="23"/>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Bold" family="SF Pro Display" pointSize="19"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ryd-1F-cS8">
-                                                                <rect key="frame" x="0.0" y="22.5" width="288" height="93.5"/>
+                                                                <rect key="frame" x="0.0" y="23" width="288" height="76.5"/>
                                                                 <string key="text">In case you need additional information, or if you need to report an issue, please drop us an email at holeinone@golfication.com. We will get back to you within 24 hours.</string>
                                                                 <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="16"/>
                                                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5758,10 +5783,10 @@
     </scenes>
     <resources>
         <image name="0_you" width="22" height="20"/>
-        <image name="AR" width="38" height="38"/>
-        <image name="Club_arrow_down" width="10" height="8"/>
+        <image name="AR" width="19" height="19"/>
+        <image name="Club_arrow_down" width="5" height="4"/>
         <image name="ICON" width="40" height="38"/>
-        <image name="Ryellow" width="153" height="153"/>
+        <image name="Ryellow" width="76.5" height="76.5"/>
         <image name="backArrow" width="15" height="28"/>
         <image name="button:3qH-QZ-ZnG:backgroundImage" width="22" height="20">
             <mutableData key="keyedArchiveRepresentation">
@@ -5923,42 +5948,43 @@ AAAAAAAAAAAAAAAAACNVA
 </mutableData>
         </image>
         <image name="course_bg" width="786" height="300"/>
-        <image name="cross" width="124.13793182373047" height="124.13793182373047"/>
-        <image name="delete" width="28" height="32"/>
-        <image name="discard" width="34" height="34"/>
+        <image name="cross" width="25" height="25"/>
+        <image name="delete" width="14" height="16"/>
+        <image name="discard" width="17" height="17"/>
         <image name="eddieUSer" width="976" height="976"/>
-        <image name="edit_White" width="51.200000762939453" height="51.200000762939453"/>
-        <image name="fairway_left" width="25.600000381469727" height="25.600000381469727"/>
-        <image name="fairway_right" width="25.600000381469727" height="25.600000381469727"/>
-        <image name="finish" width="28" height="44"/>
-        <image name="gir_false" width="20" height="20"/>
-        <image name="golfBag" width="51.200000762939453" height="51.200000762939453"/>
+        <image name="edit_White" width="32" height="32"/>
+        <image name="fairway_left" width="16" height="16"/>
+        <image name="fairway_right" width="16" height="16"/>
+        <image name="finish" width="14" height="22"/>
+        <image name="gir_false" width="12.5" height="12.5"/>
+        <image name="golfBag" width="32" height="32"/>
         <image name="golficationBar" width="25" height="25"/>
-        <image name="green_arrow" width="22" height="14"/>
-        <image name="hit" width="25.600000381469727" height="25.600000381469727"/>
-        <image name="hole_out" width="30" height="36"/>
+        <image name="gps-RF" width="12" height="12"/>
+        <image name="green_arrow" width="11" height="7"/>
+        <image name="hit" width="16" height="16"/>
+        <image name="hole_out" width="15" height="18"/>
         <image name="icon_info_grey" width="30" height="30"/>
-        <image name="lie_on" width="129" height="90"/>
-        <image name="locked_1" width="48" height="48"/>
+        <image name="lie_on" width="64.5" height="45"/>
+        <image name="locked_1" width="60" height="60"/>
         <image name="me" width="48" height="48"/>
-        <image name="menu_white" width="40" height="40"/>
-        <image name="multiplayer" width="42" height="38"/>
-        <image name="next" width="22" height="24"/>
-        <image name="note" width="48" height="48"/>
-        <image name="penalty" width="40" height="40"/>
-        <image name="penalty_1" width="12" height="45"/>
-        <image name="prev" width="22" height="24"/>
-        <image name="restart" width="34" height="34"/>
-        <image name="setting" width="24" height="24"/>
-        <image name="share_fill" width="64" height="64"/>
-        <image name="share_green" width="32" height="32"/>
-        <image name="siri" width="135" height="74"/>
+        <image name="menu_white" width="25" height="25"/>
+        <image name="multiplayer" width="21" height="19"/>
+        <image name="next" width="33" height="36"/>
+        <image name="note" width="32" height="32"/>
+        <image name="penalty" width="25" height="25"/>
+        <image name="penalty_1" width="6" height="22.5"/>
+        <image name="prev" width="33" height="36"/>
+        <image name="restart" width="17" height="17"/>
+        <image name="setting" width="30" height="30"/>
+        <image name="share_fill" width="32" height="32"/>
+        <image name="share_green" width="16" height="16"/>
+        <image name="siri" width="67.5" height="37"/>
         <image name="stats_arrow" width="19" height="7.5"/>
-        <image name="stylized map" width="36" height="36"/>
-        <image name="text_edit" width="24" height="24"/>
-        <image name="track_Shot" width="64" height="60"/>
+        <image name="stylized map" width="18" height="18"/>
+        <image name="text_edit" width="16" height="16"/>
+        <image name="track_Shot" width="32" height="30"/>
         <image name="voiceAssitance" width="670" height="604"/>
-        <image name="wind_yellow" width="48" height="48"/>
+        <image name="wind_yellow" width="24" height="24"/>
         <image name="you" width="22" height="22"/>
     </resources>
 </document>

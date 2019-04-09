@@ -1620,7 +1620,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 self.playGolfXView.isHidden = true
                                 self.mappingGolfXView.isHidden = false
                                 self.lblLegacyAppMode.isHidden = true
-                                self.golficationXView.isHidden = false
+                                self.golficationXView.isHidden = !Constants.isDevice
                                 self.navigationItem.rightBarButtonItem = nil
                                 FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourseRequest/\(Auth.auth().currentUser!.uid)") { (snapshot) in
                                     var dataDic = NSDictionary()
@@ -2678,13 +2678,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             }
+            self.gotoFeedBackViewController(mID: Constants.matchId, mode: Constants.mode, isDiscard: true)
         }
         BackgroundMapStats.deleteCoreData()
         self.scoring.removeAll()
         scoring.removeAll()
-        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController = tabBarCtrl
     }
     
     func saveAndviewScore(){
@@ -2863,7 +2861,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let feedDict = NSMutableDictionary()
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
-        feedDict.setObject(Constants.matchDataDic.value(forKey: "timestamp") as Any, forKey: "timestamp" as NSCopying)
+        feedDict.setObject(Timestamp, forKey: "timestamp" as NSCopying)
         feedDict.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
@@ -2879,22 +2877,29 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         ref.child("userData/\(feedDict.value(forKey: "userKey")!)/myFeeds").updateChildValues([feedId:true])
     }
     
-    func gotoFeedBackViewController(mID:String,mode:Int){
+    func gotoFeedBackViewController(mID:String,mode:Int,isDiscard:Bool = false){
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FeedbackVC") as! FeedbackVC
         viewCtrl.matchIdentifier = mID
         viewCtrl.mode = mode
-        viewCtrl.onDoneBlock = { result in
-            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
-            viewCtrl.finalPlayersData = self.players
-            viewCtrl.finalScoreData = self.scoring
-            viewCtrl.currentMatchId = mID
-            viewCtrl.justFinishedTheMatch = true
-            viewCtrl.fromGameImprovement = false
-            viewCtrl.isManualScoring = mode != 1 ? true:false
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-            Constants.matchId.removeAll()
-            self.scoring.removeAll()
-            
+        if !isDiscard{
+            viewCtrl.onDoneBlock = { result in
+                let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
+                viewCtrl.finalPlayersData = self.players
+                viewCtrl.finalScoreData = self.scoring
+                viewCtrl.currentMatchId = mID
+                viewCtrl.justFinishedTheMatch = true
+                viewCtrl.fromGameImprovement = false
+                viewCtrl.isManualScoring = mode != 1 ? true:false
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                Constants.matchId.removeAll()
+                self.scoring.removeAll()
+            }
+        }else{
+            viewCtrl.onDoneBlock = { result in
+                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.window?.rootViewController = tabBarCtrl
+            }
         }
         self.present(viewCtrl, animated: true, completion: nil)
     }

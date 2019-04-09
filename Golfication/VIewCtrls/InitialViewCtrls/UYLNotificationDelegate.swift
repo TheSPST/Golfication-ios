@@ -96,7 +96,16 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
                 debugPrint("Dismiss Action")
             case UNNotificationDefaultActionIdentifier:
                 if(response.notification.request.content.categoryIdentifier != "my.notification"){
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Notification4Open")
                     self.redirectToGameScreen()
+                }else if response.notification.request.identifier.contains(find: "my.newUser"){
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Notification3Open")
+                }else if response.notification.request.identifier.contains(find: "my.game"){
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Notification1Open")
+                }else if response.notification.request.identifier.contains(find: "my.elevation"){
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Notification5Open")
+                }else if response.notification.request.identifier.contains(find: "my.nearbyGolf"){
+                    FBSomeEvents.shared.singleParamFBEvene(param: "Notification2Open")
                 }
             case "Snooze":
                 debugPrint("Snooze")

@@ -119,7 +119,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                     })
                     
                     connection.start()
-                    self.updateUserDataIntoFirebase(uid: (user?.uid)!, fbEmail: (user?.email)!, fbName: (user?.displayName)!)
+                    self.updateUserDataIntoFirebase(uid: (user?.uid)!, fbEmail: (user?.email ?? ""), fbName: (user?.displayName ?? ""))
                     Constants.userName = (user?.displayName)!
                     
                 })
@@ -156,14 +156,18 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
                         DispatchQueue.main.async(execute: {
                             self.userDetails.setObject(device, forKey: "device" as NSCopying)
                             self.userDetails.setObject(proMode, forKey: "proMode" as NSCopying)
-                            self.userDetails.setObject(fbName, forKey: "name" as NSCopying)
-                            self.userDetails.setObject(fbEmail, forKey: "email" as NSCopying)
+                            if !fbName.isEmpty{
+                                self.userDetails.setObject(fbName, forKey: "name" as NSCopying)
+                                self.userList.setObject(fbName, forKey: "name" as NSCopying)
+                            }
+                            if !fbEmail.isEmpty{
+                                self.userDetails.setObject(fbEmail, forKey: "email" as NSCopying)
+                                self.userList.setObject(fbEmail, forKey: "email" as NSCopying)
+                            }
                             if let locale = Locale.current.regionCode {
                                 self.userList.setObject(locale, forKey:"country" as NSCopying)
                             }
-                            self.userList.setObject(fbName, forKey: "name" as NSCopying)
                             self.userList.setObject(Int(NSDate().timeIntervalSince1970*1000), forKey: "timestamp" as NSCopying)
-                            self.userList.setObject(fbEmail, forKey: "email" as NSCopying)
                             if(uid.count>1){
                                 ref.child("userData/\(uid)").updateChildValues(self.userDetails as! [AnyHashable : Any])
                                 ref.child("userList/\(uid)").updateChildValues(self.userList as! [AnyHashable : Any])
@@ -203,17 +207,18 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
     
     func getUserDataFromFirebase(uid:String, isFirst:Bool) {
         let friendListDict = NSMutableDictionary()
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseUserData(addedPath: "") { (snapshot) in
-            let dataDic = (snapshot.value as? NSMutableDictionary)!
-            for (key, value) in dataDic{
-                if let fb_id = (value as? NSMutableDictionary)?.value(forKey: "fb_id"){
-                    if((self.friendsDetails.value(forKey: "\(fb_id)")) != nil){
-                        friendListDict.setObject(true, forKey: "\(key)" as NSCopying)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData\(uid)") { (snapshot) in
+            if let dataDic = snapshot.value as? NSMutableDictionary{
+                for (key, value) in dataDic{
+                    if let fb_id = (value as? NSMutableDictionary)?.value(forKey: "fb_id"){
+                        if((self.friendsDetails.value(forKey: "\(fb_id)")) != nil){
+                            friendListDict.setObject(true, forKey: "\(key)" as NSCopying)
+                        }
                     }
                 }
             }
+
             DispatchQueue.main.async(execute: {
-                friendListDict.setObject(true, forKey: "jpSgWiruZuOnWybYce55YDYGXP62" as NSCopying)
                 let friendsNode = ["friends":friendListDict]
                 if(uid.count > 1){
                     ref.child("userData/\(uid)/").updateChildValues(friendsNode)

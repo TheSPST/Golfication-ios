@@ -97,19 +97,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["brand":selectedBrand])
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["avgDistance":Int(selectedAvgDistance)!])
                 if Constants.distanceFilter == 1{
-//                    ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["clubLength":"\((Double(selectedLength)! / 2.54).rounded(toPlaces: 2))"])
-                    var val = (Double(selectedLength)! / 2.54).rounded(toPlaces: 2)
-                    let decVal = Int(val*100)%100
-                    let rem = decVal%25
-                    if rem < 12{
-                        val = val - (Double(rem)/100.0)
-                    }
-                    else{
-                        val = val + (Double(25-rem)/100.0)
-                    }
-                    if val < 22.0{
-                       val = 22.0
-                    }
+                    let val = self.getValueWithMultipleOf5(selectedLength:self.selectedLength)
                     ref.child("userData/\(Auth.auth().currentUser!.uid)/golfBag/\(i)").updateChildValues(["clubLength":"\(val)"])
                 }
                 else{
@@ -129,7 +117,34 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             }
         }
     }
-    
+    func getValueWithMultipleOf5(selectedLength:String)->Double{
+        let val = (Double(selectedLength)! / 2.54).rounded(toPlaces: 2)
+        let decVal = val - Double(Int(val))
+        return getValue(val:val,decVal:decVal)
+    }
+    func getValue(val:Double,decVal:Double)->Double{
+        var val = val
+        if decVal < 0.125{
+            val = Double(Int(val))
+        }else if decVal >= 0.125 && decVal < 0.375{
+            val = Double(Int(val)) + 0.25
+        }else if decVal >= 0.375 && decVal < 0.625{
+            val = Double(Int(val)) + 0.5
+        }else if decVal >= 0.625 && decVal < 0.875{
+            val = Double(Int(val)) + 0.75
+        }else{
+            val = Double(Int(val)) + 1
+        }
+        if val < 22.0{
+            val = 22.0
+        }
+        return val
+    }
+    func getValueWithMultipleOf5ForNonFilter(selectedLength:String)->Double{
+        let val = Double(selectedLength)!
+        let decVal = val - Double(Int(val))
+        return getValue(val:val,decVal:decVal)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -530,12 +545,12 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         }
                         if let clubLength = dict.value(forKey: "clubLength") as? String{
                             if clubLength != "" && clubLength != "43"{
-                            self.selectedLength = clubLength
-                            self.lblLength.text = self.selectedLength + " Inches"
-                            if Constants.distanceFilter == 1{
-                                self.selectedLength = "\((Double(clubLength)! * 2.54).rounded())"
-                                self.lblLength.text = self.selectedLength + " cms"
-                            }
+                                self.selectedLength = clubLength
+                                self.lblLength.text = self.selectedLength + " Inches"
+                                if Constants.distanceFilter == 1{
+                                    self.selectedLength = "\((Double(clubLength)! * 2.54).rounded())"
+                                    self.lblLength.text = self.selectedLength + " cms"
+                                }
                             }
                         }
                         if (dict.value(forKey: "tag") as! Bool == true){
@@ -666,15 +681,14 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
 }
     @IBAction func avgDistanceAction(_ sender: Any) {
         var rangeArr = [Int]()
-        let avg = Int(selectedAvgDistance)!
-//        for i in 0..<self.golfBagArr.count{
-//            if let dict = self.golfBagArr[i] as? NSDictionary, (dict.value(forKey: "clubName") as! String).contains(self.selectedBagStr){
-//                avg = dict.value(forKey: "avgDistance") as! Int
-//                break
-//            }
-//        }
+        var avg = Int(selectedAvgDistance)!
         debugPrint("avg:",avg)
         if avg > 0{
+            if avg == 5{
+                for data in Constants.clubWithMaxMin where data.name == self.selectedBagStr{
+                    avg = BackgroundMapStats.getDataInTermOf5(data:Int((data.max + data.min)/2))
+                }
+            }
             let min = BackgroundMapStats.getDataInTermOf5(data:Int((avg * 50)/100))
             let max = BackgroundMapStats.getDataInTermOf5(data:Int((avg * 150)/100))
             var i = min
@@ -798,19 +812,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     let golfBagDict = NSMutableDictionary()
                     golfBagDict.setObject(self.selectedBrand, forKey: "brand" as NSCopying)
                     if Constants.distanceFilter == 1{
-//                    golfBagDict.setObject("\((Double(self.selectedLength)! / 2.54).rounded(toPlaces: 2))", forKey: "clubLength" as NSCopying)
-                        var val = (Double(self.selectedLength)! / 2.54).rounded(toPlaces: 2)
-                        let decVal = Int(val*100)%100
-                        let rem = decVal%25
-                        if rem < 12{
-                            val = val - (Double(rem)/100.0)
-                        }
-                        else{
-                            val = val + (Double(25-rem)/100.0)
-                        }
-                        if val < 22.0{
-                            val = 22.0
-                        }
+                        let val = self.getValueWithMultipleOf5(selectedLength: self.selectedLength)
                         golfBagDict.setObject("\(val)", forKey: "clubLength" as NSCopying)
                     }
                     else{

@@ -1481,20 +1481,14 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 Analytics.logEvent("mode\(Constants.mode)_game_discarded", parameters: [:])
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["my.notification"])
             }
+            self.mapTimer.invalidate()
+            self.gotoFeedBackViewController(mID: Constants.matchId, mode: Constants.mode, isDiscard: true)
         }
         BackgroundMapStats.deleteCoreData()
         self.scoring.removeAll()
         scoring.removeAll()
-        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController = tabBarCtrl
     }
     func saveAndviewScore(){
-        
-//        if(self.swingMatchId.count > 0){
-//            ref.child("userData/\(Auth.auth().currentUser!.uid)/swingSession/").updateChildValues([self.swingMatchId:false])
-//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: "Finish")
-//        }
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
         let generateStats = GenerateStats()
         generateStats.matchKey = Constants.matchId
@@ -1578,33 +1572,41 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         ref.child("feedData").updateChildValues(finalFeedDic as! [AnyHashable : Any])
         ref.child("userData/\(feedDict.value(forKey: "userKey")!)/myFeeds").updateChildValues([feedId:true])
     }
-    func gotoFeedBackViewController(mID:String,mode:Int){
+    func gotoFeedBackViewController(mID:String,mode:Int,isDiscard:Bool = false){
         let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FeedbackVC") as! FeedbackVC
         viewCtrl.matchIdentifier = mID
         viewCtrl.mode = mode
-        viewCtrl.onDoneBlock = { result in
-            let players = NSMutableArray()
-            let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
-            if(self.matchDataDict.object(forKey: "player") != nil){
-                let tempArray = self.matchDataDict.object(forKey: "player")! as! NSMutableDictionary
-                for (k,v) in tempArray{
-                    let dict = v as! NSMutableDictionary
-                    dict.addEntries(from: ["id":k])
-                    if(k as! String == Auth.auth().currentUser!.uid){
-                        dict.addEntries(from: ["status":4])
+        if !isDiscard{
+            viewCtrl.onDoneBlock = { result in
+                let players = NSMutableArray()
+                let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
+                if(self.matchDataDict.object(forKey: "player") != nil){
+                    let tempArray = self.matchDataDict.object(forKey: "player")! as! NSMutableDictionary
+                    for (k,v) in tempArray{
+                        let dict = v as! NSMutableDictionary
+                        dict.addEntries(from: ["id":k])
+                        if(k as! String == Auth.auth().currentUser!.uid){
+                            dict.addEntries(from: ["status":4])
+                        }
+                        players.add(dict)
                     }
-                    players.add(dict)
                 }
+                viewCtrl.finalPlayersData = players
+                viewCtrl.finalScoreData = self.scoring
+                viewCtrl.currentMatchId = mID
+                viewCtrl.justFinishedTheMatch = true
+                viewCtrl.fromGameImprovement = false
+                self.navigationController?.pushViewController(viewCtrl, animated: true)
+                self.scoring.removeAll()
+                Constants.matchId.removeAll()
+                
             }
-            viewCtrl.finalPlayersData = players
-            viewCtrl.finalScoreData = self.scoring
-            viewCtrl.currentMatchId = mID
-            viewCtrl.justFinishedTheMatch = true
-            viewCtrl.fromGameImprovement = false
-            self.navigationController?.pushViewController(viewCtrl, animated: true)
-            self.scoring.removeAll()
-            Constants.matchId.removeAll()
-            
+        }else{
+            viewCtrl.onDoneBlock = { result in
+                let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.window?.rootViewController = tabBarCtrl
+            }
         }
         self.present(viewCtrl, animated: true, completion: nil)
     }
@@ -4667,10 +4669,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             if(BackgroundMapStats.findPositionOfPointInside(position: position.first!, whichFeature:courseData.numberOfHoles[self.holeIndex].green)){
                 let distance = GMSGeometryDistance(position.first!, position[1]) * Constants.YARD * 3
 //                markerText = "  \(Int(distance)) ft "
-                if(Constants.distanceFilter == 1){
-                    let distance = GMSGeometryDistance(position.first!, position.last!)
-//                    markerText = "  \(Int(distance)) m "
-                }
+//                if(Constants.distanceFilter == 1){
+//                    let distance = GMSGeometryDistance(position.first!, position.last!)
+////                    markerText = "  \(Int(distance)) m "
+//                }
                 markerClub = clubReco(dist: distance, lie: "G")
                 if (distance/3 < 100) {
                     self.btnSelectClubs.setTitle(BackgroundMapStats.getClubName(club: markerClub.trim()).uppercased(), for: .normal)
@@ -5086,10 +5088,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             if(BackgroundMapStats.findPositionOfPointInside(position: position.first!, whichFeature:courseData.numberOfHoles[self.holeIndex].green)){
                 let distance = GMSGeometryDistance(position.first!, position.last!) * Constants.YARD * 3
 //                markerText = "  \(Int(distance)) ft "
-                if(Constants.distanceFilter == 1){
-                    let distance = GMSGeometryDistance(position.first!, position.last!)
+//                if(Constants.distanceFilter == 1){
+//                    let distance = GMSGeometryDistance(position.first!, position.last!)
 //                    markerText = "  \(Int(distance)) m "
-                }
+//                }
                 markerClub = "Pu"
                 if (distance/3 < 100) {
                     if(!isFromPlotLine) || (isDraggingMarker){
@@ -5123,8 +5125,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+                        btnForSugg1.lblDirection.isHidden = !Constants.isProMode
+                        btnForSugg1.btnElev.isHidden = !Constants.isProMode
                     }else{
-                        btnForSugg1.lblDirection.isHidden = Constants.isProMode
+                        btnForSugg1.lblDirection.isHidden = true
                         BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
                         btnForSugg1.btnElev.isHidden = true
                     }
@@ -5194,8 +5198,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+                        btnForSugg1.btnElev.isHidden = !Constants.isProMode
+                        btnForSugg1.lblDirection.isHidden = !Constants.isProMode
                     }else{
-                        btnForSugg1.lblDirection.isHidden = Constants.isProMode
+                        btnForSugg1.lblDirection.isHidden = true
                         BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
                         btnForSugg1.btnElev.isHidden = true
                     }
@@ -5225,8 +5231,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             }
                         }
                         btnForSugg2.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+                        btnForSugg2.lblDirection.isHidden = !Constants.isProMode
+                        btnForSugg2.btnElev.isHidden = !Constants.isProMode
                     }else{
-                        btnForSugg2.lblDirection.isHidden = Constants.isProMode
+                        btnForSugg2.lblDirection.isHidden = true
                         BackgroundMapStats.setDir(isUp: true, label: btnForSugg2.lblDirection)
                         btnForSugg2.btnElev.isHidden = true
                     }
@@ -5278,8 +5286,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             }
                         }
                         btnForSugg1.btnElev.setTitle("\(Int(abs(finalElev))) \(suffix)", for: .normal)
+                        btnForSugg1.lblDirection.isHidden = !Constants.isProMode
+                        btnForSugg1.btnElev.isHidden = !Constants.isProMode
                     }else{
-                        btnForSugg1.lblDirection.isHidden = Constants.isProMode
+                        btnForSugg1.lblDirection.isHidden = true
                         BackgroundMapStats.setDir(isUp: true, label: btnForSugg1.lblDirection)
                         btnForSugg1.btnElev.isHidden = true
                     }
@@ -5852,6 +5862,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                 self.lblFrontDistance.text = "ELEVATION"
                                 self.lblDistance.text = "ELEVATION"
                                 self.lblBackDistance.text = "ELEVATION"
+                                
+                                self.btnFrontDistance.isHidden = true
+                                self.lblDirFront.isHidden = true
+                                self.btnCenterDistance.isHidden = true
+                                self.lblDirCenter.isHidden = true
+                                self.btnBackDistance.isHidden = true
+                                self.lblDirBack.isHidden = true
                             }
 //                            if(self.holeOutFlag){
 //                                Notification.sendGameDetailsNotification(msg: "Hole \(self.scoring[indexToUpdate].hole) • Par \(self.scoring[self.holeIndex].par) • \((self.matchDataDict.value(forKey: "courseName") as! String))", title: "You Played \(self.shotCount) shots.", subtitle:"",timer:1.0,isStart:self.isTracking, isHole: self.holeOutFlag)
@@ -7094,7 +7111,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 if(holeNum == self.holeIndex+1){
                     if let pData = self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: self.selectedUserId) as? NSMutableDictionary{
                         if let shotsArr = pData.value(forKeyPath: "shots") as? [NSMutableDictionary]{
-                            let shotNu = (swing.value(forKey: "shotNum") as! Int)
+                            var shotNu = (swing.value(forKey: "shotNum") as! Int)
+                            shotNu = shotNu == 0 ? 1:shotNu
                             if shotsArr.count >= (shotNu){
                                 club = (shotsArr[shotNu-1].value(forKeyPath: "club") as! String).trim()
                             }
@@ -7180,7 +7198,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             })
                         }
                         tapTargetPrompt.dismissed = {
-                            
                             print("view dismissed")
                             self.forTutorial[0] = true
                             print("dragged Clicked")
@@ -7192,7 +7209,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         tapTargetPrompt.circleColor = UIColor.glfBlack75
                         tapTargetPrompt.primaryText = ""
                         tapTargetPrompt.secondaryText = "Drag your target marker to get free club recommendations for every shot.".localized()
-                        tapTargetPrompt.textPostion = .bottomLeft
+                        tapTargetPrompt.textPostion = .bottomRight
                     }
                 })
 

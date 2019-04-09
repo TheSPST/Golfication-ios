@@ -46,7 +46,7 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        scrollView.contentInsetAdjustmentBehavior = .automatic
+//        scrollView.contentInsetAdjustmentBehavior = .automatic
         if let providerData = Auth.auth().currentUser?.providerData {
             for item in providerData {
                 fbId = item.providerID
@@ -57,17 +57,17 @@ class GolficationGuideVC: UIViewController,UIScrollViewDelegate{
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.window?.rootViewController = tabBarCtrl
         }
-        if UIDevice.current.iPhoneX || UIDevice.current.iPhonePlus{
-            scoringImgTopConstraint.constant = cardView1.center.y - scoreImageView.frame.size.height/2
-            rfImgTopConstraint.constant = cardView2.center.y - rfImageView.frame.size.height/2
-            ultimateImgTopConstraint.constant = cardView3.center.y - ultimateImageView.frame.size.height/2
-            statsImgTopConstraint.constant = cardView4.center.y - statsImageView.frame.size.height/2
-        }
-        else if UIDevice.current.iPhone{
+        if UIDevice.current.iPhoneX || UIDevice.current.iPhonePlus || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
             scoringImgTopConstraint.constant = cardView1.center.y - scoreImageView.frame.size.height/2 - 70
             rfImgTopConstraint.constant = cardView2.center.y - rfImageView.frame.size.height/2 - 70
             ultimateImgTopConstraint.constant = cardView3.center.y - ultimateImageView.frame.size.height/2 - 70
             statsImgTopConstraint.constant = cardView4.center.y - statsImageView.frame.size.height/2 - 70
+        }
+        else if UIDevice.current.iPhone{
+            scoringImgTopConstraint.constant = cardView1.center.y - scoreImageView.frame.size.height/2 - 170
+            rfImgTopConstraint.constant = cardView2.center.y - rfImageView.frame.size.height/2 - 170
+            ultimateImgTopConstraint.constant = cardView3.center.y - ultimateImageView.frame.size.height/2 - 170
+            statsImgTopConstraint.constant = cardView4.center.y - statsImageView.frame.size.height/2 - 170
         }
         else if(UIDevice.current.iPad960){
             scoreImageView.image = #imageLiteral(resourceName: "slideimg_1_iPad960")

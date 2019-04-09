@@ -163,6 +163,7 @@ class Notification: NSObject{
         center.removeDeliveredNotifications(withIdentifiers: ["my.nearbyGolf"])
         let content = UNMutableNotificationContent()
         if let nearByGolfClub = UserDefaults.standard.object(forKey: "NearByGolfClub") as? String{
+            content.title = "Playing Golf?"
             content.body = "Start your round at \(nearByGolfClub)!"
             UserDefaults.standard.set("", forKey: "NearByGolfClub")
             UserDefaults.standard.synchronize()

@@ -209,7 +209,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     }
     
     // MARK: backAction
-    @IBAction func backAction(_ sender: UIBarButtonItem) {
+   /* @IBAction func backAction(_ sender: UIBarButtonItem) {
         if fromPublicProfile{
             self.navigationController?.popViewController(animated: true)
         }
@@ -219,7 +219,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.window?.rootViewController = tabBarCtrl
         }
-    }
+    }*/
     
     @IBAction func settingAction(_ sender: Any) {
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "SettingVC") as! SettingVC
@@ -618,11 +618,10 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         appDelegate = (UIApplication.shared.delegate as! AppDelegate)
-
         self.navigationController?.navigationBar.isHidden = false
-        self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
+        self.tabBarController?.tabBar.isHidden = false
+//        playButton.contentView.isHidden = true
+//        playButton.floatButton.isHidden = true
         
         self.sharedInstance = BluetoothSync.getInstance()
         self.sharedInstance.delegate = self

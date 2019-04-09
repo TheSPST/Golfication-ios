@@ -15,7 +15,7 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
     
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var lblTopTitle: UILabel!
-    @IBOutlet weak var heightOfView: NSLayoutConstraint!
+    //    @IBOutlet weak var heightOfView: NSLayoutConstraint!
     @IBOutlet weak var btnSubmit: UIButton!
     @IBOutlet weak var textViewForFeedback: UITextField!
     @IBOutlet weak var btnIncorrectMapping: UIButton!
@@ -46,14 +46,14 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
     var keyboardHeight: CGFloat!
     
     func showReview() {
-            if #available(iOS 10.3, *) {
-                debugPrint("Review Requested")
-                SKStoreReviewController.requestReview()
-            } else {
-                // Fallback on earlier versions
-            }
+        if #available(iOS 10.3, *) {
+            debugPrint("Review Requested")
+            SKStoreReviewController.requestReview()
+        } else {
+            // Fallback on earlier versions
+        }
     }
-
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
             let position = touch.location(in: view)
@@ -77,8 +77,8 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
         btnMissingFeature.setCorner(color: UIColor.glfWarmGrey.cgColor)
         btnWrongParValues.setCorner(color: UIColor.glfWarmGrey.cgColor)
         self.originOfMainView = self.mainView.frame.origin
-
-//        textViewForFeedback.delegate = self
+        
+        //        textViewForFeedback.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
@@ -99,17 +99,15 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
         }
         switch mode {
         case 2:
-                self.btnIncorrectMapping.setTitle("Unmapped Course", for: .normal)
-                break
+            self.btnIncorrectMapping.setTitle("Unmapped Course", for: .normal)
+            break
         case 3:
-                self.btnIncorrectMapping.setTitle("Unmapped Course", for: .normal)
+            self.btnIncorrectMapping.setTitle("Unmapped Course", for: .normal)
             break
         default:
-                self.btnIncorrectMapping.setTitle("Incorrect Mapping", for: .normal)
+            self.btnIncorrectMapping.setTitle("Incorrect Mapping", for: .normal)
             break
         }
-        
-        // Do any additional setup after loading the view.
     }
     @objc func returnTextView(gesture: UIGestureRecognizer) {
         guard textViewForFeedback != nil else {
@@ -120,8 +118,8 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
                 textViewForFeedback?.resignFirstResponder()
             }
         }
-
-//        textViewForFeedback = nil
+        
+        //        textViewForFeedback = nil
     }
     
     @objc func starCount(_ sender:UIButton){
@@ -136,20 +134,20 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
         for i in 0..<starsStackView.arrangedSubviews.count{
             if(i < sender.tag+1){
                 (starsStackView.arrangedSubviews[i] as! UIButton).setBackgroundImage(#imageLiteral(resourceName: "ICC_highlightedStar_2x"), for: .normal)
-                self.allWrongBtnSV.isHidden = false
-                self.textViewForFeedback.isHidden = false
+                //self.allWrongBtnSV.isHidden = false
+                //                self.textViewForFeedback.isHidden = false
             }else{
                 (starsStackView.arrangedSubviews[i] as! UIButton).setBackgroundImage(#imageLiteral(resourceName: "ICC_emptyStar_2x"), for: .normal)
             }
         }
         self.btnSubmit.isHidden = false
         self.mainStackView.layoutIfNeeded()
-        self.heightOfView.constant = mainStackView.frame.height + 24
+        //        self.heightOfView.constant = mainStackView.frame.height + 24
         if(mainStackView.frame.height < 140){
-            self.heightOfView.constant = 160
+            //            self.heightOfView.constant = 160
         }
-        self.lblWhatWentWrong.text = "What went wrong ?"
-
+        self.lblWhatWentWrong.text = "Having Issues?"
+        
         if(sender.tag == 4){
             self.allWrongBtnSV.isHidden = true
             self.textViewForFeedback.isHidden = true
@@ -157,9 +155,9 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
             self.btnSkip.setTitleColor(UIColor.glfWhite, for: .normal)
             self.lblWhatWentWrong.text = ""
             self.mainStackView.layoutIfNeeded()
-            self.heightOfView.constant = mainStackView.frame.height + 24
+            //            self.heightOfView.constant = mainStackView.frame.height + 24
             if(mainStackView.frame.height < 140){
-                self.heightOfView.constant = 160
+                //                self.heightOfView.constant = 160
             }
         }
     }
@@ -184,6 +182,12 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
         }
     }
     
+    @IBAction func supportAction(_ sender: UIButton) {
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "SupportVC") as! SupportVC
+        let navCtrl = UINavigationController(rootViewController: viewCtrl)
+        self.present(navCtrl, animated: true, completion: nil)
+    }
+    
     @IBAction func btnActionSubmit(_ sender: Any) {
         self.btnSubmit.isHidden = true
         self.lblWhatWentWrong.text = "Thank you for feedback."
@@ -202,7 +206,6 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
             }
             self.btnActionClose(UIButton.self)
         })
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -235,18 +238,8 @@ class FeedbackVC: UIViewController,UITextViewDelegate {
         self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
         UIView.commitAnimations()
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
+
 // MARK: Keyboard Handling
 extension FeedbackVC {
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -259,7 +252,7 @@ extension FeedbackVC {
             
             // so increase contentView's height by keyboard height
             UIView.animate(withDuration: 0.3, animations: {
-                self.heightOfView.constant += self.keyboardHeight
+                //                self.heightOfView.constant += self.keyboardHeight
             })
             
             // move if keyboard hide input field
@@ -277,11 +270,11 @@ extension FeedbackVC {
                 self.mainView.frame.origin = CGPoint(x: self.mainView.frame.minX, y: self.mainView.frame.minY - (collapseSpace + 10))
                 self.mainView.layoutIfNeeded()
                 
-                self.heightOfView.constant = self.mainStackView.frame.height + 24
+                //                self.heightOfView.constant = self.mainStackView.frame.height + 24
                 if(self.mainStackView.frame.height < 140){
-                    self.heightOfView.constant = 160
+                    //                    self.heightOfView.constant = 160
                 }
-
+                
                 self.mainView.layoutIfNeeded()
             })
         }
@@ -290,14 +283,12 @@ extension FeedbackVC {
     @objc func keyboardWillHide(notification: NSNotification) {
         UIView.animate(withDuration: 0.3) {
             self.mainView.frame.origin = self.originOfMainView
-            self.heightOfView.constant = self.mainStackView.frame.height + 24
+            //            self.heightOfView.constant = self.mainStackView.frame.height + 24
             if(self.mainStackView.frame.height < 140){
-                self.heightOfView.constant = 160
+                //                self.heightOfView.constant = 160
             }
             self.mainView.layoutIfNeeded()
-
         }
-        
         keyboardHeight = nil
     }
 }

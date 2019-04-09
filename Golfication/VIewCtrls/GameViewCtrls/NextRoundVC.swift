@@ -672,37 +672,38 @@ class NextRoundVC: UIViewController {
         btnPrevClassic.titleLabel?.lineBreakMode = .byWordWrapping
         btnPrevRf.titleLabel?.lineBreakMode = .byWordWrapping
         btnPrevShotTrack.titleLabel?.lineBreakMode = .byWordWrapping
-        
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourseRequest/\(Auth.auth().currentUser!.uid)") { (snapshot) in
-            var dataDic = NSDictionary()
-            if(snapshot.childrenCount > 0){
-
-                dataDic = snapshot.value as! NSDictionary
-                
-                for (key,_) in dataDic{
-                    if let keyVal = key as? Int{
-                        if keyVal == Int(Constants.selectedGolfID){
-                            self.checkMappingRequest()
-                            self.btnRequestMapping.isHidden = true
+        if scoringMode != "Advanced(GPS)"{
+            self.progressView.show(atView: self.view, navItem: self.navigationItem)
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourseRequest/\(Auth.auth().currentUser!.uid)") { (snapshot) in
+                var dataDic = NSDictionary()
+                if(snapshot.childrenCount > 0){
+                    
+                    dataDic = snapshot.value as! NSDictionary
+                    
+                    for (key,_) in dataDic{
+                        if let keyVal = key as? Int{
+                            if keyVal == Int(Constants.selectedGolfID){
+                                self.checkMappingRequest()
+                                self.btnRequestMapping.isHidden = true
+                            }
                         }
-                    }
-                    else if let keyVal = key as? String{
-                        if keyVal == Constants.selectedGolfID{
-                            self.checkMappingRequest()
-                            self.btnRequestMapping.isHidden = true
+                        else if let keyVal = key as? String{
+                            if keyVal == Constants.selectedGolfID{
+                                self.checkMappingRequest()
+                                self.btnRequestMapping.isHidden = true
+                            }
                         }
                     }
                 }
+                DispatchQueue.main.async(execute: {
+                    self.progressView.hide(navItem: self.navigationItem)
+                    if self.scoringMode.containsIgnoringCase(find: "classic"){
+                        self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
+                    }else{
+                        self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
+                    }
+                })
             }
-            DispatchQueue.main.async(execute: {
-                self.progressView.hide(navItem: self.navigationItem)
-                if self.scoringMode.containsIgnoringCase(find: "classic"){
-                    self.btnPlayBasic.setTitle("Play in Classic Mode", for: .normal)
-                }else{
-                    self.btnPlayBasic.setTitle("Play in RangeFinder", for: .normal)
-                }
-            })
         }
     }
     var mappingCount = 0

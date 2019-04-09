@@ -167,7 +167,7 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
 
-        ref.child("feedData").queryOrderedByKey().queryLimited(toLast: 100).observeSingleEvent(of: .value, with: { snapshot in
+        ref.child("feedData").queryOrderedByKey().queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
             var feedDic = NSDictionary()
             if snapshot.value != nil{
                 feedDic = snapshot.value as! NSDictionary

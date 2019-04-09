@@ -199,18 +199,15 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
     
     func getUserDataFromFirebase(uid:String, isFirst:Bool) {
         let friendListDict = NSMutableDictionary()
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseUserData(addedPath: "") { (snapshot) in
-            let dataDic = (snapshot.value as? NSMutableDictionary)!
-            //print("Data From User : \(dataDic)")
-            
-            for (key, value) in dataDic{
-                if let fb_id = (value as? NSMutableDictionary)?.value(forKey: "fb_id"){
-                    if((self.friendsDetails.value(forKey: "\(fb_id)")) != nil){
-                        friendListDict.setObject(true, forKey: "\(key)" as NSCopying)
+        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData\(uid)") { (snapshot) in
+            if let dataDic = snapshot.value as? NSMutableDictionary{
+                for (key, value) in dataDic{
+                    if let fb_id = (value as? NSMutableDictionary)?.value(forKey: "fb_id"){
+                        if((self.friendsDetails.value(forKey: "\(fb_id)")) != nil){
+                            friendListDict.setObject(true, forKey: "\(key)" as NSCopying)
+                        }
                     }
                 }
-
-//                group.leave()
             }
             DispatchQueue.main.async(execute: {
                 friendListDict.setObject(true, forKey: "jpSgWiruZuOnWybYce55YDYGXP62" as NSCopying)
@@ -371,7 +368,10 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
                 self.progressView.hide(navItem: self.navigationItem)
                 return
             }
-              self.checkEmailVerification(currentUser: user!)
+            self.progressView.hide(navItem: self.navigationItem)
+            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+            self.navigationController?.pushViewController(tabBarCtrl, animated: true)
+//              self.checkEmailVerification(currentUser: user!)
         }
     }
     
@@ -474,8 +474,6 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
                                     
                                     let userDetails = NSMutableDictionary()
                                     userDetails.setObject(["jpSgWiruZuOnWybYce55YDYGXP62":true], forKey: "friends" as NSCopying)
-                                    userDetails.setObject((currentUser.email)!, forKey: "email" as NSCopying)
-                                    userDetails.setObject((currentUser.displayName)!, forKey: "name" as NSCopying)
                                     userDetails.setObject(imagUrl, forKey: "image" as NSCopying)
                                     userDetails.setObject(false, forKey: "device" as NSCopying)
                                     userDetails.setObject(false, forKey: "proMode" as NSCopying)

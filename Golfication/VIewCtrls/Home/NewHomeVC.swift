@@ -18,7 +18,7 @@ enum VersionError: Error {
     case invalidResponse, invalidBundleInfo
 }
 let context = CoreDataStorage.mainQueueContext()
-class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CustomProModeDelegate, BluetoothDelegate{
+class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CustomProModeDelegate{
     // MARK: - Set Outlets
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
     var locationManager : CLLocationManager!
@@ -59,6 +59,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBOutlet weak var subViewClubImage: UIView!
     //    @IBOutlet weak var viewOnCourse: UIView!
     @IBOutlet weak var viewBecomePro: UIView!
+    @IBOutlet weak var viewEddieHConstraint: NSLayoutConstraint!
+
 //    @IBOutlet weak var viewInvite: UIView!
     
     @IBOutlet weak var lblGameStatus: UILabel!
@@ -91,7 +93,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var feedTableView: UITableView!
     @IBOutlet weak var swingSessionTabImgVw: UIImageView!
-    
+    @IBOutlet weak var mySwingTabView: UIView!
+
     // @IBOutlet weak var strokeGainedChartView: CardView!
     let progressView = SDLoader()
     
@@ -172,13 +175,13 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     
     // MARK: - profileAction
-    @IBAction func profileAction(_ sender: Any) {
+    /*@IBAction func profileAction(_ sender: Any) {
 //        Notification.sendLocaNotificatonNearByGolf()
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
         viewCtrl.fromPublicProfile = false
         self.navigationController?.pushViewController(viewCtrl, animated: true)
-    }
+    }*/
     
     // MARK: - tabClicked
     @objc func tabClicked(_ sender:UIButton){
@@ -280,6 +283,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.btnUpgrade.isHidden = true
         self.proLabelProfileStackView.isHidden = true
         self.viewBecomePro.isHidden = true
+        viewEddieHConstraint.constant = 0
         self.view.layoutIfNeeded()
         
         self.btnProfileBasic.setTitle("PRO", for: .normal)
@@ -332,8 +336,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         let versionDetails = ["info":versionInfo]
         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(versionDetails)
-        //-----------------------------------------------------------------------------------------
         
+        //-----------------------------------------------------------------------------------------
         btnTabsArray = [btnScoreTab, btnSGTab, btnStatsTab]
         viewTabsArray = [viewMyScoreTab, viewSGTab, viewClubTab]
         for i in 0..<btnTabsArray.count{
@@ -347,11 +351,11 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         btnTabsArray[0].setTitleColor(UIColor.glfBluegreen, for: .normal)
         btnTabsArray[0].addBottomBorderWithColor(color: UIColor.glfBluegreen, width: 1.0)
         viewTabsArray[0].isHidden = false
-        
+
         self.btnUpgrade.isHidden = true
         
-        let gestureViewProfile = UITapGestureRecognizer(target: self, action:  #selector (self.profileAction (_:)))
-        viewProfile.addGestureRecognizer(gestureViewProfile)
+//        let gestureViewProfile = UITapGestureRecognizer(target: self, action:  #selector (self.profileAction (_:)))
+//        viewProfile.addGestureRecognizer(gestureViewProfile)
         
 //        let gestureMySwing = UITapGestureRecognizer(target: self, action:  #selector (self.mySwingAction (_:)))
 //        viewMySwing.addGestureRecognizer(gestureMySwing)
@@ -374,7 +378,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
 //        let rndom = Int(arc4random_uniform(100))
 //        viewInvite.isHidden = rndom < 40 ? false : true
-        
+        btnPractice.isHidden = true
+
         self.setInitialUI()
         
         self.getStrokesGainedFirebaseData()
@@ -895,6 +900,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     
     // MARK: - setInitialUI
     func setInitialUI(){
+
         swingSessionTabImgVw.setCircleWithColor(frame: swingSessionTabImgVw.frame, color: UIColor.glfBluegreen.cgColor)
         
 //        btnPreOrder.layer.cornerRadius = 3.0
@@ -961,7 +967,8 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         
         btnPlayFriends.setTitle("  " + "PLAY GOLF".localized(), for: .normal)
         let gradient = CAGradientLayer()
-        gradient.frame = btnPlayFriends.bounds
+//        gradient.frame = btnPlayFriends.bounds
+        gradient.frame = CGRect(x: 0.0, y: 0.0, width: btnPlayFriends.frame.size.width, height: btnPlayFriends.frame.size.height)
         gradient.colors = [UIColor(rgb: 0x2E6594).cgColor, UIColor(rgb: 0x2C4094).cgColor]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
         gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
@@ -987,52 +994,52 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
-    func didUpdateState(_ state: CBManagerState) {
-        debugPrint("state== ",state)
-        var alert = String()
-        
-        switch state {
-        case .poweredOff:
-            alert = "Make sure that your bluetooth is turned on."
-            break
-        case .poweredOn:
-            debugPrint("State : Powered On")
-            
-            if Constants.macAddress != nil{
-                let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
-                self.navigationController?.pushViewController(viewCtrl, animated: true)
-                sharedInstance.delegate = nil
-            }
-            else{
-                let alertVC = UIAlertController(title: "Alert", message: "Please finish the device setup first.", preferredStyle: UIAlertControllerStyle.alert)
-                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-//                    let storyboard = UIStoryboard(name: "Home", bundle: nil)
-//                    let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
-//                    viewCtrl.fromPublicProfile = false
-//                    self.navigationController?.pushViewController(viewCtrl, animated: true)
-                    self.getGolfBagUpdate()
-                })
-                alertVC.addAction(action)
-                self.present(alertVC, animated: true, completion: nil)
-            }
-            return
-            
-        case .unsupported:
-            alert = "This device is unsupported."
-            break
-        default:
-            alert = "Try again after restarting the device."
-            break
-        }
-        
-        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
-        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
-            self.dismiss(animated: true, completion: nil)
-            self.sharedInstance.delegate = nil
-        })
-        alertVC.addAction(action)
-        self.present(alertVC, animated: true, completion: nil)
-    }
+//    func didUpdateState(_ state: CBManagerState) {
+//        debugPrint("state== ",state)
+//        var alert = String()
+//
+//        switch state {
+//        case .poweredOff:
+//            alert = "Make sure that your bluetooth is turned on."
+//            break
+//        case .poweredOn:
+//            debugPrint("State : Powered On")
+//
+//            if Constants.macAddress != nil{
+//                let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
+//                self.navigationController?.pushViewController(viewCtrl, animated: true)
+//                sharedInstance.delegate = nil
+//            }
+//            else{
+//                let alertVC = UIAlertController(title: "Alert", message: "Please finish the device setup first.", preferredStyle: UIAlertControllerStyle.alert)
+//                let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+////                    let storyboard = UIStoryboard(name: "Home", bundle: nil)
+////                    let viewCtrl = storyboard.instantiateViewController(withIdentifier: "ProfileVC") as! ProfileVC
+////                    viewCtrl.fromPublicProfile = false
+////                    self.navigationController?.pushViewController(viewCtrl, animated: true)
+//                    self.getGolfBagUpdate()
+//                })
+//                alertVC.addAction(action)
+//                self.present(alertVC, animated: true, completion: nil)
+//            }
+//            return
+//
+//        case .unsupported:
+//            alert = "This device is unsupported."
+//            break
+//        default:
+//            alert = "Try again after restarting the device."
+//            break
+//        }
+//
+//        let alertVC = UIAlertController(title: "Alert", message: alert, preferredStyle: UIAlertControllerStyle.alert)
+//        let action = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
+//            self.dismiss(animated: true, completion: nil)
+//            self.sharedInstance.delegate = nil
+//        })
+//        alertVC.addAction(action)
+//        self.present(alertVC, animated: true, completion: nil)
+//    }
     // MARK: - golfBaagAction
     func getGolfBagUpdate(){
 
@@ -1246,7 +1253,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                 }
                 if let nam = userData.object(forKey: "name") as? String{
-                    if Auth.auth().currentUser!.displayName == nil{
+                    if Auth.auth().currentUser!.displayName == nil || Auth.auth().currentUser!.displayName == ""{
                         let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
                         changeRequest?.displayName = nam
                         changeRequest?.commitChanges { (error) in}
@@ -1944,6 +1951,10 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
 //        }
         self.ifDemolblLine.isHidden = Constants.isDevice
         self.ifDemoShowStackView.isHidden = Constants.isDevice
+        self.btnPractice.isHidden = !Constants.isDevice
+        
+        mySwingTabView.isHidden = !Constants.isDevice
+
 //        self.lblDemoStatsMySwing.isHidden = Constants.isDevice
 //        else if Constants.isProMode{
 //            self.setDeviceLockedUI(targetView: self.viewSGTab, title: "My Swings")
@@ -1974,6 +1985,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 if (self.profileHomeCourse != nil && self.profileHomeCourse != "") || (mappedStr == "2"){
                     if !(Constants.trial){
                         self.viewBecomePro.isHidden = false
+                        viewEddieHConstraint.constant = 120
                         self.view.layoutIfNeeded()
                     }
                 }
@@ -1983,13 +1995,18 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
             self.btnUpgrade.isHidden = true
             self.proLabelProfileStackView.isHidden = true
             self.viewBecomePro.isHidden = true
+            viewEddieHConstraint.constant = 0
             self.view.layoutIfNeeded()
             
             self.btnProfileBasic.setTitle("PRO", for: .normal)
             self.btnProfileBasic.backgroundColor = UIColor(rgb: 0xFFC700)
             self.btnProfileBasic.setTitleColor(UIColor.white, for: .normal)
         }
-        
+        else{
+            self.viewBecomePro.isHidden = false
+            viewEddieHConstraint.constant = 120
+            self.view.layoutIfNeeded()
+        }
         
         // ----------------------------- Set My Score Chart -------------------------------------
         if self.round_time.count > 0{
@@ -2134,11 +2151,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                     }
                 }
             }
-            //            feedNumber = feedNumber.sorted()
-            //            for j in 0..<feedNumber.count{
-            //                self.dataArray.remove(at: feedNumber[j]-j)
-            //
-            //            }
             self.dataArray = self.dataArray.sorted{
                 ($0.timeStamp!) > ($1.timeStamp!)
             }
@@ -2316,8 +2328,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
     
     func getScoreFromMatchData(keyId:String){
-        self.progressView.show(atView: self.view, navItem: self.navigationItem)
-        
+//        self.progressView.show(atView: self.view, navItem: self.navigationItem)
         btnScoreDetail.isEnabled = false
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "matchData/\(keyId)/") { (snapshot) in
             self.scoring.removeAll()
@@ -2388,9 +2399,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 }
             }
             DispatchQueue.main.async(execute: {
-                
-                self.progressView.hide(navItem: self.navigationItem)
-                
+//                self.progressView.hide(navItem: self.navigationItem)
                 var finalPar: Int = 0
                 var myVal: Int = 0
                 var finalStroke: Int = 0
