@@ -144,7 +144,6 @@
 		4B1F6BD62090A29F00312EA7 /* ScoreBoardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BA92090A29F00312EA7 /* ScoreBoardVC.swift */; };
 		4B1F6BD72090A29F00312EA7 /* Game.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B1F6BAA2090A29F00312EA7 /* Game.storyboard */; };
 		4B1F6BD82090A29F00312EA7 /* SearchLocationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BAB2090A29F00312EA7 /* SearchLocationVC.swift */; };
-		4B1F6BD92090A29F00312EA7 /* ClassicScoringVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BAC2090A29F00312EA7 /* ClassicScoringVC.swift */; };
 		4B1F6BDA2090A29F00312EA7 /* SearchPlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BAD2090A29F00312EA7 /* SearchPlayerVC.swift */; };
 		4B1F6BDB2090A29F00312EA7 /* PlaceAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BAF2090A29F00312EA7 /* PlaceAnnotation.swift */; };
 		4B1F6BDC2090A29F00312EA7 /* PlacesLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F6BB02090A29F00312EA7 /* PlacesLoader.swift */; };
@@ -196,6 +195,7 @@
 		4B7E2A812175C20B00DFC3EB /* box.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E2A772175C20B00DFC3EB /* box.png */; };
 		4B7E2A842175DDA100DFC3EB /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E2A832175DDA100DFC3EB /* DetailView.swift */; };
 		4B7E5EFC20D118BA001847CC /* BackgroundMapStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E5EFB20D118BA001847CC /* BackgroundMapStats.swift */; };
+		4B7F2AFB225E0C7200CAAD3A /* FTPopOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F2AFA225E0C7200CAAD3A /* FTPopOverMenu.m */; };
 		4B7F4AE31FFD10A300191452 /* customPieViewCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F4AE01FFD10A300191452 /* customPieViewCenter.swift */; };
 		4B7F4AE41FFD10A300191452 /* customPieViewRight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F4AE11FFD10A300191452 /* customPieViewRight.swift */; };
 		4B7F4AE51FFD10A300191452 /* customPieViewLeft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F4AE21FFD10A300191452 /* customPieViewLeft.swift */; };
@@ -497,7 +497,6 @@
 		4B1F6BA92090A29F00312EA7 /* ScoreBoardVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreBoardVC.swift; sourceTree = "<group>"; };
 		4B1F6BAA2090A29F00312EA7 /* Game.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Game.storyboard; sourceTree = "<group>"; };
 		4B1F6BAB2090A29F00312EA7 /* SearchLocationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchLocationVC.swift; sourceTree = "<group>"; };
-		4B1F6BAC2090A29F00312EA7 /* ClassicScoringVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassicScoringVC.swift; sourceTree = "<group>"; };
 		4B1F6BAD2090A29F00312EA7 /* SearchPlayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchPlayerVC.swift; sourceTree = "<group>"; };
 		4B1F6BAF2090A29F00312EA7 /* PlaceAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceAnnotation.swift; sourceTree = "<group>"; };
 		4B1F6BB02090A29F00312EA7 /* PlacesLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlacesLoader.swift; sourceTree = "<group>"; };
@@ -553,6 +552,8 @@
 		4B7E2A772175C20B00DFC3EB /* box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = box.png; sourceTree = "<group>"; };
 		4B7E2A832175DDA100DFC3EB /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		4B7E5EFB20D118BA001847CC /* BackgroundMapStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundMapStats.swift; sourceTree = "<group>"; };
+		4B7F2AF9225E0C7100CAAD3A /* FTPopOverMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPopOverMenu.h; sourceTree = "<group>"; };
+		4B7F2AFA225E0C7200CAAD3A /* FTPopOverMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPopOverMenu.m; sourceTree = "<group>"; };
 		4B7F4AE01FFD10A300191452 /* customPieViewCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = customPieViewCenter.swift; sourceTree = "<group>"; };
 		4B7F4AE11FFD10A300191452 /* customPieViewRight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = customPieViewRight.swift; sourceTree = "<group>"; };
 		4B7F4AE21FFD10A300191452 /* customPieViewLeft.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = customPieViewLeft.swift; sourceTree = "<group>"; };
@@ -982,6 +983,8 @@
 		4B1F6B922090A29F00312EA7 /* GameViewCtrls */ = {
 			isa = PBXGroup;
 			children = (
+				4B7F2AF9225E0C7100CAAD3A /* FTPopOverMenu.h */,
+				4B7F2AFA225E0C7200CAAD3A /* FTPopOverMenu.m */,
 				4B9542FA221D1627001128FC /* Notes */,
 				4B7F52212158FD88002E328A /* NewGameVC.swift */,
 				3EB769F0214FD50E00830DAB /* GameImprovementPopup.xib */,
@@ -999,7 +1002,6 @@
 				4B1F6BA92090A29F00312EA7 /* ScoreBoardVC.swift */,
 				4B1F6BAA2090A29F00312EA7 /* Game.storyboard */,
 				4B1F6BAB2090A29F00312EA7 /* SearchLocationVC.swift */,
-				4B1F6BAC2090A29F00312EA7 /* ClassicScoringVC.swift */,
 				4B1F6BC12090A29F00312EA7 /* SelectCourseData.swift */,
 				4B1F6BC22090A29F00312EA7 /* NewGameScoreTableViewCell.swift */,
 				4B0788F820A6D0D9000E0FE3 /* SearchLocationTableViewCell.swift */,
@@ -2010,7 +2012,6 @@
 				4B8B85CB223D3C2900DA7BCA /* EddieProVC.swift in Sources */,
 				3EAE867D2125573F0081857B /* ScanningVC.swift in Sources */,
 				4BB26D1D1FF77EDB001E9556 /* ChippingViewController.swift in Sources */,
-				4B1F6BD92090A29F00312EA7 /* ClassicScoringVC.swift in Sources */,
 				4B1F6BD52090A29F00312EA7 /* FinalScoreBoardTopCell.swift in Sources */,
 				4B1F6BC32090A29F00312EA7 /* FeedbackVC.swift in Sources */,
 				4B39D2262238E5F300C7742F /* CoreDataCRUD.swift in Sources */,
@@ -2076,6 +2077,7 @@
 				3E380EEF1FFCCD5300246865 /* NotificationVC.swift in Sources */,
 				3E638E272187058500DB08B9 /* PublicScore.swift in Sources */,
 				4BA0338C1FDC006600471070 /* UINavigation+CustomAnimation.swift in Sources */,
+				4B7F2AFB225E0C7200CAAD3A /* FTPopOverMenu.m in Sources */,
 				4B7E2A672175C0D900DFC3EB /* ARGeoCoordinate.m in Sources */,
 				4B7F52182158DC6F002E328A /* PKCCrop.swift in Sources */,
 				4BB26D121FF77EDB001E9556 /* SignUpVC.swift in Sources */,

@@ -10,7 +10,7 @@
 
 import UIKit
 import UserNotifications
-
+import FirebaseAuth
 var friendNotifFeedId = String()
 
 class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
@@ -213,16 +213,17 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
     }
     
     func redirectToGameScreen(){
-        
-        let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.window?.rootViewController = tabBarCtrl
-        let gameController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
-
-        var playNavCtrl = UINavigationController()
-        playNavCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
-        playNavCtrl.pushViewController(gameController, animated: true)
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
+        if Auth.auth().currentUser != nil{
+            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = tabBarCtrl
+            let gameController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
+            
+            var playNavCtrl = UINavigationController()
+            playNavCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
+            playNavCtrl.pushViewController(gameController, animated: true)
+            playButton.contentView.isHidden = true
+            playButton.floatButton.isHidden = true
+        }
     }
 }

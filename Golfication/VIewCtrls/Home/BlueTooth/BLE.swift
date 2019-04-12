@@ -1990,22 +1990,24 @@ extension BLE: CBPeripheralDelegate {
                     if (Constants.deviceGameType == 1){
                         if let scoring = Constants.matchDataDic.value(forKeyPath: "scoring") as? NSMutableArray{
                             var holeNm = 1
-                            if Int(self.currentCommandData[6]) != scoring.count{
-                                holeNm = Int(self.currentCommandData[6])
-                                debugPrint("HoleNum : ",holeNm)
-                                self.holeWithSwing.removeAll()
-                                debugPrint(self.centerPointOfTeeNGreen)
-                                self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
-                            }else{
-                                self.courseData.processShots()
-                                if(self.isFinished){
-                                    self.randomGenerator()
-                                    // changed by Amit
-                                    self.sendFourthCommand(param: [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]])
+                            if self.currentCommandData.count > 6{
+                                if Int(self.currentCommandData[6]) != scoring.count{
+                                    holeNm = Int(self.currentCommandData[6])
+                                    debugPrint("HoleNum : ",holeNm)
+                                    self.holeWithSwing.removeAll()
+                                    debugPrint(self.centerPointOfTeeNGreen)
+                                    self.holeWithSwing.append((hole: holeNm+1, shotNo: self.shotNumFor8th(hole: holeNm+1), club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
+                                }else{
+                                    self.courseData.processShots()
+                                    if(self.isFinished){
+                                        self.randomGenerator()
+                                        // changed by Amit
+                                        self.sendFourthCommand(param: [4,self.counter,gameIDArr[0],gameIDArr[1],gameIDArr[2],gameIDArr[3]])
+                                    }
+                                    self.uploadSwingScore()
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                                 }
-                                self.uploadSwingScore()
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
                             }
                         }
                     }else{

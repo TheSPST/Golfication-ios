@@ -105,6 +105,10 @@ class CourseData:NSObject{
                 if(self.propertyArray.isEmpty){
                     self.holeHcpWithTee.removeAll()
                     for i in 0..<rangeFinderHoles.count{
+                        if (rangeFinderHoles[i] as AnyObject).object(forKey: "greenLat") == nil{
+                            rangeFinderHoles = NSArray()
+                            break
+                        }
                         let dataDic = NSMutableDictionary()
                         dataDic.setObject((rangeFinderHoles[i] as AnyObject).object(forKey: "greenLat")!, forKey: "greenLat" as NSCopying)
                         dataDic.setObject((rangeFinderHoles[i] as AnyObject).object(forKey: "greenLng")!, forKey: "greenLng" as NSCopying)

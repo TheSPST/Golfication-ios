@@ -539,19 +539,19 @@
         
         if Auth.auth().currentUser != nil{
             
-            let youIcon = UIApplicationShortcutIcon(templateImageName: "avatar_0")
-            let youItem = UIApplicationShortcutItem(type: "OpenYouTab", localizedTitle: "You".localized(), localizedSubtitle: nil, icon: youIcon, userInfo: nil)
+            let homeIcon = UIApplicationShortcutIcon(templateImageName: "homeTab")
+            let homeItem = UIApplicationShortcutItem(type: "OpenHomeTab", localizedTitle: "Home".localized(), localizedSubtitle: nil, icon: homeIcon, userInfo: nil)
             
             let friendsIcon = UIApplicationShortcutIcon(templateImageName: "together_0")
             let friendsItem = UIApplicationShortcutItem(type: "OpenFriendsTab", localizedTitle: "Together".localized(), localizedSubtitle: nil, icon: friendsIcon, userInfo: nil)
             
-            let exploreIcon = UIApplicationShortcutIcon(templateImageName: "explore_0")
-            let exploreItem = UIApplicationShortcutItem(type: "OpenExploreTab", localizedTitle: "Explore".localized(), localizedSubtitle: nil, icon: exploreIcon, userInfo: nil)
+            let profileIcon = UIApplicationShortcutIcon(templateImageName: "avatar_0")
+            let profileItem = UIApplicationShortcutItem(type: "OpenProfileTab", localizedTitle: "Profile".localized(), localizedSubtitle: nil, icon: profileIcon, userInfo: nil)
             
             let addScoreIcon = UIApplicationShortcutIcon(templateImageName: "addScore")
             let addScoreItem = UIApplicationShortcutItem(type: "OpenAddScoreTab", localizedTitle: "Play Game".localized(), localizedSubtitle: nil, icon: addScoreIcon, userInfo: nil)
             
-            UIApplication.shared.shortcutItems = [youItem, friendsItem, exploreItem, addScoreItem]
+            UIApplication.shared.shortcutItems = [homeItem, friendsItem, profileItem, addScoreItem]
         }
     }
     
@@ -562,13 +562,13 @@
         let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
         window?.rootViewController = tabBarCtrl
         
-        if (shortcutItem.type == "OpenYouTab") {
+        if (shortcutItem.type == "OpenHomeTab") {
             tabBarCtrl.selectedIndex = 0
         }
         else if (shortcutItem.type == "OpenFriendsTab") {
             tabBarCtrl.selectedIndex = 1
         }
-        else if (shortcutItem.type == "OpenExploreTab") {
+        else if (shortcutItem.type == "OpenProfileTab") {
             tabBarCtrl.selectedIndex = 2
         }
         else if (shortcutItem.type == "OpenAddScoreTab") {

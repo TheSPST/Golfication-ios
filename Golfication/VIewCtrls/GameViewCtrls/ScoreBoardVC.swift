@@ -154,9 +154,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     @IBAction func backBtnAction(_ sender: Any) {
         self.navigationController?.pop()
-        if isBasic{
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateView"), object: nil)
-        }
+//        if isBasic{
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateView"), object: nil)
+//        }
         ref.child("matchData/\(Constants.matchId)/scoring/\(self.index)/\(self.playerId!)").removeAllObservers()
     }
     

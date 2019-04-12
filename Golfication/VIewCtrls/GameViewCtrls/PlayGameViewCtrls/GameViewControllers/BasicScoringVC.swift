@@ -11,7 +11,7 @@ import ActionSheetPicker_3_0
 import FirebaseAuth
 import FirebaseAnalytics
 import FirebaseDatabase
-
+import MaterialTapTargetPrompt_iOS
 import UserNotifications
 
 class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
@@ -127,9 +127,9 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             NotificationCenter.default.addObserver(self, selector: #selector(self.statsCompleted(_:)), name: NSNotification.Name(rawValue: "StatsCompleted"), object: nil)
             self.saveAndviewScore()
         }))
-        let restartOption = (UIAlertAction(title: "Restart Round", style: UIAlertActionStyle.default, handler: { action in
-            self.btnActionRestartRound(Any.self)
-        }))
+//        let restartOption = (UIAlertAction(title: "Restart Round", style: UIAlertActionStyle.default, handler: { action in
+//            self.btnActionRestartRound(Any.self)
+//        }))
         var descardRound = "Discard Round".localized()
         if Constants.isEdited{
             descardRound = "Delete Round".localized()
@@ -137,13 +137,24 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         let discardOption = (UIAlertAction(title: descardRound, style: UIAlertActionStyle.default, handler: { action in
             self.discardPressed(button: UIButton().self)
         }))
+        
+//        let image = UIImage(named: "support")
+        let supportOption = (UIAlertAction(title: "Contact Support", style: UIAlertActionStyle.default, handler: { action in
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "SupportVC") as! SupportVC
+            let navCtrl = UINavigationController(rootViewController: viewCtrl)
+            self.present(navCtrl, animated: true, completion: nil)
+        }))
+
         let cancelOption = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { action in
             debugPrint("Cancelled")
         })
         discardOption.setValue(UIColor.red, forKey: "titleTextColor")
+//        supportOption.setValue(image, forKey: "image")
+        
         myController.addAction(saveOption)
-        myController.addAction(restartOption)
+//        myController.addAction(restartOption)
         myController.addAction(discardOption)
+        myController.addAction(supportOption)
         myController.addAction(cancelOption)
         present(myController, animated: true, completion: nil)
     }
@@ -290,7 +301,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     func exitWithoutSave(){
         FBSomeEvents.shared.singleParamFBEvene(param: "Discard Game")
         if(Constants.matchId.count > 1){
-            self.updateFeedNode()
             if(Auth.auth().currentUser!.uid.count > 1){
                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
             }
@@ -368,11 +378,21 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(Constants.matchId)").removeValue()
         }
         self.sendMatchFinishedNotification()
+        var endingTime = Timestamp
+        if Constants.isEdited{
+            if let player = self.matchDataDict.value(forKeyPath: "player") as? NSDictionary{
+                let data = player.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSDictionary
+                if let etime = data?.value(forKeyPath: "endTimestamp") as? Int64{
+                    endingTime = etime
+                }
+            }
+        }
         if(Auth.auth().currentUser!.uid.count>1) &&  (Constants.matchId.count > 1){
             ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
+            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["endTimestamp":endingTime])
         }
         Constants.addPlayersArray = NSMutableArray()
-        self.updateFeedNode()
+        self.updateFeedNode(finisedTime : endingTime)
         Constants.isUpdateInfo = true
         if Constants.mode>0{
             Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
@@ -401,11 +421,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
         }
     }
-    func updateFeedNode(){
+    func updateFeedNode(finisedTime:Int64){
         let feedDict = NSMutableDictionary()
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
-        feedDict.setObject(self.matchDataDict.value(forKey: "timestamp") as Any, forKey: "timestamp" as NSCopying)
+        feedDict.setObject(finisedTime, forKey: "timestamp" as NSCopying)
         feedDict.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
@@ -498,6 +518,10 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         currentHoleWhilePlaying.setObject("\(self.holeIndex+1)", forKey: "currentHole" as NSCopying)
         FBSomeEvents.shared.singleParamFBEvene(param: "View Classic Hole \(self.holeIndex+1)")
         ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(currentHoleWhilePlaying as! [AnyHashable : Any])
+        
+        
+        
+        
         let transition = CATransition()
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromRight
@@ -611,28 +635,28 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
     
-    @objc func updateView(_ notification:NSNotification){
-        if(isContinue){
-            if let current = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
-                self.holeIndex = Int(current)!-1
-            }else{
-                if let current = Constants.matchDataDic.value(forKeyPath: "currentHole") as? String{
-                    self.holeIndex = Int(current.isEmpty ? "1":current)! - 1
-                }
-            }
-        }
-        if(self.holeIndex == self.scoreData.count){
-            self.holeIndex = 0
-        }
-        if(self.holeIndex == scoreData.count-1){
-            self.btnNext.isHidden = true
-            self.swipePrev.isEnabled = false
-            self.btnFinishRound.isHidden = false
-        }
-        self.holeIndex = self.holeIndex%self.gameTypeIndex
-        self.updateData(indexToUpdate:self.holeIndex)
-        
-    }
+//    @objc func updateView(_ notification:NSNotification){
+//        if(isContinue){
+//            if let current = self.matchDataDict.value(forKeyPath: "player.\(Auth.auth().currentUser!.uid).currentHole") as? String{
+//                self.holeIndex = Int(current)!-1
+//            }else{
+//                if let current = Constants.matchDataDic.value(forKeyPath: "currentHole") as? String{
+//                    self.holeIndex = Int(current.isEmpty ? "1":current)! - 1
+//                }
+//            }
+//        }
+////        if(self.holeIndex == self.scoreData.count){
+////            self.holeIndex = 0
+////        }
+////        if(self.holeIndex == scoreData.count-1){
+////            self.btnNext.isHidden = true
+////            self.swipePrev.isEnabled = false
+////            self.btnFinishRound.isHidden = false
+////        }
+////        self.holeIndex = self.holeIndex%self.gameTypeIndex
+//        self.updateData(indexToUpdate:self.holeIndex)
+//
+//    }
     var achievedGoal = Goal()
     var targetGoal = Goal()
     @objc func unlockEddie(_ sender: UIButton){
@@ -646,7 +670,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         FBSomeEvents.shared.singleParamFBEvene(param: "View Classic Game")
         eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         setInitialUI()
-        setHoleNum()
+        
         btnAddNotes.setCornerWithRadius(color: UIColor.clear.cgColor, radius: 12.5)
         btnAddNotes.setImage(BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "note"), targetSize: CGSize(width:15,height:15)), for: .normal)
         imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
@@ -683,7 +707,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             }
         }
         self.gameTypeIndex = Constants.matchDataDic.value(forKey: "matchType") as! String == "9 holes" ? 9:18
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateView(_:)), name: NSNotification.Name(rawValue: "updateView"),object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.updateView(_:)), name: NSNotification.Name(rawValue: "updateView"),object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.hideStableFord(_:)), name: NSNotification.Name(rawValue: "hideStableFord"),object: nil)
         lblCourseName.text = "\(matchDataDict.value(forKey: "courseName")!)"
         for (key,value) in self.matchDataDict{
@@ -892,6 +916,14 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             self.btnChangeHole.isUserInteractionEnabled = false
         }else{
             self.btnChangeHole.isUserInteractionEnabled = true
+        }
+        let tutorialCount = UserDefaults.standard.integer(forKey: "BaseCourseTutorial")
+        if tutorialCount < 2 && !isContinue{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                self.showCaseEnterHoleScore()
+            })
+            UserDefaults.standard.set(tutorialCount+1, forKey: "BaseCourseTutorial")
+            UserDefaults.standard.synchronize()
         }
     }
     func updateScoringHoleData(){
@@ -1906,4 +1938,92 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         }
         return hcp
     }
+}
+extension BasicScoringVC{
+    func showCaseEnterHoleScore(){
+        let btn = self.stackViewStrokes1.subviews[self.stackViewStrokes1.subviews.count-2] as! UIButton
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: btn)
+        tapTargetPrompt.action = {
+            self.strokesAction(sender: btn)
+            print("dragged Clicked")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if (self.scorePopView.isHidden){
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:BasicScoringVC.self)){
+                                self.showCaseExpandeDetailsScoring()
+                                timerForMiddleMarker.invalidate()
+                            }
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if (self.scorePopView.isHidden){
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:BasicScoringVC.self)){
+                                self.showCaseExpandeDetailsScoring()
+                                timerForMiddleMarker.invalidate()
+                            }
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Enter your hole score.".localized()
+        tapTargetPrompt.textPostion = .bottomLeft
+    }
+    func showCaseExpandeDetailsScoring(){
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnDetailScoring)
+        tapTargetPrompt.action = {
+            self.detailScoreAction(self.btnDetailScoring)
+            print("dragged Clicked")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                if let thePresenter = self.navigationController?.visibleViewController{
+                    if (thePresenter.isKind(of:BasicScoringVC.self)){
+                        self.showCaseSwipeHole()
+                    }
+                }
+            })
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                if let thePresenter = self.navigationController?.visibleViewController{
+                    if (thePresenter.isKind(of:BasicScoringVC.self)){
+                        self.showCaseSwipeHole()
+                    }
+                }
+            })
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Expand to add Fairways, GIRs, Putts and Sand Saves.".localized()
+        tapTargetPrompt.textPostion = .topLeft
+    }
+
+    func showCaseSwipeHole(){
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnNext)
+        tapTargetPrompt.action = {
+            self.nextAction(Any.self)
+            print("dragged Clicked")
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Swipe to go to next hole.".localized()
+        tapTargetPrompt.textPostion = .topLeft
+    }
+    
+    
 }

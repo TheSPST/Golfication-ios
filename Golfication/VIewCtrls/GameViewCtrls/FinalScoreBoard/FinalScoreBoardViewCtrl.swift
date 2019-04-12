@@ -190,6 +190,12 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     @IBOutlet weak var timerLabel: UILabel!
     var countdownTimer: Timer!
 
+    @IBAction func supportAction(_ sender: UIButton) {
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "SupportVC") as! SupportVC
+        let navCtrl = UINavigationController(rootViewController: viewCtrl)
+        self.present(navCtrl, animated: true, completion: nil)
+    }
+    
     @IBAction func backButtonAction(_ sender: Any) {
         FBSomeEvents.shared.singleParamFBEvene(param: "Click RS Back")
         if(superClassName! == "MyFeedVC"){
@@ -218,7 +224,6 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Round Summary"
-        self.automaticallyAdjustsScrollViewInsets = false
         if fromGameImprovement{
             redirectToJoinFBGameImprovement()
         }
@@ -352,7 +357,7 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 button.sd_setBackgroundImage(with: URL(string:img!), for: .normal, placeholderImage: #imageLiteral(resourceName: "you"), completed: nil)
                 if(button.currentBackgroundImage == #imageLiteral(resourceName: "you")){
                     button.setBackgroundImage(nil, for: .normal)
-                    button.setTitle("\(playerName!.first!)", for: .normal)
+                    button.setTitle("\(playerName!)", for: .normal)
                 }
             }
             userImg.append(button)
@@ -631,17 +636,17 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                     debugPrint(self.playerArray)
                     for i in 0..<holes.count{
                         let hole = Hole()
-                        hole.club = (holes[i] as AnyObject).object(forKey:"club") as! String
+                        hole.club = ((holes[i] as AnyObject).object(forKey:"club") as! String)
                         if let dist = (holes[i] as AnyObject).object(forKey:"distance") as? String{
                             hole.distance = Double(dist)
                             debugPrint(self.currentMatchId!)
                         }else{
-                            hole.distance = (holes[i] as AnyObject).object(forKey:"distance") as! Double
+                            hole.distance = ((holes[i] as AnyObject).object(forKey:"distance") as! Double)
                         }
                         if let spred = (holes[i] as AnyObject).object(forKey:"spread") as? String{
                             hole.spread = Double(spred)
                         }else{
-                            hole.spread = (holes[i] as AnyObject).object(forKey:"spread") as! Double
+                            hole.spread = ((holes[i] as AnyObject).object(forKey:"spread") as! Double)
                         }
 
                         if(Constants.distanceFilter == 1){
@@ -1057,13 +1062,11 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                         let valueArray = keysArray as! NSArray
                         for j in 0..<valueArray.count{
                             let clubData = Club()
-                            let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
-                            if((backSwing) != nil){
-                                clubData.backswing = backSwing as! Double
+                            if let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing") as? Double{
+                                clubData.backswing = backSwing
                             }
-                            let distance = (valueArray[j] as AnyObject).object(forKey: "distance")
-                            if((distance) != nil){
-                                clubData.distance = distance as! Double
+                            if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
+                                clubData.distance = distance
                             }
                             var strokesGained = (valueArray[j] as AnyObject).object(forKey: "strokesGained") as! Double
                             if let strk = (valueArray[j] as AnyObject).object(forKey: Constants.strkGainedString[Constants.skrokesGainedFilter]) as? Double{
@@ -1071,23 +1074,18 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                             }
                             clubData.strokesGained = strokesGained
                             
-                            let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
-                            if((swingScore) != nil){
-                                clubData.swingScore = swingScore as! Double
+                            if let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore") as? Double{
+                                clubData.swingScore = swingScore
                             }
-                            let type = (valueArray[j] as AnyObject).object(forKey: "type")
-                            if((type) != nil){
-                                clubData.type = type as! Int
+                            if let type = (valueArray[j] as AnyObject).object(forKey: "type") as? Int{
+                                clubData.type = type
                             }
-                            let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity")
-                            if((proximity) != nil){
-                                clubData.proximity = proximity as! Double
+                            if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
+                                clubData.proximity = proximity
                             }
-                            let holeout = (valueArray[j] as AnyObject).object(forKey: "holeout")
-                            if((holeout) != nil){
-                                clubData.holeout = holeout as! Double
+                            if let holeout = (valueArray[j] as AnyObject).object(forKey: "holeout") as? Double{
+                                clubData.holeout = holeout
                             }
-                            
                             clubWiseArray.append(clubData)
                             clubDict.append((key,clubData))
                         }
@@ -1607,10 +1605,8 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                 let userDataDic = finalScoreData[i].players
                 for data in userDataDic{
                     for (key,value) in data{
-                        userID = key as! String
+                        userID = (key as! String)
                         let userDataDic = value as! NSDictionary
-//                        print("userID == ", userID)
-//                        print("userData == ", userDataDic)
                         if userID == self.playerArray[j].id {
                             let holeOut = userDataDic.value(forKey: "holeOut") as! Bool
                             if (holeOut){
@@ -1621,19 +1617,20 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
                                     distArray.append(0.0)
                                 }
                                 if let shots = (userDataDic.value(forKey: "shots") as? NSArray){
-                                    let shot = shots[0] as! NSMutableDictionary
-                                    if(finalScoreData[i].par == 3){
-                                        if (shot.value(forKey: "distanceToHole1") as! Double) < 40.0{
+                                    if let shot = shots.firstObject as? NSMutableDictionary{
+                                        if(finalScoreData[i].par == 3){
+                                            if (shot.value(forKey: "distanceToHole1") as! Double) < 40.0{
                                                 distanceToHole.append(shot.value(forKey: "distanceToHole1") as! Double * 3.0)
+                                            }
                                         }
-
                                     }
-                                    let lastShot = shots.lastObject as! NSMutableDictionary
-                                    if(lastShot.value(forKey: "club") as! String == "Pu"){
-                                        putts.append(lastShot.value(forKey: "distance") as! Double)
-                                    }
-                                    else{
-                                        putts.append(0.0)
+                                    if let lastShot = shots.lastObject as? NSMutableDictionary{
+                                        if(lastShot.value(forKey: "club") as! String == "Pu"){
+                                            putts.append(lastShot.value(forKey: "distance") as! Double)
+                                        }
+                                        else{
+                                            putts.append(0.0)
+                                        }
                                     }
                                     count += shots.count
                                     shotArray.add(count)

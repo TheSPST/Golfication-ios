@@ -14,7 +14,6 @@ import FirebaseAuth
 import FirebaseDatabase
 import FirebaseAnalytics
 import UserNotifications
-import CTShowcase
 import GLKit
 import UICircularProgressRing
 import CoreData
@@ -1461,7 +1460,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     func exitWithoutSave(){
         FBSomeEvents.shared.singleParamFBEvene(param: "Discard Game")
-        self.updateFeedNode()
         if(Constants.matchId.count > 1){
             if(Auth.auth().currentUser!.uid.count > 1){
                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
@@ -1504,8 +1502,18 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(Constants.matchId)").removeValue()
         }
         self.sendMatchFinishedNotification()
+        var endingTime = Timestamp
+        if Constants.isEdited{
+            if let player = self.matchDataDict.value(forKeyPath: "player") as? NSDictionary{
+                let data = player.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSDictionary
+                if let etime = data?.value(forKeyPath: "endTimestamp") as? Int64{
+                    endingTime = etime
+                }
+            }
+        }
         if Constants.matchId.count > 1{
             ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
+            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["endTimestamp":endingTime])
             if !Constants.isProMode{
                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["summaryTimer":Timestamp])
             }
@@ -1523,7 +1531,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         self.matchDataDict.setValue(players, forKey: "player")
         Constants.addPlayersArray = NSMutableArray()
-        self.updateFeedNode()
+        self.updateFeedNode(finisedTime : endingTime)
         Constants.isUpdateInfo = true
         if Constants.mode>0{
             Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
@@ -1553,11 +1561,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
     }
-    func updateFeedNode(){
+    func updateFeedNode(finisedTime:Int64){
         let feedDict = NSMutableDictionary()
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
-        feedDict.setObject(self.matchDataDict.value(forKey: "timestamp") as Any, forKey: "timestamp" as NSCopying)
+        feedDict.setObject(finisedTime, forKey: "timestamp" as NSCopying)
         feedDict.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
@@ -2314,7 +2322,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                     self.btnShareShot.isHidden = false
                 }, completion: {(_Bool)->Void in
                     if(!self.isHoleByHole) && (!self.isShowcaseFlag) && (!self.isContinue){
-                        self.showCaseShareShots()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                            self.showCaseShareShots()
+                        })
                         self.isShowcaseFlag = true
                     }
                 })
@@ -2554,8 +2564,26 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             
                         }, completion:{(_ completed: Bool) -> Void in
                             if(!self.isHoleByHole) && (!self.isOnCourse) && (!self.isContinue) && (!self.isShowcase){
-                                self.isShowcase = true
-                                self.showCaseHoleOutShots()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                                    var timerForMiddleMarker = Timer()
+                                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                                        if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && self.shotCount != 0 && (self.dragMarkShowCase == nil){
+                                            if let thePresenter = self.navigationController?.visibleViewController{
+                                                if (thePresenter.isKind(of:NewMapVC.self)){
+                                                    if !self.forTutorial[3]{
+                                                        self.showCaseHoleOutShots()
+                                                        self.isShowcase = true
+                                                        self.forTutorial[0] = true
+                                                        self.forTutorial[1] = true
+                                                        self.forTutorial[2] = true
+                                                        self.forTutorial[3] = true
+                                                    }
+                                                }
+                                            }
+                                            timerForMiddleMarker.invalidate()
+                                        }
+                                    })
+                                })
                             }
                         })
                     }
@@ -2775,8 +2803,21 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 debugPrint("count : \(self.positionsOfCurveLines.count)")
                 if(!isContinue) && (!isHoleByHole) && (!isShowcase) && (!isStopShotCT){
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-                        self.isStopShotCT = true
-                        self.showCaseStopShotsOnCourse()
+                        var timerForMiddleMarker = Timer()
+                        timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                            if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && !self.centerSV.isHidden{
+                                if let thePresenter = self.navigationController?.visibleViewController{
+                                    if (thePresenter.isKind(of:NewMapVC.self)){
+                                        let tutorialCount = UserDefaults.standard.integer(forKey: "OnCourseTutorial")
+                                        if tutorialCount < 2{
+                                            self.isStopShotCT = true
+                                            self.showCaseStopShotsOnCourse()
+                                        }
+                                    }
+                                }
+                                timerForMiddleMarker.invalidate()
+                            }
+                        })
                     })
                 }
             }
@@ -2857,8 +2898,24 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             self.btnHoleoutLbl.isHidden = false
                         }, completion:{(_ completed: Bool) -> Void in
                             if(!self.isHoleByHole) && (!self.isContinue) && (!self.isShowcase){
-                                self.isShowcase = true
-                                self.showCaseHoleOutShotsOnCourse()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                                    var timerForMiddleMarker = Timer()
+                                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                                        if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && !self.centerSV.isHidden{
+                                            if let thePresenter = self.navigationController?.visibleViewController{
+                                                if (thePresenter.isKind(of:NewMapVC.self)){
+                                                    let tutorialCount = UserDefaults.standard.integer(forKey: "OnCourseTutorial")
+                                                    if tutorialCount < 2{
+                                                        self.isShowcase = true
+                                                        self.showCaseHoleOutShotsOnCourse()
+                                                    }
+                                                    
+                                                }
+                                            }
+                                            timerForMiddleMarker.invalidate()
+                                        }
+                                    })
+                                })
                             }
                         })
                     }
@@ -5915,8 +5972,23 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                                     self.btnRestartLbl.isHidden = true
                                     self.btnRestartShot.isHidden = true
                                     if(!self.isHoleByHole) && (!self.isContinue) && (!self.isShowcase){
-                                        self.isShowcase = true
-                                        self.showCaseHoleOutShotsOnCourse()
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                                            var timerForMiddleMarker = Timer()
+                                            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                                                if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && !self.centerSV.isHidden{
+                                                    if let thePresenter = self.navigationController?.visibleViewController{
+                                                        if (thePresenter.isKind(of:NewMapVC.self)){
+                                                            let tutorialCount = UserDefaults.standard.integer(forKey: "OnCourseTutorial")
+                                                            if tutorialCount < 2{
+                                                                self.isShowcase = true
+                                                                self.showCaseHoleOutShotsOnCourse()
+                                                            }
+                                                        }
+                                                    }
+                                                    timerForMiddleMarker.invalidate()
+                                                }
+                                            })
+                                        })
                                     }
                                 }
                             }else{
@@ -6963,10 +7035,33 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if(!isContinue) && (!isHoleByHole){
             if(!isOnCourse){
-                self.showCaseMiddleMarker()
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:NewMapVC.self)){
+                                if !self.forTutorial[0]{
+                                    self.showCaseMiddleMarker()
+                                    self.forTutorial[0] = true
+                                }
+                            }
+                        }
+                        timerForMiddleMarker.invalidate()
+                    }
+                })
             }else{
                 if !self.isDeviceConnected {
-                    self.showCaseClubChangeOnCourse()
+                    var timerForMiddleMarker = Timer()
+                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                        if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil) && !self.centerSV.isHidden{
+                            if let thePresenter = self.navigationController?.visibleViewController{
+                                if (thePresenter.isKind(of:NewMapVC.self)){
+                                    self.showCaseClubChangeOnCourse()
+                                }
+                            }
+                            timerForMiddleMarker.invalidate()
+                        }
+                    })
                 }
 
             }
@@ -7092,51 +7187,52 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.swingData.removeAll()
         self.swingShotArrForCurrentHole.removeAll()
         for swing in swingShotArr{
-            let swing = swing as! NSMutableDictionary
-            var tempArr = [Any]()
-            var backSwingAngle = 0.0
-            if let bckAngle = swing.value(forKey: "backSwingAngle") as? Double{
-                backSwingAngle = bckAngle
-            }
-            let backSwing = swing.value(forKey: "backSwing") as! Double
-            let downSwing = swing.value(forKey: "downSwing") as! Double
-            let clubSpeed = swing.value(forKey: "clubSpeed") as! Double
-            let handSpeed = swing.value(forKey: "handSpeed") as! Double
-            let tempo = swing.value(forKey: "tempo") as! Double
-            let swingScore = swing.value(forKey: "swingScore") as! Int
-            var club = swing.value(forKey: "club") as! String
-            let VCArr : [Int] = [(0),(0),(0),Int(clubSpeed)]
-            let VHArr : [Int] = [(0),(0),(0),Int(handSpeed)]
-            if let holeNum = swing.value(forKey: "holeNum") as? Int{
-                if(holeNum == self.holeIndex+1){
-                    if let pData = self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: self.selectedUserId) as? NSMutableDictionary{
-                        if let shotsArr = pData.value(forKeyPath: "shots") as? [NSMutableDictionary]{
-                            var shotNu = (swing.value(forKey: "shotNum") as! Int)
-                            shotNu = shotNu == 0 ? 1:shotNu
-                            if shotsArr.count >= (shotNu){
-                                club = (shotsArr[shotNu-1].value(forKeyPath: "club") as! String).trim()
+            if let swing = swing as? NSMutableDictionary{
+                var tempArr = [Any]()
+                var backSwingAngle = 0.0
+                if let bckAngle = swing.value(forKey: "backSwingAngle") as? Double{
+                    backSwingAngle = bckAngle
+                }
+                let backSwing = swing.value(forKey: "backSwing") as! Double
+                let downSwing = swing.value(forKey: "downSwing") as! Double
+                let clubSpeed = swing.value(forKey: "clubSpeed") as! Double
+                let handSpeed = swing.value(forKey: "handSpeed") as! Double
+                let tempo = swing.value(forKey: "tempo") as! Double
+                let swingScore = swing.value(forKey: "swingScore") as! Int
+                var club = swing.value(forKey: "club") as! String
+                let VCArr : [Int] = [(0),(0),(0),Int(clubSpeed)]
+                let VHArr : [Int] = [(0),(0),(0),Int(handSpeed)]
+                if let holeNum = swing.value(forKey: "holeNum") as? Int{
+                    if(holeNum == self.holeIndex+1){
+                        if let pData = self.scoring[self.holeIndex].players[self.playerIndex].value(forKey: self.selectedUserId) as? NSMutableDictionary{
+                            if let shotsArr = pData.value(forKeyPath: "shots") as? [NSMutableDictionary]{
+                                var shotNu = (swing.value(forKey: "shotNum") as! Int)
+                                shotNu = shotNu == 0 ? 1:shotNu
+                                if shotsArr.count >= (shotNu){
+                                    club = (shotsArr[shotNu-1].value(forKeyPath: "club") as! String).trim()
+                                }
                             }
                         }
+                        swingShotArrForCurrentHole.append(swing)
                     }
-                    swingShotArrForCurrentHole.append(swing)
-                }
-                if club != "Pu"{
-                    tempArr.append("\(Int(swingScore))")
-                    tempArr.append(VCArr)
-                    tempArr.append("-")
-                    tempArr.append("\(tempo.rounded(toPlaces: 1))")
-                    tempArr.append("\(backSwingAngle)")
-                    tempArr.append(VHArr)
-                    if club == ""{
-                        tempArr.append("Dr")
-                    }else{
-                        tempArr.append(club)
-                    }
-                    
-                    tempArr.append("\(backSwing)")
-                    tempArr.append("\(downSwing)")
-                    if(holeNum == self.holeIndex+1){
-                        self.swingData.append(tempArr)
+                    if club != "Pu"{
+                        tempArr.append("\(Int(swingScore))")
+                        tempArr.append(VCArr)
+                        tempArr.append("-")
+                        tempArr.append("\(tempo.rounded(toPlaces: 1))")
+                        tempArr.append("\(backSwingAngle)")
+                        tempArr.append(VHArr)
+                        if club == ""{
+                            tempArr.append("Dr")
+                        }else{
+                            tempArr.append(club)
+                        }
+                        
+                        tempArr.append("\(backSwing)")
+                        tempArr.append("\(downSwing)")
+                        if(holeNum == self.holeIndex+1){
+                            self.swingData.append(tempArr)
+                        }
                     }
                 }
             }
@@ -7145,263 +7241,266 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // MARK :- OFFCourse Tutorials
     func showCaseMiddleMarker(){
         var label2 = UILabel()
-//        let showCaseTargetLine = CTShowcaseView(title: "", message: "Drag your target marker to get free club recommendations for every shot.".localized(),key:nil){ () -> () in
-//            label2.removeFromSuperview()
-//
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-//                self.showCaseClubChange()
-//            })
-//        }
-//        showCaseTargetLine.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-//        showCaseTargetLine.continueButton.isHidden = false
-//        let highlighterForTargetLine = showCaseTargetLine.highlighter as! CTStaticGlowHighlighter
-//        highlighterForTargetLine.highlightColor = UIColor.glfWhite
-//        highlighterForTargetLine.highlightType = .circle
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-//            if(self.positionsOfDotLine.count > 1){
-//                let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
-//                label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-25, width: 50, height: 50))
-//                self.mapView.addSubview(label2)
-//                showCaseTargetLine.setup(for:label2 , offset: .zero , margin: 5)
-//                var timerForMiddleMarker = Timer()
-//
-//                //                debugPrint(self.view.)
-//                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-//                    if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-//                        if let thePresenter = self.navigationController?.visibleViewController{
-//                            if (thePresenter.isKind(of:NewMapVC.self)){
-//                                if !self.forTutorial[0]{
-//                                    showCaseTargetLine.show()
-//                                    self.forTutorial[0] = true
-//                                }
-//                            }
-//                        }
-//                        timerForMiddleMarker.invalidate()
-//                    }
-//                })
-//            }
-//        })
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                    if(self.positionsOfDotLine.count > 1){
+                    let tutorialCount = UserDefaults.standard.integer(forKey: "OffCourseTutorial")
+                    if(self.positionsOfDotLine.count > 1) && tutorialCount < 2{
                         let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
                         label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-25, width: 50, height: 50))
                         self.mapView.addSubview(label2)
                         let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
                         
                         tapTargetPrompt.action = {
-                            self.forTutorial[0] = true
-                            print("dragged Clicked")
                             label2.removeFromSuperview()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                                self.showCaseClubChange()
+                                var timerForMiddleMarker = Timer()
+                                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                                    if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+                                        if let thePresenter = self.navigationController?.visibleViewController{
+                                            if (thePresenter.isKind(of:NewMapVC.self)){
+                                                if !self.forTutorial[1]{
+                                                    self.forTutorial[0] = true
+                                                    self.forTutorial[1] = true
+                                                    self.showCaseClubChange()
+                                                }
+                                            }
+                                        }
+                                        timerForMiddleMarker.invalidate()
+                                    }
+                                })
+
                             })
                         }
                         tapTargetPrompt.dismissed = {
                             print("view dismissed")
-                            self.forTutorial[0] = true
-                            print("dragged Clicked")
                             label2.removeFromSuperview()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                                self.showCaseClubChange()
+                                var timerForMiddleMarker = Timer()
+                                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                                    if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+                                        if let thePresenter = self.navigationController?.visibleViewController{
+                                            if (thePresenter.isKind(of:NewMapVC.self)){
+                                                if !self.forTutorial[1]{
+                                                    self.forTutorial[0] = true
+                                                    self.forTutorial[1] = true
+                                                    self.showCaseClubChange()
+                                                }
+                                            }
+                                        }
+                                        timerForMiddleMarker.invalidate()
+                                    }
+                                })
+                                
                             })
                         }
-                        tapTargetPrompt.circleColor = UIColor.glfBlack75
+                        tapTargetPrompt.circleColor = UIColor.glfBlack95
                         tapTargetPrompt.primaryText = ""
                         tapTargetPrompt.secondaryText = "Drag your target marker to get free club recommendations for every shot.".localized()
                         tapTargetPrompt.textPostion = .bottomRight
+                        UserDefaults.standard.set(tutorialCount+1, forKey: "OffCourseTutorial")
+                        UserDefaults.standard.synchronize()
+                    }else{
+                        self.forTutorial[0] = true
+                        self.forTutorial[1] = true
+                        self.forTutorial[2] = true
+                        self.forTutorial[3] = true
                     }
                 })
 
     }
     func showCaseClubChange(){
-        let showCaseSelectClub = CTShowcaseView(title: "", message: "This is the club we recommend based on your yardage. Tap to change.".localized(),key:nil){()->() in
+        
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnSelectClubs)
+        
+        tapTargetPrompt.action = {
+            self.btnActionClubSelection(self.btnSelectClubs)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                self.showCaseTrackShots()
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:NewMapVC.self)){
+                                if !self.forTutorial[2]{
+                                    self.showCaseTrackShots()
+                                    self.forTutorial[0] = true
+                                    self.forTutorial[1] = true
+                                    self.forTutorial[2] = true
+                                }
+                            }
+                        }
+                        timerForMiddleMarker.invalidate()
+                    }
+                })
             })
         }
-        showCaseSelectClub.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showCaseSelectClub.continueButton.isHidden = false
-        
-        let highlighterCubChange = showCaseSelectClub.highlighter as! CTStaticGlowHighlighter
-        highlighterCubChange.highlightColor = UIColor.glfWhite
-        showCaseSelectClub.setup(for: self.btnSelectClubs, offset: .zero, margin: 5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            var timerForMiddleMarker = Timer()
-            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-                    if let thePresenter = self.navigationController?.visibleViewController{
-                        if (thePresenter.isKind(of:NewMapVC.self)){
-                            if !self.forTutorial[1]{
-                                showCaseSelectClub.show()
-                                self.forTutorial[0] = true
-                                self.forTutorial[1] = true
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:NewMapVC.self)){
+                                if !self.forTutorial[2]{
+                                    self.showCaseTrackShots()
+                                    self.forTutorial[0] = true
+                                    self.forTutorial[1] = true
+                                    self.forTutorial[2] = true
+                                }
                             }
                         }
+                        timerForMiddleMarker.invalidate()
                     }
-                    timerForMiddleMarker.invalidate()
-                }
+                })
             })
-        })
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "This is the club we recommend based on your yardage. Tap to change.".localized()
+        tapTargetPrompt.textPostion = .topRight
     }
     func showCaseTrackShots(){
-        let showcaseTrackShots = CTShowcaseView(title: "", message: "Tap to record this shot.".localized(),key:nil){()->() in}
-        showcaseTrackShots.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showcaseTrackShots.continueButton.isHidden = false
-        let highlightTrackShot = showcaseTrackShots.highlighter as! CTStaticGlowHighlighter
-        highlightTrackShot.highlightColor = UIColor.glfWhite
-        showcaseTrackShots.setup(for: self.btnTrackShot, offset: .zero, margin: 5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            var timerForMiddleMarker = Timer()
-            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-                    if let thePresenter = self.navigationController?.visibleViewController{
-                        if (thePresenter.isKind(of:NewMapVC.self)){
-                            if !self.forTutorial[2]{
-                                showcaseTrackShots.show()
-                                self.forTutorial[0] = true
-                                self.forTutorial[1] = true
-                                self.forTutorial[2] = true
-                            }
-                        }
-                    }
-                    timerForMiddleMarker.invalidate()
-                }
-            })
-        })
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnTrackShot)
+        
+        tapTargetPrompt.action = {
+            self.btnActionTrackShots(self.btnTrackShot)
+            print("dragged Clicked")
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Tap to record this shot.".localized()
+        tapTargetPrompt.textPostion = .topLeft
     }
     func showCaseHoleOutShots(){
-        let showCaseHoleOut = CTShowcaseView(title: "", message: "Use the hole-out button to complete this hole and view score.".localized(),key:nil){()->() in}
-        showCaseHoleOut.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showCaseHoleOut.continueButton.isHidden = false
-        let highlighterHoleOut = showCaseHoleOut.highlighter as! CTStaticGlowHighlighter
-        highlighterHoleOut.highlightColor = UIColor.glfWhite
-        showCaseHoleOut.setup(for: self.btnHoleOut, offset: .zero, margin: 5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            var timerForMiddleMarker = Timer()
-            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && self.shotCount != 0 && (self.dragMarkShowCase == nil){
-                    if let thePresenter = self.navigationController?.visibleViewController{
-                        if (thePresenter.isKind(of:NewMapVC.self)){
-                            if !self.forTutorial[3]{
-                                showCaseHoleOut.show()
-                                self.forTutorial[0] = true
-                                self.forTutorial[1] = true
-                                self.forTutorial[2] = true
-                                self.forTutorial[3] = true
-                            }
-                        }
-                    }
-                    timerForMiddleMarker.invalidate()
-                }
-            })
-        })
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnHoleOut)
+        tapTargetPrompt.action = {
+            self.btnActionHoleOut(self.btnHoleOut)
+            print("dragged Clicked")
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Use the hole-out button to complete this hole and view score.".localized()
+        tapTargetPrompt.textPostion = .topLeft
     }
     func showCaseShareShots(){
-        let showcaseShareShots = CTShowcaseView(title: "", message: "Share your hole and stats with friends on Golfication or social media.".localized(),key:nil){()->() in}
-        showcaseShareShots.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showcaseShareShots.continueButton.isHidden = false
-        let highlightShareStats = showcaseShareShots.highlighter as! CTStaticGlowHighlighter
-        highlightShareStats.highlightColor = UIColor.glfWhite
-        showcaseShareShots.setup(for: self.btnShareHoleStats, offset: .zero, margin: 5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-            if let thePresenter = self.navigationController?.visibleViewController{
-                if (thePresenter.isKind(of:NewMapVC.self)){
-                    showcaseShareShots.show()
-                }
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnShareHoleStats)
+        tapTargetPrompt.action = {
+            self.btnActionShareHoleStats(self.btnShareHoleStats)
+            if !self.forTutorial[3]{
+                self.forTutorial[0] = true
+                self.forTutorial[1] = true
+                self.forTutorial[2] = true
+                self.forTutorial[3] = true
             }
-            
-        })
+            print("dragged Clicked")
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+            if !self.forTutorial[3]{
+                self.forTutorial[0] = true
+                self.forTutorial[1] = true
+                self.forTutorial[2] = true
+                self.forTutorial[3] = true
+            }
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Share your hole and stats with friends on Golfication or social media.".localized()
+        tapTargetPrompt.textPostion = .topRight
     }
     // MARK:- ONCourse Tutorial
     func showCaseClubChangeOnCourse(){
-        let showCaseSelectClub = CTShowcaseView(title: "", message: "This is the club we recommend based on your yardage. Tap to change.".localized(),key:nil){()->() in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                self.showCaseTrackShotsOnCourse()
-            })
-        }
-        showCaseSelectClub.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showCaseSelectClub.continueButton.isHidden = false
-        let highlighterCubChange = showCaseSelectClub.highlighter as! CTStaticGlowHighlighter
-        highlighterCubChange.highlightColor = UIColor.glfWhite
-        showCaseSelectClub.setup(for: self.btnSelectClubs, offset: .zero, margin: 5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            var timerForMiddleMarker = Timer()
-            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil) && !self.centerSV.isHidden{
-                    if let thePresenter = self.navigationController?.visibleViewController{
-                        if (thePresenter.isKind(of:NewMapVC.self)){
-                            showCaseSelectClub.show()
+        let tutorialCount = UserDefaults.standard.integer(forKey: "OnCourseTutorial")
+        if tutorialCount < 2{
+            let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnSelectClubs)
+            tapTargetPrompt.action = {
+                self.btnActionClubSelection(self.btnSelectClubs)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                    var timerForMiddleMarker = Timer()
+                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                        if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil) && !self.centerSV.isHidden{
+                            if let thePresenter = self.navigationController?.visibleViewController{
+                                if (thePresenter.isKind(of:NewMapVC.self)){
+                                    self.showCaseTrackShotsOnCourse()
+                                }
+                            }
+                            timerForMiddleMarker.invalidate()
                         }
-                    }
-                    timerForMiddleMarker.invalidate()
-                }
-            })
-        })
+                    })
+                })
+            }
+            tapTargetPrompt.dismissed = {
+                print("view dismissed")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                    var timerForMiddleMarker = Timer()
+                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                        if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil) && !self.centerSV.isHidden{
+                            if let thePresenter = self.navigationController?.visibleViewController{
+                                if (thePresenter.isKind(of:NewMapVC.self)){
+                                    self.showCaseTrackShotsOnCourse()
+                                }
+                            }
+                            timerForMiddleMarker.invalidate()
+                        }
+                    })
+                })
+            }
+            tapTargetPrompt.circleColor = UIColor.glfBlack95
+            tapTargetPrompt.primaryText = ""
+            tapTargetPrompt.secondaryText = "This is the club we recommend based on your yardage. Tap to change.".localized()
+            tapTargetPrompt.textPostion = .topRight
+            UserDefaults.standard.set(tutorialCount+1, forKey: "OnCourseTutorial")
+            UserDefaults.standard.synchronize()
+        }
     }
     func showCaseTrackShotsOnCourse(){
-        let showcaseTrackShots = CTShowcaseView(title: "", message: "Tap here to tee-off from your current GPS location.".localized(),key:nil){()->() in}
-        showcaseTrackShots.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showcaseTrackShots.continueButton.isHidden = false
-        let highlightTrackShot = showcaseTrackShots.highlighter as! CTStaticGlowHighlighter
-        highlightTrackShot.highlightColor = UIColor.glfWhite
-        showcaseTrackShots.setup(for: self.btnTrackShot, offset: .zero, margin: 5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            var timerForMiddleMarker = Timer()
-            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil) && !self.centerSV.isHidden{
-                    if let thePresenter = self.navigationController?.visibleViewController{
-                        if (thePresenter.isKind(of:NewMapVC.self)){
-                            showcaseTrackShots.show()
-                        }
-                    }
-                    
-                    timerForMiddleMarker.invalidate()
-                }
-            })
-        })
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnTrackShot)
+        
+        tapTargetPrompt.action = {
+            self.btnActionTrackShots(self.btnTrackShot)
+            print("dragged Clicked")
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Tap here to tee-off from your current GPS location.".localized()
+        tapTargetPrompt.textPostion = .topLeft
     }
     func showCaseStopShotsOnCourse(){
-        let showcaseTrackShots = CTShowcaseView(title: "", message: "When you reach the location of the ball, tap here to stop tracking this shot.".localized(),key:nil){()->() in}
-        showcaseTrackShots.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showcaseTrackShots.continueButton.isHidden = false
-        let highlightTrackShot = showcaseTrackShots.highlighter as! CTStaticGlowHighlighter
-        highlightTrackShot.highlightColor = UIColor.glfWhite
-        showcaseTrackShots.setup(for: self.btnTrackShot, offset: .zero, margin: 5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            var timerForMiddleMarker = Timer()
-            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && !self.centerSV.isHidden{
-                    if let thePresenter = self.navigationController?.visibleViewController{
-                        if (thePresenter.isKind(of:NewMapVC.self)){
-                            showcaseTrackShots.show()
-                        }
-                    }
-                    timerForMiddleMarker.invalidate()
-                }
-            })
-        })
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnTrackShot)
+        
+        tapTargetPrompt.action = {
+            self.btnActionTrackShots(self.btnTrackShot)
+            print("dragged Clicked")
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "When you reach the location of the ball, tap here to stop tracking this shot.".localized()
+        tapTargetPrompt.textPostion = .topLeft
     }
     func showCaseHoleOutShotsOnCourse(){
-        let showCaseHoleOut = CTShowcaseView(title: "", message: "Use the hole-out button to complete this hole and view score.".localized(),key:nil){()->() in}
-        showCaseHoleOut.continueButton.setTitle("Ok, Got it.".localized(), for: .normal)
-        showCaseHoleOut.continueButton.isHidden = false
-        let highlighterHoleOut = showCaseHoleOut.highlighter as! CTStaticGlowHighlighter
-        highlighterHoleOut.highlightColor = UIColor.glfWhite
-        showCaseHoleOut.setup(for: self.btnHoleOut, offset: .zero, margin: 5)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-            var timerForMiddleMarker = Timer()
-            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && !self.centerSV.isHidden{
-                    if let thePresenter = self.navigationController?.visibleViewController{
-                        if (thePresenter.isKind(of:NewMapVC.self)){
-                            showCaseHoleOut.show()
-                        }
-                    }
-                    timerForMiddleMarker.invalidate()
-                }
-            })
-        })
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnHoleOut)
+        tapTargetPrompt.action = {
+            self.btnActionHoleOut(self.btnHoleOut)
+            print("dragged Clicked")
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Use the hole-out button to complete this hole and view score.".localized()
+        tapTargetPrompt.textPostion = .topLeft
     }
     
     @objc func buttonAction(sender: UIButton!) {

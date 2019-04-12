@@ -352,7 +352,7 @@ class GolfBagEditPopUpData: NSObject {
                 break
             case "Sw":
                 //51-61
-                selectedLength = "\(35.0*inchToCM).rounded())"
+                selectedLength = "\((35.0*inchToCM).rounded())"
                 break
             case "Gw":
                 //47-57

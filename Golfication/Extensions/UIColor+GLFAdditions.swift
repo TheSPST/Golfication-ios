@@ -104,7 +104,9 @@ extension UIColor {
     @nonobjc class var glfBlack75: UIColor {
         return UIColor(white: 0.0, alpha: 0.75)
     }
-    
+    @nonobjc class var glfBlack95: UIColor {
+        return UIColor(white: 0.0, alpha: 0.95)
+    }
     @nonobjc class var glfPaleTeal: UIColor {
         return UIColor(red: 127.0 / 255.0, green: 196.0 / 255.0, blue: 177.0 / 255.0, alpha: 1.0)
     }

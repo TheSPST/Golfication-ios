@@ -788,8 +788,12 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
                 clubWithAllDistance[i].arr.removeFirst(remove)
                 clubWithAllDistance[i].arr.removeLast(remove)
                 for j in 0..<Constants.clubWithMaxMin.count where Constants.clubWithMaxMin[j].name == clubWithAllDistance[i].club{
-                    Constants.clubWithMaxMin[j].max  = Int(clubWithAllDistance[i].arr.max()!)
-                    Constants.clubWithMaxMin[j].min  = Int(clubWithAllDistance[i].arr.min()!)
+                    if Constants.clubWithMaxMin[j].max < Int(clubWithAllDistance[i].arr.max()!)+40{
+                       Constants.clubWithMaxMin[j].max = Int(clubWithAllDistance[i].arr.max()!)
+                    }
+                    if Constants.clubWithMaxMin[j].min > Int(clubWithAllDistance[i].arr.min()!)-40{
+                        Constants.clubWithMaxMin[j].min  = Int(clubWithAllDistance[i].arr.min()!)
+                    }
                 }
             }
         }
@@ -3129,11 +3133,11 @@ extension NewHomeVC:CLLocationManagerDelegate{
 //        self.locationManager.startUpdatingLocation()
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-        let userLocation = locations.last!
-        let userLocationForClub = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
-
-        if Constants.matchId.isEmpty{
-            self.getNearByData(latitude: userLocationForClub.latitude, longitude: userLocationForClub.longitude, currentLocation: userLocation)
+        if let userLocation = locations.last{
+            let userLocationForClub = CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)
+            if Constants.matchId.isEmpty{
+                self.getNearByData(latitude: userLocationForClub.latitude, longitude: userLocationForClub.longitude, currentLocation: userLocation)
+            }
         }
     }
     func getNearByData(latitude: Double, longitude: Double,currentLocation: CLLocation){
@@ -3178,8 +3182,9 @@ extension NewHomeVC:CLLocationManagerDelegate{
                         dataArr = BackgroundMapStats.sortAndShow(searchDataArr: dataArr, myLocation: currentLocation)
                         let golfName = (dataArr[0].value(forKey: "Name") as? String) ?? ""
                         let golfDistance = (dataArr[0].value(forKey: "Distance") as? Double) ?? 0.0
-                        
-                        ref.child("userData/\(Auth.auth().currentUser!.uid)/nearByGolfClub").updateChildValues(["\(Timestamp)":golfDistance])
+                        if Auth.auth().currentUser?.uid != nil{
+                            ref.child("userData/\(Auth.auth().currentUser!.uid)/nearByGolfClub").updateChildValues(["\(Timestamp)":golfDistance])
+                        }
                         if golfDistance < 1500.0 && golfName != ""{
                             UserDefaults.standard.set(golfName, forKey: "NearByGolfClub")
                             UserDefaults.standard.synchronize()

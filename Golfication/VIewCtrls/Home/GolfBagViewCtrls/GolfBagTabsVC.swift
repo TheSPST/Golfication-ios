@@ -385,9 +385,10 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
 
         selectedLengthArr = golfBagEditPopUpData.getClubLengthArray(clubName: self.selectedBagStr)
         selectedLength = golfBagEditPopUpData.selectedLength
-        lblLength.text = selectedLength + " Inches"
+        debugPrint("selected",self.selectedLength)
+        lblLength.text = selectedLength + " Inch"
         if Constants.distanceFilter == 1{
-            lblLength.text = selectedLength + " cms"
+            lblLength.text = selectedLength + " cm"
         }
         debugPrint("selectedLengthArr", selectedLengthArr)
 
@@ -398,9 +399,6 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
 
         Constants.syncdArray = NSMutableArray()
         bagMArray = NSMutableArray()
-        
-//        self.editView.isHidden = false
-//        self.defaultView.isHidden = true
         
         self.progressView.show(atView: self.scrlView, navItem: self.navigationItem)
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in
@@ -515,9 +513,9 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         }
                         if let clubLength = dict.value(forKey: "clubLength") as? String{
                             if clubLength != ""{
-                                self.lblLengthValue.text = clubLength + " Inches"
+                                self.lblLengthValue.text = clubLength + " Inch"
                                 if Constants.distanceFilter == 1{
-                                    self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cms"
+                                    self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cm"
                                 }
                             }
                         }
@@ -546,10 +544,12 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         if let clubLength = dict.value(forKey: "clubLength") as? String{
                             if clubLength != "" && clubLength != "43"{
                                 self.selectedLength = clubLength
-                                self.lblLength.text = self.selectedLength + " Inches"
+                                debugPrint("self.selectedLength",self.selectedLength)
+                                self.lblLength.text = self.selectedLength + " Inch"
                                 if Constants.distanceFilter == 1{
                                     self.selectedLength = "\((Double(clubLength)! * 2.54).rounded())"
-                                    self.lblLength.text = self.selectedLength + " cms"
+                                    debugPrint("self.selectedLength",self.selectedLength)
+                                    self.lblLength.text = self.selectedLength + " cm"
                                 }
                             }
                         }
@@ -655,14 +655,15 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         for i in 0..<selectedLengthArr.count{
             if selectedLengthArr[i] == selectedLength{
                 
-            var unit = " Inches"
+            var unit = " Inch"
             if Constants.distanceFilter == 1{
-                unit = " cms"
+                unit = " cm"
             }
         ActionSheetStringPicker.show(withTitle: "Club Length in\(unit)", rows: selectedLengthArr, initialSelection: i, doneBlock: {
             picker, value, index in
             
             self.selectedLength = "\(index!)"
+            debugPrint(self.selectedLength)
             self.lblLength.text = self.selectedLength + unit
 
             if value == 0 {
@@ -1179,9 +1180,9 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         self.lblAvgDistanceValue.text = "\(avgDistance)"
                     }
                     if let clubLength = dict.value(forKey: "clubLength") as? String, dict.value(forKey: "clubLength") as! String != ""{
-                        self.lblLengthValue.text = clubLength + " Inches"
+                        self.lblLengthValue.text = clubLength + " Inch"
                         if Constants.distanceFilter == 1{
-                            self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cms"
+                            self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cm"
                         }
                     }
                     break
@@ -1288,9 +1289,9 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                             self.lblAvgDistanceValue.text = "\(avgDistance)"
                         }
                         if let clubLength = dict.value(forKey: "clubLength") as? String, dict.value(forKey: "clubLength") as! String != ""{
-                            self.lblLengthValue.text = clubLength + " Inches"
+                            self.lblLengthValue.text = clubLength + " Inch"
                             if Constants.distanceFilter == 1{
-                                self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cms"
+                                self.lblLengthValue.text = "\((Double(clubLength)! * 2.54).rounded())" + " cm"
                             }
                         }
                         break

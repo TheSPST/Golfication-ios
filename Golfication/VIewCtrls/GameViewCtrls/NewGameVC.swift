@@ -92,7 +92,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     @IBOutlet weak var eddieView: EddieView!
     var barBtnBLE: UIBarButtonItem!
-    
+    var barBtnDropDown: UIBarButtonItem!
+
     let imagePicker = UIImagePickerController()
     var cameraBtn: UIButton!
     var requestSFPopupView: UIView!
@@ -291,6 +292,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         NotificationCenter.default.addObserver(self, selector: #selector(self.ScanningTimeOut(_:)), name: NSNotification.Name(rawValue: "Scanning_Time_Out"), object: nil)
         
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+        barBtnDropDown.image = UIImage(named: "menu_black")!
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         self.golfXPopupView = (Bundle.main.loadNibNamed("ScanningGolfX", owner: self, options: nil)![0] as! UIView)
         self.golfXPopupView.frame = self.view.bounds
@@ -309,6 +311,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        FTPopOverMenu.dismiss()
+
         self.reqTimeOutTimer.invalidate()
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DefaultMapApiCompleted"))
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "DiscardCancel"))
@@ -367,6 +371,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.btnRetry.isHidden = false
         self.btnNoDevice.isHidden = false
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+        barBtnDropDown.image = UIImage(named: "menu_black")!
+
         Constants.ble.stopScanning()
         
         var swingK = String()
@@ -431,6 +437,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     func updateScreenBLE(){
         self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBar")
+        barBtnDropDown.image = UIImage(named: "menu_black")!
+
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         self.view.makeToast("Device is connected.")
         
@@ -551,9 +559,14 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         btnGir.setCornerWithRadius(color: UIColor.glfWarmGrey.cgColor, radius: 5.0)
         btnGir.setTitleColor(UIColor.glfWarmGrey, for: .normal)
         // for Bluetooth device setup
+        
         barBtnBLE = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(self.golfXAction))
         barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
-        self.navigationItem.rightBarButtonItem = barBtnBLE
+        
+        barBtnDropDown = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(supportAction(_:event:)))
+        barBtnDropDown.image = UIImage(named: "menu_black")!
+        self.navigationItem.rightBarButtonItems = [barBtnDropDown, barBtnBLE]
+        
         self.startingTeeCardView.isHidden = true
         self.stblfordRulesLabel.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(completeDeviceSetup(_:)), name: NSNotification.Name(rawValue: "setupDevice"), object: nil)
@@ -599,6 +612,20 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         getHomeCourse()
     }
+    
+    @objc func supportAction(_ sender: UIBarButtonItem,  event: UIEvent) {
+        
+        FTPopOverMenu.show(from: event, withMenu: ["Contact Support"], imageNameArray: ["support"], doneBlock: { (selectedIndex) in
+            
+            let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "SupportVC") as! SupportVC
+            let navCtrl = UINavigationController(rootViewController: viewCtrl)
+            self.present(navCtrl, animated: true, completion: nil)
+        })
+        {
+            debugPrint("Dismissed")
+        }
+    }
+    
     @IBAction func goalInfoAction(_ sender: Any) {
         FBSomeEvents.shared.singleParamFBEvene(param: "Click NG Goals Info")
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "StatsInfoVC") as! StatsInfoVC
@@ -800,15 +827,18 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         // ------------------------ end -------------------------------------------
         
         if Constants.isDevice{
-            self.navigationItem.rightBarButtonItem = barBtnBLE
-            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
             
+            self.navigationItem.rightBarButtonItems = [barBtnDropDown, barBtnBLE]
+            barBtnDropDown.image = UIImage(named: "menu_black")!
+            self.barBtnBLE.image = #imageLiteral(resourceName: "golficationBarG")
+
             if(Constants.deviceGolficationX != nil){
                 updateScreenBLE()
             }
         }
         else{
-            self.navigationItem.rightBarButtonItem = nil
+            self.navigationItem.rightBarButtonItems = [barBtnDropDown]
+            barBtnDropDown.image = UIImage(named: "menu_black")!
         }
     }
     
@@ -1575,7 +1605,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 self.playGolfXView.isHidden = true
                                 self.mappingGolfXView.isHidden = false
                                 self.lblLegacyAppMode.isHidden = true
-                                self.navigationItem.rightBarButtonItem = nil
+                                
+                                self.navigationItem.rightBarButtonItems = [self.barBtnDropDown]
+                                self.barBtnDropDown.image = UIImage(named: "menu_black")!
+
                                 self.playOnCourseAction(self.btnPlayOnCourse)
                                 FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourseRequest/\(Auth.auth().currentUser!.uid)") { (snapshot) in
                                     var dataDic = NSDictionary()
@@ -1602,13 +1635,16 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                     self.golficationXView.isHidden = false
                                     self.playGolfXAction(self.btnPlayGolfX)
                                     self.playGolfXView.isHidden = false
-                                    self.navigationItem.rightBarButtonItem = self.barBtnBLE
+                                    
+                                    self.navigationItem.rightBarButtonItems = [self.barBtnDropDown, self.barBtnBLE]
                                 }
                                 else{
                                     self.lblLegacyAppMode.isHidden = true
                                     self.golficationXView.isHidden = true
                                     self.playGolfXView.isHidden = true
-                                    self.navigationItem.rightBarButtonItem = nil
+                                    self.navigationItem.rightBarButtonItems = [self.barBtnDropDown]
+                                    self.barBtnDropDown.image = UIImage(named: "menu_black")!
+
                                     self.playOnCourseAction(self.btnPlayOnCourse)
                                 }
                                 self.mappingGolfXView.isHidden = true
@@ -1621,7 +1657,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 self.mappingGolfXView.isHidden = false
                                 self.lblLegacyAppMode.isHidden = true
                                 self.golficationXView.isHidden = !Constants.isDevice
-                                self.navigationItem.rightBarButtonItem = nil
+                                self.navigationItem.rightBarButtonItems = [self.barBtnDropDown]
+                                self.barBtnDropDown.image = UIImage(named: "menu_black")!
+
                                 FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "unmappedCourseRequest/\(Auth.auth().currentUser!.uid)") { (snapshot) in
                                     var dataDic = NSDictionary()
                                     if(snapshot.childrenCount > 0){
@@ -1645,7 +1683,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                 self.lblLegacyAppMode.isHidden = true
                                 self.golficationXView.isHidden = true
                                 self.playGolfXView.isHidden = true
-                                self.navigationItem.rightBarButtonItem = nil
+                                self.navigationItem.rightBarButtonItems = [self.barBtnDropDown]
+                                self.barBtnDropDown.image = UIImage(named: "menu_black")!
+
                                 self.mappingGolfXView.isHidden = true
                             }
                             self.playOnCourseAction(self.btnPlayOnCourse)
@@ -2251,7 +2291,9 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
     @objc func continueCourseData(_ notification: NSNotification) {
-        Constants.ble.courseData = self.courseData
+        if Constants.ble != nil{
+            Constants.ble.courseData = self.courseData
+        }
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "continueCourseData"), object: nil)
     }
     @objc func defaultMapApiCompleted(_ notification: NSNotification) {
@@ -2819,9 +2861,18 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(Constants.matchId)").removeValue()
         }
         self.sendMatchFinishedNotification()
-        
+        var endingTime = Timestamp
+        if Constants.isEdited{
+            if let player = Constants.matchDataDic.value(forKeyPath: "player") as? NSDictionary{
+                let data = player.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSDictionary
+                if let etime = data?.value(forKeyPath: "endTimestamp") as? Int64{
+                    endingTime = etime
+                }
+            }
+        }
         if(Auth.auth().currentUser!.uid.count>1) &&  (Constants.matchId.count > 1){
             ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
+            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["endTimestamp":endingTime])
             if !Constants.isProMode && Constants.mode == 1{
                 ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["summaryTimer":Timestamp])
             }
@@ -2835,7 +2886,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 btnPlayerArray[i].setTitle("+", for: .normal)
             }
         }
-        self.updateFeedNode()
+        self.updateFeedNode(finisedTime : endingTime)
         Constants.isUpdateInfo = true
         if Constants.mode>0{
             Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
@@ -2857,11 +2908,11 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.setActiveMatchUI()
     }
     
-    func updateFeedNode(){
+    func updateFeedNode(finisedTime:Int64){
         let feedDict = NSMutableDictionary()
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
-        feedDict.setObject(Timestamp, forKey: "timestamp" as NSCopying)
+        feedDict.setObject(finisedTime, forKey: "timestamp" as NSCopying)
         feedDict.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()

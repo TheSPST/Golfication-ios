@@ -86,6 +86,12 @@ class ProfileVC: UIViewController, BluetoothDelegate {
     var bluetoothStatus: Bool!
     var bluetoothMessage = String()
 
+    @IBAction func supportAction(_ sender: UIButton) {
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "SupportVC") as! SupportVC
+        let navCtrl = UINavigationController(rootViewController: viewCtrl)
+        self.present(navCtrl, animated: true, completion: nil)
+    }
+
     // MARK: editProfileAction
     @IBAction func editProfileAction(_ sender: Any){
 

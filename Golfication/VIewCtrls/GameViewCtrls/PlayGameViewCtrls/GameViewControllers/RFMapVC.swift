@@ -111,6 +111,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     
     @IBOutlet weak var gpsBtn: UIButton!
     @IBOutlet weak var farFromTheHoleView : FarFromTheHole!
+    @IBOutlet weak var bottomDistance: NSLayoutConstraint!
+    
+    
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
     var buttonsArrayForGIR = [UIButton]()
@@ -128,6 +131,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     var gameTypeIndex = Int()
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
 
+    @IBOutlet weak var lblSiriHeading: UILocalizedLabel!
+    @IBOutlet weak var lblIfYou: UILabel!
+    
+    @IBOutlet weak var lblFront: UILocalizedLabel!
+    @IBOutlet weak var lblCenter: UILocalizedLabel!
+    @IBOutlet weak var lblBack: UILocalizedLabel!
     // Header IBOutlets
     @IBOutlet weak var backBtnHeader: UIButton!
     // WindRelated IBOutlests
@@ -643,7 +652,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     func exitWithoutSave(){
         FBSomeEvents.shared.singleParamFBEvene(param: "Discard Game")
-        self.updateFeedNode()
         if(matchId.count > 1){
             if(Auth.auth().currentUser!.uid.count > 1){
                 ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
@@ -672,11 +680,21 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             ref.child("userData/\(Auth.auth().currentUser?.uid ?? "user1")/activeMatches/\(matchId)").removeValue()
         }
         self.sendMatchFinishedNotification()
+        var endingTime = Timestamp
+        if Constants.isEdited{
+            if let player = Constants.matchDataDic.value(forKeyPath: "player") as? NSDictionary{
+                let data = player.value(forKey: "\(Auth.auth().currentUser!.uid)") as? NSDictionary
+                if let etime = data?.value(forKeyPath: "endTimestamp") as? Int64{
+                    endingTime = etime
+                }
+            }
+        }
         if(Auth.auth().currentUser!.uid.count>1) &&  (matchId.count > 1){
             ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":4])
+            ref.child("matchData/\(matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["endTimestamp":endingTime])
         }
         Constants.addPlayersArray = NSMutableArray()
-        self.updateFeedNode()
+        self.updateFeedNode(finisedTime : endingTime)
         Constants.isUpdateInfo = true
         if Constants.mode>0{
             Analytics.logEvent("mode\(Constants.mode)_game_completed", parameters: [:])
@@ -705,11 +723,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }
         }
     }
-    func updateFeedNode(){
+    func updateFeedNode(finisedTime:Int64){
         let feedDict = NSMutableDictionary()
         feedDict.setObject(Auth.auth().currentUser?.displayName as Any, forKey: "userName" as NSCopying)
         feedDict.setObject(Auth.auth().currentUser?.uid as Any, forKey: "userKey" as NSCopying)
-        feedDict.setObject(matchDataDic.value(forKey: "timestamp") as Any, forKey: "timestamp" as NSCopying)
+        feedDict.setObject(finisedTime, forKey: "timestamp" as NSCopying)
         feedDict.setObject(matchId, forKey: "matchKey" as NSCopying)
         feedDict.setObject("2", forKey: "type" as NSCopying)
         var imagUrl = String()
@@ -1037,6 +1055,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             btnPrev.isHidden = true
 //            btnPlayerStats.isHidden = true
             self.btnEditShots.isHidden = true
+            self.lblEditShotNumber.isHidden = true
             scrlHConstraint.constant = 0
             UIView.animate(withDuration: 0.3, animations: {
                 self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
@@ -1050,6 +1069,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             isScoreDetailExpended = false
             isScoreTapped = false
             self.btnEditShots.isHidden = false
+            self.lblEditShotNumber.isHidden = false
             sender.tag = 0
             scoreSecondSV.isHidden = true
 //            btnPlayerStats.isHidden = false
@@ -1511,9 +1531,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         swipeUp.addTarget(self, action: #selector(self.swipedViewUp))
         btnPlayerStats.addGestureRecognizer(swipeUp)
 
-        swipeDown.direction = UISwipeGestureRecognizerDirection.down
-        swipeDown.addTarget(self, action: #selector(self.swipedViewDown))
-        scrlView.addGestureRecognizer(swipeDown)
+//        swipeDown.direction = UISwipeGestureRecognizerDirection.down
+//        swipeDown.addTarget(self, action: #selector(self.swipedViewDown))
+//        scrlView.addGestureRecognizer(swipeDown)
 
         swipeHeaderUp.direction = UISwipeGestureRecognizerDirection.up
         swipeHeaderUp.addTarget(self, action: #selector(self.swipedViewHeaderUp))
@@ -1565,8 +1585,63 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         self.detailScoreSV.isHidden = true
         
+        let quote = "If you have your earphones, next time just say "
+        let qoute2 = "\"What's the distance\""
+        if UIDevice.current.iPhoneX || UIDevice.current.iPhonePlus || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
+            self.bottomDistance.constant = 50
+            self.lblBackElev.font = self.lblBackElev.font.withSize(70)
+            self.lblCenterElev.font = self.lblCenterElev.font.withSize(80)
+            self.lblFrontElev.font = self.lblFrontElev.font.withSize(70)
+            self.lblSiriHeading.font = self.lblSiriHeading.font.withSize(24)
+            
+            self.lblFront.font = self.lblFront.font.withSize(17)
+            self.lblBack.font = self.lblBack.font.withSize(17)
+            self.lblFront.font = self.lblFront.font.withSize(17)
+            
+            self.lblFrontDist.font = self.lblFrontDist.font.withSize(17)
+            self.lblCenterDist.font = self.lblCenterDist.font.withSize(17)
+            self.lblEndDist.font = self.lblEndDist.font.withSize(17)
+            
+            let attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 16)]
+            let attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Italic", size: 16)]
+            let attributedText = NSMutableAttributedString()
+            let attributedQuote = NSAttributedString(string: quote, attributes: attributes as [NSAttributedStringKey : Any])
+            let attributedQuote2 = NSAttributedString(string: qoute2, attributes: attributes2 as [NSAttributedStringKey : Any])
+            attributedText.append(attributedQuote)
+            attributedText.append(attributedQuote2)
+            self.lblIfYou.attributedText = attributedText
+        }
+        else if UIDevice.current.iPhone5{
+            self.bottomDistance.constant = 8
+            self.lblBackElev.font = self.lblBackElev.font.withSize(40)
+            self.lblCenterElev.font = self.lblCenterElev.font.withSize(50)
+            self.lblFrontElev.font = self.lblFrontElev.font.withSize(40)
+            self.lblSiriHeading.font = self.lblSiriHeading.font.withSize(18)
+            
+            self.lblFront.font = self.lblFront.font.withSize(12)
+            self.lblBack.font = self.lblBack.font.withSize(12)
+            self.lblFront.font = self.lblFront.font.withSize(12)
+            
+            self.lblFrontDist.font = self.lblFrontDist.font.withSize(12)
+            self.lblCenterDist.font = self.lblCenterDist.font.withSize(12)
+            self.lblEndDist.font = self.lblEndDist.font.withSize(12)
+            
+            let attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 11)]
+            let attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Italic", size: 11)]
+            let attributedText = NSMutableAttributedString()
+            let attributedQuote = NSAttributedString(string: quote, attributes: attributes as [NSAttributedStringKey : Any])
+            let attributedQuote2 = NSAttributedString(string: quote, attributes: attributes2 as [NSAttributedStringKey : Any])
+            attributedText.append(attributedQuote)
+            attributedText.append(attributedQuote2)
+            self.lblIfYou.attributedText = attributedText
+            
+        }
         setInitialUI()
-        
+    }
+    @IBAction func supportAction(_ sender: UIButton) {
+        let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "SupportVC") as! SupportVC
+        let navCtrl = UINavigationController(rootViewController: viewCtrl)
+        self.present(navCtrl, animated: true, completion: nil)
     }
     @objc func unlockEddie(_ sender: UIButton){
         FBSomeEvents.shared.singleParamFBEvene(param: "Click Rangefinder Pulldown Eddie")
@@ -2279,7 +2354,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.btnScore.setTitle("\(classicScoring.strokesCount!)", for: .normal)
             self.scoreSV.isHidden = true
             self.scoreSV2.isHidden = false
-            lblEditShotNumber.isHidden = self.scrlView.isHidden ? true:false
+            lblEditShotNumber.isHidden = !self.scrlView.isHidden ? true:false
             lblEditShotNumber.text = " \(classicScoring.strokesCount!) "
 //            self.lblStblScore.text = "\(self.classicScoring.strokesCount!)"
 //            self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
@@ -2719,7 +2794,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 self.positionsOfDotLine.append(self.userLocationForClub!)
                 self.gpsBtn.isHidden = true
             }else{
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                     self.farFromTheHoleView.isHidden = self.isFarFromHoleFirstTime
                     self.isFarFromHoleFirstTime = true
                     self.gpsBtn.isHidden = false
@@ -2806,12 +2881,11 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                         self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
                         self.gpsBtn.isHidden = true
                     }else{
+                        self.gpsBtn.isHidden = false
                         self.positionsOfDotLine.remove(at: 0)
                         self.positionsOfDotLine.insert(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee, at: 0)
                     }
                     
-//                    self.positionsOfDotLine.remove(at: 0)
-//                    self.positionsOfDotLine.insert(self.userLocationForClub!, at: 0)
                     self.isUserInsideBound = true
                     self.markers[0].position = self.positionsOfDotLine.first!
                     if(self.previousLocation != nil){

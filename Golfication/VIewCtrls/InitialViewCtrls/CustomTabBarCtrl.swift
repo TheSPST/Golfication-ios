@@ -91,8 +91,8 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
 //        let infoBtnImage = originalImage.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
 //        UITabBar.appearance().tintColor
         meVC.tabBarItem.selectedImage = UIImage(contentsOfFile: "homeTabSe")?.maskWithColor(color:
-            UIColor.glfGreenBlue)
-        self.tabBar.tintColor = UIColor.glfGreenBlue
+            UIColor.glfBluegreen)
+        self.tabBar.tintColor = UIColor.glfBluegreen
         // select image
         meVC.view.backgroundColor = UIColor.white
         meNavCtrl = UINavigationController(rootViewController: meVC)
