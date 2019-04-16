@@ -104,18 +104,26 @@ class TIOADViewController: UIViewController{
     }
     
     func startUpdate(){
-        if (!deviceSelected!) {
-            for s:CBService in Constants.deviceGolficationX.services! where s.uuid.uuidString == TI_OAD_SERVICE{
-                debugPrint("Start OAD, we are ready",s)
-                NotificationCenter.default.addObserver(self, selector: #selector(self.callAgain(_:)), name: NSNotification.Name(rawValue: "getSwingInside"), object: nil)
-                DispatchQueue.main.async {
-                    self.client = TIOADClient(peripheral: Constants.deviceGolficationX, andImageData: self.oadImage, andDelegate: self)
-                    self.TIOADMTUSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
-                    self.TIOADBlockSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse)-4)"
-                    self.deviceSelected = true
-                    self.TIOADStartScanButton.setTitle("Start Updating", for: .normal)
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwingInside"),object: nil)
+        if (!deviceSelected!){
+            if (Constants.deviceGolficationX?.services != nil){
+                for s:CBService in Constants.deviceGolficationX.services! where s.uuid.uuidString == TI_OAD_SERVICE{
+                    debugPrint("Start OAD, we are ready",s)
+                    NotificationCenter.default.addObserver(self, selector: #selector(self.callAgain(_:)), name: NSNotification.Name(rawValue: "getSwingInside"), object: nil)
+                    DispatchQueue.main.async {
+                        self.client = TIOADClient(peripheral: Constants.deviceGolficationX, andImageData: self.oadImage, andDelegate: self)
+                        self.TIOADMTUSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse))"
+                        self.TIOADBlockSize.text = "\(Constants.deviceGolficationX.maximumWriteValueLength(for: CBCharacteristicWriteType.withoutResponse)-4)"
+                        self.deviceSelected = true
+                        self.TIOADStartScanButton.setTitle("Start Updating", for: .normal)
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "getSwingInside"),object: nil)
+                    }
                 }
+            }
+            else{
+                let alertVC = UIAlertController(title: "Alert", message: "Please try again.", preferredStyle: UIAlertController.Style.alert)
+                let action = UIAlertAction(title: "ok", style: UIAlertAction.Style.default, handler: nil)
+                alertVC.addAction(action)
+                self.present(alertVC, animated: true, completion: nil)
             }
         }
         else {

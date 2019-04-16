@@ -67,7 +67,6 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
         self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)
 
         Constants.finalFilterDic.removeAllObjects()
-        self.automaticallyAdjustsScrollViewInsets = false
         self.setInitialUI()
         FBSomeEvents.shared.singleParamFBEvene(param: "View Club Stats")
     }
@@ -556,9 +555,8 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                         let valueArray = keysArray as! NSArray
                         for j in 0..<valueArray.count{
                             let clubData = Club()
-                            let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
-                            if((backSwing) != nil){
-                                clubData.backswing = backSwing as! Double
+                            if let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing") as? Double{
+                                clubData.backswing = backSwing
                             }
                             if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
                                 clubData.distance = distance
@@ -572,13 +570,11 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
                             }
                             clubData.strokesGained = strokesGained
                             
-                            let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
-                            if((swingScore) != nil){
-                                clubData.swingScore = swingScore as! Double
+                            if let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore") as? Double{
+                                clubData.swingScore = swingScore
                             }
-                            let type = (valueArray[j] as AnyObject).object(forKey: "type")
-                            if((type) != nil){
-                                clubData.type = type as! Int
+                            if let type = (valueArray[j] as AnyObject).object(forKey: "type") as? Int{
+                                clubData.type = type
                             }
                             clubWiseArray.append(clubData)
                             clubDict.append((key,clubData))

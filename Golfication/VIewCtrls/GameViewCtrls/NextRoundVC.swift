@@ -283,7 +283,7 @@ class NextRoundVC: UIViewController {
             self.btnStartClassic.tag = 2
         }
         if selectedMode == 0 && (selectedTab == 1 || selectedTab == 2){
-            if self.btnStartClassic.tag == 2{
+            if self.btnStartClassic.tag != 1{
                 switch CLLocationManager.authorizationStatus() {
                 case .notDetermined:
                     // Request when-in-use authorization initially
@@ -313,19 +313,21 @@ class NextRoundVC: UIViewController {
                         let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
                         let distance : CLLocationDistance = location1.distance(from: location2)
                         debugPrint("distance = \(distance) m")
-                        
-                        if(distance <= 15000.0){
+                        if self.btnStartClassic.tag == 2 || selectedTab == 1{
                             popUpContainerView.isHidden = false
-                            if self.btnStartClassic.tag != 0{
                                 self.btnSkip.tag = self.btnStartClassic.tag
+                        }else{
+                            if(distance <= 15000.0){
+                                popUpContainerView.isHidden = false
+                            }
+                            else{
+                                // show alert
+                                let emptyAlert = UIAlertController(title: "Alert", message: "You need to be near the course to play in On-Course mode.", preferredStyle: UIAlertControllerStyle.alert)
+                                emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                                self.present(emptyAlert, animated: true, completion: nil)
                             }
                         }
-                        else{
-                            // show alert
-                            let emptyAlert = UIAlertController(title: "Alert", message: "You need to be near the course to play in On-Course mode.", preferredStyle: UIAlertControllerStyle.alert)
-                            emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                            self.present(emptyAlert, animated: true, completion: nil)
-                        }
+                        
                     }
                     break
                 }

@@ -17,6 +17,7 @@ import FirebaseDatabase
 import FirebaseAnalytics
 import UserNotifications
 import CoreData
+import MaterialTapTargetPrompt_iOS
 struct GreenData {
     let front: CLLocationCoordinate2D
     let center: CLLocationCoordinate2D
@@ -113,6 +114,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var farFromTheHoleView : FarFromTheHole!
     @IBOutlet weak var bottomDistance: NSLayoutConstraint!
     
+    @IBOutlet weak var lblGetEddieForElevation: UILabel!
+    @IBOutlet weak var lblEddiegivesPlays: UILocalizedLabel!
     
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
@@ -527,7 +530,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         locationManager.startUpdatingLocation()
         self.farFromTheHoleView.layer.cornerRadius = 5.0
-        self.farFromTheHoleView.isHidden = true
         self.farFromTheHoleView.btnContinue.addTarget(self, action: #selector(self.farFromTheHoleContinueAction), for: .touchUpInside)
         self.updateMap(indexToUpdate: self.holeIndex)
         btnPlayerStats.isEnabled = true
@@ -991,7 +993,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.scoreSV2.isHidden = false
         })
         self.view.layoutIfNeeded()
-        self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
+        self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height + 180
         
     }
     @IBAction func expendScoreAction(_ sender: Any) {
@@ -1009,7 +1011,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 lay.borderWidth = 0
             }
         }
-        self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
+        self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height + 180
         updateColorToStrokes()
     }
     
@@ -1051,6 +1053,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBAction func playerStatsAction(_ sender: UIButton) {
         if scrlView.isHidden{
             scrlView.isHidden = false
+            bottomView.isHidden = false
             btnNext.isHidden = true
             btnPrev.isHidden = true
 //            btnPlayerStats.isHidden = true
@@ -1058,7 +1061,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.lblEditShotNumber.isHidden = true
             scrlHConstraint.constant = 0
             UIView.animate(withDuration: 0.3, animations: {
-                self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
+                self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height + 180
                 self.view.layoutIfNeeded()
             })
             self.classicScoring = getScoreIntoClassicNode(hole:self.holeIndex,playerKey:self.playerId)
@@ -1087,6 +1090,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             }, completion: {
                 (value: Bool) in
                 self.scrlView.isHidden = true
+                self.bottomView.isHidden = true
             })
         }
     }
@@ -1100,7 +1104,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
 //            })
             sender.tag = 1
             self.view.layoutIfNeeded()
-            self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
+            self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height + 180
             UIView.animate(withDuration: 0.4, animations: {
                 self.btnDetailScoring.imageView?.transform = CGAffineTransform(rotationAngle: (0.0 * CGFloat(Double.pi)) / 180.0)
             })
@@ -1114,7 +1118,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             })
             sender.tag = 0
             self.view.layoutIfNeeded()
-            self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
+            self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height + 180
         }
     }
     @IBOutlet weak var btnDetailScoring: UILocalizedButton!
@@ -1145,7 +1149,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     @IBOutlet weak var lblHoleNumber2: UILabel!
     @IBOutlet weak var lblParNumber2: UILabel!
     @IBOutlet weak var btnHoleSelection: UIButton!
-    
+    @IBOutlet weak var bottomView: UIView!
+
     @IBOutlet weak var scrlContainerView: UIView!
     @IBOutlet weak var stackViewForDistance: UIStackView!
     
@@ -1176,9 +1181,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             playerStatsAction(btnPlayerStats)
         }
     }
+    var isViewDidEntered = false
     var isFarFromHoleFirstTime = false
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.lblEditShotNumber.isHidden = !self.scrlView.isHidden
+
+        self.farFromTheHoleView.isHidden = true
+        self.isViewDidEntered = true
         FBSomeEvents.shared.singleParamFBEvene(param: "View Rangefinder Game")
         btnPlayerStats.isHidden = true
         locationManager.delegate = self
@@ -1470,6 +1480,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         stablefordSubView.setCornerView(color: UIColor.glfWhite.cgColor)
         imgViewStblReferesh.tintImageColor(color: UIColor.glfWhite)
         scrlView.isHidden = true
+        bottomView.isHidden = true
         btnNext.isHidden = false
         btnPrev.isHidden = false
 //        btnDetailScoring.setCorner(color: UIColor.glfWhite.cgColor)
@@ -1593,6 +1604,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.lblCenterElev.font = self.lblCenterElev.font.withSize(80)
             self.lblFrontElev.font = self.lblFrontElev.font.withSize(70)
             self.lblSiriHeading.font = self.lblSiriHeading.font.withSize(24)
+            self.lblWindOnlyLbl.font = self.lblWindOnlyLbl.font.withSize(28)
+            self.lblGetEddieForElevation.font = self.lblGetEddieForElevation.font.withSize(16)
+            self.lblEddiegivesPlays.font = self.lblEddiegivesPlays.font.withSize(24)
             
             self.lblFront.font = self.lblFront.font.withSize(17)
             self.lblBack.font = self.lblBack.font.withSize(17)
@@ -1626,6 +1640,9 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.lblCenterDist.font = self.lblCenterDist.font.withSize(12)
             self.lblEndDist.font = self.lblEndDist.font.withSize(12)
             
+            self.lblGetEddieForElevation.font = self.lblGetEddieForElevation.font.withSize(12)
+            self.lblEddiegivesPlays.font = self.lblEddiegivesPlays.font.withSize(18)
+            self.lblWindOnlyLbl.font = self.lblWindOnlyLbl.font.withSize(20)
             let attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 11)]
             let attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Italic", size: 11)]
             let attributedText = NSMutableAttributedString()
@@ -1747,6 +1764,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     func showHideViews(isHide:Bool){
         if !(scrlView.isHidden){
             scrlView.isHidden = true
+            bottomView.isHidden = true
         }
         self.btnNext.isHidden = false
         self.btnPrev.isHidden = false
@@ -2054,6 +2072,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 }
                 break
             default:
+                isDraggingMarker = false
                 break
             }
         }
@@ -2084,7 +2103,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.scoreSV2.isHidden = false
         })
         self.view.layoutIfNeeded()
-        self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
+        self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height + 180
         if(!self.teeTypeArr.isEmpty){
             self.uploadStableFordPints(playerId: self.playerId,strokes:Int(title!)!)
         }else{
@@ -2354,7 +2373,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             self.btnScore.setTitle("\(classicScoring.strokesCount!)", for: .normal)
             self.scoreSV.isHidden = true
             self.scoreSV2.isHidden = false
-            lblEditShotNumber.isHidden = !self.scrlView.isHidden ? true:false
+            lblEditShotNumber.isHidden = self.btnNext.isHidden
             lblEditShotNumber.text = " \(classicScoring.strokesCount!) "
 //            self.lblStblScore.text = "\(self.classicScoring.strokesCount!)"
 //            self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
@@ -2750,7 +2769,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     func updateMap(indexToUpdate:Int){
         if self.playerId.contains(find: "\(Auth.auth().currentUser!.uid)"){
             windNotesView.btnNotesUnlock.isHidden = false
-            
         }else{
             windNotesView.btnNotesUnlock.isHidden = true
         }
@@ -2768,6 +2786,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
           self.isFromViewDid = true
         }
         self.scrlView.isHidden = true
+        bottomView.isHidden = true
         self.first = false
         self.isUpdating = false
         btnTopShotRanking.setTitle("", for: .normal)
@@ -2794,11 +2813,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 self.positionsOfDotLine.append(self.userLocationForClub!)
                 self.gpsBtn.isHidden = true
             }else{
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                    self.farFromTheHoleView.isHidden = self.isFarFromHoleFirstTime
-                    self.isFarFromHoleFirstTime = true
-                    self.gpsBtn.isHidden = false
-                })
+                self.gpsBtn.isHidden = false
+                self.isFarFromHoleFirstTime = false
                 self.positionsOfDotLine.append(self.courseData.centerPointOfTeeNGreen[indexToUpdate].tee)
             }
         }else{
@@ -2975,12 +2991,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 self.isFromViewDid = false
             }else{
                 self.scrlView.isHidden = false
+                self.bottomView.isHidden = false
             }
             if self.classicScoring.stableFordScore != nil{
                 self.lblStblScore.text = "\(self.classicScoring.stableFordScore!)"
                 self.btnStablefordScore.setTitle("Stableford Score", for: .normal)
             }
-            self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height
+            self.scrlHConstraint.constant = self.scrlContainerView.frame.size.height + 180
             self.view.layoutIfNeeded()
         })
 
@@ -3117,90 +3134,100 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
             fbDistance.frontLng = data.front.longitude
             frontBackDistanceArr.append(fbDistance)
         }
-            BackgroundMapStats.donateInteraction()
-            context.performAndWait{ () -> Void in
-                if let counter1 = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: context){
-                    counter1.forEach { counter in
-                        context.delete(counter as! NSManagedObject)
-                    }
+        BackgroundMapStats.donateInteraction()
+        context.performAndWait{ () -> Void in
+            if let counter1 = NSManagedObject.findAllForEntity("TeeDistanceEntity", context: context){
+                counter1.forEach { counter in
+                    context.delete(counter as! NSManagedObject)
                 }
-                if let counter1 = NSManagedObject.findAllForEntity("FrontBackDistanceEntity", context: context){
-                    counter1.forEach { counter in
-                        context.delete(counter as! NSManagedObject)
-                    }
+            }
+            if let counter1 = NSManagedObject.findAllForEntity("FrontBackDistanceEntity", context: context){
+                counter1.forEach { counter in
+                    context.delete(counter as! NSManagedObject)
                 }
-                if let counter1 = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: context){
-                    counter1.forEach { counter in
-                        context.delete(counter as! NSManagedObject)
-                    }
+            }
+            if let counter1 = NSManagedObject.findAllForEntity("CourseDetailsEntity", context: context){
+                counter1.forEach { counter in
+                    context.delete(counter as! NSManagedObject)
                 }
-                if let counter = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: context){
-                    counter.forEach { counter in
-                        context.delete(counter as! NSManagedObject)
-                    }
+            }
+            if let counter = NSManagedObject.findAllForEntity("GreenDistanceEntity", context: context){
+                counter.forEach { counter in
+                    context.delete(counter as! NSManagedObject)
                 }
-                for data in greenModel{
-                    if let greenEntity = NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: context) as? GreenDistanceEntity{
-                        greenEntity.greeNum = Int16(data.greenNum)
-                        greenEntity.lat = data.lat
-                        greenEntity.lng = data.lng
-                        CoreDataStorage.saveContext(context)
-                    }
-                }
-                var i = 0
-                for data in self.courseData.centerPointOfTeeNGreen{
-                    if let teeEntity = NSEntityDescription.insertNewObject(forEntityName: "TeeDistanceEntity", into: context) as? TeeDistanceEntity{
-                        teeEntity.teeNum = Int16(i)
-                        teeEntity.lat = data.tee.latitude
-                        teeEntity.lng = data.tee.longitude
-                        CoreDataStorage.saveContext(context)
-                        i += 1
-                    }
-                }
-                for data in frontBackDistanceArr{
-                    if let frontBackEntity = NSEntityDescription.insertNewObject(forEntityName: "FrontBackDistanceEntity", into: context) as? FrontBackDistanceEntity{
-                        frontBackEntity.backLat = data.backLat
-                        frontBackEntity.backLng = data.backLng
-                        frontBackEntity.frontLat = data.frontLat
-                        frontBackEntity.frontLng = data.frontLng
-                        frontBackEntity.centerLat = data.centerLat
-                        frontBackEntity.centerLng = data.centerLng
-                        CoreDataStorage.saveContext(context)
-                    }
-                }
-                if let courseDataEn = NSEntityDescription.insertNewObject(forEntityName: "CourseDetailsEntity", into: context) as? CourseDetailsEntity{
-                    var matchDataDictionary = NSMutableDictionary()
-                    if(self.isAcceptInvite){
-                        matchDataDictionary = self.matchDataDic
-                    }else{
-                        matchDataDictionary = matchDataDic
-                    }
-                    courseDataEn.cName = matchDataDictionary.value(forKey: "courseName") as? String
-                    courseDataEn.uName = Auth.auth().currentUser!.displayName
-                    courseDataEn.imgUrl = ""
-                    CoreDataStorage.saveContext(context)
-                }
-                for data in greenModel{
-                    if let greenEntity = (NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: context) as? GreenDistanceEntity){
-                        greenEntity.greeNum = Int16(data.greenNum)
-                        greenEntity.lat = data.lat
-                        greenEntity.lng = data.lng
-                        CoreDataStorage.saveContext(context)
-                    }
-                }
-                if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
-                    counter.forEach { counter in
-                        context.delete(counter as! NSManagedObject)
-                    }
-                }
-                if let curHoleEntity = NSEntityDescription.insertNewObject(forEntityName: "CurrentHoleEntity", into: context) as? CurrentHoleEntity{
-                    curHoleEntity.timestamp = Timestamp
-                    curHoleEntity.holeIndex = Int16(0)
+            }
+            for data in greenModel{
+                if let greenEntity = NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: context) as? GreenDistanceEntity{
+                    greenEntity.greeNum = Int16(data.greenNum)
+                    greenEntity.lat = data.lat
+                    greenEntity.lng = data.lng
                     CoreDataStorage.saveContext(context)
                 }
             }
-        
-        
+            var i = 0
+            for data in self.courseData.centerPointOfTeeNGreen{
+                if let teeEntity = NSEntityDescription.insertNewObject(forEntityName: "TeeDistanceEntity", into: context) as? TeeDistanceEntity{
+                    teeEntity.teeNum = Int16(i)
+                    teeEntity.lat = data.tee.latitude
+                    teeEntity.lng = data.tee.longitude
+                    CoreDataStorage.saveContext(context)
+                    i += 1
+                }
+            }
+            for data in frontBackDistanceArr{
+                if let frontBackEntity = NSEntityDescription.insertNewObject(forEntityName: "FrontBackDistanceEntity", into: context) as? FrontBackDistanceEntity{
+                    frontBackEntity.backLat = data.backLat
+                    frontBackEntity.backLng = data.backLng
+                    frontBackEntity.frontLat = data.frontLat
+                    frontBackEntity.frontLng = data.frontLng
+                    frontBackEntity.centerLat = data.centerLat
+                    frontBackEntity.centerLng = data.centerLng
+                    CoreDataStorage.saveContext(context)
+                }
+            }
+            if let courseDataEn = NSEntityDescription.insertNewObject(forEntityName: "CourseDetailsEntity", into: context) as? CourseDetailsEntity{
+                var matchDataDictionary = NSMutableDictionary()
+                if(self.isAcceptInvite){
+                    matchDataDictionary = self.matchDataDic
+                }else{
+                    matchDataDictionary = matchDataDic
+                }
+                courseDataEn.cName = matchDataDictionary.value(forKey: "courseName") as? String
+                courseDataEn.uName = Auth.auth().currentUser!.displayName
+                courseDataEn.imgUrl = ""
+                CoreDataStorage.saveContext(context)
+            }
+            for data in greenModel{
+                if let greenEntity = (NSEntityDescription.insertNewObject(forEntityName: "GreenDistanceEntity", into: context) as? GreenDistanceEntity){
+                    greenEntity.greeNum = Int16(data.greenNum)
+                    greenEntity.lat = data.lat
+                    greenEntity.lng = data.lng
+                    CoreDataStorage.saveContext(context)
+                }
+            }
+            if let counter = NSManagedObject.findAllForEntity("CurrentHoleEntity", context: context){
+                counter.forEach { counter in
+                    context.delete(counter as! NSManagedObject)
+                }
+            }
+            if let curHoleEntity = NSEntityDescription.insertNewObject(forEntityName: "CurrentHoleEntity", into: context) as? CurrentHoleEntity{
+                curHoleEntity.timestamp = Timestamp
+                curHoleEntity.holeIndex = Int16(0)
+                CoreDataStorage.saveContext(context)
+            }
+        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+//            var timerForMiddleMarker = Timer()
+//            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+//                if let thePresenter = self.navigationController?.visibleViewController{
+//                    if (thePresenter.isKind(of:RFMapVC.self)) && self.farFromTheHoleView.isHidden{
+//                        self.showCaseTargetMarker()
+//                        timerForMiddleMarker.invalidate()
+//                    }
+//                }
+//            })
+//
+//        })
     }
     func clubReco(dist:Double,lie:String)->String {
         if (lie.trim() == "G"){
@@ -3405,6 +3432,16 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         }
         return checkDistance
     }
+
+    func mapViewDidFinishTileRendering(_ mapView: GMSMapView) {
+        if isViewDidEntered{
+            self.farFromTheHoleView.isHidden = self.isFarFromHoleFirstTime
+            if isContinueMatch{
+                isViewDidEntered = false
+            }
+        }
+        self.isFarFromHoleFirstTime = true
+    }
 }
 extension RFMapVC{
     
@@ -3447,6 +3484,7 @@ extension RFMapVC{
     }
     
     @IBAction func nextAction(_ sender: UIButton!) {
+        self.isViewDidEntered = false
         holeIndex += 1
         holeIndex = holeIndex % self.scoring.count
         let currentHoleWhilePlaying = NSMutableDictionary()
@@ -3465,7 +3503,7 @@ extension RFMapVC{
     }
     
     @IBAction func previousAction(_ sender: UIButton!) {
-
+        self.isViewDidEntered = false
         holeIndex -= 1
         holeIndex = holeIndex % self.scoring.count
         if(self.holeIndex == -1){
@@ -3483,3 +3521,208 @@ extension RFMapVC{
         }
     }
 }
+/*extension RFMapVC{
+    func showCaseTargetMarker(){
+        var label2 = UILabel()
+        let tutorialCount = UserDefaults.standard.integer(forKey: "RFTutorial")
+        if(self.positionsOfDotLine.count > 1) && tutorialCount < 2{
+            let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
+            label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-25, width: 50, height: 50))
+            self.mapView.addSubview(label2)
+            let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
+            tapTargetPrompt.action = {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                    label2.removeFromSuperview()
+                    var timerForMiddleMarker = Timer()
+                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker && self.farFromTheHoleView.isHidden && !self.btnNext.isHidden{
+                                self.showCaseRecommendedClub()
+                                timerForMiddleMarker.invalidate()
+                            }
+                        }
+                    })
+                })
+            }
+            tapTargetPrompt.dismissed = {
+                print("view dismissed")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                    var timerForMiddleMarker = Timer()
+                    label2.removeFromSuperview()
+                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker && self.farFromTheHoleView.isHidden && !self.btnNext.isHidden{
+                                self.showCaseRecommendedClub()
+                                timerForMiddleMarker.invalidate()
+                            }
+                        }
+                    })
+                })
+            }
+            tapTargetPrompt.circleColor = UIColor.glfBlack95
+            tapTargetPrompt.primaryText = ""
+            tapTargetPrompt.secondaryText = "Set your target.".localized()
+            tapTargetPrompt.textPostion = .bottomLeft 
+            UserDefaults.standard.set(tutorialCount+1, forKey: "RFTutorial")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    func showCaseRecommendedClub(){
+        var label2 = UILabel()
+        let point = self.mapView.projection.point(for: suggestedMarker2.position)
+        label2 = UILabel(frame: CGRect(x: point.x, y: point.y-32.5, width: 120, height: 65))
+        self.mapView.addSubview(label2)
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
+        tapTargetPrompt.action = {
+            label2.removeFromSuperview()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if let thePresenter = self.navigationController?.visibleViewController{
+                        if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker{
+                            self.showCaseDistanceToGreen()
+                            timerForMiddleMarker.invalidate()
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+            label2.removeFromSuperview()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if let thePresenter = self.navigationController?.visibleViewController{
+                        if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker{
+                            self.showCaseDistanceToGreen()
+                            timerForMiddleMarker.invalidate()
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "See recommended club.".localized()
+        tapTargetPrompt.textPostion = .topRight
+    }
+    func showCaseDistanceToGreen(){
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.lblCenterHeader)
+        tapTargetPrompt.action = {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if let thePresenter = self.navigationController?.visibleViewController{
+                        if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker && !self.btnCenter.isHidden{
+                            self.showCasePulledDown()
+                            timerForMiddleMarker.invalidate()
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if let thePresenter = self.navigationController?.visibleViewController{
+                        if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker && !self.btnCenter.isHidden{
+                            self.showCasePulledDown()
+                            timerForMiddleMarker.invalidate()
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Check your distance to the green.".localized()
+        tapTargetPrompt.textPostion = .bottomLeft
+    }
+    func showCasePulledDown(){
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnCenter)
+        tapTargetPrompt.action = {
+            self.btnActionMoveToMap(Any.self)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if let thePresenter = self.navigationController?.visibleViewController{
+                        if (thePresenter.isKind(of:RFMapVC.self)) && !self.viewForground.isHidden{
+                            self.showCasePulledUp()
+                            timerForMiddleMarker.invalidate()
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if let thePresenter = self.navigationController?.visibleViewController{
+                        if (thePresenter.isKind(of:RFMapVC.self)) && !self.viewForground.isHidden{
+                            self.showCasePulledUp()
+                            timerForMiddleMarker.invalidate()
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Pull down to view distances to front, center and back.".localized()
+        tapTargetPrompt.textPostion = .bottomLeft
+    }
+    func showCasePulledUp(){
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnMoveToMapGround)
+        tapTargetPrompt.action = {
+            self.btnActionMoveToMap(Any.self)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if let thePresenter = self.navigationController?.visibleViewController{
+                        if (thePresenter.isKind(of:RFMapVC.self)) && self.viewForground.isHidden && !self.btnNext.isHidden && !self.isDraggingMarker{
+                            self.showCaseEnterHoleScore()
+                            timerForMiddleMarker.invalidate()
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if let thePresenter = self.navigationController?.visibleViewController{
+                        if (thePresenter.isKind(of:RFMapVC.self)) && self.viewForground.isHidden && !self.btnNext.isHidden && !self.isDraggingMarker{
+                            self.showCaseEnterHoleScore()
+                            timerForMiddleMarker.invalidate()
+                        }
+                    }
+                })
+            })
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "tap to go to GPS view.".localized()
+        tapTargetPrompt.textPostion = .topLeft
+    }
+    
+    func showCaseEnterHoleScore(){
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnEditShots)
+        tapTargetPrompt.action = {
+            self.playerStatsAction(self.btnPlayerStats)
+        }
+        tapTargetPrompt.dismissed = {
+            print("view dismissed")
+        }
+        tapTargetPrompt.circleColor = UIColor.glfBlack95
+        tapTargetPrompt.primaryText = ""
+        tapTargetPrompt.secondaryText = "Score your hole when finished.".localized()
+        tapTargetPrompt.textPostion = .topLeft
+    }
+}*/

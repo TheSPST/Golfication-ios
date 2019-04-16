@@ -333,7 +333,6 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
             }
             if (user != nil){
                 let changeRequest = user?.createProfileChangeRequest()
-                debugPrint("self.txtFieldName.text",self.txtFieldName.text)
                 changeRequest?.displayName = self.txtFieldName.text!
                 changeRequest?.photoURL = URL(string: "")
                 Auth.auth().signIn(withEmail: self.txtFieldEmail.text!, password: self.txtFieldPswd.text!, completion: { (user, error) in

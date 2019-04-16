@@ -26,14 +26,16 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
     @IBOutlet weak var courseTxtField: UITextField!
     @IBOutlet weak var countryTxtField: UITextField!
     @IBOutlet weak var cityTxtField: UITextField!
-    
+    @IBOutlet weak var tblBottomConstraint: NSLayoutConstraint!
+
     var locationManager = CLLocationManager()
     
     var fromNewGame = Bool()
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        
+        tblBottomConstraint.constant = 10
+
         if !(searchBar.text == "") {
             self.searchGolfLocation(searchText: searchBar.text!)
         }
@@ -49,6 +51,9 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
             }
             gameTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
         }
+    }
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar){
+        tblBottomConstraint.constant = 170
     }
     @objc func runTimedCode(){
         FBSomeEvents.shared.singleParamFBEvene(param: "CS Search Course")

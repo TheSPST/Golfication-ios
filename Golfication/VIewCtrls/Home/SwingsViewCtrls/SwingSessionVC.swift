@@ -34,7 +34,6 @@ class SwingSessionVC: ButtonBarPagerTabStripViewController, DemoFooterViewDelega
         //        CoursesTypeArray.removeAll()
         
         // change selected bar color
-        self.automaticallyAdjustsScrollViewInsets = false
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white
         settings.style.selectedBarBackgroundColor = UIColor.glfBluegreen

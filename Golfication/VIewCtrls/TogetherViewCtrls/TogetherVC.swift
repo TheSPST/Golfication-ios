@@ -22,7 +22,7 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     let progressView = SDLoader()
-
+    var refreshControl: UIRefreshControl!
     var scoring  = [HoleShotPar]()
     var drivingRank = Int()
     var roundsRank = Int()
@@ -37,8 +37,8 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var puttPerHoleRankDict = NSMutableDictionary()
     var cardViewMArray = NSMutableArray()
     let borderWidth:CGFloat = 2.0
-
-//    var feedData = [(image:String,name:String,timestamp:Int,course:String,scores:[HoleShotPar],type:Int)]()
+    
+    //    var feedData = [(image:String,name:String,timestamp:Int,course:String,scores:[HoleShotPar],type:Int)]()
     var dataArray = [Feeds]()
     var holeShots = [HoleShotPar]()
     
@@ -51,7 +51,7 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
-
+        
         if(dataArray.count == 0){
             getFeedData()
         }
@@ -63,118 +63,27 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         swingsRankValue.text = ""
         roundPlayerRankValue.text = ""
         strokesGainedPuttingRankValue.text = ""
-        
-        /*var friendsList = [String]()
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/\(Auth.auth().currentUser!.uid)/friends") { (snapshot) in
-            var dataDic = [String:Bool]()
-            if(snapshot.childrenCount > 0){
-                dataDic = (snapshot.value as? [String:Bool])!
-            }
-            friendsList.append(Auth.auth().currentUser!.uid)
-            for (key,value) in dataDic{
-                if(value){
-                    friendsList.append(key)
-                }
-            }
-            for key in friendsList{
-                ref.child("userData/\(key)/myFeeds").observeSingleEvent(of: .value, with: { snapshot in
-                    if snapshot.exists(){
-                        let dataDic = (snapshot.value as? [String:Bool])!
-                        let group = DispatchGroup()
-                        for (key,_) in dataDic{
-                            group.enter()
-                            let feed = Feeds()
-                            ref.child("feedData/\(key)").observeSingleEvent(of: .value, with: { snapshot in
-                                if snapshot.exists() {
-                                    
-                                    let feedData = (snapshot.value as? NSDictionary)!
-                                    if(feedData["type"] as! String == "2"){
-                                        if let location = feedData["location"] as? String {
-                                            feed.location = location
-                                        }
-                                        if let taggedUsers = feedData["taggedUsers"] as? NSDictionary {
-                                            feed.taggedUsers = taggedUsers
-                                        }
-                                        if let timestamp = feedData["timestamp"] as? Double {
-                                            feed.timeStamp = timestamp
-                                        }
-                                        if let type = feedData["type"] as? String {
-                                            feed.type = type
-                                        }
-                                        if let userImage = feedData["userImage"] as? String {
-                                            feed.userImage = userImage
-                                        }
-                                        if let userKey = feedData["userKey"] as? String {
-                                            feed.userKey = userKey
-                                        }
-                                        if let userName = feedData["userName"] as? String {
-                                            feed.userName = userName
-                                        }
-                                        if let matchId = feedData["matchKey"] as? String {
-                                            feed.matchId = matchId
-                                        }
-                                    }
-                                    else if (feedData["type"] as! String == "1"){
-                                        if let message = feedData["message"] as? String {
-                                            feed.message = message
-                                        }
-                                        if let shareImage = feedData["shareImage"] as? String {
-                                            feed.locationKey = shareImage
-                                        }
-                                        if let timestamp = feedData["timestamp"] as? Double {
-                                            feed.timeStamp = timestamp
-                                        }
-                                        if let type = feedData["type"] as? String {
-                                            feed.type = type
-                                        }
-                                        if let userImage = feedData["userImage"] as? String {
-                                            feed.userImage = userImage
-                                        }
-                                        if let userKey = feedData["userKey"] as? String {
-                                            feed.userKey = userKey
-                                        }
-                                        if let userName = feedData["userName"] as? String {
-                                            feed.userName = userName
-                                        }
-                                    }
-                                    feed.likesCount = 0
-                                    feed.isLikedByMe = false
-                                    if let likes = feedData["likes"] as? [String:Bool]{
-                                        feed.likesCount = likes.count
-                                        if(likes["\(Auth.auth().currentUser!.uid)"]) != nil{
-                                            feed.isLikedByMe = true
-                                        }
-                                    }
-                                    feed.feedId = key
-                                    self.dataArray.append(feed)
-                                }
-                                group.leave()
-                            })
-                        }
-                        group.notify(queue: .main){
-                            self.getScoreFromFirebaseMatchData()
-                        }
-                    }
-
-                })
-            }
-            DispatchQueue.main.async(execute: {
-                self.getRank()
-            })
-        }*/
+        refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        scrollView.addSubview(refreshControl)
+    }
+    @objc func refresh(_ sender: Any) {
+        getFeedData()
+        refreshControl.endRefreshing()
     }
     func getFeedData(){
-        
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-
-        ref.child("feedData").queryOrderedByKey().queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
+        self.dataArray.removeAll()
+        ref.child("feedData").keepSynced(true)
+        ref.child("feedData").queryOrdered(byChild: "timestamp").queryLimited(toLast: 50).observeSingleEvent(of: .value, with: { snapshot in
             var feedDic = NSDictionary()
             if snapshot.value != nil{
                 feedDic = snapshot.value as! NSDictionary
-
+                
                 for (key, value) in feedDic{
                     let feed = Feeds()
-
+                    
                     let feedData = value as! NSDictionary
                     debugPrint("snapshot ==", feedData)
                     if(feedData["type"] as! String == "2"){
@@ -199,9 +108,9 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         }
                         if let userName = feedData["userName"] as? String {
                             feed.userName = userName
-//                            if userName.containsIgnoringCase(find: "rishabh") || userName.containsIgnoringCase(find: "test") || userName.containsIgnoringCase(find: "arjun"){
-//                                debugPrint(feedData)
-//                            }
+                            //                            if userName.containsIgnoringCase(find: "rishabh") || userName.containsIgnoringCase(find: "test") || userName.containsIgnoringCase(find: "arjun"){
+                            //                                debugPrint(feedData)
+                            //                            }
                         }
                         if let matchId = feedData["matchKey"] as? String {
                             feed.matchId = matchId
@@ -232,9 +141,9 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                         }
                         if let userName = feedData["userName"] as? String {
                             feed.userName = userName
-//                            if userName.containsIgnoringCase(find: "rishabh") || userName.containsIgnoringCase(find: "test") || userName.containsIgnoringCase(find: "arjun"){
-//                                debugPrint(feedData)
-//                            }
+                            //                            if userName.containsIgnoringCase(find: "rishabh") || userName.containsIgnoringCase(find: "test") || userName.containsIgnoringCase(find: "arjun"){
+                            //                                debugPrint(feedData)
+                            //                            }
                         }
                         feed.deleted = false
                         if let deleted = feedData["deleted"] as? Bool {
@@ -261,7 +170,7 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             
             DispatchQueue.main.async(execute: {
                 debugPrint("dataArray ==", self.dataArray.count)
-
+                
                 self.getScoreFromFirebaseMatchData()
                 self.getRank()
             })
@@ -269,31 +178,34 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
     
     func getRank(){
-
-        FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "ranks") { (snapshot) in
-            var dataRankDic = NSMutableDictionary()
-            
-            if(snapshot.value != nil){
-                dataRankDic = snapshot.value as! NSMutableDictionary
-                for (key,value) in dataRankDic{
-                    if(key as! String == "rank1"){
-                        self.percentileRankDict = value as! NSMutableDictionary
-                    }
-                    else if(key as! String == "rank2"){
-                        self.drivingRankDict = value as! NSMutableDictionary
-                    }
-                    else if(key as! String == "rank3"){
-                        self.roundsRankDict = value as! NSMutableDictionary
-                    }
-                    else if(key as! String == "rank4"){
-                        self.puttPerHoleRankDict = value as! NSMutableDictionary
+        if self.percentileRankDict.count == 0{
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "ranks") { (snapshot) in
+                var dataRankDic = NSMutableDictionary()
+                if(snapshot.value != nil){
+                    dataRankDic = snapshot.value as! NSMutableDictionary
+                    for (key,value) in dataRankDic{
+                        if(key as! String == "rank1"){
+                            self.percentileRankDict = value as! NSMutableDictionary
+                        }
+                        else if(key as! String == "rank2"){
+                            self.drivingRankDict = value as! NSMutableDictionary
+                        }
+                        else if(key as! String == "rank3"){
+                            self.roundsRankDict = value as! NSMutableDictionary
+                        }
+                        else if(key as! String == "rank4"){
+                            self.puttPerHoleRankDict = value as! NSMutableDictionary
+                        }
                     }
                 }
+                DispatchQueue.main.async(execute: {
+                    self.getRankData()
+                })
             }
-            DispatchQueue.main.async(execute: {
-                self.getRankData()
-            })
+        }else{
+            self.getRankData()
         }
+        
     }
     func getRankData(){
         var roundData = 0
@@ -673,7 +585,6 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             if(self.dataArray.count > 0){
                 for i in 0..<self.dataArray.count{
                     let feeds = self.dataArray[i]
-                    //if !(feeds.holeShotsArray?.count == nil) || !(feeds.holeShotsArray?.count == 0){
                     if(feeds.location == nil){
                         height += 440
                     }else if ((feeds.holeShotsArray?.count == 9)){
@@ -718,23 +629,23 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(indexPath)
+        //        print(indexPath)
     }
     
-        func numberOfSections(in tableView: UITableView) -> Int{
-            return 1
-        }
-        
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-        {
-//            if section == 0 {
-//                return 1
-//            }
-//            else{
-                return dataArray.count
-           // }
-        }
-        
+    func numberOfSections(in tableView: UITableView) -> Int{
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        //            if section == 0 {
+        //                return 1
+        //            }
+        //            else{
+        return dataArray.count
+        // }
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
         var height = CGFloat()
         let feeds = dataArray[indexPath.row]
@@ -743,9 +654,9 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             if (feeds.holeShotsArray?.count) == 9{
                 height = 250.0 - 60
             }
-//            else if feeds.holeShotsArray?.count == nil || feeds.holeShotsArray?.count == 0{
-//                height = 0.0
-//            }
+                //            else if feeds.holeShotsArray?.count == nil || feeds.holeShotsArray?.count == 0{
+                //                height = 0.0
+                //            }
             else{
                 height = 250.0
             }
@@ -756,250 +667,222 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         return height
     }
     
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//            if indexPath.section == 0 {
-//                let cell = tableView.dequeueReusableCell(withIdentifier: "TogetherTopVIewCell", for: indexPath as IndexPath) as! TogetherTopVIewCell
-//
-//                let stringData = self.percentile == 11 ? "Please play one game to see your ranks" : "You scored better than \(self.percentile)% of Golfers"
-//                cell.lblAvrgFromLastRounds.text = stringData
-//                cell.swingsRankValue.text = String(self.drivingRankStr)
-//                cell.roundPlayerRankValue.text = "-"
-//                if(roundsRank != 0){
-//                    cell.roundPlayerRankValue.text = self.roundsRankStr
-//                }
-//
-//                cell.strokesGainedPuttingRankValue.text = String(self.puttingRankStr)
-//                let value = [10.0,20.0,30.0,40.0,50.0,60.0,70.0,80.0,90.0,100.0]
-//                cell.totalScorePercentileBar.setBarChartForTogether(dataPoints: [String](), values: value, chartView: (cell.totalScorePercentileBar)!, color: UIColor.glfWhite, barWidth: 0.2, whichValue: Int(self.percentile)/10)
-//                return cell
-//            }
-//            else{
-            let cell = tableView.dequeueReusableCell(withIdentifier: "TogetherFeedViewCell", for: indexPath as IndexPath) as! TogetherFeedViewCell
-
-            let imageGesture = UITapGestureRecognizer(target: self, action: #selector(self.usrProfileImageTapped(_:)))
-            cell.userImg.isUserInteractionEnabled = true
-            cell.userImg.tag = indexPath.row
-            cell.userImg.addGestureRecognizer(imageGesture)
-            
-                //cell.backgroundColor = UIColor.glfBluegreen
-               // if(dataArray.count > 0){
-                let feeds = dataArray[indexPath.row]
-            
-            if(feeds.feedId! == friendNotifFeedId){
-                cell.cardView.layer.borderWidth = 1.0
-                cell.cardView.layer.borderColor = UIColor.glfGreen.cgColor
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TogetherFeedViewCell", for: indexPath as IndexPath) as! TogetherFeedViewCell
+        
+        let imageGesture = UITapGestureRecognizer(target: self, action: #selector(self.usrProfileImageTapped(_:)))
+        cell.userImg.isUserInteractionEnabled = true
+        cell.userImg.tag = indexPath.row
+        cell.userImg.addGestureRecognizer(imageGesture)
+        
+        let feeds = dataArray[indexPath.row]
+        if(feeds.feedId! == friendNotifFeedId){
+            cell.cardView.layer.borderWidth = 1.0
+            cell.cardView.layer.borderColor = UIColor.glfGreen.cgColor
+        }
+        else{
+            cell.cardView.layer.borderColor = UIColor.clear.cgColor
+        }
+        
+        cell.userName.text = feeds.userName
+        cell.userImg.setCircle(frame: cell.userImg.frame)
+        cell.userImg.image = UIImage(named:"you")
+        cell.userImg.backgroundColor = UIColor.lightGray
+        if (feeds.userImage != nil) {
+            cell.userImg.sd_setImage(with: URL(string: feeds.userImage!), placeholderImage:#imageLiteral(resourceName: "you"), completed: nil)
+        }
+        if(feeds.type == "2"){
+            cell.lblSharedMsg.isHidden = true
+            let subtitle = NSDate(timeIntervalSince1970:(feeds.timeStamp)!/1000).timeAgoSinceNow
+            if((feeds.location) != nil){
+                cell.lblSubtitle.text = "\(subtitle) at \(feeds.location!)"
             }
-            else{
-                cell.cardView.layer.borderColor = UIColor.clear.cgColor
-            }
-            
-            cell.userName.text = feeds.userName
-            cell.userImg.setCircle(frame: cell.userImg.frame)
-            cell.userImg.image = UIImage(named:"you")
-            cell.userImg.backgroundColor = UIColor.lightGray
-            if (feeds.userImage != nil) {
-                cell.userImg.sd_setImage(with: URL(string: feeds.userImage!), placeholderImage:#imageLiteral(resourceName: "you"), completed: nil)
-            }
-            
-                    if(feeds.type == "2"){
+            if let holesData = (feeds.holeShotsArray){
+                var shotSum = 0
+                var parSum = 0
+                for i in 0..<holesData.count{
+                    
+                    if(i < 9){
                         
-                        cell.lblSharedMsg.isHidden = true
-                        let subtitle = NSDate(timeIntervalSince1970:(feeds.timeStamp)!/1000).timeAgoSinceNow
-                        if((feeds.location) != nil){
-                            cell.lblSubtitle.text = "\(subtitle) at \(feeds.location!)"
-                        }
-                        if let holesData = (feeds.holeShotsArray){
-                            var shotSum = 0
-                            var parSum = 0
-                            for i in 0..<holesData.count{
-                                
-                                if(i < 9){
+                        var index1 = 0
+                        for btn in cell.scoreView1Shots.subviews{
+                            if btn.isKind(of: UIButton.self){
+                                if index1 == i{
+                                    (btn as! UIButton).setTitleColor(UIColor.glfBlack, for: .normal)
+                                    (btn as! UIButton).titleLabel?.font = UIFont(name: "SFProDisplay-Heavy", size: FONT_SIZE)
+                                    (btn as! UIButton).setTitle("-", for: .normal)
                                     
-                                    var index1 = 0
-                                    for btn in cell.scoreView1Shots.subviews{
-                                        if btn.isKind(of: UIButton.self){
-                                            if index1 == i{
-                                                (btn as! UIButton).setTitleColor(UIColor.glfBlack, for: .normal)
-                                                (btn as! UIButton).titleLabel?.font = UIFont(name: "SFProDisplay-Heavy", size: FONT_SIZE)
-                                                (btn as! UIButton).setTitle("-", for: .normal)
-                                                
-                                                let layer = CALayer()
-                                                layer.frame = CGRect(x: 3, y:  3, width: (btn as! UIButton).frame.width - 6, height: (btn as! UIButton).frame.height - 6)
-                                                layer.borderColor = UIColor.clear.cgColor
-                                                (btn as! UIButton).layer.addSublayer(layer)
-                                                (btn as! UIButton).layer.borderColor = UIColor.clear.cgColor
-                                                
-                                                if(holesData[i].shot == 0){
-                                                    
-                                                    (btn as! UIButton).setTitle("-", for: .normal)
-                                                    self.updateButtons(allScore: 0, holeLbl: (btn as! UIButton))
-                                                }
-                                                else{
-                                                    (btn as! UIButton).setTitle("\(holesData[i].shot!)", for: .normal)
-                                                    self.updateButtons(allScore: holesData[i].par-holesData[i].shot, holeLbl: (btn as! UIButton))
-                                                    
-                                                    shotSum += holesData[i].shot
-                                                    parSum += holesData[i].par
-                                                    
-                                                }
-                                                break
-                                            }
-                                            index1 = index1 + 1
-                                        }
+                                    let layer = CALayer()
+                                    layer.frame = CGRect(x: 3, y:  3, width: (btn as! UIButton).frame.width - 6, height: (btn as! UIButton).frame.height - 6)
+                                    layer.borderColor = UIColor.clear.cgColor
+                                    (btn as! UIButton).layer.addSublayer(layer)
+                                    (btn as! UIButton).layer.borderColor = UIColor.clear.cgColor
+                                    
+                                    if(holesData[i].shot == 0){
+                                        
+                                        (btn as! UIButton).setTitle("-", for: .normal)
+                                        self.updateButtons(allScore: 0, holeLbl: (btn as! UIButton))
                                     }
-                                    var index2 = 0
-                                    for btn in cell.scoreView1Par.subviews{
-                                        if btn.isKind(of: UIButton.self){
-                                            if index2 == i{
-                                                (btn as! UIButton).setTitleColor(UIColor.glfFlatBlue, for: .normal)
-                                                (btn as! UIButton).titleLabel?.font = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)
-                                                (btn as! UIButton).setTitle("\(holesData[i].par!)", for: .normal)
-                                                break
-                                            }
-                                            index2 = index2 + 1
-                                        }
+                                    else{
+                                        (btn as! UIButton).setTitle("\(holesData[i].shot!)", for: .normal)
+                                        self.updateButtons(allScore: holesData[i].par-holesData[i].shot, holeLbl: (btn as! UIButton))
+                                        
+                                        shotSum += holesData[i].shot
+                                        parSum += holesData[i].par
+                                        
                                     }
+                                    break
                                 }
-                                else{
-                                    var index3 = 9
-                                    for btn in cell.scoreView2Shots.subviews{
-                                        if btn.isKind(of: UIButton.self){
-                                            if index3 == i{
-                                                
-                                                (btn as! UIButton).setTitleColor(UIColor.glfBlack, for: .normal)
-                                                (btn as! UIButton).titleLabel?.font = UIFont(name: "SFProDisplay-Heavy", size: FONT_SIZE)
-                                                (btn as! UIButton).setTitle("-", for: .normal)
-                                                
-                                                let layer = CALayer()
-                                                layer.frame = CGRect(x: 3, y:  3, width: (btn as! UIButton).frame.width - 6, height: (btn as! UIButton).frame.height - 6)
-                                                layer.borderColor = UIColor.clear.cgColor
-                                                (btn as! UIButton).layer.addSublayer(layer)
-                                                (btn as! UIButton).layer.borderColor = UIColor.clear.cgColor
-                                                
-                                                if(holesData[i].shot == 0){
-                                                    
-                                                    (btn as! UIButton).setTitle("-", for: .normal)
-                                                    self.updateButtons(allScore: 0, holeLbl: (btn as! UIButton))
-                                                }
-                                                else{
-                                                    (btn as! UIButton).setTitle("\(holesData[i].shot!)", for: .normal)
-                                                    self.updateButtons(allScore: holesData[i].par-holesData[i].shot, holeLbl: (btn as! UIButton))
-                                                    
-                                                    shotSum += holesData[i].shot
-                                                    parSum += holesData[i].par
-                                                }
-                                                break
-                                            }
-                                            index3 = index3 + 1
-                                        }
-                                    }
-                                    var index4 = 9
-                                    for btn in cell.scoreView2Par.subviews{
-                                        if btn.isKind(of: UIButton.self){
-                                            if index4 == i{
-                                                (btn as! UIButton).setTitleColor(UIColor.glfFlatBlue, for: .normal)
-                                                (btn as! UIButton).titleLabel?.font = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)
-                                                (btn as! UIButton).setTitle("\(holesData[i].par!)", for: .normal)
-                                                break
-                                            }
-                                            index4 = index4 + 1
-                                        }
-                                    }
+                                index1 = index1 + 1
+                            }
+                        }
+                        var index2 = 0
+                        for btn in cell.scoreView1Par.subviews{
+                            if btn.isKind(of: UIButton.self){
+                                if index2 == i{
+                                    (btn as! UIButton).setTitleColor(UIColor.glfFlatBlue, for: .normal)
+                                    (btn as! UIButton).titleLabel?.font = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)
+                                    (btn as! UIButton).setTitle("\(holesData[i].par!)", for: .normal)
+                                    break
                                 }
-                            }
-                            cell.scoreView2.isHidden = false
-                            cell.scoreView1.isHidden = false
-                            cell.shareImageView.isHidden = true
-                            
-                            cell.shareImageHConstraint.constant = cell.frame.size.height
-                            self.view.layoutIfNeeded()
-                            
-                            if(holesData.count == 9){
-                                cell.scoreView2.isHidden = true
-                                
-                                cell.shareImageHConstraint.constant = cell.frame.size.height - 60
-                                self.view.layoutIfNeeded()
-                            }
-                            let shotDetails = shotSum > parSum ? "-over":"-under"
-                            let anoterString = shotSum > parSum ? "\(shotSum-parSum)":"\(parSum-shotSum)"
-                            cell.lblScoreTitle.text =  "\(anoterString) \(shotDetails) \(shotSum)"
-                            if(parSum) == 0{
-                                cell.lblScoreTitle.text =  "Even par \(shotSum)"
+                                index2 = index2 + 1
                             }
                         }
                     }
                     else{
-                        cell.lblSharedMsg.isHidden = false
-
-                        let subtitle = NSDate(timeIntervalSince1970:(feeds.timeStamp)!/1000).timeAgoSinceNow
-//                        if((feeds.location) != nil){
-                            cell.lblSubtitle.text = "\(subtitle)"
-                        //}
-                        if((feeds.message) != nil){
-                            cell.lblSharedMsg.text = "\(feeds.message!)"
+                        var index3 = 9
+                        for btn in cell.scoreView2Shots.subviews{
+                            if btn.isKind(of: UIButton.self){
+                                if index3 == i{
+                                    
+                                    (btn as! UIButton).setTitleColor(UIColor.glfBlack, for: .normal)
+                                    (btn as! UIButton).titleLabel?.font = UIFont(name: "SFProDisplay-Heavy", size: FONT_SIZE)
+                                    (btn as! UIButton).setTitle("-", for: .normal)
+                                    
+                                    let layer = CALayer()
+                                    layer.frame = CGRect(x: 3, y:  3, width: (btn as! UIButton).frame.width - 6, height: (btn as! UIButton).frame.height - 6)
+                                    layer.borderColor = UIColor.clear.cgColor
+                                    (btn as! UIButton).layer.addSublayer(layer)
+                                    (btn as! UIButton).layer.borderColor = UIColor.clear.cgColor
+                                    
+                                    if(holesData[i].shot == 0){
+                                        
+                                        (btn as! UIButton).setTitle("-", for: .normal)
+                                        self.updateButtons(allScore: 0, holeLbl: (btn as! UIButton))
+                                    }
+                                    else{
+                                        (btn as! UIButton).setTitle("\(holesData[i].shot!)", for: .normal)
+                                        self.updateButtons(allScore: holesData[i].par-holesData[i].shot, holeLbl: (btn as! UIButton))
+                                        
+                                        shotSum += holesData[i].shot
+                                        parSum += holesData[i].par
+                                    }
+                                    break
+                                }
+                                index3 = index3 + 1
+                            }
                         }
-                        cell.scoreView2.isHidden = true
-                        cell.scoreView1.isHidden = true
-                        cell.shareImageView.isHidden = false
-                        
-                        if (feeds.locationKey != nil) {
-                        
-                            cell.shareImageView.sd_setImage(with: URL(string: feeds.locationKey!), completed: nil)
-                            cell.shareImageHConstraint.constant = 300
-                            self.view.layoutIfNeeded()
+                        var index4 = 9
+                        for btn in cell.scoreView2Par.subviews{
+                            if btn.isKind(of: UIButton.self){
+                                if index4 == i{
+                                    (btn as! UIButton).setTitleColor(UIColor.glfFlatBlue, for: .normal)
+                                    (btn as! UIButton).titleLabel?.font = UIFont(name: "SFProDisplay-Regular", size: FONT_SIZE)
+                                    (btn as! UIButton).setTitle("\(holesData[i].par!)", for: .normal)
+                                    break
+                                }
+                                index4 = index4 + 1
+                            }
                         }
                     }
-                //btnScoreCard
-                    // ------------------------------------------------------------------------------------------------------
-//                    let gestureCardView = UITapGestureRecognizer(target: self, action:  #selector (self.showFinalScores (_:)))
-//                    cell.stackViewToClick.tag = indexPath.row
-//                    cell.stackViewToClick.addGestureRecognizer(gestureCardView)
-            cell.btnScoreCard.addTarget(self, action: #selector(self.showFinalScores(_:)), for: .touchUpInside)
-            cell.btnScoreCard.tag = indexPath.row
-
-                    var suffix = "Likes"
-                    if let likesCount = dataArray[indexPath.row].likesCount{
-                        
-                        if(likesCount == 0){
-                            suffix = "Like"
-                        }else if(likesCount == 1){
-                            suffix = "1 Like"
-                        }else{
-                            suffix = "\(likesCount) Likes"
-                        }
-                        cell.btnLike.setTitle("\(suffix)", for: .normal)
-                    }
-                    cell.btnLike.isSelected = false
-                    if(dataArray[indexPath.row].isLikedByMe)!{
-                        cell.btnLike.setImage(#imageLiteral(resourceName: "like_red"), for: .selected)
-                        cell.btnLike.isSelected = true
-                    }
-                    cell.btnLike.tag = indexPath.row
-                    cell.btnShare.tag = indexPath.row
-                    cell.btnDelete.tag = indexPath.row
-            
-                    cell.btnLike.addTarget(self, action: #selector(self.btnActionLike(_:)), for: .touchUpInside)
-                    cell.btnShare.addTarget(self, action: #selector(self.btnActionShare(_:)), for: .touchUpInside)
-                    cell.btnDelete.addTarget(self, action: #selector(self.btnActionDelete(_:)), for: .touchUpInside)
-
-                if (feeds.userKey == Auth.auth().currentUser!.uid) {
-                    cell.btnDelete.isHidden = false
-                  }
-                else
-                 {
-                    cell.btnDelete.isHidden = true
-                 }
-                    self.cardViewMArray.add(cell.cardView)
-                //}
-                return cell
-            //}
+                }
+                cell.scoreView2.isHidden = false
+                cell.scoreView1.isHidden = false
+                cell.shareImageView.isHidden = true
+                
+                cell.shareImageHConstraint.constant = cell.frame.size.height
+                self.view.layoutIfNeeded()
+                
+                if(holesData.count == 9){
+                    cell.scoreView2.isHidden = true
+                    
+                    cell.shareImageHConstraint.constant = cell.frame.size.height - 60
+                    self.view.layoutIfNeeded()
+                }
+                let shotDetails = shotSum > parSum ? "-over":"-under"
+                let anoterString = shotSum > parSum ? "\(shotSum-parSum)":"\(parSum-shotSum)"
+                cell.lblScoreTitle.text =  "\(anoterString) \(shotDetails) \(shotSum)"
+                if(parSum) == 0{
+                    cell.lblScoreTitle.text =  "Even par \(shotSum)"
+                }
+            }
         }
+        else{
+            cell.lblSharedMsg.isHidden = false
+            
+            let subtitle = NSDate(timeIntervalSince1970:(feeds.timeStamp)!/1000).timeAgoSinceNow
+            //                        if((feeds.location) != nil){
+            cell.lblSubtitle.text = "\(subtitle)"
+            //}
+            if((feeds.message) != nil){
+                cell.lblSharedMsg.text = "\(feeds.message!)"
+            }
+            cell.scoreView2.isHidden = true
+            cell.scoreView1.isHidden = true
+            cell.shareImageView.isHidden = false
+            
+            if (feeds.locationKey != nil) {
+                
+                cell.shareImageView.sd_setImage(with: URL(string: feeds.locationKey!), completed: nil)
+                cell.shareImageHConstraint.constant = 300
+                self.view.layoutIfNeeded()
+            }
+        }
+
+        cell.btnScoreCard.addTarget(self, action: #selector(self.showFinalScores(_:)), for: .touchUpInside)
+        cell.btnScoreCard.tag = indexPath.row
+        
+        var suffix = "Likes"
+        if let likesCount = dataArray[indexPath.row].likesCount{
+            
+            if(likesCount == 0){
+                suffix = "Like"
+            }else if(likesCount == 1){
+                suffix = "1 Like"
+            }else{
+                suffix = "\(likesCount) Likes"
+            }
+            cell.btnLike.setTitle("\(suffix)", for: .normal)
+        }
+        cell.btnLike.isSelected = false
+        if(dataArray[indexPath.row].isLikedByMe)!{
+            cell.btnLike.setImage(#imageLiteral(resourceName: "like_red"), for: .selected)
+            cell.btnLike.isSelected = true
+        }
+        cell.btnLike.tag = indexPath.row
+        cell.btnShare.tag = indexPath.row
+        cell.btnDelete.tag = indexPath.row
+        
+        cell.btnLike.addTarget(self, action: #selector(self.btnActionLike(_:)), for: .touchUpInside)
+        cell.btnShare.addTarget(self, action: #selector(self.btnActionShare(_:)), for: .touchUpInside)
+        cell.btnDelete.addTarget(self, action: #selector(self.btnActionDelete(_:)), for: .touchUpInside)
+        
+        if (feeds.userKey == Auth.auth().currentUser!.uid) {
+            cell.btnDelete.isHidden = false
+        }else{
+            cell.btnDelete.isHidden = true
+        }
+        self.cardViewMArray.add(cell.cardView)
+        //}
+        return cell
+        //}
+    }
     
     // MARK: - usrProfileImageTapped
     @objc func usrProfileImageTapped(_ sender:UITapGestureRecognizer){
         let index = (sender.view?.tag)!
         let feeds = dataArray[index]
-
+        
         let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "PublicProfileVC") as! PublicProfileVC
         viewCtrl.userKey = feeds.userKey!
         self.navigationController?.pushViewController(viewCtrl, animated: true)
@@ -1136,25 +1019,24 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             self.togetherTblView.reloadData()
         }))
         self.present(alert, animated: true, completion: nil)
-
+        
     }
     
     @objc func showFinalScores(_ sender:UIButton){
         // do other task
-         let index = sender.tag//{
-            if(dataArray.count > Int(index)){
-
+        let index = sender.tag//{
+        if(dataArray.count > Int(index)){
             if let matchID = dataArray[index].matchId{
                 debugPrint(matchID)
                 self.getScoreFromMatchDataScoring(matchId:matchID)
-                }
             }
+        }
         //}
     }
-
+    
     func getScoreFromMatchDataScoring(matchId:String){
         self.progressView.show(atView: self.view, navItem: self.navigationItem)
-
+        
         var scoring = [(hole:Int,par:Int,players:[NSMutableDictionary])]()
         var isManualScoring = false
         let matchDataDiction = NSMutableDictionary()
@@ -1215,7 +1097,6 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             }
             DispatchQueue.main.async(execute: {
                 self.progressView.hide(navItem: self.navigationItem)
-
                 let viewCtrl = UIStoryboard(name: "Game", bundle: nil).instantiateViewController(withIdentifier: "FinalScoreBoardViewCtrl") as! FinalScoreBoardViewCtrl
                 viewCtrl.finalPlayersData = players
                 viewCtrl.finalScoreData = scoring

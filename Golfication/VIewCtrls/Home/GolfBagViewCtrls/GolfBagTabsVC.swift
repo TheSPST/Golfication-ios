@@ -265,6 +265,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     
     var selectedLoft = String()
     var selectedLoftArr = [String]()
+    var selectedBrandArr = [String]()
 
     var selectedLengthArr = [String]()
     var selectedLength = String()
@@ -392,6 +393,12 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
         }
         debugPrint("selectedLengthArr", selectedLengthArr)
 
+        selectedBrandArr = golfBagEditPopUpData.getBrandArray(clubName: self.selectedBagStr)
+        selectedBrand = golfBagEditPopUpData.selectedBrand
+        lblBrand.text = selectedBrand
+        debugPrint("selectedBrandArr", selectedBrandArr)
+        debugPrint("selectedBrand", selectedBrand)
+
         self.lblLengthValue.text = "-"
         self.lblAvgDistanceValue.text = "-"
         self.lblBrandValue.text = "-"
@@ -450,6 +457,20 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
 //                    self.btnAddToBag.isHidden = true
 //                    self.btnRemove.isHidden = false
                     self.selectedBrand = "Generic " + self.getFullClubName(clubName:self.selectedBagStr)
+                    if self.selectedBagStr == "Pw"{
+                        self.selectedBrand = "Generic " + "P Wedge"
+                    }
+                    else if self.selectedBagStr == "Sw"{
+                        self.selectedBrand = "Generic " + "S Wedge"
+                    }
+                    else if self.selectedBagStr == "Gw"{
+                        self.selectedBrand = "Generic " + "G Wedge"
+                    }
+                    else if self.selectedBagStr == "Lw"{
+                        self.selectedBrand = "Generic " + "L Wedge"
+                    }
+                    debugPrint("selectedBrand", self.selectedBrand)
+
                     self.lblBrand.text = self.selectedBrand
 
                     if self.fromEdit{
@@ -524,9 +545,23 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                             self.lblShaft.text = self.selectedShaft
                         }
                         if let brand = dict.value(forKey: "brand") as? String{
-                            if brand != "" && brand != "Titleiest"{
+                            if brand != ""{
 
                             self.selectedBrand = brand
+                                if dict.value(forKey: "clubName") as! String == "Pw"{
+                                    self.selectedBrand = "Generic " + "P Wedge"
+                                }
+                                else if dict.value(forKey: "clubName") as! String == "Sw"{
+                                    self.selectedBrand = "Generic " + "S Wedge"
+                                }
+                                else if dict.value(forKey: "clubName") as! String == "Gw"{
+                                    self.selectedBrand = "Generic " + "G Wedge"
+                                }
+                                else if dict.value(forKey: "clubName") as! String == "Lw"{
+                                    self.selectedBrand = "Generic " + "L Wedge"
+                                }
+                                debugPrint("selectedBrand", self.selectedBrand)
+
                             self.lblBrand.text = self.selectedBrand
                             self.lblBrandValue.text = self.selectedBrand
                             }
@@ -626,31 +661,6 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             }
         }
     }
-    @IBAction func loftAngleAction(_ sender: Any){
-        for i in 0..<selectedLoftArr.count{
-            if selectedLoftArr[i] == selectedLoft{
-
-        ActionSheetStringPicker.show(withTitle: "Loft Angle", rows: selectedLoftArr, initialSelection: i, doneBlock: {
-            picker, value, index in
-            
-            self.selectedLoft = "\(index!)"
-            self.lblLoft.text = self.selectedLoft
-
-            if value == 0 {
-                //self.saveAndviewScore()
-            }
-            else{
-                //self.exitWithoutSave()
-            }
-            return
-        }, cancel: { ActionStringCancelBlock in
-            return
-        }, origin: sender)
-                
-            break
-            }
-        }
-    }
     @IBAction func clubLengthAction(_ sender: Any){
         for i in 0..<selectedLengthArr.count{
             if selectedLengthArr[i] == selectedLength{
@@ -721,24 +731,57 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
     }
     
     @IBAction func chooseBrandAction(_ sender: Any){
-        ActionSheetStringPicker.show(withTitle: "Club Brand", rows: [selectedBrand], initialSelection: 0, doneBlock: {
-            picker, value, index in
-            
-            self.selectedBrand = "\(index!)"
-            self.lblBrand.text = self.selectedBrand
+        for i in 0..<selectedBrandArr.count{
+            if selectedBrandArr[i] == selectedBrand{
 
-            if value == 0 {
-                //self.saveAndviewScore()
+                ActionSheetStringPicker.show(withTitle: "Club Brand", rows: selectedBrandArr, initialSelection: i, doneBlock: {
+                    picker, value, index in
+                    
+                    self.selectedBrand = "\(index!)"
+                    debugPrint("selectedBrand", self.selectedBrand)
+
+                    self.lblBrand.text = self.selectedBrand
+                    
+                    if value == 0 {
+                        //self.saveAndviewScore()
+                    }
+                    else{
+                        //self.exitWithoutSave()
+                    }
+                    return
+                }, cancel: { ActionStringCancelBlock in
+                    return
+                }, origin: sender)
+                break
             }
-            else{
-                //self.exitWithoutSave()
-            }
-            return
-        }, cancel: { ActionStringCancelBlock in
-            return
-        }, origin: sender)
+        }
     }
     
+    @IBAction func loftAngleAction(_ sender: Any){
+        for i in 0..<selectedLoftArr.count{
+            if selectedLoftArr[i] == selectedLoft{
+                
+                ActionSheetStringPicker.show(withTitle: "Loft Angle", rows: selectedLoftArr, initialSelection: i, doneBlock: {
+                    picker, value, index in
+                    
+                    self.selectedLoft = "\(index!)"
+                    self.lblLoft.text = self.selectedLoft
+                    
+                    if value == 0 {
+                        //self.saveAndviewScore()
+                    }
+                    else{
+                        //self.exitWithoutSave()
+                    }
+                    return
+                }, cancel: { ActionStringCancelBlock in
+                    return
+                }, origin: sender)
+                
+                break
+            }
+        }
+    }
     @IBAction func removeBagAction(_ sender: Any){
         FBSomeEvents.shared.singleParamFBEvene(param: "Bag Remove Club")
         self.progressView.show(atView: self.scrlView, navItem: self.navigationItem)
@@ -812,6 +855,8 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 if !(tempBagArray.contains(self.selectedBagStr)){
                     let golfBagDict = NSMutableDictionary()
                     golfBagDict.setObject(self.selectedBrand, forKey: "brand" as NSCopying)
+                    debugPrint("selectedBrand", self.selectedBrand)
+
                     if Constants.distanceFilter == 1{
                         let val = self.getValueWithMultipleOf5(selectedLength: self.selectedLength)
                         golfBagDict.setObject("\(val)", forKey: "clubLength" as NSCopying)
@@ -1147,6 +1192,11 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
             selectedLoftArr = golfBagEditPopUpData.getLoftAngleArray(clubName: self.selectedBagStr)
             debugPrint("selectedLoftArr", selectedLoftArr)
             
+            selectedBrandArr = golfBagEditPopUpData.getBrandArray(clubName: self.selectedBagStr)
+            selectedBrand = golfBagEditPopUpData.selectedBrand
+            debugPrint("selectedBrandArr", selectedBrandArr)
+            debugPrint("selectedBrand", selectedBrand)
+
             selectedLengthArr = golfBagEditPopUpData.getClubLengthArray(clubName: self.selectedBagStr)
             debugPrint("selectedLengthArr", selectedLengthArr)
 
@@ -1173,7 +1223,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                     if let tagName = dict.value(forKey: "tagName") as? String, dict.value(forKey: "tagName") as! String != "" {
                         self.lblTagAssignedValue.text = tagName
                     }
-                    if let brand = dict.value(forKey: "brand") as? String, dict.value(forKey: "brand") as! String != "", dict.value(forKey: "brand") as! String != "Titleiest"{
+                    if let brand = dict.value(forKey: "brand") as? String, dict.value(forKey: "brand") as! String != ""{
                         self.lblBrandValue.text = brand
                     }
                     if let avgDistance = dict.value(forKey: "avgDistance") as? Int, dict.value(forKey: "avgDistance") as! Int != 0{
@@ -1256,6 +1306,11 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                 selectedLoftArr = golfBagEditPopUpData.getLoftAngleArray(clubName: self.selectedBagStr)
                 debugPrint("selectedLoftArr", selectedLoftArr)
                 
+                selectedBrandArr = golfBagEditPopUpData.getBrandArray(clubName: self.selectedBagStr)
+                selectedBrand = golfBagEditPopUpData.selectedBrand
+                debugPrint("selectedBrandArr", selectedBrandArr)
+                debugPrint("selectedBrand", selectedBrand)
+
                 selectedLengthArr = golfBagEditPopUpData.getClubLengthArray(clubName: self.selectedBagStr)
                 debugPrint("selectedLengthArr", selectedLengthArr)
 
@@ -1282,7 +1337,7 @@ class GolfBagTabsVC: UIViewController, UICollectionViewDelegate, UICollectionVie
                         if let tagName = dict.value(forKey: "tagName") as? String, dict.value(forKey: "tagName") as! String != "" {
                             self.lblTagAssignedValue.text = tagName
                         }
-                        if let brand = dict.value(forKey: "brand") as? String, dict.value(forKey: "brand") as! String != "", dict.value(forKey: "brand") as! String != "Titleiest"{
+                        if let brand = dict.value(forKey: "brand") as? String, dict.value(forKey: "brand") as! String != ""{
                             self.lblBrandValue.text = brand
                         }
                         if let avgDistance = dict.value(forKey: "avgDistance") as? Int, dict.value(forKey: "avgDistance") as! Int != 0{

@@ -272,7 +272,13 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var windNotesView: WindNotesView!
     @IBOutlet weak var lblWindS: UILabel!
     @IBOutlet weak var lblWindU: UILabel!
-    
+   
+    @IBOutlet weak var lblFront: UILocalizedLabel!
+    @IBOutlet weak var lblCenter: UILocalizedLabel!
+    @IBOutlet weak var lblBack: UILocalizedLabel!
+    @IBOutlet weak var lblSiriHeading: UILocalizedLabel!
+    @IBOutlet weak var lblIfYou: UILabel!
+    @IBOutlet weak var bottomDistance: NSLayoutConstraint!
     var syncTime = Double()
     
 //    var isBackground : Bool{
@@ -708,8 +714,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     // Mark :- GetTableContentHeight
     var tableViewHeight: CGFloat {
         scoreTableView.layoutIfNeeded()
-        var height = scoreTableView.contentSize.height
-        self.scoreTableView.isScrollEnabled = false
+        var height = scoreTableView.contentSize.height + 50
+        self.scoreTableView.isScrollEnabled = true
         if(self.playersButton.count > 1){
             if(height > 150){
                 height = 150
@@ -1692,30 +1698,30 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
 //        }
 //        self.checkCurrentLocation()
 //    }
-    func checkCurrentLocation(){
-        switch CLLocationManager.authorizationStatus() {
-        case .notDetermined:
-            self.locationManager.requestAlwaysAuthorization()
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-            break
-            
-        case .restricted, .denied:
-            let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
-                self.btnActionBack(self.btnBack)
-            }))
-            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
-                let url = URL(string: UIApplicationOpenSettingsURLString)!
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }))
-            self.present(alert, animated: true, completion: nil)
-            break
-            
-        case .authorizedWhenInUse, .authorizedAlways:
-            // Do Nothing
-            break
-        }
-    }
+//    func checkCurrentLocation(){
+//        switch CLLocationManager.authorizationStatus() {
+//        case .notDetermined:
+//            self.locationManager.requestAlwaysAuthorization()
+//            self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+//            break
+//
+//        case .restricted, .denied:
+//            let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
+//                self.btnActionBack(self.btnBack)
+//            }))
+//            alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+//                let url = URL(string: UIApplicationOpenSettingsURLString)!
+//                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//            }))
+//            self.present(alert, animated: true, completion: nil)
+//            break
+//
+//        case .authorizedWhenInUse, .authorizedAlways:
+//            // Do Nothing
+//            break
+//        }
+//    }
     @objc func swipedViewHeaderUp(){
         self.btnActionMoveToMap(Any.self)
     }
@@ -1883,6 +1889,60 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             self.courseData.isContinue = self.isContinue
             self.courseData.getGolfCourseDataFromFirebase(courseId: courseId)
         }
+        
+        // screen foreground for multiple
+        let quote = "If you have your earphones, next time just say "
+        let qoute2 = "\"What's the distance\""
+        if UIDevice.current.iPhoneX || UIDevice.current.iPhonePlus || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
+            self.bottomDistance.constant = 50
+            self.lblBackElev.font = self.lblBackElev.font.withSize(70)
+            self.lblCenterElev.font = self.lblCenterElev.font.withSize(80)
+            self.lblFrontElev.font = self.lblFrontElev.font.withSize(70)
+            self.lblSiriHeading.font = self.lblSiriHeading.font.withSize(24)
+            
+            self.lblFront.font = self.lblFront.font.withSize(17)
+            self.lblBack.font = self.lblBack.font.withSize(17)
+            self.lblFront.font = self.lblFront.font.withSize(17)
+            
+            self.lblFrontDistance.font = self.lblFrontDistance.font.withSize(17)
+            self.lblDistance.font = self.lblDistance.font.withSize(17)
+            self.lblBackDistance.font = self.lblBackDistance.font.withSize(17)
+            
+            let attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 16)]
+            let attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Italic", size: 16)]
+            let attributedText = NSMutableAttributedString()
+            let attributedQuote = NSAttributedString(string: quote, attributes: attributes as [NSAttributedStringKey : Any])
+            let attributedQuote2 = NSAttributedString(string: qoute2, attributes: attributes2 as [NSAttributedStringKey : Any])
+            attributedText.append(attributedQuote)
+            attributedText.append(attributedQuote2)
+            self.lblIfYou.attributedText = attributedText
+        }
+        else if UIDevice.current.iPhone5{
+            self.bottomDistance.constant = 8
+            self.lblBackElev.font = self.lblBackElev.font.withSize(40)
+            self.lblCenterElev.font = self.lblCenterElev.font.withSize(50)
+            self.lblFrontElev.font = self.lblFrontElev.font.withSize(40)
+            self.lblSiriHeading.font = self.lblSiriHeading.font.withSize(18)
+            
+            self.lblFront.font = self.lblFront.font.withSize(12)
+            self.lblBack.font = self.lblBack.font.withSize(12)
+            self.lblFront.font = self.lblFront.font.withSize(12)
+            
+            self.lblFrontDistance.font = self.lblFrontDistance.font.withSize(12)
+            self.lblDistance.font = self.lblDistance.font.withSize(12)
+            self.lblBackDistance.font = self.lblBackDistance.font.withSize(12)
+            
+            let attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 11)]
+            let attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Italic", size: 11)]
+            let attributedText = NSMutableAttributedString()
+            let attributedQuote = NSAttributedString(string: quote, attributes: attributes as [NSAttributedStringKey : Any])
+            let attributedQuote2 = NSAttributedString(string: quote, attributes: attributes2 as [NSAttributedStringKey : Any])
+            attributedText.append(attributedQuote)
+            attributedText.append(attributedQuote2)
+            self.lblIfYou.attributedText = attributedText
+            
+        }
+        
     }
     @objc func hideStableFord(_ notification:NSNotification){
         let alertVC = UIAlertController(title: "Thank you for your time!", message: "Stableford scoring for your course should be available in the next 48 hours!", preferredStyle: UIAlertController.Style.alert)
@@ -2323,7 +2383,17 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }, completion: {(_Bool)->Void in
                     if(!self.isHoleByHole) && (!self.isShowcaseFlag) && (!self.isContinue){
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                            self.showCaseShareShots()
+                            if self.isOnCourse{
+                                let tutorialCount = UserDefaults.standard.integer(forKey: "OnCourseTutorial")
+                                if tutorialCount < 2{
+                                    self.showCaseShareShots()
+                                }
+                            }else{
+                                let tutorialCount = UserDefaults.standard.integer(forKey: "OffCourseTutorial")
+                                if tutorialCount < 2{
+                                    self.showCaseShareShots()
+                                }
+                            }
                         })
                         self.isShowcaseFlag = true
                     }
@@ -3905,7 +3975,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 }
                 if !gestureRecognizer.isKind(of: UITapGestureRecognizer.self){
                     gestureRecognizer.addTarget(self, action: #selector(NewMapVC.handleTap(_:)))
-                    (gestureRecognizer as? UITapGestureRecognizer)?.numberOfTapsRequired = 2
                 }
             }
         }
@@ -3969,24 +4038,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     func enableLocationServices() {
         locationManager.delegate = self
         switch CLLocationManager.authorizationStatus() {
-            case .authorizedWhenInUse, .restricted, .denied:
-                let alertController = UIAlertController(
-                    title: "Background Location Access",
-                    message: "For Rangefinder distance notification, please open this app's settings and set location access to 'Always'.",
-                    preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-                alertController.addAction(cancelAction)
-                let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
-                    if let url = URL(string:UIApplicationOpenSettingsURLString) {
-                        UIApplication.shared.open(url, options:[:], completionHandler: { (isTrue) in
-                            debugPrint("setting Opened")
-                        })
-                    }
-                }
-                alertController.addAction(openAction)
-                self.present(alertController, animated: true, completion: nil)
-            case .authorizedAlways:
-                locationManager.allowsBackgroundLocationUpdates = true
+            case .restricted, .denied:
+                self.locationManager.requestAlwaysAuthorization()
+            case .authorizedAlways, .authorizedWhenInUse:
+                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager.startUpdatingLocation()
+                self.mapView.isMyLocationEnabled = true
         case .notDetermined:
                 let alert = UIAlertController(title: "Alert" , message: "Please enable location to use this mode." , preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -6727,7 +6784,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         let holeNumber = self.holeIndex
 //        self.multiplayerPageControl.isHidden = false
         self.lblRaceToFlagTitle.isHidden = false
-        self.barChartParentStackView.isHidden = false
+        self.barChartParentStackView.isHidden = true
         
         for j in 0..<self.playersButton.count{
             var totalStrokes = 3.0
@@ -6993,9 +7050,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.progressView.hide(navItem: self.navigationItem)
         if(!isHoleByHole) && isOnCourse{
             enableLocationServices()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-            locationManager.startUpdatingLocation()
-            self.mapView.isMyLocationEnabled = true
         }
         
         if(playersButton.count == 1){
@@ -7238,74 +7292,81 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
     }
+    // MARK :-
+//    @objc func draggingCustom(_ notification: NSNotification) {
+//        if let object = notification.object as? UITouch{
+//            let points = object.location(in: self.mapView)
+//            debugPrint(points)
+//        }
+//    }
     // MARK :- OFFCourse Tutorials
     func showCaseMiddleMarker(){
-        var label2 = UILabel()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                    let tutorialCount = UserDefaults.standard.integer(forKey: "OffCourseTutorial")
-                    if(self.positionsOfDotLine.count > 1) && tutorialCount < 2{
-                        let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
-                        label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-25, width: 50, height: 50))
-                        self.mapView.addSubview(label2)
-                        let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
+//        var label2 = UILabel()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+            let tutorialCount = UserDefaults.standard.integer(forKey: "OffCourseTutorial")
+            if(self.positionsOfDotLine.count > 1) && tutorialCount < 2{
+                let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
+                let label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-12.5, width: 50, height: 50))
+//                self.mapView.addSubview(label2)
+                
+                let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
+//                NotificationCenter.default.addObserver(self, selector: #selector(self.draggingCustom(_:)), name: NSNotification.Name(rawValue: "dragging"), object: nil)
+                tapTargetPrompt.action = {
+//                    label2.removeFromSuperview()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                        var timerForMiddleMarker = Timer()
+                        timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                            if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+                                if let thePresenter = self.navigationController?.visibleViewController{
+                                    if (thePresenter.isKind(of:NewMapVC.self)){
+                                        if !self.forTutorial[1]{
+                                            self.forTutorial[0] = true
+                                            self.forTutorial[1] = true
+                                            self.showCaseClubChange()
+                                        }
+                                    }
+                                }
+                                timerForMiddleMarker.invalidate()
+                            }
+                        })
                         
-                        tapTargetPrompt.action = {
-                            label2.removeFromSuperview()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                                var timerForMiddleMarker = Timer()
-                                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                                    if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-                                        if let thePresenter = self.navigationController?.visibleViewController{
-                                            if (thePresenter.isKind(of:NewMapVC.self)){
-                                                if !self.forTutorial[1]{
-                                                    self.forTutorial[0] = true
-                                                    self.forTutorial[1] = true
-                                                    self.showCaseClubChange()
-                                                }
-                                            }
+                    })
+                }
+                tapTargetPrompt.dismissed = {
+                    print("view dismissed")
+//                    label2.removeFromSuperview()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                        var timerForMiddleMarker = Timer()
+                        timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                            if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+                                if let thePresenter = self.navigationController?.visibleViewController{
+                                    if (thePresenter.isKind(of:NewMapVC.self)){
+                                        if !self.forTutorial[1]{
+                                            self.forTutorial[0] = true
+                                            self.forTutorial[1] = true
+                                            self.showCaseClubChange()
                                         }
-                                        timerForMiddleMarker.invalidate()
                                     }
-                                })
-
-                            })
-                        }
-                        tapTargetPrompt.dismissed = {
-                            print("view dismissed")
-                            label2.removeFromSuperview()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                                var timerForMiddleMarker = Timer()
-                                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                                    if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-                                        if let thePresenter = self.navigationController?.visibleViewController{
-                                            if (thePresenter.isKind(of:NewMapVC.self)){
-                                                if !self.forTutorial[1]{
-                                                    self.forTutorial[0] = true
-                                                    self.forTutorial[1] = true
-                                                    self.showCaseClubChange()
-                                                }
-                                            }
-                                        }
-                                        timerForMiddleMarker.invalidate()
-                                    }
-                                })
-                                
-                            })
-                        }
-                        tapTargetPrompt.circleColor = UIColor.glfBlack95
-                        tapTargetPrompt.primaryText = ""
-                        tapTargetPrompt.secondaryText = "Drag your target marker to get free club recommendations for every shot.".localized()
-                        tapTargetPrompt.textPostion = .bottomRight
-                        UserDefaults.standard.set(tutorialCount+1, forKey: "OffCourseTutorial")
-                        UserDefaults.standard.synchronize()
-                    }else{
-                        self.forTutorial[0] = true
-                        self.forTutorial[1] = true
-                        self.forTutorial[2] = true
-                        self.forTutorial[3] = true
-                    }
-                })
-
+                                }
+                                timerForMiddleMarker.invalidate()
+                            }
+                        })
+                        
+                    })
+                }
+                tapTargetPrompt.circleColor = UIColor.glfBlack95
+                tapTargetPrompt.primaryText = ""
+                tapTargetPrompt.secondaryText = "Drag your target marker to get free club recommendations for every shot.".localized()
+                tapTargetPrompt.textPostion = .bottomRight
+                UserDefaults.standard.set(0, forKey: "OffCourseTutorial")
+                UserDefaults.standard.synchronize()
+            }else{
+                self.forTutorial[0] = true
+                self.forTutorial[1] = true
+                self.forTutorial[2] = true
+                self.forTutorial[3] = true
+            }
+        })
     }
     func showCaseClubChange(){
         
@@ -7358,6 +7419,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         tapTargetPrompt.secondaryText = "This is the club we recommend based on your yardage. Tap to change.".localized()
         tapTargetPrompt.textPostion = .topRight
     }
+    
     func showCaseTrackShots(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnTrackShot)
         
@@ -8297,12 +8359,15 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         self.btnDeleteShot.isHidden = !hide
         self.btnDeleteLbl.isHidden = !hide
         self.stackViewSubBtn.isHidden = !hide
-        if tappedMarker != nil && (tappedMarker.iconView!.tag+1 == self.shotViseCurve.count) && holeOutFlag{
-            self.btnPenaltyShot.isHidden = true
-            self.btnAddPenaltyLbl.isHidden = true
-        }else{
-            self.btnPenaltyShot.isHidden = false
-            self.btnAddPenaltyLbl.isHidden = false
+        let isTappedMArker = tappedMarker.iconView != nil ? 0 : tappedMarker.iconView!.tag+1
+        if isTappedMArker != 0{
+            if tappedMarker != nil && (tappedMarker.iconView!.tag+1 == self.shotViseCurve.count) && holeOutFlag{
+                self.btnPenaltyShot.isHidden = true
+                self.btnAddPenaltyLbl.isHidden = true
+            }else{
+                self.btnPenaltyShot.isHidden = false
+                self.btnAddPenaltyLbl.isHidden = false
+            }
         }
         self.btnClose.isHidden = !hide
         self.btnCloseLbl.isHidden = !hide

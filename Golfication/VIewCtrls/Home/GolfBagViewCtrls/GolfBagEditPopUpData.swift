@@ -12,6 +12,7 @@ class GolfBagEditPopUpData: NSObject {
 
     var selectedLoft = String()
     var selectedLength = String()
+    var selectedBrand = String()
 
     func getLoftAngleArray(clubName: String) -> [String]{
         var dataArray = [String]()
@@ -485,5 +486,83 @@ class GolfBagEditPopUpData: NSObject {
             }
         }
         return dataArray
+    }
+    
+    func getBrandArray(clubName: String) -> [String]{
+
+        var dataArray = [String]()
+        
+        let lastChar = clubName.last!
+        let fullName = getFullClubName(clubName: clubName).dropFirst(2)
+        
+        var genericFullName = "Generic " + getFullClubName(clubName: clubName)
+        selectedBrand = genericFullName
+
+        if clubName == "Pw"{
+            genericFullName = "Generic " + "P Wedge"
+            selectedBrand = genericFullName
+        }
+        else if clubName == "Sw"{
+            genericFullName = "Generic " + "S Wedge"
+            selectedBrand = genericFullName
+        }
+        else if clubName == "Gw"{
+            genericFullName = "Generic " + "G Wedge"
+            selectedBrand = genericFullName
+        }
+        else if clubName == "Lw"{
+            genericFullName = "Generic " + "L Wedge"
+            selectedBrand = genericFullName
+        }
+        if (clubName == "Dr") || (String(fullName) == "Wood"){
+            dataArray = [genericFullName, "Acer", "Adams", "Ben Hogan", "Benross", "Billy Club", "Bob Toski", "Bobby Jones", "Bombtech", "Bridgestone", "Brosnan", "Callaway", "Cleveland", "Coates", "Cobra", "Dunlop", "Fourteen", "Golfsmith", "GX-7 Golf", "Hogan", "Honma", "Inesis", "Intech", "Knuth Golf", "Krank", "Lynx", "Majek", "Maxfli", "Miura", "Mizuno", "Nakashima", "Nickent", "Nicklaus", "Nike", "Nomad", "Odyssey", "Onoff", "Orlimar", "Perfect Club", "Pinemeadow", "Ping", "Powell", "Power Bilt", "PRGR", "PGX", "Revolution Golf", "Royal Collection", "Slazenger", "Sonartec", "Srixon", "Taylormade", "Titleist", "Tommy Armour", "Top Flite", "Tour Edge", "Turin", "Walter Hagen", "Warrior", "Wilson", "Wishon Golf", "XXIO", "Yamaha", "Yonex"]
+        }
+        else if (lastChar == "i") || ((clubName == "Pw") || (clubName == "Sw") || (clubName == "Gw") || (clubName == "Lw")){
+
+            dataArray = [genericFullName, "Acer", "Adams", "Ben Hogan", "Benross", "Bombtech", "Bridgestone", "Brosnan", "Callaway", "Cleveland", "Coates", "Cobra", "Dunlop", "Edel", "Epon", "Forgan", "Fourteen", "Golfsmith", "Honma", "Inesis", "Infinity", "Intech", "Izzo", "John Letters", "KZG", "Lynx", "Macgregor", "Majek", "Maltby", "Maxfli", "Miura", "Mizuno", "Nakashima", "Nickent", "Nicklaus", "Nike", "Nomad", "Onoff", "Orlimar", "Pinemeadow", "Ping", "Powell", "Power Bilt", "PRGR", "PGX", "RAM", "Royal Collection", "Scratch", "Slazenger", "Sota", "Srixon", "Sub 70", "Taylormade", "Thomas Golf", "Titleist", "Tommy Armour", "Top Flite", "Tour Edge", "TP Mills", "Vega", "Walter Hagen", "Warrior", "Wilson", "Wishon Golf", "XXIO", "Yamaha", "Yonex"]
+        }
+        else if (lastChar == "h"){
+            
+            dataArray = [genericFullName, "Adams", "Affinity", "Ben Hogan", "Benross", "Bettinardi", "Bobby Jones", "Bombtech", "Bridgestone", "Brosnan", "C3I", "Callaway", "Cleveland", "Club Nut", "Coates", "Cobra", "Cooper", "Dunlop", "Edel", "Epon", "Forgan", "Fourteen", "Golf Customs", "Golf Gods", "Heavy Putter", "Honma", "Hopkins", "Indi Golf", "Inesis", "Intech", "KZG", "MacGregor", "Majek", "Maltby", "Maxfli", "Miura", "Mizuno", "Nakashima", "Nickent", "Nike", "Nomad", "Odyssey", "Onoff", "Orlimar", "Pinemeadow", "PnP", "Power Bilt", "PRGR", "PGX", "Ray Cook", "Royal Collection", "Scor", "Scratch", "Slazenger", "Slotline", "Smashfactor", "Snake Eyes", "Sonartec", "Spalding", "Srixon", "Strokes Gained Customs", "Sub 70", "Taylormade", "Thomas Golf", "Titleist", "Tommy Armour", "Top Flite", "Tour Edge", "Vega", "Walter Hagen", "Warrior", "Wilson", "Wishon Golf", "XE1", "XXIO", "Yamaha", "Yonex", "Zevo"]
+        }
+        return dataArray
+    }
+    
+    func getFullClubName(clubName: String) -> String{
+        var fullClubName = String()
+        
+        let lastChar = clubName.last!
+        let firstChar = clubName.first!
+        
+        if lastChar == "i"{
+            fullClubName = String(firstChar) + " Iron"
+        }
+        else if lastChar == "h"{
+            fullClubName = String(firstChar) + " Hybrid"
+        }
+        else if lastChar == "r"{
+            fullClubName = "Driver"
+        }
+        else if lastChar == "u"{
+            fullClubName = "Putter"
+        }
+        else if lastChar == "w"{
+            if clubName == "Pw"{
+                fullClubName =  "Pitching Wedge"
+            }
+            else if clubName == "Sw"{
+                fullClubName =  "Sand Wedge"
+            }
+            else if clubName == "Gw"{
+                fullClubName =  "Gap Wedge"
+            }
+            else if clubName == "Lw"{
+                fullClubName =  "Lob Wedge"
+            }
+            else{
+                fullClubName = String(firstChar) + " Wood"
+            }
+        }
+        return fullClubName
     }
 }

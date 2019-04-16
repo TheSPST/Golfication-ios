@@ -766,7 +766,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
         isAccept += 1
         self.getActiveMatches()
-        selectedGameTypeFromFirebase()
+        checkRangeFinderHoleData()
+//        selectedGameTypeFromFirebase()
         
         if(isShowCase) && Constants.matchId.count == 0{
             DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
@@ -930,7 +931,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }
                 DispatchQueue.main.async(execute: {
                     self.progressView.hide()
-                    self.selectedGameTypeFromFirebase()
+                    self.checkRangeFinderHoleData()
+//                    self.selectedGameTypeFromFirebase()
                 })
             }
         }
@@ -1213,7 +1215,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         }
                         //                        self.getNearByData(latitude: Double(selectedLat)!, longitude: Double(selectedLong)!, currentLocation: myLocation)
                         
-                        self.selectedGameTypeFromFirebase()
+//                        self.selectedGameTypeFromFirebase()
+                        self.checkRangeFinderHoleData()
                         self.setActiveMatchUI()
                     }
                     else if let homeCourseDic = userData.object(forKey: "homeCourseDetails") as? NSDictionary{
@@ -1248,7 +1251,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                             }))
                             self.present(emptyAlert, animated: true, completion: nil)
                         }else{
-                            self.selectedGameTypeFromFirebase()
+//                            self.selectedGameTypeFromFirebase()
+                            self.checkRangeFinderHoleData()
                             self.setActiveMatchUI()
                         }
                     }
@@ -1369,8 +1373,8 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         Constants.selectedLong = ((self.golfDataMArray[0] as AnyObject).value(forKey: "Longitude") as? String)!
                         Constants.selectedLat = ((self.golfDataMArray[0] as AnyObject).value(forKey: "Latitude") as? String)!
                         self.lblGolfName.text = Constants.selectedGolfName
-                        
-                        self.selectedGameTypeFromFirebase()
+                        self.checkRangeFinderHoleData()
+//                        self.selectedGameTypeFromFirebase()
                     }
                     self.setActiveMatchUI()
                 })
@@ -1448,35 +1452,17 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             if let slo = data.value(forKey: "slopeRating") as? Int{
                 slope = slo
             }
-            let teeName = data.value(forKey: "teeColor") as! String
-            let teeType = data.value(forKey: "tee") as! String
-            Constants.teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:ratin, slope:"\(slope)"))
+            if let teeName = data.value(forKey: "teeColor") as? String{
+                if let teeType = data.value(forKey: "tee") as? String{
+                        Constants.teeArr.append((name: teeName.capitalizingFirstLetter(), type: teeType.capitalizingFirstLetter(),rating:ratin, slope:"\(slope)"))
+                }
+            }
         }
-        if(!Constants.teeArr.isEmpty){
-            self.startingTeeCardView.isHidden = false
-            self.stblfordRulesLabel.isHidden = false
-            self.lblTeeName.text = "\(Constants.teeArr[0].name)"
-            self.lblTeeType.text = "(\(Constants.teeArr[0].type) Tee)"
-            self.lblTeeSlope.text = Constants.teeArr[0].slope
-            self.lblTeeRating.text = Constants.teeArr[0].rating
-            Constants.selectedSlope = Int(Constants.teeArr[0].slope)!
-            Constants.selectedRating = Constants.teeArr[0].rating
-            Constants.selectedTee = Constants.teeArr[0].type
-            Constants.selectedTeeColor = Constants.teeArr[0].name
-        }else{
-            Constants.selectedTee = ""
-            Constants.selectedTeeColor = ""
-            Constants.selectedSlope = 0
-            Constants.selectedRating = ""
-            self.startingTeeCardView.isHidden = true
-            self.stblfordRulesLabel.isHidden = true
-        }
+        self.selectedGameTypeFromFirebase()
     }
     func selectedGameTypeFromFirebase() {
-        if  !(Constants.selectedGolfID == "") {
             self.progressView.show()
             let golfId = "course_\(Constants.selectedGolfID)"
-            self.checkRangeFinderHoleData()
             FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "golfCourses/\(golfId)") { (snapshot) in
                 var golfData = NSDictionary()
                 if let golf = snapshot.value as? NSDictionary{
@@ -1484,118 +1470,103 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }
                 DispatchQueue.main.async(execute: {
                     if golfData.count != 0{
+                        var numberOfHoles = [(hole: Int,tee:[[CLLocationCoordinate2D]],green:[CLLocationCoordinate2D])]()
                         if let parArray = golfData.object(forKey: "par") as? NSArray{
                             if parArray.count == 18{
                                 self.gameTypeSgmtCtrl.selectedSegmentIndex = 0
+                                for i in 0..<18{
+                                    numberOfHoles.append((hole: i+1, tee: [[CLLocationCoordinate2D]](), green: [CLLocationCoordinate2D]()))
+                                }
                             }
                             else{
                                 self.gameTypeSgmtCtrl.selectedSegmentIndex = 1
+                                for i in 0..<9{
+                                    numberOfHoles.append((hole: i+1, tee: [[CLLocationCoordinate2D]](), green: [CLLocationCoordinate2D]()))
+                                }
                             }
                             self.gameTypeChanged(self.gameTypeSgmtCtrl)
                         }
-                        if (golfData.object(forKey: "coordinates") as? NSArray) != nil{
-                            self.classicScoringSV.isHidden = true
-                            self.stackRequestInfo.isHidden = true
-                            //                            self.scoringTypeSgmtCtrl.isEnabled = true
-                            //                            self.scoringTypeSgmtCtrl.selectedSegmentIndex = 1
-                            
-                            self.gameMode = "Advanced(GPS)"
-                            self.scoringMode = "Advanced(GPS)"
-                            
-                            self.switchShotTracker.isOn = true
-                            //self.shotTrackerChanged(mySwitch: self.switchShotTracker)
-                            self.switchShotTracker.isEnabled = true
-                            
-                            self.switchRangeFinder.isOn = true
-                            //self.rangeFinderChanged(mySwitch: self.switchRangeFinder)
-                            self.switchRangeFinder.isEnabled = true
-                            
-                        }
-                        else{
-                            if let rangefinder = golfData.object(forKey: "rangefinder") as? NSDictionary{
-                                
-                                var greenLat = Double()
-                                var greenLng = Double()
-                                if let rangeFinderHoles = rangefinder.object(forKey: "holes") as? NSArray{
-                                    if let lat = (rangeFinderHoles[0] as AnyObject).object(forKey: "greenLat") as? Double{
-                                        greenLat = lat
+                        if let coordinate = golfData.object(forKey: "coordinates") as? NSArray{
+                            var polygonArray = [[CLLocationCoordinate2D]]()
+                            var types = [String]()
+                            var propertyArray = [Properties]()
+                            for data in coordinate{
+                                let coordinateDict = (data as? NSDictionary)!
+                                for(key,value) in coordinateDict{
+                                    if((key as! String) == "type"){
+                                        types.append(value as! String)
                                     }
-                                    if let lng = (rangeFinderHoles[0] as AnyObject).object(forKey: "greenLng") as? Double{
-                                        greenLng = lng
+                                    else if((key as! String) == "geometry"){
+                                        let geometryDict = value as! NSDictionary
+                                        for(key,value) in geometryDict{
+                                            if((key as! String) == "coordinates"){
+                                                let coordArray = value as! NSArray
+                                                var polygon = [CLLocationCoordinate2D]()
+                                                for data in coordArray{
+                                                    let latlongArray = data as! NSArray
+                                                    for position in latlongArray{
+                                                        let positionArray = position as! NSArray
+                                                        polygon.append(CLLocationCoordinate2D(latitude: positionArray[1] as! CLLocationDegrees,longitude: positionArray[0] as! CLLocationDegrees))
+                                                    }
+                                                }
+                                                polygonArray.append(polygon)
+                                            }
+                                        }
+                                    }else if((key as! String) == "properties"){
+                                        let property = Properties()
+                                        if let hole = (value as AnyObject).object(forKey:"hole") as? String{
+                                            property.hole = Int(hole)
+                                        }
+                                        else if let hole = (value as AnyObject).object(forKey:"hole") as? Int{
+                                            property.hole = hole
+                                        }
+                                        property.label = (value as AnyObject).object(forKey:"label") as? String
+                                        property.type = (value as AnyObject).object(forKey:"type") as? String
+                                        propertyArray.append(property)
                                     }
-                                }
-                                if(rangefinder.object(forKey: "holes") != nil) && (greenLat != 0)  && (greenLng != 0){
-                                    self.gameMode = "rangeFinder"
-                                    self.scoringMode = "rangeFinder"
-                                    self.lblRequestMap.text = "This course is only available with Classic Scoring + Rangefinder."
-                                    
-                                    self.lblRFRequestInfo.text = "*Shot tracking is currently unavailable for this course."
-                                    self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
-                                    
-                                    self.switchRangeFinder.isOn = true
-                                    //self.rangeFinderChanged(mySwitch: self.switchRangeFinder)
-                                    self.switchRangeFinder.isEnabled = true
-                                    
-                                    self.switchShotTracker.isOn = false
-                                    //self.shotTrackerChanged(mySwitch: self.switchShotTracker)
-                                    self.switchShotTracker.isEnabled = false
-                                }
-                                else{
-                                    self.gameMode = "classic"
-                                    self.scoringMode = "classic"
-                                    self.lblRequestMap.text = "This course is only available with Classic Scoring."
-                                    
-                                    self.lblRFRequestInfo.text = "*Shot tracking and Rangefinder is currently unavailable for this course."
-                                    self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
-                                    
-                                    self.switchRangeFinder.isOn = false
-                                    //self.rangeFinderChanged(mySwitch: self.switchRangeFinder)
-                                    self.switchRangeFinder.isEnabled = false
-                                    
-                                    self.switchShotTracker.isOn = false
-                                    //self.shotTrackerChanged(mySwitch: self.switchShotTracker)
-                                    self.switchShotTracker.isEnabled = false
                                 }
                             }
-                            else{
-                                self.gameMode = "classic"
-                                self.scoringMode = "classic"
-                                self.lblRequestMap.text = "This course is available with Classic Scoring only. Request mapping to enable Advanced Stats."
-                                
-                                self.lblRFRequestInfo.text = "*Shot tracking and Rangefinder is currently unavailable for this course."
-                                self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
-                                
-                                self.switchRangeFinder.isOn = false
-                                //self.rangeFinderChanged(mySwitch: self.switchRangeFinder)
-                                self.switchRangeFinder.isEnabled = false
-                                
-                                self.switchShotTracker.isOn = false
-                                //self.shotTrackerChanged(mySwitch: self.switchShotTracker)
-                                self.switchShotTracker.isEnabled = false
+                            for j in 0..<numberOfHoles.count{
+                                for i in 0..<polygonArray.count{
+                                    if(propertyArray[i].hole == numberOfHoles[j].hole){
+                                        if(propertyArray[i].type == "T"){
+                                            numberOfHoles[j].tee.append(polygonArray[i])
+                                        }
+                                        if(propertyArray[i].type == "G"){
+                                            numberOfHoles[j].green = polygonArray[i]
+                                        }
+                                    }
+                                }
                             }
-                            //                            self.classicScoringSV.isHidden = false  // changed by Amit
-                            //                            self.stackRequestInfo.isHidden = false
-                            self.classicScoringSV.isHidden = true
-                            self.stackRequestInfo.isHidden = true
-                            
-                            let myMutableString = NSMutableAttributedString(string: self.lblRequestInfo.text!)
-                            myMutableString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(rgb: 0x3A7CA5), range: NSRange(location: 33, length: 8))
-                            self.lblRequestInfo.attributedText = myMutableString
-                            
-                            self.attributedStringArray.append("course often")
-                            let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
-                            self.lblRequestInfo.addGestureRecognizer(tap)
-                            self.lblRequestInfo.isUserInteractionEnabled = true
-                            
-                            //                            self.scoringTypeSgmtCtrl.isEnabled = false
-                            //                            self.scoringTypeSgmtCtrl.selectedSegmentIndex = 0
+                            var isAdvanced = false
+                            for i in 0..<numberOfHoles.count{
+                                if numberOfHoles[i].tee.count > 0 && numberOfHoles[i].green.count > 0{
+                                    isAdvanced = true
+                                }else{
+                                    isAdvanced = false
+                                    break
+                                }
+                            }
+                            if isAdvanced{
+                                self.classicScoringSV.isHidden = true
+                                self.stackRequestInfo.isHidden = true
+                                self.gameMode = "Advanced(GPS)"
+                                self.scoringMode = "Advanced(GPS)"
+                                self.switchShotTracker.isOn = true
+                                self.switchShotTracker.isEnabled = true
+                                self.switchRangeFinder.isOn = true
+                                self.switchRangeFinder.isEnabled = true
+                                self.checkRFStable(golfData: golfData,key:"rangefinder")
+                                self.checkRFStable(golfData: golfData,key:"stableford")
+                            }else{
+                                self.checkRFClassic(golfData: golfData)
+                            }
+                        }else{
+                            self.checkRFClassic(golfData: golfData)
                         }
-                        //                        self.scoringModeChanged(self.scoringTypeSgmtCtrl)
                         if Constants.matchId.isEmpty{
                             self.progressView.hide()
                         }
-                        debugPrint("ModeGame",self.gameMode)
-                        debugPrint("modeScoring",self.scoringMode)
                         
                         if Constants.isDevice{
                             self.lblLegacyAppMode.isHidden = false
@@ -1696,9 +1667,29 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                         self.golficationXView.isHidden = true
                         self.playOnCourseAction(self.btnPlayOnCourse)
                     }
+                    if(!Constants.teeArr.isEmpty){
+                        self.startingTeeCardView.isHidden = false
+                        self.stblfordRulesLabel.isHidden = false
+                        self.lblTeeName.text = "\(Constants.teeArr[0].name)"
+                        self.lblTeeType.text = "(\(Constants.teeArr[0].type) Tee)"
+                        self.lblTeeSlope.text = Constants.teeArr[0].slope
+                        self.lblTeeRating.text = Constants.teeArr[0].rating
+                        Constants.selectedSlope = Int(Constants.teeArr[0].slope)!
+                        Constants.selectedRating = Constants.teeArr[0].rating
+                        Constants.selectedTee = Constants.teeArr[0].type
+                        Constants.selectedTeeColor = Constants.teeArr[0].name
+                    }else{
+                        Constants.selectedTee = ""
+                        Constants.selectedTeeColor = ""
+                        Constants.selectedSlope = 0
+                        Constants.selectedRating = ""
+                        self.startingTeeCardView.isHidden = true
+                        self.stblfordRulesLabel.isHidden = true
+                    }
+                    self.progressView.hide()
                 })
             }
-        }
+        
     }
     func updateGoals(isNine:Bool){
         btnPar.setTitle("\(Constants.targetGoal.par/(isNine ? 2:1))", for: .normal)
@@ -1735,6 +1726,150 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 self.btnRequestMapping.isHidden = true
                 self.lblOverlapping.text = "Thanks for your request. We will notify you when this course is mapped for advanced scoring."
             })
+        }
+    }
+    private func checkRFClassic(golfData:NSDictionary){
+        if let rangefinder = golfData.object(forKey: "rangefinder") as? NSDictionary{
+            var isGreenAvailable = false
+            debugPrint("Constants.teeArr",Constants.teeArr)
+            if let rangeFinderHoles = rangefinder.object(forKey: "holes") as? NSArray{
+                for data in rangeFinderHoles{
+                    if let _ = (data as AnyObject).object(forKey: "greenLat") as? Double{
+                        isGreenAvailable = true
+                    }else{
+                        isGreenAvailable = false
+                    }
+                    if let _ = (data as AnyObject).object(forKey: "greenLng") as? Double{
+                        isGreenAvailable = true
+                    }else{
+                        isGreenAvailable = false
+                    }
+                    if let teebox = (data as AnyObject).object(forKey: "teeBoxes") as? NSArray{
+                        var teeTypeArr = [String]()
+                        for data in teebox{
+                            var count = 0
+                            if let _ = (data as AnyObject).object(forKey:"lat") as? Double{
+                                count += 1
+                            }
+                            if let _ = (data as AnyObject).object(forKey:"lng") as? Double{
+                                count += 1
+                            }
+                            if let _ = (data as AnyObject).object(forKey:"hcp") as? Int{
+                                count += 1
+                            }
+                            if let _ = (data as AnyObject).object(forKey:"teeType") as? String{
+                                count += 1
+                            }
+                            if let _ = (data as AnyObject).object(forKey:"teeColorType") as? String{
+                                count += 1
+                            }
+                            if count == 5{
+                                teeTypeArr.append(((data as AnyObject).object(forKey:"teeType") as! String))
+                            }
+                        }
+                        var teeArr = [(name:String,type:String,rating:String,slope:String)]()
+                        for i in 0..<Constants.teeArr.count{
+                            if teeTypeArr.contains(Constants.teeArr[i].type.lowercased()){
+                                teeArr.append(Constants.teeArr[i])
+                            }
+                        }
+                        if teeArr.count == 0{
+                            Constants.teeArr.removeAll()
+                            break
+                        }else{
+                            Constants.teeArr = teeArr
+                        }
+                    }
+                }
+            }
+            if(rangefinder.object(forKey: "holes") != nil) && isGreenAvailable{
+                self.gameMode = "rangeFinder"
+                self.scoringMode = "rangeFinder"
+                self.lblRequestMap.text = "This course is only available with Classic Scoring + Rangefinder."
+                self.lblRFRequestInfo.text = "*Shot tracking is currently unavailable for this course."
+                self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
+                self.switchRangeFinder.isOn = true
+                self.switchRangeFinder.isEnabled = true
+                self.switchShotTracker.isOn = false
+                self.switchShotTracker.isEnabled = false
+            }
+            else{
+                self.gameMode = "classic"
+                self.scoringMode = "classic"
+                self.lblRequestMap.text = "This course is only available with Classic Scoring."
+                self.lblRFRequestInfo.text = "*Shot tracking and Rangefinder is currently unavailable for this course."
+                self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
+                self.switchRangeFinder.isOn = false
+                self.switchRangeFinder.isEnabled = false
+                self.switchShotTracker.isOn = false
+                self.switchShotTracker.isEnabled = false
+            }
+        }
+        else{
+            self.gameMode = "classic"
+            self.scoringMode = "classic"
+            self.lblRequestMap.text = "This course is available with Classic Scoring only. Request mapping to enable Advanced Stats."
+            self.lblRFRequestInfo.text = "*Shot tracking and Rangefinder is currently unavailable for this course."
+            self.lblRequestInfo.text = "If you play on this course often Tap here to let us know and we'll work on it."
+            self.switchRangeFinder.isOn = false
+            self.switchRangeFinder.isEnabled = false
+            self.switchShotTracker.isOn = false
+            self.switchShotTracker.isEnabled = false
+        }
+        self.classicScoringSV.isHidden = true
+        self.stackRequestInfo.isHidden = true
+        
+        let myMutableString = NSMutableAttributedString(string: self.lblRequestInfo.text!)
+        myMutableString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(rgb: 0x3A7CA5), range: NSRange(location: 33, length: 8))
+        self.lblRequestInfo.attributedText = myMutableString
+        
+        self.attributedStringArray.append("course often")
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLabel(tap:)))
+        self.lblRequestInfo.addGestureRecognizer(tap)
+        self.lblRequestInfo.isUserInteractionEnabled = true
+    }
+    private func checkRFStable(golfData:NSDictionary,key:String){
+        if let rangefinder = golfData.object(forKey: key) as? NSDictionary{
+            if let rangeFinderHoles = rangefinder.object(forKey: "holes") as? NSArray{
+                for data in rangeFinderHoles{
+                    if let teebox = (data as AnyObject).object(forKey: "teeBoxes") as? NSArray{
+                        var teeTypeArr = [String]()
+                        for data in teebox{
+                            var count = 0
+                            if let _ = (data as AnyObject).object(forKey:"lat") as? Double{
+                                count += 1
+                            }
+                            if let _ = (data as AnyObject).object(forKey:"lng") as? Double{
+                                count += 1
+                            }
+                            if let _ = (data as AnyObject).object(forKey:"hcp") as? Int{
+                                count += 1
+                            }
+                            if let _ = (data as AnyObject).object(forKey:"teeType") as? String{
+                                count += 1
+                            }
+                            if let _ = (data as AnyObject).object(forKey:"teeColorType") as? String{
+                                count += 1
+                            }
+                            if count == 5{
+                                teeTypeArr.append(((data as AnyObject).object(forKey:"teeType") as! String))
+                            }
+                        }
+                        var teeArr = [(name:String,type:String,rating:String,slope:String)]()
+                        for i in 0..<Constants.teeArr.count{
+                            if teeTypeArr.contains(Constants.teeArr[i].type.lowercased()){
+                                teeArr.append(Constants.teeArr[i])
+                            }
+                        }
+                        if teeArr.count == 0{
+                            Constants.teeArr.removeAll()
+                            break
+                        }else{
+                            Constants.teeArr = teeArr
+                        }
+                    }
+                }
+            }
         }
     }
     

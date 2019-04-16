@@ -16,6 +16,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     let progressView = SDLoader()
 
     @IBOutlet weak var lblHandicap: UILabel!
+    @IBOutlet weak var actvtIndicatorView: UIActivityIndicatorView!
+
 //    @IBOutlet weak var lblHandiLeft: UILocalizedLabel!
 //    @IBOutlet weak var settings: UILocalizedLabel!
     
@@ -650,7 +652,9 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         let urlStr = "getData.php?"
         let dataStr =  "text=\(searchText)"
         
-        self.progressView.show()
+//        self.progressView.show()
+        self.actvtIndicatorView.isHidden = false
+        self.actvtIndicatorView.startAnimating()
 
         let gradient = CAGradientLayer()
         gradient.colors = [UIColor.white.cgColor, UIColor(rgb:0xFAFAFA).cgColor]
@@ -671,7 +675,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             debugPrint("self.serverHandler.state_calling",self.serverHandler.state)
             if (arg0 == nil) && (error != nil){
                 DispatchQueue.main.async(execute: {
-                    self.progressView.hide()
+//                    self.progressView.hide()
+                    self.actvtIndicatorView.isHidden = true
+                    self.actvtIndicatorView.stopAnimating()
+
                     self.tblViewHConstraint.constant = 60
                     self.nearMeContainerView.isHidden = false
                     self.lblCustomize.isHidden = false
@@ -706,7 +713,10 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                 DispatchQueue.main.async(execute: {
                     self.serverHandler.state = 0
                     debugPrint("self.serverHandler.state_Dispatch",self.serverHandler.state)
-                    self.progressView.hide()
+//                    self.progressView.hide()
+                    self.actvtIndicatorView.isHidden = true
+                    self.actvtIndicatorView.stopAnimating()
+
                     if !self.searchDataArr.isEmpty{
                         self.tblViewHConstraint.constant = self.view.frame.size.height - (self.searchContainerView.frame.size.height + self.bottomStackSV.frame.size.height + 240)
                         if CGFloat((self.searchDataArr.count+1) * 60) < self.tblViewHConstraint.constant{

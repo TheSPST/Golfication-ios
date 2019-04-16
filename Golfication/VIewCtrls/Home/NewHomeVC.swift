@@ -297,6 +297,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         locationUpdate()
         if let iosToken = (InstanceID.instanceID().token()){
             if Auth.auth().currentUser != nil{
+                ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["openTime" :Timestamp] as [AnyHashable:Int64])
                 ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["iosToken" :iosToken] as [AnyHashable:String])
             }else{
                 let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "GolficationGuideVC") as! GolficationGuideVC
@@ -526,36 +527,29 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
     }
 
     // Get user details which have Pro membership
-//        func FindUser(){
-//            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
-//                self.progressView.show(atView: self.view, navItem: self.navigationItem)
-//                var userData = NSMutableDictionary()
-//                if(snapshot.value != nil){
-//                    userData = snapshot.value as! NSMutableDictionary
-//                    for (key,value) in userData{
-//                        if let v = value as? NSMutableDictionary{
-//                            //(((v.value(forKey: "deviceInfo") as? NSMutableDictionary) != nil))
-//                            if ((v.value(forKey: "iosToken")) != nil){
-////                                debugPrint((v.value(forKey: "deviceInfo") as! NSMutableDictionary).value(forKey: "OAD")as? NSMutableDictionary)
-////                                debugPrint("ios Key: \(key)")
-////                                debugPrint("OAD Key: \((v.value(forKey: "OAD") as? NSMutableDictionary))")
-//                                if let pro = v.value(forKey: "proMembership") as? NSMutableDictionary{
-////                                    if pro.value(forKey: "productID") as? String == "pro_subscription_trial_monthly" || pro.value(forKey: "productID") as? String == "pro_subscription_trial_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_yearly" || pro.value(forKey: "productID") as? String == "pro_subscription_monthly"{
-//                                        debugPrint("ios Key: \(key)")
-//                                        debugPrint("proMembership",pro)
-//
-////                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                DispatchQueue.main.async(execute: {
-//                    self.progressView.hide(navItem: self.navigationItem)
-//                })
-//            }
-//        }
-    
+     /*   func FindUser(){
+            FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData") { (snapshot) in
+                self.progressView.show(atView: self.view, navItem: self.navigationItem)
+                var userData = NSMutableDictionary()
+                if(snapshot.value != nil){
+                    userData = snapshot.value as! NSMutableDictionary
+                    for (key,value) in userData{
+                        if let v = value as? NSMutableDictionary{
+                            if ((v.value(forKey: "iosToken")) != nil){
+                                if let pro = v.value(forKey: "proMembership") as? NSMutableDictionary{
+                                    debugPrint("ios Key: \(key)")
+                                    debugPrint("proMembership",pro)
+                                }
+                            }
+                        }
+                    }
+                }
+                DispatchQueue.main.async(execute: {
+                    self.progressView.hide(navItem: self.navigationItem)
+                })
+            }
+        }
+*/
     func getGolficationXVersion(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "firmwareVersion") { (snapshot) in
             let firmware = snapshot.value as! NSMutableDictionary
@@ -997,6 +991,7 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let viewCtrl = UIStoryboard(name: "Device", bundle:nil).instantiateViewController(withIdentifier: "ScanningVC") as! ScanningVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
     }
+    
     
 //    func didUpdateState(_ state: CBManagerState) {
 //        debugPrint("state== ",state)

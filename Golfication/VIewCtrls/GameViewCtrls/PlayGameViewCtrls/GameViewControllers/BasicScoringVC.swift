@@ -1941,11 +1941,11 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
 }
 extension BasicScoringVC{
     func showCaseEnterHoleScore(){
-        let btn = self.stackViewStrokes1.subviews[self.stackViewStrokes1.subviews.count-2] as! UIButton
-        let tapTargetPrompt = MaterialTapTargetPrompt(target: btn)
+//        let btn = self.stackViewStrokes1.subviews[self.stackViewStrokes1.subviews.count-2] as! UIButton
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.scoreSV)
         tapTargetPrompt.action = {
-            self.strokesAction(sender: btn)
-            print("dragged Clicked")
+//            self.strokesAction(sender: btn)
+//            print("dragged Clicked")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                 var timerForMiddleMarker = Timer()
                 timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
@@ -1986,7 +1986,7 @@ extension BasicScoringVC{
         tapTargetPrompt.action = {
             self.detailScoreAction(self.btnDetailScoring)
             print("dragged Clicked")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 8, execute: {
                 if let thePresenter = self.navigationController?.visibleViewController{
                     if (thePresenter.isKind(of:BasicScoringVC.self)){
                         self.showCaseSwipeHole()
@@ -1996,7 +1996,7 @@ extension BasicScoringVC{
         }
         tapTargetPrompt.dismissed = {
             print("view dismissed")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 8, execute: {
                 if let thePresenter = self.navigationController?.visibleViewController{
                     if (thePresenter.isKind(of:BasicScoringVC.self)){
                         self.showCaseSwipeHole()
@@ -2021,7 +2021,7 @@ extension BasicScoringVC{
         }
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
-        tapTargetPrompt.secondaryText = "Swipe to go to next hole.".localized()
+        tapTargetPrompt.secondaryText = "Tap to go to next hole.".localized()
         tapTargetPrompt.textPostion = .topLeft
     }
     
