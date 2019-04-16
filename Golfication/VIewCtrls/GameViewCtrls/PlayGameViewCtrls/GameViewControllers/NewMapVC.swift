@@ -7358,7 +7358,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 tapTargetPrompt.primaryText = ""
                 tapTargetPrompt.secondaryText = "Drag your target marker to get free club recommendations for every shot.".localized()
                 tapTargetPrompt.textPostion = .bottomRight
-                UserDefaults.standard.set(0, forKey: "OffCourseTutorial")
+                UserDefaults.standard.set(tutorialCount+1, forKey: "OffCourseTutorial")
                 UserDefaults.standard.synchronize()
             }else{
                 self.forTutorial[0] = true
