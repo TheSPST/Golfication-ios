@@ -167,9 +167,7 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
         let btnPrivacyTitle = NSMutableAttributedString(string:(btnPrivacy.titleLabel?.text)!, attributes:attrs)
         attributedString1.append(btnPrivacyTitle)
         btnPrivacy.setAttributedTitle(attributedString1, for: .normal)
-        
-        self.automaticallyAdjustsScrollViewInsets = false
-        
+                
         view7Days.layer.cornerRadius = 25.0
         view30Days.layer.cornerRadius = 25.0
         

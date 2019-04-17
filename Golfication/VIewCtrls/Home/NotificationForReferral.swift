@@ -14,8 +14,8 @@ class NotificationForReferral: NSObject {
     var keys : [String]!
     func checkReferralTimestampWithInvite(completionHandler:@escaping (Bool) -> ()){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/\(referedBy!)/referralTimestamp") { (snapshot) in
-            if(snapshot.value != nil){
-                self.newTimer = snapshot.value as! Int64
+            if let timer = snapshot.value as? Int64{
+                self.newTimer = timer
             }
             DispatchQueue.main.async( execute: {
                 FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "userData/\(referedBy!)/invite") { (snapshot) in

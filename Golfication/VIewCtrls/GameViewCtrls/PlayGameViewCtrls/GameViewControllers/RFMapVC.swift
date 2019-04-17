@@ -37,7 +37,7 @@ class MarkerButton:UIButton{
         fatalError("init(coder:) has not been implemented")
     }
 }
-class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,ExitGamePopUpDelegate{
+class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
     var propertyArray = [Properties]()
     var isAcceptInvite = false
     
@@ -337,12 +337,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 }
             }
         }
-    }
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-//        self.mapView.isMyLocationEnabled = true
-        let userLocation = locations.last
-        userLocationForClub = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
-        locationManager.stopUpdatingLocation()
     }
 
     @IBOutlet weak var playerStackWConstraint: NSLayoutConstraint!
@@ -947,22 +941,21 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
     }
     
     @IBAction func backButtonAction(_ sender: Any) {
-        for controller in self.navigationController!.viewControllers as Array {
-            if controller.isKind(of: NewGameVC.self) {
-                if self.navigationController == nil{
-                    let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
-                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                    appDelegate.window?.rootViewController = tabBarCtrl
-                    break
-                }else{
+        if self.navigationController == nil{
+            let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.window?.rootViewController = tabBarCtrl
+            return
+        }else{
+            for controller in self.navigationController!.viewControllers{
+                if controller.isKind(of: NewGameVC.self) {
                     _ =  self.navigationController!.popToViewController(controller, animated: !isAcceptInvite)
                     break
                 }
-            }else{
-                self.navigationController!.popToRootViewController(animated: !isAcceptInvite)
             }
         }
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         statusStableFord()
@@ -3216,18 +3209,18 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
                 CoreDataStorage.saveContext(context)
             }
         }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-//            var timerForMiddleMarker = Timer()
-//            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-//                if let thePresenter = self.navigationController?.visibleViewController{
-//                    if (thePresenter.isKind(of:RFMapVC.self)) && self.farFromTheHoleView.isHidden{
-//                        self.showCaseTargetMarker()
-//                        timerForMiddleMarker.invalidate()
-//                    }
-//                }
-//            })
-//
-//        })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+            var timerForMiddleMarker = Timer()
+            timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                if let thePresenter = self.navigationController?.visibleViewController{
+                    if (thePresenter.isKind(of:RFMapVC.self)) && self.farFromTheHoleView.isHidden{
+                        self.showCaseTargetMarker()
+                        timerForMiddleMarker.invalidate()
+                    }
+                }
+            })
+
+        })
     }
     func clubReco(dist:Double,lie:String)->String {
         if (lie.trim() == "G"){
@@ -3443,6 +3436,14 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,CLLocationManagerDelegate,Exi
         self.isFarFromHoleFirstTime = true
     }
 }
+extension RFMapVC:CLLocationManagerDelegate{
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
+        //        self.mapView.isMyLocationEnabled = true
+        let userLocation = locations.last
+        userLocationForClub = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
+        locationManager.stopUpdatingLocation()
+    }
+}
 extension RFMapVC{
     
     @objc func buttonAction(sender: UIButton!) {
@@ -3521,7 +3522,7 @@ extension RFMapVC{
         }
     }
 }
-/*extension RFMapVC{
+extension RFMapVC{
     func showCaseTargetMarker(){
         var label2 = UILabel()
         let tutorialCount = UserDefaults.standard.integer(forKey: "RFTutorial")
@@ -3562,7 +3563,7 @@ extension RFMapVC{
             tapTargetPrompt.circleColor = UIColor.glfBlack95
             tapTargetPrompt.primaryText = ""
             tapTargetPrompt.secondaryText = "Set your target.".localized()
-            tapTargetPrompt.textPostion = .bottomLeft 
+            tapTargetPrompt.textPostion = .centerBottom
             UserDefaults.standard.set(tutorialCount+1, forKey: "RFTutorial")
             UserDefaults.standard.synchronize()
         }
@@ -3572,7 +3573,7 @@ extension RFMapVC{
         let point = self.mapView.projection.point(for: suggestedMarker2.position)
         label2 = UILabel(frame: CGRect(x: point.x, y: point.y-32.5, width: 120, height: 65))
         self.mapView.addSubview(label2)
-        let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: label2, type: .rectangle)
         tapTargetPrompt.action = {
             label2.removeFromSuperview()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
@@ -3605,7 +3606,7 @@ extension RFMapVC{
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "See recommended club.".localized()
-        tapTargetPrompt.textPostion = .topRight
+        tapTargetPrompt.textPostion = .centerBottom
     }
     func showCaseDistanceToGreen(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.lblCenterHeader)
@@ -3725,4 +3726,4 @@ extension RFMapVC{
         tapTargetPrompt.secondaryText = "Score your hole when finished.".localized()
         tapTargetPrompt.textPostion = .topLeft
     }
-}*/
+}

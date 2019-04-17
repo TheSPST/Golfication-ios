@@ -12,7 +12,6 @@ import FirebaseAuth
 import FirebaseInstanceID
 import FBSDKCoreKit
 import FBSDKLoginKit
-import Google
 
 //private let dataURL = "https://golficationtest.firebaseio.com"
 

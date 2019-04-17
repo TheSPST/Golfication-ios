@@ -86,7 +86,7 @@ class RefreshSubscriptionManager: NSObject {
                         switch result {
                         case .success(let receipt):
                             // Verify the purchase of a Subscription
-                            let purchaseResult = SwiftyStoreKit.verifySubscription(type: .autoRenewable,productId: data,inReceipt: receipt)
+                            let purchaseResult = SwiftyStoreKit.verifySubscription(ofType: .autoRenewable,productId: data,inReceipt: receipt)
                             switch purchaseResult {
                                 
                             //if Product is Purchased & trial is true or false

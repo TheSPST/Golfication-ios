@@ -997,29 +997,60 @@
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DdU-Lr-C5Y">
-                                                                                    <rect key="frame" x="10" y="10" width="260" height="16"/>
-                                                                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
+                                                                                    <rect key="frame" x="10" y="10" width="260" height="18"/>
+                                                                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WF7-6G-JlU">
-                                                                                    <rect key="frame" x="10" y="26" width="260" height="13.5"/>
-                                                                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="11"/>
+                                                                                    <rect key="frame" x="10" y="28" width="260" height="16"/>
+                                                                                    <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="13"/>
                                                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
+                                                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vEQ-Yf-FcN">
+                                                                                    <rect key="frame" x="0.0" y="5" width="280" height="33.5"/>
+                                                                                    <subviews>
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Couldn't find your course?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eFS-Hp-fMp">
+                                                                                            <rect key="frame" x="58.5" y="0.0" width="163.5" height="20"/>
+                                                                                            <constraints>
+                                                                                                <constraint firstAttribute="height" constant="20" id="dvg-cz-9WA"/>
+                                                                                            </constraints>
+                                                                                            <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
+                                                                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                            <nil key="highlightedColor"/>
+                                                                                        </label>
+                                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lNy-4I-52E">
+                                                                                            <rect key="frame" x="55" y="20" width="170" height="13.5"/>
+                                                                                            <constraints>
+                                                                                                <constraint firstAttribute="width" constant="170" id="AHN-FW-LUH"/>
+                                                                                            </constraints>
+                                                                                            <fontDescription key="fontDescription" name="SFProDisplay-Regular" family="SF Pro Display" pointSize="15"/>
+                                                                                            <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                                            <state key="normal" title="Add course to the list" image="add_course">
+                                                                                                <color key="titleColor" red="0.0" green="0.50980392159999999" blue="0.3921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                            </state>
+                                                                                        </button>
+                                                                                    </subviews>
+                                                                                </stackView>
                                                                             </subviews>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <constraints>
                                                                                 <constraint firstItem="WF7-6G-JlU" firstAttribute="leading" secondItem="WpU-sd-njN" secondAttribute="leading" constant="10" id="1FF-oR-jQ3"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="DdU-Lr-C5Y" secondAttribute="trailing" constant="10" id="6ma-fW-H0c"/>
+                                                                                <constraint firstItem="vEQ-Yf-FcN" firstAttribute="top" secondItem="WpU-sd-njN" secondAttribute="top" constant="5" id="9fr-Q9-Nrz"/>
+                                                                                <constraint firstItem="vEQ-Yf-FcN" firstAttribute="leading" secondItem="WpU-sd-njN" secondAttribute="leading" id="KTw-dC-kxV"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="WF7-6G-JlU" secondAttribute="trailing" constant="10" id="MnW-5P-IHL"/>
                                                                                 <constraint firstItem="WF7-6G-JlU" firstAttribute="top" secondItem="DdU-Lr-C5Y" secondAttribute="bottom" id="RVi-N9-CA5"/>
+                                                                                <constraint firstAttribute="bottom" secondItem="vEQ-Yf-FcN" secondAttribute="bottom" constant="5" id="WB4-Ap-JQW"/>
                                                                                 <constraint firstItem="DdU-Lr-C5Y" firstAttribute="top" secondItem="WpU-sd-njN" secondAttribute="top" constant="10" id="bPd-Li-ag7"/>
                                                                                 <constraint firstItem="DdU-Lr-C5Y" firstAttribute="leading" secondItem="WpU-sd-njN" secondAttribute="leading" constant="10" id="oIY-3j-C0W"/>
+                                                                                <constraint firstAttribute="trailing" secondItem="vEQ-Yf-FcN" secondAttribute="trailing" id="xKs-Qg-VQl"/>
                                                                             </constraints>
                                                                         </tableViewCellContentView>
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <connections>
+                                                                            <outlet property="addCourseSV" destination="vEQ-Yf-FcN" id="Fsv-WN-deh"/>
+                                                                            <outlet property="btnAddCourse" destination="lNy-4I-52E" id="7bT-yt-Noy"/>
                                                                             <outlet property="lblSubTitle" destination="WF7-6G-JlU" id="DCk-IG-a76"/>
                                                                             <outlet property="lblTitle" destination="DdU-Lr-C5Y" id="vUV-h1-cfD"/>
                                                                         </connections>
@@ -1468,7 +1499,7 @@
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bDG-bv-2QM">
-                                        <rect key="frame" x="20" y="53.5" width="280" height="441"/>
+                                        <rect key="frame" x="20" y="20" width="280" height="441"/>
                                         <subviews>
                                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DdO-4c-bFy" customClass="TPKeyboardAvoidingScrollView">
                                                 <rect key="frame" x="0.0" y="0.0" width="280" height="297"/>
@@ -1656,13 +1687,12 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.25" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="bDG-bv-2QM" secondAttribute="trailing" constant="20" id="A6w-xV-n5Q"/>
-                                    <constraint firstItem="bDG-bv-2QM" firstAttribute="centerY" secondItem="XHV-Xc-vT1" secondAttribute="centerY" id="jgy-MA-Xay"/>
+                                    <constraint firstItem="bDG-bv-2QM" firstAttribute="top" secondItem="XHV-Xc-vT1" secondAttribute="top" constant="20" id="NLI-5x-Vtt"/>
                                     <constraint firstItem="bDG-bv-2QM" firstAttribute="leading" secondItem="XHV-Xc-vT1" secondAttribute="leading" constant="20" id="vvz-mo-FBX"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="OrI-V3-4r2">
-                                <rect key="frame" x="142" y="266" width="37" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="OrI-V3-4r2">
+                                <rect key="frame" x="141.5" y="265.5" width="37" height="37"/>
                                 <color key="color" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                         </subviews>
@@ -1674,12 +1704,14 @@
                             <constraint firstItem="ytq-Dz-BEK" firstAttribute="top" secondItem="iuR-lP-gPc" secondAttribute="bottom" constant="10" id="ISG-SO-gnp"/>
                             <constraint firstItem="R1V-Z2-nuY" firstAttribute="centerX" secondItem="SAg-82-loG" secondAttribute="centerX" id="Q2V-wb-2s8"/>
                             <constraint firstItem="Kus-EI-bHb" firstAttribute="top" secondItem="R1V-Z2-nuY" secondAttribute="bottom" id="Wyj-4G-kYQ"/>
+                            <constraint firstItem="OrI-V3-4r2" firstAttribute="centerY" secondItem="SAg-82-loG" secondAttribute="centerY" id="Xyd-kP-u3a"/>
                             <constraint firstAttribute="trailing" secondItem="iuR-lP-gPc" secondAttribute="trailing" id="ehs-ru-Fho"/>
                             <constraint firstAttribute="trailing" secondItem="Kus-EI-bHb" secondAttribute="trailing" id="kmx-Gt-FDV"/>
                             <constraint firstItem="ytq-Dz-BEK" firstAttribute="top" secondItem="XHV-Xc-vT1" secondAttribute="bottom" id="nbO-Ku-T5j"/>
                             <constraint firstItem="Kus-EI-bHb" firstAttribute="leading" secondItem="SAg-82-loG" secondAttribute="leading" id="ogr-9C-glX"/>
                             <constraint firstItem="XHV-Xc-vT1" firstAttribute="top" secondItem="oTJ-S1-e6z" secondAttribute="bottom" id="wuB-4C-4z4"/>
                             <constraint firstItem="iuR-lP-gPc" firstAttribute="leading" secondItem="SAg-82-loG" secondAttribute="leading" id="xaI-W2-gHz"/>
+                            <constraint firstItem="OrI-V3-4r2" firstAttribute="centerX" secondItem="SAg-82-loG" secondAttribute="centerX" id="y3T-Ie-CbQ"/>
                             <constraint firstItem="R1V-Z2-nuY" firstAttribute="top" secondItem="oTJ-S1-e6z" secondAttribute="bottom" id="z7b-Wa-up2"/>
                         </constraints>
                     </view>
@@ -1731,6 +1763,7 @@
     </scenes>
     <resources>
         <image name="GetStarted" width="90" height="65"/>
+        <image name="add_course" width="25" height="25"/>
         <image name="eddieUSer" width="976" height="976"/>
         <image name="getStarted1" width="144" height="151"/>
         <image name="mapPin" width="50" height="50"/>

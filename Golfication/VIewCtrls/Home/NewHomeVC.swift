@@ -9,7 +9,6 @@
 import UIKit
 import FirebaseAuth
 import Charts
-import Google
 import DeviceKit
 import FirebaseInstanceID
 import CoreData

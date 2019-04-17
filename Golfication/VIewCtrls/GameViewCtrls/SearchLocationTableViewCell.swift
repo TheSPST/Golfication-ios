@@ -18,7 +18,9 @@ class SearchLocationTableViewCell: UITableViewCell {
     @IBOutlet weak var rfImageView: UIImageView!
     @IBOutlet weak var advanceImageView: UIImageView!
     @IBOutlet weak var leftModeView: UIView!
-    
+    @IBOutlet weak var addCourseSV: UIView!
+    @IBOutlet weak var btnAddCourse: UIButton!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         

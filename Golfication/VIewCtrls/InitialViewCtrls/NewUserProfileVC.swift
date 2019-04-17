@@ -286,7 +286,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                         ["Pu"]
         ];
         self.golfBagTblView!.tableFooterView = UIView()
-        
+        self.courseTblView!.tableFooterView = UIView()
+
         let gradient = CAGradientLayer()
         gradient.colors = [UIColor.white.cgColor, UIColor(rgb:0xFAFAFA).cgColor]
         gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
@@ -622,7 +623,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                         self.leftModeView.layer.mask = rectShape
                         
                         self.searchTxtField.text = golfName
-                        
+                        self.tblViewHConstraint.constant = 0
                         ref.child("userData/\(Auth.auth().currentUser!.uid)/").updateChildValues(["homeCourse":NSNull()])
                         
                         let homeCourseDic = NSMutableDictionary()
@@ -718,7 +719,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
                     self.actvtIndicatorView.stopAnimating()
 
                     if !self.searchDataArr.isEmpty{
-                        self.tblViewHConstraint.constant = self.view.frame.size.height - (self.searchContainerView.frame.size.height + self.bottomStackSV.frame.size.height + 240)
+                        self.tblViewHConstraint.constant = self.view.frame.size.height - (self.searchContainerView.frame.size.height + self.bottomStackSV.frame.size.height + 240 + 60)
                         if CGFloat((self.searchDataArr.count+1) * 60) < self.tblViewHConstraint.constant{
                             self.tblViewHConstraint.constant = CGFloat((self.searchDataArr.count+1) * 60)
                         }
@@ -979,7 +980,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         else{
             if searchDataArr.count>0{
-                return searchDataArr.count
+                return searchDataArr.count + 1
             }
         }
         return 0
@@ -996,7 +997,8 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         if tableView.tag == 1{
             return 0
         }
-        return 60
+//        return 60
+        return 0
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -1015,7 +1017,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         
             let btn = UIButton(frame: CGRect(x:0,y:(lbl.frame.maxY+2),width:tableView.frame.width,height:30))
             btn.setImage(#imageLiteral(resourceName: "add_course"), for: .normal)
-            btn.setTitle("  Add course name to the list", for: .normal)
+            btn.setTitle("  Add course to the list", for: .normal)
             btn.setTitleColor(UIColor.glfDarkGreen, for: .normal)
             view.addSubview(lbl)
             view.addSubview(btn)
@@ -1162,15 +1164,25 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
         else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "SearchLocationTableViewCell", for: indexPath as IndexPath) as! SearchLocationTableViewCell
             if indexPath.row < searchDataArr.count{
+                cell.addCourseSV.isHidden = true
+                cell.lblTitle.isHidden = false
+                cell.lblSubTitle.isHidden = false
+
                 cell.lblTitle.text = (searchDataArr[indexPath.row] as AnyObject).value(forKey: "Name") as? String
                 cell.lblSubTitle.text = "\((searchDataArr[indexPath.row] as AnyObject).value(forKey: "City") as? String ?? ""),\((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Country") as? String ?? "")"
+            }
+            else{
+                cell.addCourseSV.isHidden = false
+                cell.lblTitle.isHidden = true
+                cell.lblSubTitle.isHidden = true
+                cell.btnAddCourse.addTarget(self, action: #selector(self.footerTouched(_:)), for: .touchUpInside)
             }
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView.tag == 0{
+        if tableView.tag == 0 && indexPath.row !=  searchDataArr.count{
             let golfID = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Id") as? String)!
             let golfName = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Name") as? String)!
             let golfLat = ((searchDataArr[indexPath.row] as AnyObject).value(forKey: "Latitude") as? String)!
@@ -1228,7 +1240,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
             Notification.sendLocalNotificationForElevation()
             searchTxtField.resignFirstResponder()
             
-            tblViewHConstraint.constant = 60
+            tblViewHConstraint.constant = 0
             nearMeContainerView.isHidden = false
             lblCustomize.isHidden = false
             FBSomeEvents.shared.singleParamFBEvene(param: "Setup Select Course")

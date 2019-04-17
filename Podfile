@@ -16,7 +16,7 @@ target 'Golfication' do
     pod 'UICircularProgressRing'
     pod 'XLPagerTabStrip', '~> 8.0'
     pod 'ActionButton'
-    pod 'SDWebImage', '~> 4.0'    
+    pod 'SDWebImage'
     pod 'Dropper'
     pod 'CTShowcase', '~> 2.2'
     pod 'ActionSheetPicker-3.0'
@@ -25,7 +25,7 @@ target 'Golfication' do
     pod 'SwiftyStoreKit'
     pod 'Fabric'
     pod 'Crashlytics', '~> 3.10'
-    pod 'Google/Analytics'
+    pod 'GoogleAnalytics'
     pod 'GoogleMaps'
     pod 'GooglePlaces'
     pod 'DeviceKit', '~> 1.3'
@@ -34,5 +34,6 @@ target 'Golfication' do
     pod 'FBSDKMarketingKit'
     pod 'FacebookCore'
     pod 'MaterialTapTargetPrompt-iOS'
+    pod 'MaterialShowcase'
 
 end

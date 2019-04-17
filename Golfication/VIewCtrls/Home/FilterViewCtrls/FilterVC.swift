@@ -37,10 +37,7 @@ class FilterVC: UIViewController, UICollectionViewDelegate, UICollectionViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Filters".localized()
-        
-        self.automaticallyAdjustsScrollViewInsets = false
         self.fliterCollectionView.allowsMultipleSelection = true
-        
         let backBtn = UIBarButtonItem(image:(UIImage(named: "backArrow")), style: .plain, target: self, action: #selector(self.backAction(_:)))
         backBtn.tintColor = UIColor.glfBluegreen
         self.navigationItem.setLeftBarButtonItems([backBtn], animated: true)

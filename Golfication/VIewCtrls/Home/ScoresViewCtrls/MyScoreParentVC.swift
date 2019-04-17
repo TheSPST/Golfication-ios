@@ -22,9 +22,7 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
 //    var classicScores = [ClassicScores]()
 
     override func viewDidLoad() {
-        self.tabBarController?.tabBar.isHidden = true
-        self.automaticallyAdjustsScrollViewInsets = false
-        
+        self.tabBarController?.tabBar.isHidden = true        
         settings.style.buttonBarBackgroundColor = .white
         settings.style.buttonBarItemBackgroundColor = .white
         settings.style.selectedBarBackgroundColor = UIColor.glfBluegreen
@@ -250,9 +248,8 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                         let valueArray = keysArray as! NSArray
                         for j in 0..<valueArray.count{
                             let clubData = Club()
-                            let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
-                            if((backSwing) != nil){
-                                clubData.backswing = backSwing as! Double
+                            if let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")  as? Double{
+                                clubData.backswing = backSwing
                             }
                             if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
                                 clubData.distance = distance
@@ -266,24 +263,20 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                             }
                             clubData.strokesGained = strokesGained
                             
-                            let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
-                            if((swingScore) != nil){
-                                clubData.swingScore = swingScore as! Double
+                            if let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore") as? Double{
+                                clubData.swingScore = swingScore
                             }
-                            let type = (valueArray[j] as AnyObject).object(forKey: "type")
-                            if((type) != nil){
-                                clubData.type = type as! Int
+                            if let type = (valueArray[j] as AnyObject).object(forKey: "type") as? Int{
+                                clubData.type = type
                             }
                             if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
                                 clubData.proximity = proximity
                                 if(Constants.distanceFilter == 1){
                                     clubData.proximity = proximity/Constants.YARD
                                 }
-                                
                             }
-                            let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut")
-                            if((holeout) != nil){
-                                clubData.holeout = holeout as! Double
+                            if let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut") as? Double{
+                                clubData.holeout = holeout
                             }
                             
                             clubWiseArray.append(clubData)
@@ -565,9 +558,8 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                         let valueArray = keysArray as! NSArray
                         for j in 0..<valueArray.count{
                             let clubData = Club()
-                            let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing")
-                            if((backSwing) != nil){
-                                clubData.backswing = backSwing as! Double
+                            if let backSwing = (valueArray[j] as AnyObject).object(forKey: "backswing") as? Double{
+                                clubData.backswing = backSwing
                             }
                             if let distance = (valueArray[j] as AnyObject).object(forKey: "distance") as? Double{
                                 clubData.distance = distance
@@ -581,26 +573,21 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                             }
                             clubData.strokesGained = strokesGained
                             
-                            let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore")
-                            if((swingScore) != nil){
-                                clubData.swingScore = swingScore as! Double
+                            if let swingScore = (valueArray[j] as AnyObject).object(forKey: "swingScore") as? Double{
+                                clubData.swingScore = swingScore
                             }
-                            let type = (valueArray[j] as AnyObject).object(forKey: "type")
-                            if((type) != nil){
-                                clubData.type = type as! Int
+                            if let type = (valueArray[j] as AnyObject).object(forKey: "type") as? Int{
+                                clubData.type = type
                             }
                             if let proximity = (valueArray[j] as AnyObject).object(forKey: "proximity") as? Double{
                                 clubData.proximity = proximity
                                 if(Constants.distanceFilter == 1){
                                     clubData.proximity = proximity/Constants.YARD
                                 }
-                                
                             }
-                            let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut")
-                            if((holeout) != nil){
-                                clubData.holeout = holeout as! Double
+                            if let holeout = (valueArray[j] as AnyObject).object(forKey: "holeOut") as? Double{
+                                clubData.holeout = holeout
                             }
-                            
                             clubWiseArray.append(clubData)
                             score.clubDict.append((key,clubData))
                         }

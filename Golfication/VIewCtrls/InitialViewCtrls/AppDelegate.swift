@@ -20,7 +20,6 @@
   import FirebaseAuth
   import SwiftyStoreKit
   import StoreKit
-  import Google
   import FacebookCore
   import iAd
   var sharedSecret = "79d35d5b3b684c84ba4302a33d498a47"

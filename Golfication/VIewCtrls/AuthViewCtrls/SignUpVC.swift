@@ -352,7 +352,7 @@ class SignUpVC: UIViewController, IndicatorInfoProvider {
 //                    let alert = UIAlertController(title: "Verify Email", message: "We have just sent you a verification email. Please verify your email address by clicking the verification link.", preferredStyle: UIAlertControllerStyle.alert)
                     let alert = UIAlertController(title: "Registration Successful", message: "You will be logged in automatically to start tracking your rounds. This may take a few seconds.", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: { [alert] (_) in
-                        
+                        debugPrint(alert)
 //                        https://golfication.us15.list-manage.com/subscribe/post?u=61aa993cd19d0fb238ab03ae0&amp;id=b8bdae75ef&EMAIL=rishabh.sood@gmail.com&FULLNAME=Rishabh Sood
                         UserDefaults.standard.set(self.isNewUser, forKey: "isNewUser")
                         UserDefaults.standard.synchronize()
