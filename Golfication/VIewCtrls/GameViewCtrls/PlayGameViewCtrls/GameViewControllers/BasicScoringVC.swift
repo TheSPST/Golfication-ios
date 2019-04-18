@@ -858,7 +858,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
             next = self.holeIndex+1
         }
         btnPrev.setTitle("  " + "Hole \(self.scoreData[prev].hole)".localized(), for: .normal)
-        btnNext.setTitle("Hole \(self.scoreData[next].hole)" + "  ".localized(), for: .normal)
+        btnNext.setTitle("  Hole \(self.scoreData[next].hole)" + "  ".localized(), for: .normal)
     }
     @objc func loadMap(_ notification: NSNotification) {
         self.progressView.hide(navItem: navigationItem)
@@ -1941,11 +1941,8 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
 }
 extension BasicScoringVC{
     func showCaseEnterHoleScore(){
-//        let btn = self.stackViewStrokes1.subviews[self.stackViewStrokes1.subviews.count-2] as! UIButton
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.scoreSV)
         tapTargetPrompt.action = {
-//            self.strokesAction(sender: btn)
-//            print("dragged Clicked")
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                 var timerForMiddleMarker = Timer()
                 timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
@@ -1979,7 +1976,10 @@ extension BasicScoringVC{
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Enter your hole score.".localized()
-        tapTargetPrompt.textPostion = .bottomLeft
+        let fram : CGRect = tapTargetPrompt.convert(self.scoreSV.frame, from:self.view)
+        tapTargetPrompt.secondaryTextLabel.center = CGPoint(x:fram.origin.x+fram.width/2, y:fram.origin.y+fram.height*2 + 100)
+        tapTargetPrompt.secondaryTextLabel.frame.size = CGSize(width: self.view.frame.width*0.8, height: 30)
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     func showCaseExpandeDetailsScoring(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnDetailScoring)
@@ -2007,11 +2007,14 @@ extension BasicScoringVC{
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Expand to add Fairways, GIRs, Putts and Sand Saves.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        let fram : CGRect = tapTargetPrompt.convert(self.btnDetailScoring.frame, from:self.view)
+        tapTargetPrompt.secondaryTextLabel.center = CGPoint(x:fram.origin.x+fram.width/2, y:fram.origin.y+fram.height*2 + 100)
+        tapTargetPrompt.secondaryTextLabel.frame.size = CGSize(width: self.view.frame.width*0.8, height: 30)
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
 
     func showCaseSwipeHole(){
-        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnNext)
+        let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnNext,type: .rectangle)
         tapTargetPrompt.action = {
             self.nextAction(Any.self)
             print("dragged Clicked")
@@ -2021,8 +2024,9 @@ extension BasicScoringVC{
         }
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
-        tapTargetPrompt.secondaryText = "Tap to go to next hole.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        tapTargetPrompt.secondaryText = "Tap to go to the next hole.".localized()
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/6,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     
     

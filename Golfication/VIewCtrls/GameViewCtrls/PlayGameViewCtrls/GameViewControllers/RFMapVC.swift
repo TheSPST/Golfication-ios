@@ -40,7 +40,8 @@ class MarkerButton:UIButton{
 class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
     var propertyArray = [Properties]()
     var isAcceptInvite = false
-    
+    let blurWhiteCircleLayer = CAShapeLayer()
+    let showcaseView = UIView()
     @IBOutlet weak var topHeaderView: UIView!
     @IBOutlet var mapView: GMSMapView!
     @IBOutlet weak var fairwayHitStackView: UIStackView!
@@ -2035,6 +2036,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
     var previousLocation : CLLocationCoordinate2D!
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         self.mapView.settings.scrollGestures = true
+        self.showcaseView.isHidden = true
         if(!self.scrlView.isHidden){
             self.playerStatsAction(self.btnPlayerStats)
             self.lblEditShotNumber.isHidden = self.scrlView.isHidden ? true:false
@@ -3523,55 +3525,139 @@ extension RFMapVC{
     }
 }
 extension RFMapVC{
-    func showCaseTargetMarker(){
-        var label2 = UILabel()
-        let tutorialCount = UserDefaults.standard.integer(forKey: "RFTutorial")
-        if(self.positionsOfDotLine.count > 1) && tutorialCount < 2{
-            let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
-            label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-25, width: 50, height: 50))
-            self.mapView.addSubview(label2)
-            let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
-            tapTargetPrompt.action = {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                    label2.removeFromSuperview()
-                    var timerForMiddleMarker = Timer()
-                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                        if let thePresenter = self.navigationController?.visibleViewController{
-                            if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker && self.farFromTheHoleView.isHidden && !self.btnNext.isHidden{
-                                self.showCaseRecommendedClub()
-                                timerForMiddleMarker.invalidate()
-                            }
-                        }
-                    })
-                })
-            }
-            tapTargetPrompt.dismissed = {
-                print("view dismissed")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                    var timerForMiddleMarker = Timer()
-                    label2.removeFromSuperview()
-                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                        if let thePresenter = self.navigationController?.visibleViewController{
-                            if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker && self.farFromTheHoleView.isHidden && !self.btnNext.isHidden{
-                                self.showCaseRecommendedClub()
-                                timerForMiddleMarker.invalidate()
-                            }
-                        }
-                    })
-                })
-            }
-            tapTargetPrompt.circleColor = UIColor.glfBlack95
-            tapTargetPrompt.primaryText = ""
-            tapTargetPrompt.secondaryText = "Set your target.".localized()
-            tapTargetPrompt.textPostion = .centerBottom
-            UserDefaults.standard.set(tutorialCount+1, forKey: "RFTutorial")
-            UserDefaults.standard.synchronize()
-        }
+    // MARK :- showCaseMiddleMarker
+    func userInteractionSomeView(isHide:Bool){
+        self.btnNext.isHidden = isHide
+        self.btnPrev.isHidden = isHide
+        self.btnEditShots.isHidden = isHide
+        self.lblEditShotNumber.isHidden = isHide
+        self.windNotesView.isHidden = isHide
     }
+    func showCaseTargetMarker(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+            let tutorialCount = UserDefaults.standard.integer(forKey: "RFTutorial")
+            if(self.positionsOfDotLine.count > 1) && tutorialCount < 2{
+                self.userInteractionSomeView(isHide:true)
+                self.showcaseView.frame = CGRect(origin:.zero,size:CGSize(width:self.mapView.frame.height,height:self.mapView.frame.height))
+                self.showcaseView.layer.cornerRadius = (self.showcaseView.frame.height)*0.5
+                self.showcaseView.backgroundColor = UIColor.glfBlack95
+                self.showcaseView.isUserInteractionEnabled = true
+                
+                let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
+                self.showcaseView.center = point
+                let fram = self.showcaseView.convert(point, from:self.view)
+
+                let label2 = UILabel(frame: CGRect(x: fram.x-30, y: fram.y-30, width: 60, height: 60))
+                
+                label2.backgroundColor = UIColor.clear
+                label2.setCircle(frame: label2.frame)
+                
+                let maskLayer = CAShapeLayer()
+                maskLayer.frame = self.showcaseView.bounds
+                maskLayer.fillColor = UIColor.glfBlack95.cgColor
+                
+                let path = UIBezierPath(rect: self.showcaseView.bounds)
+                maskLayer.fillRule = kCAFillRuleEvenOdd
+                
+                // Append the circle to the path so that it is subtracted.
+                path.append(UIBezierPath(ovalIn: label2.frame))
+                maskLayer.path = path.cgPath
+                
+                self.showcaseView.layer.mask = maskLayer
+                self.blurWhiteCircleLayer.path = UIBezierPath(roundedRect: label2.frame, cornerRadius: 30).cgPath
+                self.blurWhiteCircleLayer.fillColor = UIColor.white.cgColor
+                self.blurWhiteCircleLayer.opacity = 0.0
+                
+                self.showcaseView.layer.addSublayer(self.blurWhiteCircleLayer)
+                self.showcaseView.addSubview(label2)
+                let lbl = UILabel(frame: CGRect(x:label2.frame.minX-self.view.frame.height*0.2, y: label2.frame.minY+self.view.frame.height*0.2, width: self.view.frame.width*0.8, height: 60))
+                lbl.numberOfLines = 0
+                lbl.text = "Drag the marker to set your target.".localized()
+                if UIDevice.current.iPhone5 || UIDevice.current.iPhoneSE{
+                    lbl.font = UIFont(name: "SFProDisplay-Medium", size: 18)
+                }else{
+                    lbl.font = UIFont(name: "SFProDisplay-Medium", size: 22)
+                }
+                lbl.textColor = UIColor.glfWhite
+                lbl.textAlignment = .left
+                lbl.sizeToFit()
+                self.showcaseView.addSubview(label2)
+//                lbl.frame.origin = CGPoint(x:32,y:point.y+100)
+                
+                self.showcaseView.addSubview(lbl)
+                
+                self.addBulrFilterToWhiteCircle(blurWhiteCircleLayer:self.blurWhiteCircleLayer)
+                self.playAnimationForWhiteCircle(blurWhiteCircleLayer:self.blurWhiteCircleLayer)
+                self.mapView.addSubview(self.showcaseView)
+                
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                    self.showcaseView.isHidden = false
+                })
+                UserDefaults.standard.set(tutorialCount+1, forKey: "RFTutorial")
+                UserDefaults.standard.synchronize()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                    var timerForMiddleMarker = Timer()
+                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:RFMapVC.self)) && !self.isDraggingMarker && self.farFromTheHoleView.isHidden && self.btnNext.isHidden && self.showcaseView.isHidden{
+                                self.userInteractionSomeView(isHide:false)
+                                self.showCaseRecommendedClub()
+                                timerForMiddleMarker.invalidate()
+                            }
+                        }
+                    })
+                })
+            }
+        })
+    }
+    func addBulrFilterToWhiteCircle(blurWhiteCircleLayer:CAShapeLayer){
+        let blurFilter = CIFilter(name: "CIGaussianBlur")
+        blurFilter?.setDefaults()
+        blurFilter?.setValue(0, forKey: "inputRadius")
+        blurFilter?.setValue(30, forKey: "inputRadius")
+        blurWhiteCircleLayer.filters = [blurFilter!]
+    }
+    func playAnimationForWhiteCircle(blurWhiteCircleLayer:CAShapeLayer){
+        let animation = CABasicAnimation(keyPath: "path")
+        animation.duration = 1.55
+        animation.beginTime = CACurrentMediaTime() + 0.8
+        
+        let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
+        self.showcaseView.center = point
+        let frams = self.showcaseView.convert(point, from:self.view)
+        let label2 = UILabel(frame: CGRect(x: frams.x-30, y: frams.y-30, width: 60, height: 60))
+        label2.setCircle(frame: label2.frame)
+        var fram : CGRect = self.showcaseView.convert(label2.frame, from:self.showcaseView)
+        fram = self.add(number: 100,fram:fram)
+        
+        let path = UIBezierPath(roundedRect: fram, cornerRadius: 100)
+        path.append(UIBezierPath(roundedRect: fram, cornerRadius: 60))
+        path.usesEvenOddFillRule = true
+        
+        animation.toValue = path.cgPath
+        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        animation.repeatCount = HUGE
+        // if you remove it the shape will return to the original shape after the animation finished
+        animation.fillMode = kCAFillRuleEvenOdd
+        animation.isRemovedOnCompletion = false
+        blurWhiteCircleLayer.add(animation, forKey: nil)
+        
+        let opacityanimation: CABasicAnimation = CABasicAnimation(keyPath: "opacity");
+        opacityanimation.fromValue = 0.7
+        opacityanimation.toValue = 0
+        opacityanimation.beginTime = CACurrentMediaTime() + 0.8
+        opacityanimation.repeatCount = HUGE
+        opacityanimation.duration = 1.55
+        blurWhiteCircleLayer.add(opacityanimation, forKey: nil)
+    }
+    private func add(number: CGFloat, fram:CGRect)->CGRect{
+        return CGRect(x:fram.minX - (number/2), y:fram.minY - (number/2), width:fram.width + number, height:fram.height + number)
+    }
+    
     func showCaseRecommendedClub(){
         var label2 = UILabel()
-        let point = self.mapView.projection.point(for: suggestedMarker2.position)
-        label2 = UILabel(frame: CGRect(x: point.x, y: point.y-32.5, width: 120, height: 65))
+        let point = self.mapView.projection.point(for: suggestedMarker1.position)
+        label2 = UILabel(frame: CGRect(x: point.x, y: point.y-self.btnForSugg1.frame.height/2, width: self.btnForSugg1.frame.width, height: self.btnForSugg1.frame.height))
         self.mapView.addSubview(label2)
         let tapTargetPrompt = MaterialTapTargetPrompt(target: label2, type: .rectangle)
         tapTargetPrompt.action = {
@@ -3605,8 +3691,23 @@ extension RFMapVC{
         }
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
-        tapTargetPrompt.secondaryText = "See recommended club.".localized()
-        tapTargetPrompt.textPostion = .centerBottom
+        let str = BackgroundMapStats.getClubName(club: self.btnForSugg1.lblClub.text!.trim())
+        var attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 22)]
+        var attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 18)]
+        if UIDevice.current.iPhone5 || UIDevice.current.iPhoneSE{
+            attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 18)]
+            attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 14)]
+        }
+        
+        let attributedText = NSMutableAttributedString()
+        let attributedQuote = NSAttributedString(string: "Your recommended club for this shot is \(str)\n", attributes: attributes as [NSAttributedStringKey : Any])
+        let attributedQuote2 = NSAttributedString(string: "\nTap to continue.", attributes: attributes2 as [NSAttributedStringKey : Any])
+        attributedText.append(attributedQuote)
+        attributedText.append(attributedQuote2)
+        tapTargetPrompt.secondaryTextLabel.attributedText = attributedText
+        tapTargetPrompt.secondaryTextLabel.textAlignment = .left
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/2 ,y:self.view.frame.width*1.2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     func showCaseDistanceToGreen(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.lblCenterHeader)
@@ -3639,8 +3740,22 @@ extension RFMapVC{
         }
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
-        tapTargetPrompt.secondaryText = "Check your distance to the green.".localized()
-        tapTargetPrompt.textPostion = .bottomLeft
+        var attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 22)]
+        var attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 18)]
+        if UIDevice.current.iPhone5 || UIDevice.current.iPhoneSE{
+            attributes = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Medium", size: 18)]
+            attributes2 = [NSAttributedStringKey.font: UIFont(name: "SFProDisplay-Regular", size: 14)]
+        }
+        
+        let attributedText = NSMutableAttributedString()
+        let attributedQuote = NSAttributedString(string: "Check your distance to the green\n", attributes: attributes as [NSAttributedStringKey : Any])
+        let attributedQuote2 = NSAttributedString(string: "\nTap to continue.", attributes: attributes2 as [NSAttributedStringKey : Any])
+        attributedText.append(attributedQuote)
+        attributedText.append(attributedQuote2)
+        tapTargetPrompt.secondaryTextLabel.attributedText = attributedText
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/4 ,y:self.view.frame.width*1.2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.textAlignment = .left
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     func showCasePulledDown(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnCenter)
@@ -3675,7 +3790,10 @@ extension RFMapVC{
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Pull down to view distances to front, center and back.".localized()
-        tapTargetPrompt.textPostion = .bottomLeft
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/4 ,y:self.view.frame.width*1.2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.textAlignment = .left
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
+
     }
     func showCasePulledUp(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnMoveToMapGround)
@@ -3709,8 +3827,9 @@ extension RFMapVC{
         }
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
-        tapTargetPrompt.secondaryText = "tap to go to GPS view.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        tapTargetPrompt.secondaryText = "Swipe up to go back to GPS view.".localized()
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/6,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     
     func showCaseEnterHoleScore(){
@@ -3724,6 +3843,7 @@ extension RFMapVC{
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Score your hole when finished.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/6,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
 }

@@ -52,7 +52,7 @@ class NotificationForReferral: NSObject {
                             }
                             ref.child("userData/\(referedBy!)/").updateChildValues(["referralTimestamp":Timestamp] as [AnyHashable:Any])
                         }
-                        if self.keys.count == 0{
+                        if self.keys.count == 0 && !referedBy.isEmpty{
                             Notification.sendNotification(reciever: "\(referedBy!)",message: "Your friend \(Auth.auth().currentUser!.displayName!) has just joined Golfication. Invite two more friends to claim your $50 discount!", type: "13", category: "Referred", matchDataId: "notAvailable", feedKey:"nothing")
                             if(self.newTimer == nil){
                                 ref.child("userData/\(referedBy!)/").updateChildValues(["referralTimestamp":Timestamp] as [AnyHashable:Any])

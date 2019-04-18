@@ -11,7 +11,7 @@ import CoreLocation
 import FirebaseAuth
 import FirebaseAnalytics
 import FirebaseDynamicLinks
-class NextRoundVC: UIViewController {
+class NextRoundVC: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var btnPrevClassic: UIButton!
     @IBOutlet weak var btnPrevRf: UIButton!
     @IBOutlet weak var btnPrevShotTrack: UIButton!
@@ -287,48 +287,19 @@ class NextRoundVC: UIViewController {
                 switch CLLocationManager.authorizationStatus() {
                 case .notDetermined:
                     // Request when-in-use authorization initially
+                    locationManager.delegate = self
                     locationManager.requestAlwaysAuthorization()
                     locationManager.desiredAccuracy = kCLLocationAccuracyBest
                     break
                     
                 case .restricted, .denied:
                     // Disable location features
-                    let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                    alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
-                        let url = URL(string: UIApplicationOpenSettingsURLString)!
-                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
+                    restrictedDeniedPopup()
                     break
                     
                 case .authorizedWhenInUse, .authorizedAlways:
                     // Enable basic location features
-                    if let currentLocation: CLLocation = locationManager.location{
-                        
-                        var currentCoord = CLLocationCoordinate2D()
-                        currentCoord = currentLocation.coordinate
-                        
-                        let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
-                        let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
-                        let distance : CLLocationDistance = location1.distance(from: location2)
-                        debugPrint("distance = \(distance) m")
-                        if self.btnStartClassic.tag == 2 || selectedTab == 1{
-                            popUpContainerView.isHidden = false
-                                self.btnSkip.tag = self.btnStartClassic.tag
-                        }else{
-                            if(distance <= 15000.0){
-                                popUpContainerView.isHidden = false
-                            }
-                            else{
-                                // show alert
-                                let emptyAlert = UIAlertController(title: "Alert", message: "You need to be near the course to play in On-Course mode.", preferredStyle: UIAlertControllerStyle.alert)
-                                emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                                self.present(emptyAlert, animated: true, completion: nil)
-                            }
-                        }
-                        
-                    }
+                      showAddFriendsPopup()
                     break
                 }
             }else{
@@ -345,7 +316,65 @@ class NextRoundVC: UIViewController {
             }
         }
     }
-    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if (status == CLAuthorizationStatus.restricted) || (status == CLAuthorizationStatus.denied) {
+            // The user denied authorization
+            restrictedDeniedPopup()
+        }
+        else if (status == CLAuthorizationStatus.authorizedAlways) || (status == CLAuthorizationStatus.authorizedWhenInUse) {
+            // The user accepted authorization
+          showAddFriendsPopup()
+        }
+    }
+    func restrictedDeniedPopup(){
+        let alert = UIAlertController(title: "Need Authorization or Enable GPS from Privacy Settings", message: "This game mode is unusable if you don't authorize this app or don't enable GPS", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+            let url = URL(string: UIApplicationOpenSettingsURLString)!
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    func showAddFriendsPopup(){
+        progressView.show()
+        var timer = 0.0
+        let _ = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { (t) in
+            if let currentLocation: CLLocation = self.locationManager.location{
+                var currentCoord = CLLocationCoordinate2D()
+                currentCoord = currentLocation.coordinate
+                
+                let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
+                let location2 = CLLocation(latitude: Double(Constants.selectedLat)!, longitude: Double(Constants.selectedLong)!)
+                let distance : CLLocationDistance = location1.distance(from: location2)
+                debugPrint("distance = \(distance) m")
+                if self.btnStartClassic.tag == 2 || self.selectedTab == 1{
+                    self.popUpContainerView.isHidden = false
+                    self.btnSkip.tag = self.btnStartClassic.tag
+                }else{
+                    if(distance <= 15000.0){
+                        self.popUpContainerView.isHidden = false
+                    }
+                    else{
+                        // show alert
+                        let emptyAlert = UIAlertController(title: "Alert", message: "You need to be near the course to play in On-Course mode.", preferredStyle: UIAlertControllerStyle.alert)
+                        emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(emptyAlert, animated: true, completion: nil)
+                    }
+                }
+                self.progressView.hide()
+                t.invalidate()
+            }
+            timer += 0.1
+            if timer == 5.0{
+                self.progressView.hide()
+                t.invalidate()
+                
+                let emptyAlert = UIAlertController(title: "Alert", message: "Location not found. Please try again.", preferredStyle: UIAlertControllerStyle.alert)
+                emptyAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(emptyAlert, animated: true, completion: nil)
+            }
+        }
+    }
     @IBAction func skipAction(sender: UIButton) {
         FBSomeEvents.shared.singleParamFBEvene(param: "Click NG2 Skip")
         Constants.addPlayersArray = NSMutableArray()

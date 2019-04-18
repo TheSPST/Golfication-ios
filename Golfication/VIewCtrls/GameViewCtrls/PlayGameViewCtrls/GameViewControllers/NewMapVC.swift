@@ -2385,12 +2385,12 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                             if self.isOnCourse{
                                 let tutorialCount = UserDefaults.standard.integer(forKey: "OnCourseTutorial")
-                                if tutorialCount < 2{
+                                if tutorialCount <= 2{
                                     self.showCaseShareShots()
                                 }
                             }else{
                                 let tutorialCount = UserDefaults.standard.integer(forKey: "OffCourseTutorial")
-                                if tutorialCount < 2{
+                                if tutorialCount <= 2{
                                     self.showCaseShareShots()
                                 }
                             }
@@ -4093,6 +4093,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     }
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         self.codeWhenClickToBackView()
+        self.showcaseView.isHidden = true
         if (!self.isProcessing) && (!holeOutFlag) && !self.isTracking{
             self.backTouched()
             if(isOnCourse) && !self.isTracking{
@@ -7088,34 +7089,34 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         if(!isContinue) && (!isHoleByHole){
             if(!isOnCourse){
-//                var timerForMiddleMarker = Timer()
-//                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-//                    if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-//                        if let thePresenter = self.navigationController?.visibleViewController{
-//                            if (thePresenter.isKind(of:NewMapVC.self)){
-//                                if !self.forTutorial[0]{
-//                                    self.showCaseMiddleMarker()
-//                                    self.forTutorial[0] = true
-//                                }
-//                            }
-//                        }
-//                        timerForMiddleMarker.invalidate()
-//                    }
-//                })
-            }else{
-                if !self.isDeviceConnected {
-                    var timerForMiddleMarker = Timer()
-                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                        if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil) && !self.centerSV.isHidden{
-                            if let thePresenter = self.navigationController?.visibleViewController{
-                                if (thePresenter.isKind(of:NewMapVC.self)){
-                                    self.showCaseClubChangeOnCourse()
+                var timerForMiddleMarker = Timer()
+                timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                    if(self.shotCount == 0) && (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
+                        if let thePresenter = self.navigationController?.visibleViewController{
+                            if (thePresenter.isKind(of:NewMapVC.self)){
+                                if !self.forTutorial[0]{
+                                    self.showCaseMiddleMarker()
+                                    self.forTutorial[0] = true
                                 }
                             }
-                            timerForMiddleMarker.invalidate()
                         }
-                    })
-                }
+                        timerForMiddleMarker.invalidate()
+                    }
+                })
+            }else{
+//                if !self.isDeviceConnected {
+//                    var timerForMiddleMarker = Timer()
+//                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+//                        if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil) && !self.centerSV.isHidden{
+//                            if let thePresenter = self.navigationController?.visibleViewController{
+//                                if (thePresenter.isKind(of:NewMapVC.self)){
+//                                    self.showCaseClubChangeOnCourse()
+//                                }
+//                            }
+//                            timerForMiddleMarker.invalidate()
+//                        }
+//                    })
+//                }
 
             }
         }
@@ -7291,85 +7292,96 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         }
     }
-    // MARK :-
-//    @objc func draggingCustom(_ notification: NSNotification) {
-//        if let object = notification.object as? UITouch{
-//            let points = object.location(in: self.mapView)
-//            debugPrint(points)
-//        }
-//    }
-    // MARK :- OFFCourse Tutorials
+    // MARK :- showCaseMiddleMarker
+    let blurWhiteCircleLayer = CAShapeLayer()
+    let showcaseView = UIView()
+    func userInteractionSomeView(isHide:Bool){
+        self.btnNext.isHidden = isHide
+        self.btnPrev.isHidden = isHide
+        self.btnTrackShot.isHidden = isHide
+        self.lblShotNumber.isHidden = isHide
+        self.windNotesView.isHidden = isHide
+    }
     func showCaseMiddleMarker(){
-
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
             let tutorialCount = UserDefaults.standard.integer(forKey: "OffCourseTutorial")
             if(self.positionsOfDotLine.count > 1) && tutorialCount < 2{
+                self.userInteractionSomeView(isHide:true)
+                self.showcaseView.frame = CGRect(origin:.zero,size:CGSize(width:self.mapView.frame.height,height:self.mapView.frame.height))
+                self.showcaseView.layer.cornerRadius = (self.showcaseView.frame.height)*0.5
+                self.showcaseView.backgroundColor = UIColor.glfBlack95
+                self.showcaseView.isUserInteractionEnabled = true
+                
                 let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
-                let label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-12.5, width: 50, height: 50))
-                self.mapView.addSubview(label2)
-                let showcase = MaterialShowcase()
-                showcase.setTargetView(view: label2) // always required to set targetView
-                showcase.primaryText = ""
-                showcase.backgroundViewType = .full
-                showcase.backgroundColor = UIColor.glfBlack95
-                showcase.targetHolderColor = UIColor.clear
-                showcase.isTapRecognizerForTargetView = true
-                showcase.secondaryText = "Drag your target marker to get free club recommendations for every shot.".localized()
+                self.showcaseView.center = point
+                let fram = self.showcaseView.convert(point, from:self.view)
+                let label2 = UILabel(frame: CGRect(x: fram.x-30, y: fram.y-30, width: 60, height: 60))
+                label2.backgroundColor = UIColor.clear
+                label2.setCircle(frame: label2.frame)
+                let maskLayer = CAShapeLayer()
+                maskLayer.frame = self.showcaseView.bounds
+                maskLayer.fillColor = UIColor.glfBlack95.cgColor
                 
-                showcase.show(completion: {
-                    debugPrint("completeDone")
+                
+                let path = UIBezierPath(rect: self.showcaseView.bounds)
+                maskLayer.fillRule = kCAFillRuleEvenOdd
+                
+                // Append the circle to the path so that it is subtracted.
+                path.append(UIBezierPath(ovalIn: label2.frame))
+                maskLayer.path = path.cgPath
+                
+                
+                self.showcaseView.layer.mask = maskLayer
+
+                self.blurWhiteCircleLayer.path = UIBezierPath(roundedRect: label2.frame, cornerRadius: 30).cgPath
+                self.blurWhiteCircleLayer.fillColor = UIColor.white.cgColor
+                self.blurWhiteCircleLayer.opacity = 0.0
+                
+                self.showcaseView.layer.addSublayer(self.blurWhiteCircleLayer)
+                let lbl = UILabel(frame: CGRect(x:label2.frame.minX-self.view.frame.height*0.2, y: label2.frame.minY+self.view.frame.height*0.2, width: self.view.frame.width*0.8, height: 60))
+                lbl.numberOfLines = 0
+                lbl.text = "Drag your target marker to get free club recommendations for every shot.".localized()
+                lbl.textColor = UIColor.glfWhite
+                if UIDevice.current.iPhone5 || UIDevice.current.iPhoneSE{
+                    lbl.font = UIFont(name: "SFProDisplay-Medium", size: 18)
+                }else{
+                    lbl.font = UIFont(name: "SFProDisplay-Medium", size: 22)
+                }
+                lbl.textAlignment = .left
+                lbl.sizeToFit()
+                self.showcaseView.addSubview(label2)
+//                lbl.frame.origin = CGPoint(x:32,y:point.y+100)
+                
+                self.showcaseView.addSubview(label2)
+                self.showcaseView.addSubview(lbl)
+                
+                self.addBulrFilterToWhiteCircle(blurWhiteCircleLayer:self.blurWhiteCircleLayer)
+                self.playAnimationForWhiteCircle(blurWhiteCircleLayer:self.blurWhiteCircleLayer)
+                self.mapView.addSubview(self.showcaseView)
+                
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                    self.showcaseView.isHidden = false
                 })
-                
-//                let tapTargetPrompt = MaterialTapTargetPrompt(target: label2)
-//                tapTargetPrompt.action = {
-//                    self.mapView(self.mapView, didDrag: self.markers[1])
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-//                        var timerForMiddleMarker = Timer()
-//                        timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-//                            if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-//                                if let thePresenter = self.navigationController?.visibleViewController{
-//                                    if (thePresenter.isKind(of:NewMapVC.self)){
-//                                        if !self.forTutorial[1]{
-//                                            self.forTutorial[0] = true
-//                                            self.forTutorial[1] = true
-//                                            self.showCaseClubChange()
-//                                        }
-//                                    }
-//                                }
-//                                timerForMiddleMarker.invalidate()
-//                            }
-//                        })
-//
-//                    })
-//                }
-//                tapTargetPrompt.dismissed = {
-//                    print("view dismissed")
-////                    label2.removeFromSuperview()
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-//                        var timerForMiddleMarker = Timer()
-//                        timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-//                            if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil){
-//                                if let thePresenter = self.navigationController?.visibleViewController{
-//                                    if (thePresenter.isKind(of:NewMapVC.self)){
-//                                        if !self.forTutorial[1]{
-//                                            self.forTutorial[0] = true
-//                                            self.forTutorial[1] = true
-//                                            self.showCaseClubChange()
-//                                        }
-//                                    }
-//                                }
-//                                timerForMiddleMarker.invalidate()
-//                            }
-//                        })
-//
-//                    })
-//                }
-//                tapTargetPrompt.circleColor = UIColor.glfBlack95
-//                tapTargetPrompt.primaryText = ""
-//                tapTargetPrompt.secondaryText = "Drag your target marker to get free club recommendations for every shot.".localized()
-//                tapTargetPrompt.textPostion = .bottomRight
-                UserDefaults.standard.set(0, forKey: "OffCourseTutorial")
+                UserDefaults.standard.set(tutorialCount+1, forKey: "OffCourseTutorial")
                 UserDefaults.standard.synchronize()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                    var timerForMiddleMarker = Timer()
+                    timerForMiddleMarker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                        if (!self.btnPlayersStats.isHidden) && (self.selectClubDropper.status == .hidden) && (self.dragMarkShowCase == nil) && self.showcaseView.isHidden{
+                            if let thePresenter = self.navigationController?.visibleViewController{
+                                if (thePresenter.isKind(of:NewMapVC.self)){
+                                    if !self.forTutorial[1]{
+                                        self.forTutorial[0] = true
+                                        self.forTutorial[1] = true
+                                        self.userInteractionSomeView(isHide: false)
+                                        self.showCaseClubChange()
+                                    }
+                                }
+                            }
+                            timerForMiddleMarker.invalidate()
+                        }
+                    })
+                })
             }else{
                 self.forTutorial[0] = true
                 self.forTutorial[1] = true
@@ -7378,42 +7390,49 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
         })
     }
-    
-//    func showCaseMiddleMarker(){
-//        //        var label2 = UILabel()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-//            if(self.positionsOfDotLine.count > 1){
-//                let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
-//                let label2 = UILabel(frame: CGRect(x: point.x-25, y: point.y-12.5, width: 50, height: 50))
-//
-//                let coloredCircleLayer = CAShapeLayer()
-//                let blurWhiteCircleLayer = CAShapeLayer()
-//                coloredCircleLayer.path = UIBezierPath(rect: self.mapView.frame).cgPath
-//                coloredCircleLayer.fillColor = UIColor.glfBlack95.cgColor
-//                coloredCircleLayer.opacity = 0.9
-//
-//                self.mapView.layer.addSublayer(coloredCircleLayer)
-//
-//
-//                blurWhiteCircleLayer.path = UIBezierPath(rect: label2.frame).cgPath
-//                blurWhiteCircleLayer.fillColor = UIColor.white.cgColor
-//                blurWhiteCircleLayer.opacity = 0.0
-//
-//                self.mapView.layer.addSublayer(blurWhiteCircleLayer)
-//
-//
-//                let lbl = UILabel()
-//                lbl.text = "Drag your target marker to get free club recommendations for every shot.".localized()
-//                self.mapView.addSubview(label2)
-//                label2.backgroundColor = UIColor.glfBlack
-//                self.mapView.addSubview(label2)
-//                self.mapView.addSubview(lbl)
-//
-//                //                NotificationCenter.default.addObserver(self, selector: #selector(self.draggingCustom(_:)), name: NSNotification.Name(rawValue:
-//
-//            }
-//        })
-//    }
+    func addBulrFilterToWhiteCircle(blurWhiteCircleLayer:CAShapeLayer){
+        
+            let blurFilter = CIFilter(name: "CIGaussianBlur")
+            blurFilter?.setDefaults()
+            blurFilter?.setValue(0, forKey: "inputRadius")
+            blurFilter?.setValue(30, forKey: "inputRadius")
+            blurWhiteCircleLayer.filters = [blurFilter!]
+    }
+    func playAnimationForWhiteCircle(blurWhiteCircleLayer:CAShapeLayer){
+        let animation = CABasicAnimation(keyPath: "path")
+        animation.duration = 1.55
+        animation.beginTime = CACurrentMediaTime() + 0.8
+        let point = self.mapView.projection.point(for: self.positionsOfDotLine[1])
+        let frams = self.showcaseView.convert(point, from:self.view)
+        let label2 = UILabel(frame: CGRect(x: frams.x-30, y: frams.y-30, width: 60, height: 60))
+        label2.setCircle(frame: label2.frame)
+        
+        var fram : CGRect = self.showcaseView.convert(label2.frame, from:self.showcaseView)
+        fram = self.add(number: 100,fram:fram)
+        
+        let path = UIBezierPath(roundedRect: fram, cornerRadius: 100)
+        path.append(UIBezierPath(roundedRect: fram, cornerRadius: 60))
+        path.usesEvenOddFillRule = true
+        
+        animation.toValue = path.cgPath
+        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        animation.repeatCount = HUGE
+        // if you remove it the shape will return to the original shape after the animation finished
+        animation.fillMode = kCAFillRuleEvenOdd
+        animation.isRemovedOnCompletion = false
+        blurWhiteCircleLayer.add(animation, forKey: nil)
+        
+        let opacityanimation: CABasicAnimation = CABasicAnimation(keyPath: "opacity");
+        opacityanimation.fromValue = 0.7
+        opacityanimation.toValue = 0
+        opacityanimation.beginTime = CACurrentMediaTime() + 0.8
+        opacityanimation.repeatCount = HUGE
+        opacityanimation.duration = 1.55
+        blurWhiteCircleLayer.add(opacityanimation, forKey: nil)
+    }
+    private func add(number: CGFloat, fram:CGRect)->CGRect{
+        return CGRect(x:fram.minX - (number/2), y:fram.minY - (number/2), width:fram.width + number, height:fram.height + number)
+    }
 
     func showCaseClubChange(){
         
@@ -7464,7 +7483,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "This is the club we recommend based on your yardage. Tap to change.".localized()
-        tapTargetPrompt.textPostion = .topRight
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width-32 ,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     
     func showCaseTrackShots(){
@@ -7479,8 +7499,9 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
-        tapTargetPrompt.secondaryText = "Tap to record this shot.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        tapTargetPrompt.secondaryText = "Tap to record this tee-shot.".localized()
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/6,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     func showCaseHoleOutShots(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnHoleOut)
@@ -7494,7 +7515,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Use the hole-out button to complete this hole and view score.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/6,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     func showCaseShareShots(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnShareHoleStats)
@@ -7520,7 +7542,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Share your hole and stats with friends on Golfication or social media.".localized()
-        tapTargetPrompt.textPostion = .topRight
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/1.5,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     // MARK:- ONCourse Tutorial
     func showCaseClubChangeOnCourse(){
@@ -7561,7 +7584,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             }
             tapTargetPrompt.circleColor = UIColor.glfBlack95
             tapTargetPrompt.primaryText = ""
-            tapTargetPrompt.secondaryText = "This is the club we recommend based on your yardage. Tap to change.".localized()
+            tapTargetPrompt.secondaryText = "This is the club we recommend based on your yardages. Tap to change.".localized()
             tapTargetPrompt.textPostion = .topRight
             UserDefaults.standard.set(tutorialCount+1, forKey: "OnCourseTutorial")
             UserDefaults.standard.synchronize()
@@ -7579,8 +7602,10 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         }
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
-        tapTargetPrompt.secondaryText = "Tap here to tee-off from your current GPS location.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        tapTargetPrompt.secondaryText = "Tap to tee-off from your current GPS location.".localized()
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/6,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
+        
     }
     func showCaseStopShotsOnCourse(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnTrackShot)
@@ -7595,7 +7620,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "When you reach the location of the ball, tap here to stop tracking this shot.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/6,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     func showCaseHoleOutShotsOnCourse(){
         let tapTargetPrompt = MaterialTapTargetPrompt(target: self.btnHoleOut)
@@ -7609,7 +7635,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Use the hole-out button to complete this hole and view score.".localized()
-        tapTargetPrompt.textPostion = .topLeft
+        tapTargetPrompt.secondaryTextLabel.frame = CGRect(origin: CGPoint(x:self.view.frame.width/6,y:self.view.frame.width/2), size: CGSize(width:self.view.frame.width*0.8,height:5))
+        tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
     
     @objc func buttonAction(sender: UIButton!) {
@@ -7713,7 +7740,6 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
             DispatchQueue.main.async(execute: {
                 self.shotsDetails = self.getShotDataOrdered(indexToUpdate: self.holeIndex, playerId: self.selectedUserId)
                 self.progressView.hide(navItem: self.navigationItem)
-                self.showCaseMiddleMarker()
             })
         }
     }

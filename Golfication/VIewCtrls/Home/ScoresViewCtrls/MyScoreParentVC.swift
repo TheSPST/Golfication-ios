@@ -529,11 +529,11 @@ class MyScoreParentVC: ButtonBarPagerTabStripViewController,DemoFooterViewDelega
                 var approachArray = [Chipping]()
                 for i in 0..<approach.count{
                     let chip = Chipping()
-                    chip.club = (approach[i] as AnyObject).object(forKey:"club") as! String
-                    chip.distance = (approach[i] as AnyObject).object(forKey:"distance") as! Double
-                    chip.hole = (approach[i] as AnyObject).object(forKey:"hole") as! Int
-                    chip.proximityX = (approach[i] as AnyObject).object(forKey:"proximityX") as! Double
-                    chip.proximityY = (approach[i] as AnyObject).object(forKey:"proximityY") as! Double
+                    chip.club = ((approach[i] as AnyObject).object(forKey:"club") as! String)
+                    chip.distance = ((approach[i] as AnyObject).object(forKey:"distance") as! Double)
+                    chip.hole = ((approach[i] as AnyObject).object(forKey:"hole") as! Int)
+                    chip.proximityX = ((approach[i] as AnyObject).object(forKey:"proximityX") as! Double)
+                    chip.proximityY = ((approach[i] as AnyObject).object(forKey:"proximityY") as! Double)
                     chip.green = (approach[i] as AnyObject).object(forKey:"green") as? Bool
                     if(Constants.distanceFilter == 1){
                         chip.proximityX = chip.proximityX/Constants.YARD

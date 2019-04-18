@@ -296,6 +296,9 @@ extension UIDevice {
     var iPhone5: Bool {
         return UIScreen.main.nativeBounds.height == 1136
     }
+    var iPhoneSE: Bool {
+        return UIScreen.main.nativeBounds.height == 1136
+    }
     var iPad: Bool{
         return UIDevice.current.model.range(of: "iPad") != nil
     }
