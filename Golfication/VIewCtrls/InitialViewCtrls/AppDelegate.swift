@@ -24,7 +24,6 @@
   import iAd
   var sharedSecret = "79d35d5b3b684c84ba4302a33d498a47"
   var referedBy : String!
-//  var locationBackgroundTask: UIBackgroundTaskIdentifier!
   var tempararyUserKey : String!
   @UIApplicationMain
   class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate,UNUserNotificationCenterDelegate{
@@ -69,12 +68,7 @@
                 })
             }
         }
-        //-------------------------------------------------------------------------
 
-//        if(locationManager.location == nil){
-//            locationManager.requestAlwaysAuthorization()
-//            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        }
         // Override point for customization after application launch.
         Fabric.sharedSDK().debug = false
         FirebaseOptions.defaultOptions()?.deepLinkURLScheme = "dlscheme"
@@ -85,21 +79,6 @@
         self.logUser()
         DynamicLinks.performDiagnostics(completion: nil)
         Database.database().isPersistenceEnabled = true
-        // for bluetooth
-        /*
-        if let launchOptions = launchOptions {
-            // 2
-            if let centralManagerUUIDs = launchOptions[UIApplicationLaunchOptionsKey.bluetoothCentrals] as? Array<String> {
-                for id in centralManagerUUIDs {
-                    if id == "DEVICE_GOLFICATION_X" {
-                        // Restore the CBCentralManager here
-                    }
-                }
-            }
-        }*/
-        
-        
-        
         
         Messaging.messaging().delegate = self
         let center  = UNUserNotificationCenter.current()
@@ -111,15 +90,6 @@
         }
         application.registerForRemoteNotifications()
         
-//        let settings: UIUserNotificationSettings =
-//                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-//        application.registerUserNotificationSettings(settings)
-//        application.registerForRemoteNotifications()
-        // [END register_for_notifications]
-        
-        
-        //debugPrint("IDFA",ASIdentifierManager.shared().advertisingIdentifier.uuidString)
-                
         
         //------------------- Local Notification ----------------------
 //        let center = UNUserNotificationCenter.current()
@@ -348,176 +318,6 @@
 //        finishBackgroundTask()
     }
     
-//    func finishBackgroundTask(){
-//        //https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/preparing_your_app_to_run_in_the_background/extending_your_app_s_background_execution_time
-//
-//        DispatchQueue.global().async {
-//
-//            locationBackgroundTask = UIApplication.shared.beginBackgroundTask(withName: "Finish Network Tasks", expirationHandler: {
-//                self.endBackgroundTask()
-//            })
-//
-//            if let currentLocation: CLLocation = self.locationManager.location{
-//
-//                //Background user location when app is terminated/suspended ios
-//                //http://mobileoop.com/getting-location-updates-for-ios-7-and-8-when-the-app-is-killedterminatedsuspended
-//
-//                var currentCoord = CLLocationCoordinate2D()
-//
-//                currentCoord = currentLocation.coordinate
-//
-//                var homeLat = String()
-//                var homeLng = String()
-//                var golfName = String()
-//
-//                if let lat = UserDefaults.standard.object(forKey: "HomeLat") as? String{
-//                    homeLat = lat
-//                }
-//                if let lng = UserDefaults.standard.object(forKey: "HomeLng") as? String{
-//                    homeLng = lng
-//                }
-//                if let courseName = UserDefaults.standard.object(forKey: "HomeCourseName") as? String{
-//                    golfName = courseName
-//                }
-//                if !(homeLat == "") || !(homeLng == ""){
-//                    let location1 = CLLocation(latitude: currentCoord.latitude, longitude: currentCoord.longitude)
-//                    let location2 = CLLocation(latitude: Double(homeLat)!, longitude: Double(homeLng)!)
-//                    let distance : CLLocationDistance = location1.distance(from: location2)
-//                    debugPrint("distance = \(distance) m")
-//
-//                    if(distance <= 3000.0) && (golfName != ""){
-//                        self.sendLocalNotificationToUSer()
-//                    }
-//                    else if(distance > 20000.0){
-//                        self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
-//                    }
-//                    else{
-//                        self.endBackgroundTask()
-//                    }
-//                }else{
-//                    self.getNearByData(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, currentLocation: currentLocation)
-//                    // ------------ For testing at Saket Metro --------------
-//                    /*let lat = Double("28.523329")!
-//                     let lng = Double("77.195157")!
-//                     currentLocation =  CLLocation(latitude: lat,  longitude: lng)
-//                     self.getNearByData(latitude: lat, longitude: lng, currentLocation: currentLocation)*/
-//                }
-//            }
-//            else{
-//                self.endBackgroundTask()
-//            }
-//        }
-//    }
-    
-    func endBackgroundTask() {
-//        UIApplication.shared.endBackgroundTask(locationBackgroundTask)
-//        locationBackgroundTask = UIBackgroundTaskInvalid
-    }
-    
-    // MARK: getNearByData
-//    func getNearByData(latitude: Double, longitude: Double, currentLocation: CLLocation){
-//
-//        let serverHandler = ServerHandler()
-//        serverHandler.state = 0
-//        let urlStr = "nearBy.php?"
-//        let dataStr =  "lat=" + "\(latitude)&" + "lng=" + "\(longitude)"
-//
-//        serverHandler.getLocations(urlString: urlStr, dataString: dataStr){(arg0, error)  in
-//            if (arg0 == nil) && (error != nil){
-//
-//                DispatchQueue.main.async(execute: {
-//                    // In case of -1 response
-//                })
-//            }
-//            else{
-//                var dataArr =  [NSMutableDictionary]()
-//
-//                let (courses) = arg0
-//                let group = DispatchGroup()
-//
-//                courses?.forEach {
-//                    group.enter()
-//
-//                    let dataDic = NSMutableDictionary()
-//                    dataDic.setObject($0.key, forKey:"Id"  as NSCopying)
-//                    dataDic.setObject($0.value.Name, forKey : "Name" as NSCopying)
-//                    dataDic.setObject($0.value.City, forKey : "City" as NSCopying)
-//                    dataDic.setObject($0.value.Country, forKey : "Country" as NSCopying)
-//                    dataDic.setObject($0.value.Latitude, forKey : "Latitude" as NSCopying)
-//                    dataDic.setObject($0.value.Longitude, forKey : "Longitude" as NSCopying)
-//                    if($0.key != "99999999"){
-//                        dataArr.append(dataDic)
-//                    }
-//                    group.leave()
-//                    group.notify(queue: .main) {
-//                    }
-//                }
-//                DispatchQueue.main.async(execute: {
-//                    if !dataArr.isEmpty{
-//                        dataArr = BackgroundMapStats.sortAndShow(searchDataArr: dataArr, myLocation: currentLocation)
-//                        let golfName = (dataArr[0].value(forKey: "Name") as? String) ?? ""
-//                        let golfDistance = (dataArr[0].value(forKey: "Distance") as? Double) ?? 0.0
-//
-////                        let distance: Double  = Double(golfDistance)!
-//                        if golfDistance < 1500.0 && golfName != ""{
-//                            UserDefaults.standard.set(golfName, forKey: "NearByGolfClub")
-//                            UserDefaults.standard.synchronize()
-//                            self.sendLocalNotificationToUSer()
-//                        }
-//                        else{
-//                            self.endBackgroundTask()
-//                        }
-//                    }
-//                })
-//            }
-//        }
-//    }
-    
-//    func sendLocalNotificationToUSer() {
-//
-//        if let savedTodayDate = UserDefaults.standard.object(forKey: "Today_Date") as? String{
-//            let dateFormatter = DateFormatter()
-//            dateFormatter.locale = Locale(identifier: "en")
-//            dateFormatter.dateFormat = "dd-MMM-yyyy"
-//            let tomorrow = Date()
-//            let tomorrowDF = DateFormatter()
-//            tomorrowDF.locale = Locale(identifier: "en")
-//            tomorrowDF.dateFormat = "dd-MMM-yyyy"
-//            let tomorrowDateStr = tomorrowDF.string(from: tomorrow)
-//
-//            switch savedTodayDate.compare(tomorrowDateStr) {
-//
-//            case .orderedAscending     :   debugPrint("currentDate is earlier than expDate")
-//
-////            Notification.sendLocaNotificatonNearByGolf()
-//            let timeNow = Date()
-//            let formatter = DateFormatter()
-//            formatter.locale = Locale(identifier: "en")
-//            formatter.dateFormat = "dd-MMM-yyyy"
-//            let currentDateStr = formatter.string(from: timeNow as Date)
-//            UserDefaults.standard.set(currentDateStr, forKey: "Today_Date")
-//            UserDefaults.standard.synchronize()
-//
-//            case .orderedDescending    :   debugPrint("currentDate is later than expDate")
-//
-//            case .orderedSame          :   debugPrint("Both dates are same")
-//
-//            }
-//        }
-//        else{
-////            Notification.sendLocaNotificatonNearByGolf()
-//
-//            let timeNow = Date()
-//            let formatter = DateFormatter()
-//            formatter.locale = Locale(identifier: "en")
-//            formatter.dateFormat = "dd-MMM-yyyy"
-//            let currentDateStr = formatter.string(from: timeNow as Date)
-//            UserDefaults.standard.set(currentDateStr, forKey: "Today_Date")
-//            UserDefaults.standard.synchronize()
-//        }
-//        self.endBackgroundTask()
-//    }
-    
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
     }
@@ -575,17 +375,7 @@
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         return application(app, open: url, sourceApplication: nil,annotation: [:])
-//        if let isDynamicLink = DynamicLinks.dynamicLinks()?.shouldHandleDynamicLink(fromCustomSchemeURL: url),
-//            isDynamicLink {
-//            let dynamicLink = DynamicLinks.dynamicLinks()?.dynamicLink(fromCustomSchemeURL: url)
-//            if let url = dynamicLink?.url{
-//                debugPrint(dynamicLink!)
-//            }else{
-//                debugPrint(dynamicLink!)
-//            }
-//
-//            return handleDynamicLink(dynamicLink)
-//        }
+
     }
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         let dynamicLink =   DynamicLinks.dynamicLinks()?.dynamicLink(fromCustomSchemeURL: url)
