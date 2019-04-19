@@ -12,7 +12,4 @@
 #import "TIOAD.h"
 #import "ARKit.h"
 #import "FTPopOverMenu.h"
-#import <GoogleAnalytics/GAI.h>
-#import <GoogleAnalytics/GAIDictionaryBuilder.h>
-#import "GAIFields.h"
 #endif /* Golfication_Bridging_Header_h */

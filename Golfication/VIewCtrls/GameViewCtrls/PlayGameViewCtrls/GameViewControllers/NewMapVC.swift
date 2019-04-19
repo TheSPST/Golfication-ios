@@ -18,7 +18,6 @@ import GLKit
 import UICircularProgressRing
 import CoreData
 import MaterialTapTargetPrompt_iOS
-import MaterialShowcase
 private enum State {
     case closed
     case open

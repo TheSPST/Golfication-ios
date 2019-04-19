@@ -8,7 +8,6 @@
 
 import UIKit
 import ActionButton
-import CTShowcase
 import FirebaseAuth
 var isShowCase : Bool!
 var playButton: ActionButton!
@@ -19,48 +18,6 @@ class CustomTabBarCtrl: UITabBarController,UITabBarControllerDelegate {
 
     var playNavCtrl:UINavigationController!
     var meNavCtrl:UINavigationController!
-    
-    /*override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        let showcaseStartGame = CTShowcaseView(title: "", message: "A top pro is waiting to start a new game with you!", key:"startGame") { () -> () in
-                isShowCase = true
-            let mapViewController = UIStoryboard(name: "Game", bundle:nil).instantiateViewController(withIdentifier: "NewGameVC") as! NewGameVC
-                mapViewController.automaticallyAdjustsScrollViewInsets = false
-                self.playNavCtrl = (self.selectedViewController as? UINavigationController)!
-                self.playNavCtrl.pushViewController(mapViewController, animated: true)
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
-        }
-        let highlighter = showcaseStartGame.highlighter as! CTStaticGlowHighlighter
-        highlighter.highlightColor = UIColor.glfWhite
-        highlighter.highlightType = .circle
-        showcaseStartGame.skipButton.isHidden = false
-        showcaseStartGame.skipButton.addTarget(self, action: #selector(btnSkipClick(_:)), for: .touchUpInside)
-        showcaseStartGame.setup(for: playButton.floatButton, offset: .zero , margin: 5)
-        
-        showcaseStartGame.show()
-    }*/
-    
-//    @objc func btnSkipClick(_ sender: UIButton!) {
-//        isShowCase = false
-//        sender.superview?.removeFromSuperview()
-//
-//        if UserDefaults.standard.object(forKey: "isNewUser") as? Bool != nil{
-//
-//        let newUser = UserDefaults.standard.object(forKey: "isNewUser") as! Bool
-//        if newUser{
-//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "NewUserPoPopUPVC") as! NewUserProPopUVC
-////            viewCtrl.modalPresentationStyle = .overCurrentContext
-//            let navCtrl = UINavigationController(rootViewController: viewCtrl)
-//            navCtrl.modalPresentationStyle = .overCurrentContext
-//            self.present(navCtrl, animated: false, completion: nil)
-////            self.present(viewCtrl, animated: true, completion: nil)
-////            let navCtrl = (self.selectedViewController as? UINavigationController)!
-////            navCtrl.pushViewController(viewCtrl, animated: true)
-//
-//        }
-//        }
-//    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)

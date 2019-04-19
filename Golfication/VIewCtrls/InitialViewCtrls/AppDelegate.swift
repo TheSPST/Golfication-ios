@@ -119,16 +119,7 @@
         
         
         //debugPrint("IDFA",ASIdentifierManager.shared().advertisingIdentifier.uuidString)
-        
-        // -------------------------- Google Analytics --------------------------------r
-        let gai: GAI = GAI.sharedInstance()
-        gai.tracker(withTrackingId: "UA-115156894-1")
-//        // Optional: automatically report uncaught exceptions.
-        gai.trackUncaughtExceptions = true
-        // Optional: set Logger to VERBOSE for debug information.
-        // Remove before app release.
-        //gai.logger.logLevel = .verbose;
-        
+                
         
         //------------------- Local Notification ----------------------
 //        let center = UNUserNotificationCenter.current()

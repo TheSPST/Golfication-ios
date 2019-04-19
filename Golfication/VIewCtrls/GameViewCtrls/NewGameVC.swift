@@ -12,7 +12,6 @@ import FirebaseAuth
 import ActionSheetPicker_3_0
 import FirebaseAnalytics
 import UserNotifications
-import CTShowcase
 import CoreBluetooth
 import UICircularProgressRing
 import FirebaseStorage
@@ -651,87 +650,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         }
     }
     
-    // Mark: StartShowCase
-    func startShowcase(){
-        if(isShowCase){
-            let startGameShowCase = CTShowcaseView(title: "", message: "Hit start to begin your round." , key: "strtGame") { () -> () in
-                self.startGameAction()
-            }
-            let highlighteStart =  startGameShowCase.highlighter as! CTStaticGlowHighlighter
-            highlighteStart.highlightColor = UIColor.glfWhite
-            
-            let playerAddedShowCase = CTShowcaseView(title: "", message: "DeeJay have been added\nto your game." , key:"playerAdded") { () -> () in
-                //                self.scrollNewGame.contentOffset = .zero
-                startGameShowCase.setup(for: self.btnStartContinue!, offset: .zero , margin: 0)
-                startGameShowCase.show()
-            }
-            let highlightePlayerAdded = CTDynamicGlowHighlighter()
-            highlightePlayerAdded.highlightColor = UIColor.glfWhite
-            
-            highlightePlayerAdded.animDuration = 0.5
-            highlightePlayerAdded.glowSize = 5
-            highlightePlayerAdded.highlightType = .circle
-            playerAddedShowCase.continueButton.isHidden = false
-            highlightePlayerAdded.maxOffset = 10
-            playerAddedShowCase.highlighter = highlightePlayerAdded
-            let addPlayerShowCase = CTShowcaseView(title: "", message: "Add DeeJay to your game." , key:"addPlayer") { () -> () in
-                playerAddedShowCase.setup(for: self.btnOnePlayer, offset: .zero , margin: 5)
-                self.btnOnePlayer.setBackgroundImage(#imageLiteral(resourceName: "dJohnson"), for: .normal)
-                self.btnOnePlayer.setTitle("", for: .normal)
-                playerAddedShowCase.show()
-            }
-            let highlighteAddPlayer = CTDynamicGlowHighlighter()
-            highlighteAddPlayer.highlightColor = UIColor.glfWhite
-            highlighteAddPlayer.animDuration = 0.5
-            highlighteAddPlayer.glowSize = 5
-            highlighteAddPlayer.maxOffset = 10
-            highlighteAddPlayer.highlightType = .circle
-            
-            addPlayerShowCase.highlighter = highlighteAddPlayer
-            let showcaseSelectHole = CTShowcaseView(title: "", message: "Start at Hole 1", key: "selectHole") { () -> () in
-                //                let point = CGPoint(x: 0, y: 200)
-                //                self.scrollNewGame.contentOffset = point
-                self.startHoleAction(sender: self.btnOneHole)
-                addPlayerShowCase.setup(for: self.btnRcntOnePlayer, offset: .zero , margin: 5)
-                addPlayerShowCase.show()
-            }
-            let highlighter1 = CTDynamicGlowHighlighter()
-            highlighter1.highlightColor = UIColor.glfWhite
-            highlighter1.animDuration = 0.5
-            highlighter1.glowSize = 5
-            highlighter1.maxOffset = 10
-            showcaseSelectHole.highlighter = highlighter1
-            let showcaseGameType = CTShowcaseView(title: "", message: "Start a 9-hole or 18-hole round.", key: "gameType") { () -> () in
-                
-                self.startHoleAction(sender: self.btnOneHole)
-                addPlayerShowCase.setup(for: self.btnRcntOnePlayer, offset: .zero , margin: 5)
-                addPlayerShowCase.show()
-            }
-            let highlighter2 = CTDynamicGlowHighlighter()
-            // Configure its parameters if you don't like the defaults
-            highlighter2.highlightColor = UIColor.glfWhite
-            highlighter2.animDuration = 0.5
-            highlighter2.glowSize = 5
-            highlighter2.maxOffset = 10
-            showcaseGameType.highlighter = highlighter2
-            
-            let showcaseChooseCourse = CTShowcaseView(title: "", message: "Confirm this course to proceed.", key:"chooseCourse") { () -> () in
-                showcaseGameType.setup(for: self.gameTypeStackView!, offset: .zero , margin: 5)
-                showcaseGameType.show()
-            }
-            if(isShowCase){
-                //                self.gameTypeSgmtCtrl.selectedSegmentIndex = 1
-                btnTenHole.backgroundColor = UIColor(rgb: 0x008F63)
-                btnTenHole.setTitleColor(UIColor.white, for: .normal)
-                self.btnRcntOnePlayer.setBackgroundImage(#imageLiteral(resourceName: "dJohnson"), for: .normal)
-                
-            }
-            let highlighter = showcaseChooseCourse.highlighter as! CTStaticGlowHighlighter
-            highlighter.highlightColor = UIColor.glfWhite
-            showcaseChooseCourse.setup(for: self.changeCourseView, offset: .zero , margin: 5)
-            showcaseChooseCourse.show()
-        }
-    }
+    
     
     var reqTimeOutTimer = Timer()
     // MARK: viewWillAppear
@@ -768,13 +687,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.getActiveMatches()
         checkRangeFinderHoleData()
 //        selectedGameTypeFromFirebase()
-        
-        if(isShowCase) && Constants.matchId.count == 0{
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1 , execute: {
-                //                self.startShowcase()
-            })
-        }
-        
+                
         // --------------------------- From select course vc
         if !(Constants.selectedLat == "" && Constants.selectedLong == "") {
             let spString = Constants.selectedLat.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)

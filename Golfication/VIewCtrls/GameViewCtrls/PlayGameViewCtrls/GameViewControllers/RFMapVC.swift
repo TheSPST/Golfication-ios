@@ -3582,8 +3582,6 @@ extension RFMapVC{
                 lbl.textAlignment = .left
                 lbl.sizeToFit()
                 self.showcaseView.addSubview(label2)
-//                lbl.frame.origin = CGPoint(x:32,y:point.y+100)
-                
                 self.showcaseView.addSubview(lbl)
                 
                 self.addBulrFilterToWhiteCircle(blurWhiteCircleLayer:self.blurWhiteCircleLayer)

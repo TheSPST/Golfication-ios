@@ -18,14 +18,12 @@ target 'Golfication' do
     pod 'ActionButton'
     pod 'SDWebImage'
     pod 'Dropper'
-    pod 'CTShowcase', '~> 2.2'
     pod 'ActionSheetPicker-3.0'
     pod 'IQKeyboardManagerSwift'
     pod 'youtube-ios-player-helper', '~> 0.1.4'
     pod 'SwiftyStoreKit'
     pod 'Fabric'
     pod 'Crashlytics', '~> 3.10'
-    pod 'GoogleAnalytics'
     pod 'GoogleMaps'
     pod 'GooglePlaces'
     pod 'DeviceKit', '~> 1.3'
@@ -34,6 +32,4 @@ target 'Golfication' do
     pod 'FBSDKMarketingKit'
     pod 'FacebookCore'
     pod 'MaterialTapTargetPrompt-iOS'
-    pod 'MaterialShowcase'
-
 end
