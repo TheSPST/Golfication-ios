@@ -417,6 +417,7 @@ class BluetootheConnectionTesting: UIViewController ,BluetoothDelegate{
             Constants.ble.isSetupScreen = true
             updateScreenBLE()
         }
+        self.tabBarController?.tabBar.isHidden = true
     }
     func getGolfBagData(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "golfBag") { (snapshot) in

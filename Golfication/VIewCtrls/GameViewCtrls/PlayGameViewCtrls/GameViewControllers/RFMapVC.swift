@@ -3581,6 +3581,8 @@ extension RFMapVC{
                 lbl.textColor = UIColor.glfWhite
                 lbl.textAlignment = .left
                 lbl.sizeToFit()
+                let newPoint = self.showcaseView.convert(CGPoint(x:16,y:point.y+100), from:self.view)
+                lbl.frame.origin = newPoint
                 self.showcaseView.addSubview(label2)
                 self.showcaseView.addSubview(lbl)
                 

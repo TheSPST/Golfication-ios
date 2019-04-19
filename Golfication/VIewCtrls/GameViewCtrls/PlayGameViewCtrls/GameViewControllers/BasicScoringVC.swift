@@ -1976,8 +1976,8 @@ extension BasicScoringVC{
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Enter your hole score.".localized()
-        let fram : CGRect = tapTargetPrompt.convert(self.scoreSV.frame, from:self.view)
-        tapTargetPrompt.secondaryTextLabel.center = CGPoint(x:fram.origin.x+fram.width/2, y:fram.origin.y+fram.height*2 + 100)
+        let newPoint = tapTargetPrompt.convert(CGPoint(x:16,y:self.scoreSV.frame.maxY+200), from:self.view)
+        tapTargetPrompt.secondaryTextLabel.frame.origin = newPoint
         tapTargetPrompt.secondaryTextLabel.frame.size = CGSize(width: self.view.frame.width*0.8, height: 30)
         tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }
@@ -2007,8 +2007,8 @@ extension BasicScoringVC{
         tapTargetPrompt.circleColor = UIColor.glfBlack95
         tapTargetPrompt.primaryText = ""
         tapTargetPrompt.secondaryText = "Expand to add Fairways, GIRs, Putts and Sand Saves.".localized()
-        let fram : CGRect = tapTargetPrompt.convert(self.btnDetailScoring.frame, from:self.view)
-        tapTargetPrompt.secondaryTextLabel.center = CGPoint(x:fram.origin.x+fram.width/2, y:fram.origin.y+fram.height*2 + 100)
+        let newPoint = tapTargetPrompt.convert(CGPoint(x:16,y:self.btnDetailScoring.frame.maxY+80), from:self.view)
+        tapTargetPrompt.secondaryTextLabel.frame.origin = newPoint
         tapTargetPrompt.secondaryTextLabel.frame.size = CGSize(width: self.view.frame.width*0.8, height: 30)
         tapTargetPrompt.secondaryTextLabel.sizeToFit()
     }

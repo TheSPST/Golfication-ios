@@ -279,26 +279,39 @@ class BackgroundMapStats: NSObject {
         return offsetLatLong
     }
     static func removeRepetedElement(curvedArray : [CLLocationCoordinate2D] )->[CLLocationCoordinate2D]{
-        var uniqueArray = [CLLocationCoordinate2D]()
-        if(!curvedArray.isEmpty){
-            var lat = [CLLocationDegrees]()
-            var lng = [CLLocationDegrees]()
-            for i in 0..<curvedArray.count{
-                lat.append(curvedArray[i].latitude)
-                lng.append(curvedArray[i].longitude)
-            }
-            lat = lat.removeDuplicates()
-            lng = lng.removeDuplicates()
-            if lng.count == lat.count{
-                for i in 0..<lng.count{
-                    uniqueArray.append(CLLocationCoordinate2D(latitude: lat[i], longitude: lng[i]))
-                }
-            }else{
-                uniqueArray = curvedArray
-            }
-
+        var strArr = [String]()
+        for data in curvedArray{
+            strArr.append("\(data.latitude),\(data.longitude)")
         }
+        let unique = Array(Set(strArr))
+        
+        var uniqueArray = [CLLocationCoordinate2D]()
+        for data in unique{
+            let result = data.split(separator: ",")
+            if result.count == 2{
+                uniqueArray.append(CLLocationCoordinate2D(latitude: Double(result[0])!, longitude: Double(result[1])!))
+            }
+        }        
         return uniqueArray
+//        if(!curvedArray.isEmpty){
+//            var lat = [CLLocationDegrees]()
+//            var lng = [CLLocationDegrees]()
+//            for i in 0..<curvedArray.count{
+//                lat.append(curvedArray[i].latitude)
+//                lng.append(curvedArray[i].longitude)
+//            }
+//            lat = lat.removeDuplicates()
+//            lng = lng.removeDuplicates()
+//            if lng.count == lat.count{
+//                for i in 0..<lng.count{
+//                    uniqueArray.append(CLLocationCoordinate2D(latitude: lat[i], longitude: lng[i]))
+//                }
+//            }else{
+//                uniqueArray = curvedArray
+//            }
+//
+//        }
+//        return uniqueArray
     }
     static func imageOfButton(endingPoint: String)->UIImage{
         let btn = UIButton(frame:CGRect(x: 0, y: 0, width: 100, height: 30))
@@ -679,4 +692,8 @@ class Goal{
     var Birdie = Int()
     var fairwayHit = Int()
 }
-
+extension CLLocationCoordinate2D {
+    func isEqual(_ coord: CLLocationCoordinate2D) -> Bool {
+        return (fabs(self.latitude - coord.latitude) < .ulpOfOne) && (fabs(self.longitude - coord.longitude) < .ulpOfOne)
+    }
+}

@@ -150,8 +150,8 @@
                             for (key,value) in appReceiptJSON{
                                 debugPrint(key)
                                 if (key == "latest_receipt_info"){
-                                    let v = value as? NSArray
-                                    debugPrint("latest_receipt_info",v?.lastObject)
+//                                    let v = value as? NSArray
+//                                    debugPrint("latest_receipt_info",v?.lastObject)
                                 } else if (key == "pending_renewal_info"){
                                     debugPrint("pending_renewal_info",value)
                                 }else if (key == "latest_receipt"){
@@ -382,7 +382,7 @@
         if let dynamicLink = dynamicLink {
             // Handle the deep link here.
             // Show promotional offer.
-            debugPrint("Dynamic link : \(dynamicLink.url)")
+//            debugPrint("Dynamic link : \(dynamicLink.url)")
             return handleDynamicLink(dynamicLink)
         }
         return false
@@ -403,7 +403,7 @@
     }
     func checkAlreadyMember(promocode:String){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "proMembership/isMembershipActive") { (snapshot) in
-            var isMembership = Int()
+            var isMembership : Int!
             if(snapshot.value != nil){
                 isMembership = snapshot.value as! Int
             }

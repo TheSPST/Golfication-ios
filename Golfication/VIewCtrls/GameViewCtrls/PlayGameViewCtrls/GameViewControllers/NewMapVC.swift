@@ -1407,6 +1407,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
         if(isHoleByHole){
             self.navigationController?.popViewController(animated: true)
         }
+        self.mapTimer.invalidate()
     }
     
     @IBAction func btnActionClubSelection(_ sender: UIButton) {
@@ -6087,6 +6088,11 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                             if !self.swingMatchId.isEmpty && !self.holeOutFlag{
                                 self.hideWhenDeviceConnected()
                             }
+                            if let thePresenter = self.navigationController?.visibleViewController{
+                                if !(thePresenter.isKind(of:NewMapVC.self)){
+                                    timer.invalidate()
+                                }
+                            }
                         }
                         counter += 1
                     })
@@ -7349,7 +7355,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 lbl.textAlignment = .left
                 lbl.sizeToFit()
                 self.showcaseView.addSubview(label2)
-//                lbl.frame.origin = CGPoint(x:32,y:point.y+100)
+                let newPoint = self.showcaseView.convert(CGPoint(x:16,y:point.y+100), from:self.view)
+                lbl.frame.origin = newPoint
                 
                 self.showcaseView.addSubview(label2)
                 self.showcaseView.addSubview(lbl)

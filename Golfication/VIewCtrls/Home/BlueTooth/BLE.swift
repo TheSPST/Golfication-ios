@@ -614,6 +614,20 @@ class BLE: NSObject {
             }
         }
     }
+    public func sendfifteenCommand(){
+        if(Constants.charctersticsGlobalForWrite != nil) && (Constants.deviceGolficationX != nil){
+            self.randomGenerator()
+            let param : [UInt8] = [15,counter]
+            var writeData = Data()
+            self.currentCommandData = param
+            writeData =  Data(bytes:param)
+            Constants.deviceGolficationX.writeValue(writeData, for: Constants.charctersticsGlobalForWrite!, type: CBCharacteristicWriteType.withResponse)
+        }else{
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.makeToast("No Service found or timeout please try again.")
+            }
+        }
+    }
     @objc private func sendEightCommand(_ notification: NSNotification){
         if(Constants.ble.charctersticsWrite != nil){
             var newByteArray = toByteArray(self.currentGameId)
@@ -1232,9 +1246,12 @@ extension BLE: CBPeripheralDelegate {
             if(characteristic.uuid == golficationXCharacteristicCBUUIDWrite){
                 self.charctersticsWrite = characteristic
                 Constants.charctersticsGlobalForWrite = characteristic
-                debugPrint(peripheral.maximumWriteValueLength(for: CBCharacteristicWriteType.withResponse))
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
-                    self.sendEleventhCommand()
+//                    self.sendfifteenCommand()
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                        self.sendEleventhCommand()
+
+//                    }
                 }
             }else if (characteristic.uuid == golficationXCharacteristicCBUUIDRead){
                 self.charctersticsRead = characteristic
@@ -2240,6 +2257,8 @@ extension BLE: CBPeripheralDelegate {
                     })
                 }else if dataArray[0] == UInt8(14) && (currentCommandData[1] == dataArray[1]){
                     self.isDebugMode = true
+                }else if dataArray[0] == UInt8(15) && (currentCommandData[1] == dataArray[1]){
+                    ref.child("connectionDebug/\(Auth.auth().currentUser!.uid)/").updateChildValues(["\(Timestamp)":dataArray])
                 }
             }
             break
