@@ -526,14 +526,6 @@ class SignInVC: UIViewController, IndicatorInfoProvider {
         super.viewWillAppear(true)
         appDelegate = (UIApplication.shared.delegate as! AppDelegate)
         
-        // ---------------- Google Analytics --------------------------------------
-        guard let tracker = GAI.sharedInstance().defaultTracker else { return }
-        tracker.set(kGAIScreenName, value: "Login Screen")
-
-        guard let builder = GAIDictionaryBuilder.createScreenView() else { return }
-        tracker.send(builder.build() as [NSObject : AnyObject])
-        // ------------------------------------------------------------------
-        
         if Constants.userEmail != ""{
             txtFieldEmail.text = Constants.userEmail
         }
