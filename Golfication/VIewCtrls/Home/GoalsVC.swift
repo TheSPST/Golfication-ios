@@ -866,7 +866,7 @@ class GoalsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     @objc func sliderChanged(_ sender: UISlider) {
-        let section = sender.tag/100
+//        let section = sender.tag/100
         let row = sender.tag%100
         
         if titleStr == "Scoring Goals"{

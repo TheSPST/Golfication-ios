@@ -973,7 +973,7 @@ class NewUserProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView.tag == 1{
             if (self.expandedSectionHeaderNumber == section) {
-                let arrayOfItems = self.sectionItems[section] as! NSArray
+//                let arrayOfItems = self.sectionItems[section] as! NSArray
                 //            return arrayOfItems.count
                 return 1
             }

@@ -365,7 +365,7 @@ class ARPlanViewController: UIViewController {
         let point = sender.location(in: self.sceneView)
         let results = self.sceneView.hitTest(point, types: [.existingPlaneUsingExtent, .estimatedHorizontalPlane])
         if results.first != nil && viewFeatures.isEmpty{
-            debugPrint(results.first)
+//            debugPrint(results.first)
             touchedPoint = results.first!.worldTransform.translation
             configureWorldBottom()
         }else{

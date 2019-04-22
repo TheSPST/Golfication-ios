@@ -226,13 +226,11 @@ class SearchPlayerVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { [weak alert] (_) in
                 // Do Nothing
-                //                print("Cancel Alert: \(alert?.title ?? "")")
-                
+                debugPrint("Cancel Alert: \(alert)")
             }))
             
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak alert] (_) in
-                //                print("Ok Alert: \(alert?.title ?? "")")
-                
+                debugPrint("Ok Alert: \(alert)")
                 for i in 0..<Constants.selectedIndex.count{
                     
                     if !(sender.tag == 0){

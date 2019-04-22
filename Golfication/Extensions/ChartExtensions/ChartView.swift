@@ -358,7 +358,7 @@ extension PieChartView {
         chartView.chartDescription?.text = ""
         
         var colors: [UIColor] = []
-        for i in 0..<dataPoints.count {
+        for _ in 0..<dataPoints.count {
             let red = Double(arc4random_uniform(256))
             let green = Double(arc4random_uniform(256))
             let blue = Double(arc4random_uniform(256))
