@@ -3171,9 +3171,6 @@ extension NewHomeVC:CLLocationManagerDelegate{
                         dataArr = BackgroundMapStats.sortAndShow(searchDataArr: dataArr, myLocation: currentLocation)
                         let golfName = (dataArr[0].value(forKey: "Name") as? String) ?? ""
                         let golfDistance = (dataArr[0].value(forKey: "Distance") as? Double) ?? 0.0
-                        if Auth.auth().currentUser?.uid != nil{
-                            ref.child("userData/\(Auth.auth().currentUser!.uid)/nearByGolfClub").updateChildValues(["\(Timestamp)":golfDistance])
-                        }
                         if golfDistance < 1500.0 && golfName != ""{
                             UserDefaults.standard.set(golfName, forKey: "NearByGolfClub")
                             UserDefaults.standard.synchronize()
