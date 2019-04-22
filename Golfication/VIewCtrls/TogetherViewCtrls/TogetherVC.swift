@@ -648,6 +648,9 @@ class TogetherVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
         var height = CGFloat()
+        if dataArray.count == 0{
+            return 0
+        }
         let feeds = dataArray[indexPath.row]
         
         if feeds.type == "2"{

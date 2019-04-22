@@ -296,6 +296,11 @@
 		4BC051B222143B93000A7B14 /* StatsInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC051B122143B93000A7B14 /* StatsInfoVC.swift */; };
 		4BC879BA20C517EF00A3B2BB /* PracticeGameViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */; };
 		4BCC816620AD652300AD3108 /* ScanProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCC816520AD652300AD3108 /* ScanProgressView.xib */; };
+		4BCEBCDE226B226E004B24E4 /* GolficationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCEBCDD226B226E004B24E4 /* GolficationUITests.swift */; };
+		4BCEBCEA226B23DB004B24E4 /* Appfile in Resources */ = {isa = PBXBuildFile; fileRef = 4BCEBCE6226B23DB004B24E4 /* Appfile */; };
+		4BCEBCEC226B23DB004B24E4 /* Fastfile in Resources */ = {isa = PBXBuildFile; fileRef = 4BCEBCE8226B23DB004B24E4 /* Fastfile */; };
+		4BCEBCED226B23DB004B24E4 /* Snapfile in Resources */ = {isa = PBXBuildFile; fileRef = 4BCEBCE9226B23DB004B24E4 /* Snapfile */; };
+		4BCEBCEE226B249C004B24E4 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCEBCE7226B23DB004B24E4 /* SnapshotHelper.swift */; };
 		4BCF8E2C21B502F70015338F /* swing_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4BCF8E2B21B502F70015338F /* swing_beep.mp3 */; };
 		4BCFF6D820453CBC00FCB10D /* MySwingWebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */; };
 		4BD451C5225B8B6E00E2BB6F /* SupportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD451C3225B8B6E00E2BB6F /* SupportVC.swift */; };
@@ -335,6 +340,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4B0174F72225302600A215E6;
 			remoteInfo = DistanceIntents;
+		};
+		4BCEBCE0226B226E004B24E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D5D4A2F1F94D382004621C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D5D4A361F94D382004621C7;
+			remoteInfo = Golfication;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -664,6 +676,13 @@
 		4BC051B122143B93000A7B14 /* StatsInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsInfoVC.swift; sourceTree = "<group>"; };
 		4BC879B920C517EF00A3B2BB /* PracticeGameViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PracticeGameViewCtrl.swift; sourceTree = "<group>"; };
 		4BCC816520AD652300AD3108 /* ScanProgressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanProgressView.xib; sourceTree = "<group>"; };
+		4BCEBCDB226B226E004B24E4 /* GolficationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GolficationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BCEBCDD226B226E004B24E4 /* GolficationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GolficationUITests.swift; sourceTree = "<group>"; };
+		4BCEBCDF226B226E004B24E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BCEBCE6226B23DB004B24E4 /* Appfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Appfile; sourceTree = "<group>"; };
+		4BCEBCE7226B23DB004B24E4 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		4BCEBCE8226B23DB004B24E4 /* Fastfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fastfile; sourceTree = "<group>"; };
+		4BCEBCE9226B23DB004B24E4 /* Snapfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Snapfile; sourceTree = "<group>"; };
 		4BCF8E2B21B502F70015338F /* swing_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = swing_beep.mp3; sourceTree = "<group>"; };
 		4BCFF6D720453CBC00FCB10D /* MySwingWebViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySwingWebViewVC.swift; sourceTree = "<group>"; };
 		4BD451C3225B8B6E00E2BB6F /* SupportVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportVC.swift; sourceTree = "<group>"; };
@@ -688,6 +707,7 @@
 		4BF564EE1FD2AA03006BDB0E /* String+Width.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Width.swift"; sourceTree = "<group>"; };
 		74C4161709B89182A1A47152 /* Pods-Golfication.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.debug.xcconfig"; sourceTree = "<group>"; };
 		BAEB7E85ED122E864139FDF9 /* Pods-Golfication.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Golfication.release.xcconfig"; path = "Pods/Target Support Files/Pods-Golfication/Pods-Golfication.release.xcconfig"; sourceTree = "<group>"; };
+		D47BB4FDD1DCFB1B59FC811C /* Pods_GolficationUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GolficationUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -718,12 +738,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BCEBCD8226B226E004B24E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0D5D4A2E1F94D382004621C7 = {
 			isa = PBXGroup;
 			children = (
+				4BCEBCE5226B23DB004B24E4 /* fastlane */,
 				4B01799A22256D7100A215E6 /* CoreDataStorage.swift */,
 				4B01751A222531A500A215E6 /* Intents.intentdefinition */,
 				4B017522222536E300A215E6 /* CoreDataDistanceModel.xcdatamodeld */,
@@ -731,6 +759,7 @@
 				0D5D4A391F94D382004621C7 /* Golfication */,
 				4B0174F92225302600A215E6 /* DistanceIntents */,
 				4B0175042225302700A215E6 /* DistanceIntentsUI */,
+				4BCEBCDC226B226E004B24E4 /* GolficationUITests */,
 				0D5D4A381F94D382004621C7 /* Products */,
 				DB1FB1DD9AFC91304E29BD61 /* Pods */,
 				E5CF73F40FE57CA4A12729BD /* Frameworks */,
@@ -743,6 +772,7 @@
 				0D5D4A371F94D382004621C7 /* Golfication.app */,
 				4B0174F82225302600A215E6 /* DistanceIntents.appex */,
 				4B0175012225302600A215E6 /* DistanceIntentsUI.appex */,
+				4BCEBCDB226B226E004B24E4 /* GolficationUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1516,6 +1546,26 @@
 			path = ExploreViewCtrls;
 			sourceTree = "<group>";
 		};
+		4BCEBCDC226B226E004B24E4 /* GolficationUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4BCEBCDD226B226E004B24E4 /* GolficationUITests.swift */,
+				4BCEBCE7226B23DB004B24E4 /* SnapshotHelper.swift */,
+				4BCEBCDF226B226E004B24E4 /* Info.plist */,
+			);
+			path = GolficationUITests;
+			sourceTree = "<group>";
+		};
+		4BCEBCE5226B23DB004B24E4 /* fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				4BCEBCE6226B23DB004B24E4 /* Appfile */,
+				4BCEBCE8226B23DB004B24E4 /* Fastfile */,
+				4BCEBCE9226B23DB004B24E4 /* Snapfile */,
+			);
+			path = fastlane;
+			sourceTree = "<group>";
+		};
 		DB1FB1DD9AFC91304E29BD61 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1536,6 +1586,7 @@
 				0D42F8731FC6B74A00A97389 /* MapKit.framework */,
 				03AEE031B334C7493B9375BC /* Pods_Golfication.framework */,
 				4B0175022225302700A215E6 /* IntentsUI.framework */,
+				D47BB4FDD1DCFB1B59FC811C /* Pods_GolficationUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1602,13 +1653,31 @@
 			productReference = 4B0175012225302600A215E6 /* DistanceIntentsUI.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		4BCEBCDA226B226E004B24E4 /* GolficationUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4BCEBCE2226B226E004B24E4 /* Build configuration list for PBXNativeTarget "GolficationUITests" */;
+			buildPhases = (
+				4BCEBCD7226B226E004B24E4 /* Sources */,
+				4BCEBCD8226B226E004B24E4 /* Frameworks */,
+				4BCEBCD9226B226E004B24E4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4BCEBCE1226B226E004B24E4 /* PBXTargetDependency */,
+			);
+			name = GolficationUITests;
+			productName = GolficationUITests;
+			productReference = 4BCEBCDB226B226E004B24E4 /* GolficationUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		0D5D4A2F1F94D382004621C7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1010;
+				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = Khelfie;
 				TargetAttributes = {
@@ -1655,6 +1724,11 @@
 							};
 						};
 					};
+					4BCEBCDA226B226E004B24E4 = {
+						CreatedOnToolsVersion = 10.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 0D5D4A361F94D382004621C7;
+					};
 				};
 			};
 			buildConfigurationList = 0D5D4A321F94D382004621C7 /* Build configuration list for PBXProject "Golfication" */;
@@ -1677,6 +1751,7 @@
 				0D5D4A361F94D382004621C7 /* Golfication */,
 				4B0174F72225302600A215E6 /* DistanceIntents */,
 				4B0175002225302600A215E6 /* DistanceIntentsUI */,
+				4BCEBCDA226B226E004B24E4 /* GolficationUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1710,6 +1785,7 @@
 				4B0174E7222124E400A215E6 /* GoogleService-Info-demo.plist in Resources */,
 				3E83232A201A1ABC0015A5D3 /* Together.storyboard in Resources */,
 				4B8C8D3C1FF674D0001F5D01 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
+				4BCEBCEA226B23DB004B24E4 /* Appfile in Resources */,
 				4B8C8D3B1FF674D0001F5D01 /* SF-Pro-Display-MediumItalic.otf in Resources */,
 				4BA70889223D1342003CEFF4 /* WindNotesView.xib in Resources */,
 				4B8C8D361FF674D0001F5D01 /* SF-Pro-Display-HeavyItalic.otf in Resources */,
@@ -1740,12 +1816,14 @@
 				4B1F6BC62090A29F00312EA7 /* CustomStyle.json in Resources */,
 				4BE66A84223668A20057A22B /* EddieViewRFMap.xib in Resources */,
 				4B7F521E2158DC6F002E328A /* PKCCropLineView.xib in Resources */,
+				4BCEBCEC226B23DB004B24E4 /* Fastfile in Resources */,
 				4B7E2A792175C20B00DFC3EB /* DetailView.xib in Resources */,
 				4B8C8D411FF674D0001F5D01 /* SF-Pro-Display-BoldItalic.otf in Resources */,
 				4B2049242258B9C9006CC4EE /* FarFromTheHole.xib in Resources */,
 				4B7E2A7B2175C20B00DFC3EB /* radar_dot.png in Resources */,
 				4BD6AABB20A9AA0C00F1839C /* Profile.storyboard in Resources */,
 				4B7E2A7E2175C20B00DFC3EB /* arrow.png in Resources */,
+				4BCEBCED226B23DB004B24E4 /* Snapfile in Resources */,
 				3EC2B2732011C50300E9AF6A /* golficationtest-firebase-crashreporting-z7kqd-4684e271d4.json in Resources */,
 				4B8C8D3A1FF674D0001F5D01 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				3EA43D072015D80E0077B14A /* TestView.xib in Resources */,
@@ -1767,6 +1845,13 @@
 			files = (
 				4BF2944122495810009D76F5 /* Assets.xcassets in Resources */,
 				4B0175092225302700A215E6 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BCEBCD9226B226E004B24E4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2160,6 +2245,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4BCEBCD7226B226E004B24E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BCEBCDE226B226E004B24E4 /* GolficationUITests.swift in Sources */,
+				4BCEBCEE226B249C004B24E4 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2172,6 +2266,11 @@
 			isa = PBXTargetDependency;
 			target = 4B0174F72225302600A215E6 /* DistanceIntents */;
 			targetProxy = 4B01750E2225302700A215E6 /* PBXContainerItemProxy */;
+		};
+		4BCEBCE1226B226E004B24E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D5D4A361F94D382004621C7 /* Golfication */;
+			targetProxy = 4BCEBCE0226B226E004B24E4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2484,6 +2583,43 @@
 			};
 			name = Release;
 		};
+		4BCEBCE3226B226E004B24E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FE7D783SLH;
+				INFOPLIST_FILE = GolficationUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.GolficationUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Golfication;
+			};
+			name = Debug;
+		};
+		4BCEBCE4226B226E004B24E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FE7D783SLH;
+				INFOPLIST_FILE = GolficationUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.khelfie.GolficationUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Golfication;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2519,6 +2655,15 @@
 			buildConfigurations = (
 				4B0175112225302700A215E6 /* Debug */,
 				4B0175122225302700A215E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4BCEBCE2226B226E004B24E4 /* Build configuration list for PBXNativeTarget "GolficationUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4BCEBCE3226B226E004B24E4 /* Debug */,
+				4BCEBCE4226B226E004B24E4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

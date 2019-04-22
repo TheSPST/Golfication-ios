@@ -1247,11 +1247,11 @@ extension BLE: CBPeripheralDelegate {
                 self.charctersticsWrite = characteristic
                 Constants.charctersticsGlobalForWrite = characteristic
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
-//                    self.sendfifteenCommand()
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                    self.sendfifteenCommand()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
                         self.sendEleventhCommand()
 
-//                    }
+                    }
                 }
             }else if (characteristic.uuid == golficationXCharacteristicCBUUIDRead){
                 self.charctersticsRead = characteristic
@@ -2257,7 +2257,7 @@ extension BLE: CBPeripheralDelegate {
                     })
                 }else if dataArray[0] == UInt8(14) && (currentCommandData[1] == dataArray[1]){
                     self.isDebugMode = true
-                }else if dataArray[0] == UInt8(15) && (currentCommandData[1] == dataArray[1]){
+                }else if dataArray[0] == UInt8(15){
                     ref.child("connectionDebug/\(Auth.auth().currentUser!.uid)/").updateChildValues(["\(Timestamp)":dataArray])
                 }
             }

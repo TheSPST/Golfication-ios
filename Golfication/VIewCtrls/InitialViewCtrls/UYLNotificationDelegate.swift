@@ -88,17 +88,14 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
             
             friendNotifFeedId = userInfo["feedKey"] as! String
             tabBarCtrl.selectedIndex = 1
-         }
-        else
-        {
+         }else{
             switch response.actionIdentifier {
             case UNNotificationDismissActionIdentifier:
                 debugPrint("Dismiss Action")
             case UNNotificationDefaultActionIdentifier:
-                if(response.notification.request.content.categoryIdentifier != "my.notification"){
+                if(response.notification.request.identifier == "my.notification"){
                     FBSomeEvents.shared.singleParamFBEvene(param: "Notification4Open")
-                    self.redirectToGameScreen()
-                }else if response.notification.request.identifier.contains(find: "my.newUser"){
+                }else if response.notification.request.identifier.contains(find: "my.newUser") || response.notification.request.identifier.contains(find: "my.newUser3") || response.notification.request.identifier.contains(find: "my.newUser5") || response.notification.request.identifier.contains(find: "my.newUser7"){
                     FBSomeEvents.shared.singleParamFBEvene(param: "Notification3Open")
                 }else if response.notification.request.identifier.contains(find: "my.game"){
                     FBSomeEvents.shared.singleParamFBEvene(param: "Notification1Open")
@@ -107,6 +104,7 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
                 }else if response.notification.request.identifier.contains(find: "my.nearbyGolf"){
                     FBSomeEvents.shared.singleParamFBEvene(param: "Notification2Open")
                 }
+                self.redirectToGameScreen()
             case "Snooze":
                 debugPrint("Snooze")
             case "Delete":

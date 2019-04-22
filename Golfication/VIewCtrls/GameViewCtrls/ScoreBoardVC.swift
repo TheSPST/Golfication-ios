@@ -550,6 +550,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         viewCtrl.modalPresentationStyle = .overCurrentContext
         self.present(viewCtrl, animated: true, completion: nil)
     }
+    var notesIndex = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         FBSomeEvents.shared.singleParamFBEvene(param: "View Scorecard")
@@ -601,28 +602,30 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                  ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                  ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                  ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"]]
+            self.notesIndex = 9
             if Constants.mode == 1{
                 self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"],
                                      ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized(), "Notes"]]
+                self.notesIndex = 11
             }
-        }
-            else{
-                
-                self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
-                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
-                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
-                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
-                                     ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"]]
-                if Constants.mode == 1{
-                    self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
-                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
-                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
-                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
-                                         ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"]]
-                }
+        }else{
+            self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"],
+                                 ["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(), "Notes"]]
+            self.notesIndex = 6
+            if Constants.mode == 1{
+                self.sectionItems = [[],[],["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"],
+                                     ["Driving Distance".localized(), "Fairway Hit".localized(), "Approach Dist".localized(), "GIR".localized(), "Chip/Down".localized(), "Sand/Down".localized(), "Putts".localized(),"Penalties".localized(), "Notes"]]
+                self.notesIndex = 8
+            }
         }
         /*if !self.teeTypeArr.isEmpty{
             self.sectionItems = [[],[],["Fairway Hit".localized(),"GIR".localized(), "Chip".localized(), "Sand Shot", "Putts".localized(),"Penalties".localized(),"HCP", "Stableford".localized(), "Net Score".localized()],
@@ -1827,7 +1830,7 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier: String
-        
+        debugPrint("indexPath:",indexPath)
         if tableView.tag == 0 {
             cellIdentifier = "MenueCell"
         }
@@ -1930,16 +1933,6 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     btn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
                     cell.contentView.addSubview(btn)
                     btn.isUserInteractionEnabled = self.isTouchEnable
-
-                    //                    let label =  UILabel(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 40, height: 32))
-                    //                    label.text = "-"
-                    //                    label.textAlignment = .center
-                    //                    label.font = UIFont(name: "SFProDisplay-Regular", size: 14.0)
-                    //                    label.textColor = UIColor.black
-                    //                    label.backgroundColor = UIColor.clear
-                    //                    cell.contentView.addSubview(label)
-                    
-                    //                    let theImageView = UIButton(frame: CGRect(x: 20+(width + padding)*CGFloat(i), y: 0, width: 32, height: 32))
                     
                     for dataDict in self.scoreData[i].players{
                         
@@ -2217,14 +2210,8 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                     }
                     if let playerId = (self.sectionNames[indexPath.section] as AnyObject).value(forKey: "id") as? String{
                         if playerId == Auth.auth().currentUser!.uid{
-                            if indexPath.row == sectionItems.count-1{
-                                let originalImage1 = BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "note"), targetSize: CGSize(width:15,height:15))
-                                let backBtnImage1 =  originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-                                btn.setImage(backBtnImage1, for: .normal)
-                                btn.tintColor = UIColor.glfFlatBlue
-                                btn.setTitle("", for: .normal)
-                                btn.isNotes = true
-                                btn.isUserInteractionEnabled = true
+                            if self.notesIndex == indexPath.row{
+                                self.notesBtnSetup(btn:btn)
                             }
                         }
                     }
@@ -2355,7 +2342,15 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         cell.selectionStyle = .none
         return cell
     }
-    
+    func notesBtnSetup(btn:CellButton){
+        let originalImage1 = BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "note"), targetSize: CGSize(width:15,height:15))
+        let backBtnImage1 =  originalImage1.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        btn.setImage(backBtnImage1, for: .normal)
+        btn.tintColor = UIColor.glfFlatBlue
+        btn.setTitle("", for: .normal)
+        btn.isNotes = true
+        btn.isUserInteractionEnabled = true
+    }
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }

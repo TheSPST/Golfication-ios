@@ -1605,10 +1605,16 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
     }
     func updateGoals(isNine:Bool){
-        btnPar.setTitle("\(Constants.targetGoal.par/(isNine ? 2:1))", for: .normal)
-        btnBirdie.setTitle("\(Constants.targetGoal.Birdie/(isNine ? 2:1))", for: .normal)
-        btnFairway.setTitle("\(Constants.targetGoal.fairwayHit/(isNine ? 2:1))", for: .normal)
-        btnGir.setTitle("\(Constants.targetGoal.gir/(isNine ? 2:1))", for: .normal)
+        if isNine{
+            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2 == 0 ? 1:Constants.targetGoal.Birdie/2
+            self.targetGoal.par = Constants.targetGoal.par/2 == 0 ? 1:Constants.targetGoal.par/2
+            self.targetGoal.gir = Constants.targetGoal.gir/2 == 0 ? 1:Constants.targetGoal.gir/2
+            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2 == 0 ? 1:Constants.targetGoal.fairwayHit/2
+        }
+        btnPar.setTitle("\(Constants.targetGoal.par)", for: .normal)
+        btnBirdie.setTitle("\(Constants.targetGoal.Birdie)", for: .normal)
+        btnFairway.setTitle("\(Constants.targetGoal.fairwayHit)", for: .normal)
+        btnGir.setTitle("\(Constants.targetGoal.gir)", for: .normal)
     }
     @IBAction func btnActionForRequestMapping(_ sender: UIButton) {
         var mappingCount = 0
@@ -1900,10 +1906,10 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                     self.scoring.append((hole: i+1, par:par,players:playersArray))
                 }
                 if self.scoring.count == 9{
-                    self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
-                    self.targetGoal.par = Constants.targetGoal.par/2
-                    self.targetGoal.gir = Constants.targetGoal.gir/2
-                    self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+                    self.targetGoal.Birdie = Constants.targetGoal.Birdie/2 == 0 ? 1:Constants.targetGoal.Birdie/2
+                    self.targetGoal.par = Constants.targetGoal.par/2 == 0 ? 1:Constants.targetGoal.par/2
+                    self.targetGoal.gir = Constants.targetGoal.gir/2 == 0 ? 1:Constants.targetGoal.gir/2
+                    self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2 == 0 ? 1:Constants.targetGoal.fairwayHit/2
                 }else{
                     self.targetGoal = Constants.targetGoal
                 }

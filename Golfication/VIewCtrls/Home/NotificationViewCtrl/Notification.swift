@@ -120,19 +120,7 @@ class Notification: NSObject{
                 request, withCompletionHandler: nil)
         }
     }
-    static func sendLocaNotificatonAfterLogin(){
-        let center = UNUserNotificationCenter.current()
-        center.removePendingNotificationRequests(withIdentifiers: ["my.login"])
-        center.removeDeliveredNotifications(withIdentifiers: ["my.login"])
-        let content = UNMutableNotificationContent()
-        content.title = "Golfication"
-        content.body = "Please select your Home Course."
-        content.badge = 0
-        content.sound = UNNotificationSound.default()
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 120, repeats: false)
-        let request = UNNotificationRequest(identifier: "my.login", content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-    }
+    
     static func sendLocalNotificationForNonProNewUser(){
         
         if !Constants.isProMode && Constants.matchId.isEmpty {
@@ -168,11 +156,6 @@ class Notification: NSObject{
             UserDefaults.standard.set("", forKey: "NearByGolfClub")
             UserDefaults.standard.synchronize()
         }
-//        else{
-//            if let courseName = UserDefaults.standard.object(forKey: "HomeCourseName") as? String{
-//                content.body = "Start your round at \(courseName)!"
-//            }
-//        }
         content.badge = 0
         content.sound = UNNotificationSound.default()
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)

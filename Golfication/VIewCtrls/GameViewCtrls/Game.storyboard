@@ -6216,9 +6216,6 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="90" id="qKn-up-MUq"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isRFMap" value="NO"/>
-                                        </userDefinedRuntimeAttributes>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*Atleast 9-holes must be completed to generate round stats." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pNQ-D6-nFL" customClass="UILocalizedLabel" customModule="Golfication" customModuleProvider="target">
                                         <rect key="frame" x="10" y="655" width="335" height="35"/>

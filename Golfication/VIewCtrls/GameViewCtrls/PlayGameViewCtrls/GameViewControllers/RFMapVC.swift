@@ -2725,10 +2725,10 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
             ref.child("matchData/\(self.matchId)/").updateChildValues(scoring as! [AnyHashable : Any])
         }
         if self.scoring.count == 9{
-            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2
-            self.targetGoal.par = Constants.targetGoal.par/2
-            self.targetGoal.gir = Constants.targetGoal.gir/2
-            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2
+            self.targetGoal.Birdie = Constants.targetGoal.Birdie/2 == 0 ? 1:Constants.targetGoal.Birdie/2
+            self.targetGoal.par = Constants.targetGoal.par/2 == 0 ? 1:Constants.targetGoal.par/2
+            self.targetGoal.gir = Constants.targetGoal.gir/2 == 0 ? 1:Constants.targetGoal.gir/2
+            self.targetGoal.fairwayHit = Constants.targetGoal.fairwayHit/2 == 0 ? 1:Constants.targetGoal.fairwayHit/2
         }else{
             self.targetGoal = Constants.targetGoal
         }
