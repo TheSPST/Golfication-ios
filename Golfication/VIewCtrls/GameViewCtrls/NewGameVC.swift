@@ -3220,13 +3220,13 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         debugPrint("cellForRowIdnex")
-        let  cell = tableView.dequeueReusableCell(withIdentifier: "PlayersCell") as! NewGameScoreTableViewCell!
+        let  cell = tableView.dequeueReusableCell(withIdentifier: "PlayersCell") as! NewGameScoreTableViewCell
         let userName = (players[indexPath.row] as AnyObject).value(forKey: "name") as! String
         let nameArray = userName.components(separatedBy: " ")
-        cell?.lblPlayerName.text = nameArray.first!
+        cell.lblPlayerName.text = nameArray.first!
         if((players[indexPath.row] as AnyObject).value(forKey: "image") != nil){
             let imageStr = ((players[indexPath.row] as AnyObject).value(forKey: "image") as? String) ?? ""
-            cell?.imgPlayer.sd_setImage(with: URL(string:imageStr),placeholderImage: #imageLiteral(resourceName: "you"), completed: nil)
+            cell.imgPlayer.sd_setImage(with: URL(string:imageStr),placeholderImage: #imageLiteral(resourceName: "you"), completed: nil)
         }
         let playerId = (players[indexPath.row] as AnyObject).value(forKey: "id") as? String
         var finalPar: Int = 0
@@ -3260,28 +3260,28 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 }
             }
         }
-        cell?.lblPar.text = "\(finalPar)"
+        cell.lblPar.text = "\(finalPar)"
         if finalPar>0{
-            cell?.lblPar.text = "+\(finalPar)"
+            cell.lblPar.text = "+\(finalPar)"
         }
-        cell?.lblThru.text = "\(myVal)"
+        cell.lblThru.text = "\(myVal)"
         if let status = (players[indexPath.row] as AnyObject).value(forKey: "status") as? Int{
             if status == 3 || status == 4{
                 if scoring.count == 18{
                     if myVal == 18{
-                        cell?.lblThru.text = "F"
+                        cell.lblThru.text = "F"
                     }
                 }
                 else{
                     if myVal == 9{
-                        cell?.lblThru.text = "F"
+                        cell.lblThru.text = "F"
                     }
                 }
             }
         }
-        cell?.lblStrokes.text = "\(finalStroke)"
+        cell.lblStrokes.text = "\(finalStroke)"
         
-        return cell!
+        return cell
     }
     
 }

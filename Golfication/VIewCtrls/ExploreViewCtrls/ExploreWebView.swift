@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import WebKit
 
 class ExploreWebView: UIViewController {
 
-    @IBOutlet weak var webView: UIWebView!
+    @IBOutlet weak var webView: WKWebView!
     var linkStr: String =  ""
 
     override func viewDidLoad() {
@@ -24,7 +25,7 @@ class ExploreWebView: UIViewController {
         
         if let url = URL(string: linkStr) {
             let request = URLRequest(url: url)
-            webView.loadRequest(request)
+            webView.load(request)
         }
     }
     @objc func backAction(_ sender: UIBarButtonItem) {
