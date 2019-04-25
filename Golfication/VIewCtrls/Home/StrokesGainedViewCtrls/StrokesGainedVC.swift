@@ -9,7 +9,6 @@
 import UIKit
 import Charts
 import UICircularProgressRing
-import ActionButton
 import FirebaseAnalytics
 
 class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDelegate {
@@ -405,9 +404,6 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
         let navCtrl = UINavigationController(rootViewController: viewCtrl)
         navCtrl.modalPresentationStyle = .overCurrentContext
         self.present(navCtrl, animated: false, completion: nil)
-        
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     func playGameButton(button: UIButton) {
@@ -713,14 +709,9 @@ class StrokesGainedVC: UIViewController, CustomProModeDelegate,DemoFooterViewDel
             self.navigationController?.pushViewController(mapViewController, animated: true)
         }
         else{
-//        let viewCtrl = UIStoryboard(name: "Home", bundle: nil).instantiateViewController(withIdentifier: "ProMemberPopUpVC") as! ProMemberPopUpVC
-//            self.navigationController?.pushViewController(viewCtrl, animated: true)
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "StrokesGained"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
-
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
     }
     

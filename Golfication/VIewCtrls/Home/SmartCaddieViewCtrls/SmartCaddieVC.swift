@@ -8,7 +8,6 @@
 
 import UIKit
 import Charts
-import ActionButton
 import FirebaseAnalytics
 
 class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDelegate{
@@ -817,9 +816,6 @@ class SmartCaddieVC: UIViewController, CustomProModeDelegate,DemoFooterViewDeleg
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "SmartCaddie"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
-
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
     }
 }

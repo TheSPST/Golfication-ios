@@ -296,8 +296,6 @@
             var navCtrl = UINavigationController()
             navCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
             navCtrl.pushViewController(viewCtrl, animated: true)
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
         completionHandler()
     }
@@ -367,8 +365,6 @@
             var playNavCtrl = UINavigationController()
             playNavCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
             playNavCtrl.pushViewController(gameController, animated: true)
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
     }
     

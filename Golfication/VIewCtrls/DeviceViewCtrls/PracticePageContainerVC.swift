@@ -289,10 +289,6 @@ class PracticePageContainerVC: ButtonBarPagerTabStripViewController,UITableViewD
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        if playButton != nil{
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
-        }
     }
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         if !practiceFinished && self.navigationController!.viewControllers.count>2{

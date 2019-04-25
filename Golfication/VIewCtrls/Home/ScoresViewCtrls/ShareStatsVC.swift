@@ -47,8 +47,6 @@ class ShareStatsVC: UIViewController, UIGestureRecognizerDelegate, UIDocumentInt
                 }
                 self.dismiss(animated: false, completion: nil)
             }
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
     }
     

@@ -150,8 +150,6 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
                 var playNavCtrl = UINavigationController()
                 playNavCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
                 playNavCtrl.pushViewController(gameController, animated: false)
-                playButton.contentView.isHidden = true
-                playButton.floatButton.isHidden = true
             })
         }
     }
@@ -280,8 +278,6 @@ class PublicProfileVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     func getUserProfileData(){

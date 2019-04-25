@@ -9,7 +9,6 @@
 import UIKit
 import XLPagerTabStrip
 import Charts
-import ActionButton
 import FirebaseAnalytics
 
 class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeDelegate {
@@ -366,9 +365,6 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
         let navCtrl = UINavigationController(rootViewController: viewCtrl)
         navCtrl.modalPresentationStyle = .overCurrentContext
         self.present(navCtrl, animated: false, completion: nil)
-        
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     func setProLockedUI(targetView:UIView?, title: String) {
@@ -422,9 +418,6 @@ class OTTViewController: UIViewController, IndicatorInfoProvider, CustomProModeD
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "OTT"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
-
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
         }
     }
     override func didReceiveMemoryWarning() {

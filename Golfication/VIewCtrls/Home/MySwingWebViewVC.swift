@@ -34,16 +34,10 @@ class MySwingWebViewVC: UIViewController, WKUIDelegate {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if fromIndiegogo {
-        playButton.floatButton.removeFromSuperview()
-        playButton.contentView.removeFromSuperview()
-        }
     }
     
     override func viewDidLoad() {

@@ -22,9 +22,6 @@ class FeedPostVC: UIViewController, UITextViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = false
-        
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     // MARK: viewDidLoad

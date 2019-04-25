@@ -626,9 +626,7 @@ class ProfileVC: UIViewController, BluetoothDelegate {
         appDelegate = (UIApplication.shared.delegate as! AppDelegate)
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = false
-//        playButton.contentView.isHidden = true
-//        playButton.floatButton.isHidden = true
-        
+
         self.sharedInstance = BluetoothSync.getInstance()
         self.sharedInstance.delegate = self
         self.sharedInstance.initCBCentralManager()

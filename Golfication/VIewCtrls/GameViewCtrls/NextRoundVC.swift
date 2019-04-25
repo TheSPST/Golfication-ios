@@ -869,8 +869,6 @@ class NextRoundVC: UIViewController, CLLocationManagerDelegate {
         
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
         
         if self.progressView.isAnimating!{
         let appDelegate = (UIApplication.shared.delegate as! AppDelegate)

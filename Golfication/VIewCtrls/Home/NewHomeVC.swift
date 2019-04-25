@@ -219,8 +219,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let myScoreParentVC = storyboard.instantiateViewController(withIdentifier: "MyScoreParentVC") as! MyScoreParentVC
         self.navigationController?.pushViewController(myScoreParentVC, animated: true)
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     // MARK: - clickStrocksGained
@@ -240,8 +238,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let storyboard = UIStoryboard(name: "Home", bundle: nil)
         let viewCtrl = storyboard.instantiateViewController(withIdentifier: "SmartCaddieVC") as! SmartCaddieVC
         self.navigationController?.pushViewController(viewCtrl, animated: true)
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     // MARK: - continueAction
@@ -879,9 +875,6 @@ class NewHomeVC: UIViewController, UITableViewDataSource, UITableViewDelegate, C
         let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
         viewCtrl.source = "Home"
         self.navigationController?.pushViewController(viewCtrl, animated: false)
-
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     // MARK: - mySwingAction

@@ -45,8 +45,6 @@ class MyFeedVC: UIViewController, UITableViewDataSource, UITableViewDelegate{
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     // MARK: - getFeedDataFromFirebase

@@ -27,9 +27,6 @@ class NotificationVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
-        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if !(appDelegate.isInternet){
             let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.alert)

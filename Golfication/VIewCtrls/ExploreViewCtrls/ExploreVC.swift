@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import ActionButton
 import SDWebImage
 
 class ExploreVC: UIViewController, UIScrollViewDelegate {
@@ -270,8 +269,6 @@ class ExploreVC: UIViewController, UIScrollViewDelegate {
         viewCtrl.scrollIndex = cardTag
         viewCtrl.categoryData = (categoryData.value(forKey: category) as! NSArray)
         self.navigationController?.pushViewController(viewCtrl, animated: true)
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     @objc func imageTapAction(_ sender: UITapGestureRecognizer){
         let tag = sender.view!.tag
@@ -291,8 +288,6 @@ class ExploreVC: UIViewController, UIScrollViewDelegate {
         viewCtrl.scrollIndex = cardTag
         viewCtrl.categoryData = (categoryData.value(forKey: category) as! NSArray)
         self.navigationController?.pushViewController(viewCtrl, animated: true)
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     @objc func changePage(_ sender: UIPageControl) {

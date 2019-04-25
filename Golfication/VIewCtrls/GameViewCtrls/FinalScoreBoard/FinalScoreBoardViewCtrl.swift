@@ -216,8 +216,6 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     // MARK: viewDidLoad
@@ -734,9 +732,6 @@ class FinalScoreBoardViewCtrl: UIViewController,UITableViewDelegate, UITableView
         let navCtrl = UINavigationController(rootViewController: viewCtrl)
         navCtrl.modalPresentationStyle = .overCurrentContext
         self.present(navCtrl, animated: false, completion: nil)
-        
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     func setupApprochAccuracyScatterChart(){
         var proximityXPoints = [Double]()

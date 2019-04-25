@@ -141,8 +141,6 @@ class ProMemberPopUpVC: UIViewController, UIScrollViewDelegate{
         
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
         
         let appDelegate = (UIApplication.shared.delegate as! AppDelegate)
         if !(appDelegate.isInternet){

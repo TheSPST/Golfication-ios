@@ -54,8 +54,6 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
             var navCtrl = UINavigationController()
             navCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
             navCtrl.pushViewController(viewCtrl, animated: true)
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
          else if userInfo["type"] as? String == "10" {
             let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
@@ -78,8 +76,6 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
             var navCtrl = UINavigationController()
             navCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
             navCtrl.pushViewController(viewCtrl, animated: true)
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
          }
          else if userInfo["type"] as? String == "12" {
             let tabBarCtrl = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CustomTabBarCtrl") as! CustomTabBarCtrl
@@ -220,8 +216,6 @@ class UYLNotificationDelegate: NSObject, UNUserNotificationCenterDelegate  {
             var playNavCtrl = UINavigationController()
             playNavCtrl = (tabBarCtrl.selectedViewController as? UINavigationController)!
             playNavCtrl.pushViewController(gameController, animated: true)
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
     }
 }

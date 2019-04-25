@@ -15,7 +15,6 @@ target 'Golfication' do
   pod 'Firebase/DynamicLinks'
   pod 'UICircularProgressRing'
   pod 'XLPagerTabStrip', '~> 8.0'
-  pod 'ActionButton'
   pod 'SDWebImage'
   pod 'Dropper'
   pod 'ActionSheetPicker-3.0'

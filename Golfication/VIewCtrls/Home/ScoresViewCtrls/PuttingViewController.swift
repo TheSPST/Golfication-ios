@@ -187,9 +187,6 @@ class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorI
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "Putting"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
-
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
     }
     
@@ -320,9 +317,6 @@ class PuttingViewController: UIViewController, CustomProModeDelegate, IndicatorI
         let navCtrl = UINavigationController(rootViewController: viewCtrl)
         navCtrl.modalPresentationStyle = .overCurrentContext
         self.present(navCtrl, animated: false, completion: nil)
-        
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     func setupPuttVsHandicap(){

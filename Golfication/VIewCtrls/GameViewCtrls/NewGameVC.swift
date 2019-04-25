@@ -686,8 +686,6 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         Constants.deviceGameType = 1
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
         self.continueGameView.isHidden = true
         self.newGamescrollView.isHidden = true
         if Constants.selectedGolfName == ""{

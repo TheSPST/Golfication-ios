@@ -20,8 +20,6 @@ class SwingSessionVC: ButtonBarPagerTabStripViewController, DemoFooterViewDelega
         super.viewWillAppear(true)
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     override func viewDidLoad() {

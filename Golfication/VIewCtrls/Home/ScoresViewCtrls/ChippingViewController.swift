@@ -9,7 +9,6 @@
 import UIKit
 import XLPagerTabStrip
 import Charts
-import ActionButton
 import FirebaseAnalytics
 
 class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomProModeDelegate {
@@ -368,9 +367,6 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
         let navCtrl = UINavigationController(rootViewController: viewCtrl)
         navCtrl.modalPresentationStyle = .overCurrentContext
         self.present(navCtrl, animated: false, completion: nil)
-        
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     func setProLockedUI(targetView:UIView?, title: String) {
@@ -424,9 +420,6 @@ class ChippingViewController: UIViewController, IndicatorInfoProvider, CustomPro
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "Chipping"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
-
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
         }
     }
     

@@ -1376,8 +1376,6 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
         self.tabBarController?.tabBar.isHidden = true
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     func setInitialUI(){
         var tag = 0

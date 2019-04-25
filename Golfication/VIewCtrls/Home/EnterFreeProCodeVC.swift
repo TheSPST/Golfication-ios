@@ -38,8 +38,6 @@ class EnterFreeProCodeVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-       playButton.contentView.isHidden = true
-       playButton.floatButton.isHidden = true
     }
     
     override func viewDidLoad() {

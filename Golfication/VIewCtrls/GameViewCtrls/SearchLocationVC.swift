@@ -148,11 +148,6 @@ class SearchLocationVC: UIViewController, UISearchBarDelegate, UITableViewDelega
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
         self.tabBarController?.tabBar.isHidden = true
-        
-        if playButton != nil{
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
-        }
     }
     
     override func viewDidLoad() {

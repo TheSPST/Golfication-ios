@@ -10,13 +10,12 @@ import Foundation
 import CoreData
 
 open class CoreDataStorage {
-    
+
     // MARK: - Shared Instance
-    
+
     public static let sharedInstance = CoreDataStorage()
     
     // MARK: - Initialization
-    
     init() {
 //        NotificationCenter.default.addObserver(self, selector: #selector(contextDidSavePrivateQueueContext(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.privateQueueCtxt)
 //        NotificationCenter.default.addObserver(self, selector: #selector(contextDidSaveMainQueueContext(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: self.mainQueueCtxt)
@@ -39,7 +38,6 @@ open class CoreDataStorage {
 //            })
 //        }
 //    }
-    
 //    @objc func contextDidSaveMainQueueContext(_ notification:Notification) {
 //        if let context = self.privateQueueCtxt {
 //            self.synced(self, closure: { () -> () in
@@ -52,7 +50,6 @@ open class CoreDataStorage {
 //            })
 //        }
 //    }
-    
     func synced(_ lock: AnyObject, closure: () -> ()) {
         objc_sync_enter(lock)
         closure()

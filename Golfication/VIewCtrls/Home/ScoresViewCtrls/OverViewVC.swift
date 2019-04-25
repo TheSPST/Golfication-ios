@@ -323,9 +323,6 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
             let viewCtrl = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "EddieProVC") as! EddieProVC
             viewCtrl.source = "Overview"
             self.navigationController?.pushViewController(viewCtrl, animated: false)
-
-            playButton.contentView.isHidden = true
-            playButton.floatButton.isHidden = true
         }
     }
     
@@ -489,9 +486,6 @@ class OverViewVC: UIViewController, CustomProModeDelegate, IndicatorInfoProvider
         let navCtrl = UINavigationController(rootViewController: viewCtrl)
         navCtrl.modalPresentationStyle = .overCurrentContext
         self.present(navCtrl, animated: false, completion: nil)
-        
-        playButton.contentView.isHidden = true
-        playButton.floatButton.isHidden = true
     }
     
     override func didReceiveMemoryWarning() {
