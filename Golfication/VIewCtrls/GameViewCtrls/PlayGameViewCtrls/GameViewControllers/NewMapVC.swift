@@ -278,6 +278,8 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBOutlet weak var lblSiriHeading: UILocalizedLabel!
     @IBOutlet weak var lblIfYou: UILabel!
     @IBOutlet weak var bottomDistance: NSLayoutConstraint!
+    @IBOutlet weak var iPhoneXBottomView: UIView!
+
     var syncTime = Double()
     
 //    var isBackground : Bool{
@@ -1224,6 +1226,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     @IBAction func btnActionPlayerStats(_ sender: Any) {
         
         if(self.viewHoleStats.isHidden){
+            iPhoneXBottomView.isHidden = false
             self.achievedGoal = BackgroundMapStats.calculateGoal(scoreData: self.scoring, targetGoal: targetGoal)
             self.eddieView.updateGoalView(achievedGoal: self.achievedGoal, targetGoal: targetGoal)
             self.btnPlayersStats.isHidden = true
@@ -1293,6 +1296,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
                 self.view.layoutIfNeeded()
             }, completion: {(value: Bool) in
                 self.viewHoleStats.isHidden = true
+                self.iPhoneXBottomView.isHidden = true
             })
             
             if(isPintMarker){
@@ -1769,6 +1773,7 @@ class NewMapVC: UIViewController,GMSMapViewDelegate,UIGestureRecognizerDelegate,
     let swipeHeaderDown2 = UISwipeGestureRecognizer()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         if Constants.isProMode{
             btnClubs.setImage( #imageLiteral(resourceName: "eddieUSer").resize(CGSize(width:45,height:45)), for: .normal)
             btnSelectClubs.backgroundColor = UIColor.glfYellowEddie

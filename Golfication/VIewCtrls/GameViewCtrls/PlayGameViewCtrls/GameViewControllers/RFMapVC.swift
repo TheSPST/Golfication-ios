@@ -117,7 +117,8 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
     
     @IBOutlet weak var lblGetEddieForElevation: UILabel!
     @IBOutlet weak var lblEddiegivesPlays: UILocalizedLabel!
-    
+    @IBOutlet weak var iPhoneXBottomView: UIView!
+
     var teeTypeArr = [(tee:String,color:String,handicap:Double)]()
     var buttonsArrayForFairwayHit = [UIButton]()
     var buttonsArrayForGIR = [UIButton]()
@@ -1048,6 +1049,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
         if scrlView.isHidden{
             scrlView.isHidden = false
             bottomView.isHidden = false
+            iPhoneXBottomView.isHidden = false
             btnNext.isHidden = true
             btnPrev.isHidden = true
 //            btnPlayerStats.isHidden = true
@@ -1085,6 +1087,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
                 (value: Bool) in
                 self.scrlView.isHidden = true
                 self.bottomView.isHidden = true
+                self.iPhoneXBottomView.isHidden = true
             })
         }
     }
@@ -1475,6 +1478,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
         imgViewStblReferesh.tintImageColor(color: UIColor.glfWhite)
         scrlView.isHidden = true
         bottomView.isHidden = true
+        iPhoneXBottomView.isHidden = true
         btnNext.isHidden = false
         btnPrev.isHidden = false
 //        btnDetailScoring.setCorner(color: UIColor.glfWhite.cgColor)
@@ -1759,6 +1763,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
         if !(scrlView.isHidden){
             scrlView.isHidden = true
             bottomView.isHidden = true
+            iPhoneXBottomView.isHidden = true
         }
         self.btnNext.isHidden = false
         self.btnPrev.isHidden = false
@@ -2756,6 +2761,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
         }
         self.scrlView.isHidden = true
         bottomView.isHidden = true
+        iPhoneXBottomView.isHidden = true
         self.first = false
         self.isUpdating = false
         btnTopShotRanking.setTitle("", for: .normal)
@@ -2961,6 +2967,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
             }else{
                 self.scrlView.isHidden = false
                 self.bottomView.isHidden = false
+                self.iPhoneXBottomView.isHidden = false
             }
             if self.classicScoring.stableFordScore != nil{
                 self.lblStblScore.text = "\(self.classicScoring.stableFordScore!)"
