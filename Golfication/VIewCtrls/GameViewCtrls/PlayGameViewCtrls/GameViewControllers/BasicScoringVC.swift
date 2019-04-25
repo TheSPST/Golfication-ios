@@ -17,6 +17,7 @@ import UserNotifications
 class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
     @IBOutlet weak var menuStackView: StackView!
     @IBOutlet weak var btnMenu: UIButton!
+    @IBOutlet weak var eddieViewHeightConstraints: NSLayoutConstraint!
     
     @IBOutlet weak var holeParDDView: UIView!
     @IBOutlet weak var scorePopView: UIView!
@@ -670,7 +671,10 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
         FBSomeEvents.shared.singleParamFBEvene(param: "View Classic Game")
         eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         setInitialUI()
-        
+        if UIDevice.current.iPhone5 || UIDevice.current.iPhoneSE{
+            self.eddieViewHeightConstraints.constant = 150
+            eddieView.setupIphoneSE(margin: 30)
+        }
         btnAddNotes.setCornerWithRadius(color: UIColor.clear.cgColor, radius: 12.5)
         btnAddNotes.setImage(BackgroundMapStats.resizeImage(image: #imageLiteral(resourceName: "note"), targetSize: CGSize(width:15,height:15)), for: .normal)
         imgViewRefreshScore.tintImageColor(color: UIColor.glfWhite)
@@ -1634,13 +1638,13 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 }else{
                     holeWiseShots.setObject("R", forKey: "fairway" as NSCopying)
                 }
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
 
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
 
@@ -1666,12 +1670,12 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 btn.isHidden = false
                 btn.backgroundColor = UIColor.glfBluegreen
                 holeWiseShots.setObject((btn.tag % 10), forKey: "chipCount" as NSCopying)
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         
         ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -1697,12 +1701,12 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 btn.isHidden = false
                 btn.backgroundColor = UIColor.glfBluegreen
                 holeWiseShots.setObject((btn.tag % 10), forKey: "sandCount" as NSCopying)
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
         ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -1727,12 +1731,12 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 btn.isHidden = false
                 btn.backgroundColor = UIColor.glfBluegreen
                 holeWiseShots.setObject((btn.tag % 10), forKey: "penaltyCount" as NSCopying)
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
         ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -1777,7 +1781,7 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                     holeWiseShots.setObject(false, forKey: "gir" as NSCopying)
                 }
             }
-            holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+            holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
             debugPrint(holeWiseShots)
             updateScoreData()
             ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -1803,40 +1807,16 @@ class BasicScoringVC: UIViewController,ExitGamePopUpDelegate{
                 btn.isHidden = false
                 btn.backgroundColor = UIColor.glfBluegreen
                 holeWiseShots.setObject((btn.tag % 10), forKey: "putting" as NSCopying)
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
         ref.child("matchData/\(Constants.matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
     }
-    func updateDictionaryWithValues(dict:NSMutableDictionary)->NSMutableDictionary{
-        let dictnary = dict
-        let chipShot = dict.value(forKey: "chipCount")
-        let sandShot = dict.value(forKey: "sandCount")
-        let putting = dict.value(forKey: "putting")
-        if((chipShot) != nil) && ((sandShot) != nil) && ((putting) != nil){
-            if(chipShot as! Int == 1) && (sandShot as! Int == 0) && (putting as! Int == 1){
-                dictnary.setObject(true, forKey: "chipUpDown" as NSCopying)
-            }else if(chipShot as! Int > 0) && (((chipShot as! Int) + (putting as! Int)) > 2) && (putting as! Int > 0){
-                dictnary.setObject(false, forKey: "chipUpDown" as NSCopying)
-            }
-            if(chipShot as! Int == 0) && (sandShot as! Int == 1) && (putting as! Int == 1){
-                dictnary.setObject(true, forKey: "sandUpDown" as NSCopying)
-            }else if(chipShot as! Int > 0) && (((putting as! Int) + (putting as! Int)) > 2) && (putting as! Int > 0){
-                dictnary.setObject(false, forKey: "sandUpDown" as NSCopying)
-            }
-            if(chipShot as! Int != 0) && (sandShot as! Int != 0){
-                dictnary.setObject(false, forKey: "sandUpDown" as NSCopying)
-                dictnary.setObject(false, forKey: "chipUpDown" as NSCopying)
-            }
-        }
-        return dictnary
-    }
-    
     func getScoreIntoClassicNode(hole:Int,playerKey:String)->classicMode{
         let classicScore = classicMode()
         for data in scoreData[hole].players{

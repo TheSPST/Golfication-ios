@@ -20,6 +20,7 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     // MARK: Set Outlets
     
+    @IBOutlet weak var eddieViewHeightConstraints: NSLayoutConstraint!
     @IBOutlet weak var btnGoalInfo: UIButton!
     @IBOutlet weak var stblfordRulesLabel: UILabel!
     @IBOutlet weak var gameTypeStackView: UIStackView!
@@ -534,6 +535,18 @@ class NewGameVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         super.viewDidLoad()
         FBSomeEvents.shared.singleParamFBEvene(param: "View New Game")
         self.goalView.isHidden = !Constants.isProMode
+        
+        if UIDevice.current.iPhone5 || UIDevice.current.iPhoneSE{
+            self.eddieViewHeightConstraints.constant = 150
+            eddieView.setupIphoneSE(margin: 30)
+            let size = CGSize(width:30,height:30)
+            btnPar.frame.size = size
+            btnBirdie.frame.size = size
+            btnFairway.frame.size = size
+            btnGir.frame.size = size
+            goalView.layoutIfNeeded()
+            
+        }
         eddieView.btnUnlockEddie.addTarget(self, action: #selector(self.unlockEddie(_:)), for: .touchUpInside)
         debugPrint("didLoad")
         NotificationCenter.default.addObserver(self, selector: #selector(self.discardGame(_:)), name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)

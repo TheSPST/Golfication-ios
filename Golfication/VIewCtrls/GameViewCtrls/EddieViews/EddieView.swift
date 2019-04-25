@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 @IBDesignable final class EddieView:UIView{
-    
     @IBOutlet weak var eddieImgView: UIImageView!
     var gradient = CAGradientLayer()
     @IBInspectable var cornerRadius: CGFloat = 5
@@ -19,6 +18,8 @@ import UIKit
     @IBInspectable var shadowColor: UIColor? = UIColor.black
     @IBInspectable var shadowOpacity: Float = 0.15
 
+    @IBOutlet weak var trailingSE: NSLayoutConstraint!
+    @IBOutlet weak var stckViewGoals: UIStackView!
     @IBOutlet weak var stackViewLbls: UIStackView!
     @IBOutlet weak var lblGoals: UILabel!
     @IBOutlet weak var viewUnlockEddie: UIView!
@@ -35,7 +36,8 @@ import UIKit
     @IBOutlet weak var lblBirdie : UILabel!
     @IBOutlet weak var lblFH : UILabel!
     @IBOutlet weak var view: UIView!
-
+    @IBOutlet weak var lblByEddie: UILabel!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -91,7 +93,9 @@ import UIKit
             }
         }
     }
-    
+    func setupIphoneSE(margin:CGFloat){
+        self.trailingSE.constant = margin
+    }
     func updateGoalView(achievedGoal:Goal,targetGoal:Goal){
         if Constants.isProMode{
             var fhPer = Double(achievedGoal.fairwayHit)/Double(targetGoal.fairwayHit)

@@ -270,11 +270,10 @@ extension CustomARViewController : ARSCNViewDelegate {
     }
 
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-
-//        let key = planeAnchor.identifier.uuidString
+        guard anchor is ARPlaneAnchor else { return }
+//        let key = anchor.identifier.uuidString
 //        if let existingPlane = self.planes[key] {
-//            NodeGenerator.update(planeNode: existingPlane, from: planeAnchor, hidden: !self.showPlanes)
+//            NodeGenerator.update(planeNode: existingPlane, from: anchor, hidden: !self.showPlanes)
 //        }
     }
 

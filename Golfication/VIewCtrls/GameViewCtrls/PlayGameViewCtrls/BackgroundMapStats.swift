@@ -531,6 +531,29 @@ class BackgroundMapStats: NSObject {
             })
         }
     }
+    static func updateDictionaryWithValues(dict:NSMutableDictionary)->NSMutableDictionary{
+        let dictnary = dict
+        let chipShot = dict.value(forKey: "chipCount")
+        let sandShot = dict.value(forKey: "sandCount")
+        let putting = dict.value(forKey: "putting")
+        if((chipShot) != nil) && ((sandShot) != nil) && ((putting) != nil){
+            if(chipShot as! Int == 1) && (sandShot as! Int == 0) && (putting as! Int == 1){
+                dictnary.setObject(true, forKey: "chipUpDown" as NSCopying)
+            }else if(chipShot as! Int > 0) && (((chipShot as! Int) + (putting as! Int)) > 2) && (putting as! Int > 0){
+                dictnary.setObject(false, forKey: "chipUpDown" as NSCopying)
+            }
+            if(chipShot as! Int == 0) && (sandShot as! Int == 1) && (putting as! Int == 1){
+                dictnary.setObject(true, forKey: "sandUpDown" as NSCopying)
+            }else if(chipShot as! Int > 0) && (((sandShot as! Int) + (putting as! Int)) > 2) && (putting as! Int > 0){
+                dictnary.setObject(false, forKey: "sandUpDown" as NSCopying)
+            }
+            if(chipShot as! Int != 0) && (sandShot as! Int != 0){
+                dictnary.setObject(false, forKey: "sandUpDown" as NSCopying)
+                dictnary.setObject(false, forKey: "chipUpDown" as NSCopying)
+            }
+        }
+        return dictnary
+    }
     static func setDir(isUp:Bool,label:UILabel){
         label.textColor = !isUp ? UIColor.glfDarkGreen :UIColor.glfRed
         if isUp{
@@ -588,6 +611,17 @@ class BackgroundMapStats: NSObject {
         let dataStr =  "u=" + "61aa993cd19d0fb238ab03ae0&amp;" + "id=" + "b8bdae75ef&" + "EMAIL=" + "\(uEmail)&" + "FULLNAME=" + "\(uName)&" + "FNAME=" + "\(fName)&" + "LNAME=" + "\(lName)"
         serverHandler.sendMailingRequest(urlString: urlStr, dataString: dataStr){(arg0, error)  in
             debugPrint("arg0_&_error==", arg0 ?? "", error ?? "")
+        }
+    }
+    static func getValue(value:[UInt8])->Float{
+        if (Int(value[0])>50){
+            let val1 = Float(value[0])-255.0
+            let val2 = Float(Int(value[1])>100 ? (Int(value[1])-256):Int(value[1]))/100.0
+            return val1+val2
+        }else {
+            let val1 = Float(value[0])
+            let val2 = Float(Int(value[1])>100 ? (Int(value[1])-256):Int(value[1]))/100.0
+            return val1+val2
         }
     }
     static func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {

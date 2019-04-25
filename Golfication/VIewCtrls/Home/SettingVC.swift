@@ -127,6 +127,10 @@ class SettingVC: UIViewController , UITableViewDelegate, UITableViewDataSource,B
         super.viewWillDisappear(animated)
         self.progressView.hide()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
+    }
     func checkVersion(){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "info") { (snapshot) in
             if(snapshot.childrenCount > 0){

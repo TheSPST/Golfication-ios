@@ -35,6 +35,12 @@ class DebugData{
         self.time = time
     }
 }
+struct Plane{
+    let time:Int64!
+    let x:Float!
+    let y:Float!
+    let z:Float!
+}
 class BLE: NSObject {
     var locationManager = CLLocationManager()
     var isFinishGame = false
@@ -60,6 +66,7 @@ class BLE: NSObject {
     var timerForWriteCommand8 = Timer()
     var timerForWriteCommand9 = Timer()
     var timerForWriteCommand11 = Timer()
+    var timerForPlane = Timer()
     var totalClub : UInt8!
     var centerPointOfTeeNGreen = [(tee:CLLocationCoordinate2D ,fairway:CLLocationCoordinate2D, green:CLLocationCoordinate2D,par:Int)]()
     var isFinished = false
@@ -76,7 +83,7 @@ class BLE: NSObject {
     var leftOrRight : Int!
     var metric: Int!
     var isFirst = false
-    var swingDetails = [(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64,hole:Int)]()
+    var swingDetails = [(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64,hole:Int,plane:[NSMutableDictionary])]()
     var holeWithSwing = [(hole:Int,shotNo:Int,club:String,lat:Double,lng:Double,holeOut:Bool,clubDetected:Bool)]()
     let golficationXServiceCBUUID_READ = CBUUID(string: "0000AA80-0000-1000-8000-00805F9B34FB")
     let golficationXCharacteristicCBUUIDRead = CBUUID(string:"0000AA81-0000-1000-8000-00805F9B34FB")
@@ -110,6 +117,7 @@ class BLE: NSObject {
     var courseData = CourseData()
     var holeData = [[CLLocationCoordinate2D]]()
     var isDebugMode = false
+    var planArr = [NSMutableDictionary]()
     var isProperConnected:Bool!{
         var isTrue = false
         if(Constants.deviceGolficationX != nil) && self.service_Read != nil && self.service_Write != nil{
@@ -644,7 +652,7 @@ class BLE: NSObject {
             self.randomGenerator()
             if(Constants.deviceGameType == 2){
                 if self.swingDetails.last?.shotNo != 0{
-                    self.swingDetails.append((shotNo: 0, bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0,ba:0.0,tempo:0.0,club:"",time:0,hole:0))
+                    self.swingDetails.append((shotNo: 0, bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0,ba:0.0,tempo:0.0,club:"",time:0,hole:0,plane:[NSMutableDictionary]()))
                 }
                 debugPrint(self.currentGameId)
                 self.invalidateAllTimers()
@@ -1289,6 +1297,7 @@ extension BLE: CBPeripheralDelegate {
                             swingDict.setValue(data.cv, forKey: "clubSpeed")
                             swingDict.setValue(data.time, forKey: "timestamp")
                             swingDict.setValue(data.ba, forKey: "backSwingAngle")
+                            swingDict.setValue(data.plane, forKey: "plane")
                             if (Constants.deviceGameType == 1){
                                 swingDict.setValue(data.hole, forKey: "holeNum")
                             }
@@ -1332,6 +1341,7 @@ extension BLE: CBPeripheralDelegate {
                                     swingDict.setValue(data.cv, forKey: "clubSpeed")
                                     swingDict.setValue(data.time, forKey: "timestamp")
                                     swingDict.setValue(data.ba, forKey: "backSwingAngle")
+                                    swingDict.setValue(data.plane, forKey: "plane")
                                     var d = 0.0
                                     if(data.tempo > 3){
                                         d = data.tempo - 3
@@ -1365,6 +1375,7 @@ extension BLE: CBPeripheralDelegate {
                                     swingDict.setValue(data.time, forKey: "timestamp")
                                     swingDict.setValue(data.ba, forKey: "backSwingAngle")
                                     swingDict.setValue(data.hole, forKey: "holeNum")
+                                    swingDict.setValue(data.plane, forKey: "plane")
                                     var d = 0.0
                                     if(data.tempo > 3){
                                         d = data.tempo - 3
@@ -1568,7 +1579,7 @@ extension BLE: CBPeripheralDelegate {
             }
         }
     }
-    func updateSingleSwing(data:(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64,hole:Int),hole:Int){
+    func updateSingleSwing(data:(shotNo:Int,bs:Double,ds:Double,hv:Double,cv:Double,ba:Double,tempo:Double,club:String,time:Int64,hole:Int,plane:[NSMutableDictionary]),hole:Int){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebaseMatch(addedPath: "swingSessions/\(self.swingMatchId)/swings") { (snapshot) in
             var shotArr = [NSMutableDictionary]()
             if(snapshot.value != nil){
@@ -1588,6 +1599,7 @@ extension BLE: CBPeripheralDelegate {
                 swingDict.setValue(data.cv, forKey: "clubSpeed")
                 swingDict.setValue(data.time, forKey: "timestamp")
                 swingDict.setValue(data.ba, forKey: "backSwingAngle")
+                swingDict.setValue(data.plane, forKey: "plane")
                 var d = 0.0
                 if(data.tempo > 3){
                     d = data.tempo - 3
@@ -1634,7 +1646,6 @@ extension BLE: CBPeripheralDelegate {
                 for i in data{
                     dataArray.append(i)
                 }
-                //                var arry = BluetootheConnectionTesting.getData(value: dataArray)
                 
                 debugPrint("data Array Recieved :\(dataArray)")
                 
@@ -1722,29 +1733,25 @@ extension BLE: CBPeripheralDelegate {
                             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: [dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
                         }else{
                             DispatchQueue.main.async(execute: {
-//                                if !self.isSetupScreen{
-                                    let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
-                                    gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
-                                        self.randomGenerator()
-                                        self.swingDetails.removeAll()
-                                        self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
-                                        
-                                        if !self.isSetupScreen{
+                                let gameAlert = UIAlertController(title: "Ongoing Match", message: "Discard the ongoing game.", preferredStyle: UIAlertControllerStyle.alert)
+                                gameAlert.addAction(UIAlertAction(title: "Discard", style: .default, handler: { (action: UIAlertAction!) in
+                                    self.randomGenerator()
+                                    self.swingDetails.removeAll()
+                                    self.sendFourthCommand(param: [4,self.counter,dataArray[2],dataArray[3],dataArray[4],dataArray[5]])
+                                    
+                                    if !self.isSetupScreen{
                                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-                                        }else{
-                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SetupScreen"), object: nil)
-                                        }
-                                    }))
-                                    gameAlert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { (action: UIAlertAction!) in
-                                        debugPrint("Game Discard cancel Press")
-                                        self.invalidateAllTimers()
-                                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
-                                    }))
-                                    UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
-//                                }
-//                                else{
-//                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateScreen"), object: nil)
-//                                }
+                                    }else{
+                                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SetupScreen"), object: nil)
+                                    }
+                                }))
+                                gameAlert.addAction(UIAlertAction(title: "Cancel".localized(), style: .default, handler: { (action: UIAlertAction!) in
+                                    debugPrint("Game Discard cancel Press")
+                                    self.invalidateAllTimers()
+                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "DiscardCancel"), object: nil)
+                                }))
+                                UIApplication.shared.keyWindow?.rootViewController?.present(gameAlert, animated: true, completion: nil)
+                                
                             })
                         }
                     }
@@ -1753,20 +1760,6 @@ extension BLE: CBPeripheralDelegate {
                     self.currentGameId = responseInIntFirst4
                     DispatchQueue.main.async(execute: {
                         self.endAllActiveSessions()
-//                        if let playerData = Constants.matchDataDic.value(forKey: "player") as? [String:NSMutableDictionary]{
-//                            for (key,value) in playerData{
-//                                if key == Auth.auth().currentUser!.uid{
-//                                    if let swingK = value.value(forKeyPath: "swingKey") as? String{
-////                                        if swingK == Constants.swingSessionKey{
-////                                            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["status":0])
-////                                            ref.child("userData/\(Auth.auth().currentUser!.uid)/activeMatches/\(Constants.matchId)").removeValue()
-////                                            Constants.deviceGameType = 0
-////                                        }
-//                                    }
-//                                    break
-//                                }
-//                            }
-//                        }
                         Constants.swingSessionKey = String()
                         if self.isFinished{
                             UIApplication.shared.keyWindow?.makeToast("Game finished Successfully.")
@@ -1777,7 +1770,7 @@ extension BLE: CBPeripheralDelegate {
                         // changed by Amit
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
                     })
-
+                    
                 }else if (dataArray[0] == UInt8(6)){
                     timerForWriteCommand61.invalidate()
                     if (currentCommandData[1] > 200) && (dataArray[1] == currentCommandData[1]-200){
@@ -1863,12 +1856,12 @@ extension BLE: CBPeripheralDelegate {
                                         matchDataDic.setObject(Timestamp, forKey: "timestamp" as NSCopying)
                                         matchDataDic.setObject(Auth.auth().currentUser!.uid, forKey: "userKey" as NSCopying)
                                         matchDataDic.setObject(Constants.distanceFilter, forKey: "unit" as NSCopying)
-                                            ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
+                                        ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["swingKey":self.swingMatchId])
                                         ref.child("matchData/\(Constants.matchId)/player/\(Auth.auth().currentUser!.uid)").updateChildValues(["syncTime":Timestamp])
-                                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
-                                            matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
-                                            matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
-                                            UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
+                                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "courseDataAPI"), object: nil)
+                                        matchDataDic.setObject(Constants.matchId, forKey: "matchKey" as NSCopying)
+                                        matchDataDic.setObject(Constants.selectedGolfName, forKey: "courseName" as NSCopying)
+                                        UIApplication.shared.keyWindow?.makeToast("Course loaded Successful.")
                                         ref.child("swingSessions").updateChildValues([self.swingMatchId:matchDataDic])
                                         self.holeData = [[CLLocationCoordinate2D]]()
                                         var totalHole = Constants.gameType.contains(find: "9") ? 9:18
@@ -1914,13 +1907,13 @@ extension BLE: CBPeripheralDelegate {
                     }else{
                         if(self.holeWithSwing.count == 0){
                             self.holeWithSwing.append((hole: 1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
-                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0,ba:0.0,tempo: 0.0, club: "",time:0,hole:0))
+                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0,ba:0.0,tempo: 0.0, club: "",time:0,hole:0,plane:[NSMutableDictionary]()))
                         }else if(self.holeWithSwing.last!.holeOut){
                             self.holeWithSwing.append((hole:holeWithSwing.last!.hole+1 , shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
-                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, ba:0.0, tempo: 0.0, club: "",time:0,hole:0))
+                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, ba:0.0, tempo: 0.0, club: "",time:0,hole:0,plane:[NSMutableDictionary]()))
                         }else{
                             self.holeWithSwing.append((hole: 1, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
-                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, ba:0.0, tempo: 0.0, club: "",time:0,hole:0))
+                            self.swingDetails.append((shotNo: 0, bs: 0, ds: 0, hv: 0, cv: 0, ba:0.0, tempo: 0.0, club: "",time:0,hole:0,plane:[NSMutableDictionary]()))
                         }
                         holeNo = Int(dataArray[16])
                         holeWithSwing[holeWithSwing.count-1].hole = Int(dataArray[16])
@@ -1953,7 +1946,7 @@ extension BLE: CBPeripheralDelegate {
                             swingDetails[shotNo-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/0.3))
                         }
                         swingDetails[swingDetails.count-1].hv = Double(handVelocity)
-//                        swingDetails[swingDetails.count-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
+                        //                        swingDetails[swingDetails.count-1].tempo = (downSwing == 0.0 ? 0.0 : Double(backSwing/downSwing))
                         swingDetails[swingDetails.count-1].time = Timestamp
                         swingDetails[swingDetails.count-1].hole = Int(dataArray[16])
                     }
@@ -2045,17 +2038,17 @@ extension BLE: CBPeripheralDelegate {
                         })
                     }else{
                         DispatchQueue.main.async(execute: {
-//                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
+                            //                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "practiceFinished"), object: "Finish")
                         })
                     }
-
+                    
                 }else if(dataArray[0] == UInt8(91)){
                     if swingDetails.last == nil{
-                        swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0,hole:0))
+                        swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0,hole:0,plane:planArr))
                         holeWithSwing.append((hole: 0, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
                     }
                     else if(swingDetails.last!.shotNo != 0){
-                        swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0,hole:0))
+                        swingDetails.append((shotNo: 0 , bs: 0.0, ds: 0.0, hv: 0.0, cv: 0.0, ba:0.0, tempo: 0.0, club: "",time:0,hole:0,plane:planArr))
                         holeWithSwing.append((hole: 0, shotNo: 0, club: "", lat: 0.0, lng: 0.0, holeOut: false,clubDetected:false))
                     }
                     if(Constants.deviceGameType == 2){
@@ -2109,12 +2102,14 @@ extension BLE: CBPeripheralDelegate {
                     }
                     
                 }else if(dataArray[0] == UInt8(92)){
+                    timerForPlane.invalidate()
                     if(Constants.deviceGameType == 2){
                         memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
                         memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         swingDetails[shotNo-1].cv = Double(clubVelocity)
                         swingDetails[shotNo-1].ba = Double(backAngle)
                         swingDetails[shotNo-1].shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])
+                        swingDetails[shotNo-1].plane = self.planArr
                         shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])+1
                         debugPrint(swingDetails)
                         self.uploadSwingScore()
@@ -2259,6 +2254,26 @@ extension BLE: CBPeripheralDelegate {
                     self.isDebugMode = true
                 }else if dataArray[0] == UInt8(15){
                     ref.child("connectionDebug/\(Auth.auth().currentUser!.uid)/").updateChildValues(["\(Timestamp)":dataArray])
+                }else if dataArray[0] == UInt8(43) && dataArray[1] == UInt8(43){
+                    let plan = Plane(time: Timestamp, x: BackgroundMapStats.getValue(value: [dataArray[2],dataArray[3]]),
+                                     y: BackgroundMapStats.getValue(value: [dataArray[4],dataArray[5]]),
+                                     z: BackgroundMapStats.getValue(value: [dataArray[6],dataArray[7]]))
+                    let dict = NSMutableDictionary()
+                    dict.addEntries(from: ["time" : plan.time])
+                    dict.addEntries(from: ["x" : plan.x])
+                    dict.addEntries(from: ["y" : plan.y])
+                    dict.addEntries(from: ["z" : plan.z])
+                    self.planArr.append(dict)
+                    
+                }else if dataArray[0] == UInt8(41){
+                    debugPrint("fourty-one recieved ")
+                    timerForPlane = Timer.scheduledTimer(withTimeInterval: 4.5, repeats: true, block: { (timer) in
+                        self.planArr.removeAll()
+                        timer.invalidate()
+                    })
+                    self.planArr.removeAll()
+                }else if dataArray[0] == UInt8(44){
+                    debugPrint("fourty-four recieved ")
                 }
             }
             break

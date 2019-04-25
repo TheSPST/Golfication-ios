@@ -128,9 +128,9 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
 
             if #available(iOS 11.0, *) {
-                self.scrollView.contentInsetAdjustmentBehavior = .never
-                self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
-                self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset
+//                self.scrollView.contentInsetAdjustmentBehavior = .never
+//                self.scrollView.contentInset = UIEdgeInsetsMake(24, 0, 0, 0)
+//                self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset
                 
             } else {
                 // Fallback on earlier versions
@@ -142,10 +142,10 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             tblView.isScrollEnabled = true
             
             if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
-            tblView.frame.origin.y = 0
+//            tblView.frame.origin.y = 0
             }
-            self.scrollView = (scrollView1 == self.menueTableView) ? self.tblView : scrollView1
-            self.scrollView.setContentOffset(scrollView1.contentOffset, animated: false)
+//            self.scrollView = (scrollView1 == self.menueTableView) ? self.tblView : scrollView1
+//            self.scrollView.setContentOffset(scrollView1.contentOffset, animated: false)
         }
         else{
             tblView.isScrollEnabled = false
@@ -554,15 +554,25 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         FBSomeEvents.shared.singleParamFBEvene(param: "View Scorecard")
-        let cameraBtn =  UIButton(frame: CGRect(x: self.view.frame.width/2-15, y: self.view.frame.height-40-(30+5), width: 30, height: 30))
+        
+        var cameraBtn =  UIButton(frame: CGRect(x: self.view.frame.width/2-15, y: self.view.frame.height-40-(30+5), width: 30, height: 30))
+        if UIDevice.current.iPhoneSE{
+            cameraBtn =  UIButton(frame: CGRect(x: self.view.frame.width/2-15, y: self.view.frame.height-18, width: 18, height: 18))
+        }
         cameraBtn.setBackgroundImage(UIImage(named:"icon_camera"), for: .normal)
         cameraBtn.addTarget(self, action: #selector(self.cameraAction), for: .touchUpInside)
         let bottomLbl = UILabel()
         bottomLbl.frame = CGRect(x: 50, y: self.view.frame.height-40-(30+30+5), width: self.view.frame.width-100, height: 30)
+        if UIDevice.current.iPhoneSE{
+        bottomLbl.frame = CGRect(x: 50, y: self.view.frame.height-(18+22), width: self.view.frame.width-100, height: 25)
+        }
         bottomLbl.numberOfLines = 2
         bottomLbl.textAlignment = .center
         bottomLbl.textColor = UIColor.darkGray
         bottomLbl.font = UIFont(name: "SFProDisplay-Regular", size: 11.0)
+        if UIDevice.current.iPhoneSE{
+            bottomLbl.font = UIFont(name: "SFProDisplay-Regular", size: 9.0)
+        }
         bottomLbl.text = "Enable Stableford Scores by sending us a picture of the club scorecard".localized()
         bottomLbl.backgroundColor = UIColor.clear
         
@@ -2212,6 +2222,11 @@ class ScoreBoardVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         if playerId == Auth.auth().currentUser!.uid{
                             if self.notesIndex == indexPath.row{
                                 self.notesBtnSetup(btn:btn)
+                            }
+                        }
+                        else{
+                            if self.notesIndex == indexPath.row{
+                                btn.setTitle("", for: .normal)
                             }
                         }
                     }

@@ -404,8 +404,8 @@
     func checkAlreadyMember(promocode:String){
         FirebaseHandler.fireSharedInstance.getResponseFromFirebase(addedPath: "proMembership/isMembershipActive") { (snapshot) in
             var isMembership : Int!
-            if(snapshot.value != nil){
-                isMembership = snapshot.value as! Int
+            if let member = snapshot.value as? Int{
+                isMembership = member
             }
             DispatchQueue.main.async(execute: {
                 let oneYear = OneYearMembership()

@@ -80,66 +80,12 @@ class DebugModeVC: UIViewController{
         var a : Float = 0.0
         var b : Float = 0.0
         var c : Float = 0.0
-        
-        if (Int(value[0])>50){
-            let val1 = Float(value[0])-255.0
-            let val2 = Float(Int(value[1])>100 ? (Int(value[1])-256):Int(value[1]))/100.0
-            x = Float(val1)+val2
-        }else {
-            let val1 = Float(value[0])
-            let val2 = Float(Int(value[1])>100 ? (Int(value[1])-256):Int(value[1]))/100.0
-            x = val1+val2
-        }
-        
-        if (Int(value[2])>50){
-            let val1 = Float(value[2])-255.0
-            let val2 = Float(Int(value[3])>100 ? (Int(value[3])-256):Int(value[3]))/100.0
-            y = val1+val2
-        }else {
-            let val1 = Float(value[2])
-            let val2 = Float(Int(value[3])>100 ? (Int(value[3])-256):Int(value[3]))/100.0
-            y = val1+val2
-        }
-        
-        if (Int(value[4])>50){
-            let val1 = Float(value[4])-255.0
-            let val2 = Float(Int(value[5])>100 ? (Int(value[5])-256):Int(value[5]))/100.0
-            z = val1+val2
-        }else {
-            let val1 = Float(value[4])
-            let val2 = Float(Int(value[5])>100 ? (Int(value[5])-256):Int(value[5]))/100.0
-            z = val1+val2
-        }
-        
-        if (Int(value[6])>50){
-            let val1 = Float(value[6])-255.0
-            let val2 = Float(Int(value[7])>100 ? (Int(value[7])-256):Int(value[7]))/100.0
-            a = val1+val2;
-        }else {
-            let val1 = Float(value[6])
-            let val2 = Float(Int(value[7])>100 ? (Int(value[7])-256):Int(value[7]))/100.0
-            a = Float(val1)+val2
-        }
-        
-        if (Int(value[8])>50){
-            let val1 = Float(value[8])-255.0
-            let val2 = Float(Int(value[9])>100 ? (Int(value[9])-256):Int(value[9]))/100.0
-            b = val1+val2
-        }else {
-            let val1 = Float(value[8])
-            let val2 = Float(Int(value[9])>100 ? (Int(value[9])-256):Int(value[9]))/100.0
-            b = Float(val1)+val2
-        }
-        
-        if (Int(value[10])>50){
-            let val1 = Float(value[10])-255.0
-            let val2 = Float(Int(value[11])>100 ? (Int(value[11])-256):Int(value[11]))/100.0
-            c = val1+val2
-        }else {
-            let val1 = Float(value[10])
-            let val2 = Float(Int(value[11])>100 ? (Int(value[11])-256):Int(value[11]))/100.0
-            c = val1+val2
-        }
+        x = BackgroundMapStats.getValue(value: [value[0],value[1]])
+        y = BackgroundMapStats.getValue(value: [value[2],value[3]])
+        z = BackgroundMapStats.getValue(value: [value[4],value[5]])
+        a = BackgroundMapStats.getValue(value: [value[6],value[7]])
+        b = BackgroundMapStats.getValue(value: [value[8],value[9]])
+        c = BackgroundMapStats.getValue(value: [value[10],value[11]])
         
         let g1 = Float(Int(value[12]) > 100 ? (Int(value[12])-256):(Int(value[12]))) + Float(Int(value[13]) > 100 ? (Int(value[13])-256) : Int(value[13]))*100.0
         let g2 = Float(Int(value[14]) > 100 ? (Int(value[14])-256):(Int(value[14]))) + Float(Int(value[15]) > 100 ? (Int(value[15])-256) : Int(value[15]))*100.0
@@ -155,6 +101,7 @@ class DebugModeVC: UIViewController{
         let debugDa = DebugData(x: x, y: y, z: z, a: a, b: b, c: c, g1: g1, g2: g2, g3: g3, time: Timestamp)
         self.debugDataArray.append(debugDa)
     }
+
     @IBAction func startDebugAction(_ sender: UIButton) {
         if Constants.ble != nil && Constants.deviceGolficationX != nil{
             btnDebug.isEnabled = false

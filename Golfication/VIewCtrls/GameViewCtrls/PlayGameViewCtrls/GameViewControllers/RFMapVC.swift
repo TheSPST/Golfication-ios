@@ -2007,32 +2007,6 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
                 } as @convention(block) () -> Void)
         })
     }
-    func updateDictionaryWithValues(dict:NSMutableDictionary)->NSMutableDictionary{
-        let dictnary = dict
-        let chipShot = dict.value(forKey: "chipCount")
-        let sandShot = dict.value(forKey: "sandCount")
-        let putting = dict.value(forKey: "putting")
-        if((chipShot) != nil) && ((sandShot) != nil) && ((putting) != nil){
-            if(chipShot as! Int == 1) && (sandShot as! Int == 0) && (putting as! Int == 1){
-                dictnary.setObject(true, forKey: "chipUpDown" as NSCopying)
-            }else if(chipShot as! Int > 0) && (((chipShot as! Int) + (putting as! Int)) > 2) && (putting as! Int > 0){
-                dictnary.setObject(false, forKey: "chipUpDown" as NSCopying)
-            }
-            if(chipShot as! Int == 0) && (sandShot as! Int == 1) && (putting as! Int == 1){
-                dictnary.setObject(true, forKey: "sandUpDown" as NSCopying)
-            }else if(chipShot as! Int > 0) && (((putting as! Int) + (putting as! Int)) > 2) && (putting as! Int > 0){
-                dictnary.setObject(false, forKey: "sandUpDown" as NSCopying)
-            }
-            if(chipShot as! Int != 0) && (sandShot as! Int != 0){
-                dictnary.setObject(false, forKey: "sandUpDown" as NSCopying)
-                dictnary.setObject(false, forKey: "chipUpDown" as NSCopying)
-            }
-        }
-        
-        
-        
-        return dictnary
-    }
     var previousLocation : CLLocationCoordinate2D!
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         self.mapView.settings.scrollGestures = true
@@ -2467,13 +2441,13 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
                 }else{
                     holeWiseShots.setObject("R", forKey: "fairway" as NSCopying)
                 }
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
             
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
         ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -2499,12 +2473,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
                 btn.backgroundColor = UIColor.glfBluegreen
                 btn.setTitleColor(UIColor.glfWhite, for: .normal)
                 holeWiseShots.setObject((btn.tag % 10), forKey: "chipCount" as NSCopying)
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         
         ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -2531,12 +2505,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
                 btn.backgroundColor = UIColor.glfBluegreen
                 btn.setTitleColor(UIColor.glfWhite, for: .normal)
                 holeWiseShots.setObject((btn.tag % 10), forKey: "sandCount" as NSCopying)
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
         ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -2562,12 +2536,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
                 btn.backgroundColor = UIColor.glfBluegreen
                 btn.setTitleColor(UIColor.glfWhite, for: .normal)
                 holeWiseShots.setObject((btn.tag % 10), forKey: "penaltyCount" as NSCopying)
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
         ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -2612,7 +2586,7 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
                     holeWiseShots.setObject(false, forKey: "gir" as NSCopying)
                 }
             }
-            holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+            holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
             debugPrint(holeWiseShots)
             updateScoreData()
             ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
@@ -2639,12 +2613,12 @@ class RFMapVC: UIViewController,GMSMapViewDelegate,ExitGamePopUpDelegate{
                 btn.backgroundColor = UIColor.glfBluegreen
                 btn.setTitleColor(UIColor.glfWhite, for: .normal)
                 holeWiseShots.setObject((btn.tag % 10), forKey: "putting" as NSCopying)
-                holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+                holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
                 debugPrint(holeWiseShots)
                 ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
             }
         }
-        holeWiseShots = updateDictionaryWithValues(dict: holeWiseShots)
+        holeWiseShots = BackgroundMapStats.updateDictionaryWithValues(dict: holeWiseShots)
         debugPrint(holeWiseShots)
         updateScoreData()
         ref.child("matchData/\(matchId)/scoring/\(self.holeIndex)/\(self.playerId!)").updateChildValues(holeWiseShots as! [AnyHashable : Any])
