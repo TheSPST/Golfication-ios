@@ -283,8 +283,8 @@ class BackgroundMapStats: NSObject {
         for data in curvedArray{
             strArr.append("\(data.latitude),\(data.longitude)")
         }
-        let unique = Array(Set(strArr))
         
+        let unique = BackgroundMapStats.removeDuplicates(array: strArr)
         var uniqueArray = [CLLocationCoordinate2D]()
         for data in unique{
             let result = data.split(separator: ",")
@@ -293,25 +293,22 @@ class BackgroundMapStats: NSObject {
             }
         }        
         return uniqueArray
-//        if(!curvedArray.isEmpty){
-//            var lat = [CLLocationDegrees]()
-//            var lng = [CLLocationDegrees]()
-//            for i in 0..<curvedArray.count{
-//                lat.append(curvedArray[i].latitude)
-//                lng.append(curvedArray[i].longitude)
-//            }
-//            lat = lat.removeDuplicates()
-//            lng = lng.removeDuplicates()
-//            if lng.count == lat.count{
-//                for i in 0..<lng.count{
-//                    uniqueArray.append(CLLocationCoordinate2D(latitude: lat[i], longitude: lng[i]))
-//                }
-//            }else{
-//                uniqueArray = curvedArray
-//            }
-//
-//        }
-//        return uniqueArray
+    }
+    static func removeDuplicates(array: [String]) -> [String] {
+        var encountered = Set<String>()
+        var result: [String] = []
+        for value in array {
+            if encountered.contains(value) {
+                // Do not add a duplicate element.
+            }
+            else {
+                // Add value to the set.
+                encountered.insert(value)
+                // ... Append the value.
+                result.append(value)
+            }
+        }
+        return result
     }
     static func imageOfButton(endingPoint: String)->UIImage{
         let btn = UIButton(frame:CGRect(x: 0, y: 0, width: 100, height: 30))
