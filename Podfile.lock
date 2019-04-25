@@ -6,9 +6,9 @@ PODS:
   - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.9.0)
-  - Charts (3.1.1):
-    - Charts/Core (= 3.1.1)
-  - Charts/Core (3.1.1)
+  - Charts (3.2.1):
+    - Charts/Core (= 3.2.1)
+  - Charts/Core (3.2.1)
   - Crashlytics (3.10.1):
     - Fabric (~> 1.7.5)
   - DeviceKit (1.6.0)
@@ -181,7 +181,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   ActionSheetPicker-3.0: d11a4c12c6aaf704b8a3f56d179198c99f3e41e6
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
-  Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
+  Charts: f122fb70b19847fa5817d018b77d6c5a2296ab25
   Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
   DeviceKit: 3de509f9db7ae93bf676da5e97b945517bc957cd
   Dropper: 52a020beb6fef2e4b1d55447f17099e5776954ef
