@@ -22,6 +22,18 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var btnMonthlyPayment: UIButton!
     @IBOutlet weak var getEddieView: CardView!
     @IBOutlet weak var smartCaddieView: CardView!
+    @IBOutlet weak var windSpeedView: CardView!
+    
+    @IBOutlet weak var eddieImgHCons: NSLayoutConstraint!
+    @IBOutlet weak var windImgHCons: NSLayoutConstraint!
+    @IBOutlet weak var elevImgHCons: NSLayoutConstraint!
+    @IBOutlet weak var goalImgHCons: NSLayoutConstraint!
+    @IBOutlet weak var notesImgHCons: NSLayoutConstraint!
+    @IBOutlet weak var recClubImgHCons: NSLayoutConstraint!
+    @IBOutlet weak var distanceImgHCons: NSLayoutConstraint!
+    @IBOutlet weak var clubStatsImgHCons: NSLayoutConstraint!
+    @IBOutlet weak var sgStatsImgHCons: NSLayoutConstraint!
+
     var source = String()
     @IBOutlet weak var topContra: NSLayoutConstraint!
     @IBOutlet weak var bottomPadd: NSLayoutConstraint!
@@ -78,15 +90,141 @@ class EddieProVC: UIViewController, UIScrollViewDelegate {
         self.smartCaddieView.layer.insertSublayer(gradientLayer1, at: 0)
         smartCaddieView.layer.masksToBounds = true
         if UIDevice.current.iPhoneX || UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
-            pageControl.heightConst(50)
-            bottomPadd.constant = 30.0
-            topContra.constant = 30.0
+//            pageControl.heightConst(50)
+//            bottomPadd.constant = 30.0
+//            topContra.constant = 30.0
         }
+        setImageRatio()
         checkTrialPreriod()
         self.eddieView.setValue(source, forKey: "source")
         self.eddieView.setValue(true, forKey: "screen\(currentPageIndex+1)")
         FBSomeEvents.shared.singleParamFBEvene(param: "View Eddie \(currentPageIndex+1))")
         self.eddieView.setValue(Auth.auth().currentUser!.displayName, forKey: "name")
+        
+        //setUpScrol()
+    }
+    
+    func setImageRatio(){
+        
+        // Set Eddie Image
+        let eddieImage = UIImage(named: "big_eddie")!
+        let eddieRatio = eddieImage.size.width / eddieImage.size.height
+        let eddieNewHeight = self.view.frame.size.width-20-40 / eddieRatio
+
+        // Set Wind  Speed Image
+        let image = UIImage(named: "windSpeed")!
+        let ratio = image.size.width / image.size.height
+        let newHeight = self.view.frame.size.width-20 / ratio
+        
+        // Set Elevation Image
+        let elevImage = UIImage(named: "courseElecations")!
+        let elevRatio = elevImage.size.width / elevImage.size.height
+        let elevNewHeight = self.view.frame.size.width-20 / elevRatio
+        
+        // Set Goals Image
+        let goalImage = UIImage(named: "yourGoals")!
+        let goalRatio = goalImage.size.width / goalImage.size.height
+        let goalNewHeight = self.view.frame.size.width-20 / goalRatio
+        
+        // Set Notes Image
+        let notesImage = UIImage(named: "takeNotes")!
+        let notesRatio = notesImage.size.width / notesImage.size.height
+        let notesNewHeight = self.view.frame.size.width-20 / notesRatio
+        
+        // Set Recommended Club Image
+        let recClubImage = UIImage(named: "recBestClub")!
+        let recClubRatio = recClubImage.size.width / recClubImage.size.height
+        let recClubNewHeight = self.view.frame.size.width-20 / recClubRatio
+        
+        // Set distance Image
+        let distanceImage = UIImage(named: "voiceAssitance")!
+        let distanceRatio = distanceImage.size.width / distanceImage.size.height
+        let distanceNewHeight = self.view.frame.size.width-20 / distanceRatio
+        
+        // Set club Stats Image
+        let clubStatsImage = UIImage(named: "gameClubStats")!
+        let clubStatsRatio = clubStatsImage.size.width / clubStatsImage.size.height
+        let clubStatsNewHeight = self.view.frame.size.width-20 / clubStatsRatio
+        
+        // Set SG Stats Image
+        let sgStatsImage = UIImage(named: "sgStats")!
+        let sgStatsRatio = sgStatsImage.size.width / sgStatsImage.size.height
+        let sgStatsNewHeight = self.view.frame.size.width-20 / sgStatsRatio
+        
+        eddieImgHCons.constant = eddieNewHeight
+        if UIDevice.current.iPhoneSE{
+            windImgHCons.constant = newHeight - 50
+            elevImgHCons.constant = elevNewHeight - 48
+            goalImgHCons.constant = goalNewHeight - 50
+            notesImgHCons.constant = notesNewHeight - 50
+            recClubImgHCons.constant = recClubNewHeight - 50
+            distanceImgHCons.constant = distanceNewHeight - 50
+            clubStatsImgHCons.constant = clubStatsNewHeight - 50
+            sgStatsImgHCons.constant = sgStatsNewHeight - 50
+        }
+        else if UIDevice.current.iPhone || UIDevice.current.iPhoneX{
+            windImgHCons.constant = newHeight - 55
+            elevImgHCons.constant = elevNewHeight - 53
+            goalImgHCons.constant = goalNewHeight - 55
+            notesImgHCons.constant = notesNewHeight - 55
+            recClubImgHCons.constant = recClubNewHeight - 55
+            distanceImgHCons.constant = distanceNewHeight - 55
+            clubStatsImgHCons.constant = clubStatsNewHeight - 55
+            sgStatsImgHCons.constant = sgStatsNewHeight - 55
+        }
+        else if UIDevice.current.iPhonePlus ||  UIDevice.current.iPhoneXR || UIDevice.current.iPhoneXSMax{
+            windImgHCons.constant = newHeight - 59
+            elevImgHCons.constant = elevNewHeight - 57
+            goalImgHCons.constant = goalNewHeight - 59
+            notesImgHCons.constant = notesNewHeight - 59
+            recClubImgHCons.constant = recClubNewHeight - 59
+            distanceImgHCons.constant = distanceNewHeight - 59
+            clubStatsImgHCons.constant = clubStatsNewHeight - 59
+            sgStatsImgHCons.constant = sgStatsNewHeight - 59
+        }
+    }
+    func setUpScrol(){
+        //https://stackoverflow.com/questions/41154784/how-to-resize-uiimageview-based-on-uiimages-size-ratio-in-swift-3/41155070
+        
+        let scrol = UIScrollView.init(frame: CGRect(x:0, y:64, width:self.view.frame.size.width ,height:self.view.frame.size.height-64))
+        
+        let containerView = UIView()
+        containerView.backgroundColor = UIColor.yellow
+
+        let cardView = CardView()
+        cardView.backgroundColor = UIColor.green
+        
+        let subView = UIView.init(frame: CGRect(x:0, y:0, width:self.view.frame.size.width-20 ,height:90))
+        subView.backgroundColor  = UIColor.blue
+        
+        let image = UIImage(named: "windSpeed")!
+        let imageView = UIImageView.init(frame: CGRect(x:0, y:subView.frame.size.height, width:self.view.frame.size.width-20 ,height:0))
+        
+        let ratio = image.size.width / image.size.height
+        let newHeight = self.view.frame.size.width-20 / ratio
+        imageView.frame.size = CGSize(width: self.view.frame.size.width-20, height: newHeight-40)
+        
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = UIColor.red
+        
+        let label = UILabel.init(frame: CGRect(x:10, y: imageView.frame.origin.y + imageView.frame.size.height, width:scrol.frame.size.width - 40 ,height:05))
+        label.numberOfLines = 0
+        label.text = "Eddie uses live weather feed to provide accurate information about the wind before you play each shot."
+        label.sizeToFit()
+        label.backgroundColor = UIColor.cyan
+        
+        cardView.frame = CGRect(x:10, y:0, width:self.view.frame.size.width-20 ,height:label.frame.origin.y + label.frame.size.height + 20)
+        containerView.frame = CGRect(x:0, y:0, width:self.view.frame.size.width ,height:scrol.frame.size.height)// width will be changed
+
+        cardView.addSubview(subView)
+        cardView.addSubview(imageView)
+        cardView.addSubview(label)
+        
+        containerView.addSubview(cardView)
+
+        scrol.addSubview(containerView)
+        self.view.addSubview(scrol)
     }
     
     func checkTrialPreriod(){
