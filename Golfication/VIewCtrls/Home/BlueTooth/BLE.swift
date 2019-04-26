@@ -118,6 +118,7 @@ class BLE: NSObject {
     var holeData = [[CLLocationCoordinate2D]]()
     var isDebugMode = false
     var planArr = [NSMutableDictionary]()
+    var shotPlaneArr = [NSMutableDictionary]()
     var isProperConnected:Bool!{
         var isTrue = false
         if(Constants.deviceGolficationX != nil) && self.service_Read != nil && self.service_Write != nil{
@@ -1959,9 +1960,9 @@ extension BLE: CBPeripheralDelegate {
                         swingDetails[shotNo-1].ba = Double(backAngle)
                         swingDetails[shotNo-1].shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])
                         shotNo = byteArrayToInt32(value: [dataArray[10],dataArray[11]])+1
+                        self.shotPlaneArr.removeAll()
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                     }else{
-                        
                         memccpy(&clubVelocity, [dataArray[2],dataArray[3],dataArray[4],dataArray[5]], 4, 4)
                         memccpy(&backAngle, [dataArray[6],dataArray[7],dataArray[8],dataArray[9]], 4, 4)
                         memccpy(&lat, [dataArray[10],dataArray[11],dataArray[12],dataArray[13]], 4, 4)
@@ -1993,6 +1994,20 @@ extension BLE: CBPeripheralDelegate {
                             debugPrint("HoleWithSwing",holeWithSwing)
                         }
                     }
+                }else if(dataArray[0] == UInt8(85)){
+                    let dict1 = BackgroundMapStats.setXYZDictionary(dataArray: [dataArray[3],dataArray[4],dataArray[5]])
+                    let dict2 = BackgroundMapStats.setXYZDictionary(dataArray: [dataArray[6],dataArray[7],dataArray[8]])
+                    let dict3 = BackgroundMapStats.setXYZDictionary(dataArray: [dataArray[9],dataArray[10],dataArray[11]])
+                    let dict4 = BackgroundMapStats.setXYZDictionary(dataArray: [dataArray[12],dataArray[13],dataArray[14]])
+                    let dict5 = BackgroundMapStats.setXYZDictionary(dataArray: [dataArray[15],dataArray[16],dataArray[17]])
+                    self.shotPlaneArr.append(dict1)
+                    self.shotPlaneArr.append(dict2)
+                    self.shotPlaneArr.append(dict3)
+                    self.shotPlaneArr.append(dict4)
+                    self.shotPlaneArr.append(dict5)
+                }else if(dataArray[0] == UInt8(86)){
+                    swingDetails[swingDetails.count-1].plane = self.shotPlaneArr
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "command8"), object: self.gameIDArr)
                 }else if(dataArray[0] == UInt8(80)){
                     self.timerForWriteCommand8.invalidate()
                     self.isContinue = true
@@ -2255,16 +2270,8 @@ extension BLE: CBPeripheralDelegate {
                 }else if dataArray[0] == UInt8(15){
                     ref.child("connectionDebug/\(Auth.auth().currentUser!.uid)/").updateChildValues(["\(Timestamp)":dataArray])
                 }else if dataArray[0] == UInt8(43) && dataArray[1] == UInt8(43){
-                    let plan = Plane(time: Timestamp, x: BackgroundMapStats.getValue(value: [dataArray[2],dataArray[3]]),
-                                     y: BackgroundMapStats.getValue(value: [dataArray[4],dataArray[5]]),
-                                     z: BackgroundMapStats.getValue(value: [dataArray[6],dataArray[7]]))
-                    let dict = NSMutableDictionary()
-                    dict.addEntries(from: ["time" : plan.time])
-                    dict.addEntries(from: ["x" : plan.x])
-                    dict.addEntries(from: ["y" : plan.y])
-                    dict.addEntries(from: ["z" : plan.z])
+                    let dict = BackgroundMapStats.setXYZDictionary(dataArray: [dataArray[2],dataArray[3],dataArray[4]])
                     self.planArr.append(dict)
-                    
                 }else if dataArray[0] == UInt8(41){
                     debugPrint("fourty-one recieved ")
                     timerForPlane = Timer.scheduledTimer(withTimeInterval: 4.5, repeats: true, block: { (timer) in
