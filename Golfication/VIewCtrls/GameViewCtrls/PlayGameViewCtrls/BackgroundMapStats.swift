@@ -621,6 +621,20 @@ class BackgroundMapStats: NSObject {
             return val1+val2
         }
     }
+    static func getXYZ(value:UInt8)->Float{
+        if (Int(value)>150){
+            return (Float(value)-256.0)/100.0
+        }else {
+            return Float(value)/100.0
+        }
+    }
+    static func setXYZDictionary(dataArray:[UInt8])->NSMutableDictionary{
+        let dict = NSMutableDictionary()
+        dict.addEntries(from: ["x" : self.getXYZ(value: dataArray[0])])
+        dict.addEntries(from: ["y" : self.getXYZ(value: dataArray[1])])
+        dict.addEntries(from: ["z" : self.getXYZ(value: dataArray[2])])
+        return dict
+    }
     static func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
         let size = image.size
         let widthRatio  = targetSize.width  / size.width
